@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
+		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
+		8445318019FF043A0096F26E /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317F19FF043A0096F26E /* Location.swift */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */; };
 		84D1555A19D2733500316995 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* ViewController.swift */; };
@@ -30,6 +33,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8445317519FEEB210096F26E /* RouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachine.swift; sourceTree = "<group>"; };
+		8445317919FEEC8C0096F26E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		8445317F19FF043A0096F26E /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* HoneyBee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HoneyBee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1555419D2733500316995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -51,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
 				84D1557819D2737D00316995 /* MapKit.framework in Frameworks */,
 			);
@@ -66,9 +73,38 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8445317719FEEB2A0096F26E /* Machines */ = {
+			isa = PBXGroup;
+			children = (
+				8445317519FEEB210096F26E /* RouteMachine.swift */,
+				84D1557919D2743900316995 /* CoreDataController.swift */,
+			);
+			name = Machines;
+			sourceTree = "<group>";
+		};
+		8445317819FEEB4D0096F26E /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				84D1555419D2733500316995 /* AppDelegate.swift */,
+				84D1555919D2733500316995 /* ViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		8445317B19FF031D0096F26E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8445317F19FF043A0096F26E /* Location.swift */,
+				84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */,
+			);
+			name = Model;
+			path = ..;
+			sourceTree = "<group>";
+		};
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
+				8445317919FEEC8C0096F26E /* CoreLocation.framework */,
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,
 				84D1557719D2737D00316995 /* MapKit.framework */,
 				84D1555119D2733500316995 /* HoneyBee */,
@@ -89,13 +125,12 @@
 		84D1555119D2733500316995 /* HoneyBee */ = {
 			isa = PBXGroup;
 			children = (
-				84D1555419D2733500316995 /* AppDelegate.swift */,
-				84D1557919D2743900316995 /* CoreDataController.swift */,
-				84D1555919D2733500316995 /* ViewController.swift */,
+				8445317B19FF031D0096F26E /* Model */,
+				8445317719FEEB2A0096F26E /* Machines */,
+				8445317819FEEB4D0096F26E /* View Controllers */,
 				84D1555B19D2733500316995 /* Main.storyboard */,
 				84D1555E19D2733500316995 /* Images.xcassets */,
 				84D1556019D2733500316995 /* LaunchScreen.xib */,
-				84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */,
 				84D1555219D2733500316995 /* Supporting Files */,
 			);
 			path = HoneyBee;
@@ -226,9 +261,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
 				84D1555A19D2733500316995 /* ViewController.swift in Sources */,
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
+				8445318019FF043A0096F26E /* Location.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -354,9 +391,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = HoneyBee/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -364,6 +403,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = HoneyBee/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -423,6 +463,7 @@
 				84D1557319D2733500316995 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84D1557419D2733500316995 /* Build configuration list for PBXNativeTarget "HoneyBeeTests" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +472,7 @@
 				84D1557619D2733500316995 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
@@ -441,7 +483,8 @@
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,
 			);
 			currentVersion = 84D1555719D2733500316995 /* HoneyBee.xcdatamodel */;
-			path = HoneyBee.xcdatamodeld;
+			name = HoneyBee.xcdatamodeld;
+			path = HoneyBee/HoneyBee.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

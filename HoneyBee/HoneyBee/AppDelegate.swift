@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // fire up Core Data
         CoreDataController.sharedCoreDataController
+        RouteMachine.sharedMachine
         
         return true
     }
