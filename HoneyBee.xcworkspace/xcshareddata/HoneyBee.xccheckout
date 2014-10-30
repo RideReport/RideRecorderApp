@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>6C6B5ECC-8D17-41A5-B32B-21732E3BB2AC</string>
+	<string>0E503D1E-0D6C-4BC6-AD27-9F71C572BAC6</string>
 	<key>IDESourceControlProjectName</key>
 	<string>HoneyBee</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -14,11 +14,11 @@
 		<string>github.com:quicklywilliam/HoneyBee.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>HoneyBee.xcodeproj</string>
+	<string>HoneyBee.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
-		<string>../..</string>
+		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:quicklywilliam/HoneyBee.git</string>

@@ -19,8 +19,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // fire up Core Data
-        CoreDataController.sharedCoreDataController
-        RouteMachine.sharedMachine
+        CoreDataController.sharedCoreDataController.startup()
+        RouteMachine.sharedMachine.startup()
+        
+        // setup Knock to log to Xcode if available
+        DDLog.addLogger(DDTTYLogger.sharedInstance())
+        DDTTYLogger.sharedInstance().colorsEnabled = true
+        
+        // setup the file logger
+        DDLog.addLogger(UIForLumberjack.sharedInstance())
         
         return true
     }

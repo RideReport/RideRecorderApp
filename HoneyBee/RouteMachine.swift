@@ -30,11 +30,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var isActivelyTracking : Bool
     
     private var locationManager : CLLocationManager!
-    private var geofenceSleepRegion :  CLRegion!
+    public private(set) var geofenceSleepRegion :  CLCircularRegion!
     
-    private var motionManager : CMMotionActivityManager!
+    private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
     private var lastMotionActivity : CMMotionActivity!
+    
+    private var currentTrip : Trip!
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -52,37 +54,60 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     override init () {
         self.isActivelyTracking = false
-        super.init()
-        
         self.locationManager = CLLocationManager()
-        self.locationManager.delegate = self;
-        
-        self.locationManager.requestAlwaysAuthorization()
-        if (CMMotionActivityManager.isActivityAvailable()) {
-            self.motionQueue = NSOperationQueue()
-            self.motionManager = CMMotionActivityManager()
-            
-            self.startMotionTracking()
-        }
+        self.motionQueue = NSOperationQueue()
+        self.motionActivityManager = CMMotionActivityManager()
+
+        super.init()
     }
     
-    // MARK: - CLLocationManger
+    func startup () {
+        self.locationManager.delegate = self;
+        self.locationManager.requestAlwaysAuthorization()
+        
+        self.checkForMotionActivity()
+    }
     
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    // MARK: - State Machine
+    
+    func startActivelyTracking() {
+        DDLogWrapper.logInfo("Starting Active Tracking")
+        
+        self.isActivelyTracking = true
+        self.locationManager.startUpdatingLocation()
+        
+        self.currentTrip = Trip()
+        CoreDataController.sharedCoreDataController.saveContext()
+    }
+    
+    func stopActivelyTracking() {
+        DDLogWrapper.logInfo("Stopping Active Tracking")
+        
+        self.isActivelyTracking = false
+        self.currentTrip = nil
+        
+        self.lastMotionActivity = nil
+        self.motionActivityManager.stopActivityUpdates()
+        
+        self.enterGeofenceSleep()
     }
     
     func enterGeofenceSleep() {
-        self.lastMotionActivity = nil
-        self.isActivelyTracking = false
-        self.motionManager.stopActivityUpdates()
+        DDLogWrapper.logInfo("Entering geofence sleep")
         
         self.geofenceSleepRegion = nil
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
-            // unclear what we should do if not
+            // acquire a location to base the geofence on
+            DDLogWrapper.logVerbose("Entering geofence sleep")
             
             self.locationManager.startUpdatingLocation()
         }
+    }
+
+    // MARK: - CLLocationManger
+    
+    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -90,46 +115,63 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             // TODO : For the first location, extrapolate back to the geofence
             
             // add the location
-            let newLocation = Location(location: locations.first!, motionActivity: self.lastMotionActivity)
+            DDLogWrapper.logVerbose("Got new active tracking location")
+
+            let newLocation = Location(location: locations.first!, motionActivity: self.lastMotionActivity, trip: self.currentTrip)
             CoreDataController.sharedCoreDataController.saveContext()
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
         } else if (self.geofenceSleepRegion == nil) {
-            // we just use the first location we get. should we check the accuracy first?
+            // we've got a location base the geofence sleep region on now
+            DDLogWrapper.logVerbose("Got geofence sleep region location")
+            
+            // TODO: we just use the first location we get. should we check the accuracy first?
             let geofenceCenter = locations.first!
             
             self.geofenceSleepRegion = CLCircularRegion(center: geofenceCenter.coordinate, radius: 100.0, identifier: "Movement Geofence")
             self.locationManager.startMonitoringForRegion(self.geofenceSleepRegion)
+            NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdateGeofence", object: nil)
+            
+            self.locationManager.stopUpdatingLocation()
         }
-        
-        self.locationManager.stopUpdatingLocation()
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
-        if (self.geofenceSleepRegion == region) {
+        if (self.geofenceSleepRegion! == region) {
+            DDLogWrapper.logVerbose("Exited geofence")
+            
             // we moved out of the region, so check and see what activity type we are engaging in
-            self.startMotionTracking()
+            self.checkForMotionActivity()
         }
     }
     
     // MARK: - CMMotionActivityManager
     
-    func startMotionTracking() {
-        self.motionManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity: CMMotionActivity!) -> Void in
-            self.processMotionActivity(activity)
-        })
+    func checkForMotionActivity() {
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+            // simulator.
+            self.lastMotionActivity = CMMotionActivity()
+            self.startActivelyTracking()
+        #endif
+        
+        if (CMMotionActivityManager.isActivityAvailable()) {
+            self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity: CMMotionActivity!) -> Void in
+                self.processMotionActivity(activity)
+            })
+        }
     }
     
     func processMotionActivity(activity: CMMotionActivity!) {
         self.lastMotionActivity = activity
         
-        if (activity.cycling || activity.running || activity.automotive) {
-            self.isActivelyTracking = true
-            self.startMotionTracking()
+        if (activity.walking || activity.running || activity.cycling || activity.automotive) {
+            DDLogWrapper.logVerbose("Found active motion")
+
+            self.startActivelyTracking()
         } else {
-            if (self.isActivelyTracking) {
-                // end the route
-            }
-            // we are stationary and/or in an unknown state. go to sleep state
-            self.enterGeofenceSleep()
+            DDLogWrapper.logVerbose("Found stationary motion")
+            // TODO: some sort of timeout here?
+            self.stopActivelyTracking()
         }
     }
 }

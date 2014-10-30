@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,13 +17,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="501"/>
+                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
+                                </variation>
                             </mapView>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mgd-mm-E9v">
+                                <rect key="frame" x="0.0" y="500" width="600" height="100"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="500" width="800" height="100"/>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="mgd-mm-E9v" secondAttribute="width" id="Jvg-r9-Txd"/>
+                            <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
+                            <constraint firstAttribute="height" secondItem="mgd-mm-E9v" secondAttribute="height" multiplier="3:4" id="fIc-yI-kmp"/>
+                            <constraint firstAttribute="height" secondItem="E6c-Xj-hL4" secondAttribute="height" multiplier="4:3" id="fUo-0N-i1J"/>
+                        </constraints>
                     </view>
                     <connections>
+                        <outlet property="logView" destination="mgd-mm-E9v" id="0hg-QT-OXW"/>
                         <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
                     </connections>
                 </viewController>
