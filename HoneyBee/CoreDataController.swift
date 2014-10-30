@@ -32,7 +32,12 @@ class CoreDataController {
     }
     
     func startup () {
+        // clean up bad trips
+        for trip in Trip.emptyTrips()! {
+            (trip as Trip).managedObjectContext?.deleteObject((trip as Trip))
+        }
         
+        self.saveContext()
     }
     
     func currentManagedObjectContext () -> NSManagedObjectContext {

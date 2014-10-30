@@ -11,14 +11,16 @@ import CoreLocation
 import MapKit
 
 class ViewController: UIViewController, MKMapViewDelegate {
-    @IBOutlet var mapView: MKMapView!
-    @IBOutlet weak var logView: UIView!
+    @IBOutlet weak var mapView: MKMapView!
     
     private var geofenceCircle : MKCircle!
-
+    private var tripPolyLines : [MKPolyline]!
+    private var tripAnnotations : [MKAnnotation]!
+    private var hasCenteredMap : Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
         
@@ -27,12 +29,16 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
         
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.updatePointsUI()
+            self.setCurrentTrip(RouteMachine.sharedMachine.currentTrip)
         }
         
-        self.updatePointsUI()
-        
-        UIForLumberjack.sharedInstance().showLogInView(self.logView)
+        if (Trip.allTrips()?.count > 0) {
+            self.setCurrentTrip(Trip.allTrips()!.first as Trip)
+        }        
+    }
+    
+    @IBAction func logs(sender: AnyObject) {
+        UIForLumberjack.sharedInstance().showLogInView(self.view)
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,18 +47,37 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     // MARK: - Update Map UI
-    func updatePointsUI() {
-        for trip in Trip.allTrips()! {
-            var coordinates : [CLLocationCoordinate2D] = []
-            var count : Int = 0
-            for location in trip.locations! {
-                coordinates += [(location as Location).coordinate()]
-                count++
-            }
-            
-            let polyline = MKPolyline(coordinates: &coordinates, count: count)
-            self.mapView.addOverlay(polyline)
+    func setCurrentTrip(trip : Trip) {
+        if (self.tripPolyLines != nil) {
+            self.mapView.removeAnnotations(self.tripAnnotations)
+            self.mapView.removeOverlays(self.tripPolyLines)
         }
+        
+        self.tripPolyLines = []
+        self.tripAnnotations = []
+        var coordinates : [CLLocationCoordinate2D] = []
+        var count : Int = 0
+        for location in trip.locations.array {
+            let coord = (location as Location).coordinate()
+            coordinates.append(coord)
+            count++
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coord
+            
+            if ((location as Location).isSmoothedLocation) {
+                annotation.title = NSString(format: "%i**", count)
+            } else {
+                annotation.title = NSString(format: "%i", count)
+            }
+            self.mapView.addAnnotation(annotation)
+            self.tripAnnotations.append(annotation)
+        }
+        
+        let polyline = MKPolyline(coordinates: &coordinates, count: count)
+        self.mapView.addOverlay(polyline)
+        self.tripPolyLines.append(polyline)
+        
+        //            (trip as Trip).smoothIfNeeded()
     }
     
     func updateGeofenceUI() {
@@ -73,9 +98,36 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     // MARK: - Map Kit
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
-        let mapRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: MKCoordinateSpanMake(0.005, 0.005));
+        if (!self.hasCenteredMap) {
+            let mapRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: MKCoordinateSpanMake(0.005, 0.005));
+            mapView.setRegion(mapRegion, animated: false)
+            
+            self.hasCenteredMap = true
+        }
+    }
+    
+    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+        if (annotation.isKindOfClass(MKUserLocation)) {
+            return nil;
+        }
+        let reuseID = "ViewControllerMapReuseID"
+        let textLabelTag = 59
+        var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
+        if (annotationView == nil) {
+            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+            let textLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
+            textLabel.backgroundColor = UIColor.clearColor()
+            textLabel.tag = textLabelTag
+            
+            annotationView.addSubview(textLabel)
+            annotationView.canShowCallout = true
+            annotationView.frame = textLabel.frame
+        }
+        annotationView.annotation = annotation
+        let textLabel = annotationView.viewWithTag(textLabelTag) as UILabel
+        textLabel.text = annotation.title
         
-        mapView.setRegion(mapRegion, animated: false)
+        return annotationView
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {

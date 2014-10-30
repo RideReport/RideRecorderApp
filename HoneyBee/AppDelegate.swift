@@ -18,6 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        // setup the file logger
+        DDLog.addLogger(UIForLumberjack.sharedInstance())
+        
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()
         RouteMachine.sharedMachine.startup()
@@ -25,9 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // setup Knock to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
-        
-        // setup the file logger
-        DDLog.addLogger(UIForLumberjack.sharedInstance())
         
         return true
     }

@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import CoreLocation
 import CoreMotion
+import MapKit
 
 class Location : NSManagedObject {
     enum ActivityType : Int16 {
@@ -24,6 +25,7 @@ class Location : NSManagedObject {
     @NSManaged var confidence : NSNumber
     @NSManaged var course : NSNumber
     @NSManaged var horizontalAccuracy : NSNumber
+    @NSManaged var isSmoothedLocation : Bool
     @NSManaged var latitude : NSNumber
     @NSManaged var longitude : NSNumber
     @NSManaged var speed : NSNumber
@@ -58,5 +60,10 @@ class Location : NSManagedObject {
     
     func coordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2DMake(self.latitude.doubleValue, self.longitude.doubleValue)
+    }
+    
+    func mapItem() -> MKMapItem {
+        let placemark = MKPlacemark(coordinate: self.coordinate(), addressDictionary: nil)
+        return MKMapItem(placemark: placemark)
     }
 }
