@@ -50,7 +50,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let viewController = self.presentingViewController
         if (viewController != nil && viewController!.isKindOfClass(ViewController)) {
-            (viewController as ViewController).setCurrentTrip(trips[indexPath.row])
+            (viewController as ViewController).setSelectedTrip(trips[indexPath.row])
         }
         
         self.dismissViewControllerAnimated(true, completion: nil)

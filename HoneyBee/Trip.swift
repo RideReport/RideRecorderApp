@@ -24,7 +24,7 @@ class Trip : NSManagedObject {
     
     @NSManaged var activityType : NSNumber
     @NSManaged var creationDate : NSDate!
-    @NSManaged var locations : NSMutableOrderedSet!
+    @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     
     convenience init(activityType: Trip.ActivityType) {
@@ -75,7 +75,30 @@ class Trip : NSManagedObject {
         return location
     }
     
-    func smoothIfNeeded() {
+    func undoSmoothWithCompletionHandler(handler: ()->Void) {
+        if (self.locations.count < 2 || !self.hasSmoothed) {
+            return
+        }
+        
+        DDLogWrapper.logVerbose("De-Smoothing route…")
+        
+        for element in self.locations.array {
+            let location = element as Location
+            if location.isSmoothedLocation {
+                location.trip = nil
+                location.managedObjectContext?.deleteObject(location)
+            }
+        }
+        
+        DDLogWrapper.logVerbose("Route de-smoothed!")
+        
+        self.hasSmoothed = false
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        handler()
+    }
+    
+    func smoothIfNeededWithCompletionHandler(handler: ()->Void) {
         if (self.locations.count < 2 || self.hasSmoothed) {
             return
         }
@@ -99,22 +122,26 @@ class Trip : NSManagedObject {
                 let pointCount = route.polyline!.pointCount
                 var coords = [CLLocationCoordinate2D](count: pointCount, repeatedValue: kCLLocationCoordinate2DInvalid)
                 route.polyline.getCoordinates(&coords, range: NSMakeRange(0, pointCount))
+                let mutableLocations = self.locations.mutableCopy() as NSMutableOrderedSet
                 for index in 0..<pointCount {
                     let location = self.locationWithCoordinate(coords[index])
                     location.trip = self
-                    self.locations.insertObject(location, atIndex: 1+index)
-                }                
+                    mutableLocations.insertObject(location, atIndex: 1+index)
+                }
+                self.locations = mutableLocations
             } else {
                 self.hasSmoothed = false
             }
             
 //            self.locations.removeObject(location0)
-//            CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(location0)
+//            location0.managedObjectContext.deleteObject(location0)
 //            self.locations.removeObject(location1)
-//            CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(location1)
+//            location1.managedObjectContext.deleteObject(location1)
             
             DDLogWrapper.logVerbose("Route smoothed!")
             CoreDataController.sharedCoreDataController.saveContext()
+            
+            handler()
         }
     }
 

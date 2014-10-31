@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -50,9 +51,21 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZb-DC-bGh">
+                                <rect key="frame" x="538" y="570" width="54" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Smooth">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="smoothUnSmooth:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eVG-i0-vvx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="yZb-DC-bGh" secondAttribute="trailing" constant="-8" id="7kd-TK-Hi6"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yZb-DC-bGh" secondAttribute="bottom" id="Sit-9Z-KEW"/>
                             <constraint firstAttribute="width" secondItem="EE9-E1-5mv" secondAttribute="width" id="ZV6-jr-wcp"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstAttribute="height" secondItem="E6c-Xj-hL4" secondAttribute="height" id="fUo-0N-i1J"/>
@@ -60,6 +73,7 @@
                     </view>
                     <connections>
                         <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
+                        <outlet property="smoothUnsmoothButton" destination="yZb-DC-bGh" id="rjE-TL-12k"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -163,6 +177,23 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Oa-e2-WNt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1158" y="416"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="4bK-7J-RlI">
+            <objects>
+                <viewController id="HfZ-9y-EXe" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uUe-Kr-zlS"/>
+                        <viewControllerLayoutGuide type="bottom" id="KHz-sL-rKQ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jvO-xb-ZdY">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n72-hA-eiO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
 </document>

@@ -29,7 +29,7 @@ import CoreMotion
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let geofenceSleepRegionRadius : Double = 50
     let distanceFilter : Double = 30
-    let locationTrackingDeferralTimeout : Double = 120
+    let locationTrackingDeferralTimeout : NSTimeInterval = 120
     
     private var isDefferringLocationUpdates : Bool = false
     private var shouldEndTripAfterReceivingDeferredUpdates : Bool = false
@@ -42,8 +42,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
     private var motionCheckStartDate : NSDate!;
-    let motionStartTimeoutInterval : Double = 30
-    let motionContinueTimeoutInterval : Double = 60
+    let motionStartTimeoutInterval : NSTimeInterval = 30
+    let motionContinueTimeoutInterval : NSTimeInterval = 60
     
     
     public private(set) var currentTrip : Trip!
@@ -158,7 +158,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logVerbose("Started deferring updates")
             
             self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdaxtesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
         
         if (self.currentTrip != nil) {

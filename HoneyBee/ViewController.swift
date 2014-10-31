@@ -12,11 +12,13 @@ import MapKit
 
 class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var smoothUnsmoothButton: UIButton!
     
     private var geofenceCircle : MKCircle!
     private var tripPolyLines : [MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
+    private var selectedTrip : Trip!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,12 +31,25 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
         
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.setCurrentTrip(RouteMachine.sharedMachine.currentTrip)
+            self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
         }
         
         if (Trip.allTrips()?.count > 0) {
-            self.setCurrentTrip(Trip.allTrips()!.first as Trip)
+            self.setSelectedTrip(Trip.allTrips()!.first as Trip)
         }        
+    }
+    
+    @IBAction func smoothUnSmooth(sender: AnyObject) {
+        self.smoothUnsmoothButton.setTitle("....", forState: UIControlState.Normal)
+        if (self.selectedTrip.hasSmoothed) {
+            self.selectedTrip.undoSmoothWithCompletionHandler({
+                self.setSelectedTrip(self.selectedTrip)
+            })
+        } else {
+            self.selectedTrip.smoothIfNeededWithCompletionHandler({
+                self.setSelectedTrip(self.selectedTrip)
+            })
+        }
     }
     
     @IBAction func logs(sender: AnyObject) {
@@ -47,7 +62,15 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     // MARK: - Update Map UI
-    func setCurrentTrip(trip : Trip) {
+    func setSelectedTrip(trip : Trip) {
+        self.selectedTrip = trip
+        
+        if (trip.hasSmoothed) {
+            self.smoothUnsmoothButton.setTitle("Unsmooth", forState: UIControlState.Normal)
+        } else {
+            self.smoothUnsmoothButton.setTitle("Smooth", forState: UIControlState.Normal)
+        }
+        
         if (self.tripPolyLines != nil) {
             self.mapView.removeAnnotations(self.tripAnnotations)
             self.mapView.removeOverlays(self.tripPolyLines)
@@ -75,9 +98,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         let polyline = MKPolyline(coordinates: &coordinates, count: count)
         self.mapView.addOverlay(polyline)
-        self.tripPolyLines.append(polyline)
-        
-        //            (trip as Trip).smoothIfNeeded()
+        self.tripPolyLines.append(polyline)        
     }
     
     func updateGeofenceUI() {
