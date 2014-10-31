@@ -11,17 +11,27 @@ import Foundation
 import Foundation
 import CoreData
 import CoreLocation
-import CoreMotion
 import MapKit
 
 class Trip : NSManagedObject {
+    enum ActivityType : Int16 {
+        case Walking = 0
+        case Running
+        case Cycling
+        case Automotive
+        case Unknown
+    }
+    
+    @NSManaged var activityType : NSNumber
     @NSManaged var creationDate : NSDate!
     @NSManaged var locations : NSMutableOrderedSet!
     @NSManaged var hasSmoothed : Bool
     
-    convenience init() {
+    convenience init(activityType: Trip.ActivityType) {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        
+        self.activityType = NSNumber(short: activityType.rawValue)
     }
     
     class func allTrips() -> [AnyObject]? {
@@ -60,10 +70,7 @@ class Trip : NSManagedObject {
         location.latitude = NSNumber(double: coordinate.latitude)
         location.longitude = NSNumber(double: coordinate.longitude)
         location.speed = self.locations.objectAtIndex(1).speed
-        location.confidence = NSNumber(integer: CMMotionActivityConfidence.High.rawValue)
         location.isSmoothedLocation = true
-        
-        location.activityType = self.locations.objectAtIndex(1).activityType
         
         return location
     }
