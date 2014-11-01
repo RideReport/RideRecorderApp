@@ -42,6 +42,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
     private var motionCheckStartDate : NSDate!;
+    private var motionBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     let motionStartTimeoutInterval : NSTimeInterval = 30
     let motionContinueTimeoutInterval : NSTimeInterval = 60
     
@@ -214,6 +215,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.motionCheckStartDate = NSDate()
         DDLogWrapper.logVerbose("Checkign motin to start active tracking…")
         
+        self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
+            DDLogWrapper.logVerbose("Background task expired! Stoping active tracking check")
+            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
+            self.stopMotionTracking()
+            self.enterGeofenceSleep()
+        })
+        
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
             if (activity.confidence != CMMotionActivityConfidence.Low &&
                 (activity.walking || activity.running || activity.cycling || activity.automotive)) {
@@ -232,21 +240,36 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
                 
                 DDLogWrapper.logVerbose("Found matching activity for starting active tracking")
-                self.motionActivityManager.stopActivityUpdates()
+                self.stopMotionTracking()
                 self.startActivelyTrackingWithActivityType(activityType)
             } else {
                 if (abs(self.motionCheckStartDate!.timeIntervalSinceNow) > self.motionStartTimeoutInterval) {
                     DDLogWrapper.logVerbose("Did NOT find matching activity for starting active tracking")
-                    self.motionActivityManager.stopActivityUpdates()
+                    self.stopMotionTracking()
                     self.enterGeofenceSleep()
                 }
             }
         })
     }
     
+    func stopMotionTracking() {
+        self.motionActivityManager.stopActivityUpdates()
+        
+        if (self.motionBackgroundTaskID != UIBackgroundTaskInvalid) {
+            UIApplication.sharedApplication().endBackgroundTask(self.motionBackgroundTaskID)
+            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
+        }
+    }
+    
     func checkMotionToContinueActiveTracking() {
         self.motionCheckStartDate = NSDate()
         DDLogWrapper.logVerbose("Checkign motin to continue active tracking…")
+        
+        self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
+            DDLogWrapper.logVerbose("Background task expired! Continuing active tracking…")
+            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
+            self.stopMotionTracking()
+        })
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
             if ((activity.confidence != CMMotionActivityConfidence.Low) &&
@@ -256,11 +279,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 (activity.automotive  && self.currentTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue))) {
                     // continue tracking
                     DDLogWrapper.logVerbose("Found matching activity for continuing active tracking")
-                    self.motionActivityManager.stopActivityUpdates()
+                    self.stopMotionTracking()
             } else {
                 if (abs(self.motionCheckStartDate!.timeIntervalSinceNow) > self.motionContinueTimeoutInterval) {
                     DDLogWrapper.logVerbose("Did NOT find matching activity for continuing active tracking")
-                    self.motionActivityManager.stopActivityUpdates()
+                    self.stopMotionTracking()
                     self.stopActivelyTrackingIfNeeded()
                 }
             }
