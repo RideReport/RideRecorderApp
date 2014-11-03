@@ -123,6 +123,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func enterGeofenceSleep() {
         DDLogWrapper.logInfo("Entering geofence sleep")
         
+        for region in self.locationManager.monitoredRegions {
+            self.locationManager.stopMonitoringForRegion(region as CLRegion)
+        }
+        
         self.geofenceSleepRegion = nil
         self.geofenceSleepLocation = nil
         
@@ -202,7 +206,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
-        if (self.geofenceSleepRegion! == region) {
+        if (self.geofenceSleepRegion != nil && self.geofenceSleepRegion! == region) {
             DDLogWrapper.logVerbose("Exited geofence")
             
             self.checkMotionToStartActiveTracking()
