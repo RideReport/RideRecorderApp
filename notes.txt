@@ -1,3 +1,5 @@
+- REREAD THIS: http://stackoverflow.com/questions/20083032/coremotion-updates-in-background-state
+- ISSUE: not getting activity tracking data, which is starving the run loop and causing our background task to expire.
 - look at startMonitoringVisits, use to end/begin trips instead of the geofence?
   - or to collect more precise starting-at/designation information
 - 

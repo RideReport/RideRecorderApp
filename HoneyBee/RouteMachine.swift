@@ -27,7 +27,7 @@ import CoreLocation
 import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
-    let geofenceSleepRegionRadius : Double = 50
+    let geofenceSleepRegionRadius : Double = 30
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     
@@ -69,7 +69,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
         
-        self.motionQueue = NSOperationQueue()
+        self.motionQueue = NSOperationQueue.mainQueue()
         self.motionActivityManager = CMMotionActivityManager()
 
         super.init()
@@ -166,9 +166,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
         
-        if (self.currentTrip != nil) {
-            // TODO : For the first location, extrapolate back to the geofence
-            
+        if (self.currentTrip != nil) {            
             // add the location
             DDLogWrapper.logVerbose("Got new active tracking location")
 
@@ -191,7 +189,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logVerbose("Got geofence sleep region location")
             
             // TODO: we just use the first location we get. should we check the accuracy first?
-            for location in locations {
+            if (locations.count > 0) {
                 self.geofenceSleepLocation = locations.first!
                 
                 self.geofenceSleepRegion = CLCircularRegion(center: self.geofenceSleepLocation.coordinate, radius: self.geofenceSleepRegionRadius, identifier: "Movement Geofence")
@@ -227,7 +225,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         })
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
-            if (activity.confidence != CMMotionActivityConfidence.Low &&
+            if (//activity.confidence != CMMotionActivityConfidence.Low &&
                 (activity.walking || activity.running || activity.cycling || activity.automotive)) {
                 var activityType = Trip.ActivityType.Unknown
 
@@ -276,7 +274,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         })
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
-            if ((activity.confidence != CMMotionActivityConfidence.Low) &&
+            if (//(activity.confidence != CMMotionActivityConfidence.Low) &&
                 ((activity.walking && self.currentTrip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) ||
                 (activity.running && self.currentTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) ||
                 (activity.cycling && self.currentTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) ||

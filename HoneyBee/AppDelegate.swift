@@ -19,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // setup the file logger
+        #if DEBUG
+            UIForLumberjack.sharedInstance().persistsLogs = true
+        #endif
         DDLog.addLogger(UIForLumberjack.sharedInstance())
         
         // fire up Core Data

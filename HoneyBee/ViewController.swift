@@ -136,9 +136,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
         var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
         if (annotationView == nil) {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-            let textLabel = UILabel(frame: CGRectMake(0, 0, 60, 25))
+            let textLabel = UILabel(frame: CGRectMake(7.5, 0, 15, 5))
             textLabel.backgroundColor = UIColor.clearColor()
             textLabel.tag = textLabelTag
+            textLabel.font = UIFont.systemFontOfSize(6)
             
             annotationView.addSubview(textLabel)
             annotationView.canShowCallout = true
@@ -155,7 +156,18 @@ class ViewController: UIViewController, MKMapViewDelegate {
         if (overlay.isKindOfClass(MKPolyline)) {
             let view = MKPolylineRenderer(polyline:(overlay as MKPolyline))
         
-            view.strokeColor = UIColor.redColor()
+            if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                view.strokeColor = UIColor.yellowColor()
+            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+                view.strokeColor = UIColor.orangeColor()
+            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                view.strokeColor = UIColor.greenColor()
+            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                view.strokeColor = UIColor.redColor()
+            } else {
+                // unknown
+                view.strokeColor = UIColor.grayColor()
+            }
             view.lineWidth = 4
             return view;
         } else if (overlay.isKindOfClass(MKCircle)) {
