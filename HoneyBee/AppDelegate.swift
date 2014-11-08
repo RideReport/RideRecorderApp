@@ -13,6 +13,7 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var fileLogger : DDFileLogger!
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -28,6 +29,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // setup Knock to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
+        
+        self.fileLogger = DDFileLogger()
+        self.fileLogger.rollingFrequency = 60 * 60 * 24
+        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+        DDLog.addLogger(self.fileLogger)
         
         return true
     }
