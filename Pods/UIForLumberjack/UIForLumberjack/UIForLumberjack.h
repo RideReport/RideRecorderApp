@@ -8,14 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import "DDLog.h"
-#import "DDFileLogger.h"
 
 #define kSPUILoggerMessageMargin 10
 
 @interface UIForLumberjack : NSObject <UITableViewDataSource, UITableViewDelegate, DDLogger>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic) BOOL persistsLogs;
 
 + (UIForLumberjack*) sharedInstance;
 

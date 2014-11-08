@@ -13,7 +13,6 @@
 @property (nonatomic, strong) NSMutableArray *messages;
 @property (nonatomic, strong) NSMutableSet *messagesExpanded;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
-@property (nonatomic, strong) NSString *persistanceFilePath;
 
 @end
 
@@ -37,26 +36,8 @@
         
         sharedInstance.dateFormatter = [[NSDateFormatter alloc] init];
         [sharedInstance.dateFormatter setDateFormat:@"HH:mm:ss:SSS"];
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        sharedInstance.persistanceFilePath = [documentsDirectory stringByAppendingPathComponent:@"UIForLumberjackLogs.data"];
-
     });
     return sharedInstance;
-}
-
-- (void)setPersistsLogs:(BOOL)persistsLogs;
-{
-    if (persistsLogs && !self.persistsLogs) {
-        NSMutableArray *existingLogs = [NSMutableArray arrayWithContentsOfFile:self.persistanceFilePath];
-        if (existingLogs) {
-            self.messages = existingLogs;
-        }
-    } else if (!persistsLogs && self.persistsLogs) {
-    }
-    
-    _persistsLogs = persistsLogs;
 }
 
 #pragma mark - DDLogger
@@ -64,10 +45,6 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [_messages addObject:logMessage];
-        if (self.persistsLogs) {
-            BOOL foo = [self.messages writeToFile:self.persistanceFilePath atomically:YES];
-            NSLog(@"dasd");
-        }
         
         BOOL scroll = NO;
         if(_tableView.contentOffset.y + _tableView.bounds.size.height >= _tableView.contentSize.height)
