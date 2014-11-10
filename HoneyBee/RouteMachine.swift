@@ -182,7 +182,14 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 self.currentTrip = nil
                 self.enterGeofenceSleep()
             } else {
-                self.checkMotionToContinueActiveTracking()
+                let mostRecentLocation = locations.last
+                if (mostRecentLocation?.speed > 3) {
+                    // if the speed is above 3 meters per second, keep tracking
+                    self.stopMotionTracking()
+                } else {
+                    // otherwise, check the acceleromtere for recent data
+                    self.checkMotionToContinueActiveTracking()
+                }
             }
         } else if (self.geofenceSleepRegion == nil) {
             // we've got a location base the geofence sleep region on now
@@ -217,16 +224,18 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.motionCheckStartDate = NSDate()
         DDLogWrapper.logVerbose("Checkign motin to start active tracking…")
         
-        self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
-            DDLogWrapper.logVerbose("Background task expired! Stoping active tracking check")
-            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
-            self.stopMotionTracking()
-            self.enterGeofenceSleep()
-        })
+        if (self.motionBackgroundTaskID == UIBackgroundTaskInvalid) {
+            self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
+                DDLogWrapper.logVerbose("Background task expired! Stoping active tracking check")
+                self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
+                self.stopMotionTracking()
+                self.enterGeofenceSleep()
+            })
+        }
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
             if (//activity.confidence != CMMotionActivityConfidence.Low &&
-                (activity.walking || activity.running || activity.cycling || activity.automotive)) {
+                (activity.running || activity.cycling || activity.automotive)) {
                 var activityType = Trip.ActivityType.Unknown
 
                 if (activity.walking) {
@@ -267,16 +276,17 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.motionCheckStartDate = NSDate()
         DDLogWrapper.logVerbose("Checkign motin to continue active tracking…")
         
-        self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
-            DDLogWrapper.logVerbose("Background task expired! Continuing active tracking…")
-            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
-            self.stopMotionTracking()
-        })
+        if (self.motionBackgroundTaskID == UIBackgroundTaskInvalid) {
+            self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
+                DDLogWrapper.logVerbose("Background task expired! Continuing active tracking…")
+                self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
+                self.stopMotionTracking()
+            })
+        }
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
             if (//(activity.confidence != CMMotionActivityConfidence.Low) &&
-                ((activity.walking && self.currentTrip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) ||
-                (activity.running && self.currentTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) ||
+                ((activity.running && self.currentTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) ||
                 (activity.cycling && self.currentTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) ||
                 (activity.automotive  && self.currentTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue))) {
                     // continue tracking

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A388a" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B17" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Location" representedClassName="HoneyBee.Location" syncable="YES">
         <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
@@ -16,7 +16,7 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="148"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="150"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="103"/>
     </elements>
 </model>

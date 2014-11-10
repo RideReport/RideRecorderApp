@@ -12,6 +12,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     
     private var trips : [Trip]! = nil
+    private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +20,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.trips = Trip.allTrips() as [Trip]!
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        
+        self.dateFormatter = NSDateFormatter()
+        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH;mm;ss"
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -37,7 +42,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (tableCell == nil) {
             tableCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseID)
         }
-        tableCell!.textLabel.text = trip.creationDate.description
+        tableCell!.textLabel.text = self.dateFormatter.stringFromDate(trip.creationDate)
         if (trip.locations != nil) {
             tableCell!.detailTextLabel!.text = NSString(format: "Points: %i", trip.locations.count)
         } else {
