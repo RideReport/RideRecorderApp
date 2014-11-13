@@ -22,10 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // setup the file logger
         DDLog.addLogger(UIForLumberjack.sharedInstance())
         
-        // fire up Core Data
-        CoreDataController.sharedCoreDataController.startup()
-        RouteMachine.sharedMachine.startup()
-        
         // setup Knock to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
@@ -34,6 +30,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.fileLogger.rollingFrequency = 60 * 60 * 24
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
+        
+        DDLogWrapper.logInfo("========================STARTING HONEYBEE APP========================")
+        
+        // fire up Core Data
+        CoreDataController.sharedCoreDataController.startup()
+        RouteMachine.sharedMachine.startup()
+        
         
         return true
     }

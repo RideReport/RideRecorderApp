@@ -234,6 +234,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
+            DDLogWrapper.logVerbose(NSString(format: "Activity: %@", activity))
+            
             if (//activity.confidence != CMMotionActivityConfidence.Low &&
                 (activity.running || activity.cycling || activity.automotive)) {
                 var activityType = Trip.ActivityType.Unknown
