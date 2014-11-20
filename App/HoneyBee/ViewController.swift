@@ -13,6 +13,7 @@ import MapKit
 class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var smoothUnsmoothButton: UIButton!
+    @IBOutlet weak var queryCMButton: UIButton!
     
     private var geofenceCircle : MKCircle!
     private var tripPolyLines : [MKPolyline]!
@@ -20,8 +21,14 @@ class ViewController: UIViewController, MKMapViewDelegate {
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
     
+    private var dateFormatter : NSDateFormatter!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.dateFormatter = NSDateFormatter()
+        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
         
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
@@ -36,7 +43,17 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         if (Trip.allTrips()?.count > 0) {
             self.setSelectedTrip(Trip.allTrips()!.first as Trip)
-        }        
+        } else {
+            self.setSelectedTrip(nil)
+        }
+    }
+    
+    @IBAction func queryCM(sender: AnyObject) {
+        self.queryCMButton.setTitle("....", forState: UIControlState.Normal)
+
+        self.selectedTrip.clasifyActivityType({
+            self.setSelectedTrip(self.selectedTrip)
+        })
     }
     
     @IBAction func smoothUnSmooth(sender: AnyObject) {
@@ -46,7 +63,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 self.setSelectedTrip(self.selectedTrip)
             })
         } else {
-            self.selectedTrip.smoothIfNeededWithCompletionHandler({
+            self.selectedTrip.smoothIfNeeded({
                 self.setSelectedTrip(self.selectedTrip)
             })
         }
@@ -62,8 +79,19 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     // MARK: - Update Map UI
-    func setSelectedTrip(trip : Trip) {
+    func setSelectedTrip(trip : Trip!) {
         self.selectedTrip = trip
+        
+        if (trip == nil) {
+            self.queryCMButton.hidden = true
+            self.smoothUnsmoothButton.hidden = true
+            return
+        } else {
+            self.queryCMButton.hidden = false
+            self.queryCMButton.setTitle("Query CM", forState: UIControlState.Normal)
+            
+            self.smoothUnsmoothButton.hidden = false
+        }
         
         if (trip.hasSmoothed) {
             self.smoothUnsmoothButton.setTitle("Unsmooth", forState: UIControlState.Normal)
@@ -81,17 +109,24 @@ class ViewController: UIViewController, MKMapViewDelegate {
         var coordinates : [CLLocationCoordinate2D] = []
         var count : Int = 0
         for location in trip.locations.array {
-            let coord = (location as Location).coordinate()
+            let location = (location as Location)
+            let coord = location.coordinate()
             coordinates.append(coord)
             count++
             let annotation = MKPointAnnotation()
             annotation.coordinate = coord
             
-            if ((location as Location).isSmoothedLocation) {
+            if (location.isSmoothedLocation) {
                 annotation.title = NSString(format: "%i**", count)
             } else {
                 annotation.title = NSString(format: "%i", count)
             }
+            if (location.date != nil) {
+                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date), location.speed)
+            } else {
+                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed)
+            }
+            
             self.mapView.addAnnotation(annotation)
             self.tripAnnotations.append(annotation)
         }

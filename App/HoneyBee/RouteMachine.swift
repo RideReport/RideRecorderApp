@@ -5,22 +5,6 @@
 //  Created by William Henderson on 10/27/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
 //
-// The basic strategy for this approach is as follows:
-
-//  INITIAL STATE: Wake up due to background app refresh and/or geofence exit
-//
-//  - check motion activity. are we cycling?
-//      - NO
-//          - Are stationary?
-//              - YES: set a geofence, go to sleep, back to begining
-//      - NO
-//          - how long have we been moving? add time stamp to map. guess starting location my extrapolating in a straight line based on distance, speed and heading
-//  - turn on location tracking, motion tracking
-//      - get a location update
-//      - add location to current route
-//  - get a motion update
-//      - are we still moving?
-//      - NO: end route, go to sleep, back to begining
 
 import Foundation
 import CoreLocation
@@ -32,22 +16,20 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     
     private var isDefferringLocationUpdates : Bool = false
-    private var shouldEndTripAfterReceivingDeferredUpdates : Bool = false
     
     private var locationManager : CLLocationManager!
-    public private(set) var geofenceSleepRegion :  CLCircularRegion!
+    internal private(set) var geofenceSleepRegion :  CLCircularRegion!
     private(set) var geofenceSleepLocation :  CLLocation!
-    private var shouldStopTrackingAfterNextLocationUpdate : Bool = false
+    private var lastMovingLocation :  CLLocation!
+    private var geofenceExitDate : NSDate!;
     
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
-    private var motionCheckStartDate : NSDate!;
-    private var motionBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    private var motionCheckStartDate : NSDate!
     let motionStartTimeoutInterval : NSTimeInterval = 30
     let motionContinueTimeoutInterval : NSTimeInterval = 60
     
-    
-    public private(set) var currentTrip : Trip!
+    internal private(set) var currentTrip : Trip!
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -65,9 +47,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     override init () {
         self.locationManager = CLLocationManager()
-        self.locationManager.distanceFilter = kCLDistanceFilterNone // must be set to none for deferred location updates
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
+        self.locationManager.distanceFilter = 8
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
+        self.locationManager.pausesLocationUpdatesAutomatically = false
         
         self.motionQueue = NSOperationQueue.mainQueue()
         self.motionActivityManager = CMMotionActivityManager()
@@ -82,14 +65,20 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     // MARK: - State Machine
     
-    func startActivelyTrackingWithActivityType(activityType: Trip.ActivityType) {
+    func startActivelyTracking() {
         if (self.currentTrip != nil) {
             return
         }
         
+        #if DEBUG
+            let notif = UILocalNotification()
+            notif.alertBody = "Starting Active Tracking"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        #endif
+        
         DDLogWrapper.logInfo("Starting Active Tracking")
         
-        self.currentTrip = Trip(activityType: activityType)
+        self.currentTrip = Trip()
         CoreDataController.sharedCoreDataController.saveContext()
         
         if (self.geofenceSleepLocation != nil) {
@@ -99,14 +88,20 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         CoreDataController.sharedCoreDataController.saveContext()
         
-        // acquire a location to base the geofence on
+        self.lastMovingLocation = nil
         self.locationManager.startUpdatingLocation()
     }
     
     func stopActivelyTrackingIfNeeded() {
-        if (self.currentTrip == nil || self.shouldEndTripAfterReceivingDeferredUpdates) {
+        if (self.currentTrip == nil) {
             return
         }
+        
+        #if DEBUG
+            let notif = UILocalNotification()
+            notif.alertBody = "Stopping Active Tracking"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        #endif
         
         DDLogWrapper.logInfo("Stopping Active Tracking")
         
@@ -115,9 +110,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
         }
         
-        // wait for the last locations for the trip to come in before closing it out.
-        self.locationManager.disallowDeferredLocationUpdates()
-        self.shouldStopTrackingAfterNextLocationUpdate = true
+        self.currentTrip = nil
+        self.enterGeofenceSleep()
     }
     
     func enterGeofenceSleep() {
@@ -129,9 +123,29 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.geofenceSleepRegion = nil
         self.geofenceSleepLocation = nil
+        self.geofenceExitDate = nil
         
         // acquire a location to base the geofence on
         self.locationManager.startUpdatingLocation()
+    }
+    
+    func startDeferringUpdates() {
+        if (!self.isDefferringLocationUpdates) {
+            self.locationManager.distanceFilter = 8 // must be set to none for deferred location updates
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
+            
+            DDLogWrapper.logVerbose("Started deferring updates")
+            
+            self.isDefferringLocationUpdates = true
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+        }
+    }
+    
+    func stopDeferringUpdates() {
+        self.locationManager.disallowDeferredLocationUpdates()
+        
+        self.locationManager.distanceFilter = kCLDistanceFilterNone
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
 
     // MARK: - CLLocationManger
@@ -139,13 +153,21 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
-            self.checkMotionToStartActiveTracking()
+            self.locationManager.startUpdatingLocation()
             #if (arch(i386) || arch(x86_64)) && os(iOS)
                 // simulator.
             #endif
         } else {
             // tell the user they need to give us access to the zion mainframes
         }
+    }
+    
+    func locationManagerDidPauseLocationUpdates(manager: CLLocationManager!) {
+        DDLogWrapper.logVerbose("Did Pause location updates!")
+    }
+    
+    func locationManagerDidResumeLocationUpdates(manager: CLLocationManager!) {
+        DDLogWrapper.logVerbose("Did Resume location updates!")
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
@@ -159,37 +181,28 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
-        if (!self.isDefferringLocationUpdates) {
-            DDLogWrapper.logVerbose("Started deferring updates")
-            
-            self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
-        }
-        
-        if (self.currentTrip != nil) {            
-            // add the location
-            DDLogWrapper.logVerbose("Got new active tracking location")
-
+        if (self.currentTrip != nil) {
             for location in locations {
-                Location(location: location as CLLocation, trip: self.currentTrip)
-            }
-            CoreDataController.sharedCoreDataController.saveContext()
-            
-            NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
-            
-            if (self.shouldStopTrackingAfterNextLocationUpdate) {
-                // last locations for the trip have come in, close it out.
-                self.currentTrip = nil
-                self.enterGeofenceSleep()
-            } else {
-                let mostRecentLocation = locations.last
-                if (mostRecentLocation?.speed > 3) {
-                    // if the speed is above 3 meters per second, keep tracking
-                    self.stopMotionTracking()
+                DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
+                if (location.speed < 0 || location.speed > 1) {
+                    // if the speed is above 1 meters per second, keep tracking
+                    DDLogWrapper.logVerbose("Got new active tracking location")
+                    
+                    self.lastMovingLocation = location
+                    Location(location: location as CLLocation, trip: self.currentTrip)
                 } else {
-                    // otherwise, check the acceleromtere for recent data
-                    self.checkMotionToContinueActiveTracking()
+                    DDLogWrapper.logVerbose("Moving slow, ignoring location point")
                 }
+            }
+            
+            if ((self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0) ||
+                (self.geofenceExitDate != nil && abs(self.geofenceExitDate.timeIntervalSinceNow) > 40.0)){
+                // otherwise, check the acceleromtere for recent data
+                DDLogWrapper.logVerbose("Moving too slow for too long")
+                self.stopActivelyTrackingIfNeeded()
+            } else {
+                CoreDataController.sharedCoreDataController.saveContext()
+                NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
             }
         } else if (self.geofenceSleepRegion == nil) {
             // we've got a location base the geofence sleep region on now
@@ -213,94 +226,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
         if (self.geofenceSleepRegion != nil && self.geofenceSleepRegion! == region) {
             DDLogWrapper.logVerbose("Exited geofence")
-            
-            self.checkMotionToStartActiveTracking()
+            self.geofenceExitDate = NSDate()
+            self.startActivelyTracking()
         }
     }
     
-    // MARK: - CMMotionActivityManager
-    
-    func checkMotionToStartActiveTracking() {
-        self.motionCheckStartDate = NSDate()
-        DDLogWrapper.logVerbose("Checkign motin to start active tracking…")
-        
-        if (self.motionBackgroundTaskID == UIBackgroundTaskInvalid) {
-            self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
-                DDLogWrapper.logVerbose("Background task expired! Stoping active tracking check")
-                self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
-                self.stopMotionTracking()
-                self.enterGeofenceSleep()
-            })
-        }
-        
-        self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
-            DDLogWrapper.logVerbose(NSString(format: "Activity: %@", activity))
-            
-            if (//activity.confidence != CMMotionActivityConfidence.Low &&
-                (activity.running || activity.cycling || activity.automotive)) {
-                var activityType = Trip.ActivityType.Unknown
-
-                if (activity.walking) {
-                    activityType = Trip.ActivityType.Walking
-                } else if (activity.running) {
-                    activityType = Trip.ActivityType.Running
-                } else if (activity.cycling) {
-                    activityType = Trip.ActivityType.Cycling
-                } else if (activity.automotive) {
-                    activityType = Trip.ActivityType.Running
-                } else {
-                    activityType = Trip.ActivityType.Unknown
-                }
-                
-                DDLogWrapper.logVerbose("Found matching activity for starting active tracking")
-                self.stopMotionTracking()
-                self.startActivelyTrackingWithActivityType(activityType)
-            } else {
-                if (abs(self.motionCheckStartDate!.timeIntervalSinceNow) > self.motionStartTimeoutInterval) {
-                    DDLogWrapper.logVerbose("Did NOT find matching activity for starting active tracking")
-                    self.stopMotionTracking()
-                    self.enterGeofenceSleep()
-                }
-            }
-        })
-    }
-    
-    func stopMotionTracking() {
-        self.motionActivityManager.stopActivityUpdates()
-        
-        if (self.motionBackgroundTaskID != UIBackgroundTaskInvalid) {
-            UIApplication.sharedApplication().endBackgroundTask(self.motionBackgroundTaskID)
-            self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
-        }
-    }
-    
-    func checkMotionToContinueActiveTracking() {
-        self.motionCheckStartDate = NSDate()
-        DDLogWrapper.logVerbose("Checkign motin to continue active tracking…")
-        
-        if (self.motionBackgroundTaskID == UIBackgroundTaskInvalid) {
-            self.motionBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({
-                DDLogWrapper.logVerbose("Background task expired! Continuing active tracking…")
-                self.motionBackgroundTaskID = UIBackgroundTaskInvalid;
-                self.stopMotionTracking()
-            })
-        }
-        
-        self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) in
-            if (//(activity.confidence != CMMotionActivityConfidence.Low) &&
-                ((activity.running && self.currentTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) ||
-                (activity.cycling && self.currentTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) ||
-                (activity.automotive  && self.currentTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue))) {
-                    // continue tracking
-                    DDLogWrapper.logVerbose("Found matching activity for continuing active tracking")
-                    self.stopMotionTracking()
-            } else {
-                if (abs(self.motionCheckStartDate!.timeIntervalSinceNow) > self.motionContinueTimeoutInterval) {
-                    DDLogWrapper.logVerbose("Did NOT find matching activity for continuing active tracking")
-                    self.stopMotionTracking()
-                    self.stopActivelyTrackingIfNeeded()
-                }
-            }
-        })
+    func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
+        self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
     }
 }

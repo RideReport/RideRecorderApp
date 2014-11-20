@@ -14,11 +14,11 @@
 		<string>github.com:quicklywilliam/HoneyBee.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>HoneyBee.xcworkspace</string>
+	<string>App/HoneyBee.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
-		<string>..</string>
+		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:quicklywilliam/HoneyBee.git</string>

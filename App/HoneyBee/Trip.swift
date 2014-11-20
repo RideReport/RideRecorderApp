@@ -11,6 +11,7 @@ import Foundation
 import Foundation
 import CoreData
 import CoreLocation
+import CoreMotion
 import MapKit
 
 class Trip : NSManagedObject {
@@ -23,21 +24,19 @@ class Trip : NSManagedObject {
     }
     
     @NSManaged var activityType : NSNumber
-    @NSManaged var creationDate : NSDate!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
+    @NSManaged var creationDate : NSDate!
     
-    convenience init(activityType: Trip.ActivityType) {
+    convenience init() {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
-        
-        self.activityType = NSNumber(short: activityType.rawValue)
+        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)        
     }
     
     class func allTrips() -> [AnyObject]? {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
@@ -98,7 +97,7 @@ class Trip : NSManagedObject {
         handler()
     }
     
-    func smoothIfNeededWithCompletionHandler(handler: ()->Void) {
+    func smoothIfNeeded(handler: ()->Void) {
         if (self.locations.count < 2 || self.hasSmoothed) {
             return
         }
@@ -139,6 +138,79 @@ class Trip : NSManagedObject {
 //            location1.managedObjectContext.deleteObject(location1)
             
             DDLogWrapper.logVerbose("Route smoothed!")
+            CoreDataController.sharedCoreDataController.saveContext()
+            
+            handler()
+        }
+    }
+    
+    var startDate : NSDate! {
+        return self.locations.firstObject?.date
+    }
+    
+    var endDate : NSDate!! {
+        return self.locations.lastObject?.date
+    }
+    
+    var averageSpeed : CLLocationSpeed {
+        var sumSpeed : Double = 0.0
+        var count = 0
+        for location in self.locations.array {
+            if (location as Location).speed.doubleValue > 0 {
+                count++
+                sumSpeed += (location as Location).speed.doubleValue
+            }
+        }
+        
+        return sumSpeed/Double(count)
+    }
+    
+    func clasifyActivityType(handler: ()->Void) {
+        RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
+            var walkScore = 0
+            var runScore = 0
+            var autoScore = 0
+            var cycleScore = 0
+            for activity in activities {
+                let theActivity = (activity as CMMotionActivity)
+                if (theActivity.walking) {
+                    walkScore += theActivity.confidence.rawValue
+                }
+                if (theActivity.running) {
+                    runScore += theActivity.confidence.rawValue
+                }
+                if (theActivity.automotive) {
+                    autoScore += theActivity.confidence.rawValue
+                }
+                if (theActivity.cycling) {
+                    cycleScore += theActivity.confidence.rawValue
+                }
+            }
+            
+            var scores = [walkScore, runScore, autoScore, cycleScore]
+            scores.sort{$1 < $0}
+            if scores[0] == 0 {
+                // if no one scored, possibly because there was no activity data available, fall back on speeds.
+                if (self.averageSpeed >= 3) {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+                } else {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+                }
+            } else if scores[0] == cycleScore {
+                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            } else if scores[0] == walkScore {
+                if (self.averageSpeed >= 3) {
+                    // Core Motion misidentifies cycling as walking, particularly when your phone is in your pocket during the ride
+                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+                } else {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+                }
+            } else if scores[0] == autoScore {
+                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+            } else if scores[0] == runScore {
+                self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
+            }
+            
             CoreDataController.sharedCoreDataController.saveContext()
             
             handler()

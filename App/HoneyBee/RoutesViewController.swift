@@ -23,7 +23,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "yyyy-MM-dd 'at' HH;mm;ss"
+        self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -42,7 +42,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (tableCell == nil) {
             tableCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseID)
         }
-        tableCell!.textLabel.text = self.dateFormatter.stringFromDate(trip.creationDate)
+        if (trip.startDate != nil) {
+            tableCell!.textLabel.text = self.dateFormatter.stringFromDate(trip.startDate)
+        }
         if (trip.locations != nil) {
             tableCell!.detailTextLabel!.text = NSString(format: "Points: %i", trip.locations.count)
         } else {
@@ -59,5 +61,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.Delete) {
+            let trip : Trip = self.trips[indexPath.row]
+            trip.managedObjectContext?.deleteObject(trip)
+            CoreDataController.sharedCoreDataController.saveContext()
+            
+            self.trips = Trip.allTrips() as [Trip]!
+            self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        }
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
     }
 }

@@ -1,0 +1,31 @@
+- REREAD THIS: http://stackoverflow.com/questions/20083032/coremotion-updates-in-background-state
+- ISSUE: not getting activity tracking data, which is starving the run loop and causing our background task to expire.
+- NOTES FROM READING LOG ON DESKTOP:
+  - Geofence exit took ~10 minutes to fire. (around belmont st on the way home)
+  - every GPS update is scheduling a background task
+    - background tasks are expiring (after around 4 mins)
+  - it split the thing into two trips for some reason
+    - that's because it crashed due to the background task expiring. huh.
+  - the new route was started when i opened my phone in the oaks bottom parking lot
+    - however, it first dumped some stale locations from back on division street (locations 1-3)
+
+
+- look at startMonitoringVisits, use to end/begin trips instead of the geofence?
+  - or to collect more precise starting-at/designation information
+- 
+
+
+//  INITIAL STATE: Wake up due to background app refresh and/or geofence exit
+//
+//  - check motion activity. are we cycling?
+//      - NO
+//          - Are stationary?
+//              - YES: set a geofence, go to sleep, back to begining
+//      - NO
+//          - how long have we been moving? add time stamp to map. guess starting location my extrapolating in a straight line based on distance, speed and heading
+//  - turn on location tracking, motion tracking
+//      - get a location update
+//      - add location to current route
+//  - get a motion update
+//      - are we still moving?
+//      - NO: end route, go to sleep, back to begining

@@ -1,0 +1,1 @@
+PODS_UIFORLUMBERJACK_OTHER_LDFLAGS = -framework Foundation -framework UIKit

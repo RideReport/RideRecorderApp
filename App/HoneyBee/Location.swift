@@ -21,6 +21,7 @@ class Location : NSManagedObject {
     @NSManaged var longitude : NSNumber
     @NSManaged var speed : NSNumber
     @NSManaged var trip : Trip!
+    @NSManaged var date : NSDate!
     
     convenience init(location: CLLocation, trip: Trip) {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
@@ -33,6 +34,7 @@ class Location : NSManagedObject {
         self.latitude = NSNumber(double: location.coordinate.latitude)
         self.longitude = NSNumber(double: location.coordinate.longitude)
         self.speed = NSNumber(double: location.speed)
+        self.date = location.timestamp
     }
     
     func coordinate() -> CLLocationCoordinate2D {
