@@ -122,9 +122,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 annotation.title = NSString(format: "%i", count)
             }
             if (location.date != nil) {
-                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date), location.speed)
+                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date), location.speed.doubleValue)
             } else {
-                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed)
+                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed.doubleValue)
             }
             
             self.mapView.addAnnotation(annotation)

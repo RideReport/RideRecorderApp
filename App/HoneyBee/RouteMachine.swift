@@ -129,24 +129,24 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.startUpdatingLocation()
     }
     
-    func startDeferringUpdates() {
-        if (!self.isDefferringLocationUpdates) {
-            self.locationManager.distanceFilter = 8 // must be set to none for deferred location updates
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
-            
-            DDLogWrapper.logVerbose("Started deferring updates")
-            
-            self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
-        }
-    }
-    
-    func stopDeferringUpdates() {
-        self.locationManager.disallowDeferredLocationUpdates()
-        
-        self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    }
+//    func startDeferringUpdates() {
+//        if (!self.isDefferringLocationUpdates) {
+//            self.locationManager.distanceFilter = 8 // must be set to none for deferred location updates
+//            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
+//            
+//            DDLogWrapper.logVerbose("Started deferring updates")
+//            
+//            self.isDefferringLocationUpdates = true
+//            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+//        }
+//    }
+//    
+//    func stopDeferringUpdates() {
+//        self.locationManager.disallowDeferredLocationUpdates()
+//        
+//        self.locationManager.distanceFilter = kCLDistanceFilterNone
+//        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+//    }
 
     // MARK: - CLLocationManger
     
@@ -159,6 +159,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             #endif
         } else {
             // tell the user they need to give us access to the zion mainframes
+            DDLogWrapper.logVerbose("Not authorized for location access!")
         }
     }
     
@@ -196,7 +197,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             }
             
             if ((self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0) ||
-                (self.geofenceExitDate != nil && abs(self.geofenceExitDate.timeIntervalSinceNow) > 40.0)){
+                (self.lastMovingLocation == nil && self.geofenceExitDate != nil && abs(self.geofenceExitDate.timeIntervalSinceNow) > 40.0)){
                 // otherwise, check the acceleromtere for recent data
                 DDLogWrapper.logVerbose("Moving too slow for too long")
                 self.stopActivelyTrackingIfNeeded()
