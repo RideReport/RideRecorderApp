@@ -69,6 +69,10 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    @IBAction func startRoute(sender: AnyObject) {
+        RouteMachine.sharedMachine.startActivelyTracking()
+    }
+    
     @IBAction func logs(sender: AnyObject) {
         UIForLumberjack.sharedInstance().showLogInView(self.view)
     }
@@ -192,16 +196,16 @@ class ViewController: UIViewController, MKMapViewDelegate {
             let view = MKPolylineRenderer(polyline:(overlay as MKPolyline))
         
             if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                view.strokeColor = UIColor.yellowColor()
+                view.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(0.7)
             } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                view.strokeColor = UIColor.orangeColor()
+                view.strokeColor = UIColor.orangeColor().colorWithAlphaComponent(0.7)
             } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                view.strokeColor = UIColor.greenColor()
+                view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(0.7)
             } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                view.strokeColor = UIColor.redColor()
+                view.strokeColor = UIColor.redColor().colorWithAlphaComponent(0.7)
             } else {
                 // unknown
-                view.strokeColor = UIColor.grayColor()
+                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(0.7)
             }
             view.lineWidth = 4
             return view;

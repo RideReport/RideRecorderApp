@@ -17,6 +17,8 @@
 		846717631A019A0D00851AD5 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataController.swift */; };
 		846717641A019A1300851AD5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		846717651A019A1700851AD5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* ViewController.swift */; };
+		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
+		847862201A267BB600176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8478621F1A267BB600176500 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
 		847A05681A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -52,6 +54,7 @@
 		844531851A0023580096F26E /* DDLogWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLogWrapper.h; sourceTree = "<group>"; };
 		844531861A0023580096F26E /* DDLogWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLogWrapper.m; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachineTests.swift; sourceTree = "<group>"; };
+		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trip.swift; path = HoneyBee/Trip.swift; sourceTree = "<group>"; };
 		847A05661A01B2FE008F5371 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Location.swift; path = HoneyBee/Location.swift; sourceTree = "<group>"; };
 		847A056E1A02E757008F5371 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
@@ -64,7 +67,6 @@
 		84D1555E19D2733500316995 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		84D1556119D2733500316995 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		84D1556719D2733500316995 /* HoneyBeeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HoneyBeeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		84D1556C19D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1556D19D2733500316995 /* HoneyBeeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoneyBeeTests.swift; sourceTree = "<group>"; };
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
@@ -115,7 +117,6 @@
 		8445317819FEEB4D0096F26E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				84D1555419D2733500316995 /* AppDelegate.swift */,
 				84D1555919D2733500316995 /* ViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 			);
@@ -166,6 +167,7 @@
 		84D1555119D2733500316995 /* HoneyBee */ = {
 			isa = PBXGroup;
 			children = (
+				84D1555419D2733500316995 /* AppDelegate.swift */,
 				8445317B19FF031D0096F26E /* Model */,
 				8445317719FEEB2A0096F26E /* Machines */,
 				8445317819FEEB4D0096F26E /* View Controllers */,
@@ -191,6 +193,7 @@
 		84D1556A19D2733500316995 /* HoneyBeeTests */ = {
 			isa = PBXGroup;
 			children = (
+				8478621F1A267BB600176500 /* Info.plist */,
 				8467175B1A01729C00851AD5 /* GPX Files */,
 				84D1556D19D2733500316995 /* HoneyBeeTests.swift */,
 				8467175E1A01966C00851AD5 /* RouteMachineTests.swift */,
@@ -202,7 +205,6 @@
 		84D1556B19D2733500316995 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				84D1556C19D2733500316995 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -289,6 +291,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8478621E1A267B6900176500 /* Info.plist in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
@@ -299,6 +302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				847862201A267BB600176500 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

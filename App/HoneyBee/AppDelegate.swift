@@ -19,6 +19,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        let rideCompleteAction = UIMutableUserNotificationAction()
+        rideCompleteAction.identifier = "RIDE_COMPLETION_IDENTIFIER"
+        rideCompleteAction.title = "Log"
+        rideCompleteAction.activationMode = UIUserNotificationActivationMode.Background
+        rideCompleteAction.destructive = false
+        rideCompleteAction.authenticationRequired = false
+        
+        let rideCompleteCategory = UIMutableUserNotificationCategory()
+        rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
+        rideCompleteCategory.setActions([rideCompleteAction], forContext: UIUserNotificationActionContext.Minimal)
+        
+        let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
+        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        
         // setup the file logger
         DDLog.addLogger(UIForLumberjack.sharedInstance())
         

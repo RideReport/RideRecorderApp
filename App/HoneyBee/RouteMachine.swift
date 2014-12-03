@@ -47,10 +47,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     override init () {
         self.locationManager = CLLocationManager()
-        self.locationManager.distanceFilter = 8
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager.distanceFilter = 0
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
         self.locationManager.pausesLocationUpdatesAutomatically = false
+        self.locationManager.disallowDeferredLocationUpdates()
         
         self.motionQueue = NSOperationQueue.mainQueue()
         self.motionActivityManager = CMMotionActivityManager()
