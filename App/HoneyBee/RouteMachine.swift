@@ -11,17 +11,16 @@ import CoreLocation
 import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
-    let geofenceSleepRegionRadius : Double = 30
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     
     private var isDefferringLocationUpdates : Bool = false
     
+    private var isInLowPowerState : Bool = false
+    
     private var locationManager : CLLocationManager!
-    internal private(set) var geofenceSleepRegion :  CLCircularRegion!
-    private(set) var geofenceSleepLocation :  CLLocation!
     private var lastMovingLocation :  CLLocation!
-    private var geofenceExitDate : NSDate!;
+    private var stoppedMovingLocation :  CLLocation!
     
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
@@ -47,8 +46,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     override init () {
         self.locationManager = CLLocationManager()
-        self.locationManager.distanceFilter = 0
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
         self.locationManager.pausesLocationUpdatesAutomatically = false
         self.locationManager.disallowDeferredLocationUpdates()
@@ -66,7 +63,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     // MARK: - State Machine
     
-    func startActivelyTracking() {
+    func startActiveTracking() {
         if (self.currentTrip != nil) {
             return
         }
@@ -74,6 +71,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         #if DEBUG
             let notif = UILocalNotification()
             notif.alertBody = "Starting Active Tracking"
+            notif.category = "RIDE_COMPLETION_CATEGORY"
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
         #endif
         
@@ -82,27 +80,29 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.currentTrip = Trip()
         CoreDataController.sharedCoreDataController.saveContext()
         
-        if (self.geofenceSleepLocation != nil) {
-            // set up the first point at the geofence exit as the first location in thr trip
-            let newLocation = Location(location: self.geofenceSleepLocation!, trip: self.currentTrip)
+        if (self.stoppedMovingLocation != nil) {
+            // set up the stoppedMovingLocation as the first location in thr trip
+            let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip)
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
         
+        self.stoppedMovingLocation = nil
         self.lastMovingLocation = nil
-        self.locationManager.startUpdatingLocation()
+        
+        self.enterHighPowerState()
     }
     
     func stopActivelyTrackingIfNeeded() {
         if (self.currentTrip == nil) {
             return
         }
+
         
-        #if DEBUG
-            let notif = UILocalNotification()
-            notif.alertBody = "Stopping Active Tracking"
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-        #endif
+        let notif = UILocalNotification()
+        notif.alertBody = "🚴💨 You biked 1.5 miles from Lower Burnside -> Downtown. What'd you think?"
+        notif.category = "RIDE_COMPLETION_CATEGORY"
+        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
         
         DDLogWrapper.logInfo("Stopping Active Tracking")
         
@@ -112,22 +112,24 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         self.currentTrip = nil
-        self.enterGeofenceSleep()
+        self.enterLowPowerState()
     }
     
-    func enterGeofenceSleep() {
-        DDLogWrapper.logInfo("Entering geofence sleep")
+    func enterLowPowerState() {
+        DDLogWrapper.logInfo("Entering low power state")
         
-        for region in self.locationManager.monitoredRegions {
-            self.locationManager.stopMonitoringForRegion(region as CLRegion)
-        }
+        self.locationManager.distanceFilter = 50
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        self.isInLowPowerState = true
+    }
+    
+    func enterHighPowerState() {
+        DDLogWrapper.logInfo("Entering HIGH power state")
         
-        self.geofenceSleepRegion = nil
-        self.geofenceSleepLocation = nil
-        self.geofenceExitDate = nil
+        self.locationManager.distanceFilter = 10
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
-        // acquire a location to base the geofence on
-        self.locationManager.startUpdatingLocation()
+        self.isInLowPowerState = false
     }
     
 //    func startDeferringUpdates() {
@@ -154,6 +156,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
+            self.enterLowPowerState()
             self.locationManager.startUpdatingLocation()
             #if (arch(i386) || arch(x86_64)) && os(iOS)
                 // simulator.
@@ -197,39 +200,38 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             }
             
-            if ((self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0) ||
-                (self.lastMovingLocation == nil && self.geofenceExitDate != nil && abs(self.geofenceExitDate.timeIntervalSinceNow) > 40.0)){
+            if ((self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0)){
                 // otherwise, check the acceleromtere for recent data
                 DDLogWrapper.logVerbose("Moving too slow for too long")
+                self.stoppedMovingLocation = locations[0]
                 self.stopActivelyTrackingIfNeeded()
             } else {
                 CoreDataController.sharedCoreDataController.saveContext()
                 NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
             }
-        } else if (self.geofenceSleepRegion == nil) {
-            // we've got a location base the geofence sleep region on now
-            DDLogWrapper.logVerbose("Got geofence sleep region location")
+        } else if (self.isInLowPowerState) {
+            var foundMovement = false
+            for location in locations {
+                DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
+                if (location.speed > 1) {
+                    // if the speed is above 1 meters per second, start tracking
+                    DDLogWrapper.logVerbose("Found movement while in low power state")
+                    foundMovement = true
+                    break
+                }
+            }
             
-            // TODO: we just use the first location we get. should we check the accuracy first?
-            if (locations.count > 0) {
-                self.geofenceSleepLocation = locations.first!
+            if (foundMovement) {
+                self.startActiveTracking()
                 
-                self.geofenceSleepRegion = CLCircularRegion(center: self.geofenceSleepLocation.coordinate, radius: self.geofenceSleepRegionRadius, identifier: "Movement Geofence")
-                self.locationManager.startMonitoringForRegion(self.geofenceSleepRegion)
-                NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdateGeofence", object: nil)
-                
-                self.locationManager.stopUpdatingLocation()                
+                for location in locations {
+                    Location(location: location as CLLocation, trip: self.currentTrip)
+                }
+            } else {
+               DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
             }
         } else {
             DDLogWrapper.logVerbose("Skipped location update!")
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
-        if (self.geofenceSleepRegion != nil && self.geofenceSleepRegion! == region) {
-            DDLogWrapper.logVerbose("Exited geofence")
-            self.geofenceExitDate = NSDate()
-            self.startActivelyTracking()
         }
     }
     

@@ -19,16 +19,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        let rideCompleteAction = UIMutableUserNotificationAction()
-        rideCompleteAction.identifier = "RIDE_COMPLETION_IDENTIFIER"
-        rideCompleteAction.title = "Log"
-        rideCompleteAction.activationMode = UIUserNotificationActivationMode.Background
-        rideCompleteAction.destructive = false
-        rideCompleteAction.authenticationRequired = false
+        let goodRideAction = UIMutableUserNotificationAction()
+        goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
+        goodRideAction.title = "👍"
+        goodRideAction.activationMode = UIUserNotificationActivationMode.Background
+        goodRideAction.destructive = false
+        goodRideAction.authenticationRequired = false
+        
+        let badRideAction = UIMutableUserNotificationAction()
+        badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
+        badRideAction.title = "👎"
+        badRideAction.activationMode = UIUserNotificationActivationMode.Background
+        badRideAction.destructive = true
+        badRideAction.authenticationRequired = false
         
         let rideCompleteCategory = UIMutableUserNotificationCategory()
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
-        rideCompleteCategory.setActions([rideCompleteAction], forContext: UIUserNotificationActionContext.Minimal)
+        rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
         
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
         let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
@@ -56,9 +63,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-
-        completionHandler(UIBackgroundFetchResult.NewData)
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+        if (identifier == "RIDE_COMPLETION_IDENTIFIER") {
+            
+        }
     }
 
     func applicationWillResignActive(application: UIApplication) {

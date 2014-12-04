@@ -62,7 +62,4 @@ class RouteMachineTests: XCTestCase {
         super.tearDown()
     }
 
-    func testRouteMachineShouldSetupGeofenceSleepRegion() {
-        XCTAssertNotNil(RouteMachine.sharedMachine.geofenceSleepRegion, "Geofence Sleep Region should be set!")
-    }
 }

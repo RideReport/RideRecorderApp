@@ -15,7 +15,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var smoothUnsmoothButton: UIButton!
     @IBOutlet weak var queryCMButton: UIButton!
     
-    private var geofenceCircle : MKCircle!
     private var tripPolyLines : [MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
@@ -33,10 +32,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
         
-        NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdateGeofence", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.updateGeofenceUI()
-        }
-        
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
         }
@@ -45,6 +40,27 @@ class ViewController: UIViewController, MKMapViewDelegate {
             self.setSelectedTrip(Trip.allTrips()!.first as Trip)
         } else {
             self.setSelectedTrip(nil)
+        }
+    }
+    
+    @IBAction func queryPlacemarks(sender: AnyObject) {
+        self.selectedTrip.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
+            let title = "Travel information"
+            var message = ""
+            if (startingPlacemark != nil && endingPlacemark != nil) {
+                message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to %@", startingPlacemark.subLocality, endingPlacemark.subLocality)
+            } else if (startingPlacemark != nil) {
+                message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to somewhere", startingPlacemark.subLocality)
+            } else {
+                message = "🚴💨 You biked 1.5 miles from somewhere to somewhere"
+            }
+            
+            let notif = UILocalNotification()
+            notif.alertBody = message
+            notif.category = "RIDE_COMPLETION_CATEGORY"
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3), dispatch_get_main_queue(), { () -> Void in
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            })
         }
     }
     
@@ -70,7 +86,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func startRoute(sender: AnyObject) {
-        RouteMachine.sharedMachine.startActivelyTracking()
+        RouteMachine.sharedMachine.startActiveTracking()
     }
     
     @IBAction func logs(sender: AnyObject) {
@@ -140,22 +156,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.tripPolyLines.append(polyline)        
     }
     
-    func updateGeofenceUI() {
-        if (RouteMachine.sharedMachine.geofenceSleepRegion == nil) {
-            return;
-        }
-        
-        RouteMachine.sharedMachine.geofenceSleepRegion
-        let geofenceRegion : CLCircularRegion = RouteMachine.sharedMachine.geofenceSleepRegion!
-        
-        if (self.geofenceCircle != nil) {
-            self.mapView.removeOverlay(self.geofenceCircle!)
-        }
-        
-        self.geofenceCircle = MKCircle(centerCoordinate: geofenceRegion.center, radius: geofenceRegion.radius)
-        self.mapView.addOverlay(self.geofenceCircle!)
-    }
-    
     // MARK: - Map Kit
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         if (!self.hasCenteredMap) {
@@ -171,22 +171,22 @@ class ViewController: UIViewController, MKMapViewDelegate {
             return nil;
         }
         let reuseID = "ViewControllerMapReuseID"
-        let textLabelTag = 59
+//        let textLabelTag = 59
         var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
         if (annotationView == nil) {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-            let textLabel = UILabel(frame: CGRectMake(7.5, 0, 15, 5))
-            textLabel.backgroundColor = UIColor.clearColor()
-            textLabel.tag = textLabelTag
-            textLabel.font = UIFont.systemFontOfSize(6)
-            
-            annotationView.addSubview(textLabel)
             annotationView.canShowCallout = true
-            annotationView.frame = textLabel.frame
+            
+//            let textLabel = UILabel(frame: CGRectMake(7.5, 0, 15, 5))
+//            textLabel.backgroundColor = UIColor.clearColor()
+//            textLabel.tag = textLabelTag
+//            textLabel.font = UIFont.systemFontOfSize(6)
+//            annotationView.addSubview(textLabel)
+//            annotationView.frame = textLabel.frame
         }
         annotationView.annotation = annotation
-        let textLabel = annotationView.viewWithTag(textLabelTag) as UILabel
-        textLabel.text = annotation.title
+//        let textLabel = annotationView.viewWithTag(textLabelTag) as UILabel
+//        textLabel.text = annotation.title
         
         return annotationView
     }
@@ -207,13 +207,6 @@ class ViewController: UIViewController, MKMapViewDelegate {
                 // unknown
                 view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(0.7)
             }
-            view.lineWidth = 4
-            return view;
-        } else if (overlay.isKindOfClass(MKCircle)) {
-            let view = MKCircleRenderer(circle: overlay as MKCircle)
-            
-            view.fillColor = UIColor.greenColor().colorWithAlphaComponent(0.3)
-            view.strokeColor = UIColor.greenColor()
             view.lineWidth = 4
             return view;
         } else {

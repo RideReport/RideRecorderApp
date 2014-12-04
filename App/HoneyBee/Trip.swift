@@ -60,6 +60,10 @@ class Trip : NSManagedObject {
         self.creationDate = NSDate()
     }
     
+    func duration() -> NSTimeInterval {
+        return fabs(self.startDate.timeIntervalSinceDate(self.endDate))
+    }
+    
     func locationWithCoordinate(coordinate: CLLocationCoordinate2D) -> Location {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         let location = Location.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
@@ -95,6 +99,32 @@ class Trip : NSManagedObject {
         CoreDataController.sharedCoreDataController.saveContext()
         
         handler()
+    }
+    
+    func findStartingAndDestinationPlacemarksWithHandler(handler: (CLPlacemark!, CLPlacemark!)->Void) {
+        if (self.locations.count < 2) {
+            handler(nil, nil)
+            return
+        }
+        
+        let geocoder = CLGeocoder()
+        let startingLocation = self.locations.firstObject as Location
+        let endingLocation = self.locations.lastObject as Location
+        geocoder.reverseGeocodeLocation(startingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+            if (placemarks == nil || placemarks.count == 0) {
+                handler(nil,nil)
+                return
+            }
+            let startingPlacemark = placemarks[0] as CLPlacemark
+            geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+                if (placemarks == nil || placemarks.count == 0) {
+                    handler(startingPlacemark,nil)
+                    return
+                }
+                let endingPlacemark = placemarks[0] as CLPlacemark
+                handler(startingPlacemark, endingPlacemark)
+            })
+        })
     }
     
     func smoothIfNeeded(handler: ()->Void) {

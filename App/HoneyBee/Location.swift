@@ -45,4 +45,8 @@ class Location : NSManagedObject {
         let placemark = MKPlacemark(coordinate: self.coordinate(), addressDictionary: nil)
         return MKMapItem(placemark: placemark)
     }
+    
+    func clLocation() -> CLLocation {
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude.doubleValue, longitude: self.longitude.doubleValue), altitude: 0.0, horizontalAccuracy: self.horizontalAccuracy.doubleValue, verticalAccuracy: 0.0, course: self.course.doubleValue, speed: self.speed.doubleValue, timestamp: self.date)
+    }
 }

@@ -72,7 +72,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sjd-Qr-Q2P">
-                                <rect key="frame" x="11" y="562" width="79" height="30"/>
+                                <rect key="frame" x="11" y="570" width="79" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Start Route">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -81,19 +81,31 @@
                                     <action selector="startRoute:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Kdd-kD-RB4"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rVj-3I-EF8">
+                                <rect key="frame" x="326" y="570" width="126" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Query Placemarks">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="queryPlacemarks:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zXD-Gw-U1a"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="yZb-DC-bGh" secondAttribute="trailing" constant="-8" id="7kd-TK-Hi6"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rVj-3I-EF8" secondAttribute="bottom" id="C09-ZF-yNc"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="XZg-pb-g3U" secondAttribute="bottom" id="FIx-YI-aB2"/>
                             <constraint firstItem="yZb-DC-bGh" firstAttribute="leading" secondItem="XZg-pb-g3U" secondAttribute="trailing" constant="8" id="JBk-R7-pEJ"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="bottom" secondItem="XZg-pb-g3U" secondAttribute="bottom" id="Kqu-iM-Mm7"/>
+                            <constraint firstItem="XZg-pb-g3U" firstAttribute="leading" secondItem="rVj-3I-EF8" secondAttribute="trailing" constant="8" id="Rcz-ko-Uax"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yZb-DC-bGh" secondAttribute="bottom" id="Sit-9Z-KEW"/>
                             <constraint firstAttribute="width" secondItem="EE9-E1-5mv" secondAttribute="width" id="ZV6-jr-wcp"/>
                             <constraint firstItem="sjd-Qr-Q2P" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-5" id="Zgi-pk-EZC"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstAttribute="height" secondItem="E6c-Xj-hL4" secondAttribute="height" id="fUo-0N-i1J"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="sjd-Qr-Q2P" secondAttribute="bottom" constant="8" id="su2-mB-YsZ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="sjd-Qr-Q2P" secondAttribute="bottom" id="su2-mB-YsZ"/>
                         </constraints>
                     </view>
                     <connections>

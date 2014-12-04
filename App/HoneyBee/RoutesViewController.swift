@@ -23,7 +23,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
+        self.dateFormatter.dateFormat = "MM/dd HH:mm"
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -43,13 +43,26 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             tableCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseID)
         }
         if (trip.startDate != nil) {
-            tableCell!.textLabel.text = self.dateFormatter.stringFromDate(trip.startDate)
+            let title = NSString(format: "%@, %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            tableCell!.textLabel.text = title
         }
-        if (trip.locations != nil) {
-            tableCell!.detailTextLabel!.text = NSString(format: "Points: %i", trip.locations.count)
+        if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+            tableCell!.detailTextLabel!.text = "Automotive"
+            tableCell!.detailTextLabel!.textColor = UIColor.redColor()
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+            tableCell!.detailTextLabel!.text = "Walking"
+            tableCell!.detailTextLabel!.textColor = UIColor.yellowColor()
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+            tableCell!.detailTextLabel!.text = "Running"
+            tableCell!.detailTextLabel!.textColor = UIColor.orangeColor()
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            tableCell!.detailTextLabel!.text = "Biking"
+            tableCell!.detailTextLabel!.textColor = UIColor.greenColor()
         } else {
-            tableCell!.detailTextLabel!.text = "No locations"
+            tableCell!.detailTextLabel!.text = "Uncategorized"
+            tableCell!.detailTextLabel!.textColor = UIColor.grayColor()
         }
+
         
         return tableCell!
     }
