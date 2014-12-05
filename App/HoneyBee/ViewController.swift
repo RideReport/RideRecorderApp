@@ -44,24 +44,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func queryPlacemarks(sender: AnyObject) {
-        self.selectedTrip.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
-            let title = "Travel information"
-            var message = ""
-            if (startingPlacemark != nil && endingPlacemark != nil) {
-                message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to %@", startingPlacemark.subLocality, endingPlacemark.subLocality)
-            } else if (startingPlacemark != nil) {
-                message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to somewhere", startingPlacemark.subLocality)
-            } else {
-                message = "🚴💨 You biked 1.5 miles from somewhere to somewhere"
-            }
-            
-            let notif = UILocalNotification()
-            notif.alertBody = message
-            notif.category = "RIDE_COMPLETION_CATEGORY"
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3), dispatch_get_main_queue(), { () -> Void in
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-            })
-        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            self.selectedTrip.sendTripCompletionNotification()
+        })
     }
     
     @IBAction func queryCM(sender: AnyObject) {

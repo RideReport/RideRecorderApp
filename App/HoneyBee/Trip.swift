@@ -127,6 +127,24 @@ class Trip : NSManagedObject {
         })
     }
     
+    func sendTripCompletionNotification() {
+        self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
+            var message = ""
+            if (startingPlacemark != nil && endingPlacemark != nil) {
+            message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to %@", startingPlacemark.subLocality, endingPlacemark.subLocality)
+            } else if (startingPlacemark != nil) {
+            message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to somewhere", startingPlacemark.subLocality)
+            } else {
+            message = "🚴💨 You biked 1.5 miles from somewhere to somewhere"
+            }
+            
+            let notif = UILocalNotification()
+            notif.alertBody = message
+            notif.category = "RIDE_COMPLETION_CATEGORY"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        }
+    }
+    
     func smoothIfNeeded(handler: ()->Void) {
         if (self.locations.count < 2 || self.hasSmoothed) {
             return
