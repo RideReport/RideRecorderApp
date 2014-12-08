@@ -19,7 +19,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var isInLowPowerState : Bool = false
     
     private var locationManager : CLLocationManager!
-    private var lastLocation :  CLLocation!
+    private var lastLowPowerLocation :  CLLocation!
     private var lastMovingLocation :  CLLocation!
     private var stoppedMovingLocation :  CLLocation!
     
@@ -82,8 +82,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         CoreDataController.sharedCoreDataController.saveContext()
         
         if (self.stoppedMovingLocation != nil) {
-            // set up the stoppedMovingLocation as the first location in thr trip
+            // set up the stoppedMovingLocation as the first location in the trip
             let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip)
+            
+            // but give it a recent date.
+            newLocation.date = NSDate()
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
@@ -118,12 +121,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.distanceFilter = 100
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         self.isInLowPowerState = true
+        self.lastLowPowerLocation = nil
     }
     
     func enterHighPowerState() {
         DDLogWrapper.logInfo("Entering HIGH power state")
         
-        self.locationManager.distanceFilter = 10
+        self.locationManager.distanceFilter = 20
         self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
         self.isInLowPowerState = false
@@ -184,40 +188,37 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         if (self.currentTrip != nil) {
-            var foundMovingLocation = false
+            
+            var foundNonNegativeSpeed = false
             
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
-                if (location.speed > 1) {
-                    // if the speed is above 1 meters per second, keep tracking
+                if (location.speed > 0) {
+                    foundNonNegativeSpeed = true
+                }
+                
+                if (location.speed > 3) {
+                    // if the speed is above 3 meters per second, keep tracking
                     DDLogWrapper.logVerbose("Got new active tracking location")
                     
                     self.lastMovingLocation = location
-                    foundMovingLocation = true
                     Location(location: location as CLLocation, trip: self.currentTrip)
                 }
             }
-            let newLocation = locations.first
-            if (foundMovingLocation == true && self.lastLocation != nil && newLocation != nil) {
-                let distance = self.lastLocation .distanceFromLocation(newLocation)
-                let time = newLocation?.timestamp.timeIntervalSinceDate(self.lastLocation.timestamp)
-                
-                let speed = distance/time!
-                DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
-
-                if (speed > 1) {
-                    DDLogWrapper.logVerbose("Got new active tracking location via manual speed!")
-                    self.lastMovingLocation = newLocation
-                }
-            }
             
-            self.lastLocation = newLocation
-            
-            if ((self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0)){
+            if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 40.0)){
                 // otherwise, check the acceleromtere for recent data
                 DDLogWrapper.logVerbose("Moving too slow for too long")
                 self.stoppedMovingLocation = locations[0]
                 self.stopActivelyTrackingIfNeeded()
+            } else if (foundNonNegativeSpeed == false) {
+                if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
+                    DDLogWrapper.logVerbose("Went too long with negative speeds.")
+                    self.stoppedMovingLocation = locations[0]
+                    self.stopActivelyTrackingIfNeeded()
+                } else {
+                    DDLogWrapper.logVerbose("Nothing but negative speeds. Awaiting next update")
+                }
             } else {
                 CoreDataController.sharedCoreDataController.saveContext()
                 NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
@@ -226,13 +227,29 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             var foundMovement = false
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
-                if (location.speed < 0 || location.speed > 1) {
-                    // if the speed is above 1 meters per second, start tracking
+                if (location.speed > 3) {
+                    // if the speed is above 3 meters per second, start tracking
                     DDLogWrapper.logVerbose("Found movement while in low power state")
                     foundMovement = true
                     break
                 }
             }
+            
+            let newLocation = locations.first
+            if (foundMovement == false && self.lastLowPowerLocation != nil && newLocation != nil) {
+                let distance = self.lastLowPowerLocation .distanceFromLocation(newLocation)
+                let time = newLocation?.timestamp.timeIntervalSinceDate(self.lastLowPowerLocation.timestamp)
+                
+                let speed = distance/time!
+                DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
+                
+                if (speed > 3) {
+                    DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
+                    foundMovement = true
+                }
+            }
+            
+            self.lastLowPowerLocation = newLocation
             
             if (foundMovement) {
                 self.startActiveTracking()
