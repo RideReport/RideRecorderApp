@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C68k" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C68k" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--🚲-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HoneyBee" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
                                 </variation>
@@ -26,31 +26,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
                                 </variation>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9zL-fS-5Ew">
-                                <rect key="frame" x="23" y="12" width="49" height="30"/>
-                                <state key="normal" title="Routes">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
-                            <navigationBar contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EE9-E1-5mv">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                                <items>
-                                    <navigationItem title="Honey Bee" id="FrP-Rt-lf9">
-                                        <barButtonItem key="leftBarButtonItem" title="Logs" id="aDs-bA-cwD">
-                                            <connections>
-                                                <action selector="logs:" destination="BYZ-38-t0r" id="SWD-gs-NGv"/>
-                                            </connections>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Routes" id="HEx-Ok-67O">
-                                            <connections>
-                                                <segue destination="gis-u1-pv6" kind="popoverPresentation" popoverAnchorBarButtonItem="HEx-Ok-67O" id="Io1-D0-pp6">
-                                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                                                </segue>
-                                            </connections>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZb-DC-bGh">
                                 <rect key="frame" x="538" y="570" width="54" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -91,11 +66,31 @@
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="bottom" secondItem="XZg-pb-g3U" secondAttribute="bottom" id="Kqu-iM-Mm7"/>
                             <constraint firstItem="XZg-pb-g3U" firstAttribute="leading" secondItem="rVj-3I-EF8" secondAttribute="trailing" constant="8" id="Rcz-ko-Uax"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yZb-DC-bGh" secondAttribute="bottom" id="Sit-9Z-KEW"/>
-                            <constraint firstAttribute="width" secondItem="EE9-E1-5mv" secondAttribute="width" id="ZV6-jr-wcp"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstAttribute="height" secondItem="E6c-Xj-hL4" secondAttribute="height" id="fUo-0N-i1J"/>
+                            <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" constant="-20" id="nKW-gS-9tY"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="fUo-0N-i1J"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <navigationItem key="navigationItem" title="🚲" id="NNp-Bd-fod">
+                        <barButtonItem key="leftBarButtonItem" title="Logs" id="aDs-bA-cwD">
+                            <connections>
+                                <action selector="logs:" destination="BYZ-38-t0r" id="SWD-gs-NGv"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Routes" id="HEx-Ok-67O">
+                            <connections>
+                                <segue destination="gis-u1-pv6" kind="popoverPresentation" popoverAnchorBarButtonItem="HEx-Ok-67O" id="Io1-D0-pp6">
+                                    <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                </segue>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
                         <outlet property="queryCMButton" destination="XZg-pb-g3U" id="Gz1-tz-1Yd"/>
@@ -104,7 +99,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="550" y="416"/>
+            <point key="canvasLocation" x="1362" y="416"/>
         </scene>
         <!--Routes View Controller-->
         <scene sceneID="Lkr-Jd-b0l">
@@ -148,7 +143,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Oa-e2-WNt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1158" y="416"/>
+            <point key="canvasLocation" x="1970" y="416"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="UeG-mh-VCJ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="itw-fS-GQj">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="dXO-5e-dph"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YN6-Bi-xbb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="550" y="416"/>
         </scene>
     </scenes>
 </document>
