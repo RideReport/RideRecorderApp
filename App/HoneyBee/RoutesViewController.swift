@@ -68,7 +68,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let viewController = self.presentingViewController
+        let viewController = (self.presentingViewController as UINavigationController).topViewController
         if (viewController != nil && viewController!.isKindOfClass(ViewController)) {
             (viewController as ViewController).setSelectedTrip(trips[indexPath.row])
         }

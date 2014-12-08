@@ -15,7 +15,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var smoothUnsmoothButton: UIButton!
     @IBOutlet weak var queryCMButton: UIButton!
     
-    private var tripPolyLines : [MKPolyline]!
+    private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
@@ -32,14 +32,14 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
         
+        self.tripPolyLines = [:]
+        
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
+            self.refreshTrip(RouteMachine.sharedMachine.currentTrip)
         }
         
-        if (Trip.allTrips()?.count > 0) {
-            self.setSelectedTrip(Trip.allTrips()!.first as Trip)
-        } else {
-            self.setSelectedTrip(nil)
+        for trip in Trip.allTrips()! {
+            self.refreshTrip(trip as Trip)
         }
     }
     
@@ -53,7 +53,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.queryCMButton.setTitle("....", forState: UIControlState.Normal)
 
         self.selectedTrip.clasifyActivityType({
-            self.setSelectedTrip(self.selectedTrip)
+            self.refreshTrip(self.selectedTrip)
         })
     }
     
@@ -61,11 +61,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
         self.smoothUnsmoothButton.setTitle("....", forState: UIControlState.Normal)
         if (self.selectedTrip.hasSmoothed) {
             self.selectedTrip.undoSmoothWithCompletionHandler({
-                self.setSelectedTrip(self.selectedTrip)
+                self.refreshTrip(self.selectedTrip)
             })
         } else {
             self.selectedTrip.smoothIfNeeded({
-                self.setSelectedTrip(self.selectedTrip)
+                self.refreshTrip(self.selectedTrip)
             })
         }
     }
@@ -83,9 +83,27 @@ class ViewController: UIViewController, MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    // MARK: - Update Map UI
     func setSelectedTrip(trip : Trip!) {
+        let oldTrip = self.selectedTrip
+        
         self.selectedTrip = trip
+        
+        if (oldTrip != nil) {
+            self.refreshTrip(oldTrip)
+        }
+        
+        self.refreshTrip(trip)
+        self.refreshSelectedTrip(trip)
+    }
+    
+    func refreshSelectedTrip(trip : Trip!) {
+        self.queryCMButton.setTitle("Query CM", forState: UIControlState.Normal)
+
+        if (self.selectedTrip.hasSmoothed) {
+            self.smoothUnsmoothButton.setTitle("Unsmooth", forState: UIControlState.Normal)
+        } else {
+            self.smoothUnsmoothButton.setTitle("Smooth", forState: UIControlState.Normal)
+        }
         
         if (trip == nil) {
             self.queryCMButton.hidden = true
@@ -93,30 +111,19 @@ class ViewController: UIViewController, MKMapViewDelegate {
             return
         } else {
             self.queryCMButton.hidden = false
-            self.queryCMButton.setTitle("Query CM", forState: UIControlState.Normal)
             
             self.smoothUnsmoothButton.hidden = false
-        }
-        
-        if (trip.hasSmoothed) {
-            self.smoothUnsmoothButton.setTitle("Unsmooth", forState: UIControlState.Normal)
-        } else {
-            self.smoothUnsmoothButton.setTitle("Smooth", forState: UIControlState.Normal)
-        }
-        
-        if (self.tripPolyLines != nil) {
+            
             self.mapView.removeAnnotations(self.tripAnnotations)
-            self.mapView.removeOverlays(self.tripPolyLines)
         }
         
-        self.tripPolyLines = []
         self.tripAnnotations = []
         var coordinates : [CLLocationCoordinate2D] = []
         var count : Int = 0
+        
         for location in trip.locations.array {
             let location = (location as Location)
             let coord = location.coordinate()
-            coordinates.append(coord)
             count++
             let annotation = MKPointAnnotation()
             annotation.coordinate = coord
@@ -135,10 +142,34 @@ class ViewController: UIViewController, MKMapViewDelegate {
             self.mapView.addAnnotation(annotation)
             self.tripAnnotations.append(annotation)
         }
+    }
+    
+    // MARK: - Update Map UI
+    func refreshTrip(trip : Trip!) {
+        if (self.tripPolyLines[trip] != nil) {
+            self.mapView.removeOverlay(self.tripPolyLines[trip])
+        }
+        
+        if (trip.locations.count == 0) {
+            return
+        }
+        
+        var coordinates : [CLLocationCoordinate2D] = []
+        var count : Int = 0
+        for location in trip.locations.array {
+            let location = (location as Location)
+            let coord = location.coordinate()
+            coordinates.append(coord)
+            count++
+        }
         
         let polyline = MKPolyline(coordinates: &coordinates, count: count)
+        self.tripPolyLines[trip] = polyline
         self.mapView.addOverlay(polyline)
-        self.tripPolyLines.append(polyline)        
+        
+        if (self.selectedTrip != nil && trip == self.selectedTrip) {
+            self.refreshSelectedTrip(trip)
+        }
     }
     
     // MARK: - Map Kit
@@ -156,22 +187,22 @@ class ViewController: UIViewController, MKMapViewDelegate {
             return nil;
         }
         let reuseID = "ViewControllerMapReuseID"
-//        let textLabelTag = 59
+        let textLabelTag = 59
         var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
         if (annotationView == nil) {
             annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
             annotationView.canShowCallout = true
             
-//            let textLabel = UILabel(frame: CGRectMake(7.5, 0, 15, 5))
-//            textLabel.backgroundColor = UIColor.clearColor()
-//            textLabel.tag = textLabelTag
-//            textLabel.font = UIFont.systemFontOfSize(6)
-//            annotationView.addSubview(textLabel)
-//            annotationView.frame = textLabel.frame
+            let circleRadius : CGFloat = 1.0
+            let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
+            pointView.backgroundColor = UIColor.blackColor()
+            pointView.tag = textLabelTag
+            pointView.alpha = 0.3;
+            pointView.layer.cornerRadius = circleRadius;
+            annotationView.addSubview(pointView)
+            annotationView.frame = pointView.frame
         }
         annotationView.annotation = annotation
-//        let textLabel = annotationView.viewWithTag(textLabelTag) as UILabel
-//        textLabel.text = annotation.title
         
         return annotationView
     }
@@ -179,20 +210,40 @@ class ViewController: UIViewController, MKMapViewDelegate {
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         if (overlay.isKindOfClass(MKPolyline)) {
             let view = MKPolylineRenderer(polyline:(overlay as MKPolyline))
+            
+            let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
+            if (trip == nil) {
+                return nil
+            }
+            
+            var opacity : CGFloat
+            var lineWidth : CGFloat
+            
+            if (self.selectedTrip != nil && trip == self.selectedTrip) {
+                opacity = 0.8
+                lineWidth = 5
+            } else {
+                opacity = 0.3
+                lineWidth = 2
+            }
+            
+            if (trip == nil) {
+                return nil;
+            }
         
-            if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                view.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(0.7)
-            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                view.strokeColor = UIColor.orangeColor().colorWithAlphaComponent(0.7)
-            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(0.7)
-            } else if (self.selectedTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                view.strokeColor = UIColor.redColor().colorWithAlphaComponent(0.7)
+            if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                view.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(opacity)
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+                view.strokeColor = UIColor.orangeColor().colorWithAlphaComponent(opacity)
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(opacity)
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                view.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
             } else {
                 // unknown
-                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(0.7)
+                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
             }
-            view.lineWidth = 4
+            view.lineWidth = lineWidth
             return view;
         } else {
             return nil;
