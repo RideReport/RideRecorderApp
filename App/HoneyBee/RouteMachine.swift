@@ -12,7 +12,7 @@ import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
-    let locationTrackingDeferralTimeout : NSTimeInterval = 120
+    let locationTrackingDeferralTimeout : NSTimeInterval = 30
     
     private var isDefferringLocationUpdates : Bool = false
     
@@ -122,35 +122,27 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         self.isInLowPowerState = true
         self.lastLowPowerLocation = nil
+        
+        self.locationManager.disallowDeferredLocationUpdates()
     }
     
     func enterHighPowerState() {
         DDLogWrapper.logInfo("Entering HIGH power state")
         
-        self.locationManager.distanceFilter = 20
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager.distanceFilter = kCLDistanceFilterNone
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        self.isDefferringLocationUpdates = true
+        self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         
         self.isInLowPowerState = false
     }
     
-//    func startDeferringUpdates() {
-//        if (!self.isDefferringLocationUpdates) {
-//            self.locationManager.distanceFilter = 8 // must be set to none for deferred location updates
-//            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest // // must be set to best for deferred location updates
-//            
-//            DDLogWrapper.logVerbose("Started deferring updates")
-//            
-//            self.isDefferringLocationUpdates = true
-//            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
-//        }
-//    }
-//    
-//    func stopDeferringUpdates() {
-//        self.locationManager.disallowDeferredLocationUpdates()
-//        
-//        self.locationManager.distanceFilter = kCLDistanceFilterNone
-//        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-//    }
+    func stopDeferringUpdates() {
+        
+        self.locationManager.distanceFilter = kCLDistanceFilterNone
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+    }
 
     // MARK: - CLLocationManger
     
@@ -184,6 +176,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Finished deferring updates")
 
         self.isDefferringLocationUpdates = false
+        if (self.isInLowPowerState == false && self.currentTrip != nil) {
+            // if we are still tracking a route, continue deferring.
+            self.isDefferringLocationUpdates = true
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
