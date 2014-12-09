@@ -10,21 +10,20 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate {
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var smoothUnsmoothButton: UIButton!
-    @IBOutlet weak var queryCMButton: UIButton!
+    @IBOutlet weak var routeTitle: UIBarButtonItem!
     
     private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
     
+    private var logsShowing : Bool = false
+    
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
@@ -43,39 +42,52 @@ class ViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    @IBAction func queryPlacemarks(sender: AnyObject) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            self.selectedTrip.sendTripCompletionNotification()
-        })
-    }
-    
-    @IBAction func queryCM(sender: AnyObject) {
-        self.queryCMButton.setTitle("....", forState: UIControlState.Normal)
-
-        self.selectedTrip.clasifyActivityType({
-            self.refreshTrip(self.selectedTrip)
-        })
-    }
-    
-    @IBAction func smoothUnSmooth(sender: AnyObject) {
-        self.smoothUnsmoothButton.setTitle("....", forState: UIControlState.Normal)
+    @IBAction func tools(sender: AnyObject) {
+        if (self.selectedTrip == nil) {
+            return;
+        }
+        
+        var smoothButtonTitle = ""
         if (self.selectedTrip.hasSmoothed) {
-            self.selectedTrip.undoSmoothWithCompletionHandler({
+            smoothButtonTitle = "Unsmooth"
+        } else {
+            smoothButtonTitle = "Smooth"
+        }
+        
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End")
+        actionSheet.showFromToolbar(self.navigationController?.toolbar)
+    }
+    
+    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+        if (buttonIndex == 0) {
+            self.selectedTrip.clasifyActivityType({
                 self.refreshTrip(self.selectedTrip)
             })
-        } else {
-            self.selectedTrip.smoothIfNeeded({
-                self.refreshTrip(self.selectedTrip)
+        } else if (buttonIndex == 1) {
+            if (self.selectedTrip.hasSmoothed) {
+                self.selectedTrip.undoSmoothWithCompletionHandler({
+                    self.refreshTrip(self.selectedTrip)
+                })
+            } else {
+                self.selectedTrip.smoothIfNeeded({
+                    self.refreshTrip(self.selectedTrip)
+                })
+            }
+        } else if (buttonIndex == 2) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                self.selectedTrip.sendTripCompletionNotification()
             })
         }
     }
     
-    @IBAction func startRoute(sender: AnyObject) {
-        RouteMachine.sharedMachine.startActiveTracking()
-    }
-    
     @IBAction func logs(sender: AnyObject) {
-        UIForLumberjack.sharedInstance().showLogInView(self.view)
+        if (self.logsShowing) {
+            UIForLumberjack.sharedInstance().showLogInView(self.view)
+        } else {
+            UIForLumberjack.sharedInstance().hideLog()
+        }
+        
+        self.logsShowing = !self.logsShowing
     }
 
     override func didReceiveMemoryWarning() {
@@ -97,23 +109,28 @@ class ViewController: UIViewController, MKMapViewDelegate {
     }
     
     func refreshSelectedTrip(trip : Trip!) {
-        self.queryCMButton.setTitle("Query CM", forState: UIControlState.Normal)
-
-        if (self.selectedTrip.hasSmoothed) {
-            self.smoothUnsmoothButton.setTitle("Unsmooth", forState: UIControlState.Normal)
+        var title = ""
+        if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+            title = "Drove"
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+            title = "Walked"
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+            title = "Ran"
+        } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            title = "Biked"
         } else {
-            self.smoothUnsmoothButton.setTitle("Smooth", forState: UIControlState.Normal)
+            title = "Traveled"
         }
-        
+        if (trip.startDate != nil) {
+            title = NSString(format: "%@ for %i minutes",title, Int(trip.duration())/60)
+        } else {
+            title = title + "for a while"
+        }
+        self.routeTitle.title = title
+
         if (trip == nil) {
-            self.queryCMButton.hidden = true
-            self.smoothUnsmoothButton.hidden = true
             return
         } else {
-            self.queryCMButton.hidden = false
-            
-            self.smoothUnsmoothButton.hidden = false
-            
             self.mapView.removeAnnotations(self.tripAnnotations)
         }
         

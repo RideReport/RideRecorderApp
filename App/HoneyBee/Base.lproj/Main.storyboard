@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C68k" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--🚲-->
@@ -17,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
                                 <rect key="frame" x="0.0" y="20" width="600" height="580"/>
                                 <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
@@ -26,46 +25,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
                                 </variation>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yZb-DC-bGh">
-                                <rect key="frame" x="538" y="570" width="54" height="30"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Smooth">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="smoothUnSmooth:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eVG-i0-vvx"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XZg-pb-g3U">
-                                <rect key="frame" x="460" y="570" width="70" height="30"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Query CM">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="queryCM:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XEB-cL-jVN"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rVj-3I-EF8">
-                                <rect key="frame" x="326" y="570" width="126" height="30"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Query Placemarks">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="queryPlacemarks:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zXD-Gw-U1a"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="yZb-DC-bGh" secondAttribute="trailing" constant="-8" id="7kd-TK-Hi6"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rVj-3I-EF8" secondAttribute="bottom" id="C09-ZF-yNc"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="XZg-pb-g3U" secondAttribute="bottom" id="FIx-YI-aB2"/>
-                            <constraint firstItem="yZb-DC-bGh" firstAttribute="leading" secondItem="XZg-pb-g3U" secondAttribute="trailing" constant="8" id="JBk-R7-pEJ"/>
-                            <constraint firstItem="E6c-Xj-hL4" firstAttribute="bottom" secondItem="XZg-pb-g3U" secondAttribute="bottom" id="Kqu-iM-Mm7"/>
-                            <constraint firstItem="XZg-pb-g3U" firstAttribute="leading" secondItem="rVj-3I-EF8" secondAttribute="trailing" constant="8" id="Rcz-ko-Uax"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yZb-DC-bGh" secondAttribute="bottom" id="Sit-9Z-KEW"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstAttribute="height" secondItem="E6c-Xj-hL4" secondAttribute="height" id="fUo-0N-i1J"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" constant="-20" id="nKW-gS-9tY"/>
@@ -76,6 +38,19 @@
                             </mask>
                         </variation>
                     </view>
+                    <toolbarItems>
+                        <barButtonItem title="Tools" id="YrK-5y-IWt">
+                            <connections>
+                                <action selector="tools:" destination="BYZ-38-t0r" id="DOR-j0-kNv"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="bN5-cu-FMY"/>
+                        <barButtonItem title="Selected Route Info" style="plain" id="ymB-ox-KKk"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="6sr-nG-oJr"/>
+                        <barButtonItem title="👎" id="AeN-n6-8cp"/>
+                        <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="DtI-TP-rpD"/>
+                        <barButtonItem title="👍" id="e8b-qd-loz"/>
+                    </toolbarItems>
                     <navigationItem key="navigationItem" title="🚲" id="NNp-Bd-fod">
                         <barButtonItem key="leftBarButtonItem" title="Logs" id="aDs-bA-cwD">
                             <connections>
@@ -91,10 +66,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
-                        <outlet property="queryCMButton" destination="XZg-pb-g3U" id="Gz1-tz-1Yd"/>
-                        <outlet property="smoothUnsmoothButton" destination="yZb-DC-bGh" id="rjE-TL-12k"/>
+                        <outlet property="routeTitle" destination="ymB-ox-KKk" id="ZaS-nG-8NZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -148,13 +123,17 @@
         <!--Navigation Controller-->
         <scene sceneID="UeG-mh-VCJ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="itw-fS-GQj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Wkh-fD-nYg">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="dXO-5e-dph"/>
                     </connections>

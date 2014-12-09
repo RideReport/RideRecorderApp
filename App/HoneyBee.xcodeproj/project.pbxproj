@@ -105,6 +105,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		843C1C821A36704B0005CE1D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		8445317719FEEB2A0096F26E /* Machines */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,6 +174,7 @@
 		84D1555119D2733500316995 /* HoneyBee */ = {
 			isa = PBXGroup;
 			children = (
+				843C1C821A36704B0005CE1D /* Views */,
 				84D1555419D2733500316995 /* AppDelegate.swift */,
 				8445317B19FF031D0096F26E /* Model */,
 				8445317719FEEB2A0096F26E /* Machines */,
