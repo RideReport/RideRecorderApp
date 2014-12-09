@@ -167,6 +167,11 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             self.mapView.removeOverlay(self.tripPolyLines[trip])
         }
         
+        if (trip.deleted == true) {
+            self.tripPolyLines[trip] = nil
+            return
+        }
+        
         if (trip.locations.count == 0) {
             return
         }
