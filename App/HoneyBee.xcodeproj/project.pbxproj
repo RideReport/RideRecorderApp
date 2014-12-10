@@ -48,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 3.xcdatamodel"; sourceTree = "<group>"; };
 		8445317519FEEB210096F26E /* RouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachine.swift; sourceTree = "<group>"; };
 		8445317919FEEC8C0096F26E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		844531811A001DA40096F26E /* HoneyBee-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoneyBee-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -596,6 +597,7 @@
 		84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */,
 				84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */,
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,
 			);

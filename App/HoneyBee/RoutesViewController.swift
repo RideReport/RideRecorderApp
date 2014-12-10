@@ -41,39 +41,41 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         var tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell?
         if (tableCell == nil) {
             tableCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseID)
+            tableCell?.backgroundColor = UIColor.clearColor()
+            tableCell?.detailTextLabel?.textColor = UIColor.whiteColor()
+            tableCell?.textLabel.textColor = UIColor.whiteColor()
         }
         if (trip.startDate != nil) {
-            let title = NSString(format: "%@, %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            let title = NSString(format: "%@ for %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
             tableCell!.textLabel.text = title
         }
+        var tripTypeString = ""
         if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            tableCell!.detailTextLabel!.text = "Automotive"
-            tableCell!.detailTextLabel!.textColor = UIColor.redColor()
+            tripTypeString = "🚗"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-            tableCell!.detailTextLabel!.text = "Walking"
-            tableCell!.detailTextLabel!.textColor = UIColor.yellowColor()
+            tripTypeString = "🚶"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-            tableCell!.detailTextLabel!.text = "Running"
-            tableCell!.detailTextLabel!.textColor = UIColor.orangeColor()
+            tripTypeString = "🏃"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            tableCell!.detailTextLabel!.text = "Biking"
-            tableCell!.detailTextLabel!.textColor = UIColor.greenColor()
+            tripTypeString = "🚲"
         } else {
-            tableCell!.detailTextLabel!.text = "Uncategorized"
-            tableCell!.detailTextLabel!.textColor = UIColor.grayColor()
+            tripTypeString = "Traveled"
         }
+        
+        tableCell!.detailTextLabel!.text = NSString(format: "%@ %.1f miles",tripTypeString, trip.lengthMiles)
+
 
         
         return tableCell!
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let viewController = (self.presentingViewController as UINavigationController).topViewController
+        self.navigationController?.popViewControllerAnimated(true)
+        
+        let viewController = self.navigationController?.topViewController
         if (viewController != nil && viewController!.isKindOfClass(ViewController)) {
             (viewController as ViewController).setSelectedTrip(trips[indexPath.row])
         }
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

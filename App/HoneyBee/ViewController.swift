@@ -15,6 +15,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     @IBOutlet weak var routeTitle: UIBarButtonItem!
     
     private var tripPolyLines : [Trip : MKPolyline]!
+    private var badTripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
@@ -24,6 +25,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
+        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
+        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
@@ -32,14 +35,35 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         self.mapView.showsUserLocation = true
         
         self.tripPolyLines = [:]
+        self.badTripPolyLines = [:]
         
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.refreshTrip(RouteMachine.sharedMachine.currentTrip)
+            self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
         }
         
         for trip in Trip.allTrips()! {
             self.refreshTrip(trip as Trip)
         }
+        
+        self.setSelectedTrip(Trip.mostRecentTrip())
+    }
+    
+    @IBAction func addIncident(sender: AnyObject) {
+        DDLogWrapper.logVerbose("Add incident")
+    }
+    
+    @IBAction func rateBad(sender: AnyObject) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        self.refreshTrip(self.selectedTrip)
+    }
+    
+    @IBAction func rateGood(sender: AnyObject) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        self.refreshTrip(self.selectedTrip)
     }
     
     @IBAction func tools(sender: AnyObject) {
@@ -54,7 +78,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             smoothButtonTitle = "Smooth"
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -77,6 +101,11 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                 self.selectedTrip.sendTripCompletionNotification()
             })
+        } else if (buttonIndex == 3) {
+            self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            CoreDataController.sharedCoreDataController.saveContext()
+            
+            self.refreshTrip(self.selectedTrip)
         }
     }
     
@@ -111,21 +140,18 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     func refreshSelectedTrip(trip : Trip!) {
         var title = ""
         if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            title = "Drove"
+            title = "🚗"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-            title = "Walked"
+            title = "🚶"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-            title = "Ran"
+            title = "🏃"
         } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            title = "Biked"
+            title = "🚲"
         } else {
             title = "Traveled"
         }
-        if (trip.startDate != nil) {
-            title = NSString(format: "%@ for %i minutes",title, Int(trip.duration())/60)
-        } else {
-            title = title + "for a while"
-        }
+        title = NSString(format: "%@ %.1f miles",title, trip.lengthMiles)
+
         self.routeTitle.title = title
 
         if (trip == nil) {
@@ -166,9 +192,13 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         if (self.tripPolyLines[trip] != nil) {
             self.mapView.removeOverlay(self.tripPolyLines[trip])
         }
+        if (self.badTripPolyLines[trip] != nil) {
+            self.mapView.removeOverlay(self.badTripPolyLines[trip])
+        }
         
         if (trip.deleted == true) {
             self.tripPolyLines[trip] = nil
+            self.badTripPolyLines[trip] = nil
             return
         }
         
@@ -189,6 +219,12 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         self.tripPolyLines[trip] = polyline
         self.mapView.addOverlay(polyline)
         
+        if (trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+            let badPolyline = MKPolyline(coordinates: &coordinates, count: count)
+            self.badTripPolyLines[trip] = badPolyline
+            self.mapView.addOverlay(badPolyline)
+        }
+        
         if (self.selectedTrip != nil && trip == self.selectedTrip) {
             self.refreshSelectedTrip(trip)
         }
@@ -207,33 +243,54 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         if (annotation.isKindOfClass(MKUserLocation)) {
             return nil;
-        }
-        let reuseID = "ViewControllerMapReuseID"
-        let textLabelTag = 59
-        var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
-        if (annotationView == nil) {
-            annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-            annotationView.canShowCallout = true
+        } else if (annotation.isKindOfClass(MKPointAnnotation)) {
+            let reuseID = "PointAnnotationViewReuseID"
+            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
+            if (annotationView == nil) {
+                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+                annotationView.canShowCallout = true
+                
+                let circleRadius : CGFloat = 1.0
+                let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
+                pointView.backgroundColor = UIColor.blackColor()
+                pointView.alpha = 0.1;
+                pointView.layer.cornerRadius = circleRadius;
+                annotationView.addSubview(pointView)
+                annotationView.frame = pointView.frame
+                
+            }
             
-            let circleRadius : CGFloat = 1.0
-            let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
-            pointView.backgroundColor = UIColor.blackColor()
-            pointView.tag = textLabelTag
-            pointView.alpha = 0.3;
-            pointView.layer.cornerRadius = circleRadius;
-            annotationView.addSubview(pointView)
-            annotationView.frame = pointView.frame
+            if (self.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                let button = UIButton(frame: CGRectMake(0, 0, 60, 20))
+                button.setTitle("Incident", forState: UIControlState.Normal)
+                button.titleLabel?.font = UIFont.systemFontOfSize(12)
+                button.backgroundColor = UIColor.redColor()
+                button.addTarget(self, action:"addIncident:", forControlEvents:UIControlEvents.TouchUpInside)
+                annotationView.rightCalloutAccessoryView = button
+            } else {
+                annotationView.rightCalloutAccessoryView = nil
+            }
+            
+            annotationView.annotation = annotation
+            
+            return annotationView
         }
-        annotationView.annotation = annotation
         
-        return annotationView
+        return nil;
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
         if (overlay.isKindOfClass(MKPolyline)) {
             let view = MKPolylineRenderer(polyline:(overlay as MKPolyline))
             
-            let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
+            var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
+            var isBad = false
+            
+            if (trip == nil) {
+                isBad = true
+                trip = ((self.badTripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
+            }
+            
             if (trip == nil) {
                 return nil
             }
@@ -253,14 +310,18 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
                 return nil;
             }
         
-            if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                view.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(opacity)
+            if (isBad) {
+                view.strokeColor = UIColor.orangeColor()
+                view.lineDashPattern = [3,5]
+                lineWidth = 2
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
             } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                view.strokeColor = UIColor.orangeColor().colorWithAlphaComponent(opacity)
+                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
             } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(opacity)
             } else if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                view.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
+                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
             } else {
                 // unknown
                 view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)

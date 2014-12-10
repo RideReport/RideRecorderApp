@@ -118,6 +118,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func enterLowPowerState() {
         DDLogWrapper.logInfo("Entering low power state")
+        DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
         
         self.locationManager.distanceFilter = 100
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -129,6 +130,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func enterHighPowerState() {
         DDLogWrapper.logInfo("Entering HIGH power state")
+        DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
         
         self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
