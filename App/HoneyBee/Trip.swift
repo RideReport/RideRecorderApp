@@ -23,10 +23,18 @@ class Trip : NSManagedObject {
         case Unknown
     }
     
+    enum Rating : Int16 {
+        case NotSet = 0
+        case Good
+        case Bad
+    }
+    
     @NSManaged var activityType : NSNumber
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var creationDate : NSDate!
+    @NSManaged var length : NSNumber!
+    @NSManaged var rating : NSNumber!
     
     convenience init() {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
@@ -127,15 +135,35 @@ class Trip : NSManagedObject {
         })
     }
     
+    func closeTrip() {
+        var length : CLLocationDistance = 0
+        var lastLocation : CLLocation! = nil
+        for element in self.locations.array {
+            let location = (element as Location).clLocation()
+            if (lastLocation == nil) {
+                lastLocation = location
+                continue
+            }
+            length += lastLocation!.distanceFromLocation(location)
+            lastLocation = location
+        }
+        
+        self.length = NSNumber(double: length)
+        
+        CoreDataController.sharedCoreDataController.saveContext()
+    }
+    
     func sendTripCompletionNotification() {
         self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
             var message = ""
+            let miles = self.length.floatValue * 0.000621371
+            
             if (startingPlacemark != nil && endingPlacemark != nil) {
-            message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to %@", startingPlacemark.subLocality, endingPlacemark.subLocality)
+                message = NSString(format: "🚴💨 You biked %.1f miles from %@ to %@", miles, startingPlacemark.subLocality, endingPlacemark.subLocality)
             } else if (startingPlacemark != nil) {
-            message = NSString(format: "🚴💨 You biked 1.5 miles from %@ to somewhere", startingPlacemark.subLocality)
+                message = NSString(format: "🚴💨 You biked %.1f miles from %@ to somewhere", miles, startingPlacemark.subLocality)
             } else {
-            message = "🚴💨 You biked 1.5 miles from somewhere to somewhere"
+                message = NSString(format: "🚴💨 You biked %.1f miles from somewhere to somewhere", miles)
             }
             
             let notif = UILocalNotification()

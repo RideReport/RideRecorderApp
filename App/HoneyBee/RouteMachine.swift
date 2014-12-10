@@ -108,6 +108,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             // if it doesn't have at least 3 points, toss it.
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
         } else {
+            self.currentTrip.closeTrip()
             self.currentTrip.sendTripCompletionNotification()
         }
         
@@ -234,7 +235,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             let newLocation = locations.first
             if (foundMovement == false && self.lastLowPowerLocation != nil && newLocation != nil) {
-                let distance = self.lastLowPowerLocation .distanceFromLocation(newLocation)
+                let distance = self.lastLowPowerLocation.distanceFromLocation(newLocation)
                 let time = newLocation?.timestamp.timeIntervalSinceDate(self.lastLowPowerLocation.timestamp)
                 
                 let speed = distance/time!
