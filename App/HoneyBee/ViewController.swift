@@ -139,24 +139,29 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             self.refreshTrip(oldTrip)
         }
         
-        self.refreshTrip(trip)
+        if (trip != nil) {
+            self.refreshTrip(trip)
+        }
+        
         self.refreshSelectedTrip(trip)
     }
     
     func refreshSelectedTrip(trip : Trip!) {
         var title = ""
-        if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            title = "🚗"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-            title = "🚶"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-            title = "🏃"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            title = "🚲"
-        } else {
-            title = "Traveled"
+        if (trip != nil) {
+            if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                title = "🚗"
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                title = "🚶"
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+                title = "🏃"
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                title = "🚲"
+            } else {
+                title = "Traveled"
+            }
+            title = NSString(format: "%@ %.1f miles",title, trip.lengthMiles)
         }
-        title = NSString(format: "%@ %.1f miles",title, trip.lengthMiles)
 
         self.title = title
 

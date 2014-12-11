@@ -275,6 +275,11 @@ class Trip : NSManagedObject {
     
     func clasifyActivityType(handler: ()->Void) {
         RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
+            if (activities == nil || activities.count == 0) {
+                handler()
+                return
+            }
+            
             var walkScore = 0
             var runScore = 0
             var autoScore = 0

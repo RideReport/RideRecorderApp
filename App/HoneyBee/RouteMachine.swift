@@ -108,9 +108,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             // if it doesn't have at least 3 points, toss it.
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
         } else {
-            self.currentTrip.closeTrip()
-            self.currentTrip.clasifyActivityType({ () -> Void in
-                self.currentTrip.sendTripCompletionNotification()
+            let closingTrip = self.currentTrip
+            closingTrip.closeTrip()
+            closingTrip.clasifyActivityType({ () -> Void in
+                closingTrip.sendTripCompletionNotification()
             })
         }
         
