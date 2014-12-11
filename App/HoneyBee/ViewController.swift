@@ -12,7 +12,6 @@ import MapKit
 
 class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate {
     @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var routeTitle: UIBarButtonItem!
     
     private var tripPolyLines : [Trip : MKPolyline]!
     private var badTripPolyLines : [Trip : MKPolyline]!
@@ -25,6 +24,13 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
+        let routesController = (self.storyboard!.instantiateViewControllerWithIdentifier("RoutesViewController") as RoutesViewController)
+        routesController.mapViewController = self
+        routesController.title = "Rides"
+        
+        self.navigationController?.viewControllers = [routesController, self]
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
         self.dateFormatter = NSDateFormatter()
@@ -152,7 +158,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         }
         title = NSString(format: "%@ %.1f miles",title, trip.lengthMiles)
 
-        self.routeTitle.title = title
+        self.title = title
 
         if (trip == nil) {
             return

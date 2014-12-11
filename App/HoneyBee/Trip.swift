@@ -179,12 +179,23 @@ class Trip : NSManagedObject {
         self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
             var message = ""
             
+            var tripTypeString = "Traveled"
+            if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                tripTypeString = "🚗"
+            } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                tripTypeString = "🚶"
+            } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+                tripTypeString = "🏃"
+            } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                tripTypeString = "🚲"
+            }
+            
             if (startingPlacemark != nil && endingPlacemark != nil) {
-                message = NSString(format: "🚴💨 You biked %.1f miles from %@ to %@", self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
+                message = NSString(format: "%@ %.1f miles from %@ to %@", tripTypeString, self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
             } else if (startingPlacemark != nil) {
-                message = NSString(format: "🚴💨 You biked %.1f miles from %@ to somewhere", self.lengthMiles, startingPlacemark.subLocality)
+                message = NSString(format: "%@ %.1f miles from %@ to somewhere", tripTypeString, self.lengthMiles, startingPlacemark.subLocality)
             } else {
-                message = NSString(format: "🚴💨 You biked %.1f miles from somewhere to somewhere", self.lengthMiles)
+                message = NSString(format: "%@ %.1f miles from somewhere to somewhere", tripTypeString, self.lengthMiles)
             }
             
             let notif = UILocalNotification()

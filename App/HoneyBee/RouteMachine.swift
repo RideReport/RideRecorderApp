@@ -109,7 +109,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
         } else {
             self.currentTrip.closeTrip()
-            self.currentTrip.sendTripCompletionNotification()
+            self.currentTrip.clasifyActivityType({ () -> Void in
+                self.currentTrip.sendTripCompletionNotification()
+            })
         }
         
         self.currentTrip = nil

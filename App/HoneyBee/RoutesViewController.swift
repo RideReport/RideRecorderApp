@@ -11,12 +11,14 @@ import Foundation
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
+    var mapViewController : ViewController! = nil
+    
     private var trips : [Trip]! = nil
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         self.trips = Trip.allTrips() as [Trip]!
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -70,12 +72,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.navigationController?.popViewControllerAnimated(true)
+        self.navigationController?.pushViewController(mapViewController, animated: true)
         
-        let viewController = self.navigationController?.topViewController
-        if (viewController != nil && viewController!.isKindOfClass(ViewController)) {
-            (viewController as ViewController).setSelectedTrip(trips[indexPath.row])
-        }
+        mapViewController.setSelectedTrip(trips[indexPath.row])
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
