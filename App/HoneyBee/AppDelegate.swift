@@ -66,8 +66,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-        if (identifier == "RIDE_COMPLETION_IDENTIFIER") {
-            
+        if (identifier == "GOOD_RIDE_IDENTIFIER") {
+            Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Good.rawValue)
+            CoreDataController.sharedCoreDataController.saveContext()
+        } else if (identifier == "BAD_RIDE_IDENTIFIER") {
+            Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+            CoreDataController.sharedCoreDataController.saveContext()
         }
     }
 

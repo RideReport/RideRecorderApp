@@ -84,7 +84,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             smoothButtonTitle = "Smooth"
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -110,6 +110,10 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         } else if (buttonIndex == 3) {
             self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
             CoreDataController.sharedCoreDataController.saveContext()
+            
+            self.refreshTrip(self.selectedTrip)
+        } else if (buttonIndex == 4) {
+            self.selectedTrip.closeTrip()
             
             self.refreshTrip(self.selectedTrip)
         }
