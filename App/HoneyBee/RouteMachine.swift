@@ -112,6 +112,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             closingTrip.closeTrip()
             closingTrip.clasifyActivityType({ () -> Void in
                 closingTrip.sendTripCompletionNotification()
+                closingTrip.syncToServer()
             })
         }
         

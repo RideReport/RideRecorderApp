@@ -33,10 +33,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     @IBAction func sync(sender: AnyObject) {
-        Trip.mostRecentTrip().syncToServer()
-//        for trip in Trip.allTrips()! {
-//            (trip as Trip).syncToServer()
-//        }
+        for trip in Trip.allTrips()! {
+            (trip as Trip).syncToServer()
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
