@@ -14,7 +14,7 @@ exports.getAll = function(req, res){
 	});
 };
 
-exports.save = function(req, res){	
+exports.new = function(req, res){	
   var trips = db.client.get('trips');
 
   var reqLocations = req.body.locations
@@ -29,7 +29,7 @@ exports.save = function(req, res){
     })
   }
     
-  trips.save({
+  trips.insert({
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
       rating : req.body.rating,

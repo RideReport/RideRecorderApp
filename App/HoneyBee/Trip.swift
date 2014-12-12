@@ -179,7 +179,7 @@ class Trip : NSManagedObject {
             ])
         }
         tripDict["locations"] = locations
-        NetworkMachine.sharedMachine.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
+        NetworkMachine.sharedMachine.postRequest("trips/new", parameters: tripDict).response { (request, response, data, error) in
             if (error == nil) {
 //                self.isSynced = true
                 DDLogWrapper.logError(NSString(format: "Response: %@", response!))
