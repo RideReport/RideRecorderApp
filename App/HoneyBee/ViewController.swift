@@ -219,7 +219,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             return
         }
         
-        if (trip.locations.count == 0) {
+        if (trip.locations == nil || trip.locations.count == 0) {
             return
         }
         

@@ -164,7 +164,7 @@ class Trip : NSManagedObject {
             "uuid": self.uuid,
             "activityType": self.activityType,
             "creationDate": NetworkMachine.sharedMachine.jsonify(self.creationDate),
-            "rating:": self.rating
+            "rating": self.rating
             ]
         var locations : [AnyObject!] = []
         for location in self.locations.array {

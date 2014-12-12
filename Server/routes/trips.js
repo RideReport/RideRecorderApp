@@ -28,6 +28,8 @@ exports.new = function(req, res){
       "pos" : [reqLocations[i].latitude, reqLocations[i].longitude] 
     })
   }
+  
+  console.log(req.body)
     
   trips.insert({
       activityType : req.body.activityType,

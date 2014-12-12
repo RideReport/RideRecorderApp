@@ -49,8 +49,19 @@
           opacity: 0.9,
           smoothFactor: 1}
         );
-        console.log(polyline);
         polyline.addTo(map);
+        
+        if (trip.rating == 2) {
+          var polyline = new L.Polyline(
+    			  locs, 
+    			  {color: 'orange',
+            weight: 2,
+            opacity: 0.9,
+            dashArray: "3,5",
+            smoothFactor: 1}
+          );
+          polyline.addTo(map);
+        }
   		}
   	}
   	map.on('dragend', getTrips);	
