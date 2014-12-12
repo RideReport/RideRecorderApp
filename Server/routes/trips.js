@@ -4,7 +4,7 @@ exports.getAll = function(req, res){
   var trips = db.client.get('trips');
   var responseBody = {}
   
-  trips.find({},function(error,trips) {
+  trips.find({},{w:1},function(error,trips) {
 		if(error){
 			res.status(404).send('Not found');
 			console.error(error);    
@@ -28,8 +28,6 @@ exports.new = function(req, res){
       "pos" : [reqLocations[i].latitude, reqLocations[i].longitude] 
     })
   }
-  
-  console.log(req.body)
     
   trips.insert({
       activityType : req.body.activityType,
@@ -37,13 +35,13 @@ exports.new = function(req, res){
       rating : req.body.rating,
       locations : locations,
       id : req.body.uuid
-    }), function(error){			
+    }, {w:1}, function(error, result){			
       if(error) {
 				console.error("Error adding trip  : " + error);
-				res.status(500).send('Error adding trip');
+				return res.sendStatus(500);
 			} else {
 			  console.error("Added trip: " + req.body.uuid);
-			  res.status(201).send('Added trip');
+			  return res.sendStatus(201);
 			}
-  };
+  });
 };

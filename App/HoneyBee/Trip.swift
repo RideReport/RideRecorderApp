@@ -157,7 +157,7 @@ class Trip : NSManagedObject {
     
     func syncToServer() {
         if (self.isSynced) {
-            return
+//            return
         }
         
         var tripDict = [
