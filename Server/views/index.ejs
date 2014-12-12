@@ -54,7 +54,7 @@
   			  if (trip.rating == 2) {
             polyline = new L.Polyline(
       			  locs, 
-      			  {color: 'orange',
+      			  {color: 'red',
               weight: 2,
               opacity: 0.4,
               dashArray: "3,5",
@@ -63,15 +63,15 @@
           } else if (trip.rating == 1) {
             polyline = new L.Polyline(
       			  locs, 
-      			  {color: 'green',
+      			  {color: '#00CC00',
               weight: 3,
-              opacity: 0.4,
+              opacity: 0.5,
               smoothFactor: 1}
             );
           } else {
             polyline = new L.Polyline(
       			  locs, 
-      			  {color: 'yellow',
+      			  {color: '#CCFF33',
               weight: 3,
               opacity: 0.4,
               smoothFactor: 1}
