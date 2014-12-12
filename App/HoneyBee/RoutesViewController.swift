@@ -32,6 +32,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    @IBAction func sync(sender: AnyObject) {
+        Trip.mostRecentTrip().syncToServer()
+//        for trip in Trip.allTrips()! {
+//            (trip as Trip).syncToServer()
+//        }
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.trips.count
     }

@@ -1,0 +1,490 @@
+{
+  "sysinfo": {
+    "Live Image": "20140523T202506Z",
+    "System Type": "SunOS",
+    "Boot Time": "1401104489",
+    "Datacenter Name": "nightly-1",
+    "SDC Version": "7.0",
+    "Manufacturer": "Dell Inc.",
+    "Product": "PowerEdge R710",
+    "Serial Number": "GG4J5M1",
+    "SKU Number": "",
+    "HW Version": "",
+    "HW Family": "",
+    "Setup": "true",
+    "VM Capable": true,
+    "CPU Type": "Intel(R) Xeon(R) CPU E5530 @ 2.40GHz",
+    "CPU Virtualization": "vmx",
+    "CPU Physical Cores": 2,
+    "UUID": "44454c4c-4700-1034-804a-c7c04f354d31",
+    "Hostname": "headnode",
+    "CPU Total Cores": 16,
+    "MiB of Memory": "49142",
+    "Zpool": "zones",
+    "Zpool Disks": "c0t0d0",
+    "Zpool Profile": "striped",
+    "Zpool Creation": 1401103637,
+    "Zpool Size in GiB": 819,
+    "Disks": {
+      "c0t0d0": {
+        "Size in GB": 898
+      }
+    },
+    "Boot Parameters": {
+      "console": "ttyb",
+      "headnode": "true"
+    },
+    "SDC Agents": [
+      {
+        "name": "amon-agent",
+        "version": "1.0.1"
+      },
+      {
+        "name": "amon-relay",
+        "version": "1.0.1"
+      },
+      {
+        "name": "cabase",
+        "version": "1.0.3vmaster-20140515T173952Z-gf4e65ef"
+      },
+      {
+        "name": "hagfish-watcher",
+        "version": "1.0.0-master-20140301T001202Z-g21b91b6"
+      },
+      {
+        "name": "marlin",
+        "version": "0.0.3"
+      },
+      {
+        "name": "smartlogin",
+        "version": "0.1.0"
+      },
+      {
+        "name": "agents_core",
+        "version": "2.1.0"
+      },
+      {
+        "name": "cainstsvc",
+        "version": "0.0.3vmaster-20140515T173952Z-gf4e65ef"
+      },
+      {
+        "name": "provisioner",
+        "version": "2.4.0"
+      },
+      {
+        "name": "cn-agent",
+        "version": "1.0.1"
+      },
+      {
+        "name": "heartbeater",
+        "version": "2.1.0"
+      },
+      {
+        "name": "vm-agent",
+        "version": "1.0.0"
+      },
+      {
+        "name": "firewaller",
+        "version": "1.2.2"
+      },
+      {
+        "name": "zonetracker",
+        "version": "1.0.1"
+      }
+    ],
+    "Network Interfaces": {
+      "bnx0": {
+        "MAC Address": "a4:ba:db:1d:dd:26",
+        "ip4addr": "",
+        "Link Status": "up",
+        "NIC Names": []
+      },
+      "bnx2": {
+        "MAC Address": "a4:ba:db:1d:dd:2a",
+        "ip4addr": "",
+        "Link Status": "down",
+        "NIC Names": []
+      },
+      "bnx1": {
+        "MAC Address": "a4:ba:db:1d:dd:28",
+        "ip4addr": "",
+        "Link Status": "down",
+        "NIC Names": []
+      },
+      "bnx3": {
+        "MAC Address": "a4:ba:db:1d:dd:2c",
+        "ip4addr": "",
+        "Link Status": "down",
+        "NIC Names": []
+      },
+      "ixgbe0": {
+        "MAC Address": "90:e2:ba:05:78:f0",
+        "ip4addr": "172.25.1.4",
+        "Link Status": "up",
+        "NIC Names": [
+          "admin"
+        ]
+      },
+      "ixgbe1": {
+        "MAC Address": "90:e2:ba:05:78:f1",
+        "ip4addr": "",
+        "Link Status": "up",
+        "NIC Names": [
+          "external"
+        ]
+      }
+    },
+    "Virtual Network Interfaces": {
+      "external0": {
+        "MAC Address": "02:08:20:ef:bc:c7",
+        "ip4addr": "172.26.1.4",
+        "Link Status": "up",
+        "Host Interface": "ixgbe1",
+        "VLAN": "3301"
+      }
+    },
+    "Link Aggregations": {}
+  },
+  "ram": 49142,
+  "current_platform": "20140523T202506Z",
+  "headnode": true,
+  "boot_platform": "20140523T202506Z",
+  "datacenter": "nightly-1",
+  "overprovision_ratio": 1,
+  "reservation_ratio": 0.15,
+  "reservoir": false,
+  "traits": {},
+  "rack_identifier": "",
+  "comments": "",
+  "uuid": "44454c4c-4700-1034-804a-c7c04f354d31",
+  "hostname": "headnode",
+  "reserved": false,
+  "boot_params": {
+    "rabbitmq": "guest:guest:rabbitmq.nightly-1.joyent.us:5672"
+  },
+  "kernel_flags": {},
+  "default_console": "serial",
+  "serial": "ttyb",
+  "setup": true,
+  "setting_up": false,
+  "last_boot": "2014-05-26T11:41:29.000Z",
+  "created": "2014-05-26T11:27:17.000Z",
+  "vms": {
+    "48e0a336-5e64-4de5-a482-ee1998a2d8df": {
+      "uuid": "48e0a336-5e64-4de5-a482-ee1998a2d8df",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 128,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 100,
+      "last_modified": "2014-05-26T11:48:36.000Z"
+    },
+    "c93bf096-0779-4848-8264-975be66750a1": {
+      "uuid": "c93bf096-0779-4848-8264-975be66750a1",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 512,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 200,
+      "last_modified": "2014-05-26T11:57:35.000Z"
+    },
+    "a050d5fa-38ae-432b-b672-e3b5d34dce22": {
+      "uuid": "a050d5fa-38ae-432b-b672-e3b5d34dce22",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 256,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 150,
+      "last_modified": "2014-05-26T11:49:09.000Z"
+    },
+    "3921e5d0-5837-495f-8bd5-14269d7c04dd": {
+      "uuid": "3921e5d0-5837-495f-8bd5-14269d7c04dd",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 8192,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:49:52.000Z"
+    },
+    "319d8369-f3e0-449b-9e2a-3f169df342c5": {
+      "uuid": "319d8369-f3e0-449b-9e2a-3f169df342c5",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:50:12.000Z"
+    },
+    "e2315c3c-d0c5-4e3f-b97c-60dc8766c052": {
+      "uuid": "e2315c3c-d0c5-4e3f-b97c-60dc8766c052",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:50:33.000Z"
+    },
+    "1137e07c-bf96-4d4f-8e35-1bbda6b62b33": {
+      "uuid": "1137e07c-bf96-4d4f-8e35-1bbda6b62b33",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 8192,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:50:58.000Z"
+    },
+    "5b3a6e77-abd8-46a4-8ac3-9c8069474e3e": {
+      "uuid": "5b3a6e77-abd8-46a4-8ac3-9c8069474e3e",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 8192,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:51:33.000Z"
+    },
+    "7d236dc3-1aed-4c95-a325-031f2a7c6bc3": {
+      "uuid": "7d236dc3-1aed-4c95-a325-031f2a7c6bc3",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:52:32.000Z"
+    },
+    "6299e602-a8ec-4dd6-9cb8-cd7abcb6d1e7": {
+      "uuid": "6299e602-a8ec-4dd6-9cb8-cd7abcb6d1e7",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 256,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 150,
+      "last_modified": "2014-05-26T11:52:52.000Z"
+    },
+    "c2e1d4a7-f3ac-46a0-b754-a5d075193943": {
+      "uuid": "c2e1d4a7-f3ac-46a0-b754-a5d075193943",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 2048,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:53:12.000Z"
+    },
+    "0341af78-2987-41b5-bea7-22df0d8f7807": {
+      "uuid": "0341af78-2987-41b5-bea7-22df0d8f7807",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:53:54.000Z"
+    },
+    "91c3365c-abb8-4f44-9577-10a72d6303f5": {
+      "uuid": "91c3365c-abb8-4f44-9577-10a72d6303f5",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 128,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 100,
+      "last_modified": "2014-05-26T11:54:12.000Z"
+    },
+    "cb1a2a94-82c6-47e6-8df2-01dcecf5754d": {
+      "uuid": "cb1a2a94-82c6-47e6-8df2-01dcecf5754d",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:54:32.000Z"
+    },
+    "0a332cdb-e302-45df-ab53-2049a806034d": {
+      "uuid": "0a332cdb-e302-45df-ab53-2049a806034d",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:54:51.000Z"
+    },
+    "425d2edc-648f-48e1-88e0-59879e9e29ae": {
+      "uuid": "425d2edc-648f-48e1-88e0-59879e9e29ae",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 4096,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:55:11.000Z"
+    },
+    "fcabeca6-b7fd-40b4-a075-e85a6e626fc3": {
+      "uuid": "fcabeca6-b7fd-40b4-a075-e85a6e626fc3",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:55:38.000Z"
+    },
+    "370b3809-4a7e-4758-ad3f-6b6a43d0d702": {
+      "uuid": "370b3809-4a7e-4758-ad3f-6b6a43d0d702",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T11:58:31.000Z"
+    },
+    "d26388b0-9285-4a28-affa-d574ab6c6a7d": {
+      "uuid": "d26388b0-9285-4a28-affa-d574ab6c6a7d",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 256,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 150,
+      "last_modified": "2014-05-26T11:59:06.000Z"
+    },
+    "73c7be10-8eac-4abc-be6e-3869b61996b7": {
+      "uuid": "73c7be10-8eac-4abc-be6e-3869b61996b7",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 2048,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:59:28.000Z"
+    },
+    "ae04e670-6740-4469-807f-8686d0a93277": {
+      "uuid": "ae04e670-6740-4469-807f-8686d0a93277",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T12:00:08.000Z"
+    },
+    "4f4d5501-ad1f-4638-968a-9900044c9174": {
+      "uuid": "4f4d5501-ad1f-4638-968a-9900044c9174",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 500,
+      "max_physical_memory": 768,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 250,
+      "last_modified": "2014-05-26T12:00:48.000Z"
+    },
+    "36de85b5-3903-4d1c-92af-9ebae965e0b0": {
+      "uuid": "36de85b5-3903-4d1c-92af-9ebae965e0b0",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 25,
+      "max_physical_memory": 1024,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 300,
+      "last_modified": "2014-05-26T12:01:28.000Z"
+    },
+    "d633a1de-4463-4543-98bf-22c71fe1c201": {
+      "uuid": "d633a1de-4463-4543-98bf-22c71fe1c201",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 50,
+      "max_physical_memory": 2048,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T11:49:32.000Z"
+    },
+    "3089a478-8b4e-46ed-894c-44ef03806d58": {
+      "uuid": "3089a478-8b4e-46ed-894c-44ef03806d58",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 50,
+      "max_physical_memory": 2048,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T12:02:13.000Z"
+    },
+    "d0171850-9c1e-46ee-bca7-2de1fd1049ba": {
+      "uuid": "d0171850-9c1e-46ee-bca7-2de1fd1049ba",
+      "owner_uuid": "930896af-bf8c-48d4-885c-6573a94b1853",
+      "quota": 50,
+      "max_physical_memory": 2048,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent-minimal",
+      "cpu_cap": 400,
+      "last_modified": "2014-05-26T12:03:23.000Z"
+    },
+    "b92c865d-aab0-49c8-db7d-e378c1e3d888": {
+      "uuid": "b92c865d-aab0-49c8-db7d-e378c1e3d888",
+      "owner_uuid": "deadbeef-1111-1111-1111-111111111111",
+      "quota": 10,
+      "max_physical_memory": 128,
+      "zone_state": "running",
+      "state": "running",
+      "brand": "joyent",
+      "last_modified": "2014-05-26T12:15:17.000Z"
+    }
+  },
+  "last_heartbeat": "2014-05-26T18:16:01.539Z",
+  "transitional_status": "",
+  "status": "running",
+  "memory_available_bytes": 32278568960,
+  "memory_arc_bytes": 10473767392,
+  "memory_total_bytes": 51519778816,
+  "memory_provisionable_bytes": -10289990861,
+  "disk_kvm_zvol_used_bytes": 8589934592,
+  "disk_kvm_zvol_volsize_bytes": 8589934592,
+  "disk_kvm_quota_bytes": 21474836480,
+  "disk_zone_quota_bytes": 1309965025280,
+  "disk_cores_quota_bytes": 2899102924800,
+  "disk_installed_images_used_bytes": 5212516352,
+  "disk_pool_size_bytes": 893353197568,
+  "overprovision_ratios": {
+    "ram": 1
+  },
+  "unreserved_cpu": 0
+  "unreserved_ram": -9821,
+  "unreserved_disk": 846996
+}

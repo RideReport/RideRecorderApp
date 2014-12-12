@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4EE5F5DF268A49CFA7A497E8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA743A6C616E49B6A36F8FD7 /* libPods.a */; };
+		844497201A3A4E880009F889 /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8444971A1A3A4E040009F889 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
+		844497231A3A52D50009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
 		844531871A0023580096F26E /* DDLogWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 844531861A0023580096F26E /* DDLogWrapper.m */; };
@@ -38,6 +41,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		844497191A3A4E040009F889 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 844497141A3A4E040009F889 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3319A95C8B0040E7D1;
+			remoteInfo = Alamofire;
+		};
+		8444971B1A3A4E040009F889 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 844497141A3A4E040009F889 /* Alamofire.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F8111E3E19A95C8B0040E7D1;
+			remoteInfo = AlamofireTests;
+		};
+		8444971D1A3A4E5C0009F889 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 844497141A3A4E040009F889 /* Alamofire.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
+			remoteInfo = Alamofire;
+		};
 		84D1556819D2733500316995 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 84D1554719D2733500316995 /* Project object */;
@@ -47,8 +71,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		8444971F1A3A4E740009F889 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				844497201A3A4E880009F889 /* Alamofire.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 3.xcdatamodel"; sourceTree = "<group>"; };
+		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
+		844497211A3A4EB40009F889 /* NetworkMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMachine.swift; sourceTree = "<group>"; };
+		844497241A3A695C0009F889 /* HoneyBee 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 4.xcdatamodel"; sourceTree = "<group>"; };
+		844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 5.xcdatamodel"; sourceTree = "<group>"; };
 		8445317519FEEB210096F26E /* RouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachine.swift; sourceTree = "<group>"; };
 		8445317919FEEC8C0096F26E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		844531811A001DA40096F26E /* HoneyBee-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HoneyBee-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -102,6 +143,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				844497141A3A4E040009F889 /* Alamofire.xcodeproj */,
 				BA743A6C616E49B6A36F8FD7 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -114,11 +156,21 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		844497151A3A4E040009F889 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8444971A1A3A4E040009F889 /* Alamofire.framework */,
+				8444971C1A3A4E040009F889 /* AlamofireTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		8445317719FEEB2A0096F26E /* Machines */ = {
 			isa = PBXGroup;
 			children = (
 				8445317519FEEB210096F26E /* RouteMachine.swift */,
 				84D1557919D2743900316995 /* CoreDataController.swift */,
+				844497211A3A4EB40009F889 /* NetworkMachine.swift */,
 			);
 			name = Machines;
 			sourceTree = "<group>";
@@ -231,10 +283,12 @@
 				84D1554C19D2733500316995 /* Frameworks */,
 				84D1554D19D2733500316995 /* Resources */,
 				A005ED2935594E5E9AA996D4 /* Copy Pods Resources */,
+				8444971F1A3A4E740009F889 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8444971E1A3A4E5C0009F889 /* PBXTargetDependency */,
 			);
 			name = HoneyBee;
 			productName = HoneyBee;
@@ -288,6 +342,12 @@
 			mainGroup = 84D1554619D2733500316995;
 			productRefGroup = 84D1555019D2733500316995 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 844497151A3A4E040009F889 /* Products */;
+					ProjectRef = 844497141A3A4E040009F889 /* Alamofire.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				84D1554E19D2733500316995 /* HoneyBee */,
@@ -295,6 +355,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		8444971A1A3A4E040009F889 /* Alamofire.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Alamofire.framework;
+			remoteRef = 844497191A3A4E040009F889 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		8444971C1A3A4E040009F889 /* AlamofireTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = AlamofireTests.xctest;
+			remoteRef = 8444971B1A3A4E040009F889 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		84D1554D19D2733500316995 /* Resources */ = {
@@ -362,6 +439,7 @@
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
+				844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
@@ -375,6 +453,7 @@
 				846717621A019A0A00851AD5 /* RouteMachine.swift in Sources */,
 				846717611A019A0700851AD5 /* HoneyBee.xcdatamodeld in Sources */,
 				846717631A019A0D00851AD5 /* CoreDataController.swift in Sources */,
+				844497231A3A52D50009F889 /* NetworkMachine.swift in Sources */,
 				847A05691A01B302008F5371 /* Trip.swift in Sources */,
 				847A05701A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84D1556E19D2733500316995 /* HoneyBeeTests.swift in Sources */,
@@ -388,6 +467,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8444971E1A3A4E5C0009F889 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			targetProxy = 8444971D1A3A4E5C0009F889 /* PBXContainerItemProxy */;
+		};
 		84D1556919D2733500316995 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 84D1554E19D2733500316995 /* HoneyBee */;
@@ -600,8 +684,10 @@
 				84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */,
 				84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */,
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,
+				844497241A3A695C0009F889 /* HoneyBee 4.xcdatamodel */,
+				844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */,
 			);
-			currentVersion = 84D1555719D2733500316995 /* HoneyBee.xcdatamodel */;
+			currentVersion = 844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */;
 			name = HoneyBee.xcdatamodeld;
 			path = HoneyBee/HoneyBee.xcdatamodeld;
 			sourceTree = "<group>";

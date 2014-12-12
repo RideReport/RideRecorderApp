@@ -32,6 +32,9 @@ class Trip : NSManagedObject {
     @NSManaged var activityType : NSNumber
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
+    @NSManaged var isSynced : Bool
+    @NSManaged var isClosed : Bool
+    @NSManaged var uuid : String
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
@@ -82,6 +85,7 @@ class Trip : NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = NSDate()
+        self.uuid = NSUUID().UUIDString
     }
     
     func duration() -> NSTimeInterval {
@@ -151,7 +155,46 @@ class Trip : NSManagedObject {
         })
     }
     
+    func syncToServer() {
+        if (self.isSynced) {
+            return
+        }
+        
+        var tripDict = [
+            "uuid": self.uuid,
+            "activityType": self.activityType,
+            "creationDate": NetworkMachine.sharedMachine.jsonify(self.creationDate),
+            "rating:": self.rating
+            ]
+        var locations : [AnyObject!] = []
+        for location in self.locations.array {
+            let aLocation = location as Location
+            locations.append([
+                "course": aLocation.course,
+                "date": NetworkMachine.sharedMachine.jsonify(aLocation.date),
+                "horizontalAccuracy": aLocation.horizontalAccuracy,
+                "speed": aLocation.speed,
+                "longitude": aLocation.longitude,
+                "latitude": aLocation.latitude
+            ])
+        }
+        tripDict["locations"] = locations
+        NetworkMachine.sharedMachine.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
+            if (error == nil) {
+//                self.isSynced = true
+                DDLogWrapper.logError(NSString(format: "Response: %@", response!))
+                CoreDataController.sharedCoreDataController.saveContext()
+            } else {
+                DDLogWrapper.logError(NSString(format: "Error: %@", error!))
+            }
+        }
+    }
+    
     func closeTrip() {
+        if (self.isClosed == true) {
+            return
+        }
+        
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
         for element in self.locations.array {
@@ -165,6 +208,7 @@ class Trip : NSManagedObject {
         }
         
         self.length = NSNumber(double: length)
+        self.isClosed = true
         
         CoreDataController.sharedCoreDataController.saveContext()
     }

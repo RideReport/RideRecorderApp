@@ -97,9 +97,16 @@
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="iVJ-kB-dFg"/>
                         </constraints>
                     </view>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem systemItem="refresh" id="d5C-pN-Yq1">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="sync:" destination="gis-u1-pv6" id="zrQ-ux-VKq"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
                     <nil key="simulatedTopBarMetrics"/>
-                    <nil key="simulatedBottomBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
                     <connections>
                         <outlet property="tableView" destination="W5I-Vg-qji" id="ICZ-R4-rgn"/>
                     </connections>

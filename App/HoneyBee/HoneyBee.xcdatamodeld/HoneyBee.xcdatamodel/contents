@@ -20,8 +20,8 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="163"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="135"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="45"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="133"/>
     </elements>
 </model>
