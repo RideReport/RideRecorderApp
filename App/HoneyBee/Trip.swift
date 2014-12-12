@@ -179,7 +179,7 @@ class Trip : NSManagedObject {
             ])
         }
         tripDict["locations"] = locations
-        NetworkMachine.sharedMachine.postRequest("trips/new", parameters: tripDict).response { (request, response, data, error) in
+        NetworkMachine.sharedMachine.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
             if (error == nil) {
                 self.isSynced = true
                 DDLogWrapper.logError(NSString(format: "Response: %@", response!))
@@ -276,6 +276,7 @@ class Trip : NSManagedObject {
                 let mutableLocations = self.locations.mutableCopy() as NSMutableOrderedSet
                 for index in 0..<pointCount {
                     let location = self.locationWithCoordinate(coords[index])
+                    location.date = location0.date
                     location.trip = self
                     mutableLocations.insertObject(location, atIndex: 1+index)
                 }

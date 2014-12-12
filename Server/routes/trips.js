@@ -14,7 +14,7 @@ exports.getAll = function(req, res){
 	});
 };
 
-exports.new = function(req, res){	
+exports.save = function(req, res){	
   var trips = db.client.get('trips');
 
   var reqLocations = req.body.locations
@@ -29,13 +29,13 @@ exports.new = function(req, res){
     })
   }
     
-  trips.insert({
+  trips.update({uuid:req.body.uuid}, {
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
       rating : req.body.rating,
       locations : locations,
-      id : req.body.uuid
-    }, {w:1}, function(error, result){			
+      uuid : req.body.uuid
+    }, {w:1, upsert:true}, function(error, result){			
       if(error) {
 				console.error("Error adding trip  : " + error);
 				return res.sendStatus(500);

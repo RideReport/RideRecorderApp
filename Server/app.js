@@ -22,7 +22,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/trips', trips.getAll);
-app.post('/trips/new', trips.new);
+app.post('/trips/save', trips.save);
 
 // Set server port
 app.listen(config.server.httpListenPort);
