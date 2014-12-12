@@ -3,6 +3,8 @@
   <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
   <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
 	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+	<script src="http://matchingnotes.com/javascripts/leaflet-google.js"></script>
+	<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
 	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
 		body {
@@ -25,10 +27,9 @@
 	<script>
   	var map = L.map('map').setView([45.52, -122.6519], 14);
   	var tripLayerGroup = L.layerGroup().addTo(map);
-  	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  		maxZoom: 18,
-  		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-  	}).addTo(map);
+
+    var googleLayer = new L.Google('ROADMAP');
+    map.addLayer(googleLayer);
 
   	function getTrips(e){			
   		bounds = map.getBounds();
@@ -37,12 +38,13 @@
   	}
   	function drawTripsOnMap(trips){
   		map.removeLayer(tripLayerGroup);
+  		
+  		var polylineArray = []
 
   		for (var i = 0; i < trips.length; i++){
   			trip = trips[i];
   			locs = trip.locations.map(function(loc) {return loc.pos});
   			
-  			console.log(trip)
   			if (trip.activityType == 2) {
   				var polyline = new L.Polyline(
     			  locs, 
@@ -51,7 +53,7 @@
             opacity: 0.3,
             smoothFactor: 1}
           );
-          polyline.addTo(map);  
+          polylineArray.push(polyline);
   			} else {
   				var polyline = new L.Polyline(
     			  locs, 
@@ -60,7 +62,7 @@
             opacity: 0.3,
             smoothFactor: 1}
           );
-          polyline.addTo(map);    			  
+          polylineArray.push(polyline);  			  
   			}
   			        
         if (trip.rating == 2) {
@@ -72,9 +74,11 @@
             dashArray: "3,5",
             smoothFactor: 1}
           );
-          polyline.addTo(map);
-        }
+          polylineArray.push(polyline);
+      }
   		}
+  		
+  		tripLayerGroup = L.layerGroup(polylineArray).addTo(map);
   	}
   	map.on('dragend', getTrips);	
   	map.on('zoomend', getTrips);
