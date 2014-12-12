@@ -42,15 +42,27 @@
   			trip = trips[i];
   			locs = trip.locations.map(function(loc) {return loc.pos});
   			
-  			var polyline = new L.Polyline(
-  			  locs, 
-  			  {color: 'green',
-          weight: 3,
-          opacity: 0.3,
-          smoothFactor: 1}
-        );
-        polyline.addTo(map);
-        
+  			console.log(trip)
+  			if (trip.activityType == 2) {
+  				var polyline = new L.Polyline(
+    			  locs, 
+    			  {color: 'green',
+            weight: 3,
+            opacity: 0.3,
+            smoothFactor: 1}
+          );
+          polyline.addTo(map);  
+  			} else {
+  				var polyline = new L.Polyline(
+    			  locs, 
+    			  {color: 'grey',
+            weight: 3,
+            opacity: 0.3,
+            smoothFactor: 1}
+          );
+          polyline.addTo(map);    			  
+  			}
+  			        
         if (trip.rating == 2) {
           var polyline = new L.Polyline(
     			  locs, 
