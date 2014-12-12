@@ -14,6 +14,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 30
     
+    private var shouldDeferUpdates = false
     private var isDefferringLocationUpdates : Bool = false
     
     private var isInLowPowerState : Bool = false
@@ -135,20 +136,19 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func enterHighPowerState() {
         DDLogWrapper.logInfo("Entering HIGH power state")
         DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
-        
-        self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        self.isDefferringLocationUpdates = true
-        self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+
+        if (self.shouldDeferUpdates) {
+            self.locationManager.distanceFilter = kCLDistanceFilterNone
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            
+            self.isDefferringLocationUpdates = true
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+        } else {
+            self.locationManager.distanceFilter = 20
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        }
         
         self.isInLowPowerState = false
-    }
-    
-    func stopDeferringUpdates() {
-        
-        self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
     }
 
     // MARK: - CLLocationManger
@@ -183,7 +183,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Finished deferring updates")
 
         self.isDefferringLocationUpdates = false
-        if (self.isInLowPowerState == false && self.currentTrip != nil) {
+        if (self.shouldDeferUpdates && self.isInLowPowerState && self.currentTrip != nil) {
             // if we are still tracking a route, continue deferring.
             self.isDefferringLocationUpdates = true
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
