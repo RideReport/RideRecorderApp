@@ -321,6 +321,17 @@ class Trip : NSManagedObject {
     func clasifyActivityType(handler: ()->Void) {
         RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
             if (activities == nil || activities.count == 0) {
+                // if no data is available, fall back on speed alone
+                if (self.averageSpeed >= 6.5) {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+                } else if (self.averageSpeed >= 3) {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+                } else {
+                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+                }
+
+                CoreDataController.sharedCoreDataController.saveContext()
+
                 handler()
                 return
             }

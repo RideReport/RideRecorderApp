@@ -9,8 +9,8 @@
 import Foundation
 import Alamofire
 
-let serverAddress = "http://10.0.1.78:8080/"
-//let serverAddress = "http://54.148.164.222/"
+//let serverAddress = "http://10.0.1.78:8080/"
+let serverAddress = "http://54.148.164.222/"
 
 class NetworkMachine {
     private var jsonDateFormatter = NSDateFormatter()
