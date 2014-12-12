@@ -14,7 +14,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     @IBOutlet weak var mapView: MKMapView!
     
     private var tripPolyLines : [Trip : MKPolyline]!
-    private var badTripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
@@ -41,7 +40,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         self.mapView.showsUserLocation = true
         
         self.tripPolyLines = [:]
-        self.badTripPolyLines = [:]
         
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
@@ -209,13 +207,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         if (self.tripPolyLines[trip] != nil) {
             self.mapView.removeOverlay(self.tripPolyLines[trip])
         }
-        if (self.badTripPolyLines[trip] != nil) {
-            self.mapView.removeOverlay(self.badTripPolyLines[trip])
-        }
-        
+
         if (trip.deleted == true) {
             self.tripPolyLines[trip] = nil
-            self.badTripPolyLines[trip] = nil
             return
         }
         
@@ -235,12 +229,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         let polyline = MKPolyline(coordinates: &coordinates, count: count)
         self.tripPolyLines[trip] = polyline
         self.mapView.addOverlay(polyline)
-        
-        if (trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-            let badPolyline = MKPolyline(coordinates: &coordinates, count: count)
-            self.badTripPolyLines[trip] = badPolyline
-            self.mapView.addOverlay(badPolyline)
-        }
         
         if (self.selectedTrip != nil && trip == self.selectedTrip) {
             self.refreshSelectedTrip(trip)
@@ -301,12 +289,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             let view = MKPolylineRenderer(polyline:(overlay as MKPolyline))
             
             var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
-            var isBad = false
-            
-            if (trip == nil) {
-                isBad = true
-                trip = ((self.badTripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
-            }
             
             if (trip == nil) {
                 return nil
@@ -327,18 +309,14 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
                 return nil;
             }
         
-            if (isBad) {
-                view.strokeColor = UIColor.orangeColor()
-                view.lineDashPattern = [3,5]
-                lineWidth = 2
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(opacity)
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
+            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+                    view.strokeColor = UIColor.greenColor().colorWithAlphaComponent(opacity)
+                } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                    view.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
+                } else {
+                    view.strokeColor = UIColor(red: 204.0/255.0, green: 1.0, blue: 51.0/255.0, alpha: opacity)
+                }
             } else {
                 // unknown
                 view.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
