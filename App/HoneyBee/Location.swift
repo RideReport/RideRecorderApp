@@ -16,6 +16,7 @@ class Location : NSManagedObject {
 
     @NSManaged var course : NSNumber
     @NSManaged var horizontalAccuracy : NSNumber
+    @NSManaged var isPrivate : Bool
     @NSManaged var isSmoothedLocation : Bool
     @NSManaged var latitude : NSNumber
     @NSManaged var longitude : NSNumber

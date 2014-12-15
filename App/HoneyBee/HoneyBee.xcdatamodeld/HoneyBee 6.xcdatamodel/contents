@@ -7,7 +7,6 @@
         <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
-        <attribute name="isPrivate" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isSmoothedLocation" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
@@ -27,7 +26,7 @@
     </entity>
     <elements>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="60"/>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="163"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="180"/>
     </elements>
 </model>

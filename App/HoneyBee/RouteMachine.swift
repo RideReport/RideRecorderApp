@@ -52,7 +52,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.pausesLocationUpdatesAutomatically = false
         self.locationManager.disallowDeferredLocationUpdates()
         
-        self.motionQueue = NSOperationQueue.mainQueue()
+        self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
 
         super.init()
@@ -61,6 +61,16 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func startup () {
         self.locationManager.delegate = self;
         self.locationManager.requestAlwaysAuthorization()
+        let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineHasRequestedMotionAccess")
+        if (!hasRequestedMotionAccess) {
+            // grab an update for a second so we can have the permission dialog come up right away
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
+                    self.motionActivityManager.stopActivityUpdates()
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineHasRequestedMotionAccess")
+                })
+            })
+        }
     }
     
     // MARK: - State Machine
@@ -107,6 +117,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (self.currentTrip != nil && self.currentTrip.locations.count <= 2) {
             // if it doesn't have at least 3 points, toss it.
+            #if DEBUG
+                let notif = UILocalNotification()
+                notif.alertBody = "Canceled Trip"
+                notif.category = "RIDE_COMPLETION_CATEGORY"
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            #endif
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
         } else {
             let closingTrip = self.currentTrip

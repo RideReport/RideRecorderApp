@@ -82,16 +82,16 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             smoothButtonTitle = "Smooth"
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Send to Server")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Send to Server")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        if (buttonIndex == 0) {
+        if (buttonIndex == 1) {
             self.selectedTrip.clasifyActivityType({
                 self.refreshTrip(self.selectedTrip)
             })
-        } else if (buttonIndex == 1) {
+        } else if (buttonIndex == 2) {
             if (self.selectedTrip.hasSmoothed) {
                 self.selectedTrip.undoSmoothWithCompletionHandler({
                     self.refreshTrip(self.selectedTrip)
@@ -101,21 +101,23 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
                     self.refreshTrip(self.selectedTrip)
                 })
             }
-        } else if (buttonIndex == 2) {
+        } else if (buttonIndex == 3) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                 self.selectedTrip.sendTripCompletionNotification()
             })
-        } else if (buttonIndex == 3) {
+        } else if (buttonIndex == 4) {
             self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
             CoreDataController.sharedCoreDataController.saveContext()
             
             self.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 4) {
+        } else if (buttonIndex == 5) {
             self.selectedTrip.closeTrip()
             
             self.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 5) {
+        } else if (buttonIndex == 6) {
             self.selectedTrip.syncToServer()
+        } else {
+            //
         }
     }
     

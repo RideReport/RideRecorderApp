@@ -169,14 +169,16 @@ class Trip : NSManagedObject {
         var locations : [AnyObject!] = []
         for location in self.locations.array {
             let aLocation = location as Location
-            locations.append([
-                "course": aLocation.course,
-                "date": NetworkMachine.sharedMachine.jsonify(aLocation.date),
-                "horizontalAccuracy": aLocation.horizontalAccuracy,
-                "speed": aLocation.speed,
-                "longitude": aLocation.longitude,
-                "latitude": aLocation.latitude
-            ])
+            if !aLocation.isPrivate {
+                locations.append([
+                    "course": aLocation.course,
+                    "date": NetworkMachine.sharedMachine.jsonify(aLocation.date),
+                    "horizontalAccuracy": aLocation.horizontalAccuracy,
+                    "speed": aLocation.speed,
+                    "longitude": aLocation.longitude,
+                    "latitude": aLocation.latitude
+                    ])
+            }
         }
         tripDict["locations"] = locations
         NetworkMachine.sharedMachine.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in

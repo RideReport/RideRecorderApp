@@ -54,7 +54,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             tableCell?.textLabel.textColor = UIColor.whiteColor()
         }
         if (trip.startDate != nil) {
-            let title = NSString(format: "%@ for %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            var title = NSString(format: "%@ for %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+                title = title + "👍"
+            } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                title = title + "👎"
+            }
             tableCell!.textLabel.text = title
         }
         var tripTypeString = ""

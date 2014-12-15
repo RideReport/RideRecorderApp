@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'aws/s3'
+# require 'Tempfile'
+
+GET_LINK_ONLY_ARG = ARGV.shift
+upload_build = true
+if (GET_LINK_ONLY_ARG == "-l")
+  upload_build = false
+elsif (GET_LINK_ONLY_ARG)
+  raise("Usage: upload-iphone [-l]")
+end
+
+
+#get current version number
+if (upload_build)
+  raise "No build present at!" unless File.exists?("HoneyBee.ipa")
+end
+
+AWS::S3::DEFAULT_HOST.replace "s3-us-west-2.amazonaws.com"
+
+AWS::S3::Base.establish_connection!(
+  :access_key_id     => 'AKIAJC7GSZARTGX44Z2A',
+  :secret_access_key => '/mke0kt1SLrtSGSZGJzOewQ4Blz8wSO39mHcZqZR'
+)
+
+puts AWS::S3::Bucket.find('knockenterprise')
+
+def upload(path, dest_path, bucket, access)
+  raise "File does not exist: #{path}" unless File.exists?(path)
+  puts "Uploading #{File.basename(path)} to S3 bucket #{bucket} as #{dest_path}"
+  AWS::S3::S3Object.store(
+    dest_path,
+    File.open(path),
+    bucket,
+    :access => access
+  )  
+end
+
+if (upload_build)
+  upload("HoneyBee.ipa", "HoneyBee.ipa", "knockenterprise", "private")
+end
+
+url = AWS::S3::S3Object.url_for('HoneyBee.ipa',
+                 'knockenterprise',
+                 :expires_in => 60 * 60 * 120)
+
+`/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url #{url}" "manifest.plist"`
+upload("manifest.plist", "manifest.plist", "knockenterprise", "private")      
+
+url = AWS::S3::S3Object.url_for('manifest.plist',
+                 'knockenterprise',
+                 :expires_in => 60 * 60 * 120,
+                 :use_ssl => true)                         
+                 
+puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
+
+`/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url foo.com" "manifest.plist"`
+
+if (upload_build)                 
+  `rm -r HoneyBee.ipa`
+end
