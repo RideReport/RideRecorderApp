@@ -15,6 +15,7 @@
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
 		844531871A0023580096F26E /* DDLogWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 844531861A0023580096F26E /* DDLogWrapper.m */; };
 		8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */; };
+		8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309D1A3FAED800452EEB /* PrivacyCircle.swift */; };
 		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -79,6 +80,7 @@
 		844531851A0023580096F26E /* DDLogWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLogWrapper.h; sourceTree = "<group>"; };
 		844531861A0023580096F26E /* DDLogWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLogWrapper.m; sourceTree = "<group>"; };
 		8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyCircleRenderer.swift; sourceTree = "<group>"; };
+		8453309D1A3FAED800452EEB /* PrivacyCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivacyCircle.swift; path = HoneyBee/PrivacyCircle.swift; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachineTests.swift; sourceTree = "<group>"; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trip.swift; path = HoneyBee/Trip.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				847A05661A01B2FE008F5371 /* Location.swift */,
+				8453309D1A3FAED800452EEB /* PrivacyCircle.swift */,
 				847A05641A01B2F1008F5371 /* Trip.swift */,
 				84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */,
 			);
@@ -391,6 +394,7 @@
 				8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
+				8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -572,7 +576,7 @@
 				844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */,
 			);
-			currentVersion = 844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */;
+			currentVersion = 84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */;
 			name = HoneyBee.xcdatamodeld;
 			path = HoneyBee/HoneyBee.xcdatamodeld;
 			sourceTree = "<group>";

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C68k" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
@@ -25,10 +25,33 @@
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
                                 </variation>
                             </mapView>
+                            <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7S-Bw-nY7">
+                                <rect key="frame" x="0.0" y="512" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="l2l-V2-pMY"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem title="Cancel" id="xK2-kP-Fpt">
+                                        <color key="tintColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="cancelSetPrivacyCircle:" destination="BYZ-38-t0r" id="7Hb-Te-cmx"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Mtq-gM-mZK"/>
+                                    <barButtonItem title="Save" id="SaS-kR-n8j">
+                                        <color key="tintColor" red="0.25098040699958801" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <action selector="saveSetPrivacyCircle:" destination="BYZ-38-t0r" id="bIc-iA-9cZ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x7S-Bw-nY7" secondAttribute="bottom" id="2AI-YV-sfu"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
+                            <constraint firstItem="E6c-Xj-hL4" firstAttribute="width" secondItem="x7S-Bw-nY7" secondAttribute="width" id="mpL-V9-rHa"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" constant="-20" id="nKW-gS-9tY"/>
                         </constraints>
                     </view>
@@ -65,6 +88,7 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
                     <connections>
                         <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
+                        <outlet property="privacyCircleToolbar" destination="x7S-Bw-nY7" id="Fw8-2A-i8S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

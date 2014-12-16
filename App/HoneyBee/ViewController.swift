@@ -13,12 +13,14 @@ import MapKit
 class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate {
     @IBOutlet weak var mapView: MKMapView!
     
+    @IBOutlet weak var privacyCircleToolbar: UIToolbar!
+    
     private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     private var selectedTrip : Trip!
     
-    private var privacyCircleRadius = 300.0
+    private var defaultPrivacyCircleRadius = 300.0
     private var privacyCircle : MKCircle!
     private var privacyCircleRenderer : PrivacyCircleRenderer!
     private var isDraggingPrivacyCircle : Bool = false
@@ -71,6 +73,10 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             return
         }
         
+        if (sender.numberOfTouches() > 1) {
+            return
+        }
+        
         if (sender.state == UIGestureRecognizerState.Began) {
             let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
             let gestureLocation = CLLocation(latitude: gestureCoord.latitude, longitude: gestureCoord.longitude)
@@ -88,12 +94,36 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             if (self.isDraggingPrivacyCircle) {
                 let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
                 
-                self.privacyCircle = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircleRadius)
+                self.privacyCircle = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle.radius)
                 self.privacyCircleRenderer.coordinate = gestureCoord
             }
         } else {
             self.mapView.scrollEnabled = true
             self.isDraggingPrivacyCircle = false
+        }
+    }
+    
+    @IBAction func cancelSetPrivacyCircle(sender: AnyObject) {
+        self.privacyCircleToolbar.hidden = true
+        
+        self.mapView.removeOverlay(self.privacyCircle)
+        self.mapView.setNeedsDisplay()
+        self.privacyCircle = nil
+        self.privacyCircleRenderer = nil
+    }
+    
+    @IBAction func saveSetPrivacyCircle(sender: AnyObject) {
+        PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle)
+        
+        self.privacyCircleToolbar.hidden = true
+        
+        self.mapView.removeOverlay(self.privacyCircle)
+        self.mapView.setNeedsDisplay()
+        self.privacyCircle = nil
+        self.privacyCircleRenderer = nil
+        
+        for trip in Trip.allTrips()! {
+            self.refreshTrip(trip as Trip)
         }
     }
     
@@ -127,7 +157,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             smoothButtonTitle = "Smooth"
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Send to Server")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Sync to Server", "Set up Privacy Circle")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -161,8 +191,18 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             self.refreshTrip(self.selectedTrip)
         } else if (buttonIndex == 6) {
             self.selectedTrip.syncToServer()
+        } else if (buttonIndex == 7) {
+            if (self.privacyCircle == nil) {
+                if (PrivacyCircle.privacyCircle() == nil) {
+                    self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: self.defaultPrivacyCircleRadius)
+                } else {
+                    self.privacyCircle = MKCircle(centerCoordinate: CLLocationCoordinate2DMake(PrivacyCircle.privacyCircle().latitude.doubleValue, PrivacyCircle.privacyCircle().longitude.doubleValue), radius: PrivacyCircle.privacyCircle().radius.doubleValue)
+                }
+                self.mapView.addOverlay(self.privacyCircle)
+            }
+            self.privacyCircleToolbar.hidden = false
         } else {
-            //
+            
         }
     }
     
@@ -228,6 +268,10 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         
         for location in trip.locations.array {
             let location = (location as Location)
+            if (location.isPrivate) {
+                continue
+            }
+            
             let coord = location.coordinate()
             count++
             let annotation = MKPointAnnotation()
@@ -268,6 +312,10 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         var count : Int = 0
         for location in trip.locations.array {
             let location = (location as Location)
+            if (location.isPrivate) {
+                continue
+            }
+            
             let coord = location.coordinate()
             coordinates.append(coord)
             count++
@@ -289,11 +337,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             mapView.setRegion(mapRegion, animated: false)
             
             self.hasCenteredMap = true
-        }
-        
-        if (self.privacyCircle == nil) {
-            self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: self.privacyCircleRadius)
-            self.mapView.addOverlay(self.privacyCircle)
         }
     }
     
@@ -378,7 +421,9 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         } else if (overlay.isKindOfClass(MKCircle)) {
             self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
             self.privacyCircleRenderer.strokeColor = UIColor.redColor()
-            self.privacyCircleRenderer.lineWidth = 3.0
+            self.privacyCircleRenderer.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+            self.privacyCircleRenderer.lineWidth = 1.0
+            self.privacyCircleRenderer.lineDashPattern = [3,5]
             
             return self.privacyCircleRenderer
         } else {
