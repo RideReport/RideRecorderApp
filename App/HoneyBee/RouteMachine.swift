@@ -263,7 +263,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 let speed = distance/time!
                 DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
                 
-                if (speed > 3) {
+                if (speed > 3 && speed < 20) {
                     DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
                     foundMovement = true
                 }

@@ -22,7 +22,8 @@
 	
 </head>
 
-<body>
+<body onload="getPosition()">
+
 	<div id="map"></div>
 	<script>
   	var map = L.map('map', {
@@ -34,6 +35,15 @@
 
     var googleLayer = new L.Google('ROADMAP');
     map.addLayer(googleLayer);
+
+    function getPosition(position) {
+    	navigator.geolocation.getCurrentPosition(gotPosition);
+    }
+    
+    function gotPosition(position) {
+      map.setView([position.coords.latitude, position.coords.longitude], 14);
+      getTrips();
+    }
 
   	function getTrips(e){			
   		bounds = map.getBounds();
