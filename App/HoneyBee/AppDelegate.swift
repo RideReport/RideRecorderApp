@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        Crashlytics.startWithAPIKey("e04ad6106ec507d40d90a52437cc374949ab924e")
         
         UIDevice.currentDevice().batteryMonitoringEnabled = true
         
@@ -60,7 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()
         RouteMachine.sharedMachine.startup()
-        
         
         return true
     }

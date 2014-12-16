@@ -16,6 +16,7 @@
 		844531871A0023580096F26E /* DDLogWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 844531861A0023580096F26E /* DDLogWrapper.m */; };
 		8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */; };
 		8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309D1A3FAED800452EEB /* PrivacyCircle.swift */; };
+		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
 		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -81,6 +82,7 @@
 		844531861A0023580096F26E /* DDLogWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLogWrapper.m; sourceTree = "<group>"; };
 		8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyCircleRenderer.swift; sourceTree = "<group>"; };
 		8453309D1A3FAED800452EEB /* PrivacyCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivacyCircle.swift; path = HoneyBee/PrivacyCircle.swift; sourceTree = "<group>"; };
+		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachineTests.swift; sourceTree = "<group>"; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trip.swift; path = HoneyBee/Trip.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
 				84D1557819D2737D00316995 /* MapKit.framework in Frameworks */,
+				845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */,
 				4EE5F5DF268A49CFA7A497E8 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -123,6 +126,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				845330A01A3FC3D600452EEB /* Crashlytics.framework */,
 				844497141A3A4E040009F889 /* Alamofire.xcodeproj */,
 				BA743A6C616E49B6A36F8FD7 /* libPods.a */,
 			);
@@ -265,6 +269,7 @@
 				84D1554D19D2733500316995 /* Resources */,
 				A005ED2935594E5E9AA996D4 /* Copy Pods Resources */,
 				8444971F1A3A4E740009F889 /* CopyFiles */,
+				8453309F1A3FC3BC00452EEB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -361,6 +366,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		8453309F1A3FC3BC00452EEB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run e04ad6106ec507d40d90a52437cc374949ab924e 1a0fab5b6f81681e7bdc74a01f47e6a51400bfcb694bd06d5a5973f77ab3e938";
 		};
 		A005ED2935594E5E9AA996D4 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -516,6 +534,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = HoneyBee/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "-D DEBUG";
@@ -533,6 +555,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Knock Software Inc";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = HoneyBee/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_SWIFT_FLAGS = "";
