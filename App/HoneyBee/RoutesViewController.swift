@@ -21,6 +21,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Rides"
+        
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
+        
         self.tableView.dataSource = self
         self.tableView.delegate = self
         
@@ -37,10 +42,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.fetchedResultsController.performFetch(nil)
     }
     
-    override func didMoveToParentViewController(parent: UIViewController?) {
-        self.mainViewController = parent as MainViewController
-    }
-    
     @IBAction func done(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -51,20 +52,26 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func setSelectedTrip(trip : Trip!) {
-        if (trip == nil) {
-            return
-        }
-        
-        let trips = self.fetchedResultsController.fetchedObjects! as [Trip]
-        let index = find(trips, trip)
-        if (index == nil) {
-            return
-        }
-        
-        self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: index!, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Middle)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        (segue.destinationViewController as RouteDetailViewController).mainViewController = self.mainViewController
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        
+        if (self.tableView.indexPathForSelectedRow() != nil) {
+            self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow()!, animated: animated)
+        }
+        
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        
+        super.viewWillDisappear(animated)
+    }
+
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         self.tableView.beginUpdates()
     }
@@ -102,14 +109,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
         let reuseID = "RoutesViewTableCell"
         
-        var tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell?
-        if (tableCell == nil) {
-            tableCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: reuseID)
-            tableCell?.backgroundColor = UIColor.clearColor()
-            tableCell?.detailTextLabel?.textColor = UIColor.whiteColor()
-            tableCell?.textLabel.textColor = UIColor.whiteColor()
-        }
-        
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell?
+
         configureCell(tableCell!, trip: trip)
         
         return tableCell!
@@ -118,27 +119,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
         if (trip.startDate != nil) {
             var title = NSString(format: "%@ for %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
-            if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-                title = title + "👍"
-            } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-                title = title + "👎"
-            }
-            tableCell.textLabel.text = title
-        }
-        var tripTypeString = ""
-        if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            tripTypeString = "🚗"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-            tripTypeString = "🚶"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-            tripTypeString = "🏃"
-        } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            tripTypeString = "🚲"
-        } else {
-            tripTypeString = "Traveled"
+
+            tableCell.detailTextLabel!.text = title
         }
         
-        tableCell.detailTextLabel!.text = NSString(format: "%@ %.1f miles",tripTypeString, trip.lengthMiles)
+        var ratingString = ""
+        if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+            ratingString = "👍"
+        } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+            ratingString = "👎"
+        }
+        
+        tableCell.textLabel.text = NSString(format: "%@ %.1f miles %@",trip.activityTypeString(), trip.lengthMiles, ratingString)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

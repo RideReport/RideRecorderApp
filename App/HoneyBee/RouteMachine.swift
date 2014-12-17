@@ -16,7 +16,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     private var shouldDeferUpdates = false
     private var isDefferringLocationUpdates : Bool = false
-    
+
+    private var locationManagerIsUpdating : Bool = false
     private var isInLowPowerState : Bool = false
     
     private var locationManager : CLLocationManager!
@@ -128,6 +129,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             let closingTrip = self.currentTrip
             closingTrip.closeTrip()
             closingTrip.clasifyActivityType({ () -> Void in
+                #if DEBUG
+                    // support all trip types for debug mode
+                #else
+                if (closingTrip.shortValue != Trip.ActivityType.Cycling.rawValue) {
+                    return
+                }
+                #endif
                 closingTrip.sendTripCompletionNotification()
                 closingTrip.syncToServer()
             })
@@ -137,7 +145,46 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.enterLowPowerState()
     }
     
+    func isPaused() -> Bool {
+        return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
+    }
+    
+    func pauseTracking() {
+        if (isPaused()) {
+            return
+        }
+        
+        DDLogWrapper.logInfo("Paused Tracking")
+        
+        self.locationManager.stopUpdatingLocation()
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
+    }
+    
+    func resumeTracking() {
+        if (!isPaused()) {
+            return
+        }
+        
+        DDLogWrapper.logInfo("Resume Tracking")
+        
+        self.enterLowPowerState()
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
+    }
+    
     func enterLowPowerState() {
+        if (isPaused()) {
+            DDLogWrapper.logInfo("Tracking is Paused, not enterign low power state")
+            
+            if (self.locationManagerIsUpdating) {
+                self.locationManager.stopUpdatingLocation()
+            }
+            
+            return
+        } else if (!self.locationManagerIsUpdating) {
+            self.locationManagerIsUpdating = true
+            self.locationManager.startUpdatingLocation()
+        }
+        
         DDLogWrapper.logInfo("Entering low power state")
         DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
         
@@ -150,6 +197,19 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func enterHighPowerState() {
+        if (isPaused()) {
+            DDLogWrapper.logInfo("Tracking is Paused, not enterign high power state")
+            
+            if (self.locationManagerIsUpdating) {
+                self.locationManager.stopUpdatingLocation()
+            }
+            
+            return
+        } else if (!self.locationManagerIsUpdating) {
+            self.locationManagerIsUpdating = true
+            self.locationManager.startUpdatingLocation()
+        }
+        
         DDLogWrapper.logInfo("Entering HIGH power state")
         DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
 
@@ -173,7 +233,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
             self.enterLowPowerState()
-            self.locationManager.startUpdatingLocation()
             #if (arch(i386) || arch(x86_64)) && os(iOS)
                 self.startActiveTracking()
             #endif
@@ -193,6 +252,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         DDLogWrapper.logError(NSString(format: "Got active tracking location error! %@", error))
+        if (error.code == CLError.Denied.rawValue) {
+            // alert the user and pause tracking.
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didFinishDeferredUpdatesWithError error: NSError!) {

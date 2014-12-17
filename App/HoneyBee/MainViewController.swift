@@ -10,6 +10,8 @@ import Foundation
 import MessageUI
 
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, UIActionSheetDelegate {
+    @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
+    
     var mapViewController: MapViewController! = nil
     var routesViewController: RoutesViewController! = nil
     
@@ -20,25 +22,14 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
+        
         self.mapViewController = self.childViewControllers.first as MapViewController
-        self.routesViewController = self.childViewControllers.last as RoutesViewController
+        self.routesViewController = self.childViewControllers.last?.topViewController as RoutesViewController
+        self.routesViewController.mainViewController = self
         
-        self.setSelectedTrip(Trip.mostRecentTrip())
-        self.routesViewController.setSelectedTrip(Trip.mostRecentTrip())
-    }
-    
-    @IBAction func rateBad(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        CoreDataController.sharedCoreDataController.saveContext()
-        
-        self.mapViewController.refreshTrip(self.selectedTrip)
-    }
-    
-    @IBAction func rateGood(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        CoreDataController.sharedCoreDataController.saveContext()
-        
-        self.mapViewController.refreshTrip(self.selectedTrip)
+        refreshPauseResumeTrackingButtonUI()
     }
     
     @IBAction func tools(sender: AnyObject) {
@@ -46,15 +37,26 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             return;
         }
         
-        var smoothButtonTitle = ""
-        if (self.selectedTrip.hasSmoothed) {
-            smoothButtonTitle = "Unsmooth"
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Send Logs")
+        actionSheet.showFromToolbar(self.navigationController?.toolbar)
+    }
+    
+    @IBAction func pauseResumeTracking(sender: AnyObject) {
+        if (RouteMachine.sharedMachine.isPaused()) {
+            RouteMachine.sharedMachine.resumeTracking()
         } else {
-            smoothButtonTitle = "Smooth"
+            RouteMachine.sharedMachine.pauseTracking()
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Sync to Server", "Set up Privacy Circle", "Send Logs")
-        actionSheet.showFromToolbar(self.navigationController?.toolbar)
+        refreshPauseResumeTrackingButtonUI()
+    }
+    
+    func refreshPauseResumeTrackingButtonUI() {
+        if (RouteMachine.sharedMachine.isPaused()) {
+            self.pauseResumeTrackingButton.title = "Resume Tracking"
+        } else {
+            self.pauseResumeTrackingButton.title = "Pause Tracking"
+        }
     }
     
     func setSelectedTrip(trip : Trip!) {
@@ -75,43 +77,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         if (buttonIndex == 1) {
-            self.selectedTrip.clasifyActivityType({
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.mapViewController.refreshTrip(self.selectedTrip)
-                })
-            })
-        } else if (buttonIndex == 2) {
-            if (self.selectedTrip.hasSmoothed) {
-                self.selectedTrip.undoSmoothWithCompletionHandler({
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.mapViewController.refreshTrip(self.selectedTrip)
-                    })
-                })
-            } else {
-                self.selectedTrip.smoothIfNeeded({
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.mapViewController.refreshTrip(self.selectedTrip)
-                    })
-                })
-            }
-        } else if (buttonIndex == 3) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                self.selectedTrip.sendTripCompletionNotification()
-            })
-        } else if (buttonIndex == 4) {
-            self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            CoreDataController.sharedCoreDataController.saveContext()
-            
-            self.mapViewController.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 5) {
-            self.selectedTrip.closeTrip()
-            
-            self.mapViewController.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 6) {
-            self.selectedTrip.syncToServer()
-        } else if (buttonIndex == 7) {
             self.mapViewController.enterPrivacyCircleEditor()
-        } else if (buttonIndex == 8){
+        } else if (buttonIndex == 2){
             sendLogFile()
         } else {
             

@@ -29,10 +29,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
     private var dateFormatter : NSDateFormatter!
     
-    override func viewDidLoad() {
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
-        
+    override func viewDidLoad() {        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
@@ -163,24 +160,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func setSelectedTrip(trip : Trip!) {
-        var title = ""
-        if (trip != nil) {
-            if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                title = "🚗"
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                title = "🚶"
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                title = "🏃"
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                title = "🚲"
-            } else {
-                title = "Traveled"
-            }
-            title = NSString(format: "%@ %.1f miles",title, trip.lengthMiles)
-        }
-
-        self.title = title
-
         if (trip == nil) {
             return
         } else {
@@ -218,6 +197,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         
         let overlay = self.tripPolyLines[trip]! as MKPolyline
+        
+        if (overlay.pointCount == 0) {
+            return
+        }
         
         var i = 1
         let point0 = overlay.points()[0]

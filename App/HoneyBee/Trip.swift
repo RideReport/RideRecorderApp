@@ -88,6 +88,23 @@ class Trip : NSManagedObject {
         self.uuid = NSUUID().UUIDString
     }
     
+    func activityTypeString()->String {
+        var tripTypeString = ""
+        if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+            tripTypeString = "🚗"
+        } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+            tripTypeString = "🚶"
+        } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+            tripTypeString = "🏃"
+        } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            tripTypeString = "🚲"
+        } else {
+            tripTypeString = "Traveled"
+        }
+
+        return tripTypeString
+    }
+    
     func duration() -> NSTimeInterval {
         return fabs(self.startDate.timeIntervalSinceDate(self.endDate))
     }
@@ -224,33 +241,13 @@ class Trip : NSManagedObject {
     func sendTripCompletionNotification() {
         self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
             var message = ""
-            
-            var tripTypeString = "Traveled"
-            
-            #if DEBUG
-                if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                    tripTypeString = "🚲"
-                } else if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                    tripTypeString = "🚗"
-                } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                    tripTypeString = "🚶"
-                } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                    tripTypeString = "🏃"
-                }
-            #else
-                if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                    tripTypeString = "🚲"
-                } else {
-                    return
-                }
-            #endif
         
             if (startingPlacemark != nil && endingPlacemark != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to %@", tripTypeString, self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
+                message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
             } else if (startingPlacemark != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to somewhere", tripTypeString, self.lengthMiles, startingPlacemark.subLocality)
+                message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, startingPlacemark.subLocality)
             } else {
-                message = NSString(format: "%@ %.1f miles from somewhere to somewhere", tripTypeString, self.lengthMiles)
+                message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
             }
             
             let notif = UILocalNotification()
