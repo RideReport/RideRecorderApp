@@ -11,14 +11,14 @@ import Foundation
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     
-    var mapViewController : ViewController! = nil
+    var mainViewController: MainViewController! = nil
     
     private var trips : [Trip]! = nil
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         self.trips = Trip.allTrips() as [Trip]!
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -26,6 +26,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd HH:mm"
+    }
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        self.mainViewController = parent as MainViewController
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -36,6 +40,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         for trip in Trip.allTrips()! {
             (trip as Trip).syncToServer()
         }
+    }
+    
+    func setSelectedTrip(trip : Trip!) {
+        if (trip == nil) {
+            return
+        }
+        
+        let index = find(trips, trip)
+        if (index == nil) {
+            return
+        }
+        
+        self.tableView.selectRowAtIndexPath(NSIndexPath(forRow: index!, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.Middle)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -83,9 +100,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.navigationController?.pushViewController(mapViewController, animated: true)
-        
-        mapViewController.setSelectedTrip(trips[indexPath.row])
+        mainViewController.setSelectedTrip(trips[indexPath.row])
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

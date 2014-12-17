@@ -115,8 +115,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         DDLogWrapper.logInfo("Stopping Active Tracking")
         
-        if (self.currentTrip != nil && self.currentTrip.locations.count <= 2) {
-            // if it doesn't have at least 3 points, toss it.
+        if (self.currentTrip != nil && self.currentTrip.locations.count <= 6) {
+            // if it doesn't more than 6 points, toss it.
             #if DEBUG
                 let notif = UILocalNotification()
                 notif.alertBody = "Canceled Trip"
@@ -175,7 +175,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.enterLowPowerState()
             self.locationManager.startUpdatingLocation()
             #if (arch(i386) || arch(x86_64)) && os(iOS)
-                // simulator.
+                self.startActiveTracking()
             #endif
         } else {
             // tell the user they need to give us access to the zion mainframes
@@ -225,6 +225,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                     Location(location: location as CLLocation, trip: self.currentTrip)
                 }
             }
+            
+            #if (arch(i386) || arch(x86_64)) && os(iOS)
+                foundNonNegativeSpeed = true
+                self.lastMovingLocation = locations.first
+                Location(location: self.lastMovingLocation as CLLocation, trip: self.currentTrip)
+            #endif
             
             if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 60.0)){
                 // otherwise, check the acceleromtere for recent data

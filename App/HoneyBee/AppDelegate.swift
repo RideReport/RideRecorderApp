@@ -15,6 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var fileLogger : DDFileLogger!
+    
+    class func appDelegate() -> AppDelegate! {
+        let delegate = UIApplication.sharedApplication().delegate
+        
+        if (delegate!.isKindOfClass(AppDelegate)) {
+            return delegate as AppDelegate
+        }
+        
+        return nil
+    }
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {

@@ -226,16 +226,25 @@ class Trip : NSManagedObject {
             var message = ""
             
             var tripTypeString = "Traveled"
-            if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-                tripTypeString = "🚗"
-            } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-                tripTypeString = "🚶"
-            } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-                tripTypeString = "🏃"
-            } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                tripTypeString = "🚲"
-            }
             
+            #if DEBUG
+                if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                    tripTypeString = "🚲"
+                } else if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                    tripTypeString = "🚗"
+                } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+                    tripTypeString = "🚶"
+                } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+                    tripTypeString = "🏃"
+                }
+            #else
+                if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                    tripTypeString = "🚲"
+                } else {
+                    return
+                }
+            #endif
+        
             if (startingPlacemark != nil && endingPlacemark != nil) {
                 message = NSString(format: "%@ %.1f miles from %@ to %@", tripTypeString, self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
             } else if (startingPlacemark != nil) {
@@ -310,11 +319,16 @@ class Trip : NSManagedObject {
     var averageSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        for location in self.locations.array {
-            if (location as Location).speed.doubleValue > 0 {
+        for loc in self.locations.array {
+            let location = loc as Location
+            if (location.speed.doubleValue > 0 && location.horizontalAccuracy.doubleValue <= kCLLocationAccuracyNearestTenMeters) {
                 count++
                 sumSpeed += (location as Location).speed.doubleValue
             }
+        }
+        
+        if (count == 0) {
+            return 0
         }
         
         return sumSpeed/Double(count)

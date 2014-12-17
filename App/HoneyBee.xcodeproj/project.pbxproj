@@ -17,13 +17,15 @@
 		8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */; };
 		8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309D1A3FAED800452EEB /* PrivacyCircle.swift */; };
 		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
+		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
 		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
 		847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* RoutesViewController.swift */; };
+		847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847ED0901A40DA0D00CAA396 /* MainViewController.swift */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */; };
-		84D1555A19D2733500316995 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* ViewController.swift */; };
+		84D1555A19D2733500316995 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
 		84D1555D19D2733500316995 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555B19D2733500316995 /* Main.storyboard */; };
 		84D1555F19D2733500316995 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555E19D2733500316995 /* Images.xcassets */; };
 		84D1556219D2733500316995 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84D1556019D2733500316995 /* LaunchScreen.xib */; };
@@ -83,17 +85,20 @@
 		8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyCircleRenderer.swift; sourceTree = "<group>"; };
 		8453309D1A3FAED800452EEB /* PrivacyCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PrivacyCircle.swift; path = HoneyBee/PrivacyCircle.swift; sourceTree = "<group>"; };
 		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMachineTests.swift; sourceTree = "<group>"; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Trip.swift; path = HoneyBee/Trip.swift; sourceTree = "<group>"; };
 		847A05661A01B2FE008F5371 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Location.swift; path = HoneyBee/Location.swift; sourceTree = "<group>"; };
 		847A056E1A02E757008F5371 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesViewController.swift; sourceTree = "<group>"; };
+		847ED0901A40DA0D00CAA396 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		847ED0921A41112800CAA396 /* HoneyBee 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 7.xcdatamodel"; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 6.xcdatamodel"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* HoneyBee.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HoneyBee.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1555419D2733500316995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84D1555719D2733500316995 /* HoneyBee.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HoneyBee.xcdatamodel; sourceTree = "<group>"; };
-		84D1555919D2733500316995 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		84D1555919D2733500316995 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		84D1555C19D2733500316995 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		84D1555E19D2733500316995 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		84D1556119D2733500316995 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -111,6 +116,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
 				8405C5E01A3BAE4700B1DBDB /* Alamofire.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
@@ -126,6 +132,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				845330A21A40B01100452EEB /* MessageUI.framework */,
 				845330A01A3FC3D600452EEB /* Crashlytics.framework */,
 				844497141A3A4E040009F889 /* Alamofire.xcodeproj */,
 				BA743A6C616E49B6A36F8FD7 /* libPods.a */,
@@ -163,7 +170,8 @@
 		8445317819FEEB4D0096F26E /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				84D1555919D2733500316995 /* ViewController.swift */,
+				847ED0901A40DA0D00CAA396 /* MainViewController.swift */,
+				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 			);
 			name = "View Controllers";
@@ -403,8 +411,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
+				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
-				84D1555A19D2733500316995 /* ViewController.swift in Sources */,
+				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
@@ -595,6 +604,7 @@
 		84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				847ED0921A41112800CAA396 /* HoneyBee 7.xcdatamodel */,
 				84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */,
 				84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */,
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,

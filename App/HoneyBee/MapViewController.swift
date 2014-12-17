@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MapViewController.swift
 //  HoneyBee
 //
 //  Created by William Henderson on 9/23/14.
@@ -10,7 +10,9 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
+    var mainViewController: MainViewController! = nil
+    
     @IBOutlet weak var mapView: MKMapView!
     
     @IBOutlet weak var privacyCircleToolbar: UIToolbar!
@@ -18,25 +20,16 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
-    private var selectedTrip : Trip!
     
     private var defaultPrivacyCircleRadius = 300.0
     private var privacyCircle : MKCircle!
     private var privacyCircleRenderer : PrivacyCircleRenderer!
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
-    
-    private var logsShowing : Bool = false
-    
+        
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
-        let routesController = (self.storyboard!.instantiateViewControllerWithIdentifier("RoutesViewController") as RoutesViewController)
-        routesController.mapViewController = self
-        routesController.title = "Rides"
-        
-        self.navigationController?.viewControllers = [routesController, self]
-        
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
@@ -46,6 +39,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
+        self.mapView.pitchEnabled = true
+        self.mapView.showsBuildings = true
         
         self.tripPolyLines = [:]
         
@@ -54,14 +49,45 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
         NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.setSelectedTrip(RouteMachine.sharedMachine.currentTrip)
+            let state = UIApplication.sharedApplication().applicationState
+            if (state == UIApplicationState.Background || state == UIApplicationState.Inactive) {
+               return
+            }
+            
+            let currentTrip = RouteMachine.sharedMachine.currentTrip
+            self.refreshTrip(currentTrip)
+            
+            if (currentTrip.locations.count <= 1) {
+                return
+            }
+
+            let lastLoc = currentTrip.locations.lastObject as Location
+            var secondToLastLoc = currentTrip.locations[currentTrip.locations.count - 2] as Location
+
+            let camera = MKMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2DMake(lastLoc.latitude.doubleValue, lastLoc.longitude.doubleValue), fromEyeCoordinate: CLLocationCoordinate2DMake(secondToLastLoc.latitude.doubleValue, secondToLastLoc.longitude.doubleValue), eyeAltitude: 0)
+            camera.pitch = 80
+            self.mapView.setCamera(camera, animated: true)
         }
+    }
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        self.mainViewController = parent as MainViewController
         
         for trip in Trip.allTrips()! {
             self.refreshTrip(trip as Trip)
         }
-        
-        self.setSelectedTrip(Trip.mostRecentTrip())
+    }
+    
+    func enterPrivacyCircleEditor() {
+        if (self.privacyCircle == nil) {
+            if (PrivacyCircle.privacyCircle() == nil) {
+                self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: self.defaultPrivacyCircleRadius)
+            } else {
+                self.privacyCircle = MKCircle(centerCoordinate: CLLocationCoordinate2DMake(PrivacyCircle.privacyCircle().latitude.doubleValue, PrivacyCircle.privacyCircle().longitude.doubleValue), radius: PrivacyCircle.privacyCircle().radius.doubleValue)
+            }
+            self.mapView.addOverlay(self.privacyCircle)
+        }
+        self.privacyCircleToolbar.hidden = false
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -130,91 +156,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     @IBAction func addIncident(sender: AnyObject) {
         DDLogWrapper.logVerbose("Add incident")
     }
-    
-    @IBAction func rateBad(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        CoreDataController.sharedCoreDataController.saveContext()
-        
-        self.refreshTrip(self.selectedTrip)
-    }
-    
-    @IBAction func rateGood(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        CoreDataController.sharedCoreDataController.saveContext()
-        
-        self.refreshTrip(self.selectedTrip)
-    }
-    
-    @IBAction func tools(sender: AnyObject) {
-        if (self.selectedTrip == nil) {
-            return;
-        }
-        
-        var smoothButtonTitle = ""
-        if (self.selectedTrip.hasSmoothed) {
-            smoothButtonTitle = "Unsmooth"
-        } else {
-            smoothButtonTitle = "Smooth"
-        }
-        
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Sync to Server", "Set up Privacy Circle")
-        actionSheet.showFromToolbar(self.navigationController?.toolbar)
-    }
-    
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        if (buttonIndex == 1) {
-            self.selectedTrip.clasifyActivityType({
-                self.refreshTrip(self.selectedTrip)
-            })
-        } else if (buttonIndex == 2) {
-            if (self.selectedTrip.hasSmoothed) {
-                self.selectedTrip.undoSmoothWithCompletionHandler({
-                    self.refreshTrip(self.selectedTrip)
-                })
-            } else {
-                self.selectedTrip.smoothIfNeeded({
-                    self.refreshTrip(self.selectedTrip)
-                })
-            }
-        } else if (buttonIndex == 3) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                self.selectedTrip.sendTripCompletionNotification()
-            })
-        } else if (buttonIndex == 4) {
-            self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            CoreDataController.sharedCoreDataController.saveContext()
-            
-            self.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 5) {
-            self.selectedTrip.closeTrip()
-            
-            self.refreshTrip(self.selectedTrip)
-        } else if (buttonIndex == 6) {
-            self.selectedTrip.syncToServer()
-        } else if (buttonIndex == 7) {
-            if (self.privacyCircle == nil) {
-                if (PrivacyCircle.privacyCircle() == nil) {
-                    self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: self.defaultPrivacyCircleRadius)
-                } else {
-                    self.privacyCircle = MKCircle(centerCoordinate: CLLocationCoordinate2DMake(PrivacyCircle.privacyCircle().latitude.doubleValue, PrivacyCircle.privacyCircle().longitude.doubleValue), radius: PrivacyCircle.privacyCircle().radius.doubleValue)
-                }
-                self.mapView.addOverlay(self.privacyCircle)
-            }
-            self.privacyCircleToolbar.hidden = false
-        } else {
-            
-        }
-    }
-    
-    @IBAction func logs(sender: AnyObject) {
-        if (self.logsShowing) {
-            UIForLumberjack.sharedInstance().showLogInView(self.view)
-        } else {
-            UIForLumberjack.sharedInstance().hideLog()
-        }
-        
-        self.logsShowing = !self.logsShowing
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -222,22 +163,6 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
     }
     
     func setSelectedTrip(trip : Trip!) {
-        let oldTrip = self.selectedTrip
-        
-        self.selectedTrip = trip
-        
-        if (oldTrip != nil) {
-            self.refreshTrip(oldTrip)
-        }
-        
-        if (trip != nil) {
-            self.refreshTrip(trip)
-        }
-        
-        self.refreshSelectedTrip(trip)
-    }
-    
-    func refreshSelectedTrip(trip : Trip!) {
         var title = ""
         if (trip != nil) {
             if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
@@ -291,6 +216,38 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             self.mapView.addAnnotation(annotation)
             self.tripAnnotations.append(annotation)
         }
+        
+        let overlay = self.tripPolyLines[trip]! as MKPolyline
+        
+        var i = 1
+        let point0 = overlay.points()[0]
+        var minX : Double = point0.x
+        var maxX : Double = point0.x
+        var minY : Double = point0.y
+        var maxY : Double = point0.y
+        
+        while i < overlay.pointCount {
+            let point = overlay.points()[i]
+            if (point.x < minX) {
+                minX = point.x
+            } else if (point.x > maxX) {
+                maxX = point.x
+            }
+            
+            if (point.y < minY) {
+                minY = point.y
+            } else if (point.y > maxY) {
+                maxY = point.y
+            }
+            i++
+        }
+        
+        let padFactor : Double = 0.1
+        let sizeX = (maxX - minX)
+        let sizeY = (maxY - minY)
+        
+        let mapRect = MKMapRectMake(minX - (sizeX * padFactor), minY - (sizeY * padFactor), sizeX * (1 + 2*padFactor), sizeY * (1 + 2*padFactor))
+        self.mapView.setVisibleMapRect(mapRect, animated: true)
     }
     
     // MARK: - Update Map UI
@@ -325,8 +282,8 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
         self.tripPolyLines[trip] = polyline
         self.mapView.addOverlay(polyline)
         
-        if (self.selectedTrip != nil && trip == self.selectedTrip) {
-            self.refreshSelectedTrip(trip)
+        if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
+            self.setSelectedTrip(trip)
         }
     }
     
@@ -360,7 +317,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
                 
             }
             
-            if (self.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+            if (self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue) {
                 let button = UIButton(frame: CGRectMake(0, 0, 60, 20))
                 button.setTitle("Incident", forState: UIControlState.Normal)
                 button.titleLabel?.font = UIFont.systemFontOfSize(12)
@@ -392,7 +349,7 @@ class ViewController: UIViewController, MKMapViewDelegate, UIActionSheetDelegate
             var opacity : CGFloat
             var lineWidth : CGFloat
             
-            if (self.selectedTrip != nil && trip == self.selectedTrip) {
+            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
                 opacity = 0.8
                 lineWidth = 5
             } else {
