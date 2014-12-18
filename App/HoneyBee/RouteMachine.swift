@@ -129,13 +129,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             let closingTrip = self.currentTrip
             closingTrip.closeTrip()
             closingTrip.clasifyActivityType({ () -> Void in
-                #if DEBUG
-                    // support all trip types for debug mode
-                #else
-                if (closingTrip.shortValue != Trip.ActivityType.Cycling.rawValue) {
-                    return
-                }
-                #endif
                 closingTrip.sendTripCompletionNotification()
                 closingTrip.syncToServer()
             })
