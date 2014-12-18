@@ -110,8 +110,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="4.3m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Ejg-PQ-fwk">
-                                <rect key="frame" x="16" y="113" width="353" height="96"/>
+                                <rect key="frame" x="16" y="107" width="353" height="72"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="80"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="10mph" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="qfE-CH-gAW">
+                                <rect key="frame" x="16" y="177" width="219" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -120,10 +126,11 @@
                         <constraints>
                             <constraint firstItem="xqm-Jj-iLN" firstAttribute="top" secondItem="vjU-bf-j0X" secondAttribute="bottom" constant="-2" id="IQT-MA-xD8"/>
                             <constraint firstItem="xqm-Jj-iLN" firstAttribute="trailing" secondItem="TWR-nP-pUX" secondAttribute="trailingMargin" id="L9D-cK-y81"/>
+                            <constraint firstItem="qfE-CH-gAW" firstAttribute="top" secondItem="Ejg-PQ-fwk" secondAttribute="bottom" constant="-2" id="Lsm-Da-Utw"/>
                             <constraint firstItem="pcZ-F6-pUl" firstAttribute="top" secondItem="vjU-bf-j0X" secondAttribute="bottom" constant="-24" id="RKO-30-HTL"/>
                             <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="t3o-so-ELm" secondAttribute="bottom" constant="10" id="XMT-pp-bqh"/>
-                            <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="Ejg-PQ-fwk" secondAttribute="bottom" constant="-2" id="as6-vo-Kjt"/>
                             <constraint firstItem="t3o-so-ELm" firstAttribute="trailing" secondItem="TWR-nP-pUX" secondAttribute="trailingMargin" id="dAw-Iq-Nx3"/>
+                            <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="qfE-CH-gAW" secondAttribute="bottom" constant="6" id="dY0-jm-wIf"/>
                             <constraint firstItem="Ejg-PQ-fwk" firstAttribute="leading" secondItem="TWR-nP-pUX" secondAttribute="leadingMargin" id="uVz-ud-D0s"/>
                         </constraints>
                     </view>
@@ -131,6 +138,7 @@
                         <outlet property="distanceLabel" destination="Ejg-PQ-fwk" id="2In-pw-ITi"/>
                         <outlet property="thumbsDownButton" destination="t3o-so-ELm" id="i2v-L6-nBC"/>
                         <outlet property="thumbsUpButton" destination="xqm-Jj-iLN" id="tka-UG-Amg"/>
+                        <outlet property="tripSpeedLabel" destination="qfE-CH-gAW" id="GBf-NK-MpJ"/>
                         <outlet property="tripTypeLabel" destination="pcZ-F6-pUl" id="eO5-rH-zDg"/>
                     </connections>
                 </viewController>
@@ -170,7 +178,7 @@
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ipq-pH-1iE">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" red="0.0" green="0.0" blue="0.0" alpha="0.81000000000000005" colorSpace="calibratedRGB"/>
                                                 </label>
@@ -179,7 +187,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <segue destination="kwz-jH-hLg" kind="show" id="eD6-2N-2lo"/>
+                                            <segue destination="kwz-jH-hLg" kind="show" identifier="routeSelectedSegue" id="eD6-2N-2lo"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -264,7 +272,7 @@
                         <barButtonItem key="leftBarButtonItem" systemItem="action" id="YrK-5y-IWt">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <action selector="tools:" destination="A5D-RC-UCB" id="X9W-Yq-uu2"/>
+                                <action selector="tools:" destination="A5D-RC-UCB" id="0xy-5X-VYE"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Pause Tracking" id="5KM-wa-SB8">

@@ -39,6 +39,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.pitchEnabled = true
         self.mapView.showsBuildings = true
         
+        let mapTapRecognizer = UITapGestureRecognizer(target: self, action: "mapTapGesture:")
+        self.mapView.addGestureRecognizer(mapTapRecognizer)
+        
         self.tripPolyLines = [:]
         
         self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
@@ -89,6 +92,35 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+    
+    func mapTapGesture(sender: AnyObject) {
+        if sender.numberOfTouches() > 1 {
+            return
+        }
+        
+        let point = sender.locationInView(self.mapView)
+        
+        let coord = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
+        let mapPoint = MKMapPointForCoordinate(coord)
+        
+        for (trip, polyLine) in self.tripPolyLines {
+            let renderer = self.mapView.rendererForOverlay(polyLine)
+            if (renderer == nil) {
+                return
+            }
+            let polyLineRenderer = renderer as MKPolylineRenderer
+            
+            let pointInPolyline = polyLineRenderer.pointForMapPoint(mapPoint)
+            let strokeWidth : CGFloat = 1000.0
+            let path = CGPathCreateCopyByStrokingPath(polyLineRenderer.path, nil, strokeWidth, kCGLineCapRound, kCGLineJoinRound, 0.0)
+            
+            if (CGPathContainsPoint(path, nil, pointInPolyline, false)) {
+                self.mainViewController.setSelectedTrip(trip, sender:self)
+                return
+            }
+        }
+        
     }
     
     func respondToPrivacyCirclePanGesture(sender: AnyObject) {
@@ -160,13 +192,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func setSelectedTrip(trip : Trip!) {
+        self.mapView.removeAnnotations(self.tripAnnotations)
+        self.tripAnnotations = []
+
         if (trip == nil) {
             return
-        } else {
-            self.mapView.removeAnnotations(self.tripAnnotations)
         }
         
-        self.tripAnnotations = []
         var coordinates : [CLLocationCoordinate2D] = []
         var count : Int = 0
         
@@ -298,17 +330,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 annotationView.addSubview(pointView)
                 annotationView.frame = pointView.frame
                 
-            }
-            
-            if (self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-                let button = UIButton(frame: CGRectMake(0, 0, 60, 20))
-                button.setTitle("Incident", forState: UIControlState.Normal)
-                button.titleLabel?.font = UIFont.systemFontOfSize(12)
-                button.backgroundColor = UIColor.redColor()
-                button.addTarget(self, action:"addIncident:", forControlEvents:UIControlEvents.TouchUpInside)
-                annotationView.rightCalloutAccessoryView = button
-            } else {
-                annotationView.rightCalloutAccessoryView = nil
             }
             
             annotationView.annotation = annotation

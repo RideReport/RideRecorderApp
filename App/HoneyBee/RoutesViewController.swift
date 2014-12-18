@@ -15,7 +15,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var mainViewController: MainViewController! = nil
     
     private var fetchedResultsController : NSFetchedResultsController! = nil
-    
+
+    private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
@@ -31,7 +32,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MM/dd HH:mm"
+        self.dateFormatter.dateFormat = "MMM d"
+        
+        self.timeFormatter = NSDateFormatter()
+        self.timeFormatter.locale = NSLocale.currentLocale()
+        self.timeFormatter.dateFormat = "h:mm"
         
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -46,18 +51,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    @IBAction func sync(sender: AnyObject) {
-        for trip in Trip.allTrips()! {
-            (trip as Trip).syncToServer()
-        }
-    }
-    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         (segue.destinationViewController as RouteDetailViewController).mainViewController = self.mainViewController
     }
     
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        self.mainViewController.setSelectedTrip(nil, sender:self)
         
         if (self.tableView.indexPathForSelectedRow() != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow()!, animated: animated)
@@ -70,6 +70,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
         
         super.viewWillDisappear(animated)
+    }
+    
+    func setSelectedTrip(trip : Trip!) {
+        if (trip != nil) {
+            if (self.navigationController?.topViewController != self) {
+                (self.navigationController?.topViewController as RouteDetailViewController).refreshTripUI()
+            } else {
+                self.performSegueWithIdentifier("routeSelectedSegue", sender: self)
+            }
+        }
     }
 
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
@@ -91,7 +101,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
         case .Update:
             let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as Trip
-            configureCell(self.tableView!.cellForRowAtIndexPath(indexPath!)!, trip:trip)
+            let cell = self.tableView!.cellForRowAtIndexPath(indexPath!)
+            if (cell != nil) {
+                configureCell(cell!, trip:trip)
+            }
             
         case .Move:
             self.tableView!.deleteRowsAtIndexPaths([indexPath!],
@@ -118,7 +131,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
         if (trip.startDate != nil) {
-            var title = NSString(format: "%@ for %i minutes",self.dateFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            var dateString = ""
+            if (trip.startDate.isToday()) {
+                dateString = ""
+            } else if (trip.startDate.isYesterday()) {
+                dateString = "Yesterday at"
+            } else if (trip.startDate.isThisWeek()) {
+                dateString = trip.startDate.weekDay() + " at"
+            } else {
+                dateString = self.dateFormatter.stringFromDate(trip.startDate) + " at"
+            }
+            
+            var title = NSString(format: "%@ %@ for %im", dateString, self.timeFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
 
             tableCell.detailTextLabel!.text = title
         }
@@ -134,7 +158,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        mainViewController.setSelectedTrip(self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip)
+        self.mainViewController.setSelectedTrip(self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip, sender:self)
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

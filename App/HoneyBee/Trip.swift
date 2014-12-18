@@ -88,6 +88,12 @@ class Trip : NSManagedObject {
         self.uuid = NSUUID().UUIDString
     }
     
+    override func willSave() {
+        self.setPrimitiveValue(false, forKey: "isSynced")
+        
+        super.willSave()
+    }
+    
     func activityTypeString()->String {
         var tripTypeString = ""
         if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
@@ -174,7 +180,7 @@ class Trip : NSManagedObject {
     
     func syncToServer() {
         if (self.isSynced) {
-//            return
+            return
         }
         
         var tripDict = [

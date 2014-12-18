@@ -11,6 +11,7 @@ import MessageUI
 
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, UIActionSheetDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
+    var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
     var routesViewController: RoutesViewController! = nil
@@ -25,6 +26,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
+        self.customButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
+        self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
+        self.navigationItem.rightBarButtonItem?.customView = self.customButton
+        
         self.mapViewController = self.childViewControllers.first as MapViewController
         self.routesViewController = self.childViewControllers.last?.topViewController as RoutesViewController
         self.routesViewController.mainViewController = self
@@ -33,11 +38,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        if (self.selectedTrip == nil) {
-            return;
-        }
-        
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Send Logs")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Send Logs", "Sync all routes")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -53,13 +54,18 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     func refreshPauseResumeTrackingButtonUI() {
         if (RouteMachine.sharedMachine.isPaused()) {
-            self.pauseResumeTrackingButton.title = "Resume Tracking"
+            self.customButton.maskImage = UIImage(named: "locationArrowDisabled.png")
+            self.customButton.primaryColor = UIColor.grayColor()
+            self.customButton.secondaryColor = UIColor.grayColor()
+
         } else {
-            self.pauseResumeTrackingButton.title = "Pause Tracking"
+            self.customButton.maskImage = UIImage(named: "locationArrow.png")
+            self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
+            self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
         }
     }
     
-    func setSelectedTrip(trip : Trip!) {
+    func setSelectedTrip(trip : Trip!,  sender: AnyObject) {
         let oldTrip = self.selectedTrip
         
         self.selectedTrip = trip
@@ -72,6 +78,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.mapViewController.refreshTrip(trip)
         }
         
+        if (!sender.isKindOfClass(RoutesViewController)) {
+            self.routesViewController.setSelectedTrip(trip)
+        }
         self.mapViewController.setSelectedTrip(trip)
     }
     
@@ -80,8 +89,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.mapViewController.enterPrivacyCircleEditor()
         } else if (buttonIndex == 2){
             sendLogFile()
-        } else {
-            
+        } else if (buttonIndex == 3) {
+            for trip in Trip.allTrips()! {
+                (trip as Trip).syncToServer()
+            }
         }
     }
     

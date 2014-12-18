@@ -5,3 +5,4 @@
 #import "CocoaLumberjack.h"
 #import "UIForLumberjack.h"
 #import "DDLogWrapper.h"
+#import "HBAnimatedGradientMaskButton.h"

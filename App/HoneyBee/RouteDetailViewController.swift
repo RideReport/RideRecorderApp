@@ -15,6 +15,7 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     @IBOutlet weak var thumbsDownButton: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var tripTypeLabel: UILabel!
+    @IBOutlet weak var tripSpeedLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +31,15 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     }
     
     func refreshTripUI() {
+        if (self.mainViewController.selectedTrip == nil) {
+            return
+        }
+        
         self.distanceLabel.text = NSString(format: "%.1fm", self.mainViewController.selectedTrip.lengthMiles)
         self.tripTypeLabel.text = self.mainViewController.selectedTrip.activityTypeString()
+        
+        let speedMph = self.mainViewController.selectedTrip.averageSpeed*2.23694
+        self.tripSpeedLabel.text = NSString(format: "%.1fmph", speedMph)
         
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
