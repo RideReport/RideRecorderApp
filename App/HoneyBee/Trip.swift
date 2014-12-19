@@ -195,7 +195,7 @@ class Trip : NSManagedObject {
             if !aLocation.isPrivate {
                 locations.append([
                     "course": aLocation.course,
-                    "date": NetworkMachine.sharedMachine.jsonify(aLocation.date),
+                    "date": NetworkMachine.sharedMachine.jsonify(aLocation.date!),
                     "horizontalAccuracy": aLocation.horizontalAccuracy,
                     "speed": aLocation.speed,
                     "longitude": aLocation.longitude,

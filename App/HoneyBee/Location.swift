@@ -21,8 +21,8 @@ class Location : NSManagedObject {
     @NSManaged var latitude : NSNumber
     @NSManaged var longitude : NSNumber
     @NSManaged var speed : NSNumber
-    @NSManaged var trip : Trip!
-    @NSManaged var date : NSDate!
+    @NSManaged var trip : Trip?
+    @NSManaged var date : NSDate?
     
     convenience init(location: CLLocation, trip: Trip) {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()

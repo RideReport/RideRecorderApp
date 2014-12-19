@@ -22,8 +22,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     private var hasCenteredMap : Bool = false
     
     private var defaultPrivacyCircleRadius = 300.0
-    private var privacyCircle : MKCircle!
-    private var privacyCircleRenderer : PrivacyCircleRenderer!
+    private var privacyCircle : MKCircle?
+    private var privacyCircleRenderer : PrivacyCircleRenderer?
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
         
@@ -54,7 +54,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                return
             }
             
-            let currentTrip = RouteMachine.sharedMachine.currentTrip
+            let currentTrip : Trip! = RouteMachine.sharedMachine.currentTrip!
+            if currentTrip == nil {
+                return
+            }
             self.refreshTrip(currentTrip)
             
             if (currentTrip.locations.count <= 1) {
@@ -124,7 +127,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func respondToPrivacyCirclePanGesture(sender: AnyObject) {
-        if (self.privacyCircle == nil) {
+        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
             return
         }
         
@@ -136,9 +139,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
             let gestureLocation = CLLocation(latitude: gestureCoord.latitude, longitude: gestureCoord.longitude)
             
-            let circleLocation = CLLocation(latitude: self.privacyCircle.coordinate.latitude, longitude: self.privacyCircle.coordinate.longitude)
+            let circleLocation = CLLocation(latitude: self.privacyCircle!.coordinate.latitude, longitude: self.privacyCircle!.coordinate.longitude)
             
-            if (gestureLocation.distanceFromLocation(circleLocation) <= self.privacyCircle.radius) {
+            if (gestureLocation.distanceFromLocation(circleLocation) <= self.privacyCircle!.radius) {
                 self.mapView.scrollEnabled = false
                 self.isDraggingPrivacyCircle = true
             } else {
@@ -149,8 +152,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             if (self.isDraggingPrivacyCircle) {
                 let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
                 
-                self.privacyCircle = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle.radius)
-                self.privacyCircleRenderer.coordinate = gestureCoord
+                self.privacyCircle! = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle!.radius)
+                self.privacyCircleRenderer!.coordinate = gestureCoord
             }
         } else {
             self.mapView.scrollEnabled = true
@@ -168,7 +171,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     @IBAction func saveSetPrivacyCircle(sender: AnyObject) {
-        PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle)
+        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
+            return
+        }
+        
+        PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle!)
         
         self.privacyCircleToolbar.hidden = true
         
@@ -219,7 +226,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 annotation.title = NSString(format: "%i", count)
             }
             if (location.date != nil) {
-                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date), location.speed.doubleValue)
+                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed.doubleValue)
             } else {
                 annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed.doubleValue)
             }
@@ -381,10 +388,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             return renderer;
         } else if (overlay.isKindOfClass(MKCircle)) {
             self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
-            self.privacyCircleRenderer.strokeColor = UIColor.redColor()
-            self.privacyCircleRenderer.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
-            self.privacyCircleRenderer.lineWidth = 1.0
-            self.privacyCircleRenderer.lineDashPattern = [3,5]
+            self.privacyCircleRenderer!.strokeColor = UIColor.redColor()
+            self.privacyCircleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+            self.privacyCircleRenderer!.lineWidth = 1.0
+            self.privacyCircleRenderer!.lineDashPattern = [3,5]
             
             return self.privacyCircleRenderer
         } else {

@@ -31,7 +31,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let motionStartTimeoutInterval : NSTimeInterval = 30
     let motionContinueTimeoutInterval : NSTimeInterval = 60
     
-    internal private(set) var currentTrip : Trip!
+    internal private(set) var currentTrip : Trip?
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -95,7 +95,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (self.stoppedMovingLocation != nil) {
             // set up the stoppedMovingLocation as the first location in the trip
-            let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip)
+            let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip!)
             
             // but give it a recent date.
             newLocation.date = NSDate()
@@ -116,7 +116,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         DDLogWrapper.logInfo("Stopping Active Tracking")
         
-        if (self.currentTrip != nil && self.currentTrip.locations.count <= 6) {
+        if (self.currentTrip!.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
             #if DEBUG
                 let notif = UILocalNotification()
@@ -124,13 +124,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip)
+            CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip!)
         } else {
             let closingTrip = self.currentTrip
-            closingTrip.closeTrip()
-            closingTrip.clasifyActivityType({ () -> Void in
-                closingTrip.sendTripCompletionNotification()
-                closingTrip.syncToServer()
+            closingTrip!.closeTrip()
+            closingTrip!.clasifyActivityType({ () -> Void in
+                closingTrip!.sendTripCompletionNotification()
+                closingTrip!.syncToServer()
             })
         }
         
@@ -277,7 +277,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                     DDLogWrapper.logVerbose("Got new active tracking location")
                     
                     self.lastMovingLocation = location
-                    Location(location: location as CLLocation, trip: self.currentTrip)
+                    Location(location: location as CLLocation, trip: self.currentTrip!)
                 }
             }
             
@@ -336,7 +336,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 self.startActiveTracking()
                 
                 for location in locations {
-                    Location(location: location as CLLocation, trip: self.currentTrip)
+                    Location(location: location as CLLocation, trip: self.currentTrip!)
                 }
             } else {
                DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
