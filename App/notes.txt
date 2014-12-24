@@ -16,3 +16,7 @@ Detecting taps on MKPolylines:
 //  - get a motion update
 //      - are we still moving?
 //      - NO: end route, go to sleep, back to begining
+
+
+Useful background app link:
+https://gooddevbaddev.wordpress.com/2013/10/22/ios-7-running-location-based-apps-in-the-background/

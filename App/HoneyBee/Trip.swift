@@ -341,7 +341,7 @@ class Trip : NSManagedObject {
         RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
             if (activities == nil || activities.count == 0) {
                 // if no data is available, fall back on speed alone
-                if (self.averageSpeed >= 6.5) {
+                if (self.averageSpeed >= 8) {
                     self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
                 } else if (self.averageSpeed >= 3) {
                     self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
