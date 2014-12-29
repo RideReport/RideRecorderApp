@@ -80,22 +80,13 @@
           } else {
             polyline = new L.Polyline(
       			  locs, 
-      			  {color: '#CCFF33',
+      			  {color: 'grey',
               weight: 3,
               opacity: 0.4,
               smoothFactor: 1}
             );
           }
           polylineArray.push(polyline);
-  			} else {
-  				var polyline = new L.Polyline(
-    			  locs, 
-    			  {color: 'grey',
-            weight: 3,
-            opacity: 0.3,
-            smoothFactor: 1}
-          );
-          polylineArray.push(polyline);  			  
   			}
   		}
   		
