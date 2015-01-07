@@ -35,6 +35,13 @@ class Location : NSManagedObject {
         self.longitude = NSNumber(double: location.coordinate.longitude)
         self.speed = NSNumber(double: location.speed)
         self.date = location.timestamp
+
+        let circleCenterLocation = CLLocation(latitude: PrivacyCircle.privacyCircle().latitude.doubleValue, longitude: PrivacyCircle.privacyCircle().longitude.doubleValue)
+
+        let distanceFromCenter = circleCenterLocation.distanceFromLocation(location)
+        if (distanceFromCenter <= PrivacyCircle.privacyCircle().radius.doubleValue) {
+            self.isPrivate = true
+        }
     }
     
     class func privateLocations() -> [AnyObject] {
@@ -88,6 +95,12 @@ class Location : NSManagedObject {
         }
 
         return filteredResults
+    }
+    
+    override func willSave() {
+        self.setPrimitiveValue(false, forKey: "trip.isSynced")
+        
+        super.willSave()
     }
     
     func coordinate() -> CLLocationCoordinate2D {
