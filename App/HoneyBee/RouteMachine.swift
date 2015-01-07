@@ -13,7 +13,7 @@ import CoreMotion
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 30
-    let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters
+    let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     
     private var shouldDeferUpdates = false
     private var isDefferringLocationUpdates : Bool = false

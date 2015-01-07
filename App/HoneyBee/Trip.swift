@@ -51,22 +51,6 @@ class Trip : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
-//        for trip in results! {
-//            let atrip = trip as Trip
-//            let foo = atrip.locations.firstObject?.date!
-//            if foo == nil {
-//                NSLog("asddsa")
-//            }
-//            for loc in atrip.locations.array {
-//                let aLoc = loc as Location
-//                if (aLoc.deleted) {
-//                    let mc = atrip.locations.mutableCopy() as NSMutableOrderedSet
-//                    mc.removeObject(aLoc)
-//                    atrip.locations = mc
-//                }
-//            }
-//        }
-        
         return results!
     }
     
