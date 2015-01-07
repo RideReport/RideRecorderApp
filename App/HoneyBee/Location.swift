@@ -13,7 +13,6 @@ import CoreMotion
 import MapKit
 
 class Location : NSManagedObject {
-
     @NSManaged var course : NSNumber
     @NSManaged var horizontalAccuracy : NSNumber
     @NSManaged var isPrivate : Bool

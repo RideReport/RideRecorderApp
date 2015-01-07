@@ -154,7 +154,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             ratingString = "👎"
         }
         
-        tableCell.textLabel.text = NSString(format: "%@ %.1f miles %@",trip.activityTypeString(), trip.lengthMiles, ratingString)
+        tableCell.textLabel!.text = NSString(format: "%@ %.1f miles %@",trip.activityTypeString(), trip.lengthMiles, ratingString)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

@@ -43,10 +43,10 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Activity" positionX="-54" positionY="81" width="128" height="178"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="58"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="178"/>
         <element name="PrivacyCircle" positionX="-54" positionY="81" width="128" height="88"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="193"/>
-        <element name="Activity" positionX="-54" positionY="81" width="128" height="178"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="195"/>
     </elements>
 </model>

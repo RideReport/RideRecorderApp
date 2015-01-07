@@ -10,6 +10,9 @@
 		4EE5F5DF268A49CFA7A497E8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA743A6C616E49B6A36F8FD7 /* libPods.a */; };
 		8405C5E01A3BAE4700B1DBDB /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8444971A1A3A4E040009F889 /* Alamofire.framework */; };
 		8405C5E11A3BAFD800B1DBDB /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8444971A1A3A4E040009F889 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8429E5D01A5DC58500EB3E94 /* HoneyBee_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */; };
+		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
+		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
@@ -40,6 +43,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		8429E5D11A5DC58500EB3E94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84D1554719D2733500316995 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 84D1554E19D2733500316995;
+			remoteInfo = HoneyBee;
+		};
 		844497191A3A4E040009F889 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 844497141A3A4E040009F889 /* Alamofire.xcodeproj */;
@@ -78,6 +88,15 @@
 
 /* Begin PBXFileReference section */
 		84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 3.xcdatamodel"; sourceTree = "<group>"; };
+		8429E5CB1A5DC58500EB3E94 /* HoneyBee Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HoneyBee Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8429E5CE1A5DC58500EB3E94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoneyBee_Tests.swift; sourceTree = "<group>"; };
+		8429E5D71A5DCBA000EB3E94 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Activity.swift; path = HoneyBee/Activity.swift; sourceTree = "<group>"; };
+		8429E5D91A5DCBFE00EB3E94 /* Incident.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Incident.swift; path = HoneyBee/Incident.swift; sourceTree = "<group>"; };
+		8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 8.xcdatamodel"; sourceTree = "<group>"; };
+		8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 9.xcdatamodel"; sourceTree = "<group>"; };
+		8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 10.xcdatamodel"; sourceTree = "<group>"; };
+		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		844497211A3A4EB40009F889 /* NetworkMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMachine.swift; sourceTree = "<group>"; };
 		844497241A3A695C0009F889 /* HoneyBee 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -123,6 +142,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8429E5C81A5DC58500EB3E94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		84D1554C19D2733500316995 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -149,6 +175,39 @@
 				BA743A6C616E49B6A36F8FD7 /* libPods.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8429E5CC1A5DC58500EB3E94 /* HoneyBee Tests */ = {
+			isa = PBXGroup;
+			children = (
+				8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */,
+				8429E5CD1A5DC58500EB3E94 /* Supporting Files */,
+			);
+			path = "HoneyBee Tests";
+			sourceTree = "<group>";
+		};
+		8429E5CD1A5DC58500EB3E94 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8429E5CE1A5DC58500EB3E94 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8435A0631A5DC3BC00BDB7A4 /* HoneyBeeTests */ = {
+			isa = PBXGroup;
+			children = (
+				8435A0641A5DC3BC00BDB7A4 /* Supporting Files */,
+			);
+			path = HoneyBeeTests;
+			sourceTree = "<group>";
+		};
+		8435A0641A5DC3BC00BDB7A4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		843C1C821A36704B0005CE1D /* Views */ = {
@@ -197,6 +256,8 @@
 				847A05661A01B2FE008F5371 /* Location.swift */,
 				8453309D1A3FAED800452EEB /* PrivacyCircle.swift */,
 				847A05641A01B2F1008F5371 /* Trip.swift */,
+				8429E5D71A5DCBA000EB3E94 /* Activity.swift */,
+				8429E5D91A5DCBFE00EB3E94 /* Incident.swift */,
 				84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */,
 			);
 			name = Model;
@@ -235,6 +296,8 @@
 				84D1557719D2737D00316995 /* MapKit.framework */,
 				84D1555119D2733500316995 /* HoneyBee */,
 				84D1556A19D2733500316995 /* HoneyBeeTests */,
+				8435A0631A5DC3BC00BDB7A4 /* HoneyBeeTests */,
+				8429E5CC1A5DC58500EB3E94 /* HoneyBee Tests */,
 				84D1555019D2733500316995 /* Products */,
 				EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */,
 				1FF80F3C1C874B8ABE8DA81D /* Frameworks */,
@@ -245,6 +308,7 @@
 			isa = PBXGroup;
 			children = (
 				84D1554F19D2733500316995 /* HoneyBee.app */,
+				8429E5CB1A5DC58500EB3E94 /* HoneyBee Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -300,6 +364,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		8429E5CA1A5DC58500EB3E94 /* HoneyBee Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "HoneyBee Tests" */;
+			buildPhases = (
+				8429E5C71A5DC58500EB3E94 /* Sources */,
+				8429E5C81A5DC58500EB3E94 /* Frameworks */,
+				8429E5C91A5DC58500EB3E94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8429E5D21A5DC58500EB3E94 /* PBXTargetDependency */,
+			);
+			name = "HoneyBee Tests";
+			productName = "HoneyBee Tests";
+			productReference = 8429E5CB1A5DC58500EB3E94 /* HoneyBee Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		84D1554E19D2733500316995 /* HoneyBee */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84D1557119D2733500316995 /* Build configuration list for PBXNativeTarget "HoneyBee" */;
@@ -331,6 +413,10 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
+					8429E5CA1A5DC58500EB3E94 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 84D1554E19D2733500316995;
+					};
 					84D1554E19D2733500316995 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 9NRH28TN93;
@@ -357,6 +443,7 @@
 			projectRoot = "";
 			targets = (
 				84D1554E19D2733500316995 /* HoneyBee */,
+				8429E5CA1A5DC58500EB3E94 /* HoneyBee Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -379,6 +466,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8429E5C91A5DC58500EB3E94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		84D1554D19D2733500316995 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -441,10 +535,20 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8429E5C71A5DC58500EB3E94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8429E5D01A5DC58500EB3E94 /* HoneyBee_Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		84D1554B19D2733500316995 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
+				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
@@ -467,6 +571,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8429E5D21A5DC58500EB3E94 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 84D1554E19D2733500316995 /* HoneyBee */;
+			targetProxy = 8429E5D11A5DC58500EB3E94 /* PBXContainerItemProxy */;
+		};
 		8444971E1A3A4E5C0009F889 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Alamofire;
@@ -494,6 +603,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		8429E5D41A5DC58500EB3E94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "HoneyBee Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HoneyBee.app/HoneyBee";
+			};
+			name = Debug;
+		};
+		8429E5D51A5DC58500EB3E94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "HoneyBee Tests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HoneyBee.app/HoneyBee";
+			};
+			name = Release;
+		};
 		84D1556F19D2733500316995 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -618,6 +763,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "HoneyBee Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8429E5D41A5DC58500EB3E94 /* Debug */,
+				8429E5D51A5DC58500EB3E94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		84D1554A19D2733500316995 /* Build configuration list for PBXProject "HoneyBee" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -643,6 +796,9 @@
 			isa = XCVersionGroup;
 			children = (
 				847ED0921A41112800CAA396 /* HoneyBee 7.xcdatamodel */,
+				8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */,
+				8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */,
+				8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */,
 				84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */,
 				84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */,
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,
@@ -650,7 +806,7 @@
 				844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */,
 			);
-			currentVersion = 84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */;
+			currentVersion = 8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */;
 			name = HoneyBee.xcdatamodeld;
 			path = HoneyBee/HoneyBee.xcdatamodeld;
 			sourceTree = "<group>";

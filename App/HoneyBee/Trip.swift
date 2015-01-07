@@ -7,8 +7,6 @@
 //
 
 import Foundation
-
-import Foundation
 import CoreData
 import CoreLocation
 import CoreMotion
@@ -30,6 +28,7 @@ class Trip : NSManagedObject {
     }
     
     @NSManaged var activityType : NSNumber
+    @NSManaged var activities : NSSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
@@ -338,71 +337,82 @@ class Trip : NSManagedObject {
     }
     
     func clasifyActivityType(handler: ()->Void) {
-        RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
-            if (activities == nil || activities.count == 0) {
-                // if no data is available, fall back on speed alone
-                if (self.averageSpeed >= 8) {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-                } else if (self.averageSpeed >= 3) {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-                } else {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+        if (self.activities != nil && self.activities.count > 0) {
+            self.runActivityClassification()
+            handler()
+        } else {
+            RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
+                for activity in activities {
+                    Activity(activity: activity as CMMotionActivity, trip: self)
                 }
-
-                CoreDataController.sharedCoreDataController.saveContext()
-
+                
+                self.runActivityClassification()
                 handler()
-                return
             }
-            
-            var walkScore = 0
-            var runScore = 0
-            var autoScore = 0
-            var cycleScore = 0
-            for activity in activities {
-                let theActivity = (activity as CMMotionActivity)
-                if (theActivity.walking) {
-                    walkScore += theActivity.confidence.rawValue
-                }
-                if (theActivity.running) {
-                    runScore += theActivity.confidence.rawValue
-                }
-                if (theActivity.automotive) {
-                    autoScore += theActivity.confidence.rawValue
-                }
-                if (theActivity.cycling) {
-                    cycleScore += theActivity.confidence.rawValue
-                }
-            }
-            
-            var scores = [walkScore, runScore, autoScore, cycleScore]
-            scores.sort{$1 < $0}
-            if scores[0] == 0 {
-                // if no one scored, possibly because there was no activity data available, fall back on speeds.
-                if (self.averageSpeed >= 3) {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-                } else {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-                }
-            } else if scores[0] == cycleScore {
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            } else if scores[0] == walkScore {
-                if (self.averageSpeed >= 3) {
-                    // Core Motion misidentifies cycling as walking, particularly when your phone is in your pocket during the ride
-                    self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-                } else {
-                    self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-                }
-            } else if scores[0] == autoScore {
+        }
+    }
+    
+    internal func runActivityClassification() {
+        if (self.activities == nil || self.activities.count == 0) {
+            // if no data is available, fall back on speed alone
+            if (self.averageSpeed >= 8) {
                 self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            } else if scores[0] == runScore {
-                self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
+            } else if (self.averageSpeed >= 3) {
+                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            } else {
+                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
             
             CoreDataController.sharedCoreDataController.saveContext()
             
-            handler()
+            return
         }
+        
+        var walkScore = 0
+        var runScore = 0
+        var autoScore = 0
+        var cycleScore = 0
+        for activity in self.activities.allObjects {
+            let theActivity = (activity as Activity)
+            if (theActivity.walking) {
+                walkScore += theActivity.confidence.integerValue
+            }
+            if (theActivity.running) {
+                runScore += theActivity.confidence.integerValue
+            }
+            if (theActivity.automotive) {
+                autoScore += theActivity.confidence.integerValue
+            }
+            if (theActivity.cycling) {
+                cycleScore += theActivity.confidence.integerValue
+            }
+        }
+        
+        var scores = [walkScore, runScore, autoScore, cycleScore]
+        scores.sort{$1 < $0}
+        if scores[0] == 0 {
+            // if no one scored, possibly because there was no activity data available, fall back on speeds.
+            if (self.averageSpeed >= 3) {
+                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            } else {
+                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+            }
+        } else if scores[0] == cycleScore {
+            self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+        } else if scores[0] == walkScore {
+            if (self.averageSpeed >= 3) {
+                // Core Motion misidentifies cycling as walking, particularly when your phone is in your pocket during the ride
+                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            } else {
+                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+            }
+        } else if scores[0] == autoScore {
+            self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+        } else if scores[0] == runScore {
+            self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
+        }
+        
+        CoreDataController.sharedCoreDataController.saveContext()
     }
 
 }
