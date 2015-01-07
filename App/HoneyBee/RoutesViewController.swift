@@ -42,7 +42,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "RoutesViewControllerFetchedResultsControllerCache")
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "RoutesViewControllerFetchedResultsController")
         self.fetchedResultsController.delegate = self
         self.fetchedResultsController.performFetch(nil)
     }

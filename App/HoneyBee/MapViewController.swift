@@ -378,11 +378,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
                     renderer.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
                 } else {
-                    renderer.strokeColor = UIColor(red: 204.0/255.0, green: 1.0, blue: 51.0/255.0, alpha: opacity)
+                    renderer.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
                 }
             } else {
-                // unknown
-                renderer.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
+                renderer.strokeColor = UIColor.purpleColor().colorWithAlphaComponent(opacity)
             }
             renderer.lineWidth = lineWidth
             return renderer;

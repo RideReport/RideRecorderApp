@@ -40,4 +40,10 @@ class Activity : NSManagedObject {
         self.startDate = activity.startDate
     }
     
+    override func willSave() {
+        self.setPrimitiveValue(false, forKey: "trip.isSynced")
+        
+        super.willSave()
+    }
+    
 }

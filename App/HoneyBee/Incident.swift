@@ -10,4 +10,9 @@ import Foundation
 import CoreData
 
 class Incident : NSManagedObject {
+    override func willSave() {
+        self.setPrimitiveValue(false, forKey: "trip.isSynced")
+        
+        super.willSave()
+    }
 }

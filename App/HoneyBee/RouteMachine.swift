@@ -13,6 +13,7 @@ import CoreMotion
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 30
+    let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters
     
     private var shouldDeferUpdates = false
     private var isDefferringLocationUpdates : Bool = false
@@ -95,10 +96,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (self.stoppedMovingLocation != nil) {
             // set up the stoppedMovingLocation as the first location in the trip
-            let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip!)
-            
-            // but give it a recent date.
-            newLocation.date = NSDate()
+            if (self.stoppedMovingLocation.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip!)
+                
+                // but give it a recent date.
+                newLocation.date = NSDate()   
+            }
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
@@ -277,7 +280,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                     DDLogWrapper.logVerbose("Got new active tracking location")
                     
                     self.lastMovingLocation = location
-                    Location(location: location as CLLocation, trip: self.currentTrip!)
+                    if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                        Location(location: location as CLLocation, trip: self.currentTrip!)
+                    }
                 }
             }
             
@@ -336,7 +341,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 self.startActiveTracking()
                 
                 for location in locations {
-                    Location(location: location as CLLocation, trip: self.currentTrip!)
+                    if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                        Location(location: location as CLLocation, trip: self.currentTrip!)
+                    }
                 }
             } else {
                DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
