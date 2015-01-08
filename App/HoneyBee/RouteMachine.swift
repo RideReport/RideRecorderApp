@@ -289,7 +289,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             #if (arch(i386) || arch(x86_64)) && os(iOS)
                 foundNonNegativeSpeed = true
                 self.lastMovingLocation = locations.first
-                Location(location: self.lastMovingLocation as CLLocation, trip: self.currentTrip)
+                Location(location: self.lastMovingLocation as CLLocation, trip: self.currentTrip!)
             #endif
             
             if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 60.0)){

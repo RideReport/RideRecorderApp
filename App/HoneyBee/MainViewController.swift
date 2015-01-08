@@ -40,8 +40,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
 
         if (!hasSeenGettingStarted) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStarted")
-            NSUserDefaults.standardUserDefaults().synchronize()
         }
     }
     

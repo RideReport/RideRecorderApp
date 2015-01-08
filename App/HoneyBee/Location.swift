@@ -36,11 +36,13 @@ class Location : NSManagedObject {
         self.speed = NSNumber(double: location.speed)
         self.date = location.timestamp
 
-        let circleCenterLocation = CLLocation(latitude: PrivacyCircle.privacyCircle().latitude.doubleValue, longitude: PrivacyCircle.privacyCircle().longitude.doubleValue)
+        if (PrivacyCircle.privacyCircle() != nil) {
+            let circleCenterLocation = CLLocation(latitude: PrivacyCircle.privacyCircle().latitude.doubleValue, longitude: PrivacyCircle.privacyCircle().longitude.doubleValue)
 
-        let distanceFromCenter = circleCenterLocation.distanceFromLocation(location)
-        if (distanceFromCenter <= PrivacyCircle.privacyCircle().radius.doubleValue) {
-            self.isPrivate = true
+            let distanceFromCenter = circleCenterLocation.distanceFromLocation(location)
+            if (distanceFromCenter <= PrivacyCircle.privacyCircle().radius.doubleValue) {
+                self.isPrivate = true
+            }
         }
     }
     

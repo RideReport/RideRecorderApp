@@ -301,55 +301,85 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bPp-Id-QNJ">
                                 <rect key="frame" x="0.0" y="162" width="600" height="275"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="Tob-Jb-Nbz">
-                                        <rect key="frame" x="122" y="20" width="442" height="71"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="🔋" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a1G-a3-2XJ">
-                                        <rect key="frame" x="37" y="20" width="65" height="72"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="⭕️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFv-GJ-gtx">
-                                        <rect key="frame" x="37" y="99" width="65" height="65"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Set up a Privacy Circle to keep Ride from logging rides near your home or other private location." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="E6v-NP-xBp">
-                                        <rect key="frame" x="122" y="102" width="442" height="71"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="👍" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5eS-Qw-iXK">
-                                        <rect key="frame" x="37" y="181" width="65" height="72"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="After your ride, Ride report right to your lock screen. Slide to the left to rate the route thumbs up or down." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="aRs-oy-Jwi">
-                                        <rect key="frame" x="122" y="184" width="442" height="71"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="07P-g4-AZ4">
+                                        <rect key="frame" x="36" y="0.0" width="528" height="112"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="Tob-Jb-Nbz">
+                                                <rect key="frame" x="78" y="20" width="455" height="71"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="🔋" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a1G-a3-2XJ">
+                                                <rect key="frame" x="1" y="20" width="65" height="72"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="a1G-a3-2XJ" firstAttribute="leading" secondItem="07P-g4-AZ4" secondAttribute="leading" constant="1" id="GTx-yN-OwS"/>
+                                            <constraint firstAttribute="trailing" secondItem="Tob-Jb-Nbz" secondAttribute="trailing" id="Ou1-MI-bQj"/>
+                                            <constraint firstItem="Tob-Jb-Nbz" firstAttribute="leading" secondItem="a1G-a3-2XJ" secondAttribute="trailing" constant="12" id="WwV-1H-Sp9"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fvU-oH-zTi">
+                                        <rect key="frame" x="36" y="107" width="528" height="86"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="⭕️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFv-GJ-gtx">
+                                                <rect key="frame" x="1" y="-8" width="65" height="65"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Set up a Privacy Circle to keep Ride from logging rides near your home or other private location." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="E6v-NP-xBp">
+                                                <rect key="frame" x="78" y="-5" width="450" height="71"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="E6v-NP-xBp" secondAttribute="trailing" id="Cd0-N1-PYy"/>
+                                            <constraint firstItem="E6v-NP-xBp" firstAttribute="leading" secondItem="OFv-GJ-gtx" secondAttribute="trailing" constant="12" id="Mle-Kd-8H0"/>
+                                            <constraint firstItem="OFv-GJ-gtx" firstAttribute="leading" secondItem="fvU-oH-zTi" secondAttribute="leading" constant="1" id="h7q-GQ-1x6"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MyB-jo-Otv">
+                                        <rect key="frame" x="36" y="175" width="528" height="100"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="👍" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5eS-Qw-iXK">
+                                                <rect key="frame" x="1" y="6" width="65" height="72"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="After your ride, Ride reports right to your lock screen. Slide to the left to rate the route thumbs up or down." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="aRs-oy-Jwi">
+                                                <rect key="frame" x="78" y="9" width="450" height="71"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="aRs-oy-Jwi" firstAttribute="leading" secondItem="5eS-Qw-iXK" secondAttribute="trailing" constant="12" id="AWu-gt-si1"/>
+                                            <constraint firstAttribute="trailing" secondItem="aRs-oy-Jwi" secondAttribute="trailing" id="Ejq-5p-Cxm"/>
+                                            <constraint firstItem="5eS-Qw-iXK" firstAttribute="leading" secondItem="MyB-jo-Otv" secondAttribute="leading" constant="1" id="xfi-2E-ceL"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="E6v-NP-xBp" secondAttribute="trailing" constant="36" id="DDI-cm-MHz"/>
-                                    <constraint firstItem="OFv-GJ-gtx" firstAttribute="leading" secondItem="bPp-Id-QNJ" secondAttribute="leading" constant="37" id="N5c-5s-TAw"/>
-                                    <constraint firstItem="5eS-Qw-iXK" firstAttribute="leading" secondItem="bPp-Id-QNJ" secondAttribute="leading" constant="37" id="OEL-py-YLF"/>
-                                    <constraint firstItem="Tob-Jb-Nbz" firstAttribute="leading" secondItem="a1G-a3-2XJ" secondAttribute="trailing" constant="20" id="QPO-Ir-7Bg"/>
+                                    <constraint firstAttribute="width" secondItem="07P-g4-AZ4" secondAttribute="width" multiplier="7:6" id="4fH-MG-gIR"/>
+                                    <constraint firstAttribute="centerX" secondItem="fvU-oH-zTi" secondAttribute="centerX" id="KHy-Rj-nPh"/>
+                                    <constraint firstItem="MyB-jo-Otv" firstAttribute="width" secondItem="07P-g4-AZ4" secondAttribute="width" id="ZyM-cQ-n2H"/>
                                     <constraint firstAttribute="height" constant="275" id="a1v-75-PzY"/>
-                                    <constraint firstItem="aRs-oy-Jwi" firstAttribute="leading" secondItem="5eS-Qw-iXK" secondAttribute="trailing" constant="20" id="hZE-R5-3C7"/>
-                                    <constraint firstItem="a1G-a3-2XJ" firstAttribute="leading" secondItem="bPp-Id-QNJ" secondAttribute="leading" constant="37" id="kCh-JW-bHZ"/>
-                                    <constraint firstAttribute="trailing" secondItem="aRs-oy-Jwi" secondAttribute="trailing" constant="36" id="rQ3-X6-iuG"/>
-                                    <constraint firstItem="E6v-NP-xBp" firstAttribute="leading" secondItem="OFv-GJ-gtx" secondAttribute="trailing" constant="20" id="xs3-C7-RwN"/>
-                                    <constraint firstAttribute="trailing" secondItem="Tob-Jb-Nbz" secondAttribute="trailing" constant="36" id="zNX-2t-Pjk"/>
+                                    <constraint firstAttribute="centerX" secondItem="MyB-jo-Otv" secondAttribute="centerX" id="hgJ-JB-sMp"/>
+                                    <constraint firstAttribute="centerX" secondItem="07P-g4-AZ4" secondAttribute="centerX" id="jwa-K5-4da"/>
+                                    <constraint firstItem="fvU-oH-zTi" firstAttribute="width" secondItem="07P-g4-AZ4" secondAttribute="width" id="wgk-3u-vby"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ymC-vO-asd">

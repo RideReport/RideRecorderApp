@@ -38,11 +38,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm"
         
+        let cacheName = "RoutesViewControllerFetchedResultsController"
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "RoutesViewControllerFetchedResultsController")
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         self.fetchedResultsController.performFetch(nil)
     }

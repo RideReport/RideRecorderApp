@@ -12,6 +12,9 @@ import Foundation
 class GettingStartedViewController: UIViewController {
     
     @IBAction func done(sender: AnyObject) {
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStarted")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
