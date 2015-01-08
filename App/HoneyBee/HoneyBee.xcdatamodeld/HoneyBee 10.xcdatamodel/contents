@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C81f" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Activity" representedClassName="HoneyBee.Activity" syncable="YES">
+    <entity name="Activity" representedClassName="Ride.Activity" syncable="YES">
         <attribute name="automotive" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="confidence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="cycling" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -11,10 +11,10 @@
         <attribute name="walking" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Trip" inverseName="activities" inverseEntity="Trip" syncable="YES"/>
     </entity>
-    <entity name="Incident" representedClassName="HoneyBee.Incident" syncable="YES">
+    <entity name="Incident" representedClassName="Ride.Incident" syncable="YES">
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Location" representedClassName="HoneyBee.Location" syncable="YES">
+    <entity name="Location" representedClassName="Ride.Location" syncable="YES">
         <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
@@ -25,12 +25,12 @@
         <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip" syncable="YES"/>
     </entity>
-    <entity name="PrivacyCircle" representedClassName="HoneyBee.PrivacyCircle" syncable="YES">
+    <entity name="PrivacyCircle" representedClassName="Ride.PrivacyCircle" syncable="YES">
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="radius" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
-    <entity name="Trip" representedClassName="HoneyBee.Trip" syncable="YES">
+    <entity name="Trip" representedClassName="Ride.Trip" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="hasSmoothed" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -45,8 +45,8 @@
     <elements>
         <element name="Activity" positionX="-54" positionY="81" width="128" height="178"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="58"/>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="178"/>
-        <element name="PrivacyCircle" positionX="-54" positionY="81" width="128" height="88"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="195"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="PrivacyCircle" positionX="-54" positionY="81" width="128" height="90"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="193"/>
     </elements>
 </model>

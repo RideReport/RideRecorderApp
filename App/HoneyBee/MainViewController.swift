@@ -35,10 +35,18 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.routesViewController.mainViewController = self
         
         refreshPauseResumeTrackingButtonUI()
+        
+        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
+
+        if (!hasSeenGettingStarted) {
+            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStarted")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Send Logs", "Sync all routes")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Report Bug", "Sync all routes", "Help")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -93,6 +101,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             for trip in Trip.allTrips()! {
                 (trip as Trip).syncToServer()
             }
+        } else if (buttonIndex == 4) {
+            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }
     }
     
@@ -116,7 +126,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         let fileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
         
         let composer = MFMailComposeViewController()
-        composer.setSubject("HoneyBee Log File")
+        composer.setSubject("Ride Log File")
         composer.setToRecipients(["honeybeelogs@knocktounlock.com"])
         composer.addAttachmentData(fileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
         composer.mailComposeDelegate = self

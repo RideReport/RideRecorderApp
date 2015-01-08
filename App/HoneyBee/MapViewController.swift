@@ -381,7 +381,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     renderer.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
                 }
             } else {
-                renderer.strokeColor = UIColor.purpleColor().colorWithAlphaComponent(opacity)
+                renderer.strokeColor = UIColor.brownColor().colorWithAlphaComponent(opacity)
             }
             renderer.lineWidth = lineWidth
             return renderer;

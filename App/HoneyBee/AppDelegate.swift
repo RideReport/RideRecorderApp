@@ -68,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
-        DDLogWrapper.logInfo("========================STARTING HONEYBEE APP========================")
+        DDLogWrapper.logInfo("========================STARTING RIDE APP========================")
         
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()

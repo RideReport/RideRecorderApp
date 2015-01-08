@@ -13,6 +13,7 @@
 		8429E5D01A5DC58500EB3E94 /* HoneyBee_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
+		8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */; };
 		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
@@ -96,6 +97,7 @@
 		8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 8.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 10.xcdatamodel"; sourceTree = "<group>"; };
+		8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		844497211A3A4EB40009F889 /* NetworkMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMachine.swift; sourceTree = "<group>"; };
@@ -246,6 +248,7 @@
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
+				8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -382,9 +385,9 @@
 			productReference = 8429E5CB1A5DC58500EB3E94 /* HoneyBee Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		84D1554E19D2733500316995 /* HoneyBee */ = {
+		84D1554E19D2733500316995 /* Ride */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84D1557119D2733500316995 /* Build configuration list for PBXNativeTarget "HoneyBee" */;
+			buildConfigurationList = 84D1557119D2733500316995 /* Build configuration list for PBXNativeTarget "Ride" */;
 			buildPhases = (
 				5A2FC0655394483EA886BF4B /* Check Pods Manifest.lock */,
 				84D1554B19D2733500316995 /* Sources */,
@@ -399,7 +402,7 @@
 			dependencies = (
 				8444971E1A3A4E5C0009F889 /* PBXTargetDependency */,
 			);
-			name = HoneyBee;
+			name = Ride;
 			productName = HoneyBee;
 			productReference = 84D1554F19D2733500316995 /* HoneyBee.app */;
 			productType = "com.apple.product-type.application";
@@ -442,7 +445,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				84D1554E19D2733500316995 /* HoneyBee */,
+				84D1554E19D2733500316995 /* Ride */,
 				8429E5CA1A5DC58500EB3E94 /* HoneyBee Tests */,
 			);
 		};
@@ -550,6 +553,7 @@
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
+				8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
@@ -573,7 +577,7 @@
 /* Begin PBXTargetDependency section */
 		8429E5D21A5DC58500EB3E94 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 84D1554E19D2733500316995 /* HoneyBee */;
+			target = 84D1554E19D2733500316995 /* Ride */;
 			targetProxy = 8429E5D11A5DC58500EB3E94 /* PBXContainerItemProxy */;
 		};
 		8444971E1A3A4E5C0009F889 /* PBXTargetDependency */ = {
@@ -780,7 +784,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84D1557119D2733500316995 /* Build configuration list for PBXNativeTarget "HoneyBee" */ = {
+		84D1557119D2733500316995 /* Build configuration list for PBXNativeTarget "Ride" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84D1557219D2733500316995 /* Debug */,
