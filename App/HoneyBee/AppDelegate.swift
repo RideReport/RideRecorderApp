@@ -73,6 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()
         RouteMachine.sharedMachine.startup((launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil))
+        SoftwareUpdateMachine.sharedMachine.startup()
         
         return true
     }

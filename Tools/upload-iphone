@@ -14,7 +14,7 @@ end
 
 #get current version number
 if (upload_build)
-  raise "No build present at!" unless File.exists?("HoneyBee.ipa")
+  raise "No build present at!" unless File.exists?("Ride.ipa")
 end
 
 AWS::S3::DEFAULT_HOST.replace "s3-us-west-2.amazonaws.com"
@@ -24,7 +24,7 @@ AWS::S3::Base.establish_connection!(
   :secret_access_key => '/mke0kt1SLrtSGSZGJzOewQ4Blz8wSO39mHcZqZR'
 )
 
-puts AWS::S3::Bucket.find('knockenterprise')
+puts AWS::S3::Bucket.find('rideenterprise')
 
 def upload(path, dest_path, bucket, access)
   raise "File does not exist: #{path}" unless File.exists?(path)
@@ -38,25 +38,30 @@ def upload(path, dest_path, bucket, access)
 end
 
 if (upload_build)
-  upload("HoneyBee.ipa", "HoneyBee.ipa", "knockenterprise", "private")
+  upload("Ride.ipa", "Ride.ipa", "rideenterprise", "private")
 end
 
-url = AWS::S3::S3Object.url_for('HoneyBee.ipa',
-                 'knockenterprise',
+url = AWS::S3::S3Object.url_for('Ride.ipa',
+                 'rideenterprise',
                  :expires_in => 60 * 60 * 120)
+`cp Ride.ipa Ride.zip`
+`unzip Ride.zip -d Ride`
+current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride.app/Info.plist`
+`rm -r Ride`
+`rm Ride.zip`                 
 
 `/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url #{url}" "manifest.plist"`
-upload("manifest.plist", "manifest.plist", "knockenterprise", "private")      
+upload("manifest.plist", "manifest.plist", "rideenterprise", "public_read")      
 
 url = AWS::S3::S3Object.url_for('manifest.plist',
-                 'knockenterprise',
-                 :expires_in => 60 * 60 * 120,
-                 :use_ssl => true)                         
+                 'rideenterprise',
+                 :use_ssl => true,
+                 :authenticated => false)                         
                  
 puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
 
 `/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url foo.com" "manifest.plist"`
 
 if (upload_build)                 
-  `rm -r HoneyBee.ipa`
+  `rm -r Ride.ipa`
 end
