@@ -5,7 +5,6 @@ var config = require('./config/config.js');
 var path = require('path');
 var trips = require('./routes/trips');
 
-var utils = require('./utils/utils.js');
 var db = require('./db.js');
 
 var app = express();
@@ -27,7 +26,7 @@ app.get('/today', function(req, res) {
 });
 
 app.get('/trips', trips.getAll);
-app.get('/trips/today', trips.getToday);
+app.get('/trips/today', trips.getAllToday);
 app.post('/trips/save', trips.save);
 
 // Set server port

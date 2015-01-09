@@ -47,7 +47,7 @@
 
   	function getTrips(e){			
   		bounds = map.getBounds();
-  		url = "trips/getToday";
+  		url = "trips/today";
   		$.get(url, drawTripsOnMap, "json")
   	}
   	function drawTripsOnMap(trips){

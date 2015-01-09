@@ -1,4 +1,5 @@
 var db = require('../db.js');
+var utils = require('../utils/utils.js');
 
 exports.getAll = function(req, res){
   var trips = db.client.get('trips');
@@ -14,17 +15,17 @@ exports.getAll = function(req, res){
 	});
 };
 
-exports.getToday = function(req, res){
+exports.getAllToday = function(req, res){
   var trips = db.client.get('trips');
   var responseBody = {}
   
-  var start = new Date();
-  start.setHours(0,0,0,0);
-
-  var end = new Date();
-  end.setHours(23,59,59,999);
+  var today = new Date();
+  var yyyy = today.getFullYear().toString();
+  var mm = (today.getMonth()+1).toString();
+  var dd  = today.getDate().toString();
+  var todayString = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
   
-  trips.find({"created_on": { $substr: [ "$" + Date.yyyymmdd(), 0, -1 ]}},{w:1},function(error,trips) {
+  trips.find({"creationDate": { $regex: "^" + todayString}},{w:1},function(error,trips) {
 		if(error){
 			res.status(404).send('Not found');
 			console.error(error);    
