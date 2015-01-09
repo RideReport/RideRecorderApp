@@ -5,6 +5,7 @@ var config = require('./config/config.js');
 var path = require('path');
 var trips = require('./routes/trips');
 
+var utils = require('./utils/utils.js');
 var db = require('./db.js');
 
 var app = express();

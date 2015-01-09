@@ -24,7 +24,7 @@ exports.getToday = function(req, res){
   var end = new Date();
   end.setHours(23,59,59,999);
   
-  trips.find({"created_on": {"$gte": start, "$lt": end}},{w:1},function(error,trips) {
+  trips.find({"created_on": { $substr: [ "$" + Date.yyyymmdd(), 0, -1 ]}},{w:1},function(error,trips) {
 		if(error){
 			res.status(404).send('Not found');
 			console.error(error);    
