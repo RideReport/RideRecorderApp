@@ -20,7 +20,6 @@ exports.getTripsOnDate = function(req, res){
   var responseBody = {}
   
   var todayString = req.params.date
-  console.log(todayString)
   
   trips.find({"creationDate": { $regex: "^" + todayString}},{w:1},function(error,trips) {
 		if(error){
