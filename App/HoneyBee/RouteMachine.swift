@@ -15,6 +15,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let locationTrackingDeferralTimeout : NSTimeInterval = 30
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     
+    var startedInBackground = false
+    
     private var shouldDeferUpdates = false
     private var isDefferringLocationUpdates : Bool = false
 
@@ -60,7 +62,14 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         super.init()
     }
     
-    func startup () {
+    func startup(startingFromBackground: Bool) {
+        if (startingFromBackground) {
+            let notif = UILocalNotification()
+            notif.alertBody = "You must launch Ride to start logging again."
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        }
+        
+        self.startedInBackground = startingFromBackground
         self.locationManager.delegate = self;
         self.locationManager.requestAlwaysAuthorization()
         let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineHasRequestedMotionAccess")
@@ -133,7 +142,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             closingTrip!.closeTrip()
             closingTrip!.clasifyActivityType({ () -> Void in
                 closingTrip!.sendTripCompletionNotification()
-                closingTrip!.syncToServer()
             })
         }
         
@@ -229,6 +237,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
             self.enterLowPowerState()
+            self.locationManager.startMonitoringSignificantLocationChanges()
             #if (arch(i386) || arch(x86_64)) && os(iOS)
                 self.startActiveTracking()
             #endif

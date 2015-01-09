@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()
-        RouteMachine.sharedMachine.startup()
+        RouteMachine.sharedMachine.startup((launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil))
         
         return true
     }
@@ -81,9 +81,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Good.rawValue)
             CoreDataController.sharedCoreDataController.saveContext()
+            
+            Trip.mostRecentTrip().syncToServer()
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             CoreDataController.sharedCoreDataController.saveContext()
+            
+            Trip.mostRecentTrip().syncToServer()
         }
     }
 
@@ -103,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        Trip.syncTrips()
     }
 
     func applicationWillTerminate(application: UIApplication) {

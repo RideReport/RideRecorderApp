@@ -81,6 +81,13 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class func syncTrips() {
+        for trip in Trip.allTrips()! {
+            (trip as Trip).syncToServer()
+        }
+    }
+    
+    
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = NSDate()
@@ -88,7 +95,15 @@ class Trip : NSManagedObject {
     }
     
     override func willSave() {
-        self.setPrimitiveValue(false, forKey: "isSynced")
+        let changedVals = self.changedValues()
+        if (changedVals.count > 0 && !(changedVals.count == 1 && changedVals["isSynced"] != nil)) {
+            self.setPrimitiveValue(false, forKey: "isSynced")
+            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.syncToServer()
+                })
+            }
+        }
         
         super.willSave()
     }

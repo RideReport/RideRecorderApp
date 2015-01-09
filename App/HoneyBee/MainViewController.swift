@@ -11,6 +11,7 @@ import MessageUI
 
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, UIActionSheetDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
+    @IBOutlet weak var settingsButton: UIBarButtonItem!
     var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
@@ -30,6 +31,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.rightBarButtonItem?.customView = self.customButton
         
+        let settingsCustomButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
+        settingsCustomButton.addTarget(self, action: "tools:", forControlEvents: UIControlEvents.TouchUpInside)
+        settingsCustomButton.maskImage = UIImage(named: "gear.png")
+        settingsCustomButton.primaryColor = self.navigationItem.leftBarButtonItem?.tintColor
+        settingsCustomButton.secondaryColor = self.navigationItem.leftBarButtonItem?.tintColor
+        self.navigationItem.leftBarButtonItem?.customView = settingsCustomButton
+        
         self.mapViewController = self.childViewControllers.first as MapViewController
         self.routesViewController = self.childViewControllers.last?.topViewController as RoutesViewController
         self.routesViewController.mainViewController = self
@@ -44,7 +52,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Set up Privacy Circle", "Report Bug", "Sync all routes", "Help")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Sync all routes", "Help")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -96,9 +104,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         } else if (buttonIndex == 2){
             sendLogFile()
         } else if (buttonIndex == 3) {
-            for trip in Trip.allTrips()! {
-                (trip as Trip).syncToServer()
-            }
+            Trip.syncTrips()
         } else if (buttonIndex == 4) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }

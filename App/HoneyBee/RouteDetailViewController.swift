@@ -20,7 +20,7 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let toolsButton = UIBarButtonItem(title: "Tools", style: UIBarButtonItemStyle.Bordered, target: self, action: "tools:")
+        let toolsButton = UIBarButtonItem(title: "Debug Tools", style: UIBarButtonItemStyle.Bordered, target: self, action: "tools:")
         self.navigationItem.rightBarButtonItem = toolsButton
     }
     

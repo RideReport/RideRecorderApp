@@ -14,6 +14,7 @@
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */; };
+		8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8429E5E01A5F0F6B00EB3E94 /* gear.png */; };
 		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
@@ -98,6 +99,7 @@
 		8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 10.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
+		8429E5E01A5F0F6B00EB3E94 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		844497211A3A4EB40009F889 /* NetworkMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkMachine.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8429E5E01A5F0F6B00EB3E94 /* gear.png */,
 				8453BD641A425F9200FE2645 /* locationArrow.png */,
 				8453BD651A425F9200FE2645 /* locationArrowDisabled.png */,
 			);
@@ -481,6 +484,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */,
+				8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */,
 				8478621E1A267B6900176500 /* Info.plist in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
@@ -774,6 +778,7 @@
 				8429E5D51A5DC58500EB3E94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		84D1554A19D2733500316995 /* Build configuration list for PBXProject "HoneyBee" */ = {
 			isa = XCConfigurationList;
