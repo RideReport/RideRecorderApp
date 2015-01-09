@@ -46,10 +46,11 @@ url = AWS::S3::S3Object.url_for('Ride.ipa',
                  :expires_in => 60 * 60 * 120)
 `cp Ride.ipa Ride.zip`
 `unzip Ride.zip -d Ride`
-current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride.app/Info.plist`
+current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride.app/Info.plist`.strip
 `rm -r Ride`
 `rm Ride.zip`                 
 
+`/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-version #{current_version}" "manifest.plist"`
 `/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url #{url}" "manifest.plist"`
 upload("manifest.plist", "manifest.plist", "rideenterprise", "public_read")      
 

@@ -33,15 +33,15 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>Knock.HoneyBee</string>
+				<string>com.Knock.Ride</string>
 				<key>bundle-version</key>
-				<string>0.1</string>
+				<string>3</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>subtitle</key>
 				<string>Knock Software, Inc</string>
 				<key>title</key>
-				<string>HoneyBee</string>
+				<string>Ride</string>
 			</dict>
 		</dict>
 	</array>
