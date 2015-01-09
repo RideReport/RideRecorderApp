@@ -48,8 +48,9 @@
   	function getTrips(e){			
   		bounds = map.getBounds();
   		url = "trips";
-  		$.get(url, drawTripsOnMap, "json")
+  		$.get(url, drawTripsOnMap, "json");
   	}
+  	
   	function drawTripsOnMap(trips){
   		map.removeLayer(tripLayerGroup);
   		

@@ -27,7 +27,7 @@ app.get('/:date', function(req, res) {
 });
 
 app.get('/trips', trips.getAll);
-app.get('/trips/:date', trips.getTripsOnDate);
+app.get('/trips/date/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);
 
 // Set server port

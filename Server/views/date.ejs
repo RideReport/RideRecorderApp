@@ -47,10 +47,10 @@
 
   	function getTrips(e){			
   		bounds = map.getBounds();
-  		url = "trips/<%=date%>";
-  		
-  		$.get(url, drawTripsOnMap, "json")
+  		url = "trips/date/<%=date%>";
+  		$.get(url, drawTripsOnMap, "json");
   	}
+  	
   	function drawTripsOnMap(trips){
   		map.removeLayer(tripLayerGroup);
   		
