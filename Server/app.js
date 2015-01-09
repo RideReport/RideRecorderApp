@@ -21,12 +21,13 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
-app.get('/today', function(req, res) {
-  res.render('today');
+app.get('/:date', function(req, res) {
+  res.locals.date = req.params.date
+  res.render('date');
 });
 
 app.get('/trips', trips.getAll);
-app.get('/trips/today', trips.getAllToday);
+app.get('/trips/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);
 
 // Set server port

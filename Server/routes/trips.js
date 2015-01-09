@@ -15,15 +15,11 @@ exports.getAll = function(req, res){
 	});
 };
 
-exports.getAllToday = function(req, res){
+exports.getTripsOnDate = function(req, res){
   var trips = db.client.get('trips');
   var responseBody = {}
   
-  var today = new Date();
-  var yyyy = today.getFullYear().toString();
-  var mm = (today.getMonth()+1).toString();
-  var dd  = today.getDate().toString();
-  var todayString = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
+  var todayString = req.params.date
   console.log(todayString)
   
   trips.find({"creationDate": { $regex: "^" + todayString}},{w:1},function(error,trips) {
