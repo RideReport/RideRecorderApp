@@ -27,6 +27,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
+        self.navigationItem.title = NSString(format: "%.0f miles logged", Trip.totalCycledMiles)
+        
         self.customButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
         self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.rightBarButtonItem?.customView = self.customButton

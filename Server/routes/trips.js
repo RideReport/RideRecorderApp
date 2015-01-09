@@ -14,6 +14,26 @@ exports.getAll = function(req, res){
 	});
 };
 
+exports.getToday = function(req, res){
+  var trips = db.client.get('trips');
+  var responseBody = {}
+  
+  var start = new Date();
+  start.setHours(0,0,0,0);
+
+  var end = new Date();
+  end.setHours(23,59,59,999);
+  
+  trips.find({"created_on": {"$gte": start, "$lt": end}},{w:1},function(error,trips) {
+		if(error){
+			res.status(404).send('Not found');
+			console.error(error);    
+		} else {
+		  return res.json(trips);
+		}
+	});
+};
+
 exports.save = function(req, res){	
   var trips = db.client.get('trips');
 

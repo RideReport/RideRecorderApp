@@ -81,6 +81,17 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class var totalCycledMiles : Float {
+        var miles : Float = 0
+        for trip in Trip.allTrips()! {
+            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                miles += trip.lengthMiles
+            }
+        }
+        
+        return miles
+    }
+    
     class func syncTrips() {
         for trip in Trip.allTrips()! {
             (trip as Trip).syncToServer()
@@ -272,7 +283,10 @@ class Trip : NSManagedObject {
             
             let notif = UILocalNotification()
             notif.alertBody = message
-            notif.category = "RIDE_COMPLETION_CATEGORY"
+            if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                // don't show rating stuff for anything but bike trips.
+                notif.category = "RIDE_COMPLETION_CATEGORY"
+            }
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
         }
     }

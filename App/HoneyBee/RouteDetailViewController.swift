@@ -44,6 +44,14 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
         
+        if (self.mainViewController.selectedTrip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
+            self.thumbsUpButton.hidden = true
+            self.thumbsDownButton.hidden = true
+        } else {
+            self.thumbsUpButton.hidden = false
+            self.thumbsDownButton.hidden = false
+        }
+        
         if self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Good.rawValue {
             self.thumbsUpButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
         } else if self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue {
