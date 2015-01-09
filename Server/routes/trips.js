@@ -24,7 +24,7 @@ exports.getAllToday = function(req, res){
   var mm = (today.getMonth()+1).toString();
   var dd  = today.getDate().toString();
   var todayString = yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]);
-  console.log()
+  console.log(todayString)
   
   trips.find({"creationDate": { $regex: "^" + todayString}},{w:1},function(error,trips) {
 		if(error){
