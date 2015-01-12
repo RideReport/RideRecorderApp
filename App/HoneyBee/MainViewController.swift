@@ -128,14 +128,21 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             return
         }
         
-        let firstFileInfo = fileInfos.first! as DDLogFileInfo
-        let fileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
-        
         let composer = MFMailComposeViewController()
-        composer.setSubject("Ride Log File")
+        composer.setSubject("Ride Bug Report")
         composer.setToRecipients(["honeybeelogs@knocktounlock.com"])
-        composer.addAttachmentData(fileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
         composer.mailComposeDelegate = self
+        
+        let firstFileInfo = fileInfos.first! as DDLogFileInfo
+        let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
+        composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
+        
+        if (fileInfos.count > 1) {
+            let secondFileInfo = fileInfos[1] as DDLogFileInfo
+            let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath)!)
+            composer.addAttachmentData(secondFileData, mimeType: "text/plain", fileName: secondFileInfo.fileName)
+        }
+        
         
         self.presentViewController(composer, animated:true, completion:nil)
     }
