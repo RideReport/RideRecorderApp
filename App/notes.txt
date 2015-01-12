@@ -20,3 +20,6 @@ Detecting taps on MKPolylines:
 
 Useful background app link:
 https://gooddevbaddev.wordpress.com/2013/10/22/ios-7-running-location-based-apps-in-the-background/
+
+Very specific thread with comment from Apple engineer on starting location updates in background:
+https://devforums.apple.com/message/931899#931899
