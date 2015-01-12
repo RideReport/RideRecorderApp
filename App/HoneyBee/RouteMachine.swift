@@ -176,24 +176,14 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func enterLowPowerState() {
-        if (isPaused()) {
-            DDLogWrapper.logInfo("Tracking is Paused, not enterign low power state")
-            
-            if (self.locationManagerIsUpdating) {
-                self.locationManager.stopUpdatingLocation()
-            }
-            
-            return
-        } else if (!self.locationManagerIsUpdating) {
-            self.locationManagerIsUpdating = true
-            self.locationManager.startUpdatingLocation()
+        if (self.locationManagerIsUpdating) {
+            self.locationManagerIsUpdating = false
+            self.locationManager.stopUpdatingLocation()
         }
         
         DDLogWrapper.logInfo("Entering low power state")
         DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
         
-        self.locationManager.distanceFilter = 100
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         self.isInLowPowerState = true
         self.lastLowPowerLocation = nil
         
