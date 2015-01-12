@@ -64,8 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         DDTTYLogger.sharedInstance().colorsEnabled = true
         
         self.fileLogger = DDFileLogger()
-        self.fileLogger.rollingFrequency = 60 * 60 * 120
-        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 1
+        self.fileLogger.rollingFrequency = 60 * 60 * 24
+        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
         DDLogWrapper.logInfo("========================STARTING RIDE APP========================")
