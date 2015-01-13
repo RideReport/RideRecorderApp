@@ -8,11 +8,21 @@
 	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
 		body {
-    		padding: 0;
-		    margin: 0;
+    		padding: 10;
+		    margin: 10;
 		}
-		html, body, #map {
-		    height: 100%;
+		html, body {
+		    font: normal 14px 'courier new';
+		}
+		#content {
+	    width: 400px;
+	    float: left;
+		}
+		#map {
+		  height: 400px;
+	    width: 400px;
+	    margin-right: 20px;
+	    float: left;
 		}
 		.leaflet-container .leaflet-control-zoom {
 				margin-top: 20px;
@@ -23,8 +33,15 @@
 </head>
 
 <body onload="getPosition()">
-
 	<div id="map"></div>
+	<div id="content">
+  <h1>í ½íº²  Ride</h1>	
+	<p><strong>What is Ride?</strong><br/>
+	  Ride is an iPhone app that automatically logs your rides. When your ride is done, you rate it with a single tap on your lock screen. Ride uses your feedback and anonymous route data to improve bicycle planning and infrastructure in Portland. Later, this data will power a new technology for turn-by-turn bike directions that takes rider preferences and comfort into account.</p>
+	  	  
+	  <p><strong>How do I get it?</strong><br/>
+  	  Ride is currently in private beta. Things are still a little sketchy, but if you'd like to get early access, you can email us at <a href="mailto:metoo@ride.report">metoo@ride.report</a>. </p>
+	  </div>
 	<script>
   	var map = L.map('map', {
   	 center: [45.52, -122.6519],

@@ -21,6 +21,10 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
+app.get('/map', function(req, res) {
+  res.render('map');
+});
+
 app.get('/date/:date', function(req, res) {
   res.locals.date = req.params.date
   res.render('date');
