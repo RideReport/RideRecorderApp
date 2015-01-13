@@ -108,9 +108,11 @@ class Trip : NSManagedObject {
     override func willSave() {
         let changedVals = self.changedValues()
         if (changedVals.count > 0 && !(changedVals.count == 1 && changedVals["isSynced"] != nil)) {
-            self.setPrimitiveValue(false, forKey: "isSynced")
-            if (self.inserted && !self.deleted) {
-                if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+            if (!self.deleted) {
+                self.setPrimitiveValue(false, forKey: "isSynced")
+
+                if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active
+                    && self.isClosed.boolValue) {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.syncToServer()
                     })
