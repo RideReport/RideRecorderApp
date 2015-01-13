@@ -27,7 +27,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var locationManager : CLLocationManager!
     private var lastLowPowerLocation :  CLLocation!
     private var lastMovingLocation :  CLLocation!
-    private var stoppedMovingLocation :  CLLocation!
     
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
@@ -87,7 +86,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     // MARK: - State Machine
     
-    func startActiveTracking() {
+    func startActiveTrackingFromLocation(fromLocation: CLLocation) {
         if (self.currentTrip != nil) {
             return
         }
@@ -104,20 +103,18 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.currentTrip = Trip()
         CoreDataController.sharedCoreDataController.saveContext()
         
-        if (self.stoppedMovingLocation != nil) {
-            // set up the stoppedMovingLocation as the first location in the trip
-            if (self.stoppedMovingLocation.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-                let newLocation = Location(location: self.stoppedMovingLocation!, trip: self.currentTrip!)
-                
-                // but give it a recent date.
-                newLocation.date = NSDate()   
-            }
+        // initialize lastMovingLocation to fromLocation, where the movement started
+        self.lastMovingLocation = fromLocation
+        
+        // set up the lastMovingLocation as the first location in the trip
+        if (self.lastMovingLocation.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+            let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
+            
+            // but give it a recent date.
+            newLocation.date = NSDate()
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
-        
-        self.stoppedMovingLocation = nil
-        self.lastMovingLocation = nil
         
         self.enterHighPowerState()
     }
@@ -240,9 +237,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
             self.locationManager.startMonitoringSignificantLocationChanges()
-            #if (arch(i386) || arch(x86_64)) && os(iOS)
-                self.startActiveTracking()
-            #endif
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogWrapper.logVerbose("Not authorized for location access!")
@@ -306,14 +300,15 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 60.0)){
                 // otherwise, check the acceleromtere for recent data
                 DDLogWrapper.logVerbose("Moving too slow for too long")
-                self.stoppedMovingLocation = locations[0]
                 self.stopActivelyTrackingIfNeeded()
             } else if (foundNonNegativeSpeed == false) {
                 if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
                     DDLogWrapper.logVerbose("Went too long with negative speeds.")
-                    self.stoppedMovingLocation = locations[0]
                     self.stopActivelyTrackingIfNeeded()
                 } else {
+                    if (self.lastMovingLocation == nil) {
+                        DDLogWrapper.logVerbose("lastMovingLocation is nil, should not be!")
+                    }
                     DDLogWrapper.logVerbose("Nothing but negative speeds. Awaiting next update")
                 }
             } else {
@@ -351,7 +346,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.lastLowPowerLocation = newLocation
             
             if (foundMovement) {
-                self.startActiveTracking()
+                self.startActiveTrackingFromLocation(self.lastLowPowerLocation)
                 
                 for location in locations {
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
