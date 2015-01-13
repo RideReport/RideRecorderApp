@@ -13,8 +13,9 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     var mainViewController: MainViewController! = nil
     @IBOutlet weak var thumbsUpButton: UIButton!
     @IBOutlet weak var thumbsDownButton: UIButton!
+    @IBOutlet weak var bikeButton: UIButton!
+    @IBOutlet weak var carButton: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
-    @IBOutlet weak var tripTypeLabel: UILabel!
     @IBOutlet weak var tripSpeedLabel: UILabel!
     
     override func viewDidLoad() {
@@ -36,7 +37,6 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         }
         
         self.distanceLabel.text = NSString(format: "%.1fm", self.mainViewController.selectedTrip.lengthMiles)
-        self.tripTypeLabel.text = self.mainViewController.selectedTrip.activityTypeString()
         
         let speedMph = self.mainViewController.selectedTrip.averageSpeed*2.23694
         self.tripSpeedLabel.text = NSString(format: "%.1fmph", speedMph)
@@ -44,12 +44,19 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
         
+        self.bikeButton.backgroundColor = UIColor.clearColor()
+        self.carButton.backgroundColor = UIColor.clearColor()
+        
         if (self.mainViewController.selectedTrip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
             self.thumbsUpButton.hidden = true
             self.thumbsDownButton.hidden = true
+            if (self.mainViewController.selectedTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                self.carButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
+            }
         } else {
             self.thumbsUpButton.hidden = false
             self.thumbsDownButton.hidden = false
+            self.bikeButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
         }
         
         if self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Good.rawValue {
@@ -77,6 +84,20 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         refreshTripUI()
     }
     
+    @IBAction func bikeButton(sender: AnyObject) {
+        self.mainViewController.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
+    }
+    
+    @IBAction func carButton(sender: AnyObject) {
+        self.mainViewController.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
+    }
+    
     @IBAction func tools(sender: AnyObject) {
         var smoothButtonTitle = ""
         if (self.mainViewController.selectedTrip.hasSmoothed) {
@@ -85,7 +106,7 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
             smoothButtonTitle = "Smooth"
         }
         
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Mark as Bike Ride", "Close Trip", "Sync to Server")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Close Trip", "Sync to Server")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -115,15 +136,10 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
                 self.mainViewController.selectedTrip.sendTripCompletionNotification()
             })
         } else if (buttonIndex == 4) {
-            self.mainViewController.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            CoreDataController.sharedCoreDataController.saveContext()
-            
-            self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
-        } else if (buttonIndex == 5) {
             self.mainViewController.selectedTrip.closeTrip()
             
             self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
-        } else if (buttonIndex == 6) {
+        } else if (buttonIndex == 5) {
             self.mainViewController.selectedTrip.syncToServer()
         }
     }

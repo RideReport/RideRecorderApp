@@ -36,7 +36,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
-        self.timeFormatter.dateFormat = "h:mm"
+        self.timeFormatter.dateFormat = "h:mm a"
         
         let cacheName = "RoutesViewControllerFetchedResultsController"
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
@@ -144,7 +144,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 dateString = self.dateFormatter.stringFromDate(trip.startDate) + " at"
             }
             
-            var title = NSString(format: "%@ %@ for %im", dateString, self.timeFormatter.stringFromDate(trip.startDate), Int(trip.duration())/60)
+            var title = NSString(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(trip.startDate))
 
             tableCell.detailTextLabel!.text = title
         }
