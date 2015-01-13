@@ -130,7 +130,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Bug Report")
-        composer.setToRecipients(["honeybeelogs@knocktounlock.com"])
+        composer.setToRecipients(["logs@ride.report"])
         composer.mailComposeDelegate = self
         
         let firstFileInfo = fileInfos.first! as DDLogFileInfo
