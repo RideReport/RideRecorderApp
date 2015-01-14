@@ -27,8 +27,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
+        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        var effectView = UIVisualEffectView(effect: blur)
+        effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        self.view.insertSubview(effectView, belowSubview: self.tableView)
+        
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        self.tableView.layoutMargins = UIEdgeInsetsZero
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -125,6 +131,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let reuseID = "RoutesViewTableCell"
         
         let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell?
+        tableCell!.layoutMargins = UIEdgeInsetsZero
 
         configureCell(tableCell!, trip: trip)
         
@@ -132,6 +139,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
+        var ratingString = "❔"
+        if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
+            // for non-bike trips, show activity type instead of a rating
+            ratingString = trip.activityTypeString()
+        } else if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+            ratingString = "👍"
+        } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+            ratingString = "👎"
+        }
+        
+        var dateTitle = ""
         if (trip.startDate != nil) {
             var dateString = ""
             if (trip.startDate.isToday()) {
@@ -144,24 +162,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 dateString = self.dateFormatter.stringFromDate(trip.startDate) + " at"
             }
             
-            var title = NSString(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(trip.startDate))
-
-            tableCell.detailTextLabel!.text = title
+            dateTitle = NSString(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(trip.startDate))
+            
         }
+        tableCell.textLabel!.text = NSString(format: "%@  %@ %@", ratingString, dateTitle, trip.isSynced ? "" : "🔹")
         
-        var ratingString = ""
-        if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-            ratingString = "👍"
-        } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-            ratingString = "👎"
-        }
-        
-        var nonBikeTypetripString = ""
-        if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
-            nonBikeTypetripString = trip.activityTypeString()
-        }
-        
-        tableCell.textLabel!.text = NSString(format: "%@ %.1f miles %@ %@", nonBikeTypetripString, trip.lengthMiles, ratingString, trip.isSynced ? "" : "🔹")
+        tableCell.detailTextLabel!.text = NSString(format: "%.1f miles", trip.lengthMiles)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

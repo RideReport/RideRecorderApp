@@ -21,8 +21,17 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let toolsButton = UIBarButtonItem(title: "Debug Tools", style: UIBarButtonItemStyle.Bordered, target: self, action: "tools:")
+        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        var effectView = UIVisualEffectView(effect: blur)
+        let navHeight = self.navigationController?.navigationBar.frame.size.height
+        effectView.frame = CGRectMake(0, navHeight!, self.view.frame.width, self.view.frame.height - navHeight!)
+        self.view.addSubview(effectView)
+        self.view.sendSubviewToBack(effectView)
+        
+#if DEBUG
+        let toolsButton = UIBarButtonItem(title: "Debug", style: UIBarButtonItemStyle.Bordered, target: self, action: "tools:")
         self.navigationItem.rightBarButtonItem = toolsButton
+#endif
     }
     
     override func viewWillAppear(animated: Bool) {        

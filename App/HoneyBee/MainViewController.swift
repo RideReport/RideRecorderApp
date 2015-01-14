@@ -12,6 +12,7 @@ import MessageUI
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, UIActionSheetDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
+    @IBOutlet weak var routesContainerView: UIView!
     var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
@@ -29,7 +30,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         
         self.navigationItem.title = NSString(format: "%.0f miles logged", Trip.totalCycledMiles)
         
-        self.customButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
+        self.customButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 22, 22))
         self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.rightBarButtonItem?.customView = self.customButton
         
@@ -54,7 +55,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Sync all routes", "Help")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Help")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -106,8 +107,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         } else if (buttonIndex == 2){
             sendLogFile()
         } else if (buttonIndex == 3) {
-            Trip.syncTrips()
-        } else if (buttonIndex == 4) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }
     }
