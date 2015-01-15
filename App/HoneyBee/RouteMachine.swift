@@ -12,12 +12,12 @@ import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
-    let locationTrackingDeferralTimeout : NSTimeInterval = 30
+    let locationTrackingDeferralTimeout : NSTimeInterval = 60
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     
     var startedInBackground = false
     
-    private var shouldDeferUpdates = false
+    private var shouldDeferUpdates = true
     private var isDefferringLocationUpdates : Bool = false
 
     private var locationManagerIsUpdating : Bool = false
@@ -262,7 +262,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Finished deferring updates")
 
         self.isDefferringLocationUpdates = false
-        if (self.shouldDeferUpdates && self.isInLowPowerState && self.currentTrip != nil) {
+        if (self.shouldDeferUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
             // if we are still tracking a route, continue deferring.
             self.isDefferringLocationUpdates = true
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
