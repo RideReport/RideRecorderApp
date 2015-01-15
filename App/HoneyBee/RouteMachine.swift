@@ -14,6 +14,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 60
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
+    let minimumBatteryForTracking : Float = 1.2
     
     var startedInBackground = false
     
@@ -51,6 +52,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     override init () {
+        super.init()
+        
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
         self.locationManager.pausesLocationUpdatesAutomatically = false
@@ -58,8 +61,16 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
-
-        super.init()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    func appDidBecomeActive() {
+        if (self.currentTrip != nil && self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
+            // if the app becomes active, check to see if we should wrap up a trip.
+            DDLogWrapper.logVerbose("Ending trip after app became activate.")
+            self.stopActivelyTrackingIfNeeded()
+        }
     }
     
     func startup(startingFromBackground: Bool) {
@@ -146,7 +157,15 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
     }
     
+    func isPausedDueToBatteryLife() -> Bool {
+        return UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking
+    }
+    
     func isPaused() -> Bool {
+        return self.isPausedDueToBatteryLife() || self.isPausedByUser()
+    }
+    
+    func isPausedByUser() -> Bool {
         return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
     }
     
@@ -156,7 +175,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         DDLogWrapper.logInfo("Paused Tracking")
-        
         self.locationManager.stopUpdatingLocation()
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
     }
@@ -167,7 +185,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         DDLogWrapper.logInfo("Resume Tracking")
-        
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
     }
     
@@ -270,6 +287,18 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
+        if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
+            let notif = UILocalNotification()
+            notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            
+            DDLogWrapper.logInfo("Paused Tracking due to battery life")
+            
+            self.locationManager.stopUpdatingLocation()
+
+            return;
+        }
+        
         if (self.currentTrip != nil) {
             
             var foundNonNegativeSpeed = false
