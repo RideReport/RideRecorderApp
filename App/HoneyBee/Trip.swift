@@ -385,7 +385,7 @@ class Trip : NSManagedObject {
         }
     }
     
-    internal func runActivityClassification() {
+    func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
             if (self.averageSpeed >= 8) {
