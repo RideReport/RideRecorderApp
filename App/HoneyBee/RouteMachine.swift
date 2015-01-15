@@ -14,7 +14,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 60
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
-    let minimumBatteryForTracking : Float = 1.2
+    let minimumBatteryForTracking : Float = 0.2
     
     var startedInBackground = false
     

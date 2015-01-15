@@ -34,6 +34,8 @@
 		847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* RoutesViewController.swift */; };
 		847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847ED0901A40DA0D00CAA396 /* MainViewController.swift */; };
 		848777B01A605EB000B59B06 /* SoftwareUpdateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateMachine.swift */; };
+		848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
+		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */; };
 		84D1555A19D2733500316995 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
@@ -129,6 +131,8 @@
 		847ED0901A40DA0D00CAA396 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		847ED0921A41112800CAA396 /* HoneyBee 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 7.xcdatamodel"; sourceTree = "<group>"; };
 		848777AF1A605EB000B59B06 /* SoftwareUpdateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateMachine.swift; sourceTree = "<group>"; };
+		848777B61A6834C300B59B06 /* UIView+HBadditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+HBadditions.swift"; sourceTree = "<group>"; };
+		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 6.xcdatamodel"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ride.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -222,6 +226,7 @@
 				8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */,
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */,
+				848777B81A683A4A00B59B06 /* PopupView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -276,6 +281,7 @@
 			isa = PBXGroup;
 			children = (
 				8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */,
+				848777B61A6834C300B59B06 /* UIView+HBadditions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -562,11 +568,13 @@
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
 				8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
+				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
+				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */,

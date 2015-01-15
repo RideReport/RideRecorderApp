@@ -23,6 +23,9 @@
                                 <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
                                 </variation>
+                                <variation key="widthClass=regular" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                                </variation>
                                 <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
                                 </variation>
@@ -47,6 +50,12 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
+                                <variation key="widthClass=compact" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="556" width="400" height="44"/>
+                                </variation>
+                                <variation key="widthClass=regular" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="556" width="800" height="44"/>
+                                </variation>
                             </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -215,6 +224,12 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <variation key="widthClass=compact" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="207"/>
+                                </variation>
+                                <variation key="widthClass=regular" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="800" height="207"/>
+                                </variation>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -453,7 +468,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
@@ -461,20 +476,93 @@
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BRT-um-pLV">
                                 <rect key="frame" x="0.0" y="393" width="600" height="207"/>
+                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="393" width="400" height="207"/>
+                                </variation>
+                                <variation key="widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="393" width="800" height="207"/>
+                                </variation>
                                 <connections>
                                     <segue destination="7N1-4R-0Wg" kind="embed" identifier="routesViewControllerEmbed" id="AI3-mt-u1v"/>
                                 </connections>
                             </containerView>
+                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
+                                <rect key="frame" x="226" y="62" width="372" height="45"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride is paused until you charge your phone =)." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bKN-IG-adh">
+                                        <rect key="frame" x="17" y="16" width="315" height="21"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="315" id="R3C-fl-Ig6"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="iJ8-Ut-WgY"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="R3C-fl-Ig6"/>
+                                                <exclude reference="iJ8-Ut-WgY"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="Qha-G2-Yyd"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="Rcq-oI-WkO"/>
+                                    <constraint firstItem="bKN-IG-adh" firstAttribute="top" secondItem="5hK-0E-Yx5" secondAttribute="top" constant="17" id="c7v-9x-B82"/>
+                                    <constraint firstAttribute="trailing" secondItem="bKN-IG-adh" secondAttribute="trailing" constant="10" id="hGt-bR-zwK"/>
+                                    <constraint firstItem="bKN-IG-adh" firstAttribute="leading" secondItem="5hK-0E-Yx5" secondAttribute="leading" constant="17" id="tvd-Zf-QDx"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                        <color key="value" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="0.85999999999999999" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                        <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.71999999999999997" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowBaseWidth">
+                                        <real key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowHeight">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="strokeWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowInset">
+                                        <real key="value" value="16"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="2lj-yV-Bo7"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GsO-Yw-fHd" secondAttribute="trailing" constant="-16" id="6AQ-hd-T7z"/>
+                            <constraint firstItem="5hK-0E-Yx5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" constant="10" id="FlL-mS-kK7"/>
                             <constraint firstAttribute="height" secondItem="GsO-Yw-fHd" secondAttribute="height" id="HhZ-io-xwE"/>
+                            <constraint firstItem="5hK-0E-Yx5" firstAttribute="width" secondItem="GsO-Yw-fHd" secondAttribute="width" multiplier="2:3" id="PBH-wJ-oyn"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Tcc-m2-58E"/>
                             <constraint firstItem="BRT-um-pLV" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Ur6-L7-bP6"/>
+                            <constraint firstItem="5hK-0E-Yx5" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="YcJ-wS-bsW"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5hK-0E-Yx5" secondAttribute="trailing" constant="-14" id="d3f-So-cFD"/>
+                            <constraint firstItem="5hK-0E-Yx5" firstAttribute="trailing" secondItem="DxI-1P-rL1" secondAttribute="trailingMargin" id="dg3-iH-On4"/>
                             <constraint firstAttribute="height" secondItem="BRT-um-pLV" secondAttribute="height" multiplier="3:1" id="rHp-oZ-KO0"/>
                             <constraint firstItem="qQN-Gw-V0g" firstAttribute="top" secondItem="BRT-um-pLV" secondAttribute="bottom" id="uJC-9I-gEQ"/>
+                            <constraint firstItem="5hK-0E-Yx5" firstAttribute="trailing" secondItem="DxI-1P-rL1" secondAttribute="trailingMargin" id="wwX-xJ-447"/>
+                            <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="yD6-Yc-GUL"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="PBH-wJ-oyn"/>
+                                <exclude reference="dg3-iH-On4"/>
+                                <exclude reference="wwX-xJ-447"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="z4R-cX-Dk7">
                         <barButtonItem key="leftBarButtonItem" title="S" id="YrK-5y-IWt">
@@ -491,6 +579,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="batteryLowPopupView" destination="5hK-0E-Yx5" id="AhT-bA-Pva"/>
                         <outlet property="pauseResumeTrackingButton" destination="5KM-wa-SB8" id="AvM-9J-8OD"/>
                         <outlet property="routesContainerView" destination="BRT-um-pLV" id="UJS-jq-8fl"/>
                         <outlet property="settingsButton" destination="YrK-5y-IWt" id="2OX-5v-A8B"/>
@@ -498,7 +587,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXG-zy-OqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="883" y="398"/>
+            <point key="canvasLocation" x="946" y="398"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="P6Q-Di-BBw">

@@ -13,6 +13,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
+    @IBOutlet weak var batteryLowPopupView: UIView!
     var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
@@ -45,13 +46,17 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.routesViewController = self.childViewControllers.last?.topViewController as RoutesViewController
         self.routesViewController.mainViewController = self
         
-        refreshPauseResumeTrackingButtonUI()
-        
+        self.refreshPauseResumeTrackingButtonUI()
+
         let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
 
         if (!hasSeenGettingStarted) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.refreshPauseResumeTrackingButtonUI()
     }
     
     @IBAction func tools(sender: AnyObject) {
@@ -74,11 +79,17 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.customButton.maskImage = UIImage(named: "locationArrowDisabled.png")
             self.customButton.primaryColor = UIColor.grayColor()
             self.customButton.secondaryColor = UIColor.grayColor()
-
+            
+            if (RouteMachine.sharedMachine.isPausedDueToBatteryLife() && self.batteryLowPopupView.hidden) {
+                self.batteryLowPopupView.popIn()
+            }
         } else {
             self.customButton.maskImage = UIImage(named: "locationArrow.png")
             self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
             self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
+            if (!RouteMachine.sharedMachine.isPausedDueToBatteryLife() && !self.batteryLowPopupView.hidden) {
+                self.batteryLowPopupView.fadeOut()
+            }
         }
     }
     
