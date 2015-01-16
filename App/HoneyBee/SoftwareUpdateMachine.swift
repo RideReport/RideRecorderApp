@@ -60,7 +60,7 @@ class SoftwareUpdateMachine : NSObject, UIAlertViewDelegate {
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
                     
-                    let alert = UIAlertView(title: "An update to Ride is available", message: "Tap Upgrade to upgrade over the air.", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Upgrade")
+                    let alert = UIAlertView(title: "Ride Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
                     alert.show()
                 }
             }
