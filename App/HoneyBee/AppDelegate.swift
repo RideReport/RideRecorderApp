@@ -68,7 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
-        DDLogWrapper.logInfo("========================STARTING RIDE APP========================")
+        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as String
+        DDLogWrapper.logInfo(NSString(format: "========================STARTING RIDE APP v%@========================", versionString))
         
         // fire up Core Data
         CoreDataController.sharedCoreDataController.startup()
