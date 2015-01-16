@@ -213,7 +213,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         for location in trip.locations.array {
             let location = (location as Location)
-            if (location.isPrivate) {
+            if (location.isPrivate.boolValue) {
                 continue
             }
             
@@ -297,7 +297,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         var count : Int = 0
         for location in trip.locations.array {
             let location = (location as Location)
-            if (location.isPrivate) {
+            if (location.isPrivate.boolValue) {
                 continue
             }
             

@@ -41,7 +41,9 @@ class Activity : NSManagedObject {
     }
     
     override func willSave() {
-        self.setPrimitiveValue(false, forKey: "trip.isSynced")
+        if (self.trip != nil) {
+            self.trip!.self.syncEventually()
+        }
         
         super.willSave()
     }

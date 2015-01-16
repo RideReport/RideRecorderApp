@@ -109,18 +109,26 @@ class Trip : NSManagedObject {
         let changedVals = self.changedValues()
         if (changedVals.count > 0 && !(changedVals.count == 1 && changedVals["isSynced"] != nil)) {
             if (!self.deleted) {
-                self.setPrimitiveValue(false, forKey: "isSynced")
-
-                if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active
-                    && self.isClosed.boolValue) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.syncToServer()
-                    })
-                }
+                self.syncEventually()
             }
         }
         
         super.willSave()
+    }
+    
+    func syncEventually() {
+        if (!self.isSynced.boolValue) {
+            return
+        }
+        
+        self.setPrimitiveValue(false, forKey: "isSynced")
+        
+        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active
+            && self.isClosed.boolValue) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.syncToServer()
+                })
+        }
     }
     
     func activityTypeString()->String {
@@ -208,7 +216,7 @@ class Trip : NSManagedObject {
     }
     
     func syncToServer() {
-        if (self.isSynced) {
+        if (self.isSynced.boolValue) {
             return
         }
         
@@ -221,7 +229,7 @@ class Trip : NSManagedObject {
         var locations : [AnyObject!] = []
         for location in self.locations.array {
             let aLocation = location as Location
-            if !aLocation.isPrivate {
+            if !aLocation.isPrivate.boolValue {
                 locations.append([
                     "course": aLocation.course,
                     "date": NetworkMachine.sharedMachine.jsonify(aLocation.date!),

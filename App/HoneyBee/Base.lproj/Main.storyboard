@@ -31,7 +31,7 @@
                                 </variation>
                             </mapView>
                             <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7S-Bw-nY7">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="356" width="600" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="l2l-V2-pMY"/>
                                 </constraints>
@@ -60,7 +60,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x7S-Bw-nY7" secondAttribute="bottom" id="2AI-YV-sfu"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x7S-Bw-nY7" secondAttribute="bottom" multiplier="3:2" id="2AI-YV-sfu"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="width" secondItem="x7S-Bw-nY7" secondAttribute="width" id="mpL-V9-rHa"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="nKW-gS-9tY"/>
