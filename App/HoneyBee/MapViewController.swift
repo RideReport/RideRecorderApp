@@ -199,7 +199,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func setSelectedTrip(trip : Trip!) {
-        self.mapView.removeAnnotations(self.tripAnnotations)
+        if (self.tripAnnotations != nil && self.tripAnnotations.count > 0) {
+            self.mapView.removeAnnotations(self.tripAnnotations)
+        }
         self.tripAnnotations = []
 
         if (trip == nil) {
@@ -233,6 +235,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             
             self.mapView.addAnnotation(annotation)
             self.tripAnnotations.append(annotation)
+        }
+        
+        if (self.tripPolyLines[trip] == nil) {
+            return
         }
         
         let overlay = self.tripPolyLines[trip]! as MKPolyline
