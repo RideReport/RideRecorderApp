@@ -74,12 +74,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func startup(startingFromBackground: Bool) {
-        if (startingFromBackground) {
-            let notif = UILocalNotification()
-            notif.alertBody = "You must launch Ride to start logging again."
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-        }
-        
         self.startedInBackground = startingFromBackground
         self.locationManager.delegate = self;
         self.locationManager.requestAlwaysAuthorization()
