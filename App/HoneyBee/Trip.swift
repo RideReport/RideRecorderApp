@@ -28,6 +28,8 @@ class Trip : NSManagedObject {
     }
     
     @NSManaged var activityType : NSNumber
+    @NSManaged var batteryAtEnd : NSNumber!
+    @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
@@ -146,6 +148,18 @@ class Trip : NSManagedObject {
         }
 
         return tripTypeString
+    }
+    
+    func batteryLifeUsed() -> Int16 {
+        if (self.batteryAtStart == nil || self.batteryAtEnd == nil) {
+            return 0
+        }
+        if (self.batteryAtStart.shortValue < self.batteryAtEnd.shortValue) {
+            DDLogWrapper.logVerbose("Negative battery life used?")
+            return 0
+        }
+        
+        return (self.batteryAtStart.shortValue - self.batteryAtEnd.shortValue)
     }
     
     func duration() -> NSTimeInterval {

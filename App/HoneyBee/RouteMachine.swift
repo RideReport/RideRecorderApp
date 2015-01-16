@@ -69,7 +69,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         if (self.currentTrip != nil && self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
             // if the app becomes active, check to see if we should wrap up a trip.
             DDLogWrapper.logVerbose("Ending trip after app became activate.")
-            self.stopActivelyTrackingIfNeeded()
+            self.stopTripIfNeeded()
         }
     }
     
@@ -91,7 +91,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     // MARK: - State Machine
     
-    func startActiveTrackingFromLocation(fromLocation: CLLocation) {
+    func startTripFromLocation(fromLocation: CLLocation) {
         if (self.currentTrip != nil) {
             return
         }
@@ -106,6 +106,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Starting Active Tracking")
         
         self.currentTrip = Trip()
+        self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         CoreDataController.sharedCoreDataController.saveContext()
         
         // initialize lastMovingLocation to fromLocation, where the movement started
@@ -124,7 +125,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.enterHighPowerState()
     }
     
-    func stopActivelyTrackingIfNeeded() {
+    func stopTripIfNeeded() {
         if (self.currentTrip == nil) {
             return
         }
@@ -142,6 +143,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip!)
         } else {
             let closingTrip = self.currentTrip
+            closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+            DDLogWrapper.logInfo(NSString(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
+            
             closingTrip!.closeTrip()
             closingTrip!.clasifyActivityType({ () -> Void in
                 closingTrip!.sendTripCompletionNotification()
@@ -197,7 +201,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         DDLogWrapper.logInfo("Entering low power state")
-        DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
         
         self.locationManager.distanceFilter = 100
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
@@ -226,7 +229,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         DDLogWrapper.logInfo("Entering HIGH power state")
-        DDLogWrapper.logInfo(NSString(format: "Current Battery Level: %.0f", UIDevice.currentDevice().batteryLevel * 100))
 
         if (self.shouldDeferUpdates) {
             self.locationManager.distanceFilter = kCLDistanceFilterNone
@@ -323,11 +325,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 60.0)){
                 // otherwise, check the acceleromtere for recent data
                 DDLogWrapper.logVerbose("Moving too slow for too long")
-                self.stopActivelyTrackingIfNeeded()
+                self.stopTripIfNeeded()
             } else if (foundNonNegativeSpeed == false) {
                 if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
                     DDLogWrapper.logVerbose("Went too long with negative speeds.")
-                    self.stopActivelyTrackingIfNeeded()
+                    self.stopTripIfNeeded()
                 } else {
                     if (self.lastMovingLocation == nil) {
                         DDLogWrapper.logVerbose("lastMovingLocation is nil, should not be!")
@@ -369,7 +371,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.lastLowPowerLocation = newLocation
             
             if (foundMovement) {
-                self.startActiveTrackingFromLocation(self.lastLowPowerLocation)
+                self.startTripFromLocation(self.lastLowPowerLocation)
                 
                 for location in locations {
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {

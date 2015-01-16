@@ -14,12 +14,15 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     @IBOutlet weak var thumbsUpButton: UIButton!
     @IBOutlet weak var thumbsDownButton: UIButton!
     @IBOutlet weak var bikeButton: UIButton!
+    @IBOutlet weak var batteryLifeLabel: UILabel!
     @IBOutlet weak var carButton: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var tripSpeedLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.view.backgroundColor = UIColor.clearColor()
         
         var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         var effectView = UIVisualEffectView(effect: blur)
@@ -41,13 +44,15 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
     }
     
     func refreshTripUI() {
-        if (self.mainViewController.selectedTrip == nil) {
+        if self.mainViewController.selectedTrip == nil {
             return
         }
         
-        self.distanceLabel.text = NSString(format: "%.1fm", self.mainViewController.selectedTrip.lengthMiles)
+        let trip = self.mainViewController.selectedTrip
         
-        let speedMph = self.mainViewController.selectedTrip.averageSpeed*2.23694
+        self.distanceLabel.text = NSString(format: "%.1fm", trip.lengthMiles)
+        
+        let speedMph = trip.averageSpeed*2.23694
         self.tripSpeedLabel.text = NSString(format: "%.1fmph", speedMph)
         
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
@@ -56,10 +61,10 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         self.bikeButton.backgroundColor = UIColor.clearColor()
         self.carButton.backgroundColor = UIColor.clearColor()
         
-        if (self.mainViewController.selectedTrip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
+        if trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue {
             self.thumbsUpButton.hidden = true
             self.thumbsDownButton.hidden = true
-            if (self.mainViewController.selectedTrip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+            if (trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
                 self.carButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
             }
         } else {
@@ -68,10 +73,16 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
             self.bikeButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
         }
         
-        if self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Good.rawValue {
+        if trip.rating.shortValue == Trip.Rating.Good.rawValue {
             self.thumbsUpButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
-        } else if self.mainViewController.selectedTrip.rating.shortValue == Trip.Rating.Bad.rawValue {
+        } else if trip.rating.shortValue == Trip.Rating.Bad.rawValue {
             self.thumbsDownButton.backgroundColor = UIColor.orangeColor().colorWithAlphaComponent(0.3)
+        }
+        
+        if trip.batteryLifeUsed() > 0 {
+            self.batteryLifeLabel.text = NSString(format: "%d%% battery used", trip.batteryLifeUsed())
+        } else {
+            self.batteryLifeLabel.text = ""
         }
     }
     

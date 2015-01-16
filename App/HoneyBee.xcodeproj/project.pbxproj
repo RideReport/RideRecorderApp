@@ -133,6 +133,7 @@
 		848777AF1A605EB000B59B06 /* SoftwareUpdateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateMachine.swift; sourceTree = "<group>"; };
 		848777B61A6834C300B59B06 /* UIView+HBadditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+HBadditions.swift"; sourceTree = "<group>"; };
 		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
+		848777BA1A698BCE00B59B06 /* HoneyBee 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 11.xcdatamodel"; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 6.xcdatamodel"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ride.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -820,6 +821,7 @@
 				8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */,
 				8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */,
 				8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */,
+				848777BA1A698BCE00B59B06 /* HoneyBee 11.xcdatamodel */,
 				84270BDD1A38ECA900AD6328 /* HoneyBee 3.xcdatamodel */,
 				84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */,
 				84D1555719D2733500316995 /* HoneyBee.xcdatamodel */,
@@ -827,7 +829,7 @@
 				844497281A3A6CD70009F889 /* HoneyBee 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */,
 			);
-			currentVersion = 8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */;
+			currentVersion = 848777BA1A698BCE00B59B06 /* HoneyBee 11.xcdatamodel */;
 			name = HoneyBee.xcdatamodeld;
 			path = HoneyBee/HoneyBee.xcdatamodeld;
 			sourceTree = "<group>";
