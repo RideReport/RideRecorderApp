@@ -22,7 +22,7 @@
 	
 </head>
 
-<body onload="getPosition()">
+<body>
 
 	<div id="map"></div>
 	<script>
@@ -32,13 +32,13 @@
   	 zoomAnimation: false
   	})
   	var tripLayerGroup = L.layerGroup().addTo(map);
+  	
+  	$(document).ready(function(){
+     	navigator.geolocation.getCurrentPosition(gotPosition);
+     }
 
     var googleLayer = new L.Google('ROADMAP');
     map.addLayer(googleLayer);
-
-    function getPosition(position) {
-    	navigator.geolocation.getCurrentPosition(gotPosition);
-    }
     
     function gotPosition(position) {
       map.setView([position.coords.latitude, position.coords.longitude], 14);
