@@ -130,6 +130,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         DDLogWrapper.logInfo("Stopping Active Tracking")
+        self.locationManager.stopUpdatingLocation()
         
         if (self.currentTrip!.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
