@@ -57,7 +57,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.AutomotiveNavigation
         self.locationManager.pausesLocationUpdatesAutomatically = false
-        self.locationManager.disallowDeferredLocationUpdates()
         
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
