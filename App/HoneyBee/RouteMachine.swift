@@ -231,12 +231,14 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Entering HIGH power state")
 
         if (self.shouldDeferUpdates) {
+            DDLogWrapper.logInfo("Deferring updates!")
             self.locationManager.distanceFilter = kCLDistanceFilterNone
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
             
             self.isDefferringLocationUpdates = true
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         } else {
+            DDLogWrapper.logInfo("Not deferring updates")
             self.locationManager.distanceFilter = 20
             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         }
@@ -273,10 +275,16 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didFinishDeferredUpdatesWithError error: NSError!) {
         DDLogWrapper.logVerbose("Finished deferring updates")
+        DDLogWrapper.logVerbose("Finished deferring updates!")
+        if (error != nil) {
+            DDLogWrapper.logVerbose(NSString(format: "Error deferring: %@", error))
+        }
 
         self.isDefferringLocationUpdates = false
         if (self.shouldDeferUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
             // if we are still tracking a route, continue deferring.
+            DDLogWrapper.logVerbose("Re-deferring updates")
+
             self.isDefferringLocationUpdates = true
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
@@ -295,19 +303,20 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return;
         }
         
+        DDLogWrapper.logVerbose("Received location updates.")
+        
         if (self.currentTrip != nil) {
             
             var foundNonNegativeSpeed = false
             
             for location in locations {
-                DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
+                DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
                 if (location.speed > 0) {
                     foundNonNegativeSpeed = true
                 }
                 
                 if (location.speed > 3) {
                     // if the speed is above 3 meters per second, keep tracking
-                    DDLogWrapper.logVerbose("Got new active tracking location")
                     
                     self.lastMovingLocation = location
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
@@ -345,7 +354,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             var foundMovement = false
             for location in locations {
-                DDLogWrapper.logVerbose(NSString(format: "Location Speed: %f", location.speed))
+                DDLogWrapper.logVerbose(NSString(format: "Location found in low power mode. Speed: %f", location.speed))
                 if (location.speed > 3) {
                     // if the speed is above 3 meters per second, start tracking
                     DDLogWrapper.logVerbose("Found movement while in low power state")
