@@ -19,11 +19,11 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>6</string>
+	<string>7</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your location to provide information your bicycle routes. This information is shared anonymously and can be controlled by setting a privacy circle in the app.</string>
+	<string>$(PRODUCT_NAME) uses your location to log your bicycle routes. This information is shared anonymously and can be controlled by setting a privacy circle in the app.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
