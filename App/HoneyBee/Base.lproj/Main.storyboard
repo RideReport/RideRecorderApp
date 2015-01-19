@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C94b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C99d" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -112,7 +112,7 @@
                                     <action selector="thumbsDown:" destination="kwz-jH-hLg" eventType="touchUpInside" id="RfD-ue-Cay"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="4.3m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Ejg-PQ-fwk">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="4.3m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="Ejg-PQ-fwk">
                                 <rect key="frame" x="16" y="107" width="353" height="72"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="80"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -159,11 +159,14 @@
                         <constraints>
                             <constraint firstItem="Adv-Bd-Mez" firstAttribute="leading" secondItem="DfH-Nc-TDm" secondAttribute="trailing" constant="24" id="B7Y-lC-NM8"/>
                             <constraint firstItem="xqm-Jj-iLN" firstAttribute="top" secondItem="vjU-bf-j0X" secondAttribute="bottom" constant="-2" id="IQT-MA-xD8"/>
+                            <constraint firstItem="Ejg-PQ-fwk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Adv-Bd-Mez" secondAttribute="bottom" constant="-5" id="KvS-6C-DcW"/>
                             <constraint firstItem="xqm-Jj-iLN" firstAttribute="trailing" secondItem="TWR-nP-pUX" secondAttribute="trailingMargin" id="L9D-cK-y81"/>
                             <constraint firstItem="qfE-CH-gAW" firstAttribute="top" secondItem="Ejg-PQ-fwk" secondAttribute="bottom" constant="-2" id="Lsm-Da-Utw"/>
                             <constraint firstAttribute="centerX" secondItem="GX8-Gg-H8z" secondAttribute="centerX" constant="-0.5" id="SUX-pJ-Mqi"/>
+                            <constraint firstItem="t3o-so-ELm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="xqm-Jj-iLN" secondAttribute="bottom" constant="-13" id="VP3-HX-RqC"/>
                             <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="GX8-Gg-H8z" secondAttribute="bottom" constant="8" id="Wsq-aQ-vCr"/>
                             <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="t3o-so-ELm" secondAttribute="bottom" constant="10" id="XMT-pp-bqh"/>
+                            <constraint firstItem="Ejg-PQ-fwk" firstAttribute="top" relation="greaterThanOrEqual" secondItem="DfH-Nc-TDm" secondAttribute="bottom" constant="-5" id="aq2-da-hwN"/>
                             <constraint firstItem="t3o-so-ELm" firstAttribute="trailing" secondItem="TWR-nP-pUX" secondAttribute="trailingMargin" id="dAw-Iq-Nx3"/>
                             <constraint firstItem="1eH-gi-nPd" firstAttribute="top" secondItem="qfE-CH-gAW" secondAttribute="bottom" constant="6" id="dY0-jm-wIf"/>
                             <constraint firstItem="Adv-Bd-Mez" firstAttribute="top" secondItem="vjU-bf-j0X" secondAttribute="bottom" constant="-16" id="dtq-xM-UIb"/>
@@ -243,6 +246,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
                             <constraint firstAttribute="height" secondItem="W5I-Vg-qji" secondAttribute="height" id="JO5-OL-3Hf"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="iVJ-kB-dFg"/>
                         </constraints>
