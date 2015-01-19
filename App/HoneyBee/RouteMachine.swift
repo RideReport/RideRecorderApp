@@ -83,6 +83,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
                     self.motionActivityManager.stopActivityUpdates()
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineHasRequestedMotionAccess")
+                    NSUserDefaults.standardUserDefaults().synchronize()
                 })
             })
         }
@@ -129,8 +130,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        DDLogWrapper.logInfo("Stopping Active Tracking")
-        self.locationManager.stopUpdatingLocation()
+        if (self.locationManagerIsUpdating) {
+            self.stopActiveTracking()
+        }
         
         if (self.currentTrip!.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
@@ -172,9 +174,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        DDLogWrapper.logInfo("Paused Tracking")
-        self.locationManager.stopUpdatingLocation()
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        DDLogWrapper.logInfo("Paused Tracking")
+        self.stopActiveTracking()
+        self.locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     func resumeTracking() {
@@ -182,17 +187,23 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        DDLogWrapper.logInfo("Resume Tracking")
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        DDLogWrapper.logInfo("Resume Tracking")
+        self.locationManager.startMonitoringSignificantLocationChanges()
+    }
+    
+    func stopActiveTracking() {
+        DDLogWrapper.logInfo("Stopping Tracking")
+
+        self.locationManagerIsUpdating = false
+        self.locationManager.stopUpdatingLocation()
     }
     
     func enterLowPowerState() {
         if (isPaused()) {
             DDLogWrapper.logInfo("Tracking is Paused, not enterign low power state")
-            
-            if (self.locationManagerIsUpdating) {
-                self.locationManager.stopUpdatingLocation()
-            }
             
             return
         } else if (!self.locationManagerIsUpdating) {
@@ -217,10 +228,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func enterHighPowerState() {
         if (isPaused()) {
             DDLogWrapper.logInfo("Tracking is Paused, not enterign high power state")
-            
-            if (self.locationManagerIsUpdating) {
-                self.locationManager.stopUpdatingLocation()
-            }
             
             return
         } else if (!self.locationManagerIsUpdating) {
@@ -298,7 +305,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             DDLogWrapper.logInfo("Paused Tracking due to battery life")
             
-            self.locationManager.stopUpdatingLocation()
+            self.stopActiveTracking()
 
             return;
         }
@@ -391,7 +398,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
                 if (self.lowPowerReadingsCount > 10) {
                     DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
-                    self.locationManager.stopUpdatingLocation()
+                    self.stopActiveTracking()
                 } else {
                     DDLogWrapper.logVerbose("Taking more low power readings.")
                 }
