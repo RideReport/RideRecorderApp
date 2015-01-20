@@ -13,7 +13,6 @@
 		8429E5D01A5DC58500EB3E94 /* HoneyBee_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
-		8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */; };
 		8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8429E5E01A5F0F6B00EB3E94 /* gear.png */; };
 		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
@@ -46,6 +45,8 @@
 		84D1557A19D2743900316995 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataController.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
 		84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */; };
+		84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */; };
+		84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,7 +103,6 @@
 		8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 8.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 10.xcdatamodel"; sourceTree = "<group>"; };
-		8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
 		8429E5E01A5F0F6B00EB3E94 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
@@ -149,6 +149,8 @@
 		84D1557919D2743900316995 /* CoreDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSimulatorView.swift; sourceTree = "<group>"; };
+		84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedRatingViewController.swift; sourceTree = "<group>"; };
+		84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
 		84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 2.xcdatamodel"; sourceTree = "<group>"; };
 		BA743A6C616E49B6A36F8FD7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -262,7 +264,8 @@
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
-				8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */,
+				84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */,
+				84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -556,19 +559,20 @@
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
-				8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
+				84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */,
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
+				84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */,
 				848777B01A605EB000B59B06 /* SoftwareUpdateMachine.swift in Sources */,
 				8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,

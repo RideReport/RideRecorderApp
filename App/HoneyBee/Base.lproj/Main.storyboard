@@ -282,7 +282,7 @@
                     </toolbar>
                     <connections>
                         <segue destination="A5D-RC-UCB" kind="relationship" relationship="rootViewController" id="gLk-Sd-7ee"/>
-                        <segue destination="bFV-9d-kVU" kind="presentation" identifier="segueToGettingStarted" id="byt-RJ-ZZ2"/>
+                        <segue destination="bFV-9d-kVU" kind="presentation" identifier="segueToGettingStarted" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="byt-RJ-ZZ2"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YN6-Bi-xbb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -292,7 +292,7 @@
         <!--View Controller-->
         <scene sceneID="l9V-b9-DzN">
             <objects>
-                <viewController id="JSN-k8-2Yb" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ho-Nv-QxS"/>
                         <viewControllerLayoutGuide type="bottom" id="olm-Uf-1wd"/>
@@ -358,7 +358,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pca-mh-ubT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="818" y="1808"/>
+            <point key="canvasLocation" x="812" y="1808"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="rZ9-b6-9Ai">
@@ -399,12 +399,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G3W-6f-nVL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1489" y="1808"/>
+            <point key="canvasLocation" x="1444" y="1808"/>
         </scene>
-        <!--View Controller-->
+        <!--Getting Started Rating View Controller-->
         <scene sceneID="7nf-DU-971">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" customClass="GettingStartedRatingViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X9A-Qz-D3z"/>
                         <viewControllerLayoutGuide type="bottom" id="GyA-j0-Rsb"/>
@@ -413,13 +413,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="After your ride, Ride reports right to your lock screen. Slide to the left to rate the route thumbs up or down." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
-                                <rect key="frame" x="75" y="118" width="450" height="71"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Rating your Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="gsX-qo-6ki">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rating your Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="gsX-qo-6ki">
                                 <rect key="frame" x="90" y="44" width="421" height="37"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -435,18 +429,32 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle" value="👎"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="actionTitle" value="👍"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                                <rect key="frame" x="44" y="370" width="514" height="71"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="jcU-RA-OvC" secondAttribute="width" id="IyN-g2-Jqd"/>
+                            <constraint firstAttribute="centerX" secondItem="bHA-2Y-YLz" secondAttribute="centerX" constant="-0.5" id="deZ-Oo-BAd"/>
+                            <constraint firstAttribute="centerX" secondItem="gsX-qo-6ki" secondAttribute="centerX" constant="-0.5" id="o0w-JU-2FE"/>
+                            <constraint firstAttribute="width" secondItem="bHA-2Y-YLz" secondAttribute="width" multiplier="4:3" id="vQK-xo-wGV"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="helperTextLabel" destination="bHA-2Y-YLz" id="eEN-S0-ETs"/>
+                        <outlet property="pushSimulationView" destination="jcU-RA-OvC" id="jaI-MQ-10w"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B5y-yY-RUS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="165" y="1808"/>
+            <point key="canvasLocation" x="181" y="1808"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="VKZ-XD-iWn">
@@ -496,7 +504,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d6b-No-TID" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2172" y="1808"/>
+            <point key="canvasLocation" x="2079" y="1808"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="9ej-R0-CEK">
@@ -653,8 +661,8 @@
         <!--Getting Started View Controller-->
         <scene sceneID="B6O-ep-Keh">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="bFV-9d-kVU" customClass="GettingStartedViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bcd-hY-ntc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="bFV-9d-kVU" customClass="GettingStartedViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController"/>
             </objects>
             <point key="canvasLocation" x="181" y="1150"/>
         </scene>

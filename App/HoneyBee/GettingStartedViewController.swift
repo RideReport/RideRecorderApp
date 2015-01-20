@@ -8,13 +8,25 @@
 
 import Foundation
 
-
 class GettingStartedViewController: UIPageViewController {
+    var gettingStartedRatingVC : UIViewController!
+    var gettingStartedBatteryVC : UIViewController!
     
     override func viewDidLoad() {
-        let vc0 = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as UIViewController
         
-        self.setViewControllers([vc0], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        var effectView = UIVisualEffectView(effect: blur)
+        effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
+        self.view.addSubview(effectView)
+        self.view.sendSubviewToBack(effectView)
+        
+        gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as UIViewController
+        gettingStartedRatingVC.view.backgroundColor = UIColor.clearColor()
+        
+        gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as UIViewController
+        gettingStartedBatteryVC.view.backgroundColor = UIColor.clearColor()
+        
+        self.setViewControllers([gettingStartedRatingVC], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
     }
     
     @IBAction func done(sender: AnyObject) {

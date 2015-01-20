@@ -8,6 +8,13 @@
 
 import Foundation
 
+@objc protocol PushSimulatorViewDelegate {
+    optional func didOpenControls(view: PushSimulatorView)
+    optional func didCloseControls(view: PushSimulatorView)
+    optional func didTapDestructiveButton(view: PushSimulatorView)
+    optional func didTapActionButton(view: PushSimulatorView)
+}
+
 @IBDesignable class PushSimulatorView : UIView, UIScrollViewDelegate {
     
     @IBInspectable var body: NSString = "Lorem ipsum dolor sit amet" {
@@ -15,7 +22,7 @@ import Foundation
             reloadUI()
         }
     }
-    @IBInspectable var appName: NSString = "Lorem" {
+    @IBInspectable var appName: NSString = "Ride" {
         didSet {
             reloadUI()
         }
@@ -38,6 +45,10 @@ import Foundation
     
     let buttonWidth : CGFloat = 75.0
     
+    var delegate : PushSimulatorViewDelegate? = nil
+    
+    var isShowingControls = false
+    
     var scrollView : UIScrollView!
     var controlsView : UIView!
     var destructiveButton : UIButton!
@@ -45,6 +56,11 @@ import Foundation
     
     var contentView : UIView!
     var appNameLabel : UILabel!
+    var dateLabel : UILabel!
+    var bodyLabel : UILabel!
+    var slideLabel : UILabel!
+    
+    var appIconView : UIImageView!
     
     
     required init(coder aDecoder: NSCoder) {
@@ -87,11 +103,52 @@ import Foundation
         contentView.backgroundColor = UIColor.clearColor()
         scrollView.addSubview(contentView)
         
-        appNameLabel = UILabel(frame: CGRectMake(10, 10, self.bounds.width, self.bounds.height))
+        let insetX : CGFloat = 15
+        
+        appIconView = UIImageView(frame: CGRectMake(insetX, 10, 20, 20))
+        appIconView.backgroundColor = UIColor.redColor()
+        contentView.addSubview(appIconView)
+        
+        appNameLabel = UILabel()
+        appNameLabel.font = UIFont.boldSystemFontOfSize(18)
         appNameLabel.textColor = UIColor.whiteColor()
         contentView.addSubview(appNameLabel)
         
+        dateLabel = UILabel()
+        dateLabel.font = UIFont.systemFontOfSize(14)
+        dateLabel.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+        contentView.addSubview(dateLabel)
+        
+        bodyLabel = UILabel()
+        bodyLabel.font = UIFont.systemFontOfSize(16)
+        bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        bodyLabel.numberOfLines = 2
+        bodyLabel.textColor = UIColor.whiteColor()
+        contentView.addSubview(bodyLabel)
+        
+        let lineViewTop = UIView(frame: CGRectMake(insetX, 0.0, self.bounds.width, 1.0))
+        lineViewTop.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
+        contentView.addSubview(lineViewTop)
+        
+        let lineViewBottom = UIView(frame: CGRectMake(insetX, self.bounds.height - 1, self.bounds.width, 1.0))
+        lineViewBottom.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
+        contentView.addSubview(lineViewBottom)
+        
+        slideLabel = UILabel()
+        slideLabel.font = UIFont.systemFontOfSize(14)
+        slideLabel.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+        slideLabel.text = "slide to view"
+        contentView.addSubview(slideLabel)
+        
         reloadUI()
+    }
+    
+    func pressedDestructiveButton() {
+        delegate?.didTapDestructiveButton?(self)
+    }
+    
+    func pressedActionButton() {
+        delegate?.didTapActionButton?(self)
     }
     
     override func prepareForInterfaceBuilder() {
@@ -110,7 +167,21 @@ import Foundation
     func reloadUI() {
         destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
         actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)
+        
         appNameLabel.text = self.appName
+        dateLabel.text = "now"
+        bodyLabel.text = self.body
+        
+        let insetX : CGFloat = 46
+        let insetY : CGFloat = 8
+        
+        let appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
+        let bodySize = bodyLabel.text!.sizeWithAttributes([NSFontAttributeName: bodyLabel.font])
+        
+        appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
+        dateLabel.frame = CGRectMake(appNameSize.width + insetX + 6, insetY, 60.0, appNameSize.height)
+        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, self.bounds.width - (2*insetX) - buttonWidth*2, bodySize.height * 2)
+        slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
     }
 
     
@@ -135,6 +206,18 @@ import Foundation
             self.controlsView.frame = CGRectMake(scrollView.contentOffset.x + self.bounds.width - 2*self.buttonWidth, 0, self.buttonWidth*2, self.bounds.height)
         } else {
             self.controlsView.frame = CGRectMake(self.bounds.width, 0, scrollView.contentOffset.x, self.bounds.height)
+        }
+        
+        if (scrollView.contentOffset.x >= self.buttonWidth*2) {
+            if !self.isShowingControls {
+                self.isShowingControls = true
+                delegate?.didOpenControls?(self)
+            }
+        } else if (scrollView.contentOffset.x == 0) {
+            if self.isShowingControls {
+                self.isShowingControls = false
+                delegate?.didCloseControls?(self)
+            }
         }
     }
 
