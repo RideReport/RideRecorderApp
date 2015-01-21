@@ -8,8 +8,8 @@
 
 #import "HBAnimatedGradientMaskButton.h"
 
-static float animationTimeInterval = 0.016;
-static float animationInterval = 0.004;
+static float animationTimeInterval = 0.16;
+static float animationInterval = 0.02;
 static float gradientLengthMultiplier = 1.8;
 static float gradientLengthMultiplierWithGrey = 0.8;
 static float animationTimeCurve(float progress) {
