@@ -40,6 +40,7 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
         self.pauseButton.maskImage = UIImage(named: "locationArrowDisabled.png")
         self.pauseButton.primaryColor = UIColor.grayColor()
         self.pauseButton.secondaryColor = UIColor.grayColor()
+        self.pauseButton.animates = false
         
         self.nextButton.delay(1.0) {
             self.nextButton.fadeIn()

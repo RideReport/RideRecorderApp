@@ -52,6 +52,16 @@ static float animationTimeCurveWithGrey(float progress) {
     self.neutralColor = nil;
 }
 
+- (void)setAnimates:(BOOL)animates;
+{
+    _animates = animates;
+    if (_animates) {
+        [self animate];
+    } else {
+        [self stopAnimating];
+    }
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     if (newWindow) {
@@ -63,19 +73,31 @@ static float animationTimeCurveWithGrey(float progress) {
 
 - (void)animate;
 {
+    if (!self.animates) {
+        return;
+    }
+    
     [self stopAnimating];
     
-    self.animationProgress = 0;
-    self.animationProgress2 = 0.5;
-    self.animationTimer = [NSTimer timerWithTimeInterval:animationTimeInterval target:self selector:@selector(animateFrame) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.animationTimer forMode:NSDefaultRunLoopMode];
+    @synchronized(self) {
+        if (self.animationTimer == nil) {
+            self.animationProgress = 0;
+            self.animationProgress2 = 0.5;
+            self.animationTimer = [NSTimer timerWithTimeInterval:animationTimeInterval target:self selector:@selector(animateFrame) userInfo:nil repeats:YES];
+            [[NSRunLoop mainRunLoop] addTimer:self.animationTimer forMode:NSDefaultRunLoopMode];
+        }
+    }
 
 }
 
 - (void)stopAnimating;
 {
-    [self.animationTimer invalidate];
-    self.animationTimer = nil;
+    @synchronized(self) {
+        if (self.animationTimer != nil) {
+            [self.animationTimer invalidate];
+            self.animationTimer = nil;
+        }
+    }
 }
 
 - (void)animateFrame;
