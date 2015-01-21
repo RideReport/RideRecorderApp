@@ -47,16 +47,16 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.routesViewController.mainViewController = self
         
         self.refreshPauseResumeTrackingButtonUI()
-
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
-
-        if (!hasSeenGettingStarted) {
-            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-        }
     }
     
     override func viewDidAppear(animated: Bool) {
         self.refreshPauseResumeTrackingButtonUI()
+        
+        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
+        
+        if (!hasSeenGettingStarted) {
+            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
+        }
     }
     
     @IBAction func tools(sender: AnyObject) {

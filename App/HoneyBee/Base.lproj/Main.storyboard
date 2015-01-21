@@ -289,10 +289,10 @@
             </objects>
             <point key="canvasLocation" x="181" y="398"/>
         </scene>
-        <!--View Controller-->
+        <!--Getting Started Battery View Controller-->
         <scene sceneID="l9V-b9-DzN">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" customClass="GettingStartedBatteryViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ho-Nv-QxS"/>
                         <viewControllerLayoutGuide type="bottom" id="olm-Uf-1wd"/>
@@ -301,60 +301,53 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wQR-6q-ss4">
-                                <rect key="frame" x="210" y="55" width="180" height="39"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="Qfc-JD-OoT">
-                                        <rect key="frame" x="20" y="2" width="66" height="37"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
-                                        <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="beta" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="o0Q-3h-mEK">
-                                        <rect key="frame" x="94" y="2" width="66" height="37"/>
-                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
-                                        <color key="textColor" red="0.49803921580314636" green="0.49803921580314636" blue="0.49803921580314636" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
+                                <rect key="frame" x="266" y="322" width="68" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Cool.">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="AZM-Ht-f28"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
+                                <rect key="frame" x="43" y="182" width="514" height="71"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
+                                <rect key="frame" x="562" y="36" width="22" height="22"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="o0Q-3h-mEK" secondAttribute="trailing" constant="20" id="CBx-GG-F9U"/>
+                                    <constraint firstAttribute="height" constant="22" id="Av0-bw-c5D"/>
+                                    <constraint firstAttribute="width" constant="22" id="fPH-GA-fE3"/>
                                 </constraints>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride uses motion and location data to automatically log your rides. " textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="yQf-Hg-Sgc">
-                                <rect key="frame" x="56" y="115" width="490" height="52"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="Tob-Jb-Nbz">
-                                <rect key="frame" x="117" y="200" width="455" height="71"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.90196079015731812" green="0.90196079015731812" blue="0.90196079015731812" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="🔋" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a1G-a3-2XJ">
-                                <rect key="frame" x="40" y="200" width="65" height="72"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Here's how to pause." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="Roa-K5-IJv">
-                                <rect key="frame" x="49" y="331" width="490" height="52"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tappedPauseButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="zze-bM-Ang"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="wQR-6q-ss4" secondAttribute="centerX" id="0U8-Um-UWz"/>
-                            <constraint firstItem="wQR-6q-ss4" firstAttribute="top" secondItem="2Ho-Nv-QxS" secondAttribute="bottom" constant="35" id="8Zx-eB-RhR"/>
-                            <constraint firstItem="yQf-Hg-Sgc" firstAttribute="width" secondItem="rpN-6i-TQ7" secondAttribute="width" multiplier="3:4" id="9hU-2X-nxR"/>
-                            <constraint firstAttribute="centerX" secondItem="yQf-Hg-Sgc" secondAttribute="centerX" id="sVx-vk-K3t"/>
+                            <constraint firstAttribute="width" secondItem="3Fg-Qu-NLO" secondAttribute="width" multiplier="4:3" id="AHb-jO-KLs"/>
+                            <constraint firstAttribute="centerX" secondItem="Vhn-3o-faj" secondAttribute="centerX" id="BqY-qP-zeD"/>
+                            <constraint firstItem="E3c-4P-41g" firstAttribute="trailing" secondItem="rpN-6i-TQ7" secondAttribute="trailingMargin" id="cG7-Cm-vsE"/>
+                            <constraint firstItem="E3c-4P-41g" firstAttribute="top" secondItem="2Ho-Nv-QxS" secondAttribute="bottom" constant="16" id="lV1-te-d5a"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="helperTextLabel" destination="3Fg-Qu-NLO" id="z6n-XX-aPX"/>
+                        <outlet property="nextButton" destination="Vhn-3o-faj" id="gY7-g3-9ZE"/>
+                        <outlet property="pauseButton" destination="E3c-4P-41g" id="t1i-4X-xY9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pca-mh-ubT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -413,14 +406,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rating your Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="gsX-qo-6ki">
-                                <rect key="frame" x="90" y="44" width="421" height="37"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="232" width="600" height="100"/>
+                                <rect key="frame" x="0.0" y="290" width="600" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="Znd-fV-uZr"/>
@@ -433,22 +420,34 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
-                                <rect key="frame" x="44" y="370" width="514" height="71"/>
+                                <rect key="frame" x="43" y="175" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2tn-qi-wgx">
+                                <rect key="frame" x="266" y="322" width="68" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Got it.">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="cUY-e3-8Xh" eventType="touchUpInside" id="YDm-hl-P3n"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="jcU-RA-OvC" secondAttribute="width" id="IyN-g2-Jqd"/>
                             <constraint firstAttribute="centerX" secondItem="bHA-2Y-YLz" secondAttribute="centerX" constant="-0.5" id="deZ-Oo-BAd"/>
-                            <constraint firstAttribute="centerX" secondItem="gsX-qo-6ki" secondAttribute="centerX" constant="-0.5" id="o0w-JU-2FE"/>
+                            <constraint firstAttribute="centerX" secondItem="2tn-qi-wgx" secondAttribute="centerX" id="onY-MS-wuF"/>
                             <constraint firstAttribute="width" secondItem="bHA-2Y-YLz" secondAttribute="width" multiplier="4:3" id="vQK-xo-wGV"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="helperTextLabel" destination="bHA-2Y-YLz" id="eEN-S0-ETs"/>
+                        <outlet property="nextButton" destination="2tn-qi-wgx" id="UM6-VA-Nb7"/>
                         <outlet property="pushSimulationView" destination="jcU-RA-OvC" id="jaI-MQ-10w"/>
                     </connections>
                 </viewController>
@@ -661,8 +660,8 @@
         <!--Getting Started View Controller-->
         <scene sceneID="B6O-ep-Keh">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="bcd-hY-ntc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="bFV-9d-kVU" customClass="GettingStartedViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bcd-hY-ntc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="181" y="1150"/>
         </scene>

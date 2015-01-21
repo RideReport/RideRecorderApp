@@ -162,6 +162,8 @@ import Foundation
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.controlsView.frame = CGRect(x: self.bounds.width - buttonWidth*2, y: 0, width: 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
+        
+        reloadUI()
     }
     
     func reloadUI() {
@@ -180,7 +182,7 @@ import Foundation
         
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
         dateLabel.frame = CGRectMake(appNameSize.width + insetX + 6, insetY, 60.0, appNameSize.height)
-        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, self.bounds.width - (2*insetX) - buttonWidth*2, bodySize.height * 2)
+        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, self.bounds.width - (1.5*insetX), bodySize.height * 2)
         slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
     }
 

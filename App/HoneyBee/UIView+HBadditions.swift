@@ -10,30 +10,71 @@ import Foundation
 
 extension UIView {
     
-    func popIn() {
+    func delay(delay: NSTimeInterval, completionHandler:() -> Void) -> Self {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+            completionHandler()
+        })
+        
+        return self
+    }
+    
+    func popIn(completionHandler:() -> Void = {}) -> Self {
         self.hidden = false
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            completionHandler()
+        }
         
         let scaleAnimation = CABasicAnimation(keyPath: "transform")
         scaleAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0, 1.01)
-        scaleAnimation.duration = 0.3
+        scaleAnimation.duration = 0.5
         scaleAnimation.fromValue = NSValue(CATransform3D: CATransform3DMakeScale(0.3, 0.3, 1.0))
+        scaleAnimation.byValue = NSValue(CATransform3D: CATransform3DMakeScale(1.3, 1.3, 1.0))
         scaleAnimation.toValue = NSValue(CATransform3D: CATransform3DIdentity)
         self.layer.addAnimation(scaleAnimation, forKey:"scaleAnimation")
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
         opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints:0.18, 0.71, 0, 1.01)
-        opacityAnimation.duration = 0.3;
+        opacityAnimation.duration = 0.5;
         opacityAnimation.fromValue = NSNumber(float: 0.0)
         opacityAnimation.toValue =   NSNumber(float: 1.0)
         self.layer.addAnimation(opacityAnimation, forKey:"opacity")
         
+        CATransaction.commit()
+        
         self.layer.opacity = 1.0
+        
+        return self
     }
     
-    func fadeOut() {
+    func fadeIn(completionHandler: () -> Void = {}) -> Self {
+        self.hidden = false
+        
         CATransaction.begin()
-        CATransaction.setCompletionBlock { () -> Void in
+        CATransaction.setCompletionBlock {
+            completionHandler()
+        }
+        
+
+        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints:0.18, 0.71, 0, 1.01)
+        opacityAnimation.duration = 1.0;
+        opacityAnimation.fromValue = NSNumber(float: 0.0)
+        opacityAnimation.toValue =   NSNumber(float: 1.0)
+        self.layer.addAnimation(opacityAnimation, forKey:"opacity")
+        CATransaction.commit()
+        
+        self.layer.opacity = 1.0
+        
+        return self
+    }
+    
+    func fadeOut(completionHandler: () -> Void = {}) -> Self {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
             self.hidden = true
+            completionHandler()
         }
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
@@ -46,6 +87,8 @@ extension UIView {
         self.layer.opacity = 0.0
         
         CATransaction.commit()
+        
+        return self
     }
 
 }

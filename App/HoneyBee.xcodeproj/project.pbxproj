@@ -47,6 +47,8 @@
 		84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */; };
 		84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */; };
 		84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */; };
+		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
+		84EA5BEE1A6F226400C71F53 /* GettingStartedBatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -151,6 +153,9 @@
 		84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSimulatorView.swift; sourceTree = "<group>"; };
 		84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedRatingViewController.swift; sourceTree = "<group>"; };
 		84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
+		84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+HBAdditions.h"; sourceTree = "<group>"; };
+		84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+HBAdditions.m"; sourceTree = "<group>"; };
+		84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedBatteryViewController.swift; sourceTree = "<group>"; };
 		84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 2.xcdatamodel"; sourceTree = "<group>"; };
 		BA743A6C616E49B6A36F8FD7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -265,6 +270,7 @@
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
 				84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */,
+				84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */,
 				84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */,
 			);
 			name = "View Controllers";
@@ -287,6 +293,8 @@
 		8453BD541A424FEE00FE2645 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */,
+				84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */,
 				8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */,
 				848777B61A6834C300B59B06 /* UIView+HBadditions.swift */,
 			);
@@ -562,6 +570,7 @@
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
+				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
 				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
@@ -580,6 +589,7 @@
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
 				8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
+				84EA5BEE1A6F226400C71F53 /* GettingStartedBatteryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

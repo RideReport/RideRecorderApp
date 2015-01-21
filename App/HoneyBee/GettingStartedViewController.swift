@@ -8,9 +8,16 @@
 
 import Foundation
 
+class GettingStartedChildViewController : UIViewController {
+    var parent : GettingStartedViewController?
+    
+    @IBAction func next(sender: AnyObject) {
+        self.parent?.nextPage()
+    }
+}
+
 class GettingStartedViewController: UIPageViewController {
-    var gettingStartedRatingVC : UIViewController!
-    var gettingStartedBatteryVC : UIViewController!
+    var myViewControllers : [GettingStartedChildViewController]!
     
     override func viewDidLoad() {
         
@@ -20,16 +27,31 @@ class GettingStartedViewController: UIPageViewController {
         self.view.addSubview(effectView)
         self.view.sendSubviewToBack(effectView)
         
-        gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as UIViewController
+        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as GettingStartedChildViewController
+        gettingStartedRatingVC.parent = self
         gettingStartedRatingVC.view.backgroundColor = UIColor.clearColor()
         
-        gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as UIViewController
+        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as GettingStartedChildViewController
+        gettingStartedBatteryVC.parent = self
         gettingStartedBatteryVC.view.backgroundColor = UIColor.clearColor()
         
-        self.setViewControllers([gettingStartedRatingVC], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+        self.myViewControllers = [gettingStartedBatteryVC, gettingStartedRatingVC]
+        
+        self.setViewControllers([self.myViewControllers.first!], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
     }
     
-    @IBAction func done(sender: AnyObject) {
+    func nextPage() {
+        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as GettingStartedChildViewController)
+        
+        if (pageNumber == nil || pageNumber >= self.myViewControllers.count) {
+            self.done()
+        } else {
+            let nextPage = self.myViewControllers[pageNumber! + 1]
+            self.setViewControllers([nextPage], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+        }
+    }
+    
+    func done() {
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStarted")
         NSUserDefaults.standardUserDefaults().synchronize()
         
