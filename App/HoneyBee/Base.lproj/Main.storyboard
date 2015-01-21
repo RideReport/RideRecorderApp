@@ -30,9 +30,6 @@
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
                                 </variation>
                             </mapView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="pk3-Oh-eUb">
-                                <rect key="frame" x="10" y="10" width="240" height="128"/>
-                            </mapView>
                             <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7S-Bw-nY7">
                                 <rect key="frame" x="0.0" y="356" width="600" height="44"/>
                                 <constraints>
@@ -353,10 +350,10 @@
             </objects>
             <point key="canvasLocation" x="812" y="1808"/>
         </scene>
-        <!--View Controller-->
+        <!--Getting Started Privacy View Controller-->
         <scene sceneID="rZ9-b6-9Ai">
             <objects>
-                <viewController id="6HP-tr-YG2" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedPrivacy" id="6HP-tr-YG2" customClass="GettingStartedPrivacyViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Jlu-Sd-gGD"/>
                         <viewControllerLayoutGuide type="bottom" id="99W-ns-YZc"/>
@@ -365,30 +362,71 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your Privacy" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="22" translatesAutoresizingMaskIntoConstraints="NO" id="R68-gh-I0D">
-                                <rect key="frame" x="204" y="52" width="178" height="37"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="⭕️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEN-zw-jlv">
-                                <rect key="frame" x="61" y="149" width="65" height="65"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="60"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Set up a Privacy Circle to keep Ride from logging rides near your home or other private location." lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bQr-q8-k7k">
-                                <rect key="frame" x="134" y="149" width="450" height="71"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="TAa-ie-YIs">
-                                <rect key="frame" x="141" y="242" width="329" height="280"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="TAa-ie-YIs">
+                                <rect key="frame" x="0.0" y="200" width="600" height="400"/>
                             </mapView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Set up a Privacy Circle to keep Ride from logging rides near your home or other private location." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="p2i-Za-IaL">
+                                <rect key="frame" x="43" y="80" width="514" height="71"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jyq-fz-Rjj">
+                                <rect key="frame" x="271" y="346" width="68" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Cool.">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="MFT-tH-yyM"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TXf-he-Y5j">
+                                <rect key="frame" x="60" y="159" width="68" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Nah">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="I1h-NX-4HY"/>
+                                    <action selector="next:" destination="6HP-tr-YG2" eventType="touchUpInside" id="Zhy-uT-qYe"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s5N-8g-MYN">
+                                <rect key="frame" x="457" y="158" width="83" height="34"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Let's do it">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="gab-1e-kgF"/>
+                                    <action selector="tappedSetupPrivacy:" destination="6HP-tr-YG2" eventType="touchUpInside" id="YWh-a0-ogt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="99W-ns-YZc" firstAttribute="top" secondItem="TAa-ie-YIs" secondAttribute="bottom" id="08w-aT-mV3"/>
+                            <constraint firstItem="TAa-ie-YIs" firstAttribute="top" secondItem="s5N-8g-MYN" secondAttribute="bottom" constant="7" id="5Re-EQ-2n5"/>
+                            <constraint firstAttribute="centerX" secondItem="p2i-Za-IaL" secondAttribute="centerX" constant="-5" id="B5X-ER-wo0"/>
+                            <constraint firstItem="p2i-Za-IaL" firstAttribute="width" secondItem="H5h-dZ-Os4" secondAttribute="width" multiplier="3:4" id="G2K-Yd-O2o"/>
+                            <constraint firstItem="TAa-ie-YIs" firstAttribute="height" secondItem="H5h-dZ-Os4" secondAttribute="height" multiplier="2:3" id="USi-hf-oDW"/>
+                            <constraint firstItem="TAa-ie-YIs" firstAttribute="top" secondItem="TXf-he-Y5j" secondAttribute="bottom" constant="7" id="dp4-vA-zpb"/>
+                            <constraint firstItem="TXf-he-Y5j" firstAttribute="leading" secondItem="H5h-dZ-Os4" secondAttribute="leadingMargin" constant="44" id="iPh-Xu-JMV"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="s5N-8g-MYN" secondAttribute="trailing" constant="44" id="jFE-xF-fdL"/>
+                            <constraint firstAttribute="centerX" secondItem="TAa-ie-YIs" secondAttribute="centerX" constant="-5.5" id="jcP-GZ-ssl"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="helperTextLabel" destination="p2i-Za-IaL" id="s4F-tP-bZI"/>
+                        <outlet property="mapView" destination="TAa-ie-YIs" id="arX-6V-5Fm"/>
+                        <outlet property="nextButton" destination="Jyq-fz-Rjj" id="r9z-bN-nvm"/>
+                        <outlet property="setupPrivacyButton" destination="s5N-8g-MYN" id="BhL-94-S1h"/>
+                        <outlet property="skipButton" destination="TXf-he-Y5j" id="B3Q-LT-2of"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G3W-6f-nVL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -20,6 +20,10 @@ class PrivacyCircle : NSManagedObject {
         static var privacyCirle : PrivacyCircle?
     }
     
+    class func defaultRadius() -> Double {
+        return 300.0
+    }
+    
     
     class func privacyCircle() -> PrivacyCircle! {
         if (Static.privacyCirle != nil) {

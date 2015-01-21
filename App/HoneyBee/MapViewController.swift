@@ -21,7 +21,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     private var tripAnnotations : [MKAnnotation]!
     private var hasCenteredMap : Bool = false
     
-    private var defaultPrivacyCircleRadius = 300.0
     private var privacyCircle : MKCircle?
     private var privacyCircleRenderer : PrivacyCircleRenderer?
     private var isDraggingPrivacyCircle : Bool = false
@@ -84,7 +83,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func enterPrivacyCircleEditor() {
         if (self.privacyCircle == nil) {
             if (PrivacyCircle.privacyCircle() == nil) {
-                self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: self.defaultPrivacyCircleRadius)
+                self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: PrivacyCircle.defaultRadius())
             } else {
                 self.privacyCircle = MKCircle(centerCoordinate: CLLocationCoordinate2DMake(PrivacyCircle.privacyCircle().latitude.doubleValue, PrivacyCircle.privacyCircle().longitude.doubleValue), radius: PrivacyCircle.privacyCircle().radius.doubleValue)
             }

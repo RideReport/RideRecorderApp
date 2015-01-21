@@ -35,7 +35,11 @@ class GettingStartedViewController: UIPageViewController {
         gettingStartedBatteryVC.parent = self
         gettingStartedBatteryVC.view.backgroundColor = UIColor.clearColor()
         
-        self.myViewControllers = [gettingStartedBatteryVC, gettingStartedRatingVC]
+        let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as GettingStartedChildViewController
+        gettingStartedPriacyVC.parent = self
+        gettingStartedPriacyVC.view.backgroundColor = UIColor.clearColor()
+        
+        self.myViewControllers = [gettingStartedPriacyVC, gettingStartedBatteryVC, gettingStartedRatingVC]
         
         self.setViewControllers([self.myViewControllers.first!], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
     }
