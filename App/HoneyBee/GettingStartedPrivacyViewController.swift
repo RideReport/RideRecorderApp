@@ -16,6 +16,8 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var nextButton : UIButton!
     @IBOutlet weak var skipButton: UIButton!
+    @IBOutlet weak var cancelButton : UIButton!
+    @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var setupPrivacyButton: UIButton!
     private var hasCenteredMap : Bool = false
     
@@ -31,13 +33,24 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
         self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
         self.privacyCirclePanGesture.delegate = self
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
-
-        helperTextLabel.markdownStringValue = "Want to keep your house or office hidden from your Rides? Let's set up a **Privacy Circle**."
+        
+        setInitialUI()
+    }
+    
+    func setInitialUI() {
+        self.helperTextLabel.markdownStringValue = "Your Rides are public but completely anonymous. Want to keep your house or office hidden? Let's set up a **Privacy Circle**."
     }
     
     @IBAction func tappedSetupPrivacy(sender: AnyObject) {
-        self.skipButton.fadeOut()
-        self.setupPrivacyButton.fadeOut()
+        self.skipButton.fadeOut() {
+            self.cancelButton.fadeIn()
+            return
+        }
+        
+        self.setupPrivacyButton.fadeOut() {
+            self.saveButton.fadeIn()
+            return
+        }
         self.helperTextLabel.animatedSetMarkdownStringValue("Drag the circle over the area you want kept private. The beginnings or ends of Rides inside the circle **won't get logged**.")
         
         if (self.privacyCircle == nil) {
@@ -94,6 +107,17 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
         self.mapView.setNeedsDisplay()
         self.privacyCircle = nil
         self.privacyCircleRenderer = nil
+        
+        setInitialUI()
+        self.saveButton.fadeOut() {
+            self.setupPrivacyButton.fadeIn()
+            return
+        }
+        
+        self.cancelButton.fadeOut() {
+            self.skipButton.fadeIn()
+            return
+        }
     }
     
     @IBAction func saveSetPrivacyCircle(sender: AnyObject) {
@@ -103,10 +127,7 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
         
         PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle!)
         
-        self.mapView.removeOverlay(self.privacyCircle)
-        self.mapView.setNeedsDisplay()
-        self.privacyCircle = nil
-        self.privacyCircleRenderer = nil
+        self.parent?.nextPage()
     }
     
     // MARK: - Map Kit

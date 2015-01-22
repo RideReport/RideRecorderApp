@@ -79,6 +79,7 @@ import Foundation
         scrollView.contentSize = CGSizeMake(self.bounds.width + buttonWidth*2, self.bounds.height)
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
         
         self.addSubview(scrollView)
         
@@ -159,6 +160,8 @@ import Foundation
         super.layoutSubviews()
         
         self.scrollView.contentSize = CGSizeMake(self.bounds.width + 2*self.buttonWidth, self.bounds.height)
+        self.scrollView.contentInset = UIEdgeInsetsZero
+        
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.controlsView.frame = CGRect(x: self.bounds.width - buttonWidth*2, y: 0, width: 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)

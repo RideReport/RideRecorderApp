@@ -59,6 +59,7 @@ static float animationTimeCurveWithGrey(float progress) {
         [self animate];
     } else {
         [self stopAnimating];
+        [self setNeedsDisplay];
     }
 }
 

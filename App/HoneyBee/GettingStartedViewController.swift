@@ -16,42 +16,51 @@ class GettingStartedChildViewController : UIViewController {
     }
 }
 
-class GettingStartedViewController: UIPageViewController {
+class GettingStartedViewController: UINavigationController {
     var myViewControllers : [GettingStartedChildViewController]!
     
     override func viewDidLoad() {
         
-        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        var effectView = UIVisualEffectView(effect: blur)
-        effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        self.view.addSubview(effectView)
-        self.view.sendSubviewToBack(effectView)
+        self.navigationBarHidden = true
+        
+        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as GettingStartedChildViewController
+        self.setupVC(gettingStartedTermsVC)
         
         let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as GettingStartedChildViewController
-        gettingStartedRatingVC.parent = self
-        gettingStartedRatingVC.view.backgroundColor = UIColor.clearColor()
+        self.setupVC(gettingStartedRatingVC)
         
         let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as GettingStartedChildViewController
-        gettingStartedBatteryVC.parent = self
-        gettingStartedBatteryVC.view.backgroundColor = UIColor.clearColor()
+        self.setupVC(gettingStartedBatteryVC)
         
         let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as GettingStartedChildViewController
-        gettingStartedPriacyVC.parent = self
-        gettingStartedPriacyVC.view.backgroundColor = UIColor.clearColor()
+        self.setupVC(gettingStartedPriacyVC)
         
-        self.myViewControllers = [gettingStartedPriacyVC, gettingStartedBatteryVC, gettingStartedRatingVC]
+        let gettingStartedFinishedVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedFinished") as GettingStartedChildViewController
+        self.setupVC(gettingStartedFinishedVC)
         
-        self.setViewControllers([self.myViewControllers.first!], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+        self.myViewControllers = [gettingStartedTermsVC, gettingStartedPriacyVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedFinishedVC]
+        
+        self.setViewControllers([self.myViewControllers.first!], animated: false)
+    }
+    
+    func setupVC(vc: GettingStartedChildViewController) {
+        vc.view.backgroundColor = UIColor.clearColor()
+        vc.parent = self
     }
     
     func nextPage() {
         let pageNumber = find(self.myViewControllers!, self.viewControllers.first as GettingStartedChildViewController)
         
-        if (pageNumber == nil || pageNumber >= self.myViewControllers.count) {
+        if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()
         } else {
+            let thisPage = self.myViewControllers[pageNumber!] as UIViewController
             let nextPage = self.myViewControllers[pageNumber! + 1]
-            self.setViewControllers([nextPage], direction: UIPageViewControllerNavigationDirection.Forward, animated: false, completion: nil)
+            let transition = CATransition()
+            transition.duration = 0.6
+            transition.type = kCATransitionFade
+            self.view.layer.addAnimation(transition, forKey: nil)
+            self.setViewControllers([nextPage], animated: false)
         }
     }
     
