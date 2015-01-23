@@ -53,7 +53,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     override func viewDidAppear(animated: Bool) {
         self.refreshPauseResumeTrackingButtonUI()
         
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
+        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
         
         if (!hasSeenGettingStarted) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
@@ -61,7 +61,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Help")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Setup Assistant")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     

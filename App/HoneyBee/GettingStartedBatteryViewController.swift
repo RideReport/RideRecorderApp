@@ -21,13 +21,15 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
         self.pauseButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
         self.pauseButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
 
-        helperTextLabel.markdownStringValue = "Ride is very light on your battery. Normal usage should consume **5% or less** of your battery."
-        self.helperTextLabel.delay(3.0) {
-            self.helperTextLabel.animatedSetMarkdownStringValue( "If you want pause Ride, tap on that **arrow button in the upper right**. Go ahead, give it a shot.") {
-                self.pauseButton.delay(1.0) {
-                    self.pauseButton.popIn()
-                    return
-                }
+        self.helperTextLabel.markdownStringValue = "Want to pause Ride? Tap that **arrow button in the upper right**."
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.pauseButton.delay(1.0) {
+            self.pauseButton.popIn()
+            self.pauseButton.delay(5.0) {
+                // give the user 5 seconds to tap it themselves, then just do it
+                self.tappedPauseButton(self)
                 return
             }
             return
@@ -35,7 +37,12 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
     }
     
     @IBAction func tappedPauseButton(sender: AnyObject) {
-        helperTextLabel.animatedSetMarkdownStringValue("That's it. Ride won't log your rides or use any battery life when it is **paused**.")
+        if (self.hasTappedPause) {
+            return
+        }
+        
+        self.hasTappedPause = true
+        helperTextLabel.animatedSetMarkdownStringValue("On a typical day, Ride uses **less than 6%** of your battery. When paused, Ride uses **no battery life**.")
         
         self.pauseButton.maskImage = UIImage(named: "locationArrowDisabled.png")
         self.pauseButton.primaryColor = UIColor.grayColor()

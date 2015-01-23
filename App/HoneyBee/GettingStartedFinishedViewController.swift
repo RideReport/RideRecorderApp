@@ -14,6 +14,6 @@ class GettingStartedFinishedViewController: GettingStartedChildViewController {
     
     
     override func viewDidLoad() {
-        helperTextLabel.markdownStringValue = "That's it! Hop on your bike and **Ride will take care of the rest**."
+        helperTextLabel.markdownStringValue = "That's it! **Ride will start automatically** when you get on your bike."
     }
 }

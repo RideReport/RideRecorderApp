@@ -38,7 +38,7 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
     }
     
     func setInitialUI() {
-        self.helperTextLabel.markdownStringValue = "Your Rides are public but completely anonymous. Want to keep your house or office hidden? Let's set up a **Privacy Circle**."
+        self.helperTextLabel.markdownStringValue = "Ride data is open and completely anonymous. Want to hide Rides around your house? Set up a **Privacy Circle**."
     }
     
     @IBAction func tappedSetupPrivacy(sender: AnyObject) {
@@ -51,7 +51,7 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
             self.saveButton.fadeIn()
             return
         }
-        self.helperTextLabel.animatedSetMarkdownStringValue("Drag the circle over the area you want kept private. The beginnings or ends of Rides inside the circle **won't get logged**.")
+        self.helperTextLabel.animatedSetMarkdownStringValue("Drag the circle to the area you want kept private. The beginnings and ends of Rides inside the circle **won't get logged**.")
         
         if (self.privacyCircle == nil) {
             if (PrivacyCircle.privacyCircle() == nil) {

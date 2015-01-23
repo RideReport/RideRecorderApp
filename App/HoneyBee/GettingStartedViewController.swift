@@ -65,7 +65,7 @@ class GettingStartedViewController: UINavigationController {
     }
     
     func done() {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStarted")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStartedv2")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         self.dismissViewControllerAnimated(true, completion: nil)

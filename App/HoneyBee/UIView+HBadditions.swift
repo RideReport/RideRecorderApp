@@ -26,17 +26,17 @@ extension UIView {
             completionHandler()
         }
         
-        let scaleAnimation = CABasicAnimation(keyPath: "transform")
+        let scaleAnimation = CAKeyframeAnimation(keyPath: "transform")
         scaleAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0, 1.01)
-        scaleAnimation.duration = 0.5
-        scaleAnimation.fromValue = NSValue(CATransform3D: CATransform3DMakeScale(0.3, 0.3, 1.0))
-        scaleAnimation.byValue = NSValue(CATransform3D: CATransform3DMakeScale(1.3, 1.3, 1.0))
-        scaleAnimation.toValue = NSValue(CATransform3D: CATransform3DIdentity)
+        scaleAnimation.duration = 0.8
+        scaleAnimation.values = [NSValue(CATransform3D: CATransform3DMakeScale(0.3, 0.3, 1.0)),
+                                NSValue(CATransform3D: CATransform3DMakeScale(1.5, 1.5, 1.0)),
+                                NSValue(CATransform3D: CATransform3DIdentity)]
         self.layer.addAnimation(scaleAnimation, forKey:"scaleAnimation")
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
         opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints:0.18, 0.71, 0, 1.01)
-        opacityAnimation.duration = 0.5;
+        opacityAnimation.duration = 0.8;
         opacityAnimation.fromValue = NSNumber(float: 0.0)
         opacityAnimation.toValue =   NSNumber(float: 1.0)
         self.layer.addAnimation(opacityAnimation, forKey:"opacity")

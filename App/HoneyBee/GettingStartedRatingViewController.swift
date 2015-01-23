@@ -16,7 +16,7 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        helperTextLabel.markdownStringValue = "Ride reports right to your lock screen. Just **slide left** to rate the route."
+        helperTextLabel.markdownStringValue = "Rides are reported straight to your lock screen. Just **slide left to rate the route**."
     }
     
     func didOpenControls(view: PushSimulatorView) {
@@ -30,7 +30,7 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your Rides helps **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your Rides helps improve biking in Portland!")
     }
     
     func didTapDestructiveButton(view: PushSimulatorView) {
@@ -40,6 +40,6 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your Rides helps **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your Rides helps improve biking in Portland!")
     }
 }
