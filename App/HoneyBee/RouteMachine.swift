@@ -299,15 +299,18 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
-            let notif = UILocalNotification()
-            notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-            
-            DDLogWrapper.logInfo("Paused Tracking due to battery life")
-            
-            self.stopActiveTracking()
+            if (self.locationManagerIsUpdating) {
+                // if we are currently updating, send the user a push and stop.
+                let notif = UILocalNotification()
+                notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                
+                DDLogWrapper.logInfo("Paused Tracking due to battery life")
+                
+                self.stopActiveTracking()
+            }
 
-            return;
+            return
         }
         
         DDLogWrapper.logVerbose("Received location updates.")
