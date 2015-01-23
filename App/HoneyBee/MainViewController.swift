@@ -40,6 +40,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         settingsCustomButton.maskImage = UIImage(named: "gear.png")
         settingsCustomButton.primaryColor = self.navigationItem.leftBarButtonItem?.tintColor
         settingsCustomButton.secondaryColor = self.navigationItem.leftBarButtonItem?.tintColor
+        settingsCustomButton.animates = false
         self.navigationItem.leftBarButtonItem?.customView = settingsCustomButton
         
         self.mapViewController = self.childViewControllers.first as MapViewController
@@ -47,20 +48,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.routesViewController.mainViewController = self
         
         self.refreshPauseResumeTrackingButtonUI()
-
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStarted")
-
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.refreshPauseResumeTrackingButtonUI()
+        
+        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
+        
         if (!hasSeenGettingStarted) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
-        self.refreshPauseResumeTrackingButtonUI()
-    }
-    
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Help")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Setup Assistant")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -79,6 +80,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.customButton.maskImage = UIImage(named: "locationArrowDisabled.png")
             self.customButton.primaryColor = UIColor.grayColor()
             self.customButton.secondaryColor = UIColor.grayColor()
+            self.customButton.animates = false
             
             if (RouteMachine.sharedMachine.isPausedDueToBatteryLife() && self.batteryLowPopupView.hidden) {
                 self.batteryLowPopupView.popIn()
@@ -87,6 +89,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.customButton.maskImage = UIImage(named: "locationArrow.png")
             self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
             self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
+            self.customButton.animates = true
             if (!RouteMachine.sharedMachine.isPausedDueToBatteryLife() && !self.batteryLowPopupView.hidden) {
                 self.batteryLowPopupView.fadeOut()
             }

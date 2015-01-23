@@ -17,6 +17,7 @@ HBAnimatedGradientMaskButtonAnimationDirection;
 @interface HBAnimatedGradientMaskButton : UIButton
 
 @property (nonatomic, assign) BOOL drawsGreyComponent;
+@property (nonatomic, assign) BOOL animates;
 @property (nonatomic, assign) HBAnimatedGradientMaskButtonAnimationDirection direction;
 @property (nonatomic, retain) UIImage *maskImage;
 @property (nonatomic, retain) UIImage *pressStateMaskImage;

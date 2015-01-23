@@ -13,7 +13,6 @@
 		8429E5D01A5DC58500EB3E94 /* HoneyBee_Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5CF1A5DC58500EB3E94 /* HoneyBee_Tests.swift */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
-		8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */; };
 		8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8429E5E01A5F0F6B00EB3E94 /* gear.png */; };
 		844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* NetworkMachine.swift */; };
 		8445317619FEEB210096F26E /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
@@ -36,6 +35,8 @@
 		848777B01A605EB000B59B06 /* SoftwareUpdateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateMachine.swift */; };
 		848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
+		84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */; };
+		84BD37031A706C6D0084B6AF /* GettingStartedFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* HoneyBee.xcdatamodeld */; };
 		84D1555A19D2733500316995 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
@@ -45,6 +46,12 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataController.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
+		84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */; };
+		84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */; };
+		84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */; };
+		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
+		84EA5BEE1A6F226400C71F53 /* GettingStartedBatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */; };
+		84EA5BF01A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEF1A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +108,6 @@
 		8429E5DB1A5DD1DD00EB3E94 /* HoneyBee 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 8.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DC1A5DD2A900EB3E94 /* HoneyBee 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* HoneyBee 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 10.xcdatamodel"; sourceTree = "<group>"; };
-		8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
 		8429E5E01A5F0F6B00EB3E94 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497141A3A4E040009F889 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
@@ -135,6 +141,8 @@
 		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
 		848777BA1A698BCE00B59B06 /* HoneyBee 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 11.xcdatamodel"; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* HoneyBee 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 6.xcdatamodel"; sourceTree = "<group>"; };
+		84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedTermsViewController.swift; sourceTree = "<group>"; };
+		84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedFinishedViewController.swift; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ride.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1555419D2733500316995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -147,6 +155,13 @@
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataController.swift; sourceTree = "<group>"; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushSimulatorView.swift; sourceTree = "<group>"; };
+		84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedRatingViewController.swift; sourceTree = "<group>"; };
+		84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedViewController.swift; sourceTree = "<group>"; };
+		84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+HBAdditions.h"; sourceTree = "<group>"; };
+		84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+HBAdditions.m"; sourceTree = "<group>"; };
+		84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedBatteryViewController.swift; sourceTree = "<group>"; };
+		84EA5BEF1A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedPrivacyViewController.swift; sourceTree = "<group>"; };
 		84F6B2911A37CF4D00D775F7 /* HoneyBee 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoneyBee 2.xcdatamodel"; sourceTree = "<group>"; };
 		BA743A6C616E49B6A36F8FD7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -228,6 +243,7 @@
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
+				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -259,7 +275,12 @@
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
-				8429E5DE1A5DF83700EB3E94 /* GettingStartedViewController.swift */,
+				84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */,
+				84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */,
+				84EA5BEF1A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift */,
+				84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */,
+				84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */,
+				84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -281,6 +302,8 @@
 		8453BD541A424FEE00FE2645 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */,
+				84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */,
 				8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */,
 				848777B61A6834C300B59B06 /* UIView+HBadditions.swift */,
 			);
@@ -408,7 +431,6 @@
 				84D1554D19D2733500316995 /* Resources */,
 				A005ED2935594E5E9AA996D4 /* Copy Pods Resources */,
 				8444971F1A3A4E740009F889 /* CopyFiles */,
-				8453309F1A3FC3BC00452EEB /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -521,19 +543,6 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		8453309F1A3FC3BC00452EEB /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "./Crashlytics.framework/run e04ad6106ec507d40d90a52437cc374949ab924e 1a0fab5b6f81681e7bdc74a01f47e6a51400bfcb694bd06d5a5973f77ab3e938   ";
-		};
 		A005ED2935594E5E9AA996D4 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -567,25 +576,32 @@
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteMachine.swift in Sources */,
-				8429E5DF1A5DF83700EB3E94 /* GettingStartedViewController.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
+				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
 				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
+				84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */,
 				84D1555819D2733500316995 /* HoneyBee.xcdatamodeld in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
+				84EA5BF01A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* NetworkMachine.swift in Sources */,
+				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
+				84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */,
 				848777B01A605EB000B59B06 /* SoftwareUpdateMachine.swift in Sources */,
 				8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */,
+				84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */,
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
 				8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */,
+				84BD37031A706C6D0084B6AF /* GettingStartedFinishedViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
+				84EA5BEE1A6F226400C71F53 /* GettingStartedBatteryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
