@@ -130,10 +130,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        if (self.locationManagerIsUpdating) {
-            self.stopActiveTracking()
-        }
-        
         if (self.currentTrip!.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
             #if DEBUG
@@ -155,6 +151,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         self.currentTrip = nil
+        self.enterLowPowerState()
     }
     
     func isPausedDueToBatteryLife() -> Bool {
@@ -191,6 +188,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Resume Tracking")
+        self.enterLowPowerState()
         self.locationManager.startMonitoringSignificantLocationChanges()
     }
     
@@ -258,6 +256,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         DDLogWrapper.logVerbose("Did change authorization status")
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
+            self.enterLowPowerState()
             self.locationManager.startMonitoringSignificantLocationChanges()
         } else {
             // tell the user they need to give us access to the zion mainframes
@@ -399,12 +398,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             } else {
                 DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
-                if (self.lowPowerReadingsCount > 10) {
-                    DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
-                    self.stopActiveTracking()
-                } else {
-                    DDLogWrapper.logVerbose("Taking more low power readings.")
-                }
             }
         } else {
             DDLogWrapper.logVerbose("Got significant location update, entering low power state.")
