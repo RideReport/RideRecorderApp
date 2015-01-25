@@ -281,7 +281,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didFinishDeferredUpdatesWithError error: NSError!) {
         DDLogWrapper.logVerbose("Finished deferring updates")
-        DDLogWrapper.logVerbose("Finished deferring updates!")
+
         if (error != nil) {
             DDLogWrapper.logVerbose(NSString(format: "Error deferring: %@", error))
         }
