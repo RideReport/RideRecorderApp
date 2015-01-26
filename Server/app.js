@@ -21,6 +21,10 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
+app.get('/utPjfzYgJGp69modBo', function(req, res) {
+  res.render('download');
+});
+
 app.get('/map', function(req, res) {
   res.render('map');
 });
