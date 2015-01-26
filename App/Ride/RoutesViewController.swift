@@ -178,7 +178,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip)
         }
     }
     
