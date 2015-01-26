@@ -32,8 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Crashlytics.startWithAPIKey("e04ad6106ec507d40d90a52437cc374949ab924e")
         
-        UIDevice.currentDevice().batteryMonitoringEnabled = true
-        
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
         goodRideAction.title = "👍"
@@ -82,14 +80,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Good.rawValue)
-            CoreDataController.sharedCoreDataController.saveContext()
             
-            Trip.mostRecentTrip().syncToServer()
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip())
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-            CoreDataController.sharedCoreDataController.saveContext()
             
-            Trip.mostRecentTrip().syncToServer()
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip())
         }
     }
 
@@ -109,7 +105,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        Trip.syncTrips()
+        NetworkMachine.sharedMachine.syncTrips()
     }
 
     func applicationWillTerminate(application: UIApplication) {

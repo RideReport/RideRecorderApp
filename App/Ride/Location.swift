@@ -99,14 +99,6 @@ class Location : NSManagedObject {
         return filteredResults
     }
     
-    override func willSave() {
-        if (self.trip != nil) {
-            self.trip!.self.syncEventually()
-        }
-        
-        super.willSave()
-    }
-    
     func coordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2DMake(self.latitude.doubleValue, self.longitude.doubleValue)
     }

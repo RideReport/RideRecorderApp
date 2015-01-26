@@ -40,6 +40,66 @@ class NetworkMachine {
         self.manager = Alamofire.Manager(configuration: config)
     }
     
+    func syncTrips() {
+        for trip in Trip.allTrips()! {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.syncTrip(trip as Trip)
+            })
+        }
+    }
+    
+    
+    func saveAndSyncTripIfNeeded(trip: Trip) {
+        if (trip.isSynced.boolValue) {
+            trip.isSynced = false
+        }
+        
+        CoreDataController.sharedCoreDataController.saveContext()
+        
+        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.syncTrip(trip)
+                })
+        }
+    }
+    
+    private func syncTrip(trip: Trip) {
+        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
+            return
+        }
+        
+        var tripDict = [
+            "uuid": trip.uuid,
+            "activityType": trip.activityType,
+            "creationDate": self.jsonify(trip.creationDate),
+            "rating": trip.rating
+        ]
+        var locations : [AnyObject!] = []
+        for location in trip.locations.array {
+            let aLocation = location as Location
+            if !aLocation.isPrivate.boolValue {
+                locations.append([
+                    "course": aLocation.course,
+                    "date": self.jsonify(aLocation.date!),
+                    "horizontalAccuracy": aLocation.horizontalAccuracy,
+                    "speed": aLocation.speed,
+                    "longitude": aLocation.longitude,
+                    "latitude": aLocation.latitude
+                    ])
+            }
+        }
+        tripDict["locations"] = locations
+        self.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
+            if (error == nil) {
+                trip.isSynced = true
+                DDLogWrapper.logError(NSString(format: "Response: %@", response!))
+                CoreDataController.sharedCoreDataController.saveContext()
+            } else {
+                DDLogWrapper.logError(NSString(format: "Error: %@", error!))
+            }
+        }
+    }
+    
     func postRequest(route: String, parameters: [String: AnyObject!]) -> Request {
         return manager.request(.POST, serverAddress + route, parameters: parameters, encoding: .JSON)
     }

@@ -67,7 +67,5 @@ class PrivacyCircle : NSManagedObject {
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
-        
-        CoreDataController.sharedCoreDataController.saveContext()
     }
 }

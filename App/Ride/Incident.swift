@@ -11,12 +11,4 @@ import CoreData
 
 class Incident : NSManagedObject {
     @NSManaged var trip : Trip?
-    
-    override func willSave() {
-        if (self.trip != nil) {
-            self.trip!.self.syncEventually()
-        }
-        
-        super.willSave()
-    }
 }

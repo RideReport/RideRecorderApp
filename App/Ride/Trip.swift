@@ -94,43 +94,10 @@ class Trip : NSManagedObject {
         return miles
     }
     
-    class func syncTrips() {
-        for trip in Trip.allTrips()! {
-            (trip as Trip).syncToServer()
-        }
-    }
-    
-    
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = NSDate()
         self.uuid = NSUUID().UUIDString
-    }
-    
-    override func willSave() {
-        let changedVals = self.changedValues()
-        if (changedVals.count > 0 && !(changedVals.count == 1 && changedVals["isSynced"] != nil)) {
-            if (!self.deleted) {
-                self.syncEventually()
-            }
-        }
-        
-        super.willSave()
-    }
-    
-    func syncEventually() {
-        if (!self.isSynced.boolValue) {
-            return
-        }
-        
-        self.setPrimitiveValue(false, forKey: "isSynced")
-        
-        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active
-            && self.isClosed.boolValue) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.syncToServer()
-                })
-        }
     }
     
     func activityTypeString()->String {
@@ -198,7 +165,6 @@ class Trip : NSManagedObject {
         DDLogWrapper.logVerbose("Route de-smoothed!")
         
         self.hasSmoothed = false
-        CoreDataController.sharedCoreDataController.saveContext()
         
         handler()
     }
@@ -229,43 +195,6 @@ class Trip : NSManagedObject {
         })
     }
     
-    func syncToServer() {
-        if (self.isSynced.boolValue) {
-            return
-        }
-        
-        var tripDict = [
-            "uuid": self.uuid,
-            "activityType": self.activityType,
-            "creationDate": NetworkMachine.sharedMachine.jsonify(self.creationDate),
-            "rating": self.rating
-            ]
-        var locations : [AnyObject!] = []
-        for location in self.locations.array {
-            let aLocation = location as Location
-            if !aLocation.isPrivate.boolValue {
-                locations.append([
-                    "course": aLocation.course,
-                    "date": NetworkMachine.sharedMachine.jsonify(aLocation.date!),
-                    "horizontalAccuracy": aLocation.horizontalAccuracy,
-                    "speed": aLocation.speed,
-                    "longitude": aLocation.longitude,
-                    "latitude": aLocation.latitude
-                    ])
-            }
-        }
-        tripDict["locations"] = locations
-        NetworkMachine.sharedMachine.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
-            if (error == nil) {
-                self.isSynced = true
-                DDLogWrapper.logError(NSString(format: "Response: %@", response!))
-                CoreDataController.sharedCoreDataController.saveContext()
-            } else {
-                DDLogWrapper.logError(NSString(format: "Error: %@", error!))
-            }
-        }
-    }
-    
     func closeTrip() {
         if (self.isClosed == true) {
             return
@@ -285,8 +214,6 @@ class Trip : NSManagedObject {
         
         self.length = NSNumber(double: length)
         self.isClosed = true
-        
-        CoreDataController.sharedCoreDataController.saveContext()
     }
     
     var lengthMiles : Float {
@@ -359,7 +286,6 @@ class Trip : NSManagedObject {
 //            location1.managedObjectContext.deleteObject(location1)
             
             DDLogWrapper.logVerbose("Route smoothed!")
-            CoreDataController.sharedCoreDataController.saveContext()
             
             handler()
         }
@@ -420,8 +346,6 @@ class Trip : NSManagedObject {
                 self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
             
-            CoreDataController.sharedCoreDataController.saveContext()
-            
             return
         }
         
@@ -474,7 +398,6 @@ class Trip : NSManagedObject {
             self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
         }
         
-        CoreDataController.sharedCoreDataController.saveContext()
     }
 
 }

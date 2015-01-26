@@ -8,37 +8,31 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-UIForLumberjack.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1F4EBEB1273E43ECB1C75FC4</key>
+		<key>0A7B2B17A35E4923BE2B0857</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>941D44B40E874107BD0070DE</key>
+		<key>53C5327BE64A4B31A211BC50</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D4E3ABF6A28646DCA529884F</key>
+		<key>AC0742E9FA1143FC8EECEF7F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

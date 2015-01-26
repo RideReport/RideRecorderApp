@@ -39,13 +39,4 @@ class Activity : NSManagedObject {
         
         self.startDate = activity.startDate
     }
-    
-    override func willSave() {
-        if (self.trip != nil) {
-            self.trip!.self.syncEventually()
-        }
-        
-        super.willSave()
-    }
-    
 }

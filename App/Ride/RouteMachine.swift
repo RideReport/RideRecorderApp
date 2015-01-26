@@ -18,6 +18,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     var startedInBackground = false
     
+    var minimumMonitoringSpeed : CLLocationSpeed = 3.0
+    
     private var shouldDeferUpdates = true
     private var isDefferringLocationUpdates : Bool = false
 
@@ -53,6 +55,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     override init () {
         super.init()
+        
+        UIDevice.currentDevice().batteryMonitoringEnabled = true
         
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.Fitness
@@ -146,6 +150,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             closingTrip!.closeTrip()
             closingTrip!.clasifyActivityType({ () -> Void in
+                // don't sync it yet. wait until the user has rated the trip.
+                CoreDataController.sharedCoreDataController.saveContext()
                 closingTrip!.sendTripCompletionNotification()
             })
         }
@@ -320,13 +326,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
-                if (location.speed > 0) {
+                if (location.speed >= 0) {
                     foundNonNegativeSpeed = true
                 }
                 
-                if (location.speed > 3) {
-                    // if the speed is above 3 meters per second, keep tracking
-                    
+                if (location.speed >= self.minimumMonitoringSpeed) {
                     self.lastMovingLocation = location
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
                         Location(location: location as CLLocation, trip: self.currentTrip!)
@@ -364,8 +368,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             var foundMovement = false
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location found in low power mode. Speed: %f", location.speed))
-                if (location.speed > 3) {
-                    // if the speed is above 3 meters per second, start tracking
+                if (location.speed >= self.minimumMonitoringSpeed) {
+                    // if the speed is above the minimum, start tracking
                     DDLogWrapper.logVerbose("Found movement while in low power state")
                     foundMovement = true
                     break
@@ -380,7 +384,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 let speed = distance/time!
                 DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
                 
-                if (speed > 3 && speed < 20) {
+                if (speed >= self.minimumMonitoringSpeed && speed < 20) {
+                    // ignore really large speeds that may be the result of location inaccuracy
                     DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
                     foundMovement = true
                 }
