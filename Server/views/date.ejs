@@ -35,7 +35,7 @@
   	
   	$(document).ready(function(){
      	navigator.geolocation.getCurrentPosition(gotPosition);
-     }
+     })
 
     var googleLayer = new L.Google('ROADMAP');
     map.addLayer(googleLayer);
