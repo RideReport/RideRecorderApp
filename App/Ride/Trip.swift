@@ -14,11 +14,11 @@ import MapKit
 
 class Trip : NSManagedObject {
     enum ActivityType : Int16 {
-        case Walking = 0
+        case Unknown = 0
         case Running
         case Cycling
         case Automotive
-        case Unknown
+        case Walking
     }
     
     enum Rating : Int16 {
