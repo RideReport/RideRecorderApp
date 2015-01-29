@@ -88,6 +88,7 @@ class CoreDataController {
             return nil
         }
         var managedObjectContext = NSManagedObjectContext()
+        managedObjectContext.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
