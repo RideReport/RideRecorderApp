@@ -30,9 +30,3 @@
 #define COCOAPODS_VERSION_MINOR_CocoaLumberjack_Extensions 0
 #define COCOAPODS_VERSION_PATCH_CocoaLumberjack_Extensions 0
 
-// UIForLumberjack
-#define COCOAPODS_POD_AVAILABLE_UIForLumberjack
-#define COCOAPODS_VERSION_MAJOR_UIForLumberjack 1
-#define COCOAPODS_VERSION_MINOR_UIForLumberjack 0
-#define COCOAPODS_VERSION_PATCH_UIForLumberjack 2
-

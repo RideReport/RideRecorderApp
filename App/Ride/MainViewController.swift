@@ -21,8 +21,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     var selectedTrip : Trip!
     
-    private var logsShowing : Bool = false
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -123,16 +121,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         } else if (buttonIndex == 3) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
         }
-    }
-    
-    @IBAction func logs(sender: AnyObject) {
-        if (self.logsShowing) {
-            UIForLumberjack.sharedInstance().showLogInView(self.view)
-        } else {
-            UIForLumberjack.sharedInstance().hideLog()
-        }
-        
-        self.logsShowing = !self.logsShowing
     }
     
     func sendLogFile() {

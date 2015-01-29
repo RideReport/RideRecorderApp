@@ -3,6 +3,5 @@
 //
 
 #import "CocoaLumberjack.h"
-#import "UIForLumberjack.h"
 #import "DDLogWrapper.h"
 #import "DEBUGCLLocationManager.h"

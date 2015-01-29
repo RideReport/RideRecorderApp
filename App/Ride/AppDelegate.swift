@@ -54,10 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         
-        // setup the file logger
-        DDLog.addLogger(UIForLumberjack.sharedInstance())
-        
-        // setup Knock to log to Xcode if available
+        // setup Ride to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
         

@@ -96,7 +96,7 @@
             BlueprintIdentifier = "84D1554E19D2733500316995"
             BuildableName = "Ride.app"
             BlueprintName = "Ride"
-            ReferencedContainer = "container:HoneyBee.xcodeproj">
+            ReferencedContainer = "container:Ride.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
