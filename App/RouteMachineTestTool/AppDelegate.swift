@@ -17,7 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         DDLog.addLogger(UIForLumberjack.sharedInstance())
         
-        // setup Knock to log to Xcode if available
+        // setup to log to syslog
+        DDLog.addLogger(DDASLLogger.sharedInstance())
+        
+        // setup to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
         

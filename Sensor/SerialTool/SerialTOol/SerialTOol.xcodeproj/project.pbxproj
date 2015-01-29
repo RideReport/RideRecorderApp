@@ -1,0 +1,508 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		845FF6DA1A7860C100607316 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6D91A7860C100607316 /* AppDelegate.m */; };
+		845FF6DC1A7860C100607316 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6DB1A7860C100607316 /* main.m */; };
+		845FF6DF1A7860C100607316 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6DE1A7860C100607316 /* ViewController.m */; };
+		845FF6E11A7860C100607316 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 845FF6E01A7860C100607316 /* Images.xcassets */; };
+		845FF6E41A7860C100607316 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 845FF6E21A7860C100607316 /* Main.storyboard */; };
+		845FF6F01A7860C100607316 /* SerialTOolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6EF1A7860C100607316 /* SerialTOolTests.m */; };
+		845FF7301A7862E500607316 /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845FF72D1A7862DE00607316 /* CorePlot.framework */; };
+		846F50CB1A797971008DF801 /* ORSSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50C81A797971008DF801 /* ORSSerialPort.m */; };
+		846F50CC1A797971008DF801 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50CA1A797971008DF801 /* ORSSerialPortManager.m */; };
+		846F50D11A7979F7008DF801 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D01A7979F7008DF801 /* ORSSerialRequest.m */; };
+		846F50D41A79AB05008DF801 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D31A79AB05008DF801 /* AppController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		845FF6EA1A7860C100607316 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 845FF6CB1A7860C100607316 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 845FF6D21A7860C100607316;
+			remoteInfo = SerialTOol;
+		};
+		845FF72C1A7862DE00607316 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 845FF7261A7862DE00607316 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = CorePlot;
+		};
+		845FF72E1A7862DE00607316 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 845FF7261A7862DE00607316 /* CorePlot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0730F600109492D800E95162;
+			remoteInfo = UnitTests;
+		};
+		845FF7311A7862EB00607316 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 845FF7261A7862DE00607316 /* CorePlot.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = CorePlot;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		845FF6D31A7860C100607316 /* SerialTOol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SerialTOol.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		845FF6D71A7860C100607316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		845FF6D81A7860C100607316 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		845FF6D91A7860C100607316 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		845FF6DB1A7860C100607316 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		845FF6DD1A7860C100607316 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		845FF6DE1A7860C100607316 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		845FF6E01A7860C100607316 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		845FF6E31A7860C100607316 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		845FF6E91A7860C100607316 /* SerialTOolTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SerialTOolTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		845FF6EE1A7860C100607316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		845FF6EF1A7860C100607316 /* SerialTOolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SerialTOolTests.m; sourceTree = "<group>"; };
+		845FF7261A7862DE00607316 /* CorePlot.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CorePlot.xcodeproj; path = "Frameworks/core-plot/framework/CorePlot.xcodeproj"; sourceTree = "<group>"; };
+		846F50C71A797971008DF801 /* ORSSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPort.h; sourceTree = "<group>"; };
+		846F50C81A797971008DF801 /* ORSSerialPort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPort.m; sourceTree = "<group>"; };
+		846F50C91A797971008DF801 /* ORSSerialPortManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialPortManager.h; sourceTree = "<group>"; };
+		846F50CA1A797971008DF801 /* ORSSerialPortManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialPortManager.m; sourceTree = "<group>"; };
+		846F50CF1A7979F7008DF801 /* ORSSerialRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ORSSerialRequest.h; sourceTree = "<group>"; };
+		846F50D01A7979F7008DF801 /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
+		846F50D21A79AB05008DF801 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		846F50D31A79AB05008DF801 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		845FF6D01A7860C100607316 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				845FF7301A7862E500607316 /* CorePlot.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		845FF6E61A7860C100607316 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		845FF6CA1A7860C100607316 = {
+			isa = PBXGroup;
+			children = (
+				845FF7261A7862DE00607316 /* CorePlot.xcodeproj */,
+				845FF6D51A7860C100607316 /* SerialTOol */,
+				845FF6EC1A7860C100607316 /* SerialTOolTests */,
+				845FF6D41A7860C100607316 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		845FF6D41A7860C100607316 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				845FF6D31A7860C100607316 /* SerialTOol.app */,
+				845FF6E91A7860C100607316 /* SerialTOolTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		845FF6D51A7860C100607316 /* SerialTOol */ = {
+			isa = PBXGroup;
+			children = (
+				845FF6D81A7860C100607316 /* AppDelegate.h */,
+				845FF6D91A7860C100607316 /* AppDelegate.m */,
+				846F50D21A79AB05008DF801 /* AppController.h */,
+				846F50D31A79AB05008DF801 /* AppController.m */,
+				845FF6DD1A7860C100607316 /* ViewController.h */,
+				845FF6DE1A7860C100607316 /* ViewController.m */,
+				846F50C71A797971008DF801 /* ORSSerialPort.h */,
+				846F50C81A797971008DF801 /* ORSSerialPort.m */,
+				846F50C91A797971008DF801 /* ORSSerialPortManager.h */,
+				846F50CA1A797971008DF801 /* ORSSerialPortManager.m */,
+				846F50CF1A7979F7008DF801 /* ORSSerialRequest.h */,
+				846F50D01A7979F7008DF801 /* ORSSerialRequest.m */,
+				845FF6E01A7860C100607316 /* Images.xcassets */,
+				845FF6E21A7860C100607316 /* Main.storyboard */,
+				845FF6D61A7860C100607316 /* Supporting Files */,
+			);
+			path = SerialTOol;
+			sourceTree = "<group>";
+		};
+		845FF6D61A7860C100607316 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				845FF6D71A7860C100607316 /* Info.plist */,
+				845FF6DB1A7860C100607316 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		845FF6EC1A7860C100607316 /* SerialTOolTests */ = {
+			isa = PBXGroup;
+			children = (
+				845FF6EF1A7860C100607316 /* SerialTOolTests.m */,
+				845FF6ED1A7860C100607316 /* Supporting Files */,
+			);
+			path = SerialTOolTests;
+			sourceTree = "<group>";
+		};
+		845FF6ED1A7860C100607316 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				845FF6EE1A7860C100607316 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		845FF7271A7862DE00607316 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				845FF72D1A7862DE00607316 /* CorePlot.framework */,
+				845FF72F1A7862DE00607316 /* UnitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		845FF6D21A7860C100607316 /* SerialTOol */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 845FF6F31A7860C100607316 /* Build configuration list for PBXNativeTarget "SerialTOol" */;
+			buildPhases = (
+				845FF6CF1A7860C100607316 /* Sources */,
+				845FF6D01A7860C100607316 /* Frameworks */,
+				845FF6D11A7860C100607316 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				845FF7321A7862EB00607316 /* PBXTargetDependency */,
+			);
+			name = SerialTOol;
+			productName = SerialTOol;
+			productReference = 845FF6D31A7860C100607316 /* SerialTOol.app */;
+			productType = "com.apple.product-type.application";
+		};
+		845FF6E81A7860C100607316 /* SerialTOolTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 845FF6F61A7860C100607316 /* Build configuration list for PBXNativeTarget "SerialTOolTests" */;
+			buildPhases = (
+				845FF6E51A7860C100607316 /* Sources */,
+				845FF6E61A7860C100607316 /* Frameworks */,
+				845FF6E71A7860C100607316 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				845FF6EB1A7860C100607316 /* PBXTargetDependency */,
+			);
+			name = SerialTOolTests;
+			productName = SerialTOolTests;
+			productReference = 845FF6E91A7860C100607316 /* SerialTOolTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		845FF6CB1A7860C100607316 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = "Knock Software, Inc";
+				TargetAttributes = {
+					845FF6D21A7860C100607316 = {
+						CreatedOnToolsVersion = 6.1.1;
+					};
+					845FF6E81A7860C100607316 = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 845FF6D21A7860C100607316;
+					};
+				};
+			};
+			buildConfigurationList = 845FF6CE1A7860C100607316 /* Build configuration list for PBXProject "SerialTOol" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 845FF6CA1A7860C100607316;
+			productRefGroup = 845FF6D41A7860C100607316 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 845FF7271A7862DE00607316 /* Products */;
+					ProjectRef = 845FF7261A7862DE00607316 /* CorePlot.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				845FF6D21A7860C100607316 /* SerialTOol */,
+				845FF6E81A7860C100607316 /* SerialTOolTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		845FF72D1A7862DE00607316 /* CorePlot.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CorePlot.framework;
+			remoteRef = 845FF72C1A7862DE00607316 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		845FF72F1A7862DE00607316 /* UnitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = UnitTests.xctest;
+			remoteRef = 845FF72E1A7862DE00607316 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		845FF6D11A7860C100607316 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				845FF6E11A7860C100607316 /* Images.xcassets in Resources */,
+				845FF6E41A7860C100607316 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		845FF6E71A7860C100607316 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		845FF6CF1A7860C100607316 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				846F50D11A7979F7008DF801 /* ORSSerialRequest.m in Sources */,
+				845FF6DF1A7860C100607316 /* ViewController.m in Sources */,
+				845FF6DC1A7860C100607316 /* main.m in Sources */,
+				846F50CC1A797971008DF801 /* ORSSerialPortManager.m in Sources */,
+				846F50D41A79AB05008DF801 /* AppController.m in Sources */,
+				845FF6DA1A7860C100607316 /* AppDelegate.m in Sources */,
+				846F50CB1A797971008DF801 /* ORSSerialPort.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		845FF6E51A7860C100607316 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				845FF6F01A7860C100607316 /* SerialTOolTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		845FF6EB1A7860C100607316 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 845FF6D21A7860C100607316 /* SerialTOol */;
+			targetProxy = 845FF6EA1A7860C100607316 /* PBXContainerItemProxy */;
+		};
+		845FF7321A7862EB00607316 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CorePlot;
+			targetProxy = 845FF7311A7862EB00607316 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		845FF6E21A7860C100607316 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				845FF6E31A7860C100607316 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		845FF6F11A7860C100607316 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		845FF6F21A7860C100607316 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		845FF6F41A7860C100607316 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SerialTOol/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		845FF6F51A7860C100607316 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = SerialTOol/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		845FF6F71A7860C100607316 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SerialTOolTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SerialTOol.app/Contents/MacOS/SerialTOol";
+			};
+			name = Debug;
+		};
+		845FF6F81A7860C100607316 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SerialTOolTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SerialTOol.app/Contents/MacOS/SerialTOol";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		845FF6CE1A7860C100607316 /* Build configuration list for PBXProject "SerialTOol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				845FF6F11A7860C100607316 /* Debug */,
+				845FF6F21A7860C100607316 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		845FF6F31A7860C100607316 /* Build configuration list for PBXNativeTarget "SerialTOol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				845FF6F41A7860C100607316 /* Debug */,
+				845FF6F51A7860C100607316 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		845FF6F61A7860C100607316 /* Build configuration list for PBXNativeTarget "SerialTOolTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				845FF6F71A7860C100607316 /* Debug */,
+				845FF6F81A7860C100607316 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 845FF6CB1A7860C100607316 /* Project object */;
+}

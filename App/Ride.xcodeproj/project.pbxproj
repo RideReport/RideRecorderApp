@@ -26,6 +26,7 @@
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
 		8453BD661A425F9200FE2645 /* locationArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD641A425F9200FE2645 /* locationArrow.png */; };
 		8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD651A425F9200FE2645 /* locationArrowDisabled.png */; };
+		845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */; };
 		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -141,6 +142,8 @@
 		8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBAnimatedGradientMaskButton.m; sourceTree = "<group>"; };
 		8453BD641A425F9200FE2645 /* locationArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationArrow.png; sourceTree = "<group>"; };
 		8453BD651A425F9200FE2645 /* locationArrowDisabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locationArrowDisabled.png; sourceTree = "<group>"; };
+		845FF6C71A783AD500607316 /* DEBUGCLLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DEBUGCLLocationManager.h; sourceTree = "<group>"; };
+		845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DEBUGCLLocationManager.m; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMachineTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Trip.swift; path = Ride/Trip.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -401,6 +404,8 @@
 		84E395761A757DF30015B682 /* RouteMachineTestTool */ = {
 			isa = PBXGroup;
 			children = (
+				845FF6C71A783AD500607316 /* DEBUGCLLocationManager.h */,
+				845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */,
 				84E395A21A757FF20015B682 /* RouteMachineTestTool-Bridging-Header.h */,
 				84E395791A757DF30015B682 /* AppDelegate.swift */,
 				84E3957B1A757DF30015B682 /* ViewController.swift */,
@@ -675,6 +680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84E3957C1A757DF30015B682 /* ViewController.swift in Sources */,
+				845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */,
 				84E3959E1A757E6B0015B682 /* Incident.swift in Sources */,
 				84E395981A757E620015B682 /* RouteMachine.swift in Sources */,
 				84E3959F1A757E6F0015B682 /* Ride.xcdatamodeld in Sources */,
@@ -973,6 +979,7 @@
 				84E395921A757DF30015B682 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
