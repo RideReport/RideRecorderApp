@@ -91,6 +91,22 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 })
             })
         }
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            for aTrip in Trip.openTrips()! {
+                let trip = aTrip as Trip
+                
+                if (trip.locations.count <= 6) {
+                    // if it doesn't more than 6 points, toss it.
+                    CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(trip)
+                    NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip)
+                }
+                trip.closeTrip() {
+                    NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip)
+                }
+            }
+            
+        })
     }
     
     // MARK: - State Machine
@@ -148,12 +164,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
             DDLogWrapper.logInfo(NSString(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
             
-            closingTrip!.closeTrip()
-            closingTrip!.clasifyActivityType({ () -> Void in
+            closingTrip!.closeTrip() {
                 // don't sync it yet. wait until the user has rated the trip.
                 CoreDataController.sharedCoreDataController.saveContext()
                 closingTrip!.sendTripCompletionNotification()
-            })
+            }
         }
         
         self.currentTrip = nil

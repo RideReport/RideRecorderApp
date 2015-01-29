@@ -83,6 +83,17 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class func openTrips() -> [AnyObject]? {
+        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "isClosed == NO")
+        
+        var error : NSError?
+        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        
+        return results!
+    }
+    
     class var totalCycledMiles : Float {
         var miles : Float = 0
         for trip in Trip.allTrips()! {
@@ -195,7 +206,7 @@ class Trip : NSManagedObject {
         })
     }
     
-    func closeTrip() {
+    func closeTrip(handler: ()->Void = {}) {
         if (self.isClosed == true) {
             return
         }
@@ -214,6 +225,10 @@ class Trip : NSManagedObject {
         
         self.length = NSNumber(double: length)
         self.isClosed = true
+        
+        self.clasifyActivityType { () -> Void in
+            handler()
+        }
     }
     
     var lengthMiles : Float {
