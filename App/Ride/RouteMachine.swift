@@ -12,10 +12,10 @@ import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
-    let locationTrackingDeferralTimeout : NSTimeInterval = 60
+    let locationTrackingDeferralTimeout : NSTimeInterval = 120
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     let minimumBatteryForTracking : Float = 0.2
-    
+        
     var startedInBackground = false
     
     var minimumMonitoringSpeed : CLLocationSpeed = 3.0
