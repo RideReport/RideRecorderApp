@@ -18,7 +18,20 @@
 		846F50CC1A797971008DF801 /* ORSSerialPortManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50CA1A797971008DF801 /* ORSSerialPortManager.m */; };
 		846F50D11A7979F7008DF801 /* ORSSerialRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D01A7979F7008DF801 /* ORSSerialRequest.m */; };
 		846F50D41A79AB05008DF801 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D31A79AB05008DF801 /* AppController.m */; };
+		8493B3EC1A81846B00B3B591 /* CorePlot.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 845FF72D1A7862DE00607316 /* CorePlot.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		8493B3EE1A81848100B3B591 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8493B3ED1A81848100B3B591 /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXBuildRule section */
+		8493B3EA1A81843A00B3B591 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+			);
+		};
+/* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
 		845FF6EA1A7860C100607316 /* PBXContainerItemProxy */ = {
@@ -51,6 +64,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		8493B3EB1A81845F00B3B591 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8493B3EC1A81846B00B3B591 /* CorePlot.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		845FF6D31A7860C100607316 /* SerialTOol.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SerialTOol.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		845FF6D71A7860C100607316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,6 +99,7 @@
 		846F50D01A7979F7008DF801 /* ORSSerialRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ORSSerialRequest.m; sourceTree = "<group>"; };
 		846F50D21A79AB05008DF801 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
 		846F50D31A79AB05008DF801 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		8493B3ED1A81848100B3B591 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8493B3EE1A81848100B3B591 /* QuartzCore.framework in Frameworks */,
 				845FF7301A7862E500607316 /* CorePlot.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -97,6 +125,7 @@
 		845FF6CA1A7860C100607316 = {
 			isa = PBXGroup;
 			children = (
+				8493B3ED1A81848100B3B591 /* QuartzCore.framework */,
 				845FF7261A7862DE00607316 /* CorePlot.xcodeproj */,
 				845FF6D51A7860C100607316 /* SerialTOol */,
 				845FF6EC1A7860C100607316 /* SerialTOolTests */,
@@ -180,8 +209,10 @@
 				845FF6CF1A7860C100607316 /* Sources */,
 				845FF6D01A7860C100607316 /* Frameworks */,
 				845FF6D11A7860C100607316 /* Resources */,
+				8493B3EB1A81845F00B3B591 /* CopyFiles */,
 			);
 			buildRules = (
+				8493B3EA1A81843A00B3B591 /* PBXBuildRule */,
 			);
 			dependencies = (
 				845FF7321A7862EB00607316 /* PBXTargetDependency */,

@@ -27,6 +27,7 @@
 		8453BD661A425F9200FE2645 /* locationArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD641A425F9200FE2645 /* locationArrow.png */; };
 		8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD651A425F9200FE2645 /* locationArrowDisabled.png */; };
 		845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */; };
+		846F50D61A80397C008DF801 /* SimpleRouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */; };
 		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -51,13 +52,6 @@
 		84E3957F1A757DF30015B682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E3957D1A757DF30015B682 /* Main.storyboard */; };
 		84E395811A757DF30015B682 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84E395801A757DF30015B682 /* Images.xcassets */; };
 		84E395841A757DF30015B682 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84E395821A757DF30015B682 /* LaunchScreen.xib */; };
-		84E395981A757E620015B682 /* RouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteMachine.swift */; };
-		84E395991A757E620015B682 /* CoreDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataController.swift */; };
-		84E3959A1A757E6B0015B682 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
-		84E3959B1A757E6B0015B682 /* PrivacyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309D1A3FAED800452EEB /* PrivacyCircle.swift */; };
-		84E3959C1A757E6B0015B682 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
-		84E3959D1A757E6B0015B682 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
-		84E3959E1A757E6B0015B682 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		84E3959F1A757E6F0015B682 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
 		84E395A11A757F250015B682 /* DDLogWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 844531861A0023580096F26E /* DDLogWrapper.m */; };
 		84E395A61A76B5A80015B682 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E395A51A76B5A80015B682 /* libPods.a */; };
@@ -145,6 +139,7 @@
 		845FF6C71A783AD500607316 /* DEBUGCLLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DEBUGCLLocationManager.h; sourceTree = "<group>"; };
 		845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DEBUGCLLocationManager.m; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMachineTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRouteMachine.swift; sourceTree = "<group>"; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Trip.swift; path = Ride/Trip.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847A05661A01B2FE008F5371 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Location.swift; path = Ride/Location.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -408,6 +403,7 @@
 				845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */,
 				84E395A21A757FF20015B682 /* RouteMachineTestTool-Bridging-Header.h */,
 				84E395791A757DF30015B682 /* AppDelegate.swift */,
+				846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */,
 				84E3957B1A757DF30015B682 /* ViewController.swift */,
 				84E3957D1A757DF30015B682 /* Main.storyboard */,
 				84E395801A757DF30015B682 /* Images.xcassets */,
@@ -504,6 +500,7 @@
 					};
 					84E395741A757DF30015B682 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 9NRH28TN93;
 					};
 				};
 			};
@@ -681,15 +678,9 @@
 			files = (
 				84E3957C1A757DF30015B682 /* ViewController.swift in Sources */,
 				845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */,
-				84E3959E1A757E6B0015B682 /* Incident.swift in Sources */,
-				84E395981A757E620015B682 /* RouteMachine.swift in Sources */,
+				846F50D61A80397C008DF801 /* SimpleRouteMachine.swift in Sources */,
 				84E3959F1A757E6F0015B682 /* Ride.xcdatamodeld in Sources */,
-				84E3959A1A757E6B0015B682 /* Location.swift in Sources */,
-				84E395991A757E620015B682 /* CoreDataController.swift in Sources */,
 				84E395A11A757F250015B682 /* DDLogWrapper.m in Sources */,
-				84E3959B1A757E6B0015B682 /* PrivacyCircle.swift in Sources */,
-				84E3959C1A757E6B0015B682 /* Trip.swift in Sources */,
-				84E3959D1A757E6B0015B682 /* Activity.swift in Sources */,
 				84E3957A1A757DF30015B682 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -907,6 +898,8 @@
 			baseConfigurationReference = EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -920,6 +913,7 @@
 				);
 				PRODUCT_MODULE_NAME = Ride;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RouteMachineTestTool/RouteMachineTestTool-Bridging-Header.h";
 			};
 			name = Debug;
@@ -929,6 +923,8 @@
 			baseConfigurationReference = EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = RouteMachineTestTool/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -938,6 +934,7 @@
 				);
 				PRODUCT_MODULE_NAME = Ride;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "RouteMachineTestTool/RouteMachineTestTool-Bridging-Header.h";
 			};
 			name = Release;

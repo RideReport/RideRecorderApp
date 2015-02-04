@@ -142,7 +142,7 @@
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble([[NSDate date] timeIntervalSince1970] - 45.0) length:CPTDecimalFromDouble(45.0)];
 
-    [plotSpace scaleToFitPlots:@[[self.dataSources objectAtIndex:1]]];
+    [plotSpace scaleToFitPlots:@[[self.dataSources objectAtIndex:3]]];
 
     CPTMutablePlotRange *yRange = [plotSpace.yRange mutableCopy];
     [yRange expandRangeByFactor:CPTDecimalFromDouble(1.00)];
@@ -292,10 +292,6 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     for (NSString *component in components) {
         NSNumber *num = [[NSNumberFormatter new] numberFromString:component];
         
-        NSUInteger index = [components indexOfObject:component];
-        if (index == 3) {
-            num = [NSNumber numberWithInt:[num intValue] + 16000];
-        }
         if (num == nil) {
             NSAssert(num != nil, @"Got unexpected non-number among numbers!");
         }
@@ -304,16 +300,17 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     }
     
     [rowArray addObject:[numbers objectAtIndex:0]];
-    double irVal = [[numbers objectAtIndex:1] doubleValue] - 3;
-    if (irVal == 0) {
-        irVal = 1;
-    }
-    double lineralized = (6787/irVal) - 4.0;
-    [rowArray addObject:[NSNumber numberWithDouble:lineralized]];
+//    double irVal = [[numbers objectAtIndex:1] doubleValue] - 3;
+//    if (irVal == 0) {
+//        irVal = 1;
+//    }
+//    double lineralized = (6787/irVal) - 4.0;
+//    [rowArray addObject:[NSNumber numberWithDouble:irVal]];
+    [rowArray addObject:[numbers objectAtIndex:1]];
     [rowArray addObject:[numbers objectAtIndex:2]];
     
     int magnitude = sqrt(pow([[numbers objectAtIndex:3] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0));
-    [rowArray addObject:[NSNumber numberWithDouble:magnitude - 800]];
+    [rowArray addObject:[NSNumber numberWithDouble:magnitude]];
 
     NSUInteger indexToInsert = self.serialData.count;
     [self.serialData addObject:rowArray];

@@ -437,7 +437,7 @@ unsigned long long const kDDDefaultLogFilesDiskQuota   = 20 * 1024 * 1024; // 20
  * The first item in the array will be the most recently created log file.
  **/
 - (NSArray *)sortedLogFileInfos {
-    return [[self unsortedLogFileInfos] sortedArrayUsingSelector:@selector(reverseCompareByCreationDate:)];
+    return [[self unsortedLogFileInfos] sortedArrayUsingSelector:@selector(reverseCompareByModificationDate:)];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
