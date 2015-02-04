@@ -79,11 +79,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Good.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip())
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip(), syncInBackground: true)
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip())
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip(), syncInBackground: true)
         }
     }
 

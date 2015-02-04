@@ -68,14 +68,14 @@ class NetworkMachine {
     }
     
     
-    func saveAndSyncTripIfNeeded(trip: Trip) {
+    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
         if (trip.isSynced.boolValue) {
             trip.isSynced = false
         }
         
         CoreDataController.sharedCoreDataController.saveContext()
         
-        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+        if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.syncTrip(trip)
                 })
