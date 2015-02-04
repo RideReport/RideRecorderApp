@@ -130,12 +130,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
         let reuseID = "RoutesViewTableCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell?
-        tableCell!.layoutMargins = UIEdgeInsetsZero
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as UITableViewCell
+        tableCell.layoutMargins = UIEdgeInsetsZero
 
-        configureCell(tableCell!, trip: trip)
+        configureCell(tableCell, trip: trip)
         
-        return tableCell!
+        return tableCell
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
