@@ -348,7 +348,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 DDLogWrapper.logVerbose("Moving too slow for too long")
                 self.stopTripIfNeeded()
             } else if (foundNonNegativeSpeed == false) {
-                if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
+                if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 30.0) {
                     DDLogWrapper.logVerbose("Went too long with negative speeds.")
                     self.stopTripIfNeeded()
                 } else {
