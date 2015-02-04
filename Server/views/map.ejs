@@ -43,7 +43,6 @@
     
     function gotPosition(position) {
       map.setView([position.coords.latitude, position.coords.longitude], 14);
-      getTrips();
     }
 
   	function getTrips(e){			
@@ -94,8 +93,6 @@
   		
   		tripLayerGroup = L.layerGroup(polylineArray).addTo(map);
   	}
-  	map.on('dragend', getTrips);	
-  	map.on('zoomend', getTrips);
   	map.whenReady(getTrips)    
 
   </script>
