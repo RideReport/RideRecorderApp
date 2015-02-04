@@ -27,6 +27,8 @@ class Trip : NSManagedObject {
         case Bad
     }
     
+    private var tripEndNotification : UILocalNotification? = nil;
+    
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
@@ -253,13 +255,19 @@ class Trip : NSManagedObject {
                 message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
             }
             
-            let notif = UILocalNotification()
-            notif.alertBody = message
+            self.tripEndNotification = UILocalNotification()
+            self.tripEndNotification?.alertBody = message
             if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 // don't show rating stuff for anything but bike trips.
-                notif.category = "RIDE_COMPLETION_CATEGORY"
+                self.tripEndNotification?.category = "RIDE_COMPLETION_CATEGORY"
             }
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            UIApplication.sharedApplication().presentLocalNotificationNow(self.tripEndNotification!)
+        }
+    }
+    
+    func cancelTripCompletionNotification() {
+        if (self.tripEndNotification != nil) {
+            UIApplication.sharedApplication().cancelLocalNotification(self.tripEndNotification!)
         }
     }
     
