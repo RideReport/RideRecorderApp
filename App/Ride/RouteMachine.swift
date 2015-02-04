@@ -15,7 +15,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     let minimumBatteryForTracking : Float = 0.2
-        
+    
     var startedInBackground = false
     
     var minimumMonitoringSpeed : CLLocationSpeed = 3.0
@@ -325,7 +325,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
-                if (location.speed >= 0) {
+                if (location.speed > 0) {
                     foundNonNegativeSpeed = true
                 }
                 
