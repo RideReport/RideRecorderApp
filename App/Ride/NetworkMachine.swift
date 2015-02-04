@@ -29,6 +29,25 @@ class NetworkMachine {
         return Static.sharedMachine!
     }
     
+    func startup() {
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            for aTrip in Trip.openTrips()! {
+                let trip = aTrip as Trip
+                
+                if (trip.locations.count <= 6) {
+                    // if it doesn't more than 6 points, toss it.
+                    CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(trip)
+                    self.saveAndSyncTripIfNeeded(trip)
+                }
+                trip.closeTrip() {
+                    self.saveAndSyncTripIfNeeded(trip)
+                }
+            }
+            
+        })
+
+    }
+    
     func jsonify(date: NSDate) -> String {
         return self.jsonDateFormatter.stringFromDate(date)
     }
