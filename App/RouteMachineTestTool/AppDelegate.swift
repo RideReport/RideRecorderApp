@@ -12,24 +12,35 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var fileLogger : DDFileLogger!
+//    var fileLogger : DDFileLogger!
+    var simpleRouteMachine : SimpleRouteMachine!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {        
         // setup to log to syslog
-        DDLog.addLogger(DDASLLogger.sharedInstance())
+        // DDLog.addLogger(DDASLLogger.sharedInstance())
+        //
+        // // setup to log to Xcode if available
+        // DDLog.addLogger(DDTTYLogger.sharedInstance())
+        // DDTTYLogger.sharedInstance().colorsEnabled = true
+        //
+        // self.fileLogger = DDFileLogger()
+        // self.fileLogger.rollingFrequency = 60 * 60 * 24
+        // self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+        // DDLog.addLogger(self.fileLogger)
         
-        // setup to log to Xcode if available
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
-        DDTTYLogger.sharedInstance().colorsEnabled = true
+        let rideCompleteCategory = UIMutableUserNotificationCategory()
+        rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
         
-        self.fileLogger = DDFileLogger()
-        self.fileLogger.rollingFrequency = 60 * 60 * 24
-        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.addLogger(self.fileLogger)
+        let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
+        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+
         
-        CoreDataController.sharedCoreDataController.startup()
-        RouteMachine.sharedMachine.startup((launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil))
-        RouteMachine.sharedMachine.minimumMonitoringSpeed = 0
+//        CoreDataController.sharedCoreDataController.startup()
+//        RouteMachine.sharedMachine.startup((launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil))
+//        RouteMachine.sharedMachine.minimumMonitoringSpeed = 0
+        
+        self.simpleRouteMachine = SimpleRouteMachine()
         
         return true
     }
