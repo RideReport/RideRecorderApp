@@ -39,7 +39,7 @@ class NetworkMachine {
                     CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(trip)
                     self.saveAndSyncTripIfNeeded(trip)
                 }
-                trip.closeTrip() {
+                trip.close() {
                     self.saveAndSyncTripIfNeeded(trip)
                 }
             }

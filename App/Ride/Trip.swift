@@ -206,7 +206,7 @@ class Trip : NSManagedObject {
         })
     }
     
-    func closeTrip(handler: ()->Void = {}) {
+    func close(handler: ()->Void = {}) {
         if (self.isClosed == true) {
             return
         }
@@ -229,6 +229,10 @@ class Trip : NSManagedObject {
         self.clasifyActivityType { () -> Void in
             handler()
         }
+    }
+    
+    func reopen() {
+        self.isClosed = false
     }
     
     var lengthMiles : Float {

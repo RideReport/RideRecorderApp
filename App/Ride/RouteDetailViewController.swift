@@ -159,7 +159,7 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
                 self.mainViewController.selectedTrip.sendTripCompletionNotification()
             })
         } else if (buttonIndex == 4) {
-            self.mainViewController.selectedTrip.closeTrip()
+            self.mainViewController.selectedTrip.close()
             NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
             
             self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)

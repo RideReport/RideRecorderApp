@@ -13,6 +13,8 @@ import CoreMotion
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
+    var routeResumeTimeout : NSTimeInterval = 240
+    
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     let minimumBatteryForTracking : Float = 0.2
     
@@ -109,14 +111,21 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         DDLogWrapper.logInfo("Starting Active Tracking")
         
-        self.currentTrip = Trip()
-        self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+        let mostRecentTrip = Trip.mostRecentTrip()
+        if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceNow) < self.routeResumeTimeout) {
+            self.currentTrip = mostRecentTrip
+            self.currentTrip?.reopen()
+        } else {
+            self.currentTrip = Trip()
+            self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+        }
+        
         CoreDataController.sharedCoreDataController.saveContext()
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
         
-        // set up the lastMovingLocation as the first location in the trip
+        // add lastMovingLocation to the trip if it's accurate enough
         if (self.lastMovingLocation.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
             
@@ -148,7 +157,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
             DDLogWrapper.logInfo(NSString(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
             
-            closingTrip!.closeTrip() {
+            closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
                 CoreDataController.sharedCoreDataController.saveContext()
                 closingTrip!.sendTripCompletionNotification()
