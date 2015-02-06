@@ -106,6 +106,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         let mostRecentTrip = Trip.mostRecentTrip()
         if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceNow) < self.routeResumeTimeout) {
+            DDLogWrapper.logInfo("Resuming ride")
             #if DEBUG
                 let notif = UILocalNotification()
                 notif.alertBody = "Resumed Ride!"

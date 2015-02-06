@@ -245,6 +245,11 @@ class Trip : NSManagedObject {
     
     func sendTripCompletionNotification() {
         self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
+            if (self.isClosed == false) {
+                // in case the trip was reopened while we were calculating things
+                return
+            }
+            
             var message = ""
         
             if (startingPlacemark != nil && endingPlacemark != nil) {
