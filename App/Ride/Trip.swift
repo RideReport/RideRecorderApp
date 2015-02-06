@@ -131,7 +131,7 @@ class Trip : NSManagedObject {
     }
     
     func batteryLifeUsed() -> Int16 {
-        if (self.batteryAtStart == nil || self.batteryAtEnd == nil) {
+        if (self.batteryAtStart.shortValue == 0 || self.batteryAtEnd.shortValue == 0) {
             return 0
         }
         if (self.batteryAtStart.shortValue < self.batteryAtEnd.shortValue) {
