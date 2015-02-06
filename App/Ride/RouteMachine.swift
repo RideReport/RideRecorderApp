@@ -259,9 +259,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logInfo("Deferring updates!")
             self.locationManager.distanceFilter = kCLDistanceFilterNone
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            
-            self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         } else {
             DDLogWrapper.logInfo("Not deferring updates")
             self.locationManager.distanceFilter = 20
@@ -304,9 +301,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
 
         if (error != nil) {
             DDLogWrapper.logVerbose(NSString(format: "Error deferring: %@", error))
+            self.isDefferringLocationUpdates = false
+            return
         }
 
-        self.isDefferringLocationUpdates = false
         if (self.shouldDeferUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
             // if we are still tracking a route, continue deferring.
             DDLogWrapper.logVerbose("Re-deferring updates")
@@ -317,6 +315,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
+        if (self.shouldDeferUpdates && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
+            DDLogWrapper.logInfo("Begining deferred updates!")
+
+            self.isDefferringLocationUpdates = true
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+        }
+        
         if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
             if (self.locationManagerIsUpdating) {
                 // if we are currently updating, send the user a push and stop.
