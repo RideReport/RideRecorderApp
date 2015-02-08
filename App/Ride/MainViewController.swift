@@ -59,7 +59,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Bug", "Setup Assistant")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -129,10 +129,16 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             return
         }
         
+        let bundleID = NSBundle.mainBundle().bundleIdentifier
+        let dailyStats = UIDevice.currentDevice().dailyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
+        let weeklyStats = UIDevice.currentDevice().weeklyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
+        let body = NSString(format: "\n\n\n===BATTERY LIFE USAGE STATISTICS===\nDaily: %@\nWeekly: %@", dailyStats, weeklyStats)
+        
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Bug Report")
         composer.setToRecipients(["logs@ride.report"])
         composer.mailComposeDelegate = self
+        composer.setMessageBody(body, isHTML: false)
         
         let firstFileInfo = fileInfos.first! as DDLogFileInfo
         let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
