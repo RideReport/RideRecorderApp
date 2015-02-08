@@ -423,6 +423,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             } else {
                 DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
+                if (self.lowPowerReadingsCount > 10) {
+                    DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
+                    self.stopActiveTracking()
+                } else {
+                    DDLogWrapper.logVerbose("Taking more low power readings.")
+                }
             }
         } else {
             DDLogWrapper.logVerbose("Got significant location update, entering low power state.")
