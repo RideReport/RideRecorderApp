@@ -11,12 +11,6 @@
     map.setView([position.coords.latitude, position.coords.longitude], 14);
   }
 
-	function getTrips(e){			
-		bounds = map.getBounds();
-		url = "trips";
-		$.get(url, drawTripsOnMap, "json");
-	}
-	
 	function drawTripsOnMap(geojson){
 	  var trips = geojson.features
 		map.removeLayer(tripLayerGroup);  		
@@ -61,4 +55,3 @@
 		
 		tripLayerGroup = L.layerGroup(polylineArray).addTo(map);
 	}
-	map.whenReady(getTrips)

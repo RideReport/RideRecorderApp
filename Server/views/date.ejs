@@ -33,4 +33,12 @@
   	})
   </script>
   <script src="../map.js"></script>  
+	<script>
+  	function getTrips(e){			
+  		bounds = map.getBounds();
+      url = "../trips/date/<%=date%>";
+  		$.get(url, drawTripsOnMap, "json");
+  	}
+  	map.whenReady(getTrips)
+  </script>
 </body>

@@ -37,7 +37,6 @@ exports.getAll = function(req, res){
 
 exports.getTripsOnDate = function(req, res){
   var trips = db.mongo_client.get('trips');
-  var responseBody = {}
   
   var todayString = req.params.date
   
@@ -46,8 +45,28 @@ exports.getTripsOnDate = function(req, res){
 			res.status(404).send('Not found');
 			console.error(error);    
 		} else {
-		  return res.json(trips);
-		}
+		  var geojson = { "type": "FeatureCollection",
+          "features": []
+           };
+		  for(i=0; i<trips.length; i++) {
+        var trip = trips[i];
+        geojson.features.push({  
+    			"type": "Feature",
+    			"geometry": {
+            "type": "LineString",
+            "coordinates": trip.locations.map(function(loc) {return loc.pos.reverse()})
+          },
+    			"properties": {
+    				"id"					:trip._id,
+    				"activity_type" : trip.activityType,
+    				"creation_date" : trip.creationdate,
+    				"rating" : trip.rating,
+    				"uuid" : trip.uuid
+    			}						
+    		});
+    	}	
+		  return res.json(geojson);
+	  }
 	});
 };
 
