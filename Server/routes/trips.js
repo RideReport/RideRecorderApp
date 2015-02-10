@@ -2,7 +2,7 @@ var db = require('../db.js');
 var utils = require('../utils/utils.js');
 
 exports.getAll = function(req, res){
-  var trips = db.client.get('trips');
+  var trips = db.mongo_client.get('trips');
     
   trips.find({},{w:1},function(error,trips) {
 		if(error){
@@ -36,7 +36,7 @@ exports.getAll = function(req, res){
 };
 
 exports.getTripsOnDate = function(req, res){
-  var trips = db.client.get('trips');
+  var trips = db.mongo_client.get('trips');
   var responseBody = {}
   
   var todayString = req.params.date
@@ -52,7 +52,7 @@ exports.getTripsOnDate = function(req, res){
 };
 
 exports.save = function(req, res){	
-  var trips = db.client.get('trips');
+  var trips = db.mongo_client.get('trips');
 
   var reqLocations = req.body.locations
   var locations = []

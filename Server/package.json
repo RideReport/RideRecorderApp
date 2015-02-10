@@ -16,6 +16,8 @@
     "ejs": "~1.0.0",
     "mongodb":"~2.0.6",
     "monk":"0.7.x",
-    "forever":"0.10.x"
+    "forever":"0.10.x",
+    "pg":"*",
+    "pg-native":"*"
   }
 }

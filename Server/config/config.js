@@ -8,10 +8,10 @@ module.exports = {
 	},
 	db: {
 		dbAddress : '127.0.0.1',
-		type	: 'mongodb',
-		port	: 27017,
-		user	: 'honeybee',
+		type	: 'postgres',
+		port	: 5432,
+		user	: 'ride',
 		pass	: 'An4mPzPrGffhavd9aT',
-		db		: 'honeybee'
+		db		: 'ride'
 	},
 }

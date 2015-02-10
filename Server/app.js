@@ -1,6 +1,6 @@
 // set variables for environment
-var express = require('express'),
-    bodyParser = require('body-parser');
+var express = require('express');
+var bodyParser = require('body-parser');
 var config = require('./config/config.js');
 var path = require('path');
 var trips = require('./routes/trips');
