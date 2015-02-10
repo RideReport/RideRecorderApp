@@ -29,7 +29,6 @@
 			locs = trip.geometry.coordinates.map(function(loc) {return loc.reverse()});
 			  			  			
 			if (trip.properties.activity_type == 2) {
-			  console.log(locs);
 			  var polyline;
 			  if (trip.properties.rating == 2) {
           polyline = new L.Polyline(
