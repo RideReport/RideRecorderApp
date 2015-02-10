@@ -113,18 +113,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
             self.currentTrip = mostRecentTrip
-            self.currentTrip?.cancelTripCompletionNotification()
             self.currentTrip?.reopen()
         } else {
-            #if DEBUG
-                let notif = UILocalNotification()
-                notif.alertBody = "Started Ride"
-                notif.category = "RIDE_COMPLETION_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-            #endif
             self.currentTrip = Trip()
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         }
+        
+        self.currentTrip?.sendTripStartedNotification()
         
         CoreDataController.sharedCoreDataController.saveContext()
         

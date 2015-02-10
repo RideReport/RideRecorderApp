@@ -49,9 +49,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let rideCompleteCategory = UIMutableUserNotificationCategory()
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
         rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
+        rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
+        
+        let rideStartedCategory = UIMutableUserNotificationCategory()
+        rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
+        rideStartedCategory.setActions([], forContext: UIUserNotificationActionContext.Minimal)
+        rideStartedCategory.setActions([], forContext: UIUserNotificationActionContext.Default)
         
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
-        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
+        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(objects: rideCompleteCategory, rideStartedCategory))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         
         // setup Ride to log to Xcode if available

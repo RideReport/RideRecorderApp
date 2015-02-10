@@ -27,7 +27,7 @@ class Trip : NSManagedObject {
         case Bad
     }
     
-    private var tripEndNotification : UILocalNotification? = nil;
+    private var currentStateNotification : UILocalNotification? = nil;
     
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
@@ -243,6 +243,15 @@ class Trip : NSManagedObject {
         }
     }
     
+    func sendTripStartedNotification() {
+        self.cancelTripCompletionNotification()
+        
+        self.currentStateNotification = UILocalNotification()
+        self.currentStateNotification?.alertBody = "Started a Ride in somewhere…"
+        self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
+        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+    }
+    
     func sendTripCompletionNotification() {
         self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
             if (self.isClosed == false) {
@@ -260,19 +269,22 @@ class Trip : NSManagedObject {
                 message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
             }
             
-            self.tripEndNotification = UILocalNotification()
-            self.tripEndNotification?.alertBody = message
+            self.cancelTripCompletionNotification()
+            
+            self.currentStateNotification = UILocalNotification()
+            self.currentStateNotification?.alertBody = message
             if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 // don't show rating stuff for anything but bike trips.
-                self.tripEndNotification?.category = "RIDE_COMPLETION_CATEGORY"
+                self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             }
-            UIApplication.sharedApplication().presentLocalNotificationNow(self.tripEndNotification!)
+            UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
         }
     }
     
-    func cancelTripCompletionNotification() {
-        if (self.tripEndNotification != nil) {
-            UIApplication.sharedApplication().cancelLocalNotification(self.tripEndNotification!)
+    private func cancelTripCompletionNotification() {
+        if (self.currentStateNotification != nil) {
+            UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
+            self.currentStateNotification = nil
         }
     }
     
