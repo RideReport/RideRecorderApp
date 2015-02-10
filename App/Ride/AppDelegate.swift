@@ -11,7 +11,7 @@ import CoreData
 import Crashlytics
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     var window: UIWindow?
     var fileLogger : DDFileLogger!
@@ -73,6 +73,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NetworkMachine.sharedMachine.startup()
         
         return true
+    }
+    
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        if ((notificationSettings.types&UIUserNotificationType.Alert) == nil) {
+            // can't send alerts, let the user know.
+            if (!NSUserDefaults.standardUserDefaults().boolForKey("UserKnowsNotificationsAreDisabled")) {
+                let alert = UIAlertView(title: "Notifications are disabled", message: "Ride needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
+                alert.show()
+            }
+        }
+    }
+    
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+        if (buttonIndex == 1) {
+            let url = NSURL(string: UIApplicationOpenSettingsURLString)
+            if url != nil && UIApplication.sharedApplication().canOpenURL(url!) {
+                UIApplication.sharedApplication().openURL(url!)
+            }
+        } else {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "UserKnowsNotificationsAreDisabled")
+            NSUserDefaults.standardUserDefaults().synchronize()
+        }
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
