@@ -234,6 +234,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.locationManager.distanceFilter = 100
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInLowPowerState) {
             self.lowPowerReadingsCount = 0
