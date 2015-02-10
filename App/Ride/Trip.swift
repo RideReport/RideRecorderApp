@@ -28,6 +28,7 @@ class Trip : NSManagedObject {
     }
     
     private var currentStateNotification : UILocalNotification? = nil;
+    private var startingPlacemark : CLPlacemark? = nil;
     
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
@@ -182,29 +183,42 @@ class Trip : NSManagedObject {
         handler()
     }
     
-    func findStartingAndDestinationPlacemarksWithHandler(handler: (CLPlacemark!, CLPlacemark!)->Void) {
-        if (self.locations.count < 2) {
-            handler(nil, nil)
+    func findStartingPlacemarkWithHandler(handler: ()->Void) {
+        if (self.locations.count < 1) {
+            handler()
             return
         }
         
         let geocoder = CLGeocoder()
         let startingLocation = self.locations.firstObject as Location
-        let endingLocation = self.locations.lastObject as Location
         geocoder.reverseGeocodeLocation(startingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
-                handler(nil,nil)
+                handler()
                 return
             }
             let startingPlacemark = placemarks[0] as CLPlacemark
-            geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
-                if (placemarks == nil || placemarks.count == 0) {
-                    handler(startingPlacemark,nil)
-                    return
-                }
-                let endingPlacemark = placemarks[0] as CLPlacemark
-                handler(startingPlacemark, endingPlacemark)
-            })
+            self.startingPlacemark = startingPlacemark
+            handler()
+        })
+
+    }
+    
+    func findDestinationPlacemarksWithHandler(handler: (CLPlacemark!!)->Void) {
+        if (self.locations.count < 2) {
+            handler(nil)
+            return
+        }
+        
+        let geocoder = CLGeocoder()
+        let endingLocation = self.locations.lastObject as Location
+        
+        geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+            if (placemarks == nil || placemarks.count == 0) {
+                handler(nil)
+                return
+            }
+            let endingPlacemark = placemarks[0] as CLPlacemark
+            handler(endingPlacemark)
         })
     }
     
@@ -244,16 +258,33 @@ class Trip : NSManagedObject {
     }
     
     func sendTripStartedNotification() {
+        if (self.startingPlacemark != nil) {
+            self.doSendStartingNotification()
+        }
+        self.findStartingPlacemarkWithHandler { () -> Void in
+            self.doSendStartingNotification()
+        }
+    }
+    
+    private func doSendStartingNotification() {
         self.cancelTripCompletionNotification()
         
+        var message = ""
+        
+        if (self.startingPlacemark != nil) {
+            message = NSString(format: "Started a Ride in %@…", self.startingPlacemark!.subLocality)
+        } else {
+            message = "Started a Ride in somewhere…"
+        }
+        
         self.currentStateNotification = UILocalNotification()
-        self.currentStateNotification?.alertBody = "Started a Ride in somewhere…"
+        self.currentStateNotification?.alertBody = message
         self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
     func sendTripCompletionNotification() {
-        self.findStartingAndDestinationPlacemarksWithHandler { (startingPlacemark, endingPlacemark) -> Void in
+        self.findDestinationPlacemarksWithHandler { (endingPlacemark) -> Void in
             if (self.isClosed == false) {
                 // in case the trip was reopened while we were calculating things
                 return
@@ -261,10 +292,10 @@ class Trip : NSManagedObject {
             
             var message = ""
         
-            if (startingPlacemark != nil && endingPlacemark != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, startingPlacemark.subLocality, endingPlacemark.subLocality)
-            } else if (startingPlacemark != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, startingPlacemark.subLocality)
+            if (self.startingPlacemark != nil && endingPlacemark != nil) {
+                message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, endingPlacemark!.subLocality)
+            } else if (self.startingPlacemark? != nil) {
+                message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality)
             } else {
                 message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
             }

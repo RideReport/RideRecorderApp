@@ -38,9 +38,10 @@ class NetworkMachine {
                     // if it doesn't more than 6 points, toss it.
                     CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(trip)
                     self.saveAndSyncTripIfNeeded(trip)
-                }
-                trip.close() {
-                    self.saveAndSyncTripIfNeeded(trip)
+                } else {
+                    trip.close() {
+                        self.saveAndSyncTripIfNeeded(trip)
+                    }
                 }
             }
             

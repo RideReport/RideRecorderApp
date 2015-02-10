@@ -119,8 +119,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         }
         
-        self.currentTrip?.sendTripStartedNotification()
-        
         CoreDataController.sharedCoreDataController.saveContext()
         
         // initialize lastMovingLocation to fromLocation, where the movement started
@@ -133,6 +131,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             // but give it a recent date.
             newLocation.date = NSDate()
         }
+        
+        self.currentTrip?.sendTripStartedNotification()
         
         CoreDataController.sharedCoreDataController.saveContext()
         
