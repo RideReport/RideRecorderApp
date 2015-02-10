@@ -18,6 +18,7 @@
     "monk":"0.7.x",
     "forever":"0.10.x",
     "pg":"*",
-    "pg-native":"*"
+    "pg-native":"*",
+    "memory-cache":"*"
   }
 }
