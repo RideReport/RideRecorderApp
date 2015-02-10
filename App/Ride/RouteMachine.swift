@@ -22,7 +22,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     var minimumMonitoringSpeed : CLLocationSpeed = 3.0
     
-    private var shouldDeferUpdates = true
     private var isDefferringLocationUpdates : Bool = false
 
     private var locationManagerIsUpdating : Bool = false
@@ -257,7 +256,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         DDLogWrapper.logInfo("Entering HIGH power state")
 
-        if (self.shouldDeferUpdates) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable()) {
             DDLogWrapper.logInfo("Deferring updates!")
             self.locationManager.distanceFilter = kCLDistanceFilterNone
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -307,7 +306,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             return
         }
 
-        if (self.shouldDeferUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isInLowPowerState && self.currentTrip != nil) {
             // if we are still tracking a route, continue deferring.
             DDLogWrapper.logVerbose("Re-deferring updates")
 
@@ -317,7 +316,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
-        if (self.shouldDeferUpdates && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
             DDLogWrapper.logInfo("Begining deferred updates!")
 
             self.isDefferringLocationUpdates = true
