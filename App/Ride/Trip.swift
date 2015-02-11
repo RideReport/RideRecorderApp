@@ -397,7 +397,7 @@ class Trip : NSManagedObject {
             self.runActivityClassification()
             handler()
         } else {
-            RouteMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
+            MotionMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
                 if (activities != nil) {
                     for activity in activities {
                         Activity(activity: activity as CMMotionActivity, trip: self)

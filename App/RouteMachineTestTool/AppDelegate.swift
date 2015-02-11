@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
 //        CoreDataController.sharedCoreDataController.startup()
-//        RouteMachine.sharedMachine.startup((launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil))
+//        RouteMachine.sharedMachine.startup()
 //        RouteMachine.sharedMachine.minimumMonitoringSpeed = 0
         
         self.simpleRouteMachine = SimpleRouteMachine()

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4EE5F5DF268A49CFA7A497E8 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BA743A6C616E49B6A36F8FD7 /* libPods.a */; };
+		84033D991A8BD26900339171 /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionMachine.swift */; };
+		84033D9A1A8BD26900339171 /* MotionMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionMachine.swift */; };
 		8405C5E01A3BAE4700B1DBDB /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8444971A1A3A4E040009F889 /* Alamofire.framework */; };
 		8405C5E11A3BAFD800B1DBDB /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8444971A1A3A4E040009F889 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
@@ -109,6 +111,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		84033D981A8BD26900339171 /* MotionMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionMachine.swift; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8429E5D71A5DCBA000EB3E94 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Activity.swift; path = Ride/Activity.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -262,6 +265,7 @@
 				8445317519FEEB210096F26E /* RouteMachine.swift */,
 				84D1557919D2743900316995 /* CoreDataController.swift */,
 				844497211A3A4EB40009F889 /* NetworkMachine.swift */,
+				84033D981A8BD26900339171 /* MotionMachine.swift */,
 			);
 			name = Machines;
 			sourceTree = "<group>";
@@ -672,6 +676,7 @@
 				8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */,
 				84D1557A19D2743900316995 /* CoreDataController.swift in Sources */,
 				8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */,
+				84033D991A8BD26900339171 /* MotionMachine.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* GettingStartedFinishedViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				84EA5BEE1A6F226400C71F53 /* GettingStartedBatteryViewController.swift in Sources */,
@@ -687,6 +692,7 @@
 				846F50D61A80397C008DF801 /* SimpleRouteMachine.swift in Sources */,
 				84E3959F1A757E6F0015B682 /* Ride.xcdatamodeld in Sources */,
 				84E395A11A757F250015B682 /* DDLogWrapper.m in Sources */,
+				84033D9A1A8BD26900339171 /* MotionMachine.swift in Sources */,
 				84E3957A1A757DF30015B682 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

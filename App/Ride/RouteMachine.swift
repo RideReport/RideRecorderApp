@@ -11,32 +11,29 @@ import CoreLocation
 import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
-    let distanceFilter : Double = 30
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
-    var routeResumeTimeout : NSTimeInterval = 240
     
+    let routeResumeTimeout : NSTimeInterval = 240
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
+    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
+    let minimumSpeedToStartMonitoring : CLLocationSpeed = 4.4 // ~10mph
+    
+    let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
+    let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 60
+    
+    let maximumLowPowerReadingsCountWithoutMovement = 10
+    
     let minimumBatteryForTracking : Float = 0.2
     
-    var startedInBackground = false
-    
-    var minimumMonitoringSpeed : CLLocationSpeed = 3.0
-    
     private var isDefferringLocationUpdates : Bool = false
-
     private var locationManagerIsUpdating : Bool = false
     private var isInLowPowerState : Bool = false
     private var lowPowerReadingsCount = 0
     
-    private var locationManager : CLLocationManager!
-    private var lastLowPowerLocation :  CLLocation!
-    private var lastMovingLocation :  CLLocation!
+    private var lastLowPowerLocation :  CLLocation?
+    private var lastMovingLocation :  CLLocation?
     
-    private var motionActivityManager : CMMotionActivityManager!
-    private var motionQueue : NSOperationQueue!
-    private var motionCheckStartDate : NSDate!
-    let motionStartTimeoutInterval : NSTimeInterval = 30
-    let motionContinueTimeoutInterval : NSTimeInterval = 60
+    private var locationManager : CLLocationManager!
     
     internal private(set) var currentTrip : Trip?
     
@@ -45,6 +42,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         static var sharedMachine : RouteMachine?
     }
     
+    //
+    // MARK: - Initializers
+    //
     
     class var sharedMachine:RouteMachine {
         dispatch_once(&Static.onceToken) {
@@ -63,47 +63,42 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.activityType = CLActivityType.Fitness
         self.locationManager.pausesLocationUpdatesAutomatically = false
         
-        self.motionQueue = NSOperationQueue()
-        self.motionActivityManager = CMMotionActivityManager()
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
-    func appDidBecomeActive() {
-        if (self.currentTrip != nil && self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 100.0) {
+    private func appDidBecomeActive() {
+        if (self.currentTrip != nil && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > 100.0) {
             // if the app becomes active, check to see if we should wrap up a trip.
             DDLogWrapper.logVerbose("Ending trip after app became activate.")
-            self.stopTripIfNeeded()
+            self.stopTrip()
         }
     }
     
-    func startup(startingFromBackground: Bool) {
-        self.startedInBackground = startingFromBackground
+    func startup() {
         self.locationManager.delegate = self;
         self.locationManager.requestAlwaysAuthorization()
-        let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineHasRequestedMotionAccess")
-        if (!hasRequestedMotionAccess) {
-            // grab an update for a second so we can have the permission dialog come up right away
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
-                    self.motionActivityManager.stopActivityUpdates()
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineHasRequestedMotionAccess")
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                })
-            })
-        }
     }
     
-    // MARK: - State Machine
+    //
+    // MARK: - Private state machine methods
+    //
     
-    func startTripFromLocation(fromLocation: CLLocation) {
+    private func startTripFromLocation(fromLocation: CLLocation) {
         if (self.currentTrip != nil) {
+            return
+        }
+        
+        if (isPaused()) {
+            DDLogWrapper.logInfo("Tracking is Paused, not starting trip")
+            
             return
         }
         
         DDLogWrapper.logInfo("Starting Active Tracking")
         
         let mostRecentTrip = Trip.mostRecentTrip()
+        
+        // Resume the most recent trip if it was recent enough
         if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceNow) < self.routeResumeTimeout) {
             DDLogWrapper.logInfo("Resuming ride")
             #if DEBUG
@@ -119,27 +114,36 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         }
         
-        CoreDataController.sharedCoreDataController.saveContext()
-        
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
         
-        // add lastMovingLocation to the trip if it's accurate enough
-        if (self.lastMovingLocation.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+        // Include lastMovingLocation in the trip if it's accurate enough
+        if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
-            
-            // but give it a recent date.
-            newLocation.date = NSDate()
         }
+        CoreDataController.sharedCoreDataController.saveContext()
         
         self.currentTrip?.sendTripStartedNotification()
         
-        CoreDataController.sharedCoreDataController.saveContext()
+        if (!self.locationManagerIsUpdating) {
+            self.locationManagerIsUpdating = true
+            self.locationManager.startUpdatingLocation()
+        }
         
-        self.enterHighPowerState()
+        if (CLLocationManager.deferredLocationUpdatesAvailable()) {
+            DDLogWrapper.logInfo("Deferring updates!")
+            self.locationManager.distanceFilter = kCLDistanceFilterNone
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        } else {
+            DDLogWrapper.logInfo("Not deferring updates")
+            self.locationManager.distanceFilter = 20
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        }
+        
+        self.isInLowPowerState = false
     }
     
-    func stopTripIfNeeded() {
+    private func stopTrip() {
         if (self.currentTrip == nil) {
             return
         }
@@ -166,55 +170,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         
         self.currentTrip = nil
-        self.enterLowPowerState()
+        self.lastMovingLocation = nil
     }
     
-    func isPausedDueToBatteryLife() -> Bool {
-        return UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking
-    }
-    
-    func isPaused() -> Bool {
-        return self.isPausedDueToBatteryLife() || self.isPausedByUser()
-    }
-    
-    func isPausedByUser() -> Bool {
-        return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
-    }
-    
-    func pauseTracking() {
-        if (isPaused()) {
-            return
-        }
-        
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
-        NSUserDefaults.standardUserDefaults().synchronize()
-        
-        DDLogWrapper.logInfo("Paused Tracking")
-        self.stopActiveTracking()
-        self.locationManager.stopMonitoringSignificantLocationChanges()
-    }
-    
-    func resumeTracking() {
-        if (!isPaused()) {
-            return
-        }
-        
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
-        NSUserDefaults.standardUserDefaults().synchronize()
-        
-        DDLogWrapper.logInfo("Resume Tracking")
-        self.enterLowPowerState()
-        self.locationManager.startMonitoringSignificantLocationChanges()
-    }
-    
-    func stopActiveTracking() {
-        DDLogWrapper.logInfo("Stopping Tracking")
-
-        self.locationManagerIsUpdating = false
-        self.locationManager.stopUpdatingLocation()
-    }
-    
-    func enterLowPowerState() {
+    private func startLowPowerMonitoring() {
         if (isPaused()) {
             DDLogWrapper.logInfo("Tracking is Paused, not enterign low power state")
             
@@ -239,37 +198,84 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
     }
     
-    func enterHighPowerState() {
-        if (isPaused()) {
-            DDLogWrapper.logInfo("Tracking is Paused, not enterign high power state")
+    private func stopActiveMonitoring() {
+        DDLogWrapper.logInfo("Stopping active monitoring")
+        
+        self.locationManagerIsUpdating = false
+        self.locationManager.stopUpdatingLocation()
+    }
+    
+    private func beginDeferringUpdatesIfAppropriate() {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
+            DDLogWrapper.logVerbose("Re-deferring updates")
             
+            self.isDefferringLocationUpdates = true
+            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+        }
+    }
+    
+    //
+    // MARK: - Pause/Resuming Machine
+    //
+    
+    func isPausedDueToBatteryLife() -> Bool {
+        return UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking
+    }
+    
+    func isPaused() -> Bool {
+        return self.isPausedDueToBatteryLife() || self.isPausedByUser()
+    }
+    
+    func isPausedByUser() -> Bool {
+        return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
+    }
+    
+    func pauseTracking() {
+        if (isPaused()) {
             return
-        } else if (!self.locationManagerIsUpdating) {
-            self.locationManagerIsUpdating = true
-            self.locationManager.startUpdatingLocation()
         }
         
-        DDLogWrapper.logInfo("Entering HIGH power state")
-
-        if (CLLocationManager.deferredLocationUpdatesAvailable()) {
-            DDLogWrapper.logInfo("Deferring updates!")
-            self.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        } else {
-            DDLogWrapper.logInfo("Not deferring updates")
-            self.locationManager.distanceFilter = 20
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        DDLogWrapper.logInfo("Paused Tracking")
+        self.stopActiveMonitoring()
+        self.locationManager.stopMonitoringSignificantLocationChanges()
+    }
+    
+    private func pauseTrackingDueToLowBatteryLife() {
+        if (self.locationManagerIsUpdating) {
+            // if we are currently updating, send the user a push and stop.
+            let notif = UILocalNotification()
+            notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            
+            DDLogWrapper.logInfo("Paused Tracking due to battery life")
+            
+            self.stopActiveMonitoring()
+        }
+    }
+    
+    func resumeTracking() {
+        if (!isPaused()) {
+            return
         }
         
-        self.isInLowPowerState = false
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().synchronize()
+        
+        DDLogWrapper.logInfo("Resume Tracking")
+        self.locationManager.startMonitoringSignificantLocationChanges()
     }
 
-    // MARK: - CLLocationManger
+    //
+    // MARK: - CLLocationManger Delegate Methods
+    //
     
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         DDLogWrapper.logVerbose("Did change authorization status")
+        
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
-            self.enterLowPowerState()
             self.locationManager.startMonitoringSignificantLocationChanges()
         } else {
             // tell the user they need to give us access to the zion mainframes
@@ -278,74 +284,59 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager!) {
-        DDLogWrapper.logVerbose("Did Pause location updates!")
+        // Should never happen
+        DDLogWrapper.logError("Did Pause location updates!")
     }
     
     func locationManagerDidResumeLocationUpdates(manager: CLLocationManager!) {
-        DDLogWrapper.logVerbose("Did Resume location updates!")
+        // Should never happen
+        DDLogWrapper.logError("Did Resume location updates!")
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
         DDLogWrapper.logError(NSString(format: "Got active tracking location error! %@", error))
+        
         if (error.code == CLError.Denied.rawValue) {
             // alert the user and pause tracking.
         }
     }
     
     func locationManager(manager: CLLocationManager!, didFinishDeferredUpdatesWithError error: NSError!) {
-        DDLogWrapper.logVerbose("Finished deferring updates")
-
+        self.isDefferringLocationUpdates = false
+        
         if (error != nil) {
-            DDLogWrapper.logVerbose(NSString(format: "Error deferring: %@", error))
-            self.isDefferringLocationUpdates = false
+            DDLogWrapper.logVerbose(NSString(format: "Error deferring updates: %@", error))
             return
         }
 
-        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isInLowPowerState && self.currentTrip != nil) {
-            // if we are still tracking a route, continue deferring.
-            DDLogWrapper.logVerbose("Re-deferring updates")
+        DDLogWrapper.logVerbose("Finished deferring updates, redeffering.")
 
-            self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
-        }
+        // start deferring updates again.
+        self.beginDeferringUpdatesIfAppropriate()
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
-        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
-            DDLogWrapper.logInfo("Begining deferred updates!")
+        DDLogWrapper.logVerbose("Received location updates.")
 
-            self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
-        }
-        
         if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
-            if (self.locationManagerIsUpdating) {
-                // if we are currently updating, send the user a push and stop.
-                let notif = UILocalNotification()
-                notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                
-                DDLogWrapper.logInfo("Paused Tracking due to battery life")
-                
-                self.stopActiveTracking()
-            }
-
+            self.pauseTrackingDueToLowBatteryLife()
             return
         }
         
-        DDLogWrapper.logVerbose("Received location updates.")
+        self.beginDeferringUpdatesIfAppropriate()
         
         if (self.currentTrip != nil) {
+            // We are current tracking a trip in high power mode
             
-            var foundNonNegativeSpeed = false
+            var foundPositiveSpeed = false
             
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
                 if (location.speed > 0) {
-                    foundNonNegativeSpeed = true
+                    foundPositiveSpeed = true
                 }
                 
-                if (location.speed >= self.minimumMonitoringSpeed) {
+                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
                     self.lastMovingLocation = location
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
                         Location(location: location as CLLocation, trip: self.currentTrip!)
@@ -353,63 +344,51 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             }
             
-            #if (arch(i386) || arch(x86_64)) && os(iOS)
-                foundNonNegativeSpeed = true
-                self.lastMovingLocation = locations.first
-                Location(location: self.lastMovingLocation as CLLocation, trip: self.currentTrip!)
-            #endif
-            
-            if (foundNonNegativeSpeed == true && (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 60.0)){
-                // otherwise, check the acceleromtere for recent data
+            if (foundPositiveSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenMovements){
                 DDLogWrapper.logVerbose("Moving too slow for too long")
-                self.stopTripIfNeeded()
-            } else if (foundNonNegativeSpeed == false) {
-                if (self.lastMovingLocation != nil && abs(self.lastMovingLocation.timestamp.timeIntervalSinceNow) > 30.0) {
-                    DDLogWrapper.logVerbose("Went too long with negative speeds.")
-                    self.stopTripIfNeeded()
+                self.stopTrip()
+            } else if (foundPositiveSpeed == false) {
+                if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenPositiveSpeedReadings) {
+                    DDLogWrapper.logVerbose("Went too long with non-positive speeds.")
+                    self.stopTrip()
                 } else {
-                    if (self.lastMovingLocation == nil) {
-                        DDLogWrapper.logVerbose("lastMovingLocation is nil, should not be!")
-                    }
-                    DDLogWrapper.logVerbose("Nothing but negative speeds. Awaiting next update")
+                    DDLogWrapper.logVerbose("Nothing but non-positive speeds. Awaiting next update")
                 }
             } else {
                 CoreDataController.sharedCoreDataController.saveContext()
                 NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
             }
         } else if (self.isInLowPowerState) {
-            self.lowPowerReadingsCount += 1
+            // We are current considering starting a trip in low power mode
             
-            var foundMovement = false
+            var foundSufficientMovement = false
+            
             for location in locations {
                 DDLogWrapper.logVerbose(NSString(format: "Location found in low power mode. Speed: %f", location.speed))
-                if (location.speed >= self.minimumMonitoringSpeed) {
-                    // if the speed is above the minimum, start tracking
+                if (location.speed >= self.minimumSpeedToStartMonitoring) {
                     DDLogWrapper.logVerbose("Found movement while in low power state")
-                    foundMovement = true
+                    foundSufficientMovement = true
                     break
                 }
-            }
-            
-            let newLocation = locations.first
-            if (foundMovement == false && self.lastLowPowerLocation != nil && newLocation != nil) {
-                let distance = self.lastLowPowerLocation.distanceFromLocation(newLocation)
-                let time = newLocation?.timestamp.timeIntervalSinceDate(self.lastLowPowerLocation.timestamp)
                 
-                let speed = distance/time!
-                DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
-                
-                if (speed >= self.minimumMonitoringSpeed && speed < 20) {
-                    // ignore really large speeds that may be the result of location inaccuracy
-                    DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
-                    foundMovement = true
+                // Many times locations given in low power mode will not have a speed.
+                // Hence, we also calculate a 'manual' speed from the current location to the last one
+                if (self.lastLowPowerLocation != nil) {
+                    let distance = self.lastLowPowerLocation!.distanceFromLocation(location)
+                    let time = abs(location.timestamp.timeIntervalSinceDate(self.lastLowPowerLocation!.timestamp))
+                    
+                    let speed = distance/time
+                    DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
+                    if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
+                        // We ignore really large speeds that may be the result of location inaccuracy
+                        DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
+                        foundSufficientMovement = true
+                    }
                 }
             }
             
-            self.lastLowPowerLocation = newLocation
-            
-            if (foundMovement) {
-                self.startTripFromLocation(self.lastLowPowerLocation)
+            if (foundSufficientMovement) {
+                self.startTripFromLocation(locations.first!)
                 
                 for location in locations {
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
@@ -418,20 +397,20 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             } else {
                 DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
-                if (self.lowPowerReadingsCount > 10) {
+                
+                if (self.lowPowerReadingsCount > self.maximumLowPowerReadingsCountWithoutMovement) {
                     DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
-                    self.stopActiveTracking()
-                } else {
-                    DDLogWrapper.logVerbose("Taking more low power readings.")
+                    self.stopActiveMonitoring()
                 }
             }
+            
+            self.lastLowPowerLocation = locations.first
+            self.lowPowerReadingsCount += 1
         } else {
+            // We are currently in background mode and got course-scale movement.
+            // We now enter a low power state to monitor for user movement
             DDLogWrapper.logVerbose("Got significant location update, entering low power state.")
-            self.enterLowPowerState()
+            self.startLowPowerMonitoring()
         }
-    }
-    
-    func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
-        self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
     }
 }
