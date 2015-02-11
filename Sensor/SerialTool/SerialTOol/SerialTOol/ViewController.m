@@ -142,7 +142,7 @@
     CPTXYPlotSpace *plotSpace = (CPTXYPlotSpace *)self.graph.defaultPlotSpace;
     plotSpace.xRange = [CPTPlotRange plotRangeWithLocation:CPTDecimalFromDouble([[NSDate date] timeIntervalSince1970] - 45.0) length:CPTDecimalFromDouble(45.0)];
 
-    [plotSpace scaleToFitPlots:@[[self.dataSources objectAtIndex:3]]];
+    [plotSpace scaleToFitPlots:self.dataSources];
 
     CPTMutablePlotRange *yRange = [plotSpace.yRange mutableCopy];
     [yRange expandRangeByFactor:CPTDecimalFromDouble(1.00)];

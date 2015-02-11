@@ -36,8 +36,6 @@ class MotionMachine : NSObject, CLLocationManagerDelegate {
         
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
     func startup() {

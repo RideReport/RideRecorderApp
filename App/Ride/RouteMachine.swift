@@ -18,9 +18,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
     let minimumSpeedToStartMonitoring : CLLocationSpeed = 4.4 // ~10mph
     
+    let geofenceSleepRegionRadius : Double = 30
+    private var geofenceSleepRegion :  CLCircularRegion!
+    
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
     let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 60
-    
+
+    let minimumLowPowerReadingsCountWithMovementToTriggerTrip = 3
     let maximumLowPowerReadingsCountWithoutMovement = 10
     
     let minimumBatteryForTracking : Float = 0.2
@@ -28,7 +32,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
     private var isInLowPowerState : Bool = false
-    private var lowPowerReadingsCount = 0
+    private var lowPowerReadingsWithMotion = 0
+    private var lowPowerReadingsWithoutMotionCount = 0
     
     private var lastLowPowerLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
@@ -66,7 +71,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
-    private func appDidBecomeActive() {
+    func appDidBecomeActive() {
         if (self.currentTrip != nil && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > 100.0) {
             // if the app becomes active, check to see if we should wrap up a trip.
             DDLogWrapper.logVerbose("Ending trip after app became activate.")
@@ -75,7 +80,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func startup() {
-        self.locationManager.delegate = self;
+        self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
     }
     
@@ -169,6 +174,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             }
         }
         
+        self.stopActiveMonitoring(self.lastMovingLocation)
+        
         self.currentTrip = nil
         self.lastMovingLocation = nil
     }
@@ -190,7 +197,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInLowPowerState) {
-            self.lowPowerReadingsCount = 0
+            self.lowPowerReadingsWithMotion = 0
+            self.lowPowerReadingsWithoutMotionCount = 0
             self.isInLowPowerState = true
         }
         self.lastLowPowerLocation = nil
@@ -198,12 +206,36 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
     }
     
-    private func stopActiveMonitoring() {
+    private func disableAllGeofences() {
+        for region in self.locationManager.monitoredRegions {
+            self.locationManager.stopMonitoringForRegion(region as CLRegion)
+        }
+        
+        self.geofenceSleepRegion = nil
+    }
+    
+    private func stopActiveMonitoring(finalLocation: CLLocation?) {
         DDLogWrapper.logInfo("Stopping active monitoring")
+        
+        self.disableAllGeofences()
+        
+        if (finalLocation != nil) {
+            #if DEBUG
+                let notif = UILocalNotification()
+                notif.alertBody = "Geofenced!"
+                notif.category = "RIDE_COMPLETION_CATEGORY"
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            #endif
+            self.geofenceSleepRegion = CLCircularRegion(center:finalLocation!.coordinate, radius:self.geofenceSleepRegionRadius, identifier: "Movement Geofence")
+            self.locationManager.startMonitoringForRegion(self.geofenceSleepRegion)
+        } else {
+            DDLogWrapper.logInfo("Did not setup new geofence!")
+        }
         
         self.locationManagerIsUpdating = false
         self.locationManager.stopUpdatingLocation()
     }
+    
     
     private func beginDeferringUpdatesIfAppropriate() {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
@@ -239,7 +271,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Paused Tracking")
-        self.stopActiveMonitoring()
+        self.disableAllGeofences()
         self.locationManager.stopMonitoringSignificantLocationChanges()
     }
     
@@ -252,7 +284,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             DDLogWrapper.logInfo("Paused Tracking due to battery life")
             
-            self.stopActiveMonitoring()
+            self.stopActiveMonitoring(nil)
         }
     }
     
@@ -277,6 +309,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
             self.locationManager.startMonitoringSignificantLocationChanges()
+            self.startLowPowerMonitoring()
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogWrapper.logVerbose("Not authorized for location access!")
@@ -387,25 +420,32 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             }
             
+            self.lastLowPowerLocation = locations.first
+
             if (foundSufficientMovement) {
-                self.startTripFromLocation(locations.first!)
+                self.lowPowerReadingsWithMotion += 1
                 
-                for location in locations {
-                    if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-                        Location(location: location as CLLocation, trip: self.currentTrip!)
+                if(self.lowPowerReadingsWithoutMotionCount >= self.minimumLowPowerReadingsCountWithMovementToTriggerTrip) {
+                    DDLogWrapper.logVerbose("Found enough motion in low power mode, triggers trip…")
+                    self.startTripFromLocation(self.lastLowPowerLocation!)
+                    
+                    for location in locations {
+                        if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                            Location(location: location as CLLocation, trip: self.currentTrip!)
+                        }
                     }
+                } else {
+                    DDLogWrapper.logVerbose("Found motion in low power mode, awaiting further reads…")
                 }
             } else {
                 DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
-                
-                if (self.lowPowerReadingsCount > self.maximumLowPowerReadingsCountWithoutMovement) {
+                self.lowPowerReadingsWithoutMotionCount += 1
+
+                if (self.lowPowerReadingsWithoutMotionCount > self.maximumLowPowerReadingsCountWithoutMovement) {
                     DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
-                    self.stopActiveMonitoring()
+                    self.stopActiveMonitoring(self.lastLowPowerLocation)
                 }
             }
-            
-            self.lastLowPowerLocation = locations.first
-            self.lowPowerReadingsCount += 1
         } else {
             // We are currently in background mode and got course-scale movement.
             // We now enter a low power state to monitor for user movement
