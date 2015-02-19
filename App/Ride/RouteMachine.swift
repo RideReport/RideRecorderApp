@@ -18,11 +18,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let routeResumeTimeout : NSTimeInterval = 240
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     
-    let geofenceSleepRegionRadius : Double = 80
+    let geofenceSleepRegionRadius : Double = 30
     private var geofenceSleepRegion :  CLCircularRegion!
     
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
-    let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 60
+    let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
     let minimumLowPowerReadingsCountWithMovementToTriggerTrip = 3
     let maximumLowPowerReadingsCountWithoutMovement = 10
@@ -363,7 +363,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Got geofence exit, entering low power state.")
         self.startLowPowerMonitoring()
     }
-        
+    
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         DDLogWrapper.logVerbose("Received location updates.")
 
@@ -386,7 +386,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
                 
                 if (location.speed >= self.minimumSpeedToContinueMonitoring) {
-                    self.lastMovingLocation = location
+                    if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
+                        // if the event is more recent than the one we already have
+                        self.lastMovingLocation = location
+                    }
                     if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
                         Location(location: location as CLLocation, trip: self.currentTrip!)
                     }
