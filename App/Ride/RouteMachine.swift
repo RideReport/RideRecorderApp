@@ -12,7 +12,7 @@ import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
-    var minimumSpeedToStartMonitoring : CLLocationSpeed = 4.4 // ~10mph
+    var minimumSpeedToStartMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
     
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     let routeResumeTimeout : NSTimeInterval = 240
@@ -190,6 +190,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.locationManager.startUpdatingLocation()
         }
         
+        #if DEBUG
+            let notif = UILocalNotification()
+            notif.alertBody = "Entered low power state!"
+            notif.category = "RIDE_COMPLETION_CATEGORY"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        #endif
         DDLogWrapper.logInfo("Entering low power state")
         
         self.locationManager.distanceFilter = 100
@@ -352,6 +358,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.beginDeferringUpdatesIfAppropriate()
     }
     
+    func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
+        // Enter a low power state to monitor for user movement
+        DDLogWrapper.logVerbose("Got geofence exit, entering low power state.")
+        self.startLowPowerMonitoring()
+    }
+        
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         DDLogWrapper.logVerbose("Received location updates.")
 
@@ -451,7 +463,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             }
         } else {
-            // We are currently in background mode and got course-scale movement.
+            // We are currently in background mode and got significant location change movement.
             // We now enter a low power state to monitor for user movement
             DDLogWrapper.logVerbose("Got significant location update, entering low power state.")
             self.startLowPowerMonitoring()
