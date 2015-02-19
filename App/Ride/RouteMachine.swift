@@ -11,14 +11,14 @@ import CoreLocation
 import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
-    let locationTrackingDeferralTimeout : NSTimeInterval = 120
+    var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
+    var minimumSpeedToStartMonitoring : CLLocationSpeed = 4.4 // ~10mph
     
+    let locationTrackingDeferralTimeout : NSTimeInterval = 120
     let routeResumeTimeout : NSTimeInterval = 240
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
-    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
-    let minimumSpeedToStartMonitoring : CLLocationSpeed = 4.4 // ~10mph
     
-    let geofenceSleepRegionRadius : Double = 30
+    let geofenceSleepRegionRadius : Double = 80
     private var geofenceSleepRegion :  CLCircularRegion!
     
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
@@ -202,8 +202,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.isInLowPowerState = true
         }
         self.lastLowPowerLocation = nil
-        
-        self.locationManager.disallowDeferredLocationUpdates()
     }
     
     private func disableAllGeofences() {
@@ -228,11 +226,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             #endif
             self.geofenceSleepRegion = CLCircularRegion(center:finalLocation!.coordinate, radius:self.geofenceSleepRegionRadius, identifier: "Movement Geofence")
             self.locationManager.startMonitoringForRegion(self.geofenceSleepRegion)
+            DDLogWrapper.logInfo(NSString(format: "Set up geofence: %@!", self.geofenceSleepRegion))
         } else {
             DDLogWrapper.logInfo("Did not setup new geofence!")
         }
         
         self.locationManagerIsUpdating = false
+        self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
     }
     
@@ -324,6 +324,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManagerDidResumeLocationUpdates(manager: CLLocationManager!) {
         // Should never happen
         DDLogWrapper.logError("Did Resume location updates!")
+    }
+    
+    func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
+        DDLogWrapper.logError(NSString(format: "Got location monitoring error! %@", error))
     }
     
     func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
@@ -425,7 +429,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             if (foundSufficientMovement) {
                 self.lowPowerReadingsWithMotion += 1
                 
-                if(self.lowPowerReadingsWithoutMotionCount >= self.minimumLowPowerReadingsCountWithMovementToTriggerTrip) {
+                if(self.lowPowerReadingsWithMotion >= self.minimumLowPowerReadingsCountWithMovementToTriggerTrip) {
                     DDLogWrapper.logVerbose("Found enough motion in low power mode, triggers trip…")
                     self.startTripFromLocation(self.lastLowPowerLocation!)
                     
