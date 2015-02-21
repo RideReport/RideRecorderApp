@@ -143,6 +143,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
             // for non-bike trips, show activity type instead of a rating
             ratingString = trip.activityTypeString()
+        } else if (trip.incidents != nil && trip.incidents.count > 0) {
+            ratingString = "🚩"
         } else if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
             ratingString = "👍"
         } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {

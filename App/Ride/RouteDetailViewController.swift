@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
+class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
     var mainViewController: MainViewController! = nil
     @IBOutlet weak var thumbsUpButton: UIButton!
     @IBOutlet weak var thumbsDownButton: UIButton!
@@ -26,8 +26,7 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         
         var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         var effectView = UIVisualEffectView(effect: blur)
-        let navHeight = self.navigationController?.navigationBar.frame.size.height
-        effectView.frame = CGRectMake(0, navHeight!, self.view.frame.width, self.view.frame.height - navHeight!)
+        effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.addSubview(effectView)
         self.view.sendSubviewToBack(effectView)
         
@@ -50,10 +49,10 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         
         let trip = self.mainViewController.selectedTrip
         
-        self.distanceLabel.text = NSString(format: "%.1fm", trip.lengthMiles)
+        self.distanceLabel.text = NSString(format: "%.1f miles", trip.lengthMiles)
         
         let speedMph = trip.averageSpeed*2.23694
-        self.tripSpeedLabel.text = NSString(format: "%.1fmph", speedMph)
+        self.tripSpeedLabel.text = NSString(format: "%.1f mph", speedMph)
         
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
@@ -168,6 +167,12 @@ class RouteDetailViewController: UIViewController, UIActionSheetDelegate {
         }
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.destinationViewController.isKindOfClass(RouteIncidentsViewController) {
+            let incidentViewController = segue.destinationViewController as RouteIncidentsViewController
+            incidentViewController.mainViewController = self.mainViewController
+        }
+    }
     
     override func performSegueWithIdentifier(identifier: String?, sender: AnyObject?) {
         self.mainViewController = (sender as RoutesViewController).mainViewController

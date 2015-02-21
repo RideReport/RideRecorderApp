@@ -51,10 +51,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
         rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
         
+        let flagAction = UIMutableUserNotificationAction()
+        flagAction.identifier = "FLAG_IDENTIFIER"
+        flagAction.title = "🚩"
+        flagAction.activationMode = UIUserNotificationActivationMode.Background
+        flagAction.destructive = true
+        flagAction.authenticationRequired = false
+        
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
-        rideStartedCategory.setActions([], forContext: UIUserNotificationActionContext.Minimal)
-        rideStartedCategory.setActions([], forContext: UIUserNotificationActionContext.Default)
+        rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Minimal)
+        rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Default)
         
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
         let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(objects: rideCompleteCategory, rideStartedCategory))
@@ -105,14 +112,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+        let trip = Trip.mostRecentTrip()
+        
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
-            Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Good.rawValue)
+            trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip(), syncInBackground: true)
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-            Trip.mostRecentTrip().rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+            trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(Trip.mostRecentTrip(), syncInBackground: true)
+            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+        } else if (identifier == "FLAG_IDENTIFIER") {
+            let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
+            CoreDataController.sharedCoreDataController.saveContext()
         }
     }
 

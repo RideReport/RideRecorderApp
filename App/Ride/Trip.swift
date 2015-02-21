@@ -35,6 +35,7 @@ class Trip : NSManagedObject {
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
     @NSManaged var locations : NSOrderedSet!
+    @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
     @NSManaged var isClosed : Bool
@@ -364,6 +365,12 @@ class Trip : NSManagedObject {
             
             handler()
         }
+    }
+    
+    func mostRecentLocation() -> Location? {
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
+        let loc = self.locations.sortedArrayUsingDescriptors([sortDescriptor]).first as Location
+        return loc
     }
     
     var startDate : NSDate! {

@@ -19,6 +19,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
+    private var incidentAnnotations : [Incident : MKAnnotation]!
     private var hasCenteredMap : Bool = false
     
     private var privacyCircle : MKCircle?
@@ -42,6 +43,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.addGestureRecognizer(mapTapRecognizer)
         
         self.tripPolyLines = [:]
+        self.incidentAnnotations = [:]
         
         self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
         self.privacyCirclePanGesture.delegate = self
@@ -309,6 +311,19 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.tripPolyLines[trip] = polyline
         self.mapView.addOverlay(polyline)
         
+        for item in trip.incidents.array {
+            let incident = item as Incident
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = incident.location!.coordinate()
+            
+            annotation.title = incident.typeString
+            annotation.subtitle = incident.body
+            
+            self.mapView.addAnnotation(annotation)
+            
+            self.incidentAnnotations[incident] = annotation
+        }
+        
         if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
             self.setSelectedTrip(trip)
         }
@@ -328,25 +343,37 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         if (annotation.isKindOfClass(MKUserLocation)) {
             return nil;
         } else if (annotation.isKindOfClass(MKPointAnnotation)) {
-            let reuseID = "PointAnnotationViewReuseID"
-            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
-            if (annotationView == nil) {
-                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-                annotationView.canShowCallout = true
+            if (self.tripAnnotations! as NSArray).containsObject(annotation) {
+                let reuseID = "LocationAnnotationViewReuseID"
+                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
+                if (annotationView == nil) {
+                    annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+                    annotationView.canShowCallout = true
+                    
+                    let circleRadius : CGFloat = 1.0
+                    let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
+                    pointView.backgroundColor = UIColor.blackColor()
+                    pointView.alpha = 0.1;
+                    pointView.layer.cornerRadius = circleRadius;
+                    annotationView.addSubview(pointView)
+                    annotationView.frame = pointView.frame
+                    
+                }
                 
-                let circleRadius : CGFloat = 1.0
-                let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
-                pointView.backgroundColor = UIColor.blackColor()
-                pointView.alpha = 0.1;
-                pointView.layer.cornerRadius = circleRadius;
-                annotationView.addSubview(pointView)
-                annotationView.frame = pointView.frame
+                annotationView.annotation = annotation
                 
+                return annotationView
+            } else {
+                let reuseID = "IncidentAnnotationViewReuseID"
+                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKPinAnnotationView?
+
+                if (annotationView == nil) {
+                    annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+                    annotationView!.pinColor = MKPinAnnotationColor.Red
+                    annotationView!.canShowCallout = true
+                }
+                return annotationView
             }
-            
-            annotationView.annotation = annotation
-            
-            return annotationView
         }
         
         return nil;
