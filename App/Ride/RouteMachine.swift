@@ -200,7 +200,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
         // Use a high distance filter with full accuracy
-        self.locationManager.distanceFilter = 100
+        self.locationManager.distanceFilter = 10
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.disallowDeferredLocationUpdates()
         
@@ -362,8 +362,12 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
         // Enter a to monitor for user movement
-        DDLogWrapper.logVerbose("Got geofence exit, entering Motion Monitoring state.")
-        self.startMotionMonitoring()
+        if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
+            DDLogWrapper.logVerbose("Got geofence exit, entering Motion Monitoring state.")
+            self.startMotionMonitoring()
+        } else {
+            DDLogWrapper.logVerbose("Got geofence exit but already in Motion Monitoring or active tracking state.")
+        }
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -425,9 +429,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                     break
                 }
                 
-                // Some times locations given in motion monitoring mode will not have a speed.
+                // Some times locations given in motion monitoring mode will not have a speed (or a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
-                if (self.lastMotionMonitoringLocation != nil) {
+                if (location.speed <= 0 && self.lastMotionMonitoringLocation != nil) {
                     let distance = self.lastMotionMonitoringLocation!.distanceFromLocation(location)
                     let time = abs(location.timestamp.timeIntervalSinceDate(self.lastMotionMonitoringLocation!.timestamp))
                     
