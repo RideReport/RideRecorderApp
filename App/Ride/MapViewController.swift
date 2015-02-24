@@ -68,7 +68,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let lastLoc = currentTrip.locations.lastObject as Location
             var secondToLastLoc = currentTrip.locations[currentTrip.locations.count - 2] as Location
 
-            let camera = MKMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2DMake(lastLoc.latitude.doubleValue, lastLoc.longitude.doubleValue), fromEyeCoordinate: CLLocationCoordinate2DMake(secondToLastLoc.latitude.doubleValue, secondToLastLoc.longitude.doubleValue), eyeAltitude: 0)
+            let camera = MKMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2DMake(lastLoc.latitude!.doubleValue, lastLoc.longitude!.doubleValue), fromEyeCoordinate: CLLocationCoordinate2DMake(secondToLastLoc.latitude!.doubleValue, secondToLastLoc.longitude!.doubleValue), eyeAltitude: 0)
             camera.pitch = 80
             self.mapView.setCamera(camera, animated: true)
         }
@@ -229,9 +229,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 annotation.title = NSString(format: "%i", count)
             }
             if (location.date != nil) {
-                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed.doubleValue)
+                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed!.doubleValue)
             } else {
-                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed.doubleValue)
+                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed!.doubleValue)
             }
             
             self.mapView.addAnnotation(annotation)

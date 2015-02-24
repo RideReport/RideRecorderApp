@@ -156,7 +156,7 @@ class Trip : NSManagedObject {
         location.horizontalAccuracy = NSNumber(double: 0.0)
         location.latitude = NSNumber(double: coordinate.latitude)
         location.longitude = NSNumber(double: coordinate.longitude)
-        location.speed = self.locations.objectAtIndex(1).speed
+        location.speed = self.locations.objectAtIndex(1).speed!
         location.isSmoothedLocation = true
         
         return location
@@ -386,9 +386,9 @@ class Trip : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as Location
-            if (location.speed.doubleValue > 0 && location.horizontalAccuracy.doubleValue <= kCLLocationAccuracyNearestTenMeters) {
+            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= kCLLocationAccuracyNearestTenMeters) {
                 count++
-                sumSpeed += (location as Location).speed.doubleValue
+                sumSpeed += (location as Location).speed!.doubleValue
             }
         }
         

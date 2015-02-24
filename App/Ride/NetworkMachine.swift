@@ -99,12 +99,12 @@ class NetworkMachine {
             let aLocation = location as Location
             if !aLocation.isPrivate.boolValue {
                 locations.append([
-                    "course": aLocation.course,
+                    "course": aLocation.course!,
                     "date": self.jsonify(aLocation.date!),
-                    "horizontalAccuracy": aLocation.horizontalAccuracy,
-                    "speed": aLocation.speed,
-                    "longitude": aLocation.longitude,
-                    "latitude": aLocation.latitude
+                    "horizontalAccuracy": aLocation.horizontalAccuracy!,
+                    "speed": aLocation.speed!,
+                    "longitude": aLocation.longitude!,
+                    "latitude": aLocation.latitude!
                     ])
             }
         }

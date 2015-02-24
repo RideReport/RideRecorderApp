@@ -13,13 +13,13 @@ import CoreMotion
 import MapKit
 
 class Location : NSManagedObject {
-    @NSManaged var course : NSNumber
-    @NSManaged var horizontalAccuracy : NSNumber
+    @NSManaged var course : NSNumber?
+    @NSManaged var horizontalAccuracy : NSNumber?
     @NSManaged var isPrivate : Bool
     @NSManaged var isSmoothedLocation : Bool
-    @NSManaged var latitude : NSNumber
-    @NSManaged var longitude : NSNumber
-    @NSManaged var speed : NSNumber
+    @NSManaged var latitude : NSNumber?
+    @NSManaged var longitude : NSNumber?
+    @NSManaged var speed : NSNumber?
     @NSManaged var trip : Trip?
     @NSManaged var incident : Incident?
     @NSManaged var date : NSDate?
@@ -90,7 +90,7 @@ class Location : NSManagedObject {
         var filteredResults : [AnyObject] = []
         let centerLocation = CLLocation(latitude: circle.coordinate.latitude, longitude: circle.coordinate.longitude)
         for loc in results! {
-            let aLocation = CLLocation(latitude: (loc as Location).latitude.doubleValue, longitude: (loc as Location).longitude.doubleValue)
+            let aLocation = CLLocation(latitude: (loc as Location).latitude!.doubleValue, longitude: (loc as Location).longitude!.doubleValue)
             let distanceFromCenter = centerLocation.distanceFromLocation(aLocation)
             if (distanceFromCenter <= circle.radius) {
                 filteredResults.append(loc)
@@ -101,7 +101,7 @@ class Location : NSManagedObject {
     }
     
     func coordinate() -> CLLocationCoordinate2D {
-        return CLLocationCoordinate2DMake(self.latitude.doubleValue, self.longitude.doubleValue)
+        return CLLocationCoordinate2DMake(self.latitude!.doubleValue, self.longitude!.doubleValue)
     }
     
     func mapItem() -> MKMapItem {
@@ -109,7 +109,7 @@ class Location : NSManagedObject {
         return MKMapItem(placemark: placemark)
     }
     
-    func clLocation() -> CLLocation! {
-        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude.doubleValue, longitude: self.longitude.doubleValue), altitude: 0.0, horizontalAccuracy: self.horizontalAccuracy.doubleValue, verticalAccuracy: 0.0, course: self.course.doubleValue, speed: self.speed.doubleValue, timestamp: self.date)
+    func clLocation() -> CLLocation {
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date)
     }
 }
