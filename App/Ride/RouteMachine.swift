@@ -239,6 +239,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logInfo("Did not setup new geofence!")
         }
         
+        self.isInMotionMonitoringState = false
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
