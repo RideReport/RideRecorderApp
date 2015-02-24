@@ -24,13 +24,14 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
     let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
-    let minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip = 3
-    let maximumMotionMonitoringReadingsCountWithoutMovement = 10
+    let minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip = 2
+    let maximumMotionMonitoringReadingsCountWithoutMovement = 6
     
     let minimumBatteryForTracking : Float = 0.2
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
+    
     private var isInMotionMonitoringState : Bool = false
     private var motionMonitoringReadingsWithMotion = 0
     private var motionMonitoringReadingsWithoutMotionCount = 0
@@ -198,8 +199,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         #endif
         DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
+        // Use a high distance filter with full accuracy
         self.locationManager.distanceFilter = 100
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
