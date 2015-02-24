@@ -24,18 +24,18 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
     let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
-    let minimumLowPowerReadingsCountWithMovementToTriggerTrip = 3
-    let maximumLowPowerReadingsCountWithoutMovement = 10
+    let minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip = 3
+    let maximumMotionMonitoringReadingsCountWithoutMovement = 10
     
     let minimumBatteryForTracking : Float = 0.2
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
-    private var isInLowPowerState : Bool = false
-    private var lowPowerReadingsWithMotion = 0
-    private var lowPowerReadingsWithoutMotionCount = 0
+    private var isInMotionMonitoringState : Bool = false
+    private var motionMonitoringReadingsWithMotion = 0
+    private var motionMonitoringReadingsWithoutMotionCount = 0
     
-    private var lastLowPowerLocation :  CLLocation?
+    private var lastMotionMonitoringLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
     
     private var locationManager : CLLocationManager!
@@ -145,7 +145,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         }
         
-        self.isInLowPowerState = false
+        self.isInMotionMonitoringState = false
     }
     
     private func stopTrip() {
@@ -180,9 +180,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.lastMovingLocation = nil
     }
     
-    private func startLowPowerMonitoring() {
+    private func startMotionMonitoring() {
         if (isPaused()) {
-            DDLogWrapper.logInfo("Tracking is Paused, not enterign low power state")
+            DDLogWrapper.logInfo("Tracking is Paused, not enterign Motion Monitoring state")
             
             return
         } else if (!self.locationManagerIsUpdating) {
@@ -192,22 +192,22 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         #if DEBUG
             let notif = UILocalNotification()
-            notif.alertBody = "Entered low power state!"
+            notif.alertBody = "Entered Motion Monitoring state!"
             notif.category = "RIDE_COMPLETION_CATEGORY"
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
         #endif
-        DDLogWrapper.logInfo("Entering low power state")
+        DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
         self.locationManager.distanceFilter = 100
         self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
         self.locationManager.disallowDeferredLocationUpdates()
         
-        if (!self.isInLowPowerState) {
-            self.lowPowerReadingsWithMotion = 0
-            self.lowPowerReadingsWithoutMotionCount = 0
-            self.isInLowPowerState = true
+        if (!self.isInMotionMonitoringState) {
+            self.motionMonitoringReadingsWithMotion = 0
+            self.motionMonitoringReadingsWithoutMotionCount = 0
+            self.isInMotionMonitoringState = true
         }
-        self.lastLowPowerLocation = nil
+        self.lastMotionMonitoringLocation = nil
     }
     
     private func disableAllGeofences() {
@@ -244,7 +244,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     
     private func beginDeferringUpdatesIfAppropriate() {
-        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInLowPowerState && self.currentTrip != nil) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInMotionMonitoringState && self.currentTrip != nil) {
             DDLogWrapper.logVerbose("Re-deferring updates")
             
             self.isDefferringLocationUpdates = true
@@ -315,7 +315,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
             self.locationManager.startMonitoringSignificantLocationChanges()
-            self.startLowPowerMonitoring()
+            self.startMotionMonitoring()
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogWrapper.logVerbose("Not authorized for location access!")
@@ -359,9 +359,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
-        // Enter a low power state to monitor for user movement
-        DDLogWrapper.logVerbose("Got geofence exit, entering low power state.")
-        self.startLowPowerMonitoring()
+        // Enter a to monitor for user movement
+        DDLogWrapper.logVerbose("Got geofence exit, entering Motion Monitoring state.")
+        self.startMotionMonitoring()
     }
     
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -375,7 +375,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.beginDeferringUpdatesIfAppropriate()
         
         if (self.currentTrip != nil) {
-            // We are current tracking a trip in high power mode
+            // We are current tracking a trip
             
             var foundPositiveSpeed = false
             
@@ -410,43 +410,43 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 CoreDataController.sharedCoreDataController.saveContext()
                 NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
             }
-        } else if (self.isInLowPowerState) {
-            // We are current considering starting a trip in low power mode
+        } else if (self.isInMotionMonitoringState) {
+            // We are current considering starting a trip in motion monitoring mode
             
             var foundSufficientMovement = false
             
             for location in locations {
-                DDLogWrapper.logVerbose(NSString(format: "Location found in low power mode. Speed: %f", location.speed))
+                DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
                 if (location.speed >= self.minimumSpeedToStartMonitoring) {
-                    DDLogWrapper.logVerbose("Found movement while in low power state")
+                    DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
                     foundSufficientMovement = true
                     break
                 }
                 
-                // Many times locations given in low power mode will not have a speed.
+                // Some times locations given in motion monitoring mode will not have a speed.
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
-                if (self.lastLowPowerLocation != nil) {
-                    let distance = self.lastLowPowerLocation!.distanceFromLocation(location)
-                    let time = abs(location.timestamp.timeIntervalSinceDate(self.lastLowPowerLocation!.timestamp))
+                if (self.lastMotionMonitoringLocation != nil) {
+                    let distance = self.lastMotionMonitoringLocation!.distanceFromLocation(location)
+                    let time = abs(location.timestamp.timeIntervalSinceDate(self.lastMotionMonitoringLocation!.timestamp))
                     
                     let speed = distance/time
                     DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
                     if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
                         // We ignore really large speeds that may be the result of location inaccuracy
-                        DDLogWrapper.logVerbose("Found movement while in low power state via manual speed!")
+                        DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
                         foundSufficientMovement = true
                     }
                 }
             }
             
-            self.lastLowPowerLocation = locations.first
+            self.lastMotionMonitoringLocation = locations.first
 
             if (foundSufficientMovement) {
-                self.lowPowerReadingsWithMotion += 1
+                self.motionMonitoringReadingsWithMotion += 1
                 
-                if(self.lowPowerReadingsWithMotion >= self.minimumLowPowerReadingsCountWithMovementToTriggerTrip) {
-                    DDLogWrapper.logVerbose("Found enough motion in low power mode, triggers trip…")
-                    self.startTripFromLocation(self.lastLowPowerLocation!)
+                if(self.motionMonitoringReadingsWithMotion >= self.minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip) {
+                    DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggers trip…")
+                    self.startTripFromLocation(self.lastMotionMonitoringLocation!)
                     
                     for location in locations {
                         if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
@@ -454,22 +454,22 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                         }
                     }
                 } else {
-                    DDLogWrapper.logVerbose("Found motion in low power mode, awaiting further reads…")
+                    DDLogWrapper.logVerbose("Found motion in motion monitoring mode, awaiting further reads…")
                 }
             } else {
-                DDLogWrapper.logVerbose("Did NOT find movement while in low power state")
-                self.lowPowerReadingsWithoutMotionCount += 1
+                DDLogWrapper.logVerbose("Did NOT find movement while in motion monitoring state")
+                self.motionMonitoringReadingsWithoutMotionCount += 1
 
-                if (self.lowPowerReadingsWithoutMotionCount > self.maximumLowPowerReadingsCountWithoutMovement) {
-                    DDLogWrapper.logVerbose("Max low power readings exceeded, stopping!")
-                    self.stopActiveMonitoring(self.lastLowPowerLocation)
+                if (self.motionMonitoringReadingsWithoutMotionCount > self.maximumMotionMonitoringReadingsCountWithoutMovement) {
+                    DDLogWrapper.logVerbose("Max motion monitoring readings exceeded, stopping!")
+                    self.stopActiveMonitoring(self.lastMotionMonitoringLocation)
                 }
             }
         } else {
             // We are currently in background mode and got significant location change movement.
-            // We now enter a low power state to monitor for user movement
-            DDLogWrapper.logVerbose("Got significant location update, entering low power state.")
-            self.startLowPowerMonitoring()
+            // We now enter a state to monitor for user movement
+            DDLogWrapper.logVerbose("Got significant location update, entering motion monitoring state.")
+            self.startMotionMonitoring()
         }
     }
 }
