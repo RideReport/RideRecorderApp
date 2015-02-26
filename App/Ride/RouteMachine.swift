@@ -24,7 +24,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
     let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
-    let minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip = 2
+    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 3
+    let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
     let maximumMotionMonitoringReadingsCountWithoutMovement = 6
     
     let minimumBatteryForTracking : Float = 0.2
@@ -33,7 +34,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var locationManagerIsUpdating : Bool = false
     
     private var isInMotionMonitoringState : Bool = false
-    private var motionMonitoringReadingsWithMotion = 0
+    private var motionMonitoringReadingsWithManualMotion = 0
+    private var motionMonitoringReadingsWithGPSMotion = 0
     private var motionMonitoringReadingsWithoutMotionCount = 0
     
     private var lastMotionMonitoringLocation :  CLLocation?
@@ -205,7 +207,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
-            self.motionMonitoringReadingsWithMotion = 0
+            self.motionMonitoringReadingsWithManualMotion = 0
+            self.motionMonitoringReadingsWithGPSMotion = 0
             self.motionMonitoringReadingsWithoutMotionCount = 0
             self.isInMotionMonitoringState = true
         }
@@ -426,6 +429,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
                 if (location.speed >= self.minimumSpeedToStartMonitoring) {
                     DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
+                    self.motionMonitoringReadingsWithGPSMotion += 1
                     foundSufficientMovement = true
                     break
                 }
@@ -441,6 +445,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                     if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
                         // We ignore really large speeds that may be the result of location inaccuracy
                         DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
+                        self.motionMonitoringReadingsWithManualMotion += 1
                         foundSufficientMovement = true
                     }
                 }
@@ -449,10 +454,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.lastMotionMonitoringLocation = locations.first
 
             if (foundSufficientMovement) {
-                self.motionMonitoringReadingsWithMotion += 1
-                
-                if(self.motionMonitoringReadingsWithMotion >= self.minimumMotionMonitoringReadingsCountWithMovementToTriggerTrip) {
-                    DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggers trip…")
+                if(self.motionMonitoringReadingsWithManualMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
+                    self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
+                    DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggering trip…")
                     self.startTripFromLocation(self.lastMotionMonitoringLocation!)
                     
                     for location in locations {
