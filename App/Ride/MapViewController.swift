@@ -17,6 +17,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     @IBOutlet weak var privacyCircleToolbar: UIToolbar!
     
+    private var tripsAreLoaded = false
     private var tripPolyLines : [Trip : MKPolyline]!
     private var tripAnnotations : [MKAnnotation]!
     private var incidentAnnotations : [Incident : MKAnnotation]!
@@ -34,30 +35,84 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
         
+        self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
+        self.privacyCirclePanGesture.delegate = self
+        
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
-        self.mapView.pitchEnabled = true
-        self.mapView.showsBuildings = true
-        
+
         let mapTapRecognizer = UITapGestureRecognizer(target: self, action: "mapTapGesture:")
         self.mapView.addGestureRecognizer(mapTapRecognizer)
+        self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
         self.tripPolyLines = [:]
         self.incidentAnnotations = [:]
         
-        self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
-        self.privacyCirclePanGesture.delegate = self
-        self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
-        
+
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            self.loadTrips()
+        }
+
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            self.unloadTrips()
         }
     }
     
-    override func didMoveToParentViewController(parent: UIViewController?) {
-        self.mainViewController = parent as MainViewController
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.loadTrips()
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        self.unloadTrips()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.unloadTrips()
+    }
+    
+    func loadTrips() {
+        if (self.tripsAreLoaded) {
+            return
+        }
+        
+        self.tripsAreLoaded = true
         
         for trip in Trip.allTrips()! {
             self.refreshTrip(trip as Trip)
         }
+    }
+    
+    func unloadTrips() {
+        self.setSelectedTrip(nil)
+        
+        for line in self.tripPolyLines.values {
+            self.mapView.removeOverlay(line)
+        }
+        
+        for annotation in self.tripAnnotations! {
+            self.mapView.removeAnnotation(annotation)
+        }
+        
+        for annotation in self.incidentAnnotations.values {
+            self.mapView.removeAnnotation(annotation)
+        }
+        
+        self.tripPolyLines.removeAll(keepCapacity: false)
+        self.incidentAnnotations.removeAll(keepCapacity: false)
+        self.tripAnnotations.removeAll(keepCapacity: false)
+        self.tripsAreLoaded = false
+        
+        CoreDataController.sharedCoreDataController.managedObjectContext?.reset()
+    }
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        self.mainViewController = parent as MainViewController
     }
     
     func enterPrivacyCircleEditor() {
@@ -171,11 +226,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     @IBAction func addIncident(sender: AnyObject) {
         DDLogWrapper.logVerbose("Add incident")
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     
     func setSelectedTrip(trip : Trip!) {
         if (self.tripAnnotations != nil && self.tripAnnotations.count > 0) {
@@ -276,13 +326,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         var count : Int = 0
         for location in trip.locations.array {
             let location = (location as Location)
-            if (location.isPrivate.boolValue) {
-                continue
-            }
             
             let coord = location.coordinate()
-            coordinates.append(coord)
-            count++
+            
+            if (!location.isPrivate.boolValue) {
+                coordinates.append(coord)
+                count++
+            }
         }
         
         let polyline = MKPolyline(coordinates: &coordinates, count: count)
