@@ -14,7 +14,27 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     var mainViewController: MainViewController! = nil
     
-    private var fetchedResultsController : NSFetchedResultsController! = nil
+    
+    private var _fetchedResultsController : NSFetchedResultsController? = nil
+    private var fetchedResultsController : NSFetchedResultsController  {
+        get {
+            if (_fetchedResultsController != nil) {
+                return _fetchedResultsController!
+            }
+            
+            let cacheName = "RoutesViewControllerFetchedResultsController"
+            let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+            NSFetchedResultsController.deleteCacheWithName(cacheName)
+            let fetchedRequest = NSFetchRequest(entityName: "Trip")
+            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            
+            _fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
+            _fetchedResultsController!.delegate = self
+            _fetchedResultsController!.performFetch(nil)
+            
+            return _fetchedResultsController!
+        }
+    }
 
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
@@ -44,15 +64,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
         
-        let cacheName = "RoutesViewControllerFetchedResultsController"
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
-        NSFetchedResultsController.deleteCacheWithName(cacheName)
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
-        self.fetchedResultsController.delegate = self
-        self.fetchedResultsController.performFetch(nil)
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            self.unloadFetchedResultsController()
+        }
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -64,20 +78,33 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        
         self.mainViewController.setSelectedTrip(nil, sender:self)
         
         if (self.tableView.indexPathForSelectedRow() != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow()!, animated: animated)
         }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
         
-        super.viewWillAppear(animated)
+        self.unloadFetchedResultsController()
     }
     
     override func viewWillDisappear(animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        
         super.viewWillDisappear(animated)
+        
+        self.unloadFetchedResultsController()
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    func unloadFetchedResultsController() {
+        _fetchedResultsController?.delegate = nil
+        _fetchedResultsController = nil
     }
     
     func setSelectedTrip(trip : Trip!) {

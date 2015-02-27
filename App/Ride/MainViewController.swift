@@ -50,7 +50,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.refreshPauseResumeTrackingButtonUI()
         
         let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
@@ -60,8 +62,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         }
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        self.selectedTrip = nil
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.selectedTrip = nil
+    }
+    
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Unload Data")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -122,6 +136,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             sendLogFile()
         } else if (buttonIndex == 3) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
+        } else {
+            self.mapViewController.unloadTrips()
+            self.routesViewController.unloadFetchedResultsController()
         }
     }
     

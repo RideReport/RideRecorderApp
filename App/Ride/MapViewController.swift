@@ -49,28 +49,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.privacyCirclePanGesture.delegate = self
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
-        NSNotificationCenter.defaultCenter().addObserverForName("RouteMachineDidUpdatePoints", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            let state = UIApplication.sharedApplication().applicationState
-            if (state == UIApplicationState.Background || state == UIApplicationState.Inactive) {
-               return
-            }
-            
-            let currentTrip : Trip! = RouteMachine.sharedMachine.currentTrip!
-            if currentTrip == nil {
-                return
-            }
-            self.refreshTrip(currentTrip)
-            
-            if (currentTrip.locations.count <= 1) {
-                return
-            }
-
-            let lastLoc = currentTrip.locations.lastObject as Location
-            var secondToLastLoc = currentTrip.locations[currentTrip.locations.count - 2] as Location
-
-            let camera = MKMapCamera(lookingAtCenterCoordinate: CLLocationCoordinate2DMake(lastLoc.latitude!.doubleValue, lastLoc.longitude!.doubleValue), fromEyeCoordinate: CLLocationCoordinate2DMake(secondToLastLoc.latitude!.doubleValue, secondToLastLoc.longitude!.doubleValue), eyeAltitude: 0)
-            camera.pitch = 80
-            self.mapView.setCamera(camera, animated: true)
         }
     }
     
