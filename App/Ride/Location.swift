@@ -12,7 +12,7 @@ import CoreLocation
 import CoreMotion
 import MapKit
 
-class Location : NSManagedObject {
+class Location : NSManagedObject {    
     @NSManaged var course : NSNumber?
     @NSManaged var horizontalAccuracy : NSNumber?
     @NSManaged var isPrivate : Bool
@@ -21,6 +21,7 @@ class Location : NSManagedObject {
     @NSManaged var longitude : NSNumber?
     @NSManaged var speed : NSNumber?
     @NSManaged var trip : Trip?
+    @NSManaged var simplifiedInTrip : Trip?
     @NSManaged var incident : Incident?
     @NSManaged var date : NSDate?
     

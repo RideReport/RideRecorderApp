@@ -13,6 +13,8 @@ import CoreMotion
 import MapKit
 
 class Trip : NSManagedObject {
+    let simplificationEpisilon: CLLocationDistance = 0.00005
+    
     enum ActivityType : Int16 {
         case Unknown = 0
         case Running
@@ -43,6 +45,8 @@ class Trip : NSManagedObject {
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
+
+    @NSManaged var simplifiedLocations : NSOrderedSet!
     
     convenience init() {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
@@ -321,6 +325,57 @@ class Trip : NSManagedObject {
             UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil
         }
+    }
+    
+    func simplify() {
+        self.simplifyLocations(self.locations.array as [Location], episilon: simplificationEpisilon)
+        CoreDataController.sharedCoreDataController.saveContext()
+    }
+    
+    // Ramer–Douglas–Peucker geometric simplication algorithm
+    func simplifyLocations(locations: [Location], episilon : CLLocationDegrees) {
+        var maximumDistance : CLLocationDegrees = 0
+        var indexOfMaximumDistance = 0
+        
+        let startLoc = locations.first
+        let endLoc = locations.last
+        var counter = 1
+        
+        if (locations.count > 2) {
+            for loc in locations[1...(locations.count - 2)] {
+                let distance = self.shortestDistanceFromLineToPoint(startLoc!.coordinate(), lineEndPoint: endLoc!.coordinate(), point: loc.coordinate())
+                if (distance > maximumDistance) {
+                    indexOfMaximumDistance = counter
+                    maximumDistance = distance
+                }
+                counter++
+            }
+        } else {
+            // trivial case: two points are more than episilon distance away.
+            return
+        }
+        
+        if ( maximumDistance > episilon) {
+            self.simplifyLocations(Array(locations[0...indexOfMaximumDistance]), episilon: episilon)
+            self.simplifyLocations(Array(locations[indexOfMaximumDistance...(locations.count - 1)]), episilon: episilon)
+        } else {
+            startLoc!.simplifiedInTrip = self
+            endLoc!.simplifiedInTrip = self
+        }
+    }
+    
+    private func shortestDistanceFromLineToPoint(lineStartPoint: CLLocationCoordinate2D, lineEndPoint: CLLocationCoordinate2D, point: CLLocationCoordinate2D)->CLLocationDegrees {
+        // area of a triangle is given by a = .5 * |Ax(By-Cy) + Bx(Cy-Ay) + Cx(Ay-By)|
+        let area = 0.5 * abs(lineStartPoint.longitude * (lineEndPoint.latitude  - point.latitude)
+                            + lineEndPoint.longitude * (point.latitude - lineStartPoint.latitude)
+                            + point.longitude * (lineStartPoint.latitude - lineEndPoint.latitude))
+        
+        // base of the triangle is the distance from our start to end points
+        let base = sqrt(pow(lineStartPoint.longitude - lineEndPoint.longitude, 2) +
+                            pow(lineStartPoint.latitude - lineEndPoint.latitude, 2))
+        
+        // height = 2* area / base
+        return 2 * area / base
     }
     
     func smoothIfNeeded(handler: ()->Void) {
