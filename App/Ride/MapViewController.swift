@@ -116,8 +116,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.incidentAnnotations.removeAll(keepCapacity: false)
         self.tripAnnotations.removeAll(keepCapacity: false)
         self.tripsAreLoaded = false
-        
-        CoreDataController.sharedCoreDataController.managedObjectContext?.reset()
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {

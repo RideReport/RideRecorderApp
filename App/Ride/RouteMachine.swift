@@ -11,6 +11,8 @@ import CoreLocation
 import CoreMotion
 
 class RouteMachine : NSObject, CLLocationManagerDelegate {
+    var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
     var minimumSpeedToStartMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
     
@@ -178,7 +180,16 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
                 CoreDataController.sharedCoreDataController.saveContext()
-                closingTrip!.sendTripCompletionNotification()
+                
+                self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                    closingTrip!.sendTripCompletionNotificationImmediately()
+                })
+                closingTrip!.sendTripCompletionNotification() {
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
+                    }
+                }
             }
         }
         

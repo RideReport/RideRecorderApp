@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/RouteDetailViewController.swift"
-            timestampString = "446176417.291105"
+            timestampString = "447035564.348046"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "performSegueWithIdentifier(_:sender:)"
             landmarkType = "5">
          </BreakpointContent>

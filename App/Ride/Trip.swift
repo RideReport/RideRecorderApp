@@ -31,6 +31,7 @@ class Trip : NSManagedObject {
     
     private var currentStateNotification : UILocalNotification? = nil;
     private var startingPlacemark : CLPlacemark? = nil;
+    private var endingPlacemark : CLPlacemark? = nil;
     
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
@@ -211,9 +212,9 @@ class Trip : NSManagedObject {
 
     }
     
-    func findDestinationPlacemarksWithHandler(handler: (CLPlacemark!!)->Void) {
+    func findDestinationPlacemarksWithHandler(handler: ()->Void) {
         if (self.locations.count < 2) {
-            handler(nil)
+            handler()
             return
         }
         
@@ -222,11 +223,12 @@ class Trip : NSManagedObject {
         
         geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
-                handler(nil)
+                handler()
                 return
             }
             let endingPlacemark = placemarks[0] as CLPlacemark
-            handler(endingPlacemark)
+            self.endingPlacemark = endingPlacemark
+            handler()
         })
     }
     
@@ -291,33 +293,40 @@ class Trip : NSManagedObject {
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
-    func sendTripCompletionNotification() {
-        self.findDestinationPlacemarksWithHandler { (endingPlacemark) -> Void in
+    func sendTripCompletionNotification(handler: ()->Void = {}) {
+        self.findDestinationPlacemarksWithHandler() {
             if (self.isClosed == false) {
                 // in case the trip was reopened while we were calculating things
+                handler()
                 return
             }
-            
-            var message = ""
         
-            if (self.startingPlacemark != nil && endingPlacemark != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, endingPlacemark!.subLocality)
-            } else if (self.startingPlacemark? != nil) {
-                message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality)
-            } else {
-                message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
-            }
-            
-            self.cancelTripCompletionNotification()
-            
-            self.currentStateNotification = UILocalNotification()
-            self.currentStateNotification?.alertBody = message
-            if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                // don't show rating stuff for anything but bike trips.
-                self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
-            }
-            UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+            self.sendTripCompletionNotificationImmediately()
+            handler()
         }
+    }
+    
+    func sendTripCompletionNotificationImmediately() {
+        var message = ""
+        
+        if (self.startingPlacemark != nil && self.endingPlacemark != nil) {
+            message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality)
+        } else if (self.startingPlacemark? != nil) {
+            message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality)
+        } else {
+            message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
+        }
+        
+        self.cancelTripCompletionNotification()
+        
+        self.currentStateNotification = UILocalNotification()
+        self.currentStateNotification?.alertBody = message
+        if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            // don't show rating stuff for anything but bike trips.
+            self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
+        }
+        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+
     }
     
     private func cancelTripCompletionNotification() {
