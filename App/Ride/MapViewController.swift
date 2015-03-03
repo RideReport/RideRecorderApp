@@ -47,6 +47,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         self.mapView.mapType = MKMapType.Satellite
         
+        // set the size of the url cache for tile caching.
+        let memoryCapacity = 1 * 1024 * 1024
+        let diskCapacity = 40 * 1024 * 1024
+        let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        NSURLCache.setSharedURLCache(urlCache)
+        
         MBXMapKit.setAccessToken("pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
         let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.l4imi65m")
         self.mapView.addOverlay(tiles)
