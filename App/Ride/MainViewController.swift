@@ -71,7 +71,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Unload Data")
+        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -132,9 +132,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             sendLogFile()
         } else if (buttonIndex == 3) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-        } else {
-            self.mapViewController.unloadTrips()
-            self.routesViewController.unloadFetchedResultsController()
         }
     }
     
