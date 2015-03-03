@@ -32,6 +32,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     let minimumBatteryForTracking : Float = 0.2
     
+    private var isGettingInitialLocationForGeofence : Bool = false
+    
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
     
@@ -193,7 +195,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        self.stopActiveMonitoring(self.lastActiveMonitoringLocation)
+        self.stopMotionMonitoring(self.lastActiveMonitoringLocation)
         
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
@@ -286,7 +288,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.lastMotionMonitoringLocation = nil
     }
     
-    private func stopActiveMonitoring(finalLocation: CLLocation?) {
+    private func stopMotionMonitoring(finalLocation: CLLocation?) {
         DDLogWrapper.logInfo("Stopping active monitoring")
         
         self.disableAllGeofences()
@@ -340,7 +342,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.lastMotionMonitoringLocation = locations.first
         
-        if (foundSufficientMovement) {
+        if (self.isGettingInitialLocationForGeofence == true) {
+            self.isGettingInitialLocationForGeofence = false
+            DDLogWrapper.logVerbose("Got intial location for geofence. Stopping!")
+            self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+        } else if (foundSufficientMovement) {
             if(self.motionMonitoringReadingsWithManualMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
                     DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggering trip…")
@@ -360,7 +366,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             if (self.motionMonitoringReadingsWithoutMotionCount > self.maximumMotionMonitoringReadingsCountWithoutMovement) {
                 DDLogWrapper.logVerbose("Max motion monitoring readings exceeded, stopping!")
-                self.stopActiveMonitoring(self.lastMotionMonitoringLocation)
+                self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
             }
         }
     }
@@ -426,7 +432,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             DDLogWrapper.logInfo("Paused Tracking due to battery life")
             
-            self.stopActiveMonitoring(nil)
+            self.stopMotionMonitoring(nil)
         }
     }
     
@@ -450,7 +456,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
-            self.locationManager.startMonitoringSignificantLocationChanges()
+            self.isGettingInitialLocationForGeofence = true
             self.startMotionMonitoring()
         } else {
             // tell the user they need to give us access to the zion mainframes
