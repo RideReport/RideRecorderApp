@@ -30,3 +30,9 @@
 #define COCOAPODS_VERSION_MINOR_CocoaLumberjack_Extensions 0
 #define COCOAPODS_VERSION_PATCH_CocoaLumberjack_Extensions 0
 
+// MBXMapKit
+#define COCOAPODS_POD_AVAILABLE_MBXMapKit
+#define COCOAPODS_VERSION_MAJOR_MBXMapKit 0
+#define COCOAPODS_VERSION_MINOR_MBXMapKit 7
+#define COCOAPODS_VERSION_PATCH_MBXMapKit 0
+

@@ -7,11 +7,14 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.0.0-beta3):
     - CocoaLumberjack/Default
+  - MBXMapKit (0.7.0)
 
 DEPENDENCIES:
   - CocoaLumberjack
+  - MBXMapKit
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 55c22a2b8bde7a29c568ab4015b5874216524d70
+  MBXMapKit: cf4ecf639c3abf5713ed4c1c995c7896949c79f3
 
 COCOAPODS: 0.33.1

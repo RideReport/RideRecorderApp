@@ -45,6 +45,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.addGestureRecognizer(mapTapRecognizer)
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
+        self.mapView.mapType = MKMapType.Satellite
+        
+        MBXMapKit.setAccessToken("pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
+        let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.l4imi65m")
+        self.mapView.addOverlay(tiles)
+        
         self.tripPolyLines = [:]
         self.incidentAnnotations = [:]
         
@@ -437,7 +443,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        if (overlay.isKindOfClass(MKPolyline)) {
+        if (overlay.isKindOfClass(MBXRasterTileOverlay)) {
+            let renderer = MBXRasterTileRenderer(overlay: overlay)
+            return renderer
+        } else if (overlay.isKindOfClass(MKPolyline)) {
             let renderer = MKPolylineRenderer(polyline:(overlay as MKPolyline))
             
             var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)

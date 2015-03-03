@@ -39,9 +39,14 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         settingsCustomButton.animates = false
         self.navigationItem.leftBarButtonItem?.customView = settingsCustomButton
         
-        self.mapViewController = self.childViewControllers.first as MapViewController
-        self.routesViewController = self.childViewControllers.last?.topViewController as RoutesViewController
-        self.routesViewController.mainViewController = self
+        for viewController in self.childViewControllers {
+            if (viewController.isKindOfClass(MapViewController)) {
+                self.mapViewController = viewController as MapViewController
+            } else if (viewController.isKindOfClass(UINavigationController)) {
+                self.routesViewController = viewController.topViewController as RoutesViewController
+                self.routesViewController.mainViewController = self
+            }
+        }
         
         self.refreshPauseResumeTrackingButtonUI()
     }
