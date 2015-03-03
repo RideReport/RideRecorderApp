@@ -33,7 +33,7 @@
     			  locs, 
     			  {color: 'red',
             weight: 3,
-            opacity: 0.4,
+            opacity: 0.6,
             smoothFactor: 1}
           );
         } else if (trip.properties.rating == 1) {
