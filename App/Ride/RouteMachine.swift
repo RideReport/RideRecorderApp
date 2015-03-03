@@ -144,7 +144,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         } else {
             DDLogWrapper.logInfo("Not deferring updates")
-            self.locationManager.distanceFilter = 20
+            self.locationManager.distanceFilter = kCLDistanceFilterNone
             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         }
         
