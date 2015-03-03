@@ -28,7 +28,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let fetchedRequest = NSFetchRequest(entityName: "Trip")
             fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             
-            _fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
+            _fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
             _fetchedResultsController!.delegate = self
             _fetchedResultsController!.performFetch(nil)
             
@@ -37,7 +37,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     private var timeFormatter : NSDateFormatter!
-    private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,10 +54,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.layoutMargins = UIEdgeInsetsZero
-        
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MMM d"
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
@@ -149,8 +144,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return self.fetchedResultsController.sections!.count
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let theSection = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        
+        return theSection.name
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchedResultsController.fetchedObjects!.count
+        let sectionInfo = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        
+        return sectionInfo.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -163,6 +170,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         configureCell(tableCell, trip: trip)
         
         return tableCell
+    }
+    
+    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let headerView = view as UITableViewHeaderFooterView
+        headerView.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.1)
+        headerView.opaque = false
+        headerView.textLabel.textColor = UIColor.whiteColor()
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
@@ -180,18 +194,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         var dateTitle = ""
         if (trip.startDate != nil) {
-            var dateString = ""
-            if (trip.startDate.isToday()) {
-                dateString = ""
-            } else if (trip.startDate.isYesterday()) {
-                dateString = "Yesterday at"
-            } else if (trip.startDate.isThisWeek()) {
-                dateString = trip.startDate.weekDay() + " at"
-            } else {
-                dateString = self.dateFormatter.stringFromDate(trip.startDate) + " at"
-            }
-            
-            dateTitle = NSString(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(trip.startDate))
+            dateTitle = NSString(format: "%@", self.timeFormatter.stringFromDate(trip.startDate))
             
         }
         tableCell.textLabel!.text = NSString(format: "%@  %@ %@", ratingString, dateTitle, trip.isSynced ? "" : "🔹")

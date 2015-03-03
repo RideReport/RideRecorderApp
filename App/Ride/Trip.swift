@@ -29,6 +29,10 @@ class Trip : NSManagedObject {
         case Bad
     }
     
+    private struct Static {
+        static var dateFormatter : NSDateFormatter!
+    }
+    
     private var currentStateNotification : UILocalNotification? = nil;
     private var startingPlacemark : CLPlacemark? = nil;
     private var endingPlacemark : CLPlacemark? = nil;
@@ -48,10 +52,54 @@ class Trip : NSManagedObject {
     @NSManaged var rating : NSNumber!
 
     @NSManaged var simplifiedLocations : NSOrderedSet!
+    var sectionIdentifier : String? {
+        get {
+            self.willAccessValueForKey("sectionIdentifier")
+            var sectionString = self.primitiveValueForKey("sectionIdentifier") as String?
+            self.didAccessValueForKey("sectionIdentifier")
+            if (sectionString == nil) {
+                // do the thing
+                if (self.startDate == nil) {
+                    // should only happen for newly created trips
+                    sectionString = "Today"
+                } else if (self.startDate.isToday()) {
+                    sectionString = "Today"
+                } else if (self.startDate.isYesterday()) {
+                    sectionString = "Yesterday"
+                } else if (self.startDate.isThisWeek()) {
+                    sectionString = self.startDate.weekDay()
+                } else {
+                    sectionString = Trip.dateFormatter.stringFromDate(self.startDate)
+                }
+                self.setPrimitiveValue(sectionString, forKey: "sectionIdentifier")
+            }
+            
+            return sectionString!
+        }
+    }
+    
+    class var dateFormatter : NSDateFormatter {
+        get {
+            if (Static.dateFormatter == nil) {
+                Static.dateFormatter = NSDateFormatter()
+                Static.dateFormatter.locale = NSLocale.currentLocale()
+                Static.dateFormatter.dateFormat = "MMM d"
+            }
+            
+            return Static.dateFormatter
+        }
+    }
     
     convenience init() {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)        
+        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        self.addObserver(self, forKeyPath: "startDate", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        if (keyPath == "startDate") {
+            self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+        }
     }
     
     class func allTrips(limit: Int = 0) -> [AnyObject]? {

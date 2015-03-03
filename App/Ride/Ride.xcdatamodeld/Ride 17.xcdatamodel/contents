@@ -47,6 +47,7 @@
         <attribute name="isSynced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="length" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="sectionIdentifier" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="trip" inverseEntity="Activity" syncable="YES"/>
         <relationship name="incidents" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Incident" inverseName="trip" inverseEntity="Incident" syncable="YES"/>
@@ -58,6 +59,6 @@
         <element name="Incident" positionX="-45" positionY="72" width="128" height="133"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="208"/>
         <element name="PrivacyCircle" positionX="-54" positionY="81" width="128" height="90"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="255"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="270"/>
     </elements>
 </model>
