@@ -1,7 +1,3 @@
-  $(document).ready(function(){
-  	navigator.geolocation.getCurrentPosition(gotPosition);
-  })
-	
 	var tripLayerGroup = L.layerGroup().addTo(map);
 
   L.mapbox.accessToken = 'pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA';
@@ -10,10 +6,6 @@
       attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
   });
   map.addLayer(mapboxTiles)
-  
-  function gotPosition(position) {
-    map.setView([position.coords.latitude, position.coords.longitude], 14);
-  }
 
 	function drawTripsOnMap(geojson){
 	  var trips = geojson.features
