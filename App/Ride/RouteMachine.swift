@@ -22,7 +22,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var geofenceSleepRegion :  CLCircularRegion!
     
     let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
-    let maximumTimeIntervalBetweenPositiveSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
+    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 3
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
@@ -39,6 +39,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var motionMonitoringReadingsWithoutMotionCount = 0
     
     private var lastMotionMonitoringLocation :  CLLocation?
+    private var lastActiveMonitoringLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
     
     private var locationManager : CLLocationManager!
@@ -88,7 +89,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     //
-    // MARK: - Private state machine methods
+    // MARK: - Active Trip Tracking methods
+    // We are in the active trip tracking while a route is ongoing.
+    // If we see sufficient motion of the right kind, we keep tracking. Otherwise, we end the trip.
     //
     
     private func startTripFromLocation(fromLocation: CLLocation) {
@@ -124,6 +127,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
+        self.lastActiveMonitoringLocation = fromLocation
         
         // Include lastMovingLocation in the trip if it's accurate enough
         if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
@@ -177,11 +181,67 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        self.stopActiveMonitoring(self.lastMovingLocation)
+        self.stopActiveMonitoring(self.lastActiveMonitoringLocation)
         
         self.currentTrip = nil
+        self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
     }
+    
+    private func processActiveTrackingLocations(locations: [CLLocation]!) {
+        var foundUsableSpeed = false
+        
+        for location in locations {
+            DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
+            
+            var manualSpeed : CLLocationSpeed = 0
+            
+            if (location.speed > 0) {
+                foundUsableSpeed = true
+            } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
+                // Some times locations given will not have a speed (or a negative speed).
+                // Hence, we also calculate a 'manual' speed from the current location to the last one
+                
+                foundUsableSpeed = true
+                manualSpeed = self.lastActiveMonitoringLocation!.calculatedSpeedFromLocation(location)
+                DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", manualSpeed))
+            }
+            
+            if (location.speed >= self.minimumSpeedToContinueMonitoring ||
+                (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
+                if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
+                    // if the event is more recent than the one we already have
+                    self.lastMovingLocation = location
+                }
+                if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                    Location(location: location as CLLocation, trip: self.currentTrip!)
+                }
+            }
+            
+            self.lastActiveMonitoringLocation = location
+        }
+        
+        if (foundUsableSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenMovements){
+            DDLogWrapper.logVerbose("Moving too slow for too long")
+            self.stopTrip()
+        } else if (foundUsableSpeed == false) {
+            if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenUsuableSpeedReadings) {
+                DDLogWrapper.logVerbose("Went too long with unusable speeds.")
+                self.stopTrip()
+            } else {
+                DDLogWrapper.logVerbose("Nothing but unusable speeds. Awaiting next update")
+            }
+        } else {
+            CoreDataController.sharedCoreDataController.saveContext()
+            NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
+        }
+    }
+    
+    //
+    // MARK: - Intermediary Monitoring State methods
+    // We are in the monitoring state while considering starting a trip
+    // If we see sufficient motion of the right kind, we start it. Otherwise, we exit.
+    //
     
     private func startMotionMonitoring() {
         if (isPaused()) {
@@ -215,14 +275,6 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.lastMotionMonitoringLocation = nil
     }
     
-    private func disableAllGeofences() {
-        for region in self.locationManager.monitoredRegions {
-            self.locationManager.stopMonitoringForRegion(region as CLRegion)
-        }
-        
-        self.geofenceSleepRegion = nil
-    }
-    
     private func stopActiveMonitoring(finalLocation: CLLocation?) {
         DDLogWrapper.logInfo("Stopping active monitoring")
         
@@ -248,6 +300,73 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.locationManager.stopUpdatingLocation()
     }
     
+    private func processMotionMonitoringLocations(locations: [CLLocation]!) {
+        var foundSufficientMovement = false
+        
+        for location in locations {
+            DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
+            if (location.speed >= self.minimumSpeedToStartMonitoring) {
+                DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
+                self.motionMonitoringReadingsWithGPSMotion += 1
+                foundSufficientMovement = true
+                break
+            }
+            
+            // Some times locations given will not have a speed (or a negative speed).
+            // Hence, we also calculate a 'manual' speed from the current location to the last one
+            if (location.speed < 0 && self.lastMotionMonitoringLocation != nil) {
+                let speed = self.lastMotionMonitoringLocation!.calculatedSpeedFromLocation(location)
+                DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
+                
+                if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
+                    // We ignore really large speeds that may be the result of location inaccuracy
+                    DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
+                    self.motionMonitoringReadingsWithManualMotion += 1
+                    foundSufficientMovement = true
+                }
+            }
+        }
+        
+        self.lastMotionMonitoringLocation = locations.first
+        
+        if (foundSufficientMovement) {
+            if(self.motionMonitoringReadingsWithManualMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
+                self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
+                    DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggering trip…")
+                    self.startTripFromLocation(self.lastMotionMonitoringLocation!)
+                    
+                    for location in locations {
+                        if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                            Location(location: location as CLLocation, trip: self.currentTrip!)
+                        }
+                    }
+            } else {
+                DDLogWrapper.logVerbose("Found motion in motion monitoring mode, awaiting further reads…")
+            }
+        } else {
+            DDLogWrapper.logVerbose("Did NOT find movement while in motion monitoring state")
+            self.motionMonitoringReadingsWithoutMotionCount += 1
+            
+            if (self.motionMonitoringReadingsWithoutMotionCount > self.maximumMotionMonitoringReadingsCountWithoutMovement) {
+                DDLogWrapper.logVerbose("Max motion monitoring readings exceeded, stopping!")
+                self.stopActiveMonitoring(self.lastMotionMonitoringLocation)
+            }
+        }
+    }
+    
+    //
+    // MARK: - Helper methods
+    //
+    
+    
+    private func disableAllGeofences() {
+        for region in self.locationManager.monitoredRegions {
+            self.locationManager.stopMonitoringForRegion(region as CLRegion)
+        }
+        
+        self.geofenceSleepRegion = nil
+    }
+    
     
     private func beginDeferringUpdatesIfAppropriate() {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInMotionMonitoringState && self.currentTrip != nil) {
@@ -259,7 +378,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     //
-    // MARK: - Pause/Resuming Machine
+    // MARK: - Pause/Resuming Route Machine
     //
     
     func isPausedDueToBatteryLife() -> Bool {
@@ -385,97 +504,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         self.beginDeferringUpdatesIfAppropriate()
         
         if (self.currentTrip != nil) {
-            // We are current tracking a trip
-            
-            var foundPositiveSpeed = false
-            
-            for location in locations {
-                DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
-                if (location.speed > 0) {
-                    foundPositiveSpeed = true
-                }
-                
-                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
-                    if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
-                        // if the event is more recent than the one we already have
-                        self.lastMovingLocation = location
-                    }
-                    if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-                        Location(location: location as CLLocation, trip: self.currentTrip!)
-                    }
-                }
-            }
-            
-            if (foundPositiveSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenMovements){
-                DDLogWrapper.logVerbose("Moving too slow for too long")
-                self.stopTrip()
-            } else if (foundPositiveSpeed == false) {
-                if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenPositiveSpeedReadings) {
-                    DDLogWrapper.logVerbose("Went too long with non-positive speeds.")
-                    self.stopTrip()
-                } else {
-                    DDLogWrapper.logVerbose("Nothing but non-positive speeds. Awaiting next update")
-                }
-            } else {
-                CoreDataController.sharedCoreDataController.saveContext()
-                NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
-            }
+            self.processActiveTrackingLocations(locations)
         } else if (self.isInMotionMonitoringState) {
-            // We are current considering starting a trip in motion monitoring mode
-            
-            var foundSufficientMovement = false
-            
-            for location in locations {
-                DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
-                if (location.speed >= self.minimumSpeedToStartMonitoring) {
-                    DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
-                    self.motionMonitoringReadingsWithGPSMotion += 1
-                    foundSufficientMovement = true
-                    break
-                }
-                
-                // Some times locations given in motion monitoring mode will not have a speed (or a negative speed).
-                // Hence, we also calculate a 'manual' speed from the current location to the last one
-                if (location.speed <= 0 && self.lastMotionMonitoringLocation != nil) {
-                    let distance = self.lastMotionMonitoringLocation!.distanceFromLocation(location)
-                    let time = abs(location.timestamp.timeIntervalSinceDate(self.lastMotionMonitoringLocation!.timestamp))
-                    
-                    let speed = distance/time
-                    DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
-                    if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
-                        // We ignore really large speeds that may be the result of location inaccuracy
-                        DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
-                        self.motionMonitoringReadingsWithManualMotion += 1
-                        foundSufficientMovement = true
-                    }
-                }
-            }
-            
-            self.lastMotionMonitoringLocation = locations.first
-
-            if (foundSufficientMovement) {
-                if(self.motionMonitoringReadingsWithManualMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
-                    self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
-                    DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggering trip…")
-                    self.startTripFromLocation(self.lastMotionMonitoringLocation!)
-                    
-                    for location in locations {
-                        if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-                            Location(location: location as CLLocation, trip: self.currentTrip!)
-                        }
-                    }
-                } else {
-                    DDLogWrapper.logVerbose("Found motion in motion monitoring mode, awaiting further reads…")
-                }
-            } else {
-                DDLogWrapper.logVerbose("Did NOT find movement while in motion monitoring state")
-                self.motionMonitoringReadingsWithoutMotionCount += 1
-
-                if (self.motionMonitoringReadingsWithoutMotionCount > self.maximumMotionMonitoringReadingsCountWithoutMovement) {
-                    DDLogWrapper.logVerbose("Max motion monitoring readings exceeded, stopping!")
-                    self.stopActiveMonitoring(self.lastMotionMonitoringLocation)
-                }
-            }
+            self.processMotionMonitoringLocations(locations)
         } else {
             // We are currently in background mode and got significant location change movement.
             // We now enter a state to monitor for user movement
