@@ -385,6 +385,10 @@ class Trip : NSManagedObject {
     }
     
     func simplify() {
+        if (self.locations == nil || self.locations.count == 0) {
+            return
+        }
+        
         self.simplifyLocations(self.locations.array as [Location], episilon: simplificationEpisilon)
         CoreDataController.sharedCoreDataController.saveContext()
     }
