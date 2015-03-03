@@ -27,8 +27,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         var effectView = UIVisualEffectView(effect: blur)
         effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        self.view.addSubview(effectView)
-        self.view.sendSubviewToBack(effectView)
+        self.tableView.backgroundView = effectView
         
 #if DEBUG
         let toolsButton = UIBarButtonItem(title: "Debug", style: UIBarButtonItemStyle.Bordered, target: self, action: "tools:")
