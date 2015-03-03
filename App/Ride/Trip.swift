@@ -441,10 +441,18 @@ class Trip : NSManagedObject {
     }
     
     var startDate : NSDate! {
+        if (self.locations == nil || self.locations.count == 0) {
+            return nil
+        }
+        
         return self.locations.firstObject?.date
     }
     
     var endDate : NSDate! {
+        if (self.locations == nil || self.locations.count == 0) {
+            return nil
+        }
+        
         return self.locations.lastObject?.date
     }
     
