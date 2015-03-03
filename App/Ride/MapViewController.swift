@@ -70,6 +70,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
     }
     
+    //
+    // MARK: - UIViewController
+    //
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -88,51 +92,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.unloadTrips()
     }
     
-    func loadTrips() {
-        self.mainViewController.navigationItem.title = "Loading Trips…"
-
-        if (self.tripsAreLoaded) {
-            return
-        }
-        
-        self.tripsAreLoaded = true
-        
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            for trip in Trip.allTrips()! {
-                self.refreshTrip(trip as Trip)
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles logged", Trip.totalCycledMiles)
-            })
-        })
-    }
-    
-    func unloadTrips() {
-        self.setSelectedTrip(nil)
-        
-        for line in self.tripPolyLines.values {
-            self.mapView.removeOverlay(line)
-        }
-        
-        for annotation in self.tripAnnotations! {
-            self.mapView.removeAnnotation(annotation)
-        }
-        
-        for annotation in self.incidentAnnotations.values {
-            self.mapView.removeAnnotation(annotation)
-        }
-        
-        self.tripPolyLines.removeAll(keepCapacity: false)
-        self.incidentAnnotations.removeAll(keepCapacity: false)
-        self.tripAnnotations.removeAll(keepCapacity: false)
-        self.tripsAreLoaded = false
-    }
-    
     override func didMoveToParentViewController(parent: UIViewController?) {
         self.mainViewController = parent as MainViewController
     }
+    
+    //
+    // MARK: - UI Methods
+    //
     
     func enterPrivacyCircleEditor() {
         if (self.privacyCircle == nil) {
@@ -245,6 +211,54 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         DDLogWrapper.logVerbose("Add incident")
     }
     
+    
+    //
+    // MARK: - Update Map UI
+    //
+    
+    
+    func loadTrips() {
+        self.mainViewController.navigationItem.title = "Loading Trips…"
+        
+        if (self.tripsAreLoaded) {
+            return
+        }
+        
+        self.tripsAreLoaded = true
+        
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            for trip in Trip.allTrips()! {
+                self.refreshTrip(trip as Trip)
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles logged", Trip.totalCycledMiles)
+            })
+        })
+    }
+    
+    func unloadTrips() {
+        self.setSelectedTrip(nil)
+        
+        for line in self.tripPolyLines.values {
+            self.mapView.removeOverlay(line)
+        }
+        
+        for annotation in self.tripAnnotations! {
+            self.mapView.removeAnnotation(annotation)
+        }
+        
+        for annotation in self.incidentAnnotations.values {
+            self.mapView.removeAnnotation(annotation)
+        }
+        
+        self.tripPolyLines.removeAll(keepCapacity: false)
+        self.incidentAnnotations.removeAll(keepCapacity: false)
+        self.tripAnnotations.removeAll(keepCapacity: false)
+        self.tripsAreLoaded = false
+    }
+    
     func setSelectedTrip(trip : Trip!) {
         if (self.tripAnnotations != nil && self.tripAnnotations.count > 0) {
             let annotations = self.tripAnnotations
@@ -253,7 +267,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         self.tripAnnotations = []
-
+        
         if (trip == nil) {
             return
         }
@@ -333,7 +347,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         })
     }
     
-    // MARK: - Update Map UI
     func refreshTrip(trip : Trip!) {
         if (self.tripPolyLines[trip] != nil) {
             let overlay = self.tripPolyLines[trip]
@@ -397,8 +410,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             self.setSelectedTrip(trip)
         }
     }
-    
+
+    //
     // MARK: - Map Kit
+    //
+    
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         if (!self.hasCenteredMap) {
             let mapRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: MKCoordinateSpanMake(0.005, 0.005));

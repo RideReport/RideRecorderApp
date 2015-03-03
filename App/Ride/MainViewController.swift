@@ -51,6 +51,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.refreshPauseResumeTrackingButtonUI()
     }
     
+    //
+    // MARK: - UIVIewController
+    //
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -74,6 +78,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         
         self.selectedTrip = nil
     }
+    
+    //
+    // MARK: - UI Actions
+    //
     
     @IBAction func tools(sender: AnyObject) {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
@@ -130,6 +138,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.mapViewController.setSelectedTrip(trip)
     }
     
+    //
+    // MARK: - Action Sheet
+    //
+    
     func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
         if (buttonIndex == 1) {
             self.mapViewController.enterPrivacyCircleEditor()
@@ -174,5 +186,4 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-
 }
