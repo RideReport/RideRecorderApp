@@ -147,8 +147,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.locationManager.distanceFilter = kCLDistanceFilterNone
             self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         } else {
+            // if we can't defer, try to use a distance filter and lower accuracy instead.
             DDLogWrapper.logInfo("Not deferring updates")
-            self.locationManager.distanceFilter = kCLDistanceFilterNone
+            self.locationManager.distanceFilter = 20
             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         }
         
@@ -261,8 +262,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         #endif
         DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
-        // Use a high distance filter with full accuracy
-        self.locationManager.distanceFilter = 10
+        self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.disallowDeferredLocationUpdates()
         
