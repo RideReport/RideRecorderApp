@@ -19,6 +19,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
+                                </variation>
+                                <variation key="widthClass=regular" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
+                                </variation>
+                            </mapView>
                             <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7S-Bw-nY7">
                                 <rect key="frame" x="0.0" y="356" width="600" height="44"/>
                                 <constraints>
@@ -39,7 +52,7 @@
                                         </connections>
                                     </barButtonItem>
                                 </items>
-                                <variation key="heightClass=regular" ambiguous="YES">
+                                <variation key="heightClass=regular" ambiguous="YES" misplaced="YES">
                                     <rect key="frame" x="0.0" y="489" width="600" height="44"/>
                                 </variation>
                                 <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
@@ -49,24 +62,12 @@
                                     <rect key="frame" x="0.0" y="556" width="800" height="44"/>
                                 </variation>
                             </toolbar>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
-                                </variation>
-                                <variation key="widthClass=regular" ambiguous="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
-                                </variation>
-                            </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x7S-Bw-nY7" secondAttribute="bottom" multiplier="3:2" id="2AI-YV-sfu"/>
                             <constraint firstAttribute="centerX" secondItem="E6c-Xj-hL4" secondAttribute="centerX" id="CPR-30-5OY"/>
+                            <constraint firstItem="x7S-Bw-nY7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Kzw-yj-sIw"/>
                             <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="width" secondItem="x7S-Bw-nY7" secondAttribute="width" id="mpL-V9-rHa"/>
                             <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="nKW-gS-9tY"/>
@@ -76,12 +77,15 @@
                             <mask key="constraints">
                                 <exclude reference="CPR-30-5OY"/>
                                 <exclude reference="yWs-hS-3sE"/>
+                                <exclude reference="Kzw-yj-sIw"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
                                 <include reference="CPR-30-5OY"/>
                                 <include reference="yWs-hS-3sE"/>
+                                <include reference="Kzw-yj-sIw"/>
+                                <exclude reference="2AI-YV-sfu"/>
                             </mask>
                         </variation>
                     </view>
@@ -1216,7 +1220,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>

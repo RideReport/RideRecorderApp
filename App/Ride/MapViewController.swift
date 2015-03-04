@@ -107,7 +107,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             } else {
                 self.privacyCircle = MKCircle(centerCoordinate: CLLocationCoordinate2DMake(PrivacyCircle.privacyCircle().latitude.doubleValue, PrivacyCircle.privacyCircle().longitude.doubleValue), radius: PrivacyCircle.privacyCircle().radius.doubleValue)
             }
-            self.mapView.addOverlay(self.privacyCircle)
+            self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
         }
         self.privacyCircleToolbar.hidden = false
     }
@@ -171,8 +171,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             if (self.isDraggingPrivacyCircle) {
                 let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
                 
+                let oldPrivacyCircle = self.privacyCircle
                 self.privacyCircle! = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle!.radius)
-                self.privacyCircleRenderer!.coordinate = gestureCoord
+                self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
+                self.mapView.removeOverlay(oldPrivacyCircle)
             }
         } else {
             self.mapView.scrollEnabled = true

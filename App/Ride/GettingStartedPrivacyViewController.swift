@@ -34,6 +34,18 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
         self.privacyCirclePanGesture.delegate = self
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
+        self.mapView.mapType = MKMapType.Satellite
+        
+        // set the size of the url cache for tile caching.
+        let memoryCapacity = 1 * 1024 * 1024
+        let diskCapacity = 40 * 1024 * 1024
+        let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        NSURLCache.setSharedURLCache(urlCache)
+        
+        MBXMapKit.setAccessToken("pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
+        let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.l4imi65m")
+        self.mapView.addOverlay(tiles)
+        
         setInitialUI()
     }
     
@@ -93,8 +105,10 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
             if (self.isDraggingPrivacyCircle) {
                 let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
                 
+                let oldPrivacyCircle = self.privacyCircle
                 self.privacyCircle! = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle!.radius)
-                self.privacyCircleRenderer!.coordinate = gestureCoord
+                self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
+                self.mapView.removeOverlay(oldPrivacyCircle)
             }
         } else {
             self.mapView.scrollEnabled = true
@@ -141,7 +155,10 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-        if (overlay.isKindOfClass(MKCircle)) {
+        if (overlay.isKindOfClass(MBXRasterTileOverlay)) {
+            let renderer = MBXRasterTileRenderer(overlay: overlay)
+            return renderer
+        } else if (overlay.isKindOfClass(MKCircle)) {
             self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
             self.privacyCircleRenderer!.strokeColor = UIColor.redColor()
             self.privacyCircleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
