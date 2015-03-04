@@ -366,9 +366,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
 
         if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
-            dispatch_sync(dispatch_get_main_queue(), {
-                trip.simplify()
+            dispatch_async(dispatch_get_main_queue(), {
+                trip.simplify() {
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
+                            self.refreshTrip(trip)
+                        }
+                    })
+                }
             })
+            return
         }
         
         var coordinates : [CLLocationCoordinate2D] = []

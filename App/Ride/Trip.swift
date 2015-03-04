@@ -383,15 +383,15 @@ class Trip : NSManagedObject {
         }
     }
     
-    func simplify() {
+    func simplify(handler: ()->Void = {}) {
         if (self.locations == nil || self.locations.count == 0) {
-            self.simplifiedLocations = NSOrderedSet()
-            CoreDataController.sharedCoreDataController.saveContext()
+            handler()
             return
         }
         
         self.simplifyLocations(self.locations.array as [Location], episilon: simplificationEpisilon)
         CoreDataController.sharedCoreDataController.saveContext()
+        handler()
     }
     
     // Ramer–Douglas–Peucker geometric simplication algorithm
