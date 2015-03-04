@@ -23,7 +23,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let geofenceSleepRegionRadius : Double = 30
     private var geofenceSleepRegion :  CLCircularRegion!
     
-    let maximumTimeIntervalBetweenMovements : NSTimeInterval = 60
+    let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
     let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
 
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 3
@@ -203,7 +203,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     private func processActiveTrackingLocations(locations: [CLLocation]!) {
-        var foundUsableSpeed = false
+        var foundGPSSpeed = false
         
         for location in locations {
             DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
@@ -211,12 +211,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             var manualSpeed : CLLocationSpeed = 0
             
             if (location.speed > 0) {
-                foundUsableSpeed = true
+                foundGPSSpeed = true
             } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
                 // Some times locations given will not have a speed (or a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
                 
-                foundUsableSpeed = true
                 manualSpeed = self.lastActiveMonitoringLocation!.calculatedSpeedFromLocation(location)
                 DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", manualSpeed))
             }
@@ -235,10 +234,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.lastActiveMonitoringLocation = location
         }
         
-        if (foundUsableSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenMovements){
+        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenGPSBasedMovement){
             DDLogWrapper.logVerbose("Moving too slow for too long")
             self.stopTrip()
-        } else if (foundUsableSpeed == false) {
+        } else if (foundGPSSpeed == false) {
             if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenUsuableSpeedReadings) {
                 DDLogWrapper.logVerbose("Went too long with unusable speeds.")
                 self.stopTrip()
