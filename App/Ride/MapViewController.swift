@@ -253,7 +253,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     badgeString = "❤️"
                 }
                 
-                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles  %@", Trip.totalCycledMilesThisWeek, badgeString)
+                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles  %@", Trip.totalCycledMiles, badgeString)
             })
         })
     }
