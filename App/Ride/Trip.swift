@@ -115,6 +115,18 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class func weekTrips() -> [AnyObject]? {
+        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate.daysFromNow(-7))
+        
+        var error : NSError?
+        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        
+        return results!
+    }
+    
     class func mostRecentTrip() -> Trip! {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -156,6 +168,17 @@ class Trip : NSManagedObject {
     class var totalCycledMiles : Float {
         var miles : Float = 0
         for trip in Trip.allTrips()! {
+            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                miles += trip.lengthMiles
+            }
+        }
+        
+        return miles
+    }
+    
+    class var totalCycledMilesThisWeek : Float {
+        var miles : Float = 0
+        for trip in Trip.weekTrips()! {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 miles += trip.lengthMiles
             }

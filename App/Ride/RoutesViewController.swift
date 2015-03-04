@@ -57,7 +57,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
-        self.timeFormatter.dateFormat = "h:mm a"
+        self.timeFormatter.dateFormat = "h:mma"
         
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.unloadFetchedResultsController()
@@ -151,7 +151,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let theSection = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
-        return " ".stringByAppendingString(theSection.name!)
+        return "  ".stringByAppendingString(theSection.name!)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -198,9 +198,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             dateTitle = NSString(format: "%@", self.timeFormatter.stringFromDate(trip.startDate))
             
         }
-        tableCell.textLabel!.text = NSString(format: "%@  %@ %@", ratingString, dateTitle, trip.isSynced ? "" : "🔹")
+        tableCell.textLabel!.text = NSString(format: "%@ %@ for %.1f miles", trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
         
-        tableCell.detailTextLabel!.text = NSString(format: "%.1f miles", trip.lengthMiles)
+        tableCell.detailTextLabel!.text = NSString(format: "%@", ratingString)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
