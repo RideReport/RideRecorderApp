@@ -444,7 +444,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         if (!self.hasCenteredMap) {
-            let mapRegion = MKCoordinateRegion(center: mapView.userLocation.coordinate, span: MKCoordinateSpanMake(0.005, 0.005));
+            // offset center to account for table view overlap
+            let mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2DMake(mapView.userLocation.coordinate.latitude - 0.005, mapView.userLocation.coordinate.longitude), span: MKCoordinateSpanMake(0.028, 0.028));
             mapView.setRegion(mapRegion, animated: false)
             
             self.hasCenteredMap = true
