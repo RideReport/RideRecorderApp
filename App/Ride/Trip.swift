@@ -59,9 +59,8 @@ class Trip : NSManagedObject {
             self.didAccessValueForKey("sectionIdentifier")
             if (sectionString == nil) {
                 // do the thing
-                if (self.startDate == nil) {
-                    // should only happen for newly created trips
-                    sectionString = "Today"
+                if (self.startDate == nil || !self.isClosed) {
+                    sectionString = "In Progress"
                 } else if (self.startDate.isToday()) {
                     sectionString = "Today"
                 } else if (self.startDate.isYesterday()) {
@@ -386,6 +385,8 @@ class Trip : NSManagedObject {
     
     func simplify() {
         if (self.locations == nil || self.locations.count == 0) {
+            self.simplifiedLocations = NSOrderedSet()
+            CoreDataController.sharedCoreDataController.saveContext()
             return
         }
         

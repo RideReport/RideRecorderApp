@@ -151,7 +151,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let theSection = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
         
-        return theSection.name
+        return " ".stringByAppendingString(theSection.name!)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -174,9 +174,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as UITableViewHeaderFooterView
-        headerView.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.1)
+        headerView.tintColor = UIColor(white: 0.2, alpha: 1.0)
         headerView.opaque = false
-        headerView.textLabel.textColor = UIColor.whiteColor()
+        headerView.textLabel.font = UIFont.boldSystemFontOfSize(14.0)
+        headerView.textLabel.textColor = UIColor(white: 0.9, alpha: 1.0)
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
