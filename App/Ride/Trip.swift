@@ -59,7 +59,7 @@ class Trip : NSManagedObject {
             self.didAccessValueForKey("sectionIdentifier")
             if (sectionString == nil) {
                 // do the thing
-                if (self.startDate == nil || !self.isClosed) {
+                if (self.startDate.isToday() && !self.isClosed) {
                     sectionString = "In Progress"
                 } else if (self.startDate.isToday()) {
                     sectionString = "Today"
@@ -67,7 +67,7 @@ class Trip : NSManagedObject {
                     sectionString = "Yesterday"
                 } else if (self.startDate.isThisWeek()) {
                     sectionString = self.startDate.weekDay()
-                } else {
+                } else if (self.startDate != nil) {
                     sectionString = Trip.dateFormatter.stringFromDate(self.startDate)
                 }
                 self.setPrimitiveValue(sectionString, forKey: "sectionIdentifier")
