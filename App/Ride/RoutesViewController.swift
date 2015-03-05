@@ -58,10 +58,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
-        
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
-            self.unloadFetchedResultsController()
-        }
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -93,7 +89,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.unloadFetchedResultsController()
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
