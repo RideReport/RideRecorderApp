@@ -32,24 +32,45 @@
 		    font: normal 14px 'courier new';
 		}
 		#content {
-	    width: 400px;
+	    width: 500px;
 	    float: left;
+		}
+		#screenshot {
+	    margin-right: 60px;
+  	  float: left;
 		}
 	</style>	
 	
 </head>
 
 <body onload="checkiPhone()">
+  <div id="screenshot">
+    <img src="images/screenshot.png" style="width: 300px;">
+  </div>
 	<div id="content">
   <h1>Ì†ΩÌ∫≤ Ride Beta</h1>	
+  You've been invited the Ride beta! Ride beta currently requires an iPhone running iOS 7 or later.
+  
+  <p><strong>What is Ride?</strong><br/>
+    Ride automatically logs your bike Rides. It helps make biking better.<br/><br/>
+    Fancy things:
+    <ul>
+    <li>Ride starts and stops automatically ‚Äì just hop on your bike.</li>
+    <li>When you finish a Ride, rate it Ì†ΩÌ±ç or Ì†ΩÌ±é right from your lock screen.</li>
+    <li>Your feedback and anonymous route data will help improve biking in Portland!</li>
+    </ul>
+  </p>
+	  <p><strong>Feedback</strong><br/>
+    This is a <em>early</em> beta and your feedback is critical. We really appreciate anything you‚Äôll give us ‚Äì whether bug reports, suggestions, or questions. Thanks so much!
+    </p>
   <span id="phone">
-	<p><strong>App Download</strong><br/>
+	<p><strong>How to install</strong><br/>
     <a href="itms-services://?action=download-manifest&url=https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Frideenterprise%2Fmanifest.plist">Tap here</a> to install Ride.</p>
-	  </span>
-	  <span id="not_phone">
-	    <p>
-    	  Visit this link on your iPhone to download Ride.</p>
-	  </span>
-
+	</p></span>
+	<span id="not_phone">
+	    <p><strong>How to install</strong><br/>
+    	  Visit this link on your iPhone to install Ride.</p>
+	  </p></span>
+    
 </div>
 </body>
