@@ -74,17 +74,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.Fitness
-        self.locationManager.pausesLocationUpdatesAutomatically = false
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
-    
-    func appDidBecomeActive() {
-        if (self.currentTrip != nil && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > 100.0) {
-            // if the app becomes active, check to see if we should wrap up a trip.
-            DDLogWrapper.logVerbose("Ending trip after app became activate.")
-            self.stopTrip()
-        }
+        self.locationManager.pausesLocationUpdatesAutomatically = false        
     }
     
     func startup() {
