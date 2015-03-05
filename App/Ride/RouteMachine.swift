@@ -74,7 +74,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.Fitness
-        self.locationManager.pausesLocationUpdatesAutomatically = false        
+        self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
     func startup() {
@@ -104,7 +104,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         let mostRecentTrip = Trip.mostRecentTrip()
         
         // Resume the most recent trip if it was recent enough
-        if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceNow) < self.routeResumeTimeout) {
+        if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout) {
             DDLogWrapper.logInfo("Resuming ride")
             #if DEBUG
                 let notif = UILocalNotification()
