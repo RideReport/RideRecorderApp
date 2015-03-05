@@ -15,7 +15,7 @@ let serverAddress = "http://54.148.164.222/"
 class NetworkMachine {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
-    
+        
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedMachine : NetworkMachine?
@@ -76,10 +76,13 @@ class NetworkMachine {
         
         CoreDataController.sharedCoreDataController.saveContext()
         
-        if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.syncTrip(trip)
                 })
+        } else if (syncInBackground) {
+            // run background task synchronously to avoid being suspended first
+            self.syncTrip(trip)
         }
     }
     
