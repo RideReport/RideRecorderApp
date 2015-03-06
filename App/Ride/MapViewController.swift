@@ -24,6 +24,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     private var hasCenteredMap : Bool = false
     
     private var privacyCircle : MKCircle?
+    private var geofenceCircles : [MKCircle] = []
     private var privacyCircleRenderer : PrivacyCircleRenderer?
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
@@ -217,6 +218,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     //
     // MARK: - Update Map UI
     //
+    
+    func refreshGeofences() {
+        for oldOverlay in self.geofenceCircles {
+            self.mapView.removeOverlay(oldOverlay)
+        }
+        
+        self.geofenceCircles = []
+        
+        for region in RouteMachine.sharedMachine.geofenceSleepRegions {
+            let circle = MKCircle(centerCoordinate: region.center, radius: region.radius)
+            self.geofenceCircles.append(circle)
+            self.mapView.addOverlay(circle, level: MKOverlayLevel.AboveLabels)
+        }
+    }
     
     
     func loadTrips() {
@@ -536,13 +551,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             renderer.lineWidth = lineWidth
             return renderer;
         } else if (overlay.isKindOfClass(MKCircle)) {
-            self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
-            self.privacyCircleRenderer!.strokeColor = UIColor.redColor()
-            self.privacyCircleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
-            self.privacyCircleRenderer!.lineWidth = 1.0
-            self.privacyCircleRenderer!.lineDashPattern = [3,5]
+            let circleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
+            circleRenderer!.lineWidth = 1.0
+            circleRenderer!.lineDashPattern = [3,5]
+
+            if (self.privacyCircle != nil && (overlay as MKCircle) == self.privacyCircle!) {
+                circleRenderer!.strokeColor = UIColor.redColor()
+                circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+                self.privacyCircleRenderer = circleRenderer
+            } else {
+                circleRenderer!.strokeColor = UIColor.purpleColor()
+                circleRenderer!.fillColor = UIColor.purpleColor().colorWithAlphaComponent(0.3)
+            }
             
-            return self.privacyCircleRenderer
+            return circleRenderer
         } else {
             return nil;
         }

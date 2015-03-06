@@ -84,7 +84,11 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     //
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
+        #if DEBUG
+            let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Show Geofences")
+        #else
+            let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
+        #endif
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
@@ -149,6 +153,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             sendLogFile()
         } else if (buttonIndex == 3) {
             self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
+        } else if (buttonIndex == 4) {
+            self.mapViewController.refreshGeofences()
         }
     }
     
