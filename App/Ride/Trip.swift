@@ -305,6 +305,7 @@ class Trip : NSManagedObject {
     
     func close(handler: ()->Void = {}) {
         if (self.isClosed == true) {
+            handler()
             return
         }
         
