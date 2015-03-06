@@ -205,7 +205,7 @@ class Trip : NSManagedObject {
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
         } else {
-            tripTypeString = "Traveled"
+            tripTypeString = ""
         }
 
         return tripTypeString
