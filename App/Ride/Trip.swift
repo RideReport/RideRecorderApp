@@ -93,10 +93,11 @@ class Trip : NSManagedObject {
         let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         self.addObserver(self, forKeyPath: "startDate", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
+        self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
     }
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-        if (keyPath == "startDate") {
+        if (keyPath == "startDate" || keyPath == "isClosed") {
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
         }
     }
