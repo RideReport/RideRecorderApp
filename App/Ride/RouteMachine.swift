@@ -475,7 +475,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         DDLogWrapper.logVerbose("Did change authorization status")
         
-        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.Authorized) {
+        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways) {
             self.isGettingInitialLocationForGeofence = true
             self.startMotionMonitoring()
         } else {

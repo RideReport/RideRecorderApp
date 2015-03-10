@@ -39,7 +39,7 @@
         } else {
           polyline = new L.Polyline(
     			  locs, 
-    			  {color: 'grey',
+    			  {color: '#EAFF00',
             weight: 3,
             opacity: 0.4,
             smoothFactor: 1}

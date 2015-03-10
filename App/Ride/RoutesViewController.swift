@@ -188,7 +188,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
-        var ratingString = "❔"
+        var ratingString = ""
         if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
             // for non-bike trips, show activity type instead of a rating
             ratingString = trip.activityTypeString()
