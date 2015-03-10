@@ -543,7 +543,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
                     renderer.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
                 } else {
-                    renderer.strokeColor = UIColor.grayColor().colorWithAlphaComponent(opacity)
+                    renderer.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(opacity)
                 }
             } else {
                 renderer.strokeColor = UIColor.brownColor().colorWithAlphaComponent(opacity)
