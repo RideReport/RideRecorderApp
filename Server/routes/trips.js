@@ -22,8 +22,13 @@ exports.getAll = function(req, res){
               "features": []
                };
     		  for(i=0; i<trips.length; i++) {
-            var trip = trips[i];
-            var locs = simplify(trip.locations.map(function(loc) {return loc.pos}), .00005);
+    		    var trip = trips[i];
+            
+    		    if (trip.locations.length == 0) {
+    		      continue;
+    		    }
+            var unsimplifiedLocs = trip.locations.map(function(loc) {return loc.pos})
+            var locs = simplify(unsimplifiedLocs, .00005);
             geojson.features.push({  
         			"type": "Feature",
         			"geometry": {
@@ -70,7 +75,7 @@ exports.getTripsOnDate = function(req, res){
     			"type": "Feature",
     			"geometry": {
             "type": "LineString",
-            "coordinates": trip.locations.map(function(loc) {return loc.pos.reverse()})
+            "coordinates": trip.locations.map(function(loc) {return loc.pos})
           },
     			"properties": {
     				"id"					:trip._id,

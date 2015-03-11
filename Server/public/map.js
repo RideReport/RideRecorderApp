@@ -16,7 +16,7 @@
 			trip = trips[i];
 			
 			// leaflet expects lat first.
-			locs = trip.geometry.coordinates
+      locs = trip.geometry.coordinates
 			  			  			
 			if (trip.properties.activity_type == 2) {
 			  var polyline;
