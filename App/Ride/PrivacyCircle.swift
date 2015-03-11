@@ -18,6 +18,7 @@ class PrivacyCircle : NSManagedObject {
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var privacyCirle : PrivacyCircle?
+        static var didLookForPrivacyCircle : Bool = false
     }
     
     class func defaultRadius() -> Double {
@@ -26,7 +27,7 @@ class PrivacyCircle : NSManagedObject {
     
     
     class func privacyCircle() -> PrivacyCircle! {
-        if (Static.privacyCirle != nil) {
+        if (Static.didLookForPrivacyCircle) {
             return Static.privacyCirle
         }
         
@@ -39,6 +40,7 @@ class PrivacyCircle : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
+        Static.didLookForPrivacyCircle = true
         if (results!.count == 0) {
             return nil
         }
