@@ -25,7 +25,7 @@
     			  locs, 
     			  {color: 'red',
             weight: 3,
-            opacity: 0.6,
+            opacity: 0.4,
             smoothFactor: 1}
           );
         } else if (trip.properties.rating == 1) {
@@ -33,7 +33,7 @@
     			  locs, 
     			  {color: '#00CC00',
             weight: 3,
-            opacity: 0.5,
+            opacity: 0.3,
             smoothFactor: 1}
           );
         } else {
@@ -41,7 +41,7 @@
     			  locs, 
     			  {color: '#EAFF00',
             weight: 3,
-            opacity: 0.4,
+            opacity: 0.2,
             smoothFactor: 1}
           );
         }
