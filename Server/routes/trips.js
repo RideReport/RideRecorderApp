@@ -2,6 +2,7 @@ var db = require('../db.js');
 var utils = require('../utils/utils.js');
 var NodeCache = require( "node-cache" );
 var tripCache = require('memory-cache');
+var simplify = require('simplify-geometry');
 
 exports.getAll = function(req, res){
   var cachedTrips = tripCache.get("allTrips");
@@ -22,11 +23,12 @@ exports.getAll = function(req, res){
                };
     		  for(i=0; i<trips.length; i++) {
             var trip = trips[i];
+            var locs = simplify(trip.locations.map(function(loc) {return loc.pos.reverse()}), .00005);
             geojson.features.push({  
         			"type": "Feature",
         			"geometry": {
                 "type": "LineString",
-                "coordinates": trip.locations.map(function(loc) {return loc.pos.reverse()})
+                "coordinates": locs
               },
         			"properties": {
         				"id"					:trip._id,

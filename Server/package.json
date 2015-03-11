@@ -19,6 +19,7 @@
     "forever":"0.10.x",
     "pg":"*",
     "pg-native":"*",
-    "memory-cache":"*"
+    "memory-cache":"*",
+    "simplify-geometry": "*"
   }
 }
