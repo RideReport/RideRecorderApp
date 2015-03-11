@@ -23,7 +23,7 @@ exports.getAll = function(req, res){
                };
     		  for(i=0; i<trips.length; i++) {
             var trip = trips[i];
-            var locs = simplify(trip.locations.map(function(loc) {return loc.pos.reverse()}), .00005);
+            var locs = simplify(trip.locations.map(function(loc) {return loc.pos}), .00005);
             geojson.features.push({  
         			"type": "Feature",
         			"geometry": {
