@@ -96,6 +96,10 @@ class Trip : NSManagedObject {
         self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         if (keyPath == "startDate" || keyPath == "isClosed") {
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")

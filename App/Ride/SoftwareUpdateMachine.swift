@@ -31,6 +31,10 @@ class SoftwareUpdateMachine : NSObject, UIAlertViewDelegate {
         self.checkForUpdateIfNeeded()
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     func appDidBecomeActive() {
         self.checkForUpdateIfNeeded()
     }
