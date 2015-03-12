@@ -54,9 +54,9 @@ class NetworkMachine {
     
     init () {
         self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        let config = NSURLSessionConfiguration.defaultSessionConfiguration()
-        config.timeoutIntervalForRequest = 60
-        self.manager = Alamofire.Manager(configuration: config)
+        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
+        configuration.timeoutIntervalForRequest = 60
+        self.manager = Alamofire.Manager(configuration: configuration)
     }
     
     func syncTrips() {
