@@ -33,9 +33,9 @@ class Trip : NSManagedObject {
         static var dateFormatter : NSDateFormatter!
     }
     
-    private var currentStateNotification : UILocalNotification? = nil;
-    private var startingPlacemark : CLPlacemark? = nil;
-    private var endingPlacemark : CLPlacemark? = nil;
+    private var currentStateNotification : UILocalNotification? = nil
+    private var startingPlacemark : CLPlacemark? = nil
+    private var endingPlacemark : CLPlacemark? = nil
     
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
@@ -102,7 +102,9 @@ class Trip : NSManagedObject {
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         if (keyPath == "startDate" || keyPath == "isClosed") {
+            self.willChangeValueForKey("sectionIdentifier")
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+            self.didChangeValueForKey("sectionIdentifier")
         }
     }
     
