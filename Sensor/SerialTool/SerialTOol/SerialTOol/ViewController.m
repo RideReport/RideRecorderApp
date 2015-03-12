@@ -107,7 +107,7 @@
     
     self.dataSources = [NSMutableArray array];
     
-    for (CPTColor *color in @[[CPTColor greenColor], [CPTColor blueColor], [CPTColor purpleColor], [CPTColor redColor]]) {
+    for (CPTColor *color in @[[CPTColor greenColor], [CPTColor blueColor], [CPTColor purpleColor]]) {
         CPTScatterPlot *plot = [[CPTScatterPlot alloc] init];
         
         plot.identifier     = [NSNumber numberWithInt:count];
@@ -278,7 +278,7 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
 
     NSString *rowString =  [self.inputBufferString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *components = [rowString componentsSeparatedByString:@","];
-    if (components.count != 6) {
+    if (components.count != 5) {
         //ignore partial rows
         self.inputBufferString = @"";
         return;
@@ -312,9 +312,8 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
 //    double lineralized = (6787/irVal) - 4.0;
 //    [rowArray addObject:[NSNumber numberWithDouble:irVal]];
     [rowArray addObject:[numbers objectAtIndex:1]];
-    [rowArray addObject:[numbers objectAtIndex:2]];
     
-    int magnitude = sqrt(pow([[numbers objectAtIndex:3] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0));
+    int magnitude = sqrt(pow([[numbers objectAtIndex:2] doubleValue], 2.0) + pow([[numbers objectAtIndex:3] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0));
     [rowArray addObject:[NSNumber numberWithDouble:magnitude]];
 
     NSUInteger indexToInsert = self.serialData.count;
@@ -346,7 +345,7 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
 
 - (IBAction)openOrClosePort:(id)sender
 {    
-    self.serialPort.baudRate = @9600;
+    self.serialPort.baudRate = @57600;
     
     self.serialPort.isOpen ? [self.serialPort close] : [self.serialPort open];
 }
