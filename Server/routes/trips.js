@@ -13,7 +13,7 @@ exports.getAll = function(req, res){
   } else {
       var trips = db.mongo_client.get('trips');
 
-      trips.find({},{w:1},function(error,trips) {
+      trips.find({"activityType": 2},{w:1},function(error,trips) {
     		if(error){
     			res.status(404).send('Not found');
     			console.error(error);    
