@@ -137,7 +137,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         }
         CoreDataController.sharedCoreDataController.saveContext()
         
-        self.currentTrip?.sendTripStartedNotification()
+        self.currentTrip?.sendTripStartedNotification(fromLocation)
         
         if (!self.locationManagerIsUpdating) {
             self.locationManagerIsUpdating = true
@@ -220,11 +220,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             if (location.speed >= self.minimumSpeedToContinueMonitoring ||
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
-                if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
-                    // if the event is more recent than the one we already have
-                    self.lastMovingLocation = location
-                }
                 if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                    if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
+                        // if the event is more recent than the one we already have
+                        self.lastMovingLocation = location
+                    }
                     Location(location: location as CLLocation, trip: self.currentTrip!)
                 }
             }

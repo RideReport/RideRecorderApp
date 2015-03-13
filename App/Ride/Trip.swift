@@ -269,15 +269,9 @@ class Trip : NSManagedObject {
         handler()
     }
     
-    func findStartingPlacemarkWithHandler(handler: ()->Void) {
-        if (self.locations.count < 1) {
-            handler()
-            return
-        }
-        
+    func findStartingPlacemarkWithHandler(startingLocation : CLLocation, handler: ()->Void) {
         let geocoder = CLGeocoder()
-        let startingLocation = self.locations.firstObject as Location
-        geocoder.reverseGeocodeLocation(startingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+        geocoder.reverseGeocodeLocation(startingLocation, completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
                 handler()
                 return
@@ -345,16 +339,16 @@ class Trip : NSManagedObject {
         }
     }
     
-    func sendTripStartedNotification() {
+    func sendTripStartedNotification(startingLocation : CLLocation) {
         if (self.startingPlacemark != nil) {
-            self.doSendStartingNotification()
+            self.sendTripStartedNotificationImmediately()
         }
-        self.findStartingPlacemarkWithHandler { () -> Void in
-            self.doSendStartingNotification()
+        self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
+            self.sendTripStartedNotificationImmediately()
         }
     }
     
-    private func doSendStartingNotification() {
+    private func sendTripStartedNotificationImmediately() {
         self.cancelTripCompletionNotification()
         
         var message = ""
