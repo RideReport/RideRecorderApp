@@ -32,7 +32,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
-    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 180 // must be larger than the deferral timeout
+    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 90
 
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 3
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
@@ -208,10 +208,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             var manualSpeed : CLLocationSpeed = 0
             
-            if (location.speed > 0) {
+            if (location.speed >= 0) {
                 foundGPSSpeed = true
             } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
-                // Some times locations given will not have a speed (or a negative speed).
+                // Some times locations given will not have a speed (a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
                 
                 manualSpeed = self.lastActiveMonitoringLocation!.calculatedSpeedFromLocation(location)
@@ -232,11 +232,11 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             self.lastActiveMonitoringLocation = location
         }
         
-        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenGPSBasedMovement){
+        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
             DDLogWrapper.logVerbose("Moving too slow for too long")
             self.stopTrip()
         } else if (foundGPSSpeed == false) {
-            if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow) > self.maximumTimeIntervalBetweenUsuableSpeedReadings) {
+            if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenUsuableSpeedReadings) {
                 DDLogWrapper.logVerbose("Went too long with unusable speeds.")
                 self.stopTrip()
             } else {
