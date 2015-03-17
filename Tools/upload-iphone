@@ -43,7 +43,9 @@ end
 
 url = AWS::S3::S3Object.url_for('Ride.ipa',
                  'rideenterprise',
+                 :use_ssl => true,
                  :expires_in => 60 * 60 * 120)
+puts url
 `cp Ride.ipa Ride.zip`
 `unzip Ride.zip -d Ride`
 current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride.app/Info.plist`.strip
@@ -60,8 +62,6 @@ url = AWS::S3::S3Object.url_for('manifest.plist',
                  :authenticated => false)                         
                  
 puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
-
-`/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url foo.com" "manifest.plist"`
 
 if (upload_build)                 
   `rm -r Ride.ipa`
