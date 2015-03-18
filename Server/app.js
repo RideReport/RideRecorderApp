@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var config = require('./config/config.js');
 var path = require('path');
 var trips = require('./routes/trips');
+var dashboard = require('./routes/dashboard');
 
 var db = require('./db.js');
 
@@ -34,6 +35,7 @@ app.get('/date/:date', function(req, res) {
   res.render('date');
 });
 
+app.get('/dashboard', dashboard.show);
 app.get('/trips', trips.getAll);
 app.get('/trips/date/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);

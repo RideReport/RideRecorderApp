@@ -22,16 +22,14 @@ Description: This sketch will make the arduino read ALS on analog
 #define MAG_ADDR 0x1E // 0011110b, I2C 7bit address of HMC5883
 
 int AlsPin = 3; 
-int irPin = 2;
+int irPin = A2;
 int ultPin = 1;
 int PWPin = 0; //Ultrasonic Pulse Width
 
 void setup() {
-  Serial.begin(57600); 
-     while (!Serial) {
-    ; // wait for serial port to connect. Needed for Leonardo only
-     }
-  
+  Serial.begin(57600);
+
+ pinMode(irPin, INPUT); //for the Ultrasonic sensor  
  pinMode(ultPin, INPUT); //for the Ultrasonic sensor
  Wire.begin();
  //Start the Serial and I2C communications (with magnetometer)
@@ -44,7 +42,6 @@ void setup() {
 
   pinMode(SCK, OUTPUT);
   pinMode(MOSI, OUTPUT);
-  pinMode(MISO, INPUT);
   // see if the card is present and can be initialized:
   if (!SD.begin(10)) {
     Serial.println("Card failed, or not present");
@@ -52,6 +49,15 @@ void setup() {
     return;
   }
   Serial.println("card initialized.");
+  
+  File dataFile = SD.open("datalog.txt", FILE_WRITE);
+
+  // if the file is available, write to it:
+  if (dataFile) {
+  dataFile.println("=======BEGIN======");
+   
+    dataFile.close();
+  }
   
 }
 
@@ -61,9 +67,6 @@ void loop()
 {
 
     String dateString = getTimeStamp();
-
-    int ALSLevel;
-    ALSLevel=analogRead(AlsPin); 
 
     int x,y,z; //triple axis for magnetometer
     Wire.beginTransmission(MAG_ADDR); //tel where to begin reading mag data
@@ -113,9 +116,7 @@ void loop()
    
     dataFile.close();
   }
-      // print to the serial port too:
-  Serial.print(dateString);    
-  Serial.print("\t");      
+      // print to the serial port too:    
   Serial.print(dis);
   Serial.print(",");
   Serial.print(ultDist);

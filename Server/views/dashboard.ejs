@@ -1,0 +1,49 @@
+<head>
+  <title>Ride</title> 
+	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
+		body {
+    		padding: 10;
+		    margin: 10;
+		}
+		html, body {
+		    font: normal 14px 'courier new';
+		}
+		#content {
+	    width: 500px;
+	    float: left;
+		}
+		#screenshot {
+	    margin-right: 60px;
+  	  float: left;
+		}
+	</style>	
+	
+</head>
+
+<body>
+	<div id="content">
+  <h1>í ½íº² Ride Dashboard</h1>
+  <table>
+    <tr>
+      <td>Total trips</td><td><%=bikeTripsCount%> trips</td>
+    </tr>
+    <tr>
+      <td>Rated trips</td><td> <%= ratedTripsCount%> trips</td>
+    </tr>        
+    <tr>
+      <td>Average Rating</td><td> <%=(totalRatingMagnitude/ratedTripsCount).toFixed(2)%></td>      
+    </tr>
+    <tr>
+      <td>Total Distance</td><td> <%=(bikeTotalDistance / 1.60934).toFixed(1)%>m</td>      
+    </tr>
+    <tr>
+      <td>Average Distance</td><td> <%=(bikeTotalDistance/(bikeTripsCount * 1.60934)).toFixed(1)%>m</td>      
+    </tr>
+  </table>
+  
+
+    
+</div>
+</body>
