@@ -477,6 +477,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways) {
             self.isGettingInitialLocationForGeofence = true
+            self.locationManager.startMonitoringSignificantLocationChanges()
             self.startMotionMonitoring()
         } else {
             // tell the user they need to give us access to the zion mainframes
