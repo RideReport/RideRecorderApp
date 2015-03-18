@@ -11,7 +11,7 @@
 					<key>kind</key>
 					<string>software-package</string>
 					<key>url</key>
-					<string>https://s3-us-west-2.amazonaws.com/rideenterprise/Ride.ipa?AWSAccessKeyId=AKIAJC7GSZARTGX44Z2A&amp;Expires=1427053460&amp;Signature=S%2BPuXRuoLchZewZTO1MYoUqCaY8%3D</string>
+					<string>https://s3-us-west-2.amazonaws.com/rideenterprise/Ride.ipa?AWSAccessKeyId=AKIAJC7GSZARTGX44Z2A&amp;Expires=1427130572&amp;Signature=mFlJi412fp3dci11l6f3Ju9FDf4%3D</string>
 				</dict>
 				<dict>
 					<key>kind</key>
@@ -35,7 +35,7 @@
 				<key>bundle-identifier</key>
 				<string>com.Knock.Ride</string>
 				<key>bundle-version</key>
-				<string>23</string>
+				<string>24</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>subtitle</key>

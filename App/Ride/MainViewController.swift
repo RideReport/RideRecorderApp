@@ -13,7 +13,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
-    @IBOutlet weak var batteryLowPopupView: UIView!
+    @IBOutlet weak var popupView: PopupView!
+    
     var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
@@ -109,16 +110,23 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.customButton.secondaryColor = UIColor.grayColor()
             self.customButton.animates = false
             
-            if (RouteMachine.sharedMachine.isPausedDueToBatteryLife() && self.batteryLowPopupView.hidden) {
-                self.batteryLowPopupView.popIn()
+            if (self.popupView.hidden) {
+                self.popupView.popIn()
+            }
+            if (RouteMachine.sharedMachine.isPausedDueToUnauthorized()) {
+                self.popupView.text = "Ride needs permission to run."
+            } else if (RouteMachine.sharedMachine.isPausedDueToBatteryLife()) {
+                self.popupView.text = "Ride is paused until you charge your phone =)."
+            } else {
+                self.popupView.text = "Ride is paused."
             }
         } else {
             self.customButton.maskImage = UIImage(named: "locationArrow.png")
             self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
             self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
             self.customButton.animates = true
-            if (!RouteMachine.sharedMachine.isPausedDueToBatteryLife() && !self.batteryLowPopupView.hidden) {
-                self.batteryLowPopupView.fadeOut()
+            if (!self.popupView.hidden) {
+                self.popupView.fadeOut()
             }
         }
     }

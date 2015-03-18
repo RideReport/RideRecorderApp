@@ -423,11 +423,15 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func isPaused() -> Bool {
-        return self.isPausedDueToBatteryLife() || self.isPausedByUser()
+        return self.isPausedDueToBatteryLife() || self.isPausedByUser() || isPausedDueToUnauthorized()
     }
     
     func isPausedByUser() -> Bool {
         return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
+    }
+    
+    func isPausedDueToUnauthorized() -> Bool {
+        return (CLLocationManager.authorizationStatus() != CLAuthorizationStatus.AuthorizedAlways)
     }
     
     func pauseTracking() {

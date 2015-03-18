@@ -49,7 +49,6 @@ class SoftwareUpdateMachine : NSObject, UIAlertViewDelegate {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
             let manifestDictionary = NSDictionary(contentsOfURL: self.manifestUrl) as [String:AnyObject]?
             if (manifestDictionary != nil) {
-                
                 let items = manifestDictionary?["items"] as [AnyObject]?
                 let item = items?.last as [String:AnyObject]?
                 

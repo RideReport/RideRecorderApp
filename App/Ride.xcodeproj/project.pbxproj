@@ -32,7 +32,6 @@
 		8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD651A425F9200FE2645 /* locationArrowDisabled.png */; };
 		845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */; };
 		846F50D61A80397C008DF801 /* SimpleRouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */; };
-		8478621E1A267B6900176500 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 84D1555319D2733500316995 /* Info.plist */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
 		847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* RoutesViewController.swift */; };
@@ -280,7 +279,7 @@
 			children = (
 				8444971A1A3A4E040009F889 /* Alamofire.framework */,
 				84D7E14C1AB1F4D1005187E0 /* Alamofire.framework */,
-				8444971C1A3A4E040009F889 /* AlamofireTests.xctest */,
+				8444971C1A3A4E040009F889 /* Alamofire iOS Tests.xctest */,
 				84D7E14E1AB1F4D1005187E0 /* Alamofire OSX Tests.xctest */,
 			);
 			name = Products;
@@ -527,7 +526,7 @@
 		84D1554719D2733500316995 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
 					8429E5CA1A5DC58500EB3E94 = {
@@ -578,7 +577,7 @@
 			remoteRef = 844497191A3A4E040009F889 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		8444971C1A3A4E040009F889 /* AlamofireTests.xctest */ = {
+		8444971C1A3A4E040009F889 /* Alamofire iOS Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = "Alamofire iOS Tests.xctest";
@@ -615,7 +614,6 @@
 			files = (
 				8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */,
 				8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */,
-				8478621E1A267B6900176500 /* Info.plist in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
@@ -938,11 +936,12 @@
 				);
 				INFOPLIST_FILE = Ride/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-D";
+				OTHER_SWIFT_FLAGS = "-D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -963,6 +962,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0f146260-b870-4e97-a353-add1b815a438";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

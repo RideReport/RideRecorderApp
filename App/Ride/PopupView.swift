@@ -17,6 +17,49 @@ import Foundation
     @IBInspectable var arrowInset: CGFloat = 10
     @IBInspectable var strokeColor: UIColor = UIColor.darkGrayColor()
     @IBInspectable var fillColor: UIColor = UIColor.whiteColor()
+    @IBInspectable var text: String = "Popupview Text" {
+        didSet {
+            self.reloadView()
+        }
+    }
+    
+    private var textLabel : UILabel! = nil
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    func commonInit() {
+        self.textLabel = UILabel(frame: CGRectMake(7, 20, self.frame.size.width - 10, self.frame.size.height - 20))
+        self.textLabel.font = UIFont.systemFontOfSize(14)
+        self.textLabel.textColor = UIColor.whiteColor()
+        self.textLabel.numberOfLines = 1
+        self.textLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        self.reloadView()
+        self.addSubview(self.textLabel)
+    }
+    
+    private func reloadView() {
+        let rightHandBefore = self.frame.origin.x + self.frame.width
+        self.textLabel.text = self.text
+        self.textLabel.sizeToFit()
+        let newWidth = self.textLabel.frame.width + 20
+        self.frame = CGRectMake(rightHandBefore - newWidth, self.frame.origin.y, newWidth, self.frame.height)
+        self.setNeedsDisplay()
+    }
+    
+    override func didMoveToSuperview() {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+            self.reloadView()
+        }
+    }
     
     override func drawRect(rect: CGRect) {
         let smallerPath = CGRectMake(rect.origin.x + strokeWidth, arrowHeight + strokeWidth, rect.size.width - 2*strokeWidth, rect.size.height - arrowHeight - 2*strokeWidth)
