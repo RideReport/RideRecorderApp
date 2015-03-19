@@ -618,30 +618,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
-                                <rect key="frame" x="266" y="322" width="68" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="68" id="bSu-OQ-Lue"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Cool">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="bSu-OQ-Lue"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <include reference="bSu-OQ-Lue"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="AZM-Ht-f28"/>
-                                </connections>
-                            </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
                                 <rect key="frame" x="562" y="36" width="22" height="22"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -667,6 +643,30 @@
                                     <rect key="frame" x="42" y="264" width="316" height="71"/>
                                 </variation>
                             </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
+                                <rect key="frame" x="266" y="322" width="68" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="68" id="bSu-OQ-Lue"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal" title="Killer">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="bSu-OQ-Lue"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="bSu-OQ-Lue"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="AZM-Ht-f28"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -965,7 +965,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="That's it! Hop on your bike and Ride will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're set! Go get on your bike and Ride will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
                                 <rect key="frame" x="79" y="252" width="442" height="67"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -975,61 +975,19 @@
                                 <rect key="frame" x="210" y="55" width="180" height="39"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DlB-7P-Z7C">
-                                <rect key="frame" x="266" y="342" width="68" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="73" id="cFv-ht-riC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Go Ride">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="cFv-ht-riC"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="164" y="380" width="73" height="32"/>
-                                    <mask key="constraints">
-                                        <include reference="cFv-ht-riC"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="next:" destination="Tem-5b-8NB" eventType="touchUpInside" id="zrF-IF-LIn"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="DlB-7P-Z7C" firstAttribute="top" secondItem="wjC-A5-4oV" secondAttribute="bottom" constant="17" id="6Ga-re-oxi"/>
-                            <constraint firstItem="ytq-jA-YbT" firstAttribute="top" secondItem="DlB-7P-Z7C" secondAttribute="bottom" constant="20" id="E5n-DK-ofU"/>
-                            <constraint firstAttribute="centerY" secondItem="DlB-7P-Z7C" secondAttribute="centerY" id="HMo-09-Ncd"/>
                             <constraint firstItem="Pfx-Lg-Go3" firstAttribute="top" secondItem="U8P-mt-koQ" secondAttribute="bottom" constant="35" id="IGA-lg-uWe"/>
                             <constraint firstAttribute="centerY" secondItem="wjC-A5-4oV" secondAttribute="centerY" id="LY8-0T-Shd"/>
-                            <constraint firstItem="DlB-7P-Z7C" firstAttribute="top" secondItem="wjC-A5-4oV" secondAttribute="bottom" constant="23" id="Nka-3g-NNH"/>
                             <constraint firstItem="wjC-A5-4oV" firstAttribute="width" secondItem="Rqf-Ww-wUo" secondAttribute="width" multiplier="4:5" id="Wrf-G5-6FF"/>
                             <constraint firstItem="wjC-A5-4oV" firstAttribute="width" secondItem="Rqf-Ww-wUo" secondAttribute="width" id="f2E-ZX-gH2"/>
-                            <constraint firstItem="DlB-7P-Z7C" firstAttribute="top" secondItem="wjC-A5-4oV" secondAttribute="bottom" constant="60" id="gJV-Bw-Je0"/>
                             <constraint firstAttribute="centerX" secondItem="wjC-A5-4oV" secondAttribute="centerX" id="poC-iC-yAY"/>
                             <constraint firstAttribute="centerX" secondItem="Pfx-Lg-Go3" secondAttribute="centerX" id="u2U-N3-lZR"/>
-                            <constraint firstAttribute="centerX" secondItem="DlB-7P-Z7C" secondAttribute="centerX" id="z1t-is-lIg"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="f2E-ZX-gH2"/>
-                                <exclude reference="6Ga-re-oxi"/>
-                                <exclude reference="HMo-09-Ncd"/>
-                                <exclude reference="gJV-Bw-Je0"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="constraints">
-                                <exclude reference="HMo-09-Ncd"/>
-                                <exclude reference="Nka-3g-NNH"/>
-                                <include reference="gJV-Bw-Je0"/>
-                                <exclude reference="E5n-DK-ofU"/>
                             </mask>
                         </variation>
                     </view>
@@ -1060,16 +1018,6 @@
                                 <nil key="highlightedColor"/>
                                 <variation key="widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="40" y="257" width="320" height="84.5"/>
-                                </variation>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Thanks for installing Ride." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
-                                <rect key="frame" x="167" y="79" width="267" height="38"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="52" y="231" width="297" height="30"/>
                                 </variation>
                             </label>
                             <textView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8qs-Gs-CEz">
@@ -1135,6 +1083,19 @@
                                     <action selector="next:" destination="326-On-509" eventType="touchUpInside" id="aBs-bL-X9d"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Automatically Log your Rides." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
+                                <rect key="frame" x="167" y="79" width="267" height="38"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="139" y="61" width="330" height="29"/>
+                                </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="52" y="231" width="297" height="30"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1161,7 +1122,7 @@
                             <constraint firstItem="UL8-8P-mSA" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" id="nte-fA-6ga"/>
                             <constraint firstItem="evp-5r-dTF" firstAttribute="top" secondItem="JzU-pM-JS3" secondAttribute="bottom" constant="40" id="oGj-6f-T35"/>
                             <constraint firstItem="8qs-Gs-CEz" firstAttribute="top" secondItem="zas-tV-1iZ" secondAttribute="bottom" constant="8" id="skl-2V-IKB"/>
-                            <constraint firstAttribute="centerX" secondItem="zas-tV-1iZ" secondAttribute="centerX" constant="-0.5" id="wAP-eC-tJn"/>
+                            <constraint firstAttribute="centerX" secondItem="zas-tV-1iZ" secondAttribute="centerX" id="wAP-eC-tJn"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">

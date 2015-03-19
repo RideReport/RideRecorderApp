@@ -50,7 +50,7 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
     }
     
     func setInitialUI() {
-        self.helperTextLabel.markdownStringValue = "Ride data is open and completely anonymous. Want to hide Rides around your house? Set up a **Privacy Circle**."
+        self.helperTextLabel.markdownStringValue = "You can hide Rides that pass near your house. Set up a **Privacy Circle**."
     }
     
     @IBAction func tappedSetupPrivacy(sender: AnyObject) {

@@ -14,6 +14,15 @@ class GettingStartedFinishedViewController: GettingStartedChildViewController {
     
     
     override func viewDidLoad() {
-        helperTextLabel.markdownStringValue = "That's it! **Ride will start automatically** when you get on your bike."
+        helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride will take care of the rest."
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(8 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+            self.parent?.nextPage()
+            return
+        }
     }
 }

@@ -145,7 +145,7 @@
 //    NSMutableArray *subarray = [self.dataSources mutableCopy];
 //    [subarray removeObjectAtIndex:3];
 
-    NSArray *subarray = @[[self.dataSources objectAtIndex:1]];
+    NSArray *subarray = @[[self.dataSources objectAtIndex:2]];
     
     [plotSpace scaleToFitPlots:subarray];
 

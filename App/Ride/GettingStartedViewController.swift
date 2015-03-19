@@ -26,11 +26,11 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as GettingStartedChildViewController
         self.setupVC(gettingStartedTermsVC)
         
-        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as GettingStartedChildViewController
-        self.setupVC(gettingStartedRatingVC)
-        
         let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as GettingStartedChildViewController
         self.setupVC(gettingStartedBatteryVC)
+        
+        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as GettingStartedChildViewController
+        self.setupVC(gettingStartedRatingVC)
         
         let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as GettingStartedChildViewController
         self.setupVC(gettingStartedPriacyVC)
@@ -38,7 +38,7 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedFinishedVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedFinished") as GettingStartedChildViewController
         self.setupVC(gettingStartedFinishedVC)
         
-        self.myViewControllers = [gettingStartedTermsVC, gettingStartedPriacyVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedFinishedVC]
+        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedPriacyVC, gettingStartedBatteryVC, gettingStartedFinishedVC]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }

@@ -21,7 +21,7 @@ class GettingStartedTermsViewController: GettingStartedChildViewController, UITe
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "didTapLink:")
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
-        helperTextLabel.markdownStringValue = "Ride automatically logs your bike trips, which helps improve biking in Portland."
+        helperTextLabel.markdownStringValue = "You don't need to do anything to use Ride. Hop on your bike and Ride will begin automatically."
     }
     
     func didTapLink(tapGesture: UIGestureRecognizer) {

@@ -16,11 +16,11 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        helperTextLabel.markdownStringValue = "Rides are reported straight to your lock screen. Just **slide left to rate the route**."
+        helperTextLabel.markdownStringValue = "When a Ride ends, it reports straight to your lock screen. **Slide left to rate it.**"
     }
     
     func didOpenControls(view: PushSimulatorView) {
-        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a good ride, **thumbs down** if something was wrong.")
+        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill Ride, **thumbs down** if something stressed you out.")
     }
     
     func didTapActionButton(view: PushSimulatorView) {
@@ -30,7 +30,7 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your Rides helps improve biking in Portland!")
+        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your Rides will **improve biking in Portland**!")
     }
     
     func didTapDestructiveButton(view: PushSimulatorView) {
@@ -40,6 +40,6 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your Rides helps improve biking in Portland!")
+        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your Rides will **improve biking in Portland**!")
     }
 }
