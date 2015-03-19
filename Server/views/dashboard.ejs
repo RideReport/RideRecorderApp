@@ -70,6 +70,7 @@
 <script>
 function dashboard(id, fData){
     var barColor = 'steelblue';
+    var bar2Color = 'red';
     function segColor(c){ return {low:"#807dba", mid:"#e08214",high:"#41ab5d"}[c]; }
         
     // function to handle histogram.
@@ -95,13 +96,28 @@ function dashboard(id, fData){
 
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
-                .domain([0, d3.max(fD, function(d) { return d[1]; })]);
-
-        // Create bars for histogram to contain rectangles and freq labels.
+                .domain([0, d3.max(fD, function(d) { return d[2]; })]);
+                // Create function for y-axis map.
+                
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                .append("g").attr("class", "bar");
+                .append("g").attr("class", "bar");           
+                
+        //Miles bar
+        bars.append("rect")
+            .attr("x", function(d) { return x(d[0]); })
+            .attr("y", function(d) { return y(d[2]); })
+            .attr("width", x.rangeBand())
+            .attr("height", function(d) { return hGDim.h - y(d[2]); })
+            .attr('fill',bar2Color);       
+            
+      //Miles bar label
+      bars.append("text").text(function(d){ return d3.format(",")(d[2].toFixed(1))})
+          .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
+          .attr("y", function(d) { return y(d[2])-5; })
+          .attr("text-anchor", "middle");       
+                     
         
-        //create the rectangles.
+        //Trips bar
         bars.append("rect")
             .attr("x", function(d) { return x(d[0]); })
             .attr("y", function(d) { return y(d[1]); })
@@ -109,58 +125,20 @@ function dashboard(id, fData){
             .attr("height", function(d) { return hGDim.h - y(d[1]); })
             .attr('fill',barColor);
             
-        //Create the frequency labels above the rectangles.
+        //Trips bar label
         bars.append("text").text(function(d){ return d3.format(",")(d[1])})
             .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
             .attr("y", function(d) { return y(d[1])-5; })
             .attr("text-anchor", "middle");
-        
-        // create function to update the bars
-        hG.update = function(nD, color){
-            // update the domain of the y-axis map to reflect change in frequencies.
-            y.domain([0, d3.max(nD, function(d) { return d[1]; })]);
-            
-            // Attach the new data to the bars.
-            var bars = hGsvg.selectAll(".bar").data(nD);
-            
-            // transition the height and color of rectangles.
-            bars.select("rect").transition().duration(500)
-                .attr("y", function(d) {return y(d[1]); })
-                .attr("height", function(d) { return hGDim.h - y(d[1]); })
-                .attr("fill", color);
-
-            // transition the frequency labels location and change value.
-            bars.select("text").transition().duration(500)
-                .text(function(d){ return d3.format(",")(d[1])})
-                .attr("y", function(d) {return y(d[1])-5; });            
-        }        
         return hG;
     }
     
-       
-    
-    // calculate total frequency by state for all segment.
-    // var sF = fData.map(function(d){return [d.State,d.total];});
-    var values = Object.keys(fData).map(function(key) { return [key, fData[key]]; });
-    
-    var hG = histoGram(values); // create the histogram.
+    var hG = histoGram(fData); // create the histogram.
 }
 </script>
 
 <script>
 var weekData =  JSON.parse('<%-JSON.stringify(weekData)%>');
-var freqData=[
-{State:'AL',freq:{low:4786, mid:1319, high:249}}
-,{State:'AZ',freq:{low:1101, mid:412, high:674}}
-,{State:'CT',freq:{low:932, mid:2149, high:418}}
-,{State:'DE',freq:{low:832, mid:1152, high:1862}}
-,{State:'FL',freq:{low:4481, mid:3304, high:948}}
-,{State:'GA',freq:{low:1619, mid:167, high:1063}}
-,{State:'IA',freq:{low:1819, mid:247, high:1203}}
-,{State:'IL',freq:{low:4498, mid:3852, high:942}}
-,{State:'IN',freq:{low:797, mid:1849, high:1534}}
-,{State:'KS',freq:{low:162, mid:379, high:471}}
-];
-
-dashboard('#dashboard',weekData);
+var graphData = Object.keys(weekData).map(function (key) { return weekData[key];});
+dashboard('#dashboard',graphData);
 </script>

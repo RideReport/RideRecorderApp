@@ -24,30 +24,32 @@ exports.show = function(req, res) {
       
 		  for(i=0; i<trips.length; i++) {
 		    var trip = trips[i];
+		    
+		    if (trip.locations.length == 0 || trip.activityType != 2) {
+		      continue;
+		    }
+		    
+		    bikeTripsCount++
+		    
+		    var tripLength = geojsonTools.getDistance(trip.locations.map(function(loc) {return loc.pos}), 2);
+  	    bikeTotalDistance += tripLength;
+  	    if (trip.rating != 0) {
+    	   ratedTripsCount++
+    	   if (trip.rating == 1) {
+    	    totalRatingMagnitude++ 
+    	   }
+    	  }
+  	    
+          
 		    var creationDate = new Date(trip.creationDate);
 		    if (creationDate > weekAgo) {
 		      var dateThing = creationDate.getMonth() + "-" +creationDate.getDate()
 		      if (!weekData.hasOwnProperty(dateThing)) {
-		        weekData[dateThing] = 1
+		        weekData[dateThing] = [dateThing,1,tripLength]
 		      } else {
-		        weekData[dateThing] = weekData[dateThing] + 1
+		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][2] + tripLength]
 		      }
 		    }
-		    
-		    if (trip.locations.length == 0) {
-		      continue;
-		    }
-		    
-		     if (trip.activityType == 2) {
-      	    bikeTripsCount++
-      	    bikeTotalDistance += geojsonTools.getDistance(trip.locations.map(function(loc) {return loc.pos}), 2)
-      	    if (trip.rating != 0) {
-        	   ratedTripsCount++
-        	   if (trip.rating == 1) {
-        	    totalRatingMagnitude++ 
-        	   }
-        	  }
-          }
 
     	}	
     	
