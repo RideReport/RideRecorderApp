@@ -2,7 +2,8 @@
   <title>Ride</title> 
 	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
+	<style type="text/css">
 		body {
     		padding: 10;
 		    margin: 10;
@@ -21,7 +22,9 @@
 		path {  stroke: #fff; }
     path:hover {  opacity:0.9; }
     rect:hover {  fill:blue; }
-    .axis {  font: 10px sans-serif; }
+    .axis {  
+      font: 10px sans-serif;
+    }
     .legend tr{    border-bottom:1px solid grey; }
     .legend tr:first-child{    border-top:1px solid grey; }
 
@@ -57,7 +60,6 @@
       <td>Average Distance</td><td> <%=(bikeTotalDistance/(bikeTripsCount * 1.60934)).toFixed(1)%>m</td>      
     </tr>
   </table>
-  <h2>Rides per day</h2>
   <body>
   <div id='dashboard'>
   </div>
@@ -76,7 +78,7 @@ function dashboard(id, fData){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 1400 - hGDim.l - hGDim.r, 
+        hGDim.w = 2000 - hGDim.l - hGDim.r, 
         hGDim.h = 800 - hGDim.t - hGDim.b;
             
         //create svg for histogram.
@@ -100,7 +102,15 @@ function dashboard(id, fData){
                 // Create function for y-axis map.
                 
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
-                .append("g").attr("class", "bar");           
+                .append("g").attr("class", "bar");    
+                
+        //Weekends bar
+        bars.append("rect")
+            .attr("x", function(d) { return x(d[0]); })
+            .attr("y", 0)
+            .attr("width", x.rangeBand())
+            .attr("height", hGDim.h)
+            .attr('fill',function(d) { return (d[3] == 0 || d[3] == 6) ? "grey" : "white" });                       
                 
         //Miles bar
         bars.append("rect")
@@ -123,7 +133,7 @@ function dashboard(id, fData){
             .attr("y", function(d) { return y(d[1]); })
             .attr("width", x.rangeBand())
             .attr("height", function(d) { return hGDim.h - y(d[1]); })
-            .attr('fill',barColor);
+            .attr('fill',barColor);            
             
         //Trips bar label
         bars.append("text").text(function(d){ return d3.format(",")(d[1])})
@@ -139,6 +149,6 @@ function dashboard(id, fData){
 
 <script>
 var weekData =  JSON.parse('<%-JSON.stringify(weekData)%>');
-var graphData = Object.keys(weekData).map(function (key) { return weekData[key];});
+var graphData = Object.keys(weekData).map(function (key) { return weekData[key];}).sort(function(a,b) { return a[0] > b[0] ? 1 : a[0] < b[0] ? -1 : 0});
 dashboard('#dashboard',graphData);
 </script>

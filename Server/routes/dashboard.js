@@ -43,18 +43,16 @@ exports.show = function(req, res) {
           
 		    var creationDate = new Date(trip.creationDate);
 		    if (creationDate > weekAgo) {
-		      var dateThing = creationDate.getMonth() + "-" +creationDate.getDate()
+		      var dateThing = ('0' + creationDate.getMonth()).slice(-2) + "/" + ('0' + creationDate.getDate()).slice(-2)
 		      if (!weekData.hasOwnProperty(dateThing)) {
-		        weekData[dateThing] = [dateThing,1,tripLength]
+		        weekData[dateThing] = [dateThing,1,tripLength,creationDate.getDay()]
 		      } else {
-		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][2] + tripLength]
+		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][2] + tripLength,weekData[dateThing][3]]
 		      }
 		    }
 
     	}	
     	
-    	console.log(weekData)
-
       return res.render('dashboard', {bikeTotalDistance: bikeTotalDistance, bikeTripsCount: bikeTripsCount, ratedTripsCount: ratedTripsCount, totalRatingMagnitude: totalRatingMagnitude, weekData: weekData});
 		}
 	});
