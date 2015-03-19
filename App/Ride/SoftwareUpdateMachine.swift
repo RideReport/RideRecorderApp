@@ -59,7 +59,7 @@ class SoftwareUpdateMachine : NSObject, UIAlertViewDelegate {
                     // update is available
                     if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
                         let notif = UILocalNotification()
-                        notif.alertBody = "An update to Ride is available! Open Ride to upgrade over the air."
+                        notif.alertBody = "An update to Ride is available! Open Ride to upgrade."
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
                     

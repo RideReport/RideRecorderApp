@@ -118,7 +118,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logInfo("Resuming ride")
             #if DEBUG
                 let notif = UILocalNotification()
-                notif.alertBody = "Resumed Ride!"
+                notif.alertBody = "🐞 Resumed Ride!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
@@ -268,7 +268,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         #if DEBUG
             let notif = UILocalNotification()
-            notif.alertBody = "Entered Motion Monitoring state!"
+            notif.alertBody = "🐞 Entered Motion Monitoring state!"
             notif.category = "RIDE_COMPLETION_CATEGORY"
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
         #endif
@@ -296,7 +296,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         if (finalLocation != nil) {
             #if DEBUG
                 let notif = UILocalNotification()
-                notif.alertBody = "Geofenced!"
+                notif.alertBody = "🐞 Geofenced!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif

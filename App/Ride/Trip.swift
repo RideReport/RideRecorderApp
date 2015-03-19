@@ -362,6 +362,7 @@ class Trip : NSManagedObject {
         self.currentStateNotification = UILocalNotification()
         self.currentStateNotification?.alertBody = message
         self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
+        self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
@@ -393,6 +394,7 @@ class Trip : NSManagedObject {
         
         self.currentStateNotification = UILocalNotification()
         self.currentStateNotification?.alertBody = message
+        self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             // don't show rating stuff for anything but bike trips.
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
