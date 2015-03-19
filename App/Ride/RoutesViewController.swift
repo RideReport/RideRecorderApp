@@ -11,6 +11,7 @@ import CoreData
 
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyTableView: UIView!
     
     var mainViewController: MainViewController! = nil
     
@@ -74,10 +75,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
         
         self.mainViewController.setSelectedTrip(nil, sender:self)
+        self.refreshEmptyTableView()
         
         if (self.tableView.indexPathForSelectedRow() != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow()!, animated: animated)
         }
+    }
+    
+    private func refreshEmptyTableView() {
+        let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
+        self.emptyTableView.hidden = shouldHideEmptyTableView
+        self.tableView.hidden = !shouldHideEmptyTableView
     }
     
     override func didReceiveMemoryWarning() {
@@ -112,6 +120,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        self.refreshEmptyTableView()
         self.tableView.endUpdates()
     }
     

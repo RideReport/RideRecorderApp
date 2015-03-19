@@ -21,6 +21,8 @@
     [self setupAxes];
     [self setupScatterPlots];
     
+    self.shouldMarkNextReading = false;
+    
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.locale = [NSLocale currentLocale];
     self.dateFormatter.dateFormat = @"h:mm:ss:SS";
@@ -107,7 +109,7 @@
     
     self.dataSources = [NSMutableArray array];
     
-    for (CPTColor *color in @[[CPTColor greenColor], [CPTColor blueColor], [CPTColor purpleColor]]) {
+    for (CPTColor *color in @[[CPTColor greenColor], [CPTColor blueColor], [CPTColor redColor], [CPTColor purpleColor]]) {
         CPTScatterPlot *plot = [[CPTScatterPlot alloc] init];
         
         plot.identifier     = [NSNumber numberWithInt:count];
@@ -145,7 +147,7 @@
 //    NSMutableArray *subarray = [self.dataSources mutableCopy];
 //    [subarray removeObjectAtIndex:3];
 
-    NSArray *subarray = @[[self.dataSources objectAtIndex:2]];
+    NSArray *subarray = @[[self.dataSources objectAtIndex:3]];
     
     [plotSpace scaleToFitPlots:subarray];
 
@@ -304,17 +306,25 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
         [numbers addObject:num];
     }
     
-    [rowArray addObject:[numbers objectAtIndex:0]];
+    [rowArray addObject:[numbers objectAtIndex:2]];
 //    double irVal = [[numbers objectAtIndex:1] doubleValue] - 3;
 //    if (irVal == 0) {
 //        irVal = 1;
 //    }
 //    double lineralized = (6787/irVal) - 4.0;
 //    [rowArray addObject:[NSNumber numberWithDouble:irVal]];
-    [rowArray addObject:[numbers objectAtIndex:1]];
+    [rowArray addObject:[numbers objectAtIndex:3]];
+    [rowArray addObject:[numbers objectAtIndex:4]];
     
     int magnitude = sqrt(pow([[numbers objectAtIndex:2] doubleValue], 2.0) + pow([[numbers objectAtIndex:3] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0));
     [rowArray addObject:[NSNumber numberWithDouble:magnitude]];
+    
+    if (self.shouldMarkNextReading) {
+        [rowArray addObject:[NSNumber numberWithBool:true]];
+        self.shouldMarkNextReading = false;
+    } else {
+        [rowArray addObject:[NSNumber numberWithBool:false]];
+    }
 
     NSUInteger indexToInsert = self.serialData.count;
     [self.serialData addObject:rowArray];
@@ -363,6 +373,10 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     }
 }
 
+- (IBAction)mark:(id)sender;
+{
+    self.shouldMarkNextReading = true;
+}
 
 
 @end

@@ -35,10 +35,7 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as GettingStartedChildViewController
         self.setupVC(gettingStartedPriacyVC)
         
-        let gettingStartedFinishedVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedFinished") as GettingStartedChildViewController
-        self.setupVC(gettingStartedFinishedVC)
-        
-        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedPriacyVC, gettingStartedBatteryVC, gettingStartedFinishedVC]
+        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedPriacyVC, gettingStartedBatteryVC]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }

@@ -29,8 +29,11 @@
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
 @property (unsafe_unretained) IBOutlet NSButton *openCloseButton;
 
+@property (nonatomic, assign) BOOL shouldMarkNextReading;
+
 - (IBAction)openOrClosePort:(id)sender;
 - (IBAction)clear:(id)sender;
+- (IBAction)mark:(id)sender;
 
 @end
 
