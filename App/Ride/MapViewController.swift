@@ -255,27 +255,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                let miles = Trip.totalCycledMilesThisWeek
-                var badgeString = ""
-                if miles > 500 {
-                    badgeString = "💩"
-                } else if miles > 100 {
-                    badgeString = "💗"
-                } else if miles > 50 {
-                    badgeString = "💖"
-                } else if miles > 25 {
-                    badgeString = "💜"
-                } else if miles > 10 {
-                    badgeString = "💙"
-                } else if miles > 5 {
-                    badgeString = "💚"
-                } else if miles > 2 {
-                    badgeString = "💛"
-                } else {
-                    badgeString = "❤️"
-                }
-                
-                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles  %@", Trip.totalCycledMiles, badgeString)
+                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles", Trip.totalCycledMiles)
             })
         })
     }
