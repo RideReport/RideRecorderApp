@@ -19,7 +19,7 @@ exports.show = function(req, res) {
       var totalRatingMagnitude = 0
       
       var today = new Date; // get current date
-      var weekAgo = today - 1000 * 60 * 60 * 24 * 31;
+      var weekAgo = today - 1000 * 60 * 60 * 24 * 60;
       var weekData = {};
       
 		  for(i=0; i<trips.length; i++) {

@@ -70,14 +70,14 @@
 <script>
 function dashboard(id, fData){
     var barColor = 'steelblue';
-    var bar2Color = 'red';
+    var bar2Color = 'green';
     function segColor(c){ return {low:"#807dba", mid:"#e08214",high:"#41ab5d"}[c]; }
         
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 800 - hGDim.l - hGDim.r, 
-        hGDim.h = 500 - hGDim.t - hGDim.b;
+        hGDim.w = 1400 - hGDim.l - hGDim.r, 
+        hGDim.h = 800 - hGDim.t - hGDim.b;
             
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")
