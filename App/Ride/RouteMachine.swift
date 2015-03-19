@@ -26,9 +26,9 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     // surrounding our center, instead of an exit event on a geofence around our center.
     // we do this because exit events tend to perform worse than enter events.
     let numberOfGeofenceSleepRegions = 8
-    let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0015
+    let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0018
     let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
-    let geofenceSleepRegionRadius : CLLocationDistance = 65
+    let geofenceSleepRegionRadius : CLLocationDistance = 70
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
