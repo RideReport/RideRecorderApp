@@ -36,11 +36,8 @@ exports.getAll = function(req, res){
                 "coordinates": locs
               },
         			"properties": {
-        				"id"					:trip._id,
-        				"activity_type" : trip.activityType,
-        				"creation_date" : trip.creationdate,
-        				"rating" : trip.rating,
-        				"uuid" : trip.uuid
+        			  "activity_type" : trip.activityType,
+        				"rating" : trip.rating
         			}						
         		});
         	}	
@@ -78,11 +75,8 @@ exports.getTripsOnDate = function(req, res){
             "coordinates": trip.locations.map(function(loc) {return loc.pos})
           },
     			"properties": {
-    				"id"					:trip._id,
     				"activity_type" : trip.activityType,
-    				"creation_date" : trip.creationdate,
-    				"rating" : trip.rating,
-    				"uuid" : trip.uuid
+    				"rating" : trip.rating
     			}						
     		});
     	}	
