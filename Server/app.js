@@ -26,6 +26,10 @@ app.get('/utPjfzYgJGp69modBo', function(req, res) {
   res.render('download');
 });
 
+app.get('/beta/u1z3', function(req, res) {
+  res.render('download');
+});
+
 app.get('/map', function(req, res) {
   res.render('map');
 });
