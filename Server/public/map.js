@@ -9,7 +9,7 @@
 
 	function drawTripsOnMap(geojson){
 	  var trips = geojson.features
-		map.removeLayer(tripLayerGroup);  		
+		map.removeLayer(tripLayerGroup);	
 		var polylineArray = []
 		
 		for (var i = 0; i < trips.length; i++){

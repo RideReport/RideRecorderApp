@@ -21,6 +21,6 @@
     "pg-native":"*",
     "memory-cache":"*",
     "simplify-geometry": "*",
-    "geojson-tools": "*"
+    "geojson-tools": "*",
   }
 }

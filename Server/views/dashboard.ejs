@@ -1,27 +1,64 @@
 <head>
   <title>Ride</title> 
 	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script src="dp.js"></script>
+	<link href="dp.css" rel="stylesheet"/>
+	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
+  
 	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
 	<style type="text/css">
 		body {
-    		padding: 10;
-		    margin: 10;
+    		padding: 0;
+		    margin: 0;
 		}
 		html, body {
 		    font: normal 14px 'courier new';
 		}
+		#map {
+		  position: absolute;
+		  padding-bottom: 40px;
+		  min-height: 100%;
+	    min-width: 100%;
+	    margin: 0px;
+	    z-index: 0;
+		}
+		.leaflet-container .leaflet-control-zoom {
+				margin-top: 20px;
+		    margin-left: 20px;
+		}
+		#toolbar {
+		  width: 230px;
+		  height: 230px;
+	    margin-top: 0px;
+	    padding: 20px;
+	    float: right;
+	    right: 510;
+	    background-color: white;
+	    opacity: 0.9;
+	    z-index: 1;
+	    position: absolute;
+		}
 		#content {
-	    width: 500px;
-	    float: left;
+		  width: 80%;
+		  min-height: 100%;
+	    max-width: 500px;
+	    margin-top: 0px;
+	    margin-right: 0px;
+	    right: 0px;
+	    padding: 20px;
+	    float: right;
+	    background-color: white;
+	    opacity: 0.9;
+	    z-index: 1;
+	    position: absolute;
 		}
 		#screenshot {
 	    margin-right: 60px;
   	  float: left;
 		}
-		path {  stroke: #fff; }
-    path:hover {  opacity:0.9; }
-    rect:hover {  fill:blue; }
     .axis {  
       font: 10px sans-serif;
     }
@@ -41,31 +78,61 @@
 </head>
 
 <body>
+  <div id="map">
+  <script>
+  	var map = L.map('map', {
+  	 center: [45.52, -122.6519],
+  	 zoom: 14,
+  	 scrollWheelZoom: false,
+  	 reuseTiles: true
+  	})
+  </script>
+  <script src="map.js"></script>	
+  <script>
+  	function getTrips(){
+  		var url = "../trips";
+  		$.get(url, drawTripsOnMap, "json");
+  	}
+  	function getTripsOnDate(dateString){			
+      var url = "../trips/date/" + dateString;
+  		$.get(url, drawTripsOnMap, "json");
+  	}
+  	map.whenReady(getTrips)
+  </script>
 	<div id="content">
-  <h1>í ½íº² Ride Dashboard</h1>
   <table>
     <tr>
-      <td>Total trips</td><td><%=bikeTripsCount%> trips</td>
+      <td><strong>Total trips</strong></td><td><%=bikeTripsCount%> trips</td>
     </tr>
     <tr>
-      <td>Rated trips</td><td> <%= ratedTripsCount%> trips</td>
+      <td><strong>Rated trips</strong></td><td> <%= ratedTripsCount%> trips</td>
     </tr>        
     <tr>
-      <td>Average Rating</td><td> <%=(totalRatingMagnitude/ratedTripsCount).toFixed(2)%></td>      
+      <td><strong>Average Rating</strong></td><td> <%=(totalRatingMagnitude/ratedTripsCount).toFixed(2)%></td>      
     </tr>
     <tr>
-      <td>Total Distance</td><td> <%=(bikeTotalDistance / 1.60934).toFixed(1)%>m</td>      
+      <td><strong>Total Distance</strong></td><td> <%=(bikeTotalDistance / 1.60934).toFixed(1)%>m</td>      
     </tr>
     <tr>
-      <td>Average Distance</td><td> <%=(bikeTotalDistance/(bikeTripsCount * 1.60934)).toFixed(1)%>m</td>      
+      <td><strong>Average Distance</strong></td><td> <%=(bikeTotalDistance/(bikeTripsCount * 1.60934)).toFixed(1)%>m</td>      
     </tr>
   </table>
   <body>
   <div id='dashboard'>
   </div>
+</div>
+<div id="toolbar">  
+  <div id="static-container"></div>
   
-
-    
+  <script>
+  var dp = new DatePicker().show('#static-container')
+    , floater = new DatePicker()
+  dp.on('change', function(date) {
+    var dateThing =date.getFullYear() + "-" + ('0' + date.getMonth()).slice(-2) + "-" + ('0' + date.getDate()).slice(-2)
+    getTripsOnDate(dateThing)
+  });
+  </script>
+</div>
 </div>
 </body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -78,8 +145,8 @@ function dashboard(id, fData){
     // function to handle histogram.
     function histoGram(fD){
         var hG={},    hGDim = {t: 60, r: 0, b: 30, l: 0};
-        hGDim.w = 2000 - hGDim.l - hGDim.r, 
-        hGDim.h = 800 - hGDim.t - hGDim.b;
+        hGDim.w = 480 - hGDim.l - hGDim.r, 
+        hGDim.h = 300 - hGDim.t - hGDim.b;
             
         //create svg for histogram.
         var hGsvg = d3.select(id).append("svg")

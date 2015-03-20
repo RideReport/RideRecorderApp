@@ -25,10 +25,10 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
     // surrounding our center, instead of an exit event on a geofence around our center.
     // we do this because exit events tend to perform worse than enter events.
-    let numberOfGeofenceSleepRegions = 8
-    let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0018
+    let numberOfGeofenceSleepRegions = 9
+    let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0035
     let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
-    let geofenceSleepRegionRadius : CLLocationDistance = 70
+    let geofenceSleepRegionRadius : CLLocationDistance = 80
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
@@ -575,8 +575,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         } else {
             // We are currently in background mode and got significant location change movement.
             // We now enter a state to monitor for user movement
-            DDLogWrapper.logVerbose("Got significant location update, entering motion monitoring state.")
-            self.startMotionMonitoring()
+            DDLogWrapper.logVerbose("Got significant location update.")
         }
     }
 }
