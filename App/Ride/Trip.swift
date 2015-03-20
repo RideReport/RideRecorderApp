@@ -96,7 +96,8 @@ class Trip : NSManagedObject {
         self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
     }
     
-    deinit {
+    override func willTurnIntoFault() {
+        super.willTurnIntoFault()
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
