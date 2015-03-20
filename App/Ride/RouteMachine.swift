@@ -34,7 +34,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
     let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 90
 
-    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 3
+    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 4
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
     let maximumMotionMonitoringReadingsCountWithoutCalculatedMovement = 12 // Give extra time for a GPS fix.
     let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 4
@@ -331,7 +331,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 let speed = self.lastMotionMonitoringLocation!.calculatedSpeedFromLocation(location)
                 DDLogWrapper.logVerbose(NSString(format: "Manually found speed: %f", speed))
                 
-                if (speed >= self.minimumSpeedToStartMonitoring && speed < 20.0) {
+                if (speed >= self.minimumSpeedToStartMonitoring && speed < 12.0) {
                     // We ignore really large speeds that may be the result of location inaccuracy
                     DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
                     self.motionMonitoringReadingsWithManualMotion += 1
