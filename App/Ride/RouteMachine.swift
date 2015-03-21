@@ -32,7 +32,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
-    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 90
+    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 60
 
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 4
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
@@ -231,14 +231,24 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 }
             }
             
-            self.lastActiveMonitoringLocation = location
+            if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow)) {
+                // if the event is more recent than the one we already have
+                self.lastActiveMonitoringLocation = location
+            }
         }
         
         if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
             DDLogWrapper.logVerbose("Moving too slow for too long")
             self.stopTrip()
         } else if (foundGPSSpeed == false) {
-            if (abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenUsuableSpeedReadings) {
+            let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp))
+            var maximumTimeIntervalBetweenGPSMovements = self.maximumTimeIntervalBetweenUsuableSpeedReadings
+            if (self.isDefferringLocationUpdates) {
+                // if we are deferring, give extra time. this is because we will sometime get
+                // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
+                maximumTimeIntervalBetweenGPSMovements += self.locationTrackingDeferralTimeout
+            }
+            if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
                 DDLogWrapper.logVerbose("Went too long with unusable speeds.")
                 self.stopTrip()
             } else {
