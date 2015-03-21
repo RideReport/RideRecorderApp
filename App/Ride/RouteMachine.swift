@@ -36,7 +36,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
 
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 4
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
-    let maximumMotionMonitoringReadingsCountWithoutCalculatedMovement = 12 // Give extra time for a GPS fix.
+    let maximumMotionMonitoringReadingsCountWithoutGPSFix = 12 // Give extra time for a GPS fix.
     let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 4
     
     let minimumBatteryForTracking : Float = 0.2
@@ -50,7 +50,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     private var motionMonitoringReadingsWithManualMotion = 0
     private var motionMonitoringReadingsWithGPSMotion = 0
     private var motionMonitoringReadingsWithoutGPSMotionCount = 0
-    private var motionMonitoringReadingsWithoutCalculatedMotionCount = 0
+    private var motionMonitoringReadingsWithoutGPSFix = 0
     
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
@@ -281,7 +281,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         if (!self.isInMotionMonitoringState) {
             self.motionMonitoringReadingsWithManualMotion = 0
             self.motionMonitoringReadingsWithGPSMotion = 0
-            self.motionMonitoringReadingsWithoutCalculatedMotionCount = 0
+            self.motionMonitoringReadingsWithoutGPSFix = 0
             self.motionMonitoringReadingsWithoutGPSMotionCount = 0
             self.isInMotionMonitoringState = true
         }
@@ -313,7 +313,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     private func processMotionMonitoringLocations(locations: [CLLocation]!) {
         var foundSufficientMovement = false
-        var foundInsufficientGPSMovement = false
+        var foundGPSFix = false
         
         for location in locations {
             DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
@@ -323,7 +323,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 foundSufficientMovement = true
             } else if (location.speed > 0) {
                 // we have a GPS fix but insufficient speeds
-                foundInsufficientGPSMovement = true
+                foundGPSFix = true
             } else if (location.speed < 0 && self.lastMotionMonitoringLocation != nil) {
                 // Some times locations given will not have a speed (or a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
@@ -363,13 +363,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         } else {
             DDLogWrapper.logVerbose("Did NOT find movement while in motion monitoring state")
             
-            if (foundInsufficientGPSMovement) {
+            if (foundGPSFix) {
               self.motionMonitoringReadingsWithoutGPSMotionCount += 1
             } else {
-              self.motionMonitoringReadingsWithoutCalculatedMotionCount += 1
+              self.motionMonitoringReadingsWithoutGPSFix += 1
             }
             
-            if (self.motionMonitoringReadingsWithoutCalculatedMotionCount > self.maximumMotionMonitoringReadingsCountWithoutCalculatedMovement ||
+            if (self.motionMonitoringReadingsWithoutGPSFix > self.maximumMotionMonitoringReadingsCountWithoutGPSFix ||
                 self.motionMonitoringReadingsWithoutGPSMotionCount > self.maximumMotionMonitoringReadingsCountWithoutGPSMovement) {
                 DDLogWrapper.logVerbose("Max motion monitoring readings exceeded, stopping!")
                 self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
