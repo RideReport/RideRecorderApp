@@ -37,7 +37,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 4
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
     let maximumMotionMonitoringReadingsCountWithoutGPSFix = 12 // Give extra time for a GPS fix.
-    let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 4
+    let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 5
     
     let minimumBatteryForTracking : Float = 0.2
     
@@ -329,6 +329,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
             if (location.speed >= self.minimumSpeedToStartMonitoring) {
                 DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
+                self.motionMonitoringReadingsWithoutGPSMotionCount = 0
                 self.motionMonitoringReadingsWithGPSMotion += 1
                 foundSufficientMovement = true
             } else if (location.speed > 0) {
