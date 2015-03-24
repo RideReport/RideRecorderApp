@@ -43,7 +43,7 @@ exports.show = function(req, res) {
           
 		    var creationDate = new Date(trip.creationDate);
 		    if (creationDate > weekAgo) {
-		      var dateThing = ('0' + creationDate.getMonth()).slice(-2) + "/" + ('0' + creationDate.getDate()).slice(-2)
+		      var dateThing = ('0' + (creationDate.getMonth()+ 1)).slice(-2) + "/" + ('0' + creationDate.getDate()).slice(-2)
 		      if (!weekData.hasOwnProperty(dateThing)) {
 		        weekData[dateThing] = [dateThing,1,tripLength,creationDate.getDay()]
 		      } else {
