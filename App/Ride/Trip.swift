@@ -98,7 +98,8 @@ class Trip : NSManagedObject {
     
     override func willTurnIntoFault() {
         super.willTurnIntoFault()
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.removeObserver(self, forKeyPath: "startDate")
+        self.removeObserver(self, forKeyPath: "isClosed")
     }
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
