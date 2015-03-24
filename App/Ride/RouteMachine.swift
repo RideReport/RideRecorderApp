@@ -502,9 +502,13 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways) {
-            self.isGettingInitialLocationForGeofence = true
             self.locationManager.startMonitoringSignificantLocationChanges()
-            self.startMotionMonitoring()
+            
+            if (!self.locationManagerIsUpdating) {
+                // if we are not already getting location updates, get a single update for our geofence.
+                self.isGettingInitialLocationForGeofence = true
+                self.startMotionMonitoring()
+            }
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogWrapper.logVerbose("Not authorized for location access!")
