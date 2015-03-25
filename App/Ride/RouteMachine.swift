@@ -206,7 +206,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         var foundGPSSpeed = false
         
         for location in locations {
-            DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f", location.speed))
+            DDLogWrapper.logVerbose(NSString(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
             var manualSpeed : CLLocationSpeed = 0
             
@@ -326,7 +326,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         var foundGPSFix = false
         
         for location in locations {
-            DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f", location.speed))
+            DDLogWrapper.logVerbose(NSString(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             if (location.speed >= self.minimumSpeedToStartMonitoring) {
                 DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
                 self.motionMonitoringReadingsWithoutGPSMotionCount = 0
