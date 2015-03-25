@@ -96,8 +96,7 @@ class Trip : NSManagedObject {
         self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
     }
     
-    override func willTurnIntoFault() {
-        super.willTurnIntoFault()
+    deinit {
         self.removeObserver(self, forKeyPath: "startDate")
         self.removeObserver(self, forKeyPath: "isClosed")
     }
