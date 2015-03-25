@@ -44,6 +44,11 @@ extension NSDate {
         return ((selfComponents.year == dateComponents.year) && (selfComponents.weekOfYear == dateComponents.weekOfYear))
     }
     
+    func isInLastWeek() -> Bool
+    {
+        return (self.compare(NSDate.daysFromNow(-6)) == NSComparisonResult.OrderedDescending)
+    }
+    
     func weekDay() -> String {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "EEEE"

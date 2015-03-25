@@ -65,7 +65,7 @@ class Trip : NSManagedObject {
                     sectionString = "Today"
                 } else if (self.startDate.isYesterday()) {
                     sectionString = "Yesterday"
-                } else if (self.startDate.isThisWeek()) {
+                } else if (self.startDate.isInLastWeek()) {
                     sectionString = self.startDate.weekDay()
                 } else {
                     sectionString = Trip.dateFormatter.stringFromDate(self.startDate)
