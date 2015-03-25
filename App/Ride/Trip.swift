@@ -350,7 +350,7 @@ class Trip : NSManagedObject {
     }
     
     private func sendTripStartedNotificationImmediately() {
-        self.cancelTripCompletionNotification()
+        self.cancelTripStateNotification()
         
         var message = ""
         
@@ -363,7 +363,6 @@ class Trip : NSManagedObject {
         self.currentStateNotification = UILocalNotification()
         self.currentStateNotification?.alertBody = message
         self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
-        self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
@@ -391,20 +390,20 @@ class Trip : NSManagedObject {
             message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
         }
         
-        self.cancelTripCompletionNotification()
+        self.cancelTripStateNotification()
         
         self.currentStateNotification = UILocalNotification()
         self.currentStateNotification?.alertBody = message
-        self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            // don't show rating stuff for anything but bike trips.
+            // don't play a sound or show rating stuff for anything but bike trips.
+            self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
         }
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
 
     }
     
-    private func cancelTripCompletionNotification() {
+    private func cancelTripStateNotification() {
         if (self.currentStateNotification != nil) {
             UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil
