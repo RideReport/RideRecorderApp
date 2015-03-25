@@ -355,9 +355,9 @@ class Trip : NSManagedObject {
         var message = ""
         
         if (self.startingPlacemark != nil) {
-            message = NSString(format: "Started a Ride in %@…", self.startingPlacemark!.subLocality)
+            message = NSString(format: "Started a trip in %@…", self.startingPlacemark!.subLocality)
         } else {
-            message = "Started a Ride in somewhere…"
+            message = "Started a trip…"
         }
         
         self.currentStateNotification = UILocalNotification()
