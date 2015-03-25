@@ -63,8 +63,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Minimal)
         rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Default)
         
+        let resumeAction = UIMutableUserNotificationAction()
+        resumeAction.identifier = "RESUME_IDENTIFIER"
+        resumeAction.title = "Resume"
+        resumeAction.activationMode = UIUserNotificationActivationMode.Background
+        resumeAction.destructive = false
+        resumeAction.authenticationRequired = false
+        
+        let appPausedCategory = UIMutableUserNotificationCategory()
+        appPausedCategory.identifier = "APP_PAUSED_CATEGORY"
+        appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Minimal)
+        appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
+        
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
-        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(objects: rideCompleteCategory, rideStartedCategory))
+        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(objects: rideCompleteCategory, rideStartedCategory, appPausedCategory))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         
         // setup Ride to log to Xcode if available
@@ -125,6 +137,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         } else if (identifier == "FLAG_IDENTIFIER") {
             let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
             CoreDataController.sharedCoreDataController.saveContext()
+        } else if (identifier == "RESUME_IDENTIFIER") {
+            RouteMachine.sharedMachine.resumeTracking()
         }
     }
 

@@ -456,10 +456,27 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         return (CLLocationManager.authorizationStatus() != CLAuthorizationStatus.AuthorizedAlways)
     }
     
+    private func cancelScheduledAppResumeReminderNotifications() {
+        for notif in UIApplication.sharedApplication().scheduledLocalNotifications {
+            let notification = notif as UILocalNotification
+            if (notification.category == "APP_PAUSED_CATEGORY") {
+                UIApplication.sharedApplication().cancelLocalNotification(notification)
+            }
+        }
+    }
+    
     func pauseTracking() {
         if (isPaused()) {
             return
         }
+        
+        self.cancelScheduledAppResumeReminderNotifications()
+        
+        let reminderNotification = UILocalNotification()
+        reminderNotification.alertBody = "Ride is paused! Would you like to resume logging your bike trips?"
+        reminderNotification.category = "APP_PAUSED_CATEGORY"
+        reminderNotification.fireDate = NSDate.tomorrow()
+        UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
         
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
         NSUserDefaults.standardUserDefaults().synchronize()
@@ -486,6 +503,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         if (!isPaused()) {
             return
         }
+        
+        self.cancelScheduledAppResumeReminderNotifications()
         
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
         NSUserDefaults.standardUserDefaults().synchronize()
