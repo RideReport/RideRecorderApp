@@ -1,7 +1,10 @@
 package knock.ride;
 
+import android.content.Context;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -17,6 +20,7 @@ import com.mapbox.mapboxsdk.api.ILatLng;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.overlay.Icon;
 import com.mapbox.mapboxsdk.overlay.Marker;
+import com.mapbox.mapboxsdk.overlay.PathOverlay;
 import com.mapbox.mapboxsdk.overlay.UserLocationOverlay;
 import com.mapbox.mapboxsdk.tileprovider.tilesource.MapboxTileLayer;
 import com.mapbox.mapboxsdk.views.MapView;
@@ -34,6 +38,8 @@ public class Map extends ActionBarActivity implements
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private LocationRequest mLocationRequest;
 
+    PathOverlay line = new PathOverlay(Color.RED, 3);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +52,6 @@ public class Map extends ActionBarActivity implements
         mv.setMaxZoomLevel(mv.getTileProvider().getMaximumZoomLevel());
         mv.setCenter(mv.getTileProvider().getCenterCoordinate());
         mv.setZoom(0);
-        currentMap = getString(R.string.streetMapId);
 
         // Show user location (purposely not in follow mode)
         mv.setUserLocationEnabled(true);
@@ -64,7 +69,6 @@ public class Map extends ActionBarActivity implements
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000)        // 10 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-
 
         mv.setOnTilesLoadedListener(new TilesLoadedListener() {
             @Override
@@ -110,23 +114,18 @@ public class Map extends ActionBarActivity implements
         double currentLatitude = location.getLatitude();
         double currentLongitude = location.getLongitude();
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        Marker m = new Marker(mv, "Current Location", "Current Location", latLng);
-        mv.addMarker(m);
+        line.addPoint(latLng);
+        mv.getOverlays().remove(line);
+        mv.getOverlays().add(line);
 
+        mv.setZoom(14);
         mv.setCenter(latLng);
     }
 
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "Location services connected.");
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (location == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
-        else {
-            handleNewLocation(location);
-        };
-
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
     @Override

@@ -2,6 +2,7 @@ Location Usage
 http://blog.teamtreehouse.com/beginners-guide-location-android
 http://developer.android.com/training/location/receive-location-updates.html
 http://developer.android.com/guide/topics/location/strategies.html
+https://github.com/treehouse/android-location-example/blob/master/app/src/main/java/teamtreehouse/com/iamhere/MapsActivity.java
 
 Mapbox
 https://www.mapbox.com/mapbox-android-sdk/#gradle
