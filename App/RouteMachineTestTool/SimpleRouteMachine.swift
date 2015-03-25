@@ -1,5 +1,5 @@
 //
-//  SimpleRouteMachine.swift
+//  SimpleRouteManager.swift
 //  Ride
 //
 //  Created by William Henderson on 2/2/15.
@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import UIKit
 
-class SimpleRouteMachine: NSObject, CLLocationManagerDelegate {
+class SimpleRouteManager: NSObject, CLLocationManagerDelegate {
     private var isDefferringLocationUpdates : Bool = false
     private var locationManager : CLLocationManager!
     private var lastLocDate : NSDate = NSDate()

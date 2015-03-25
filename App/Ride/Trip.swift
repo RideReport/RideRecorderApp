@@ -90,7 +90,7 @@ class Trip : NSManagedObject {
     }
     
     convenience init() {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         self.addObserver(self, forKeyPath: "startDate", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
         self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
@@ -110,7 +110,7 @@ class Trip : NSManagedObject {
     }
     
     class func allTrips(limit: Int = 0) -> [AnyObject]? {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
@@ -124,7 +124,7 @@ class Trip : NSManagedObject {
     }
     
     class func weekTrips() -> [AnyObject]? {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate.daysFromNow(-7))
@@ -136,7 +136,7 @@ class Trip : NSManagedObject {
     }
     
     class func mostRecentTrip() -> Trip! {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
@@ -152,7 +152,7 @@ class Trip : NSManagedObject {
     }
     
     class func emptyTrips() -> [AnyObject]? {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "locations.@count == 0")
         
@@ -163,7 +163,7 @@ class Trip : NSManagedObject {
     }
     
     class func openTrips() -> [AnyObject]? {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "isClosed == NO")
         
@@ -235,7 +235,7 @@ class Trip : NSManagedObject {
     }
     
     func locationWithCoordinate(coordinate: CLLocationCoordinate2D) -> Location {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let location = Location.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         location.course = self.locations.firstObject!.course
@@ -418,7 +418,7 @@ class Trip : NSManagedObject {
         }
         
         self.simplifyLocations(self.locations.array as [Location], episilon: simplificationEpisilon)
-        CoreDataController.sharedCoreDataController.saveContext()
+        CoreDataManager.sharedCoreDataManager.saveContext()
         handler()
     }
     
@@ -560,7 +560,7 @@ class Trip : NSManagedObject {
             self.runActivityClassification()
             handler()
         } else {
-            MotionMachine.sharedMachine.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
+            MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
                 if (activities != nil) {
                     for activity in activities {
                         Activity(activity: activity as CMMotionActivity, trip: self)

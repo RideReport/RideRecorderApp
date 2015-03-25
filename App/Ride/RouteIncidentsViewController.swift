@@ -42,7 +42,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         self.timeFormatter.dateFormat = "h:mm a"
         
         let cacheName = "RouteIncidentsViewController"
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Incident")
         fetchedRequest.predicate = NSPredicate(format: "trip = %@", self.mainViewController.selectedTrip)
@@ -133,7 +133,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
             let incident : Incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as Incident
             incident.managedObjectContext?.deleteObject(incident)
             if (incident.trip != nil) {
-                NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(incident.trip!)
+                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(incident.trip!)
             }
         }
     }

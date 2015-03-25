@@ -1,5 +1,5 @@
 //
-//  RouteMachine.swift
+//  RouteManager.swift
 //  Ride
 //
 //  Created by William Henderson on 10/27/14.
@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import CoreMotion
 
-class RouteMachine : NSObject, CLLocationManagerDelegate {
+class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
@@ -62,19 +62,19 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var sharedMachine : RouteMachine?
+        static var sharedManager : RouteManager?
     }
     
     //
     // MARK: - Initializers
     //
     
-    class var sharedMachine:RouteMachine {
+    class var sharedManager:RouteManager {
         dispatch_once(&Static.onceToken) {
-            Static.sharedMachine = RouteMachine()
+            Static.sharedManager = RouteManager()
         }
         
-        return Static.sharedMachine!
+        return Static.sharedManager!
     }
     
     override init () {
@@ -137,7 +137,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
         }
-        CoreDataController.sharedCoreDataController.saveContext()
+        CoreDataManager.sharedCoreDataManager.saveContext()
         
         self.currentTrip?.sendTripStartedNotification(fromLocation)
         
@@ -173,7 +173,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(self.currentTrip!)
+            CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().deleteObject(self.currentTrip!)
         } else {
             let closingTrip = self.currentTrip
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
@@ -181,7 +181,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
             
             closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
-                CoreDataController.sharedCoreDataController.saveContext()
+                CoreDataManager.sharedCoreDataManager.saveContext()
                 
                 self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                     closingTrip!.sendTripCompletionNotificationImmediately()
@@ -255,8 +255,8 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
                 DDLogWrapper.logVerbose("Nothing but unusable speeds. Awaiting next update")
             }
         } else {
-            CoreDataController.sharedCoreDataController.saveContext()
-            NSNotificationCenter.defaultCenter().postNotificationName("RouteMachineDidUpdatePoints", object: nil)
+            CoreDataManager.sharedCoreDataManager.saveContext()
+            NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
         }
     }
     
@@ -437,7 +437,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     //
-    // MARK: - Pause/Resuming Route Machine
+    // MARK: - Pause/Resuming Route Manager
     //
     
     func isPausedDueToBatteryLife() -> Bool {
@@ -449,7 +449,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func isPausedByUser() -> Bool {
-        return NSUserDefaults.standardUserDefaults().boolForKey("RouteMachineIsPaused")
+        return NSUserDefaults.standardUserDefaults().boolForKey("RouteManagerIsPaused")
     }
     
     func isPausedDueToUnauthorized() -> Bool {
@@ -478,7 +478,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         reminderNotification.fireDate = NSDate.tomorrow()
         UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
         
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteManagerIsPaused")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Paused Tracking")
@@ -506,7 +506,7 @@ class RouteMachine : NSObject, CLLocationManagerDelegate {
         
         self.cancelScheduledAppResumeReminderNotifications()
         
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteMachineIsPaused")
+        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteManagerIsPaused")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Resume Tracking")

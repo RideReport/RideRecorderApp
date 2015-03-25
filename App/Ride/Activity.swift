@@ -24,7 +24,7 @@ class Activity : NSManagedObject {
     @NSManaged var unknown : Bool
 
     convenience init(activity: CMMotionActivity, trip: Trip) {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Activity", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.trip = trip

@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  RouteMachineTestTool
+//  RouteManagerTestTool
 //
 //  Created by William Henderson on 1/25/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -13,7 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 //    var fileLogger : DDFileLogger!
-    var simpleRouteMachine : SimpleRouteMachine!
+    var simpleRouteManager : SimpleRouteManager!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {        
         // setup to log to syslog
@@ -36,11 +36,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
 
         
-//        CoreDataController.sharedCoreDataController.startup()
-//        RouteMachine.sharedMachine.startup()
-//        RouteMachine.sharedMachine.minimumMonitoringSpeed = 0
+//        CoreDataManager.sharedCoreDataManager.startup()
+//        RouteManager.sharedManager.startup()
+//        RouteManager.sharedManager.minimumMonitoringSpeed = 0
         
-        self.simpleRouteMachine = SimpleRouteMachine()
+        self.simpleRouteManager = SimpleRouteManager()
         
         return true
     }

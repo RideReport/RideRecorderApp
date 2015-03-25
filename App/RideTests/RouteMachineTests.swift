@@ -1,5 +1,5 @@
 //
-//  RouteMachineTests.swift
+//  RouteManagerTests.swift
 //  Ride
 //
 //  Created by William Henderson on 10/29/14.
@@ -11,7 +11,7 @@ import XCTest
 import CoreLocation
 import CoreMotion
 
-class RouteMachineTests: XCTestCase {
+class RouteManagerTests: XCTestCase {
 
     override func setUp() {
         class MockLocationManager: CLLocationManager {
@@ -42,7 +42,7 @@ class RouteMachineTests: XCTestCase {
             }
         }
         
-        class MockRouteMachine : RouteMachine {
+        class MockRouteManager : RouteManager {
             private var locationManager : CLLocationManager!
             private var motionActivityManager : CMMotionActivityManager!
 
@@ -55,7 +55,7 @@ class RouteMachineTests: XCTestCase {
         
         super.setUp()
         
-        MockRouteMachine.sharedMachine.startup()
+        MockRouteManager.sharedManager.startup()
     }
     
     override func tearDown() {

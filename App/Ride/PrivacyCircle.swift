@@ -31,7 +31,7 @@ class PrivacyCircle : NSManagedObject {
             return Static.privacyCirle
         }
         
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "PrivacyCircle")
         fetchedRequest.fetchLimit = 1
     
@@ -51,7 +51,7 @@ class PrivacyCircle : NSManagedObject {
     
     class func updateOrCreatePrivacyCircle(circle: MKCircle) {
         if (PrivacyCircle.privacyCircle() == nil) {
-            let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+            let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
             Static.privacyCirle = PrivacyCircle(entity: NSEntityDescription.entityForName("PrivacyCircle", inManagedObjectContext: context)!, insertIntoManagedObjectContext:context)
         }
         Static.privacyCirle?.latitude = circle.coordinate.latitude
@@ -68,6 +68,6 @@ class PrivacyCircle : NSManagedObject {
             location.isPrivate = true
         }
         
-        CoreDataController.sharedCoreDataController.saveContext()
+        CoreDataManager.sharedCoreDataManager.saveContext()
     }
 }

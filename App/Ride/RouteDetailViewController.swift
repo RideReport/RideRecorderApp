@@ -86,7 +86,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
     
     @IBAction func thumbsUp(sender: AnyObject) {
         self.mainViewController.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         
@@ -95,7 +95,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
     
     @IBAction func thumbsDown(sender: AnyObject) {
         self.mainViewController.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         
@@ -104,14 +104,14 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
     
     @IBAction func bikeButton(sender: AnyObject) {
         self.mainViewController.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
     }
     
     @IBAction func carButton(sender: AnyObject) {
         self.mainViewController.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
     }
@@ -133,7 +133,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
             self.mainViewController.selectedTrip.clasifyActivityType({
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
-                    NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+                    NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
                 })
             })
         } else if (buttonIndex == 2) {
@@ -141,14 +141,14 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
                 self.mainViewController.selectedTrip.undoSmoothWithCompletionHandler({
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
-                        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+                        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
                     })
                 })
             } else {
                 self.mainViewController.selectedTrip.smoothIfNeeded({
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
-                        NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+                        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
                     })
                 })
             }
@@ -165,11 +165,11 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
             })
         } else if (buttonIndex == 4) {
             self.mainViewController.selectedTrip.close()
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
             
             self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         } else if (buttonIndex == 5) {
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         }
     }
 

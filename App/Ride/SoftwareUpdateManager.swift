@@ -1,5 +1,5 @@
 //
-//  SoftwareUpdateMachine.swift
+//  SoftwareUpdateManager.swift
 //  Ride
 //
 //  Created by William Henderson on 1/9/15.
@@ -8,22 +8,22 @@
 
 import Foundation
 
-class SoftwareUpdateMachine : NSObject, UIAlertViewDelegate {
+class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
     let manifestUrl = NSURL(string: "https://s3-us-west-2.amazonaws.com/rideenterprise/manifest.plist")!
     let minimumUpdateCheckInterval : NSTimeInterval = 60*60*4 // 4 hours
     var lastUpdateCheck : NSDate?
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var sharedMachine : SoftwareUpdateMachine?
+        static var sharedManager : SoftwareUpdateManager?
     }
     
-    class var sharedMachine:SoftwareUpdateMachine {
+    class var sharedManager:SoftwareUpdateManager {
         dispatch_once(&Static.onceToken) {
-            Static.sharedMachine = SoftwareUpdateMachine()
+            Static.sharedManager = SoftwareUpdateManager()
         }
         
-        return Static.sharedMachine!
+        return Static.sharedManager!
     }
     
     func startup() {

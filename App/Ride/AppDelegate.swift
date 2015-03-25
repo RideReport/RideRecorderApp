@@ -91,12 +91,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as String
         DDLogWrapper.logInfo(NSString(format: "========================STARTING RIDE APP v%@========================", versionString))
         
-        // fire up Core Data
-        CoreDataController.sharedCoreDataController.startup()
-        RouteMachine.sharedMachine.startup()
-        SoftwareUpdateMachine.sharedMachine.startup()
-        NetworkMachine.sharedMachine.startup()
-        MotionMachine.sharedMachine.startup()
+        // Start Managers
+        CoreDataManager.sharedCoreDataManager.startup()
+        RouteManager.sharedManager.startup()
+        SoftwareUpdateManager.sharedManager.startup()
+        NetworkManager.sharedManager.startup()
+        MotionManager.sharedManager.startup()
         
         return true
     }
@@ -129,16 +129,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
         } else if (identifier == "FLAG_IDENTIFIER") {
             let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
-            CoreDataController.sharedCoreDataController.saveContext()
+            CoreDataManager.sharedCoreDataManager.saveContext()
         } else if (identifier == "RESUME_IDENTIFIER") {
-            RouteMachine.sharedMachine.resumeTracking()
+            RouteManager.sharedManager.resumeTracking()
         }
     }
 
@@ -158,7 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        NetworkMachine.sharedMachine.syncTrips()
+        NetworkManager.sharedManager.syncTrips()
     }
 
     func applicationWillTerminate(application: UIApplication) {

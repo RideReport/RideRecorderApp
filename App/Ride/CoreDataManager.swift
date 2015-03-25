@@ -1,5 +1,5 @@
 //
-//  CoreDataController.swift
+//  CoreDataManager.swift
 //  k
 //
 //  Created by William Henderson on 8/4/14.
@@ -10,17 +10,17 @@ import Foundation
 import CoreData
 import EventKit
 
-class CoreDataController {
+class CoreDataManager {
 
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var SharedInstance : CoreDataController?
+        static var SharedInstance : CoreDataManager?
     }
 
     
-    class var sharedCoreDataController:CoreDataController {
+    class var sharedCoreDataManager:CoreDataManager {
         dispatch_once(&Static.onceToken) {
-            Static.SharedInstance = CoreDataController()
+            Static.SharedInstance = CoreDataManager()
         }
         
         return Static.SharedInstance!

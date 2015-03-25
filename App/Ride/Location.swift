@@ -26,7 +26,7 @@ class Location : NSManagedObject {
     @NSManaged var date : NSDate?
     
     convenience init(location: CLLocation, trip: Trip) {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.trip = trip
@@ -53,7 +53,7 @@ class Location : NSManagedObject {
         fetchedRequest.predicate = NSPredicate(format: "isPrivate = true")
 
         var error : NSError?
-        let results = CoreDataController.sharedCoreDataController.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
+        let results = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
         
         
         if (results == nil) {
@@ -82,7 +82,7 @@ class Location : NSManagedObject {
         fetchedRequest.returnsObjectsAsFaults = false
         
         var error : NSError?
-        let results = CoreDataController.sharedCoreDataController.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
+        let results = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
         
         if (results!.count == 0) {
             return []

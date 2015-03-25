@@ -23,7 +23,7 @@ class Incident : NSManagedObject {
     @NSManaged var location : Location?
     
     convenience init(location: Location, trip: Trip) {
-        let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Incident", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.trip = trip

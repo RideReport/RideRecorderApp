@@ -1,5 +1,5 @@
 //
-//  MotionMachine.swift
+//  MotionManager.swift
 //  Ride
 //
 //  Created by William Henderson on 10/27/14.
@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import CoreMotion
 
-class MotionMachine : NSObject, CLLocationManagerDelegate {
+class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
     private var motionCheckStartDate : NSDate!
@@ -19,16 +19,16 @@ class MotionMachine : NSObject, CLLocationManagerDelegate {
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var sharedMachine : MotionMachine?
+        static var sharedManager : MotionManager?
     }
     
     
-    class var sharedMachine:MotionMachine {
+    class var sharedManager:MotionManager {
         dispatch_once(&Static.onceToken) {
-            Static.sharedMachine = MotionMachine()
+            Static.sharedManager = MotionManager()
         }
         
-        return Static.sharedMachine!
+        return Static.sharedManager!
     }
     
     override init () {
@@ -39,13 +39,13 @@ class MotionMachine : NSObject, CLLocationManagerDelegate {
     }
     
     func startup() {
-        let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionMachineHasRequestedMotionAccess")
+        let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionManagerHasRequestedMotionAccess")
         if (!hasRequestedMotionAccess) {
             // grab an update for a second so we can have the permission dialog come up right away
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
                     self.motionActivityManager.stopActivityUpdates()
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MotionMachineHasRequestedMotionAccess")
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MotionManagerHasRequestedMotionAccess")
                     NSUserDefaults.standardUserDefaults().synchronize()
                 })
             })

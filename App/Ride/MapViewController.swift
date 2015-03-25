@@ -231,7 +231,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         self.geofenceCircles = []
         
-        for region in RouteMachine.sharedMachine.geofenceSleepRegions {
+        for region in RouteManager.sharedManager.geofenceSleepRegions {
             let circle = MKCircle(centerCoordinate: region.center, radius: region.radius)
             self.geofenceCircles.append(circle)
             self.mapView.addOverlay(circle, level: MKOverlayLevel.AboveLabels)

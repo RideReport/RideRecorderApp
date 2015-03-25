@@ -24,7 +24,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             }
             
             let cacheName = "RoutesViewControllerFetchedResultsController"
-            let context = CoreDataController.sharedCoreDataController.currentManagedObjectContext()
+            let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
             NSFetchedResultsController.deleteCacheWithName(cacheName)
             let fetchedRequest = NSFetchRequest(entityName: "Trip")
             fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -227,7 +227,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkMachine.sharedMachine.saveAndSyncTripIfNeeded(trip)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
         }
     }
     

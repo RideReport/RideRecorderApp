@@ -94,17 +94,17 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func pauseResumeTracking(sender: AnyObject) {
-        if (RouteMachine.sharedMachine.isPaused()) {
-            RouteMachine.sharedMachine.resumeTracking()
+        if (RouteManager.sharedManager.isPaused()) {
+            RouteManager.sharedManager.resumeTracking()
         } else {
-            RouteMachine.sharedMachine.pauseTracking()
+            RouteManager.sharedManager.pauseTracking()
         }
         
         refreshPauseResumeTrackingButtonUI()
     }
     
     func refreshPauseResumeTrackingButtonUI() {
-        if (RouteMachine.sharedMachine.isPaused()) {
+        if (RouteManager.sharedManager.isPaused()) {
             self.customButton.maskImage = UIImage(named: "locationArrowDisabled.png")
             self.customButton.primaryColor = UIColor.grayColor()
             self.customButton.secondaryColor = UIColor.grayColor()
@@ -113,9 +113,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             if (self.popupView.hidden) {
                 self.popupView.popIn()
             }
-            if (RouteMachine.sharedMachine.isPausedDueToUnauthorized()) {
+            if (RouteManager.sharedManager.isPausedDueToUnauthorized()) {
                 self.popupView.text = "Ride needs permission to run."
-            } else if (RouteMachine.sharedMachine.isPausedDueToBatteryLife()) {
+            } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
                 self.popupView.text = "Ride is paused until you charge your phone =)."
             } else {
                 self.popupView.text = "Ride is paused."

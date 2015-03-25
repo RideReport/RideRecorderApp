@@ -1,5 +1,5 @@
 //
-//  NetworkMachine.swift
+//  NetworkManager.swift
 //  Ride
 //
 //  Created by William Henderson on 12/11/14.
@@ -11,21 +11,21 @@ import Alamofire
 
 let serverAddress = "http://50.112.169.50/"
 
-class NetworkMachine {
+class NetworkManager {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
         
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var sharedMachine : NetworkMachine?
+        static var sharedManager : NetworkManager?
     }
     
-    class var sharedMachine:NetworkMachine {
+    class var sharedManager:NetworkManager {
         dispatch_once(&Static.onceToken) {
-            Static.sharedMachine = NetworkMachine()
+            Static.sharedManager = NetworkManager()
         }
         
-        return Static.sharedMachine!
+        return Static.sharedManager!
     }
     
     func startup() {
@@ -35,7 +35,7 @@ class NetworkMachine {
                 
                 if (trip.locations.count <= 6) {
                     // if it doesn't more than 6 points, toss it.
-                    CoreDataController.sharedCoreDataController.currentManagedObjectContext().deleteObject(trip)
+                    CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().deleteObject(trip)
                     self.saveAndSyncTripIfNeeded(trip)
                 } else {
                     trip.close() {
@@ -73,7 +73,7 @@ class NetworkMachine {
             trip.isSynced = false
         }
         
-        CoreDataController.sharedCoreDataController.saveContext()
+        CoreDataManager.sharedCoreDataManager.saveContext()
         
         if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -115,7 +115,7 @@ class NetworkMachine {
             if (error == nil) {
                 trip.isSynced = true
                 DDLogWrapper.logError(NSString(format: "Response: %@", response!))
-                CoreDataController.sharedCoreDataController.saveContext()
+                CoreDataManager.sharedCoreDataManager.saveContext()
             } else {
                 DDLogWrapper.logError(NSString(format: "Error: %@", error!))
             }
