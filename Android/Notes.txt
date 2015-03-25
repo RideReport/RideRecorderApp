@@ -1,0 +1,8 @@
+Location Usage
+http://blog.teamtreehouse.com/beginners-guide-location-android
+http://developer.android.com/training/location/receive-location-updates.html
+http://developer.android.com/guide/topics/location/strategies.html
+
+Mapbox
+https://www.mapbox.com/mapbox-android-sdk/#gradle
+https://github.com/mapbox/mapbox-android-demo/blob/master/MapBoxAndroidDemo/src/main/java/com/mapbox/mapboxandroiddemo/MainActivity.java
