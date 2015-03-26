@@ -55,7 +55,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         NSURLCache.setSharedURLCache(urlCache)
         
         MBXMapKit.setAccessToken("pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
-        let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.l4imi65m")
+        let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.3939fb5f")
         self.mapView.addOverlay(tiles)
         
         self.tripPolyLines = [:]

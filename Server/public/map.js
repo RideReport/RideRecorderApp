@@ -2,7 +2,7 @@
 
   L.mapbox.accessToken = 'pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA';
   // Replace 'examples.map-i87786ca' with your map id.
-  var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v4/quicklywilliam.l4imi65m/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
+  var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v4/quicklywilliam.3939fb5f/{z}/{x}/{y}.png?access_token=' + L.mapbox.accessToken, {
       attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
   });
   map.addLayer(mapboxTiles)
