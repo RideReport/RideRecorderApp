@@ -90,7 +90,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         
-        refreshTripUI()
+        self.refreshTripUI()
     }
     
     @IBAction func thumbsDown(sender: AnyObject) {
@@ -99,7 +99,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         
-        refreshTripUI()
+        self.refreshTripUI()
     }
     
     @IBAction func bikeButton(sender: AnyObject) {
@@ -107,6 +107,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
+        self.refreshTripUI()
     }
     
     @IBAction func carButton(sender: AnyObject) {
@@ -114,6 +115,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
         
         self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
+        self.refreshTripUI()        
     }
     
     @IBAction func tools(sender: AnyObject) {

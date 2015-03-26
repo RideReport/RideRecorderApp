@@ -377,7 +377,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         
-        if (trip.deleted == true) {
+        if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
             self.tripPolyLines[trip] = nil
             return
         }
@@ -465,6 +465,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
                     annotationView.canShowCallout = true
                     
+#if DEBUGRDP
                     let circleRadius : CGFloat = 2.0
                     let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
                     pointView.backgroundColor = UIColor.blackColor()
@@ -472,7 +473,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     pointView.layer.cornerRadius = circleRadius;
                     annotationView.addSubview(pointView)
                     annotationView.frame = pointView.frame
-                    
+#endif
                 }
                 
                 annotationView.annotation = annotation
@@ -512,9 +513,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
                 opacity = 0.8
-                lineWidth = 5
+                lineWidth = 8
             } else {
-                opacity = 0.3
+                opacity = 0.2
                 lineWidth = 2
             }
             
