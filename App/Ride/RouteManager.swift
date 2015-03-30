@@ -510,7 +510,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Resume Tracking")
+        self.startTrackingMachine()
+    }
+    
+    private func startTrackingMachine() {
         self.locationManager.startMonitoringSignificantLocationChanges()
+        
+        if (!self.locationManagerIsUpdating) {
+            // if we are not already getting location updates, get a single update for our geofence.
+            self.isGettingInitialLocationForGeofence = true
+            self.startMotionMonitoring()
+        }
     }
 
     //
@@ -521,13 +531,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logVerbose("Did change authorization status")
         
         if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways) {
-            self.locationManager.startMonitoringSignificantLocationChanges()
-            
-            if (!self.locationManagerIsUpdating) {
-                // if we are not already getting location updates, get a single update for our geofence.
-                self.isGettingInitialLocationForGeofence = true
-                self.startMotionMonitoring()
-            }
+            self.startTrackingMachine()
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogWrapper.logVerbose("Not authorized for location access!")
@@ -608,8 +612,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.processMotionMonitoringLocations(locations)
         } else {
             // We are currently in background mode and got significant location change movement.
-            // We now enter a state to monitor for user movement
-            DDLogWrapper.logVerbose("Got significant location update.")
+            if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
+                DDLogWrapper.logVerbose("Got significant location, entering Motion Monitoring state.")
+                self.startMotionMonitoring()
+            } else {
+                DDLogWrapper.logVerbose("Got significant location but already in Motion Monitoring or active tracking state.")
+            }
         }
     }
 }
