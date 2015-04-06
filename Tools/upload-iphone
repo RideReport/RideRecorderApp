@@ -61,6 +61,9 @@ url = AWS::S3::S3Object.url_for('manifest.plist',
                  :use_ssl => true,
                  :authenticated => false)                         
                  
+# reset plist URL
+`/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-version IPA_VERSION" "manifest.plist"`                  
+`/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url IPA_URL" "manifest.plist"`                 
 puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
 
 if (upload_build)                 
