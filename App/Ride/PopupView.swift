@@ -24,6 +24,7 @@ import Foundation
     }
     
     private var textLabel : UILabel! = nil
+    private var widthConstraint : NSLayoutConstraint! = nil
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -52,6 +53,12 @@ import Foundation
         self.textLabel.sizeToFit()
         let newWidth = self.textLabel.frame.width + 20
         self.frame = CGRectMake(rightHandBefore - newWidth, self.frame.origin.y, newWidth, self.frame.height)
+        
+        if (self.widthConstraint != nil) {
+            self.removeConstraint(self.widthConstraint)
+        }
+        self.widthConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: newWidth)
+        self.addConstraint(self.widthConstraint)
         self.setNeedsDisplay()
     }
     
