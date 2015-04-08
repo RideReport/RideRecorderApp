@@ -541,7 +541,7 @@ class Trip : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as Location
-            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= kCLLocationAccuracyNearestTenMeters) {
+            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
                 count++
                 sumSpeed += (location as Location).speed!.doubleValue
             }
