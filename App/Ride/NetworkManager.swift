@@ -62,7 +62,7 @@ class NetworkManager {
     func syncTrips() {
         for trip in Trip.allTrips()! {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.syncTrip(trip as Trip)
+                self.saveAndSyncTripIfNeeded(trip as Trip)
             })
         }
     }
