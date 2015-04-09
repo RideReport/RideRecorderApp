@@ -287,7 +287,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
         self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
