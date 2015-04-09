@@ -69,7 +69,7 @@ class NetworkManager {
     
     
     func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
-        if (trip.isSynced.boolValue) {
+        if (trip.hasChanges && trip.isSynced.boolValue) {
             trip.isSynced = false
         }
         
