@@ -66,7 +66,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        (segue.destinationViewController as RouteDetailViewController).mainViewController = self.mainViewController
+        (segue.destinationViewController as! RouteDetailViewController).mainViewController = self.mainViewController
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -108,7 +108,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func setSelectedTrip(trip : Trip!) {
         if (trip != nil) {
             if (self.navigationController?.topViewController != self) {
-                (self.navigationController?.topViewController as RouteDetailViewController).refreshTripUI()
+                (self.navigationController?.topViewController as! RouteDetailViewController).refreshTripUI()
             } else {
                 self.performSegueWithIdentifier("routeSelectedSegue", sender: self)
             }
@@ -146,7 +146,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
             
         case .Update:
-            let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as Trip
+            let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
             let cell = self.tableView!.cellForRowAtIndexPath(indexPath!)
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
@@ -165,22 +165,22 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let theSection = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        let theSection = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
         
         return "  ".stringByAppendingString(theSection.name!)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
         
         return sectionInfo.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
+        let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
         let reuseID = "RoutesViewTableCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as UITableViewCell
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as! UITableViewCell
         tableCell.layoutMargins = UIEdgeInsetsZero
 
         configureCell(tableCell, trip: trip)
@@ -189,7 +189,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let headerView = view as UITableViewHeaderFooterView
+        let headerView = view as! UITableViewHeaderFooterView
         headerView.tintColor = UIColor(white: 0.2, alpha: 1.0)
         headerView.opaque = false
         headerView.textLabel.font = UIFont.boldSystemFontOfSize(14.0)
@@ -211,21 +211,21 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         var dateTitle = ""
         if (trip.startDate != nil) {
-            dateTitle = NSString(format: "%@", self.timeFormatter.stringFromDate(trip.startDate))
+            dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.startDate))
             
         }
-        tableCell.textLabel!.text = NSString(format: "%@ %@ for %.1f miles", trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
+        tableCell.textLabel!.text = String(format: "%@ %@ for %.1f miles", trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
         
-        tableCell.detailTextLabel!.text = NSString(format: "%@", ratingString)
+        tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.mainViewController.setSelectedTrip(self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip, sender:self)
+        self.mainViewController.setSelectedTrip(self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip, sender:self)
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as Trip
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             trip.managedObjectContext?.deleteObject(trip)
             NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
         }

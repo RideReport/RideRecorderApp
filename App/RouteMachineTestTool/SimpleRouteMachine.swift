@@ -44,7 +44,7 @@ class SimpleRouteManager: NSObject, CLLocationManagerDelegate {
         NSLog("Finished deferring updates")
         
         if (error != nil) {
-            NSLog(NSString(format: "Error deferring: %@", error))
+            NSLog(String(format: "Error deferring: %@", error))
         }
         
         NSLog("Re-deferring updates")

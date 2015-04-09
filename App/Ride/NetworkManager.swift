@@ -31,7 +31,7 @@ class NetworkManager {
     func startup() {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             for aTrip in Trip.openTrips()! {
-                let trip = aTrip as Trip
+                let trip = aTrip as! Trip
                 
                 if (trip.locations.count <= 6) {
                     // if it doesn't more than 6 points, toss it.
@@ -62,7 +62,7 @@ class NetworkManager {
     func syncTrips() {
         for trip in Trip.allTrips()! {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.saveAndSyncTripIfNeeded(trip as Trip)
+                self.saveAndSyncTripIfNeeded(trip as! Trip)
             })
         }
     }
@@ -98,7 +98,7 @@ class NetworkManager {
         ]
         var locations : [AnyObject!] = []
         for location in trip.locations.array {
-            let aLocation = location as Location
+            let aLocation = location as! Location
             if !aLocation.isPrivate.boolValue {
                 locations.append([
                     "course": aLocation.course!,
@@ -114,10 +114,10 @@ class NetworkManager {
         self.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
             if (error == nil) {
                 trip.isSynced = true
-                DDLogWrapper.logError(NSString(format: "Response: %@", response!))
+                DDLogWrapper.logError(String(format: "Response: %@", response!))
                 CoreDataManager.sharedCoreDataManager.saveContext()
             } else {
-                DDLogWrapper.logError(NSString(format: "Error: %@", error!))
+                DDLogWrapper.logError(String(format: "Error: %@", error!))
             }
         }
     }

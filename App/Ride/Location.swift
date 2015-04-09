@@ -91,7 +91,7 @@ class Location : NSManagedObject {
         var filteredResults : [AnyObject] = []
         let centerLocation = CLLocation(latitude: circle.coordinate.latitude, longitude: circle.coordinate.longitude)
         for loc in results! {
-            let aLocation = CLLocation(latitude: (loc as Location).latitude!.doubleValue, longitude: (loc as Location).longitude!.doubleValue)
+            let aLocation = CLLocation(latitude: (loc as! Location).latitude!.doubleValue, longitude: (loc as! Location).longitude!.doubleValue)
             let distanceFromCenter = centerLocation.distanceFromLocation(aLocation)
             if (distanceFromCenter <= circle.radius) {
                 filteredResults.append(loc)

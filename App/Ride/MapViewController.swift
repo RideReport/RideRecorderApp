@@ -99,7 +99,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
-        self.mainViewController = parent as MainViewController
+        self.mainViewController = parent as! MainViewController
     }
     
     //
@@ -137,7 +137,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             if (renderer == nil) {
                 return
             }
-            let polyLineRenderer = renderer as MKPolylineRenderer
+            let polyLineRenderer = renderer as! MKPolylineRenderer
             
             let pointInPolyline = polyLineRenderer.pointForMapPoint(mapPoint)
             let strokeWidth : CGFloat = 1000.0
@@ -251,11 +251,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             for trip in Trip.allTrips()! {
-                self.refreshTrip(trip as Trip)
+                self.refreshTrip(trip as! Trip)
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                self.mainViewController.navigationItem.title = NSString(format: "%.0f miles", Trip.totalCycledMiles)
+                self.mainViewController.navigationItem.title = String(format: "%.0f miles", Trip.totalCycledMiles)
             })
         })
     }
@@ -298,7 +298,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         var count : Int = 0
         
         for location in trip.simplifiedLocations.array {
-            let location = (location as Location)
+            let location = (location as! Location)
             if (location.isPrivate.boolValue) {
                 continue
             }
@@ -309,14 +309,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             annotation.coordinate = coord
             
             if (location.isSmoothedLocation) {
-                annotation.title = NSString(format: "%i**", count)
+                annotation.title = String(format: "%i**", count)
             } else {
-                annotation.title = NSString(format: "%i", count)
+                annotation.title = String(format: "%i", count)
             }
             if (location.date != nil) {
-                annotation.subtitle = NSString(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed!.doubleValue)
+                annotation.subtitle = String(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed!.doubleValue)
             } else {
-                annotation.subtitle = NSString(format: "Unknown, Speed: %f", location.speed!.doubleValue)
+                annotation.subtitle = String(format: "Unknown, Speed: %f", location.speed!.doubleValue)
             }
             
             self.tripAnnotations.append(annotation)
@@ -403,7 +403,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         var coordinates : [CLLocationCoordinate2D] = []
         var count : Int = 0
         for location in trip.simplifiedLocations.array {
-            let location = (location as Location)
+            let location = (location as! Location)
             
             let coord = location.coordinate()
             
@@ -421,7 +421,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         })
         
         for item in trip.incidents.array {
-            let incident = item as Incident
+            let incident = item as! Incident
             let annotation = MKPointAnnotation()
             annotation.coordinate = incident.location!.coordinate()
             
@@ -481,7 +481,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 return annotationView
             } else if ((self.incidentAnnotations.values.array as NSArray).containsObject(annotation)) {
                 let reuseID = "IncidentAnnotationViewReuseID"
-                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKPinAnnotationView?
+                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as! MKPinAnnotationView?
 
                 if (annotationView == nil) {
                     annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
@@ -500,9 +500,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let renderer = MBXRasterTileRenderer(overlay: overlay)
             return renderer
         } else if (overlay.isKindOfClass(MKPolyline)) {
-            let renderer = MKPolylineRenderer(polyline:(overlay as MKPolyline))
+            let renderer = MKPolylineRenderer(polyline:(overlay as! MKPolyline))
             
-            var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as Trip!)
+            var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as! Trip!)
             
             if (trip == nil) {
                 return nil
@@ -537,11 +537,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             renderer.lineWidth = lineWidth
             return renderer;
         } else if (overlay.isKindOfClass(MKCircle)) {
-            let circleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
+            let circleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
             circleRenderer!.lineWidth = 1.0
             circleRenderer!.lineDashPattern = [3,5]
 
-            if (self.privacyCircle != nil && (overlay as MKCircle) == self.privacyCircle!) {
+            if (self.privacyCircle != nil && (overlay as! MKCircle) == self.privacyCircle!) {
                 circleRenderer!.strokeColor = UIColor.redColor()
                 circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
                 self.privacyCircleRenderer = circleRenderer

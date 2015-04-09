@@ -17,12 +17,12 @@ import Foundation
 
 @IBDesignable class PushSimulatorView : UIView, UIScrollViewDelegate {
     
-    @IBInspectable var body: NSString = "Lorem ipsum dolor sit amet" {
+    @IBInspectable var body: String = "Lorem ipsum dolor sit amet" {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var appName: NSString = "Ride" {
+    @IBInspectable var appName: String = "Ride" {
         didSet {
             reloadUI()
         }
@@ -32,12 +32,12 @@ import Foundation
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: NSString = "Delete" {
+    @IBInspectable var desturctiveActionTitle: String = "Delete" {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: NSString = "View" {
+    @IBInspectable var actionTitle: String = "View" {
         didSet {
             reloadUI()
         }

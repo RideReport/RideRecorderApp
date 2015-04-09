@@ -33,7 +33,7 @@ class GettingStartedTermsViewController: GettingStartedChildViewController, UITe
         let textPosition = self.termsTextView.closestPositionToPoint(tapLocation)
         let attributes = self.termsTextView.textStylingAtPosition(textPosition, inDirection: UITextStorageDirection.Forward)
         
-        let underline = attributes[NSUnderlineStyleAttributeName] as NSNumber?
+        let underline = attributes[NSUnderlineStyleAttributeName] as! NSNumber?
         if (underline?.integerValue == NSUnderlineStyle.StyleSingle.rawValue) {
             UIApplication.sharedApplication().openURL(NSURL(string: "http://ride.report/terms")!)
 

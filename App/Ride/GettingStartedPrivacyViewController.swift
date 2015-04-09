@@ -159,7 +159,7 @@ class GettingStartedPrivacyViewController: GettingStartedChildViewController, MK
             let renderer = MBXRasterTileRenderer(overlay: overlay)
             return renderer
         } else if (overlay.isKindOfClass(MKCircle)) {
-            self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as MKCircle)
+            self.privacyCircleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
             self.privacyCircleRenderer!.strokeColor = UIColor.redColor()
             self.privacyCircleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
             self.privacyCircleRenderer!.lineWidth = 1.0

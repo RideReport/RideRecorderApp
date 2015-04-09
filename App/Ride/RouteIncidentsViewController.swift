@@ -71,7 +71,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
             self.tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
             
         case .Update:
-            let incident = self.fetchedResultsController.objectAtIndexPath(indexPath!) as Incident
+            let incident = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Incident
             let cell = self.tableView!.cellForRowAtIndexPath(indexPath!)
             if (cell != nil) {
                 configureCell(cell!, incident: incident)
@@ -90,10 +90,10 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as Incident
+        let incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
         let reuseID = "RouteIncidentsTableCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as UITableViewCell
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as! UITableViewCell
         tableCell.layoutMargins = UIEdgeInsetsZero
 
         configureCell(tableCell, incident: incident)
@@ -117,7 +117,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
                 dateString = self.dateFormatter.stringFromDate(incident.creationDate) + " at"
             }
             
-            dateTitle = NSString(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(incident.creationDate))
+            dateTitle = String(format: "%@ %@", dateString, self.timeFormatter.stringFromDate(incident.creationDate))
             tableCell.detailTextLabel!.text = dateTitle
         } else {
             tableCell.detailTextLabel!.text = "Sometime"
@@ -130,7 +130,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            let incident : Incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as Incident
+            let incident : Incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
             incident.managedObjectContext?.deleteObject(incident)
             if (incident.trip != nil) {
                 NetworkManager.sharedManager.saveAndSyncTripIfNeeded(incident.trip!)

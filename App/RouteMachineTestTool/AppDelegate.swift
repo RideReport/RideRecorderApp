@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
         
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
-        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(object: rideCompleteCategory))
+        let settings = UIUserNotificationSettings(forTypes: types, categories: Set([object: rideCompleteCategory]))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
 
         

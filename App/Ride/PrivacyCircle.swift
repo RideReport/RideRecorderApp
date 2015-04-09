@@ -45,7 +45,7 @@ class PrivacyCircle : NSManagedObject {
             return nil
         }
         
-        Static.privacyCirle = (results!.first as PrivacyCircle)
+        Static.privacyCirle = (results!.first as! PrivacyCircle)
         return Static.privacyCirle
     }
     
@@ -59,12 +59,12 @@ class PrivacyCircle : NSManagedObject {
         Static.privacyCirle?.radius = circle.radius
         
         for loc in Location.privateLocations() {
-            let location = loc as Location
+            let location = loc as! Location
             location.isPrivate = false
         }
         
         for loc in Location.locationsInCircle(circle) {
-            let location = loc as Location
+            let location = loc as! Location
             location.isPrivate = true
         }
         

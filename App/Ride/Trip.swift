@@ -55,7 +55,7 @@ class Trip : NSManagedObject {
     var sectionIdentifier : String? {
         get {
             self.willAccessValueForKey("sectionIdentifier")
-            var sectionString = self.primitiveValueForKey("sectionIdentifier") as String?
+            var sectionString = self.primitiveValueForKey("sectionIdentifier") as! String?
             self.didAccessValueForKey("sectionIdentifier")
             if (sectionString == nil) {
                 // do the thing
@@ -148,7 +148,7 @@ class Trip : NSManagedObject {
             return nil
         }
         
-        return (results!.first as Trip)
+        return (results!.first as! Trip)
     }
     
     class func emptyTrips() -> [AnyObject]? {
@@ -242,7 +242,7 @@ class Trip : NSManagedObject {
         location.horizontalAccuracy = NSNumber(double: 0.0)
         location.latitude = NSNumber(double: coordinate.latitude)
         location.longitude = NSNumber(double: coordinate.longitude)
-        location.speed = self.locations.objectAtIndex(1).speed!
+        location.speed = NSNumber(double: -1.0)
         location.isSmoothedLocation = true
         
         return location
@@ -256,7 +256,7 @@ class Trip : NSManagedObject {
         DDLogWrapper.logVerbose("De-Smoothing route…")
         
         for element in self.locations.array {
-            let location = element as Location
+            let location = element as! Location
             if location.isSmoothedLocation {
                 location.trip = nil
                 location.managedObjectContext?.deleteObject(location)
@@ -277,7 +277,7 @@ class Trip : NSManagedObject {
                 handler()
                 return
             }
-            let startingPlacemark = placemarks[0] as CLPlacemark
+            let startingPlacemark = placemarks[0] as! CLPlacemark
             self.startingPlacemark = startingPlacemark
             handler()
         })
@@ -291,14 +291,14 @@ class Trip : NSManagedObject {
         }
         
         let geocoder = CLGeocoder()
-        let endingLocation = self.locations.lastObject as Location
+        let endingLocation = self.locations.lastObject as! Location
         
         geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
                 handler()
                 return
             }
-            let endingPlacemark = placemarks[0] as CLPlacemark
+            let endingPlacemark = placemarks[0] as! CLPlacemark
             self.endingPlacemark = endingPlacemark
             handler()
         })
@@ -313,7 +313,7 @@ class Trip : NSManagedObject {
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
         for element in self.locations.array {
-            let location = (element as Location).clLocation()
+            let location = (element as! Location).clLocation()
             if (lastLocation == nil) {
                 lastLocation = location
                 continue
@@ -355,7 +355,7 @@ class Trip : NSManagedObject {
         var message = ""
         
         if (self.startingPlacemark != nil) {
-            message = NSString(format: "Started a trip in %@…", self.startingPlacemark!.subLocality)
+            message = String(format: "Started a trip in %@…", self.startingPlacemark!.subLocality)
         } else {
             message = "Started a trip…"
         }
@@ -383,11 +383,11 @@ class Trip : NSManagedObject {
         var message = ""
         
         if (self.startingPlacemark != nil && self.endingPlacemark != nil) {
-            message = NSString(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality)
-        } else if (self.startingPlacemark? != nil) {
-            message = NSString(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality)
+            message = String(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality) as String
+        } else if (self.startingPlacemark != nil) {
+            message = String(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality) as String
         } else {
-            message = NSString(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles) as String
         }
         
         self.cancelTripStateNotification()
@@ -416,7 +416,7 @@ class Trip : NSManagedObject {
             return
         }
         
-        self.simplifyLocations(self.locations.array as [Location], episilon: simplificationEpisilon)
+        self.simplifyLocations(self.locations.array as! [Location], episilon: simplificationEpisilon)
         CoreDataManager.sharedCoreDataManager.saveContext()
         handler()
     }
@@ -476,8 +476,8 @@ class Trip : NSManagedObject {
         
         self.hasSmoothed = true
         
-        let location0 = self.locations.firstObject as Location
-        let location1 = self.locations.objectAtIndex(1) as Location
+        let location0 = self.locations.firstObject as! Location
+        let location1 = self.locations.objectAtIndex(1) as! Location
         
         let request = MKDirectionsRequest()
         request.setSource((location0 as Location).mapItem())
@@ -487,11 +487,11 @@ class Trip : NSManagedObject {
         let directions = MKDirections(request: request)
         directions.calculateDirectionsWithCompletionHandler { (directionsResponse, error) -> Void in
             if (error == nil) {
-                let route : MKRoute = directionsResponse.routes.first! as MKRoute
+                let route : MKRoute = directionsResponse.routes.first! as! MKRoute
                 let pointCount = route.polyline!.pointCount
                 var coords = [CLLocationCoordinate2D](count: pointCount, repeatedValue: kCLLocationCoordinate2DInvalid)
                 route.polyline.getCoordinates(&coords, range: NSMakeRange(0, pointCount))
-                let mutableLocations = self.locations.mutableCopy() as NSMutableOrderedSet
+                let mutableLocations = self.locations.mutableCopy() as! NSMutableOrderedSet
                 for index in 0..<pointCount {
                     let location = self.locationWithCoordinate(coords[index])
                     location.date = location0.date
@@ -516,7 +516,7 @@ class Trip : NSManagedObject {
     
     func mostRecentLocation() -> Location? {
         let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
-        let loc = self.locations.sortedArrayUsingDescriptors([sortDescriptor]).first as Location
+        let loc = self.locations.sortedArrayUsingDescriptors([sortDescriptor]).first as! Location
         return loc
     }
     
@@ -540,7 +540,7 @@ class Trip : NSManagedObject {
         var sumSpeed : Double = 0.0
         var count = 0
         for loc in self.locations.array {
-            let location = loc as Location
+            let location = loc as! Location
             if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
                 count++
                 sumSpeed += (location as Location).speed!.doubleValue
@@ -562,7 +562,7 @@ class Trip : NSManagedObject {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
                 if (activities != nil) {
                     for activity in activities {
-                        Activity(activity: activity as CMMotionActivity, trip: self)
+                        Activity(activity: activity as! CMMotionActivity, trip: self)
                     }
                 }
                 
@@ -591,7 +591,7 @@ class Trip : NSManagedObject {
         var autoScore = 0
         var cycleScore = 0
         for activity in self.activities.allObjects {
-            let theActivity = (activity as Activity)
+            let theActivity = (activity as! Activity)
             if (theActivity.walking) {
                 walkScore += theActivity.confidence.integerValue
             }

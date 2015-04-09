@@ -23,16 +23,16 @@ class GettingStartedViewController: UINavigationController {
         
         self.navigationBarHidden = true
         
-        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as GettingStartedChildViewController
+        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as! GettingStartedChildViewController
         self.setupVC(gettingStartedTermsVC)
         
-        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as GettingStartedChildViewController
+        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as! GettingStartedChildViewController
         self.setupVC(gettingStartedBatteryVC)
         
-        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as GettingStartedChildViewController
+        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as! GettingStartedChildViewController
         self.setupVC(gettingStartedRatingVC)
         
-        let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as GettingStartedChildViewController
+        let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as! GettingStartedChildViewController
         self.setupVC(gettingStartedPriacyVC)
         
         self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedPriacyVC, gettingStartedBatteryVC]
@@ -46,7 +46,7 @@ class GettingStartedViewController: UINavigationController {
     }
     
     func nextPage() {
-        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as GettingStartedChildViewController)
+        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as! GettingStartedChildViewController)
         
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()

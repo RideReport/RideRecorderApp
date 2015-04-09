@@ -42,9 +42,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
-                self.mapViewController = viewController as MapViewController
+                self.mapViewController = viewController as! MapViewController
             } else if (viewController.isKindOfClass(UINavigationController)) {
-                self.routesViewController = viewController.topViewController as RoutesViewController
+                self.routesViewController = viewController.topViewController as! RoutesViewController
                 self.routesViewController.mainViewController = self
             }
         }
@@ -175,20 +175,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         let bundleID = NSBundle.mainBundle().bundleIdentifier
         let dailyStats = UIDevice.currentDevice().dailyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
         let weeklyStats = UIDevice.currentDevice().weeklyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
-        let body = NSString(format: "\n\n\n===BATTERY LIFE USAGE STATISTICS===\nDaily: %@\nWeekly: %@", dailyStats, weeklyStats)
+        let body = String(format: "\n\n\n===BATTERY LIFE USAGE STATISTICS===\nDaily: %@\nWeekly: %@", dailyStats, weeklyStats)
         
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Bug Report")
         composer.setToRecipients(["logs@ride.report"])
         composer.mailComposeDelegate = self
-        composer.setMessageBody(body, isHTML: false)
+        composer.setMessageBody(body as String, isHTML: false)
         
-        let firstFileInfo = fileInfos.first! as DDLogFileInfo
+        let firstFileInfo = fileInfos.first! as! DDLogFileInfo
         let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
         composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
         
         if (fileInfos.count > 1) {
-            let secondFileInfo = fileInfos[1] as DDLogFileInfo
+            let secondFileInfo = fileInfos[1] as! DDLogFileInfo
             let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath)!)
             composer.addAttachmentData(secondFileData, mimeType: "text/plain", fileName: secondFileInfo.fileName)
         }

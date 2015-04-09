@@ -47,13 +47,13 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
         self.lastUpdateCheck = NSDate()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
-            let manifestDictionary = NSDictionary(contentsOfURL: self.manifestUrl) as [String:AnyObject]?
+            let manifestDictionary = NSDictionary(contentsOfURL: self.manifestUrl) as! [String:AnyObject]?
             if (manifestDictionary != nil) {
-                let items = manifestDictionary?["items"] as [AnyObject]?
-                let item = items?.last as [String:AnyObject]?
+                let items = manifestDictionary?["items"] as! [AnyObject]?
+                let item = items?.last as! [String:AnyObject]?
                 
-                let version = item?["metadata"]?["bundle-version"] as String
-                let currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as String
+                let version = item?["metadata"]?["bundle-version"] as! String
+                let currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
                 
                 if (currentVersion.compare(version, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending) {
                     // update is available
@@ -71,8 +71,8 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
     }
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        let itmsURL = NSString(format: "itms-services://?action=download-manifest&url=%@", self.manifestUrl)
-        UIApplication.sharedApplication().openURL(NSURL(string: itmsURL)!)
+        let itmsURL = String(format: "itms-services://?action=download-manifest&url=%@", self.manifestUrl)
+        UIApplication.sharedApplication().openURL(NSURL(string: itmsURL as String)!)
     }
     
 }

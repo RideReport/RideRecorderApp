@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let delegate = UIApplication.sharedApplication().delegate
         
         if (delegate!.isKindOfClass(AppDelegate)) {
-            return delegate as AppDelegate
+            return delegate as! AppDelegate
         }
         
         return nil
@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
         
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
-        let settings = UIUserNotificationSettings(forTypes: types, categories: NSSet(objects: rideCompleteCategory, rideStartedCategory, appPausedCategory))
+        let settings = UIUserNotificationSettings(forTypes: types, categories: Set([rideCompleteCategory, rideStartedCategory, appPausedCategory]))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         
         // setup Ride to log to Xcode if available
@@ -88,8 +88,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
-        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as String
-        DDLogWrapper.logInfo(NSString(format: "========================STARTING RIDE APP v%@========================", versionString))
+        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
+        DDLogWrapper.logInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
         
         // Start Managers
         CoreDataManager.sharedCoreDataManager.startup()

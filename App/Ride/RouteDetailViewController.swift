@@ -48,10 +48,10 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         
         let trip = self.mainViewController.selectedTrip
         
-        self.distanceLabel.text = NSString(format: "%.1f miles", trip.lengthMiles)
+        self.distanceLabel.text = String(format: "%.1f miles", trip.lengthMiles)
         
         let speedMph = trip.averageSpeed*2.23694
-        self.tripSpeedLabel.text = NSString(format: "%.1f mph", speedMph)
+        self.tripSpeedLabel.text = String(format: "%.1f mph", speedMph)
         
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
@@ -78,7 +78,7 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         }
         
         if trip.batteryLifeUsed() > 0 {
-            self.batteryLifeLabel.text = NSString(format: "%d%% battery used", trip.batteryLifeUsed())
+            self.batteryLifeLabel.text = String(format: "%d%% battery used", trip.batteryLifeUsed())
         } else {
             self.batteryLifeLabel.text = ""
         }
@@ -177,13 +177,13 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.destinationViewController.isKindOfClass(RouteIncidentsViewController) {
-            let incidentViewController = segue.destinationViewController as RouteIncidentsViewController
+            let incidentViewController = segue.destinationViewController as! RouteIncidentsViewController
             incidentViewController.mainViewController = self.mainViewController
         }
     }
     
     override func performSegueWithIdentifier(identifier: String?, sender: AnyObject?) {
-        self.mainViewController = (sender as RoutesViewController).mainViewController
+        self.mainViewController = (sender as! RoutesViewController).mainViewController
     }
 
 }
