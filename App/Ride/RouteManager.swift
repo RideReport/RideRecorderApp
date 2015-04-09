@@ -28,7 +28,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let numberOfGeofenceSleepRegions = 9
     let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0035
     let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
+    let backupGeofenceIdentifier = "com.Knock.Ride.backupGeofence"
     let geofenceSleepRegionRadius : CLLocationDistance = 80
+    let geofenceIdentifierPrefix = "com.Knock.Ride.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
@@ -396,7 +398,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Setting up geofences!")
         
         // first we put a geofence in the middle as a fallback (exit event)
-        let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: "LONELY Movement Geofence")
+        let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
         self.geofenceSleepRegions.append(region)
         self.locationManager.startMonitoringForRegion(region)
         
@@ -411,7 +413,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let dy = 2 * self.geofenceSleepRegionDistanceToCenter * sin(Double(index) * theta/2) * sin(Double(index) * theta/2)
             let locationOfNextGeofenceCenter = CLLocationCoordinate2DMake(locationOfFirstGeofenceCenter.latitude - dy, locationOfFirstGeofenceCenter.longitude - dx)
 
-            let region = CLCircularRegion(center:locationOfNextGeofenceCenter, radius:self.geofenceSleepRegionRadius, identifier: String(format: "Movement Geofence %i", index))
+            let region = CLCircularRegion(center:locationOfNextGeofenceCenter, radius:self.geofenceSleepRegionRadius, identifier: String(format: "%@%i",self.geofenceIdentifierPrefix, index))
             self.geofenceSleepRegions.append(region)
             self.locationManager.startMonitoringForRegion(region)
         }
@@ -579,6 +581,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
+        if (!region!.identifier.hasPrefix(self.geofenceIdentifierPrefix)) {
+            DDLogWrapper.logVerbose("Got geofence enter for backup or other irrelevant geofence. Skipping.")
+            return;
+        }
+        
         if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
             DDLogWrapper.logVerbose("Got geofence enter, entering Motion Monitoring state.")
             self.startMotionMonitoring()
@@ -588,6 +595,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
+        if (region!.identifier != self.backupGeofenceIdentifier) {
+            DDLogWrapper.logVerbose("Got geofence exit for irrelevant geofence. Skipping.")
+            return;
+        }
+        
         if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
             DDLogWrapper.logVerbose("Got geofence exit, entering Motion Monitoring state.")
             self.startMotionMonitoring()
