@@ -547,7 +547,7 @@ class Trip : NSManagedObject {
         
         
         if (self.isShittyWeather) {
-            return "🏆Crappy weather bonus points!"
+            return "🏆 Crappy weather bonus points!"
         }
         
         if (totalMiles % 25 == 0) {
