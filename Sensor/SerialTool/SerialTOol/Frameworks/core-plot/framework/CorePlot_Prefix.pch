@@ -26,3 +26,14 @@
         #endif
     #endif
 #endif
+
+// from http://stackoverflow.com/questions/29549756/compilation-error-with-nsparameterassert-with-xcode-6-3
+#undef NSParameterAssert
+#define NSParameterAssert(condition)    ({\
+do {\
+_Pragma("clang diagnostic push")\
+_Pragma("clang diagnostic ignored \"-Wcstring-format-directive\"")\
+NSAssert((condition), @"Invalid parameter not satisfying: %s", #condition);\
+_Pragma("clang diagnostic pop")\
+} while(0);\
+})

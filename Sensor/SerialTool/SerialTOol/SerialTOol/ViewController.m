@@ -25,7 +25,7 @@
     
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.locale = [NSLocale currentLocale];
-    self.dateFormatter.dateFormat = @"h:mm:ss:SS";
+    self.dateFormatter.dateFormat = @"h,mm,ss,SS";
     
     self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
 }
@@ -162,11 +162,17 @@
 #pragma mark -
 #pragma mark Plot datasource methods
 
+#define windowSize 100
+
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
     NSUInteger count = 0;
     
     count = [self.serialData count];
+    
+    if (count > windowSize) {
+        return windowSize;
+    }
 
     return count;
 }
@@ -174,7 +180,12 @@
 -(id)numberForPlot:(CPTPlot *)plot field:(NSUInteger)fieldEnum recordIndex:(NSUInteger)index
 {
     NSNumber *num = nil;
-    NSArray *rowdata = [self.serialData objectAtIndex:index];
+    NSArray *rowdata = nil;
+    if (self.serialData.count > windowSize) {
+        rowdata = [self.serialData objectAtIndex:((self.serialData.count - windowSize) + index)];
+    } else {
+        rowdata = [self.serialData objectAtIndex:index];
+    }
     
     
     if(fieldEnum == CPTScatterPlotFieldX) {
