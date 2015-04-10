@@ -255,7 +255,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                self.mainViewController.navigationItem.title = String(format: "%.0f miles", Trip.totalCycledMiles)
+                self.mainViewController.navigationItem.title = String(format: "%i trips", Trip.numberOfCycledTrips)
             })
         })
     }

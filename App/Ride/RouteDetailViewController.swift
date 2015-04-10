@@ -18,6 +18,9 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
     @IBOutlet weak var carButton: UIButton!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var tripSpeedLabel: UILabel!
+    @IBOutlet weak var climoticonLabel: UILabel!
+    @IBOutlet weak var temperatureLabel: UILabel!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +55,9 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
         
         let speedMph = trip.averageSpeed*2.23694
         self.tripSpeedLabel.text = String(format: "%.1f mph", speedMph)
+        
+        self.climoticonLabel.text = trip.climoticon
+        self.temperatureLabel.text = (trip.temperature == nil) ? "" : (trip.temperature.stringValue + "º")
         
         self.thumbsUpButton.backgroundColor = UIColor.clearColor()
         self.thumbsDownButton.backgroundColor = UIColor.clearColor()
@@ -166,8 +172,9 @@ class RouteDetailViewController: UITableViewController, UIActionSheetDelegate {
                 }
             })
         } else if (buttonIndex == 4) {
-            self.mainViewController.selectedTrip.close()
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            self.mainViewController.selectedTrip.close() {
+                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            }
             
             self.mainViewController.mapViewController.refreshTrip(self.mainViewController.selectedTrip)
         } else if (buttonIndex == 5) {

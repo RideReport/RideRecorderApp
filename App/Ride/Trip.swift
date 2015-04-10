@@ -50,6 +50,8 @@ class Trip : NSManagedObject {
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
+    @NSManaged var climacon : String!
+    @NSManaged var temperature : NSNumber!
 
     @NSManaged var simplifiedLocations : NSOrderedSet!
     var sectionIdentifier : String? {
@@ -173,15 +175,42 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class var totalCycledMiles : Float {
-        var miles : Float = 0
-        for trip in Trip.allTrips()! {
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                miles += trip.lengthMiles
-            }
+    class var numberOfCycledTrips : Int {
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
         }
         
-        return miles
+        return count
+    }
+    
+    class var totalCycledMiles : Float {
+        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        
+        let sumDescription = NSExpressionDescription()
+        sumDescription.name = "sumOfLengths"
+        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
+        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
+        fetchedRequest.propertiesToFetch = [sumDescription]
+        
+        var error : NSError?
+        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        if (results == nil || error != nil) {
+            return 0.0
+        }
+        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
+        return (totalLength.floatValue * 0.000621371)
     }
     
     class var totalCycledMilesThisWeek : Float {
@@ -199,6 +228,103 @@ class Trip : NSManagedObject {
         super.awakeFromInsert()
         self.creationDate = NSDate()
         self.uuid = NSUUID().UUIDString
+    }
+    
+    var isShittyWeather : Bool {
+        get {
+            if (self.climacon == nil || count(self.climacon!) == 0) {
+                return false
+            }
+            
+            if (self.temperature != nil && self.temperature.integerValue < 45) {
+                // BRrrrr
+                return true
+            }
+            
+            var climaconChar : Int8 = 0 // fml
+            for c in self.climacon!.unicodeScalars {
+                climaconChar = Int8(c.value)
+                break
+            }
+            
+            switch climaconChar {
+            case Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
+            Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
+            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+            Climacon.Umbrella.rawValue:
+                return true
+            case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
+            Climacon.Hail.rawValue, Climacon.HailSun.rawValue, Climacon.HailMoon.rawValue,
+            Climacon.Flurries.rawValue, Climacon.FlurriesSun.rawValue, Climacon.FlurriesMoon.rawValue,
+            Climacon.Snow.rawValue, Climacon.SnowSun.rawValue, Climacon.SnowMoon.rawValue,
+            Climacon.Snowflake.rawValue:
+                return true
+            case Climacon.Lightning.rawValue, Climacon.LightningSun.rawValue, Climacon.LightningMoon.rawValue:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    
+    var climoticon : String {
+        get {
+            if (self.climacon == nil || count(self.climacon!) == 0) {
+                return ""
+            }
+            
+            var climaconChar : Int8 = 0 // fml
+            for c in self.climacon!.unicodeScalars {
+                climaconChar = Int8(c.value)
+                break
+            }
+            
+            switch climaconChar {
+            case Climacon.Cloud.rawValue, Climacon.CloudDown.rawValue, Climacon.CloudMoon.rawValue,
+                Climacon.Fog.rawValue, Climacon.FogMoon.rawValue,
+                Climacon.Haze.rawValue, Climacon.HazeMoon.rawValue:
+                return "☁️"
+            case Climacon.CloudSun.rawValue, Climacon.FogSun.rawValue, Climacon.HazeSun.rawValue:
+                return "⛅️"
+            case Climacon.Drizzle.rawValue, Climacon.DrizzleSun.rawValue, Climacon.DrizzleMoon.rawValue,
+                Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
+                Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
+                Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+                Climacon.Umbrella.rawValue:
+                return "☔️"
+            case Climacon.Sun.rawValue, Climacon.Sunset.rawValue, Climacon.Sunrise.rawValue, Climacon.SunLow.rawValue, Climacon.SunLower.rawValue:
+                return "☀️"
+            case Climacon.MoonNew.rawValue:
+                return "🌑"
+            case Climacon.MoonWaxingCrescent.rawValue:
+                return "🌒"
+            case Climacon.MoonWaxingQuarter.rawValue:
+                return "🌓"
+            case Climacon.Moon.rawValue, Climacon.MoonWaxingGibbous.rawValue:
+                return "🌔"
+            case Climacon.MoonFull.rawValue:
+                return "🌕"
+            case Climacon.MoonWaningGibbous.rawValue:
+                return "🌖"
+            case Climacon.MoonWaningQuarter.rawValue:
+                return "🌗"
+            case Climacon.MoonWaningCrescent.rawValue:
+                return "🌘"
+            case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
+                Climacon.Hail.rawValue, Climacon.HailSun.rawValue, Climacon.HailMoon.rawValue,
+                Climacon.Flurries.rawValue, Climacon.FlurriesSun.rawValue, Climacon.FlurriesMoon.rawValue,
+                Climacon.Snow.rawValue, Climacon.SnowSun.rawValue, Climacon.SnowMoon.rawValue,
+                Climacon.Snowflake.rawValue:
+                return "❄️"
+            case Climacon.Wind.rawValue, Climacon.WindCloud.rawValue, Climacon.WindCloudSun.rawValue, Climacon.WindCloudMoon.rawValue,
+                Climacon.Tornado.rawValue:
+                return "💨"
+            case Climacon.Lightning.rawValue, Climacon.LightningSun.rawValue, Climacon.LightningMoon.rawValue:
+                return "⚡️"
+            default:
+                return ""
+            }
+        }
     }
     
     func activityTypeString()->String {
@@ -326,7 +452,15 @@ class Trip : NSManagedObject {
         self.isClosed = true
         
         self.clasifyActivityType { () -> Void in
-            handler()
+            let endingLocation = self.locations.lastObject as! Location
+
+            WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
+                if (condition != nil) {
+                    self.temperature = NSNumber(float: Float(condition!.temperature.f))
+                    self.climacon = String(UnicodeScalar(UInt32(condition!.climaconCharacter.rawValue)))
+                }
+                handler()
+            })
         }
     }
     
@@ -383,11 +517,16 @@ class Trip : NSManagedObject {
         var message = ""
         
         if (self.startingPlacemark != nil && self.endingPlacemark != nil) {
-            message = String(format: "%@ %.1f miles from %@ to %@", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality) as String
+            message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality) as String
         } else if (self.startingPlacemark != nil) {
-            message = String(format: "%@ %.1f miles from %@ to somewhere", self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality) as String
+            message = String(format: "%@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality) as String
         } else {
-            message = String(format: "%@ %.1f miles from somewhere to somewhere", self.activityTypeString(), self.lengthMiles) as String
+            message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles) as String
+        }
+        
+        let rewardString = self.rewardString()
+        if (rewardString != nil) {
+            message += (". " + rewardString!)
         }
         
         self.cancelTripStateNotification()
@@ -401,6 +540,30 @@ class Trip : NSManagedObject {
         }
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
 
+    }
+    
+    func rewardString()->String? {
+        let totalMiles = Trip.totalCycledMiles
+        
+        
+        if (self.isShittyWeather) {
+            return "🏆Crappy weather bonus points!"
+        }
+        
+        if (totalMiles % 25 == 0) {
+            return String(format: "💪 Your %.0fth mile!", totalMiles)
+        }
+        
+        let numTrips = Trip.numberOfCycledTrips
+        if (numTrips % 10 == 0) {
+            return String(format: "🎉 Your %ith trip!", numTrips)
+        }
+        
+        if (self.lengthMiles > 10.0) {
+            return "🌄 Epic Ride!"
+        }
+        
+        return nil
     }
     
     private func cancelTripStateNotification() {

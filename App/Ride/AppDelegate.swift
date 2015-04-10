@@ -97,6 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         SoftwareUpdateManager.sharedManager.startup()
         NetworkManager.sharedManager.startup()
         MotionManager.sharedManager.startup()
+        WeatherManager.sharedManager.startup()
         
         return true
     }

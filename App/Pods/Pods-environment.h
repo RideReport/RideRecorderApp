@@ -6,6 +6,12 @@
 // project.
 
 
+// CZWeatherKit
+#define COCOAPODS_POD_AVAILABLE_CZWeatherKit
+#define COCOAPODS_VERSION_MAJOR_CZWeatherKit 1
+#define COCOAPODS_VERSION_MINOR_CZWeatherKit 0
+#define COCOAPODS_VERSION_PATCH_CZWeatherKit 0
+
 // CocoaLumberjack
 #define COCOAPODS_POD_AVAILABLE_CocoaLumberjack
 #define COCOAPODS_VERSION_MAJOR_CocoaLumberjack 2

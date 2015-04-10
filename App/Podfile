@@ -1,6 +1,7 @@
 platform :ios, "7.0"
 pod 'CocoaLumberjack'
 pod "MBXMapKit"
+pod "CZWeatherKit"
 
 # target "Ride" do
 # 

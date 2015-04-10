@@ -214,7 +214,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.startDate))
             
         }
-        tableCell.textLabel!.text = String(format: "%@ %@ for %.1f miles", trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
+        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles", trip.climoticon,  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
         
         tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }

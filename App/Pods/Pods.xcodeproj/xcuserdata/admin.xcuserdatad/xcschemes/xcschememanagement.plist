@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-CZWeatherKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-CocoaLumberjack.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2B57AAE99F734826B0DEB8DC</key>
+		<key>13FE8C23AE0443579E16F1EF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7E833409C82F4DA3B1721243</key>
+		<key>2CF457542C7F41A68289654A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F5ADF8A0C66B4BE0BDC82A8A</key>
+		<key>7155AC0914E8477A88A98B8C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD27DB39B00A4609AB19A3F1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
