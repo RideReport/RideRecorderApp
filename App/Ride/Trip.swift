@@ -458,14 +458,16 @@ class Trip : NSManagedObject {
         
         self.clasifyActivityType { () -> Void in
             let endingLocation = self.locations.lastObject as! Location
-
-            WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
-                if (condition != nil) {
-                    self.temperature = NSNumber(float: Float(condition!.temperature.f))
-                    self.climacon = String(UnicodeScalar(UInt32(condition!.climaconCharacter.rawValue)))
-                }
-                handler()
-            })
+            
+            if (self.climacon == nil || self.climacon == "") {
+                WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
+                    if (condition != nil) {
+                        self.temperature = NSNumber(float: Float(condition!.temperature.f))
+                        self.climacon = String(UnicodeScalar(UInt32(condition!.climaconCharacter.rawValue)))
+                    }
+                    handler()
+                })
+            }
         }
     }
     
