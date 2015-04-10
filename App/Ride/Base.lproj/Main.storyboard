@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D130a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -114,6 +114,32 @@
                         <sections>
                             <tableViewSection id="vf5-lT-Zt6">
                                 <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="fNi-AZ-5Ii" detailTextLabel="JNO-Ep-Grb" style="IBUITableViewCellStyleValue1" id="o28-wv-QpG">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="o28-wv-QpG" id="MJX-UG-kAq">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="⛅️" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fNi-AZ-5Ii">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="56º" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="JNO-Ep-Grb">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular">
+                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    </variation>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="1Fn-uY-HmH">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -171,12 +197,15 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="15" y="12" width="42" height="20"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="Mpf-bH-sxI" firstAttribute="top" secondItem="Yzr-J9-Zd6" secondAttribute="topMargin" constant="-1" id="1T1-jp-Eow"/>
-                                                <constraint firstItem="Ec0-4g-J8z" firstAttribute="leading" secondItem="Yzr-J9-Zd6" secondAttribute="leadingMargin" constant="12" id="5YA-Fg-Gb2"/>
+                                                <constraint firstItem="Ec0-4g-J8z" firstAttribute="leading" secondItem="Yzr-J9-Zd6" secondAttribute="leadingMargin" id="5YA-Fg-Gb2"/>
                                                 <constraint firstAttribute="centerY" secondItem="GIc-9C-CAE" secondAttribute="centerY" constant="-0.5" id="7oq-CV-Nwf"/>
                                                 <constraint firstItem="Mpf-bH-sxI" firstAttribute="leading" secondItem="GIc-9C-CAE" secondAttribute="trailing" constant="-1" id="8Px-o5-3ff"/>
                                                 <constraint firstAttribute="centerY" secondItem="Ec0-4g-J8z" secondAttribute="centerY" id="P0o-C4-dpC"/>
@@ -280,11 +309,14 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <variation key="heightClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="15" y="15" width="47" height="20"/>
+                                                    </variation>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
-                                                <constraint firstItem="Kwc-AG-Hcu" firstAttribute="leading" secondItem="hAH-KS-lEG" secondAttribute="leadingMargin" constant="12" id="5zx-BJ-w2e"/>
+                                                <constraint firstItem="Kwc-AG-Hcu" firstAttribute="leading" secondItem="hAH-KS-lEG" secondAttribute="leadingMargin" id="5zx-BJ-w2e"/>
                                                 <constraint firstItem="SfA-3t-UQf" firstAttribute="trailing" secondItem="hAH-KS-lEG" secondAttribute="trailingMargin" id="7m3-hL-xv8"/>
                                                 <constraint firstAttribute="centerY" secondItem="Kwc-AG-Hcu" secondAttribute="centerY" constant="-3" id="8PH-DA-wQw"/>
                                                 <constraint firstAttribute="centerY" secondItem="SfA-3t-UQf" secondAttribute="centerY" constant="-3.5" id="Pc1-xg-tF9"/>
@@ -445,7 +477,9 @@
                         <outlet property="batteryLifeLabel" destination="tLG-hl-N7e" id="QT0-mh-vvD"/>
                         <outlet property="bikeButton" destination="GIc-9C-CAE" id="BBb-Wy-W7i"/>
                         <outlet property="carButton" destination="Mpf-bH-sxI" id="lC2-Cd-1xH"/>
+                        <outlet property="climoticonLabel" destination="fNi-AZ-5Ii" id="wHA-Gp-XHE"/>
                         <outlet property="distanceLabel" destination="J3q-aW-Icq" id="v7Y-9j-GgF"/>
+                        <outlet property="temperatureLabel" destination="JNO-Ep-Grb" id="bvI-5X-bYg"/>
                         <outlet property="thumbsDownButton" destination="SfA-3t-UQf" id="fhQ-VS-9nP"/>
                         <outlet property="thumbsUpButton" destination="Dxy-Ra-qpP" id="kRT-On-niN"/>
                         <outlet property="tripSpeedLabel" destination="DEw-Dv-Ul7" id="LQa-e4-Gud"/>
