@@ -273,6 +273,11 @@ class Trip : NSManagedObject {
                 return ""
             }
             
+            if (self.activityType != NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
+                // no climacon for car trips!
+                return ""
+            }
+            
             var climaconChar : Int8 = 0 // fml
             for c in self.climacon!.unicodeScalars {
                 climaconChar = Int8(c.value)
@@ -524,9 +529,11 @@ class Trip : NSManagedObject {
             message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles) as String
         }
         
-        let rewardString = self.rewardString()
-        if (rewardString != nil) {
-            message += (". " + rewardString!)
+        if (self.activityType == NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
+            let rewardString = self.rewardString()
+            if (rewardString != nil) {
+                message += (". " + rewardString!)
+            }
         }
         
         self.cancelTripStateNotification()
