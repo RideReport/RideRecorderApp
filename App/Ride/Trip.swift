@@ -484,9 +484,10 @@ class Trip : NSManagedObject {
     func sendTripStartedNotification(startingLocation : CLLocation) {
         if (self.startingPlacemark != nil) {
             self.sendTripStartedNotificationImmediately()
-        }
-        self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
-            self.sendTripStartedNotificationImmediately()
+        } else {
+            self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
+                self.sendTripStartedNotificationImmediately()
+            }
         }
     }
     
