@@ -467,6 +467,8 @@ class Trip : NSManagedObject {
                     }
                     handler()
                 })
+            } else {
+                handler()
             }
         }
     }
