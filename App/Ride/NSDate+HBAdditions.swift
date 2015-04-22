@@ -12,18 +12,38 @@ import Foundation
 extension NSDate {
     
     class func tomorrow() -> NSDate {
-        return NSDate.daysFromNow(1)
+        return NSDate().beginingOfDay().daysFrom(1)
+    }
+    
+    class func nextWeek() -> NSDate {
+        let dayComponents = NSDateComponents()
+        dayComponents.weekOfYear = 1
+        
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:NSDate().beginingOfDay(), options: nil)!
     }
     
     class func yesterday() -> NSDate {
-        return NSDate.daysFromNow(-1)
+        return NSDate().beginingOfDay().daysFrom(-1)
     }
     
-    class func daysFromNow(daysFromNow: Int) -> NSDate {
+    func hoursFrom(hoursFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
-        dayComponents.day = daysFromNow
+        dayComponents.hour = hoursFrom
         
-        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:NSDate(), options: nil)!
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: nil)!
+    }
+    
+    func daysFrom(daysFrom: Int) -> NSDate {
+        let dayComponents = NSDateComponents()
+        dayComponents.day = daysFrom
+        
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: nil)!
+    }
+    
+    func beginingOfDay() -> NSDate {
+        let dayComponents = NSCalendar.currentCalendar().components(.YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit, fromDate: self)
+        
+        return NSCalendar.currentCalendar().dateFromComponents(dayComponents)!
     }
     
     func isEqualToDay(date:NSDate) -> Bool
@@ -46,7 +66,7 @@ extension NSDate {
     
     func isInLastWeek() -> Bool
     {
-        return (self.compare(NSDate.daysFromNow(-6)) == NSComparisonResult.OrderedDescending)
+        return (self.compare(NSDate().daysFrom(-6)) == NSComparisonResult.OrderedDescending)
     }
     
     func weekDay() -> String {

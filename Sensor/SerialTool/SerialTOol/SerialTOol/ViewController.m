@@ -25,7 +25,7 @@
     
     self.dateFormatter = [NSDateFormatter new];
     self.dateFormatter.locale = [NSLocale currentLocale];
-    self.dateFormatter.dateFormat = @"h,mm,ss,SS";
+    self.dateFormatter.dateFormat = @"A";
     
     self.serialPortManager = [ORSSerialPortManager sharedSerialPortManager];
 }
@@ -147,7 +147,7 @@
 //    NSMutableArray *subarray = [self.dataSources mutableCopy];
 //    [subarray removeObjectAtIndex:3];
 
-    NSArray *subarray = @[[self.dataSources objectAtIndex:0], [self.dataSources objectAtIndex:5]];
+    NSArray *subarray = @[[self.dataSources objectAtIndex:0]];
     
     [plotSpace scaleToFitPlots:subarray];
 
@@ -162,7 +162,7 @@
 #pragma mark -
 #pragma mark Plot datasource methods
 
-#define windowSize 100
+#define windowSize 500
 
 -(NSUInteger)numberOfRecordsForPlot:(CPTPlot *)plot
 {
@@ -284,18 +284,19 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if ([string length] == 0) return;
     self.inputBufferString = [self.inputBufferString stringByAppendingString:string];
-    NSLog(self.inputBufferString);
     if ([self.inputBufferString rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]].location == NSNotFound) {
         return;
     }
 
     NSString *rowString =  [self.inputBufferString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *components = [rowString componentsSeparatedByString:@","];
-    if (components.count != 5) {
+    if (components.count != 6) {
         //ignore partial rows
         self.inputBufferString = @"";
         return;
     }
+    NSLog(self.inputBufferString);
+    
     NSNumber *num = [[NSNumberFormatter new] numberFromString:components.firstObject];
     if (!num) {
         //it's a header array!
@@ -306,7 +307,6 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
     
     // start with the date
     NSMutableArray *rowArray = [NSMutableArray arrayWithObject:[NSDate date]];
-    NSMutableArray *numbers = [NSMutableArray array];
     for (NSString *component in components) {
         NSNumber *num = [[NSNumberFormatter new] numberFromString:component];
         
@@ -314,23 +314,8 @@ objectValueForTableColumn:(NSTableColumn *)aTableColumn
             NSAssert(num != nil, @"Got unexpected non-number among numbers!");
         }
         
-        [numbers addObject:num];
+        [rowArray addObject:num];
     }
-    
-//    double irVal = [[numbers objectAtIndex:1] doubleValue] - 3;
-//    if (irVal == 0) {
-//        irVal = 1;
-//    }
-//    double lineralized = (6787/irVal) - 4.0;
-//    [rowArray addObject:[NSNumber numberWithDouble:irVal]];
-    [rowArray addObject:[numbers objectAtIndex:0]];
-    [rowArray addObject:[numbers objectAtIndex:1]];
-    [rowArray addObject:[numbers objectAtIndex:2]];
-    [rowArray addObject:[numbers objectAtIndex:3]];
-    [rowArray addObject:[numbers objectAtIndex:4]];
-    
-    int magnitude = sqrt(pow([[numbers objectAtIndex:2] doubleValue], 2.0) + pow([[numbers objectAtIndex:3] doubleValue], 2.0) + pow([[numbers objectAtIndex:4] doubleValue], 2.0));
-    [rowArray addObject:[NSNumber numberWithDouble:magnitude]];
     
     if (self.markNextReadingWithInteger != 0) {
         [rowArray addObject:[NSNumber numberWithInteger:self.markNextReadingWithInteger]];

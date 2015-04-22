@@ -40,6 +40,7 @@
 		848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; };
 		848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
+		849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
 		84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */; };
@@ -177,6 +178,7 @@
 		848777B61A6834C300B59B06 /* UIView+HBadditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIView+HBadditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PopupView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777BA1A698BCE00B59B06 /* Ride 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 11.xcdatamodel"; sourceTree = "<group>"; };
+		849162A11ADC3FCB0035900B /* Ride Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ride Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+HBAdditions.swift"; sourceTree = "<group>"; };
 		84A08C721AA54E4F00CADC04 /* Ride 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 17.xcdatamodel"; sourceTree = "<group>"; };
 		84A08C761AA780C200CADC04 /* Ride 18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 18.xcdatamodel"; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 				84D1556D19D2733500316995 /* RideTests.swift */,
 				8467175E1A01966C00851AD5 /* RouteMachineTests.swift */,
 				84D1556B19D2733500316995 /* Supporting Files */,
+				849162A11ADC3FCB0035900B /* Ride Tests-Bridging-Header.h */,
 			);
 			path = RideTests;
 			sourceTree = "<group>";
@@ -702,6 +705,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,6 +820,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -828,6 +833,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride.app/Ride";
 			};
 			name = Debug;
@@ -836,6 +843,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -844,6 +852,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride.app/Ride";
 			};
 			name = Release;

@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-UIActionSheet+Blocks.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,22 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>13FE8C23AE0443579E16F1EF</key>
+		<key>9B67612588DC43FEB99382D9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2CF457542C7F41A68289654A</key>
+		<key>9E16BD6C7B804A80B566340F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7155AC0914E8477A88A98B8C</key>
+		<key>E95F15DAE746434B8409FA0A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FD27DB39B00A4609AB19A3F1</key>
+		<key>F2C438E1B81E4A0881046D2B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FE374B09B0F24E5A91EBF29B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

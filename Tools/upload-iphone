@@ -44,7 +44,7 @@ end
 url = AWS::S3::S3Object.url_for('Ride.ipa',
                  'rideenterprise',
                  :use_ssl => true,
-                 :expires_in => 60 * 60 * 120)
+                 :expires_in => 60 * 60 * 24 * 30)
 puts url
 `cp Ride.ipa Ride.zip`
 `unzip Ride.zip -d Ride`

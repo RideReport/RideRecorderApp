@@ -467,7 +467,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func pauseTracking() {
+    func pauseTracking(untilDate: NSDate! = nil) {
         if (isPaused()) {
             return
         }

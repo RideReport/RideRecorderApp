@@ -129,7 +129,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate.daysFromNow(-7))
+        fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate().daysFrom(-7))
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)

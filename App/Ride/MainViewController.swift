@@ -9,7 +9,7 @@
 import Foundation
 import MessageUI
 
-class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, UIActionSheetDelegate {
+class MainViewController: UIViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
@@ -86,21 +86,45 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func tools(sender: AnyObject) {
         #if DEBUG
-            let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Show Geofences")
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Show Geofences")
         #else
-            let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
         #endif
+        actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
+            if (buttonIndex == 1) {
+                self.mapViewController.enterPrivacyCircleEditor()
+            } else if (buttonIndex == 2){
+                self.sendLogFile()
+            } else if (buttonIndex == 3) {
+                self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
+            } else if (buttonIndex == 4) {
+                self.mapViewController.refreshGeofences()
+            }
+        }
+        
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
     @IBAction func pauseResumeTracking(sender: AnyObject) {
         if (RouteManager.sharedManager.isPaused()) {
             RouteManager.sharedManager.resumeTracking()
+            refreshPauseResumeTrackingButtonUI()
         } else {
-            RouteManager.sharedManager.pauseTracking()
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride for an hour", "Pause Ride for the day", "Pause Ride for the week", "Turn off Ride for now")
+            actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
+                if (buttonIndex == 1) {
+                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate().hoursFrom(1))
+                } else if (buttonIndex == 2){
+                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate.tomorrow())
+                } else if (buttonIndex == 3) {
+                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate.nextWeek())
+                } else if (buttonIndex == 4) {
+                    RouteManager.sharedManager.pauseTracking()
+                }
+                self.refreshPauseResumeTrackingButtonUI()
+            }
+            actionSheet.showFromToolbar(self.navigationController?.toolbar)
         }
-        
-        refreshPauseResumeTrackingButtonUI()
     }
     
     func refreshPauseResumeTrackingButtonUI() {
@@ -151,20 +175,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     //
-    // MARK: - Action Sheet
+    // MARK: - Action Sheet Actions
     //
-    
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        if (buttonIndex == 1) {
-            self.mapViewController.enterPrivacyCircleEditor()
-        } else if (buttonIndex == 2){
-            sendLogFile()
-        } else if (buttonIndex == 3) {
-            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-        } else if (buttonIndex == 4) {
-            self.mapViewController.refreshGeofences()
-        }
-    }
     
     func sendLogFile() {
         let fileInfos = AppDelegate.appDelegate().fileLogger.logFileManager.sortedLogFileInfos()
