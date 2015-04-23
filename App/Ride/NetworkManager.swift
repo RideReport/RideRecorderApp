@@ -9,7 +9,7 @@
 import Foundation
 import Alamofire
 
-let serverAddress = "http://50.112.169.50/"
+let serverAddress = "http://ride.report/"
 
 class NetworkManager {
     private var jsonDateFormatter = NSDateFormatter()
