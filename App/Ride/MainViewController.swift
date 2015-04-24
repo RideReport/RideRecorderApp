@@ -15,6 +15,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     
+    private var timeFormatter : NSDateFormatter!
+    private var dateFormatter : NSDateFormatter!
+    
     var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
@@ -39,6 +42,14 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         settingsCustomButton.secondaryColor = self.navigationItem.leftBarButtonItem?.tintColor
         settingsCustomButton.animates = false
         self.navigationItem.leftBarButtonItem?.customView = settingsCustomButton
+        
+        self.dateFormatter = NSDateFormatter()
+        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter.dateFormat = "MMM d"
+        
+        self.timeFormatter = NSDateFormatter()
+        self.timeFormatter.locale = NSLocale.currentLocale()
+        self.timeFormatter.dateFormat = "h:mm a"
         
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
@@ -142,7 +153,19 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
                 self.popupView.text = "Ride is paused until you charge your phone =)."
             } else {
-                self.popupView.text = "Ride is paused."
+                if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
+                    if (pausedUntilDate.isToday()) {
+                        self.popupView.text = "Ride is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate) + "."
+                    } else if (pausedUntilDate.isTomorrow()) {
+                        self.popupView.text = "Ride is paused until tomorrow."
+                    } else if (pausedUntilDate.isThisWeek()) {
+                        self.popupView.text = "Ride is paused until " + pausedUntilDate.weekDay() + "."
+                    } else {
+                        self.popupView.text = "Ride is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate) + "."
+                    }
+                } else {
+                    self.popupView.text = "Ride is paused."
+                }
             }
         } else {
             self.customButton.maskImage = UIImage(named: "locationArrow.png")

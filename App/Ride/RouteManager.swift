@@ -467,6 +467,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    func pausedUntilDate() -> NSDate? {
+        return NSUserDefaults.standardUserDefaults().objectForKey("RouteManagerIsPausedUntilDate") as! NSDate?
+    }
+    
     func pauseTracking(untilDate: NSDate! = nil) {
         if (isPaused()) {
             return
@@ -474,18 +478,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.cancelScheduledAppResumeReminderNotifications()
         
-        let reminderNotification = UILocalNotification()
-        reminderNotification.alertBody = "Ride is paused! Would you like to resume logging your bike trips?"
-        reminderNotification.category = "APP_PAUSED_CATEGORY"
-        reminderNotification.fireDate = NSDate.tomorrow()
-        UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
-        
+        if (untilDate != nil) {
+            NSUserDefaults.standardUserDefaults().setObject(untilDate, forKey: "RouteManagerIsPausedUntilDate")
+        } else {
+            let reminderNotification = UILocalNotification()
+            reminderNotification.alertBody = "Ride is paused! Would you like to resume logging your bike trips?"
+            reminderNotification.category = "APP_PAUSED_CATEGORY"
+            reminderNotification.fireDate = NSDate.tomorrow()
+            UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
+        }
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteManagerIsPaused")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Paused Tracking")
         self.disableAllGeofences()
-        self.locationManager.stopMonitoringSignificantLocationChanges()
     }
     
     private func pauseTrackingDueToLowBatteryLife() {
@@ -509,6 +515,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.cancelScheduledAppResumeReminderNotifications()
         
         NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteManagerIsPaused")
+        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "RouteManagerIsPausedUntilDate")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogWrapper.logInfo("Resume Tracking")
@@ -623,6 +630,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else if (self.isInMotionMonitoringState) {
             self.processMotionMonitoringLocations(locations as! [CLLocation]!)
         } else {
+            if (self.isPaused()) {
+                let pausedUntilDate = self.pausedUntilDate()
+                if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
+                    #if DEBUG
+                        let notif = UILocalNotification()
+                        notif.alertBody = "🐞 Automatically unpausing Ride!"
+                        notif.category = "RIDE_COMPLETION_CATEGORY"
+                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    #endif
+                    self.resumeTracking()
+                }
+            }
+            
             // We are currently in background mode and got significant location change movement.
             if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
                 DDLogWrapper.logVerbose("Got significant location, entering Motion Monitoring state.")
