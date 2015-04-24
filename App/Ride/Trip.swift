@@ -45,7 +45,20 @@ class Trip : NSManagedObject {
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
-    @NSManaged var isClosed : Bool
+    var isClosed : Bool {
+        get {
+            if let num = (self.primitiveValueForKey("isClosed") as! NSNumber?) {
+                return num.boolValue
+            }
+            return false
+        }
+        set {
+            self.willChangeValueForKey("isClosed")
+            self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+            self.setPrimitiveValue(NSNumber(bool: newValue), forKey: "isClosed")
+            self.didChangeValueForKey("isClosed")
+        }
+    }
     @NSManaged var uuid : String
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
@@ -94,21 +107,6 @@ class Trip : NSManagedObject {
     convenience init() {
         let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
-        self.addObserver(self, forKeyPath: "startDate", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
-        self.addObserver(self, forKeyPath: "isClosed", options: NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Old, context: nil)
-    }
-    
-    deinit {
-        self.removeObserver(self, forKeyPath: "startDate")
-        self.removeObserver(self, forKeyPath: "isClosed")
-    }
-    
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-        if (keyPath == "startDate" || keyPath == "isClosed") {
-            self.willChangeValueForKey("sectionIdentifier")
-            self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
-            self.didChangeValueForKey("sectionIdentifier")
-        }
     }
     
     class func allTrips(limit: Int = 0) -> [AnyObject]? {
