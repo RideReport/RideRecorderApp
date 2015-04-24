@@ -644,6 +644,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     #endif
                     self.resumeTracking()
+                } else {
+                    return
                 }
             }
             
