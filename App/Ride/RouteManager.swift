@@ -186,7 +186,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 CoreDataManager.sharedCoreDataManager.saveContext()
                 
                 self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-                    closingTrip!.sendTripCompletionNotificationImmediately()
                 })
                 closingTrip!.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
@@ -287,7 +286,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogWrapper.logInfo("Entering Motion Monitoring state")
         
         self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
