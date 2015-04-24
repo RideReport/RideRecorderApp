@@ -57,12 +57,12 @@ class NetworkManager {
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
         configuration.timeoutIntervalForRequest = 60
         self.manager = Alamofire.Manager(configuration: configuration)
-    }
+    } 
     
-    func syncTrips() {
+    func syncTrips(syncInBackground: Bool = false) {
         for trip in Trip.allTrips()! {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.saveAndSyncTripIfNeeded(trip as! Trip)
+                self.saveAndSyncTripIfNeeded(trip as! Trip, syncInBackground: syncInBackground)
             })
         }
     }

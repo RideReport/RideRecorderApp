@@ -629,6 +629,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else if (self.isInMotionMonitoringState) {
             self.processMotionMonitoringLocations(locations as! [CLLocation]!)
         } else {
+            if (UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full) {
+                // opportunistically sync trips if we are plugged in
+                NetworkManager.sharedManager.syncTrips(syncInBackground: true)
+            }
+            
             if (self.isPaused()) {
                 let pausedUntilDate = self.pausedUntilDate()
                 if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
