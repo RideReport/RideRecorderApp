@@ -269,10 +269,23 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private func startMotionMonitoring() {
         if (isPaused()) {
-            DDLogWrapper.logInfo("Tracking is Paused, not enterign Motion Monitoring state")
-            
-            return
-        } else if (!self.locationManagerIsUpdating) {
+            let pausedUntilDate = self.pausedUntilDate()
+            if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
+                #if DEBUG
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Automatically unpausing Ride!"
+                    notif.category = "RIDE_COMPLETION_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                #endif
+                DDLogWrapper.logInfo("Auto-resuming tracking!")
+                self.resumeTracking()
+            } else {
+                DDLogWrapper.logInfo("Tracking is Paused, not enterign Motion Monitoring state")
+                return
+            }
+        }
+        
+        if (!self.locationManagerIsUpdating) {
             self.locationManagerIsUpdating = true
             self.locationManager.startUpdatingLocation()
         }
@@ -632,21 +645,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full) {
                 // opportunistically sync trips if we are plugged in
                 NetworkManager.sharedManager.syncTrips(syncInBackground: true)
-            }
-            
-            if (self.isPaused()) {
-                let pausedUntilDate = self.pausedUntilDate()
-                if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
-                    #if DEBUG
-                        let notif = UILocalNotification()
-                        notif.alertBody = "🐞 Automatically unpausing Ride!"
-                        notif.category = "RIDE_COMPLETION_CATEGORY"
-                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                    #endif
-                    self.resumeTracking()
-                } else {
-                    return
-                }
             }
             
             // We are currently in background mode and got significant location change movement.
