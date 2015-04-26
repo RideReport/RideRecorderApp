@@ -346,7 +346,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 self.motionMonitoringReadingsWithoutGPSMotionCount = 0
                 self.motionMonitoringReadingsWithGPSMotion += 1
                 foundSufficientMovement = true
-            } else if (location.speed > 0) {
+            } else if (location.speed >= 0) {
                 // we have a GPS fix but insufficient speeds
                 foundGPSFix = true
             } else if (location.speed < 0 && self.lastMotionMonitoringLocation != nil) {
