@@ -16,7 +16,7 @@ exports.getAll = function(req, res){
       trips.find({"activityType": 2},{w:1},function(error,trips) {
     		if(error){
     			res.status(404).send('Not found');
-    			console.error(error);    
+    			console.error(error);
     		} else {
     		  var geojson = { "type": "FeatureCollection",
               "features": []
