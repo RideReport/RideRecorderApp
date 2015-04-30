@@ -377,6 +377,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         
+        for annotation in self.incidentAnnotations.values {
+            self.mapView.removeAnnotation(annotation)
+        }
+        
         if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
             self.tripPolyLines[trip] = nil
             return
@@ -424,7 +428,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let incident = item as! Incident
             let annotation = MKPointAnnotation()
             annotation.coordinate = incident.location!.coordinate()
-            
             annotation.title = incident.typeString
             annotation.subtitle = incident.body
             
@@ -463,7 +466,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
                 if (annotationView == nil) {
                     annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-                    annotationView.canShowCallout = true
                     
 #if DEBUGRDP
                     let circleRadius : CGFloat = 2.0
@@ -486,6 +488,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 if (annotationView == nil) {
                     annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
                     annotationView!.pinColor = MKPinAnnotationColor.Red
+                    annotationView!.draggable = true
                     annotationView!.canShowCallout = true
                 }
                 return annotationView
@@ -493,6 +496,26 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         }
         
         return nil;
+    }
+    
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+        if newState != .Ending {
+            return
+        }
+        
+        let nearestLocation = self.mainViewController.selectedTrip.closestLocationToCoordinate(view!.annotation.coordinate)
+        let pinAnnotation = view!.annotation as! MKPointAnnotation
+        pinAnnotation.coordinate = nearestLocation.coordinate()
+        
+        for incident in self.incidentAnnotations.keys {
+            let incidentAnnotation = self.incidentAnnotations[incident] as! MKPointAnnotation!
+            if (incidentAnnotation == pinAnnotation) {
+                incident.location = nearestLocation
+                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+
+                return
+            }
+        }
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {

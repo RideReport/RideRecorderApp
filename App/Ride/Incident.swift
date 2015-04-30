@@ -31,6 +31,12 @@ class Incident : NSManagedObject {
         self.creationDate = NSDate()
     }
     
+    override func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.creationDate = NSDate()
+        self.uuid = NSUUID().UUIDString
+    }
+    
     var typeString : String {
         get {
             if self.type.shortValue == Type.Unknown.rawValue {

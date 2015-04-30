@@ -37,7 +37,8 @@ exports.getAll = function(req, res){
               },
         			"properties": {
         			  "activity_type" : trip.activityType,
-        				"rating" : trip.rating
+        				"rating" : trip.rating,
+        				"incidents" : trip.incidents
         			}						
         		});
         	}	
@@ -76,7 +77,8 @@ exports.getTripsOnDate = function(req, res){
           },
     			"properties": {
     				"activity_type" : trip.activityType,
-    				"rating" : trip.rating
+    				"rating" : trip.rating,
+    				"incidents" : trip.incidents
     			}						
     		});
     	}	
@@ -99,12 +101,25 @@ exports.save = function(req, res){
       "pos" : [reqLocations[i].latitude, reqLocations[i].longitude] 
     })
   }
+  
+  var reqIncidents = req.body.incidents
+  var incidents = []
+  for(i=0; i<reqIncidents.length;i++) { 
+    incidents.push({
+      "creationDate": reqIncidents[i].creationDate,
+      "type": reqIncidents[i].incidentType,
+      "body": reqIncidents[i].incidentBody,
+      "uuid": reqIncidents[i].uuid,
+      "pos" : [reqIncidents[i].latitude, reqIncidents[i].longitude]
+    })
+  }
     
   trips.update({uuid:req.body.uuid}, {
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
       rating : req.body.rating,
       locations : locations,
+      incidents : incidents,
       uuid : req.body.uuid
     }, {w:1, upsert:true}, function(error, result){			
       if(error) {

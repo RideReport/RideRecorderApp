@@ -483,6 +483,75 @@
             </objects>
             <point key="canvasLocation" x="2387" y="963.375"/>
         </scene>
+        <!--What Happened?-->
+        <scene sceneID="RAx-bA-3Ey">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CZA-pU-xDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="8Cy-Yr-3g3" customClass="IncidentEditorViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="alU-kF-XL8"/>
+                        <viewControllerLayoutGuide type="bottom" id="m8Z-gh-min"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cnn-LD-gXk">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLg-Hg-xMH">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="heightClass=regular" fixedFrame="YES">
+                                    <rect key="frame" x="16" y="313" width="568" height="221"/>
+                                </variation>
+                            </textView>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gYi-Xr-wBO">
+                                <rect key="frame" x="0.0" y="-162" width="320" height="162"/>
+                                <color key="backgroundColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="heightClass=regular" fixedFrame="YES">
+                                    <rect key="frame" x="0.0" y="72" width="600" height="162"/>
+                                </variation>
+                            </pickerView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOs-hw-4Lt">
+                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular" fixedFrame="YES">
+                                    <rect key="frame" x="16" y="261" width="46" height="21"/>
+                                </variation>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="GLg-Hg-xMH"/>
+                                <exclude reference="gYi-Xr-wBO"/>
+                                <exclude reference="pOs-hw-4Lt"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="subviews">
+                                <include reference="GLg-Hg-xMH"/>
+                                <include reference="gYi-Xr-wBO"/>
+                                <include reference="pOs-hw-4Lt"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <navigationItem key="navigationItem" title="What Happened?" id="Yqe-d7-jTS">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="TOT-l4-zsl">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="done:" destination="8Cy-Yr-3g3" id="sbd-sb-oT5"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="3294" y="397.5"/>
+        </scene>
         <!--Route Incidents View Controller-->
         <scene sceneID="cuI-j8-Gcu">
             <objects>
@@ -1392,6 +1461,7 @@
                         <outlet property="popupView" destination="5hK-0E-Yx5" id="eCB-cb-GKk"/>
                         <outlet property="routesContainerView" destination="BRT-um-pLV" id="UJS-jq-8fl"/>
                         <outlet property="settingsButton" destination="YrK-5y-IWt" id="2OX-5v-A8B"/>
+                        <segue destination="ta7-72-QXy" kind="presentation" identifier="presentIncidentEditor" id="e08-Pb-2AA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXG-zy-OqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1522,6 +1592,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yWg-oq-aoi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="fKF-g3-18S">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ta7-72-QXy" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="BW4-0P-9Eq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8Cy-Yr-3g3" kind="relationship" relationship="rootViewController" id="oc8-3h-2y9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mP9-18-qXL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2482" y="397.5"/>
         </scene>
     </scenes>
 </document>

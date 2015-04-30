@@ -9,8 +9,12 @@
 import Foundation
 import Alamofire
 
+#if (arch(i386) || arch(x86_64)) && os(iOS)
+let serverAddress = "http://127.0.0.1:8080/"
+#else
 let serverAddress = "http://ride.report/"
-
+#endif
+    
 class NetworkManager {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
@@ -69,6 +73,11 @@ class NetworkManager {
     
     
     func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
+        for incident in trip.incidents {
+            if ((incident as! Incident).hasChanges) {
+                trip.isSynced = false
+            }
+        }
         if (trip.hasChanges && trip.isSynced.boolValue) {
             trip.isSynced = false
         }
@@ -111,6 +120,23 @@ class NetworkManager {
             }
         }
         tripDict["locations"] = locations
+        
+        var incidents : [AnyObject!] = []
+        for incident in trip.incidents.array {
+            let anIncident = incident as! Incident
+            var incDict = [
+                "creationDate": self.jsonify(anIncident.creationDate!),
+                "incidentType": anIncident.type,
+                "uuid": anIncident.uuid,
+                "longitude": anIncident.location!.longitude!,
+                "latitude": anIncident.location!.latitude!
+            ]
+            if (anIncident.body != nil) {
+                incDict["incidentBody"] = anIncident.body!
+            }
+            incidents.append(incDict)
+        }
+        tripDict["incidents"] = incidents
         self.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
             if (error == nil) {
                 trip.isSynced = true

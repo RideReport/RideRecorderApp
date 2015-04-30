@@ -91,11 +91,11 @@
   <script>
   	function getTrips(){
   		var url = "../trips";
-  		$.get(url, drawTripsOnMap, "json");
+  		$.get(url, drawTripsAndIncidentsOnMap, "json");
   	}
   	function getTripsOnDate(dateString){			
       var url = "../trips/date/" + dateString;
-  		$.get(url, drawTripsOnMap, "json");
+  		$.get(url, drawTripsAndIncidentsOnMap, "json");
   	}
   	map.whenReady(getTrips)
   </script>

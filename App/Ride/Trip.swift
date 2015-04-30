@@ -481,6 +481,23 @@ class Trip : NSManagedObject {
         }
     }
     
+    func closestLocationToCoordinate(coordinate: CLLocationCoordinate2D)->Location! {
+        let targetLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    
+        var closestLocation : Location? = nil
+        var closestDisance = CLLocationDistanceMax
+        for loc in self.locations {
+            let location = loc as! Location
+            let locDistance = targetLoc.distanceFromLocation(location.clLocation())
+            if (locDistance < closestDisance) {
+                closestDisance = locDistance
+                closestLocation = location
+            }
+        }
+        
+        return closestLocation
+    }
+    
     func sendTripStartedNotification(startingLocation : CLLocation) {
         if (self.startingPlacemark != nil) {
             self.sendTripStartedNotificationImmediately()

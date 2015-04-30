@@ -178,6 +178,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         }
     }
     
+    func refreshSelectrTrip() {
+        self.mapViewController.refreshTrip(self.selectedTrip)
+    }
+    
     func setSelectedTrip(trip : Trip!,  sender: AnyObject) {
         let oldTrip = self.selectedTrip
         

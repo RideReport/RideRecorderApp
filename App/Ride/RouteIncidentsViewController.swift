@@ -18,8 +18,6 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
         self.title = "Incidents"
         
         self.view.backgroundColor = UIColor.clearColor()
@@ -29,9 +27,6 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.addSubview(effectView)
         self.view.sendSubviewToBack(effectView)
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.tableView.layoutMargins = UIEdgeInsetsZero
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -51,6 +46,21 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         self.fetchedResultsController.performFetch(nil)
+        
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.layoutMargins = UIEdgeInsetsZero
+        
+        let toolsButton = UIBarButtonItem(title: "New", style: UIBarButtonItemStyle.Bordered, target: self, action: "newIncident:")
+        self.navigationItem.rightBarButtonItem = toolsButton
+        
+        super.viewDidLoad()
+    }
+    
+    @IBAction func newIncident(sender: AnyObject) {
+        let incident = Incident(location: self.mainViewController.selectedTrip.mostRecentLocation()!, trip: self.mainViewController.selectedTrip)
+        CoreDataManager.sharedCoreDataManager.saveContext()
+        self.mainViewController.refreshSelectrTrip()
     }
     
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
@@ -125,7 +135,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        //
+        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: self)
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -135,6 +145,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
             if (incident.trip != nil) {
                 NetworkManager.sharedManager.saveAndSyncTripIfNeeded(incident.trip!)
             }
+            self.mainViewController.refreshSelectrTrip()
         }
     }
     

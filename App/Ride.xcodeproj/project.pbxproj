@@ -42,6 +42,7 @@
 		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
 		849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
+		84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */; };
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
 		84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */; };
 		84BD37031A706C6D0084B6AF /* GettingStartedFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */; };
@@ -182,6 +183,7 @@
 		84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CLLocation+HBAdditions.swift"; sourceTree = "<group>"; };
 		84A08C721AA54E4F00CADC04 /* Ride 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 17.xcdatamodel"; sourceTree = "<group>"; };
 		84A08C761AA780C200CADC04 /* Ride 18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 18.xcdatamodel"; sourceTree = "<group>"; };
+		84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncidentEditorViewController.swift; sourceTree = "<group>"; };
 		84B223A71A881C3900CA27EB /* UIDevice+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+HBAdditions.h"; sourceTree = "<group>"; };
 		84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+HBAdditions.m"; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 6.xcdatamodel"; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
 				84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */,
+				84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */,
 				84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */,
 				84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */,
 				84EA5BEF1A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift */,
@@ -718,6 +721,7 @@
 				846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
+				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
