@@ -98,7 +98,7 @@ exports.save = function(req, res){
       "date" : reqLocations[i].date,
       "horizontalAccuracy" : reqLocations[i].horizontalAccuracy,
       "speed" : reqLocations[i].speed,
-      "pos" : [reqLocations[i].latitude, reqLocations[i].longitude] 
+      "pos" : [reqLocations[i].latitude, reqLocations[i].longitude],
     })
   }
   
@@ -113,14 +113,15 @@ exports.save = function(req, res){
       "pos" : [reqIncidents[i].latitude, reqIncidents[i].longitude]
     })
   }
-    
+  console.error(req.body.ownerId);
   trips.update({uuid:req.body.uuid}, {
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
       rating : req.body.rating,
       locations : locations,
       incidents : incidents,
-      uuid : req.body.uuid
+      uuid : req.body.uuid,
+      owner : req.body.ownerId
     }, {w:1, upsert:true}, function(error, result){			
       if(error) {
 				console.error("Error adding trip  : " + error);

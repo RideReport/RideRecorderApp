@@ -250,7 +250,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            for trip in Trip.allTrips()! {
+            for trip in Trip.allTrips() {
                 self.refreshTrip(trip as! Trip)
             }
             

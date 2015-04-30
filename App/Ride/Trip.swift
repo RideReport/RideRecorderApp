@@ -109,7 +109,7 @@ class Trip : NSManagedObject {
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
     }
     
-    class func allTrips(limit: Int = 0) -> [AnyObject]? {
+    class func allTrips(limit: Int = 0) -> [AnyObject] {
         let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -119,6 +119,9 @@ class Trip : NSManagedObject {
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        if (results == nil) {
+            return []
+        }
         
         return results!
     }

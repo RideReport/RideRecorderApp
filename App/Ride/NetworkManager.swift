@@ -64,11 +64,11 @@ class NetworkManager {
     } 
     
     func syncTrips(syncInBackground: Bool = false) {
-        for trip in Trip.allTrips()! {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.saveAndSyncTripIfNeeded(trip as! Trip, syncInBackground: syncInBackground)
-            })
-        }
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            for trip in Trip.allTrips() {
+                    self.saveAndSyncTripIfNeeded(trip as! Trip, syncInBackground: syncInBackground)
+            }
+        })
     }
     
     
@@ -103,7 +103,8 @@ class NetworkManager {
             "uuid": trip.uuid,
             "activityType": trip.activityType,
             "creationDate": self.jsonify(trip.creationDate),
-            "rating": trip.rating
+            "rating": trip.rating,
+            "ownerId": Profile.profile().uuid
         ]
         var locations : [AnyObject!] = []
         for location in trip.locations.array {
