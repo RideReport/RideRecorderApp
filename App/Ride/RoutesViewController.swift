@@ -60,8 +60,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
         
-        if (true || !NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
-            let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. This will take a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
+        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
+            let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
             actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                 if (buttonIndex == 1) {
                     for trip in Trip.allTrips() {

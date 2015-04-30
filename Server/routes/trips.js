@@ -113,7 +113,6 @@ exports.save = function(req, res){
       "pos" : [reqIncidents[i].latitude, reqIncidents[i].longitude]
     })
   }
-  console.error(req.body.ownerId);
   trips.update({uuid:req.body.uuid}, {
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
