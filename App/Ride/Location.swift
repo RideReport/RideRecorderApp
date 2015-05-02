@@ -22,7 +22,7 @@ class Location : NSManagedObject {
     @NSManaged var speed : NSNumber?
     @NSManaged var trip : Trip?
     @NSManaged var simplifiedInTrip : Trip?
-    @NSManaged var incident : Incident?
+    @NSManaged var incidents : NSOrderedSet!
     @NSManaged var date : NSDate?
     
     convenience init(location: CLLocation, trip: Trip) {

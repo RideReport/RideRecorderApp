@@ -118,7 +118,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         // Resume the most recent trip if it was recent enough
         if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout) {
             DDLogWrapper.logInfo("Resuming ride")
-            #if DEBUG
+            #if DEBUG2
                 let notif = UILocalNotification()
                 notif.alertBody = "🐞 Resumed Ride!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"
@@ -169,7 +169,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (self.currentTrip!.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
-            #if DEBUG
+            #if DEBUG2
                 let notif = UILocalNotification()
                 notif.alertBody = "Canceled Trip"
                 notif.category = "RIDE_COMPLETION_CATEGORY"
@@ -290,7 +290,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManager.startUpdatingLocation()
         }
         
-        #if DEBUG
+        #if DEBUG2
             let notif = UILocalNotification()
             notif.alertBody = "🐞 Entered Motion Monitoring state!"
             notif.category = "RIDE_COMPLETION_CATEGORY"
@@ -318,7 +318,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.disableAllGeofences()
         
         if (finalLocation != nil) {
-            #if DEBUG
+            #if DEBUG2
                 let notif = UILocalNotification()
                 notif.alertBody = "🐞 Geofenced!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"

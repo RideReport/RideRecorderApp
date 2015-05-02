@@ -15,6 +15,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     
+    @IBOutlet weak var newIncidentButton: UIButton!
+    
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
@@ -87,8 +89,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        
-        self.selectedTrip = nil
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "presentIncidentEditor") {
+            (segue.destinationViewController.topViewController as! IncidentEditorViewController).mainViewController = self
+            (segue.destinationViewController.topViewController as! IncidentEditorViewController).incident = (sender as! Incident)
+        }
     }
     
     //
@@ -182,6 +189,12 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.mapViewController.refreshTrip(self.selectedTrip)
     }
     
+    @IBAction func newIncident(sender: AnyObject) {
+        let incident = Incident(location: self.selectedTrip.mostRecentLocation()!, trip: self.selectedTrip)
+        CoreDataManager.sharedCoreDataManager.saveContext()
+        self.refreshSelectrTrip()
+    }
+    
     func setSelectedTrip(trip : Trip!,  sender: AnyObject) {
         let oldTrip = self.selectedTrip
         
@@ -192,7 +205,10 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         }
         
         if (trip != nil) {
+            self.newIncidentButton.hidden = false
             self.mapViewController.refreshTrip(trip)
+        } else {
+            self.newIncidentButton.hidden = true
         }
         
         if (!sender.isKindOfClass(RoutesViewController)) {

@@ -7,6 +7,10 @@
 	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
   <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
   
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">	
+	<link href="leaflet.awesome-markers.css" rel="stylesheet"/>	
+	<script src="ionicons.min.css"></script>
+	<script src="leaflet.awesome-markers.min.js"></script>
 	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	
 	<style type="text/css">
@@ -89,6 +93,114 @@
   </script>
   <script src="map.js"></script>	
   <script>
+  	var incidentLayerGroup = L.layerGroup().addTo(map);
+  function drawTripsAndIncidentsOnMap(geojson) {
+    drawTripsOnMap(geojson);
+    drawIncidentsOnMap(geojson);
+  }
+  function drawIncidentsOnMap(geojson){
+	  var trips = geojson.features
+		map.removeLayer(incidentLayerGroup);	
+		var incidentArray = [];
+		
+		for (var i = 0; i < trips.length; i++){
+			trip = trips[i];	  			  			
+			if (trip.properties.activity_type == 2) {
+			  if (trip.properties.incidents) {
+  			  for (var v = 0; v < trip.properties.incidents.length; v++) {
+  			    var incident = trip.properties.incidents[v];
+  			    var marker = L.marker(incident.pos, {icon: incidentTypeIcon(incident.type)});  			    
+  			    marker.bindPopup("<b>" + incidentTypeString(incident.type) + "</b><br><i>" + incident.creationDate + "</i><br/>" + (incident.body ? incident.body : "") + "<br/><hr/><textarea rows='4' cols='40' placeholder='Enter a comment…'></textarea><a href='/comment/new'>Add</a>").openPopup();
+  			    incidentArray.push(marker);
+  			  }
+		    }
+			}
+		}			
+		
+		incidentLayerGroup = L.layerGroup(incidentArray).addTo(map);
+	}
+	function incidentTypeIcon(type) {
+    switch(type) {
+        case 0:
+            // Other
+            return L.AwesomeMarkers.icon({
+                icon: 'flag',
+                prefix: 'ion',
+                markerColor: 'grey'
+              });
+        case 1:
+            // Road Hazard        
+            return L.AwesomeMarkers.icon({
+                icon: 'alert',
+                prefix: 'ion',
+                markerColor: 'red'
+              });
+        case 2:
+            // Unsafe Intersection        
+            return L.AwesomeMarkers.icon({
+                icon: 'network',
+                prefix: 'ion',
+                markerColor: 'red'
+              });
+        case 3:
+            // Bike Lane Ends        
+            return L.AwesomeMarkers.icon({
+                icon: 'arrow-graph-down-right',
+                prefix: 'ion',
+                markerColor: 'red'
+              });
+        case 4:
+            // Unsafe Speeds        
+            return L.AwesomeMarkers.icon({
+                icon: 'speedometer',
+                prefix: 'ion',
+                markerColor: 'red'
+              });
+        case 5:
+            // Aggressive Motirst        
+            return L.AwesomeMarkers.icon({
+                icon: 'model-s',
+                prefix: 'ion',
+                markerColor: 'orange'
+              });
+        case 6:
+            // Insufficient Parking
+            return L.AwesomeMarkers.icon({
+                icon: 'code',
+                prefix: 'ion',
+                markerColor: 'purple'
+              });
+        case 7:
+            // Suspected Stolen Bikes
+            return L.AwesomeMarkers.icon({
+                icon: 'eye',
+                prefix: 'ion',
+                markerColor: 'black'
+              });
+        }
+  }
+  
+  function incidentTypeString(type) {
+      switch(type) {
+          case 0:
+              return "Other"
+          case 1:
+              return "Road Hazard"
+          case 2:
+              return "Unsafe Intersection"
+          case 3:
+              return "Bike Lane Ends"
+          case 4:
+              return "Unsafe Speeds"
+          case 5:
+              return "Aggressive Motorist"
+          case 6:
+              return "Insufficient Parking"
+          case 7:
+              return "Suspected Stolen Bikes"
+          }
+    }
+    
   	function getTrips(){
   		var url = "../trips";
   		$.get(url, drawTripsAndIncidentsOnMap, "json");
@@ -109,12 +221,6 @@
     </tr>        
     <tr>
       <td><strong>Average Rating</strong></td><td> <%=(totalRatingMagnitude/ratedTripsCount).toFixed(2)%></td>      
-    </tr>
-    <tr>
-      <td><strong>Total Distance</strong></td><td> <%=(bikeTotalDistance / 1.60934).toFixed(1)%>m</td>      
-    </tr>
-    <tr>
-      <td><strong>Average Distance</strong></td><td> <%=(bikeTotalDistance/(bikeTripsCount * 1.60934)).toFixed(1)%>m</td>      
     </tr>
   </table>
   <body>
@@ -165,7 +271,7 @@ function dashboard(id, fData){
 
         // Create function for y-axis map.
         var y = d3.scale.linear().range([hGDim.h, 0])
-                .domain([0, d3.max(fD, function(d) { return d[2]; })]);
+                .domain([0, d3.max(fD, function(d) { return d[1]; })]);
                 // Create function for y-axis map.
                 
         var bars = hGsvg.selectAll(".bar").data(fD).enter()
@@ -177,22 +283,7 @@ function dashboard(id, fData){
             .attr("y", 0)
             .attr("width", x.rangeBand())
             .attr("height", hGDim.h)
-            .attr('fill',function(d) { return (d[3] == 0 || d[3] == 6) ? "grey" : "white" });                       
-                
-        //Miles bar
-        bars.append("rect")
-            .attr("x", function(d) { return x(d[0]); })
-            .attr("y", function(d) { return y(d[2]); })
-            .attr("width", x.rangeBand())
-            .attr("height", function(d) { return hGDim.h - y(d[2]); })
-            .attr('fill',bar2Color);       
-            
-      //Miles bar label
-      bars.append("text").text(function(d){ return d3.format(",")(d[2].toFixed(1))})
-          .attr("x", function(d) { return x(d[0])+x.rangeBand()/2; })
-          .attr("y", function(d) { return y(d[2])-5; })
-          .attr("text-anchor", "middle");       
-                     
+            .attr('fill',function(d) { return (d[2] == 0 || d[2] == 6) ? "grey" : "white" });                       
         
         //Trips bar
         bars.append("rect")

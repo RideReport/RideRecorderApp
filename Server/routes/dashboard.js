@@ -13,7 +13,6 @@ exports.show = function(req, res) {
 			console.error(error);    
 		} else {
 		  var tripsData = [];
-		  var bikeTotalDistance = 0
       var bikeTripsCount = 0
       var ratedTripsCount = 0
       var totalRatingMagnitude = 0
@@ -31,8 +30,6 @@ exports.show = function(req, res) {
 		    
 		    bikeTripsCount++
 		    
-		    var tripLength = geojsonTools.getDistance(trip.locations.map(function(loc) {return loc.pos}), 2);
-  	    bikeTotalDistance += tripLength;
   	    if (trip.rating != 0) {
     	   ratedTripsCount++
     	   if (trip.rating == 1) {
@@ -45,15 +42,15 @@ exports.show = function(req, res) {
 		    if (creationDate > weekAgo) {
 		      var dateThing = ('0' + (creationDate.getMonth()+ 1)).slice(-2) + "/" + ('0' + creationDate.getDate()).slice(-2)
 		      if (!weekData.hasOwnProperty(dateThing)) {
-		        weekData[dateThing] = [dateThing,1,tripLength,creationDate.getDay()]
+		        weekData[dateThing] = [dateThing,1,creationDate.getDay()]
 		      } else {
-		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][2] + tripLength,weekData[dateThing][3]]
+		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][3]]
 		      }
 		    }
 
     	}	
     	
-      return res.render('dashboard', {bikeTotalDistance: bikeTotalDistance, bikeTripsCount: bikeTripsCount, ratedTripsCount: ratedTripsCount, totalRatingMagnitude: totalRatingMagnitude, weekData: weekData});
+      return res.render('dashboard', {bikeTripsCount: bikeTripsCount, ratedTripsCount: ratedTripsCount, totalRatingMagnitude: totalRatingMagnitude, weekData: weekData});
 		}
 	});
 

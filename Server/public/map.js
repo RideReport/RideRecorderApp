@@ -8,14 +8,6 @@
   map.addLayer(mapboxTiles)
   
 	function drawTripsOnMap(geojson){
-	  drawOnMap(geojson, false)
-  }
-  
-  function drawTripsAndIncidentsOnMap(geojson){
-	  drawOnMap(geojson, true)    
-  }
-  
-	function drawOnMap(geojson, showIncidents){
 	  var trips = geojson.features
 		map.removeLayer(tripLayerGroup);	
 		var polylineArray = []
@@ -27,15 +19,6 @@
       locs = trip.geometry.coordinates
 			  			  			
 			if (trip.properties.activity_type == 2) {
-			  if (showIncidents && trip.properties.incidents) {
-  			  for (var v = 0; v < trip.properties.incidents.length; v++) {
-  			    var incident = trip.properties.incidents[v];
-  			    var marker = L.marker(incident.pos);
-  			    marker.bindPopup("<b>Type: " + incident.type + "</b><br><i>" + incident.creationDate + "</i><br/>" + (incident.body ? incident.body : "")).openPopup();
-  			    polylineArray.push(marker);
-  			  }
-		    }
-			  
 			  var polyline;
 			  if (trip.properties.rating == 2) {
           polyline = new L.Polyline(

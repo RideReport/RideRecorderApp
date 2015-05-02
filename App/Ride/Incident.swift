@@ -10,8 +10,38 @@ import Foundation
 import CoreData
 
 class Incident : NSManagedObject {
-    enum Type : Int16 {
+    enum IncidentType : Int {
         case Unknown = 0
+        case RoadHazard
+        case UnsafeIntersection
+        case BikeLaneEnds
+        case UnsafeSpeeds
+        case AggressiveMotorist
+        case InsufficientParking
+        case SuspectedBikeTheif
+        
+        static var count: Int { return IncidentType.SuspectedBikeTheif.rawValue + 1}
+        
+        var text: String {
+            switch(self) {
+            case Unknown:
+                return "Other"
+            case RoadHazard:
+                return "Road Hazard"
+            case UnsafeIntersection:
+                return "Unsafe Intersection"
+            case BikeLaneEnds:
+                return "Bike Lane Ends"
+            case UnsafeSpeeds:
+                return "Unsafe Speeds"
+            case AggressiveMotorist:
+                return "Aggressive Motorist"
+            case InsufficientParking:
+                return "Insufficient Parking"
+            case SuspectedBikeTheif:
+                return "Suspected Stolen Bikes"
+            }
+        }
     }
     
     @NSManaged var uuid : String
@@ -20,7 +50,7 @@ class Incident : NSManagedObject {
     @NSManaged var type : NSNumber!
     
     @NSManaged var trip : Trip?
-    @NSManaged var location : Location?
+    @NSManaged var location : Location
     
     convenience init(location: Location, trip: Trip) {
         let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
@@ -35,15 +65,5 @@ class Incident : NSManagedObject {
         super.awakeFromInsert()
         self.creationDate = NSDate()
         self.uuid = NSUUID().UUIDString
-    }
-    
-    var typeString : String {
-        get {
-            if self.type.shortValue == Type.Unknown.rawValue {
-                return "Unknown"
-            } else {
-                return ""
-            }
-        }
     }
 }

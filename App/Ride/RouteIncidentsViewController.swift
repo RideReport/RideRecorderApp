@@ -112,7 +112,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     }
     
     func configureCell(tableCell: UITableViewCell, incident: Incident) {
-        tableCell.textLabel!.text = incident.typeString
+        tableCell.textLabel!.text = Incident.IncidentType(rawValue: incident.type.integerValue)!.text
         
         var dateTitle = ""
         if (incident.creationDate != nil) {
@@ -135,7 +135,9 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: self)
+        let incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
+        
+        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

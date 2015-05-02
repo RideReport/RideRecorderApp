@@ -129,8 +129,8 @@ class NetworkManager {
                 "creationDate": self.jsonify(anIncident.creationDate!),
                 "incidentType": anIncident.type,
                 "uuid": anIncident.uuid,
-                "longitude": anIncident.location!.longitude!,
-                "latitude": anIncident.location!.latitude!
+                "longitude": anIncident.location.longitude!,
+                "latitude": anIncident.location.latitude!
             ]
             if (anIncident.body != nil) {
                 incDict["incidentBody"] = anIncident.body!

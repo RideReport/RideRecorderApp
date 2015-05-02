@@ -495,47 +495,76 @@
                     <view key="view" contentMode="scaleToFill" id="cnn-LD-gXk">
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLg-Hg-xMH">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <variation key="heightClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="313" width="568" height="221"/>
-                                </variation>
-                            </textView>
-                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gYi-Xr-wBO">
-                                <rect key="frame" x="0.0" y="-162" width="320" height="162"/>
-                                <color key="backgroundColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
-                                <color key="tintColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <variation key="heightClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="72" width="600" height="162"/>
-                                </variation>
-                            </pickerView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOs-hw-4Lt">
                                 <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular" fixedFrame="YES">
-                                    <rect key="frame" x="16" y="261" width="46" height="21"/>
+                                <variation key="heightClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="16" y="242" width="46" height="21"/>
                                 </variation>
                             </label>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gYi-Xr-wBO">
+                                <rect key="frame" x="0.0" y="-162" width="320" height="162"/>
+                                <color key="backgroundColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="1" green="0.50196081399917603" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="heightClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="72" width="600" height="162"/>
+                                </variation>
+                            </pickerView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLg-Hg-xMH">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="221" id="mbW-db-SAd"/>
+                                </constraints>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="mbW-db-SAd"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="16" y="271" width="568" height="221"/>
+                                    <mask key="constraints">
+                                        <include reference="mbW-db-SAd"/>
+                                    </mask>
+                                </variation>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="GLg-Hg-xMH" firstAttribute="top" secondItem="pOs-hw-4Lt" secondAttribute="bottom" constant="8" id="4Cq-gz-1ke"/>
+                            <constraint firstItem="gYi-Xr-wBO" firstAttribute="width" secondItem="cnn-LD-gXk" secondAttribute="width" id="Cih-iC-uSM"/>
+                            <constraint firstAttribute="width" secondItem="GLg-Hg-xMH" secondAttribute="width" id="cXr-S2-pFR"/>
+                            <constraint firstItem="pOs-hw-4Lt" firstAttribute="top" secondItem="gYi-Xr-wBO" secondAttribute="bottom" constant="8" id="oi8-C3-gSV"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="GLg-Hg-xMH"/>
-                                <exclude reference="gYi-Xr-wBO"/>
                                 <exclude reference="pOs-hw-4Lt"/>
+                                <exclude reference="gYi-Xr-wBO"/>
+                                <exclude reference="GLg-Hg-xMH"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="Cih-iC-uSM"/>
+                                <exclude reference="oi8-C3-gSV"/>
+                                <exclude reference="4Cq-gz-1ke"/>
+                                <exclude reference="cXr-S2-pFR"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
-                                <include reference="GLg-Hg-xMH"/>
-                                <include reference="gYi-Xr-wBO"/>
                                 <include reference="pOs-hw-4Lt"/>
+                                <include reference="gYi-Xr-wBO"/>
+                                <include reference="GLg-Hg-xMH"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="Cih-iC-uSM"/>
+                                <include reference="oi8-C3-gSV"/>
+                                <include reference="4Cq-gz-1ke"/>
+                                <include reference="cXr-S2-pFR"/>
                             </mask>
                         </variation>
                     </view>
@@ -548,6 +577,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
+                    <connections>
+                        <outlet property="bodyTextView" destination="GLg-Hg-xMH" id="1Hs-Tg-was"/>
+                        <outlet property="typePicker" destination="gYi-Xr-wBO" id="rH7-Mg-Cca"/>
+                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="3294" y="397.5"/>
@@ -1408,13 +1441,32 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBs-Ui-cPm">
+                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                <state key="normal" title="🚩">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="547" y="345" width="37" height="40"/>
+                                </variation>
+                                <connections>
+                                    <action selector="newIncident:" destination="A5D-RC-UCB" eventType="touchUpInside" id="bxe-Iv-6zJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="2lj-yV-Bo7"/>
+                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="58S-9L-BUX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GsO-Yw-fHd" secondAttribute="trailing" id="6AQ-hd-T7z"/>
+                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="Bdq-GH-ib5"/>
+                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="FB9-6J-3Yf"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" constant="10" id="FlL-mS-kK7"/>
                             <constraint firstAttribute="height" secondItem="GsO-Yw-fHd" secondAttribute="height" id="HhZ-io-xwE"/>
+                            <constraint firstItem="NBs-Ui-cPm" firstAttribute="bottom" secondItem="BRT-um-pLV" secondAttribute="top" constant="-8" id="MfG-Of-RmG"/>
+                            <constraint firstItem="NBs-Ui-cPm" firstAttribute="trailing" secondItem="DxI-1P-rL1" secondAttribute="trailingMargin" id="O5I-zt-juk"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="width" secondItem="GsO-Yw-fHd" secondAttribute="width" multiplier="2:3" id="PBH-wJ-oyn"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Tcc-m2-58E"/>
                             <constraint firstItem="BRT-um-pLV" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Ur6-L7-bP6"/>
@@ -1428,17 +1480,33 @@
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="yD6-Yc-GUL"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="NBs-Ui-cPm"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="kO0-6D-5PY"/>
                                 <exclude reference="PBH-wJ-oyn"/>
                                 <exclude reference="dg3-iH-On4"/>
                                 <exclude reference="wwX-xJ-447"/>
+                                <exclude reference="58S-9L-BUX"/>
+                                <exclude reference="Bdq-GH-ib5"/>
+                                <exclude reference="FB9-6J-3Yf"/>
+                                <exclude reference="MfG-Of-RmG"/>
+                                <exclude reference="O5I-zt-juk"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
+                            <mask key="subviews">
+                                <include reference="NBs-Ui-cPm"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="6AQ-hd-T7z"/>
                                 <include reference="kO0-6D-5PY"/>
+                                <exclude reference="58S-9L-BUX"/>
+                                <exclude reference="Bdq-GH-ib5"/>
+                                <exclude reference="FB9-6J-3Yf"/>
+                                <include reference="MfG-Of-RmG"/>
+                                <include reference="O5I-zt-juk"/>
                             </mask>
                         </variation>
                     </view>
@@ -1457,6 +1525,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="newIncidentButton" destination="NBs-Ui-cPm" id="TNI-4X-4sW"/>
                         <outlet property="pauseResumeTrackingButton" destination="5KM-wa-SB8" id="AvM-9J-8OD"/>
                         <outlet property="popupView" destination="5hK-0E-Yx5" id="eCB-cb-GKk"/>
                         <outlet property="routesContainerView" destination="BRT-um-pLV" id="UJS-jq-8fl"/>

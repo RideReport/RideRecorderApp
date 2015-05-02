@@ -42,8 +42,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.delegate = self
         self.mapView.showsUserLocation = true
 
-        let mapTapRecognizer = UITapGestureRecognizer(target: self, action: "mapTapGesture:")
-        self.mapView.addGestureRecognizer(mapTapRecognizer)
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
         
         self.mapView.mapType = MKMapType.Satellite
@@ -58,6 +56,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.3939fb5f")
         self.mapView.addOverlay(tiles)
         
+        self.tripAnnotations = []
         self.tripPolyLines = [:]
         self.incidentAnnotations = [:]
         
@@ -120,35 +119,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
-    }
-    
-    func mapTapGesture(sender: AnyObject) {
-        if sender.numberOfTouches() > 1 {
-            return
-        }
-        
-        let point = sender.locationInView(self.mapView)
-        
-        let coord = self.mapView.convertPoint(point, toCoordinateFromView: self.mapView)
-        let mapPoint = MKMapPointForCoordinate(coord)
-        
-        for (trip, polyLine) in self.tripPolyLines {
-            let renderer = self.mapView.rendererForOverlay(polyLine)
-            if (renderer == nil) {
-                return
-            }
-            let polyLineRenderer = renderer as! MKPolylineRenderer
-            
-            let pointInPolyline = polyLineRenderer.pointForMapPoint(mapPoint)
-            let strokeWidth : CGFloat = 1000.0
-            let path = CGPathCreateCopyByStrokingPath(polyLineRenderer.path, nil, strokeWidth, kCGLineCapRound, kCGLineJoinRound, 0.0)
-            
-            if (CGPathContainsPoint(path, nil, pointInPolyline, false)) {
-                self.mainViewController.setSelectedTrip(trip, sender:self)
-                return
-            }
-        }
-        
     }
     
     func respondToPrivacyCirclePanGesture(sender: AnyObject) {
@@ -427,13 +397,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         for item in trip.incidents.array {
             let incident = item as! Incident
             let annotation = MKPointAnnotation()
-            annotation.coordinate = incident.location!.coordinate()
-            annotation.title = incident.typeString
+            annotation.coordinate = incident.location.coordinate()
+            annotation.title = Incident.IncidentType(rawValue: incident.type.integerValue)!.text
             annotation.subtitle = incident.body
             
-            dispatch_async(dispatch_get_main_queue(), {
-                self.mapView.addAnnotation(annotation)
-            })
+            self.mapView.addAnnotation(annotation)
             
             self.incidentAnnotations[incident] = annotation
         }
@@ -449,10 +417,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
         if (!self.hasCenteredMap) {
-            // offset center to account for table view overlap
-            let mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2DMake(mapView.userLocation.coordinate.latitude - 0.005, mapView.userLocation.coordinate.longitude), span: MKCoordinateSpanMake(0.028, 0.028));
-            mapView.setRegion(mapRegion, animated: false)
-            
+            if (self.mainViewController.selectedTrip == nil) {
+                // don't recenter the map if the user has already selected a trip
+                
+                let mapRegion = MKCoordinateRegion(center: CLLocationCoordinate2DMake(mapView.userLocation.coordinate.latitude - 0.005, mapView.userLocation.coordinate.longitude), span: MKCoordinateSpanMake(0.028, 0.028));
+                // offset center to account for table view overlap
+                mapView.setRegion(mapRegion, animated: false)
+            }
+        
             self.hasCenteredMap = true
         }
     }
@@ -490,6 +462,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     annotationView!.pinColor = MKPinAnnotationColor.Red
                     annotationView!.draggable = true
                     annotationView!.canShowCallout = true
+                    
+                    let button = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+                    annotationView!.rightCalloutAccessoryView = button
                 }
                 return annotationView
             }
@@ -498,12 +473,31 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         return nil;
     }
     
+    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
+        for incident in self.incidentAnnotations.keys {
+            let incidentAnnotation = self.incidentAnnotations[incident] as! MKPointAnnotation!
+            if (incidentAnnotation == (view.annotation as! MKPointAnnotation) ) {
+                self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
+       
+                return
+            }
+        }
+    }
+    
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
         if newState != .Ending {
             return
         }
         
-        let nearestLocation = self.mainViewController.selectedTrip.closestLocationToCoordinate(view!.annotation.coordinate)
+        var nearestLocation = self.mainViewController.selectedTrip.closestLocationToCoordinate(view!.annotation.coordinate)
+        if (nearestLocation == nil) {
+            nearestLocation = self.mainViewController.selectedTrip.mostRecentLocation()
+        }
+        if (nearestLocation == nil) {
+            // should never happen
+            return
+        }
+        
         let pinAnnotation = view!.annotation as! MKPointAnnotation
         pinAnnotation.coordinate = nearestLocation.coordinate()
         
