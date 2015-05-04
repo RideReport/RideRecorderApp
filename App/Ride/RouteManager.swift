@@ -49,7 +49,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var locationManagerIsUpdating : Bool = false
     
     private var isInMotionMonitoringState : Bool = false
-    private var motionMonitoringReadingsWithManualMotion = 0
+    private var motionMonitoringReadingsWithNonGPSMotion = 0
     private var motionMonitoringReadingsWithGPSMotion = 0
     private var motionMonitoringReadingsWithoutGPSMotionCount = 0
     private var motionMonitoringReadingsWithoutGPSFix = 0
@@ -303,7 +303,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
-            self.motionMonitoringReadingsWithManualMotion = 0
+            self.motionMonitoringReadingsWithNonGPSMotion = 0
             self.motionMonitoringReadingsWithGPSMotion = 0
             self.motionMonitoringReadingsWithoutGPSFix = 0
             self.motionMonitoringReadingsWithoutGPSMotionCount = 0
@@ -343,10 +343,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             if (location.speed >= self.minimumSpeedToStartMonitoring) {
                 DDLogWrapper.logVerbose("Found movement while in motion monitoring state")
-                self.motionMonitoringReadingsWithoutGPSMotionCount = 0
-                self.motionMonitoringReadingsWithGPSMotion += 1
+                if (location.horizontalAccuracy <= kCLLocationAccuracyBest) {
+                    self.motionMonitoringReadingsWithoutGPSMotionCount = 0
+                    self.motionMonitoringReadingsWithGPSMotion += 1
+                } else {
+                    self.motionMonitoringReadingsWithNonGPSMotion += 1
+                }
                 foundSufficientMovement = true
-            } else if (location.speed >= 0) {
+            } else if (location.speed >= 0 && location.horizontalAccuracy <= kCLLocationAccuracyBest) {
                 // we have a GPS fix but insufficient speeds
                 foundGPSFix = true
             } else if (location.speed < 0 && self.lastMotionMonitoringLocation != nil) {
@@ -359,7 +363,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if (speed >= self.minimumSpeedToStartMonitoring && speed < 12.0) {
                     // We ignore really large speeds that may be the result of location inaccuracy
                     DDLogWrapper.logVerbose("Found movement while in motion monitoring state via manual speed!")
-                    self.motionMonitoringReadingsWithManualMotion += 1
+                    self.motionMonitoringReadingsWithNonGPSMotion += 1
                     foundSufficientMovement = true
                 }
             }
@@ -372,7 +376,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogWrapper.logVerbose("Got intial location for geofence. Stopping!")
             self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
         } else if (foundSufficientMovement) {
-            if(self.motionMonitoringReadingsWithManualMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
+            if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
                     DDLogWrapper.logVerbose("Found enough motion in motion monitoring mode, triggering trip…")
                     self.startTripFromLocation(self.lastMotionMonitoringLocation!)
