@@ -24,6 +24,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-ionicons.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,27 +37,32 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>9B67612588DC43FEB99382D9</key>
+		<key>45419C0F5DCF46FDA32371C5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9E16BD6C7B804A80B566340F</key>
+		<key>49E4A8C5F0544055810A0EA9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E95F15DAE746434B8409FA0A</key>
+		<key>65B613AB3C154648BCCDD531</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F2C438E1B81E4A0881046D2B</key>
+		<key>96FEFA5013D749C1A84C3349</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FE374B09B0F24E5A91EBF29B</key>
+		<key>A683BBE4DCE74DC98EF9BA54</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C6493880F7E14CF8A9CE5807</key>
 		<dict>
 			<key>primary</key>
 			<true/>

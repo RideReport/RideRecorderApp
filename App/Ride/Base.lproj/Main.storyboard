@@ -486,13 +486,13 @@
         <!--What Happened?-->
         <scene sceneID="RAx-bA-3Ey">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CZA-pU-xDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="8Cy-Yr-3g3" customClass="IncidentEditorViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="alU-kF-XL8"/>
                         <viewControllerLayoutGuide type="bottom" id="m8Z-gh-min"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="cnn-LD-gXk">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pOs-hw-4Lt">
@@ -582,6 +582,7 @@
                         <outlet property="typePicker" destination="gYi-Xr-wBO" id="rH7-Mg-Cca"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CZA-pU-xDs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3294" y="397.5"/>
         </scene>
@@ -1448,9 +1449,6 @@
                                 <state key="normal" title="🚩">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="547" y="345" width="37" height="40"/>
-                                </variation>
                                 <connections>
                                     <action selector="newIncident:" destination="A5D-RC-UCB" eventType="touchUpInside" id="bxe-Iv-6zJ"/>
                                 </connections>
@@ -1484,6 +1482,8 @@
                                 <exclude reference="NBs-Ui-cPm"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="MfG-Of-RmG"/>
+                                <exclude reference="O5I-zt-juk"/>
                                 <exclude reference="kO0-6D-5PY"/>
                                 <exclude reference="PBH-wJ-oyn"/>
                                 <exclude reference="dg3-iH-On4"/>
@@ -1491,8 +1491,6 @@
                                 <exclude reference="58S-9L-BUX"/>
                                 <exclude reference="Bdq-GH-ib5"/>
                                 <exclude reference="FB9-6J-3Yf"/>
-                                <exclude reference="MfG-Of-RmG"/>
-                                <exclude reference="O5I-zt-juk"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -1500,13 +1498,13 @@
                                 <include reference="NBs-Ui-cPm"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="MfG-Of-RmG"/>
+                                <include reference="O5I-zt-juk"/>
                                 <exclude reference="6AQ-hd-T7z"/>
                                 <include reference="kO0-6D-5PY"/>
                                 <exclude reference="58S-9L-BUX"/>
                                 <exclude reference="Bdq-GH-ib5"/>
                                 <exclude reference="FB9-6J-3Yf"/>
-                                <include reference="MfG-Of-RmG"/>
-                                <include reference="O5I-zt-juk"/>
                             </mask>
                         </variation>
                     </view>

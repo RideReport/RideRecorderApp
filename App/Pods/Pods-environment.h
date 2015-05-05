@@ -48,3 +48,9 @@
 #define COCOAPODS_VERSION_MINOR_UIActionSheet_Blocks 9
 #define COCOAPODS_VERSION_PATCH_UIActionSheet_Blocks 0
 
+// ionicons
+#define COCOAPODS_POD_AVAILABLE_ionicons
+#define COCOAPODS_VERSION_MAJOR_ionicons 2
+#define COCOAPODS_VERSION_MINOR_ionicons 0
+#define COCOAPODS_VERSION_PATCH_ionicons 1
+

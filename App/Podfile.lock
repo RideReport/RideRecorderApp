@@ -8,18 +8,21 @@ PODS:
   - CocoaLumberjack/Extensions (2.0.0-beta3):
     - CocoaLumberjack/Default
   - CZWeatherKit (1.0.0)
+  - ionicons (2.0.1)
   - MBXMapKit (0.7.0)
   - UIActionSheet+Blocks (0.9)
 
 DEPENDENCIES:
   - CocoaLumberjack
   - CZWeatherKit
+  - ionicons
   - MBXMapKit
   - UIActionSheet+Blocks
 
 SPEC CHECKSUMS:
   CocoaLumberjack: acb01143f5888200e8a949a117bc21102204f080
   CZWeatherKit: 178157f722d93e68169699bde6d5d9b372aa23d3
+  ionicons: c7b0867373392e85c17f613d19ade04ccfbe5a7c
   MBXMapKit: 1fd570fd955fb4475b7303360b3b96afb1ff9634
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
 

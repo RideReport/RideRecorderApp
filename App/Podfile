@@ -3,6 +3,7 @@ pod 'CocoaLumberjack'
 pod "MBXMapKit"
 pod "CZWeatherKit"
 pod 'UIActionSheet+Blocks'
+pod 'ionicons'
 
 # target "Ride" do
 # 

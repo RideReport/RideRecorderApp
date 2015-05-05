@@ -19,8 +19,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     private var tripsAreLoaded = false
     private var tripPolyLines : [Trip : MKPolyline]!
-    private var tripAnnotations : [MKAnnotation]!
-    private var incidentAnnotations : [Incident : MKAnnotation]!
     private var hasCenteredMap : Bool = false
     
     private var privacyCircle : MKCircle?
@@ -56,10 +54,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         let tiles = MBXRasterTileOverlay(mapID: "quicklywilliam.3939fb5f")
         self.mapView.addOverlay(tiles)
         
-        self.tripAnnotations = []
         self.tripPolyLines = [:]
-        self.incidentAnnotations = [:]
-        
 
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.loadTrips()
@@ -236,65 +231,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         for line in self.tripPolyLines.values {
             self.mapView.removeOverlay(line)
         }
+    
         
-        for annotation in self.tripAnnotations! {
-            self.mapView.removeAnnotation(annotation)
-        }
-        
-        for annotation in self.incidentAnnotations.values {
-            self.mapView.removeAnnotation(annotation)
+        for annotation in self.mapView.annotations {
+            self.mapView.removeAnnotation(annotation as! MKAnnotation)
         }
         
         self.tripPolyLines.removeAll(keepCapacity: false)
-        self.incidentAnnotations.removeAll(keepCapacity: false)
-        self.tripAnnotations.removeAll(keepCapacity: false)
         self.tripsAreLoaded = false
     }
     
     func setSelectedTrip(trip : Trip!) {
-        if (self.tripAnnotations != nil && self.tripAnnotations.count > 0) {
-            let annotations = self.tripAnnotations
-            dispatch_async(dispatch_get_main_queue(), {
-                self.mapView.removeAnnotations(annotations)
-            })
-        }
-        self.tripAnnotations = []
-        
         if (trip == nil) {
             return
         }
         
         var coordinates : [CLLocationCoordinate2D] = []
         var count : Int = 0
-        
-        for location in trip.simplifiedLocations.array {
-            let location = (location as! Location)
-            if (location.isPrivate.boolValue) {
-                continue
-            }
-            
-            let coord = location.coordinate()
-            count++
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = coord
-            
-            if (location.isSmoothedLocation) {
-                annotation.title = String(format: "%i**", count)
-            } else {
-                annotation.title = String(format: "%i", count)
-            }
-            if (location.date != nil) {
-                annotation.subtitle = String(format: "%@, Speed: %f", self.dateFormatter.stringFromDate(location.date!), location.speed!.doubleValue)
-            } else {
-                annotation.subtitle = String(format: "Unknown, Speed: %f", location.speed!.doubleValue)
-            }
-            
-            self.tripAnnotations.append(annotation)
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                self.mapView.addAnnotation(annotation)
-            })
-        }
         
         if (self.tripPolyLines[trip] == nil) {
             return
@@ -347,8 +300,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         
-        for annotation in self.incidentAnnotations.values {
-            self.mapView.removeAnnotation(annotation)
+        for item in trip.incidents {
+            let incident = item as! Incident
+            self.mapView.removeAnnotation(incident)
         }
         
         if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
@@ -396,14 +350,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         for item in trip.incidents.array {
             let incident = item as! Incident
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = incident.location.coordinate()
-            annotation.title = Incident.IncidentType(rawValue: incident.type.integerValue)!.text
-            annotation.subtitle = incident.body
             
-            self.mapView.addAnnotation(annotation)
-            
-            self.incidentAnnotations[incident] = annotation
+            self.mapView.addAnnotation(incident)
         }
         
         if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
@@ -432,56 +380,30 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
         if (annotation.isKindOfClass(MKUserLocation)) {
             return nil;
-        } else if (annotation.isKindOfClass(MKPointAnnotation)) {
-            if ((self.tripAnnotations! as NSArray).containsObject(annotation)) {
-                let reuseID = "LocationAnnotationViewReuseID"
-                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID)
-                if (annotationView == nil) {
-                    annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-                    
-#if DEBUGRDP
-                    let circleRadius : CGFloat = 2.0
-                    let pointView = UIView(frame: CGRectMake(0, 0, circleRadius*2.0, circleRadius*2.0))
-                    pointView.backgroundColor = UIColor.blackColor()
-                    pointView.alpha = 0.8;
-                    pointView.layer.cornerRadius = circleRadius;
-                    annotationView.addSubview(pointView)
-                    annotationView.frame = pointView.frame
-#endif
-                }
+        } else if (annotation.isKindOfClass(Incident)) {
+            let incident = annotation as! Incident
+            
+            let reuseID = "IncidentAnnotationViewReuseID"
+            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKAnnotationView?
+            
+            if (annotationView == nil) {
+                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+                annotationView!.image = Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage
+                annotationView!.draggable = true
+                annotationView!.canShowCallout = true
                 
-                annotationView.annotation = annotation
-                
-                return annotationView
-            } else if ((self.incidentAnnotations.values.array as NSArray).containsObject(annotation)) {
-                let reuseID = "IncidentAnnotationViewReuseID"
-                var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as! MKPinAnnotationView?
-
-                if (annotationView == nil) {
-                    annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-                    annotationView!.pinColor = MKPinAnnotationColor.Red
-                    annotationView!.draggable = true
-                    annotationView!.canShowCallout = true
-                    
-                    let button = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
-                    annotationView!.rightCalloutAccessoryView = button
-                }
-                return annotationView
+                let button = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+                annotationView!.rightCalloutAccessoryView = button
             }
+            return annotationView
         }
         
         return nil;
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        for incident in self.incidentAnnotations.keys {
-            let incidentAnnotation = self.incidentAnnotations[incident] as! MKPointAnnotation!
-            if (incidentAnnotation == (view.annotation as! MKPointAnnotation) ) {
-                self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
-       
-                return
-            }
-        }
+        let incident = view.annotation as! Incident!
+        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
@@ -498,18 +420,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             return
         }
         
-        let pinAnnotation = view!.annotation as! MKPointAnnotation
-        pinAnnotation.coordinate = nearestLocation.coordinate()
-        
-        for incident in self.incidentAnnotations.keys {
-            let incidentAnnotation = self.incidentAnnotations[incident] as! MKPointAnnotation!
-            if (incidentAnnotation == pinAnnotation) {
-                incident.location = nearestLocation
-                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
-
-                return
-            }
-        }
+        let incident = view!.annotation as! Incident
+        incident.location = nearestLocation
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
