@@ -404,12 +404,12 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let incident = annotation as! Incident
             
             let reuseID = "IncidentAnnotationViewReuseID"
-            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as! MKAnnotationView?
+            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKAnnotationView?
             
             if (annotationView == nil) {
                 annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-//                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
                 annotationView!.image = Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage
+                annotationView!.centerOffset = CGPoint(x: 0, y: -annotationView!.image.size.height/2)
                 annotationView!.draggable = true
                 annotationView!.canShowCallout = true
                 
