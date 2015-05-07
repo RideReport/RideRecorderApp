@@ -30,6 +30,24 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        var rect : CGRect
+        let markersImage = UIImage(named: "markers-soft")!
+        let pinColorsCount : CGFloat = 20
+        let pinWidth = markersImage.size.width/pinColorsCount
+        let iconSize : CGFloat = 16.0        
+        var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
+        
+        let iconPoint = CGPoint(x: (pinWidth - icon.size.width)/2.0, y: 9)
+        rect = CGRect(x: 0, y: 0.0, width: pinWidth, height: markersImage.size.height)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        markersImage.drawAtPoint(rect.origin)
+        icon.drawAtPoint(iconPoint)
+        let newPinImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        self.newIncidentButton.setImage(newPinImage, forState: UIControlState.Normal)
+        
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
@@ -190,7 +208,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     }
     
     @IBAction func newIncident(sender: AnyObject) {
-        let incident = Incident(location: self.selectedTrip.mostRecentLocation()!, trip: self.selectedTrip)
+        let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
+        let incident = Incident(location: location, trip: self.selectedTrip)
         CoreDataManager.sharedManager.saveContext()
         self.refreshSelectrTrip()
     }

@@ -58,7 +58,8 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     }
     
     @IBAction func newIncident(sender: AnyObject) {
-        let incident = Incident(location: self.mainViewController.selectedTrip.mostRecentLocation()!, trip: self.mainViewController.selectedTrip)
+        let location = self.mainViewController.selectedTrip.closestLocationToCoordinate(self.mainViewController.mapViewController.mapView.centerCoordinate)
+        let incident = Incident(location: location, trip: self.mainViewController.selectedTrip)
         CoreDataManager.sharedManager.saveContext()
         self.mainViewController.refreshSelectrTrip()
     }

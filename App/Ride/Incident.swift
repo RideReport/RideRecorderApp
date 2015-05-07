@@ -124,7 +124,12 @@ class Incident : NSManagedObject, MKAnnotation {
     
     var coordinate: CLLocationCoordinate2D  {
         get {
-            return self.location.coordinate()
+            if (!self.fault) {
+                return self.location.coordinate()
+            } else {
+                // seems to happen when a pin is getting deleted
+                return CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            }
         }
         set {
             self.willChangeValueForKey("coordinate")

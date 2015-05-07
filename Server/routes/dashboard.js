@@ -44,7 +44,7 @@ exports.show = function(req, res) {
 		      if (!weekData.hasOwnProperty(dateThing)) {
 		        weekData[dateThing] = [dateThing,1,creationDate.getDay()]
 		      } else {
-		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][3]]
+		        weekData[dateThing] = [dateThing, weekData[dateThing][1] + 1,weekData[dateThing][2]]
 		      }
 		    }
 

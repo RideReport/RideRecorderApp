@@ -316,15 +316,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         
-        let annotations = self.mapView.annotations!
-
-        for item in trip.incidents {
-            let incident = item as! Incident
-            if ((annotations as NSArray).containsObject(incident)) {
-                self.mapView.removeAnnotation(incident)
-            }
-        }
-        
         if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
             self.tripPolyLines[trip] = nil
             return
@@ -368,11 +359,24 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             self.mapView.addOverlay(polyline)
         })
         
-        for item in trip.incidents.array {
-            let incident = item as! Incident
-            
-            self.mapView.addAnnotation(incident)
-        }
+        dispatch_async(dispatch_get_main_queue(), {
+            for annotation in self.mapView.annotations {
+                if (annotation.isKindOfClass(Incident)) {
+                    let incident = annotation as! Incident
+                    if (incident.fault || incident.deleted) {
+                        self.mapView.removeAnnotation(incident)
+                    }
+                }
+            }
+
+            for item in trip.incidents.array {
+                let incident = item as! Incident
+
+                
+                self.mapView.addAnnotation(incident)
+                self.mapView(self.mapView, viewForAnnotation: incident) //unclear why this is needed, but without Pins sometimes dont appear.
+            }
+        })
         
         if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
             self.setSelectedTrip(trip)
@@ -403,7 +407,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         } else if (annotation.isKindOfClass(Incident)) {
             let incident = annotation as! Incident
             
-            let reuseID = "IncidentAnnotationViewReuseID"
+            let reuseID = "IncidentAnnotationViewReuseID" + incident.type.stringValue
             var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKAnnotationView?
             
             if (annotationView == nil) {
