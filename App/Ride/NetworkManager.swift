@@ -20,16 +20,16 @@ class NetworkManager {
     private var manager : Manager
         
     struct Static {
-        static var onceToken : dispatch_once_t = 0
         static var sharedManager : NetworkManager?
     }
     
     class var sharedManager:NetworkManager {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedManager = NetworkManager()
-        }
-        
         return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = NetworkManager()
+        Static.sharedManager?.startup()
     }
     
     func startup() {
@@ -39,7 +39,7 @@ class NetworkManager {
                 
                 if (trip.locations.count <= 6) {
                     // if it doesn't more than 6 points, toss it.
-                    CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().deleteObject(trip)
+                    CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
                     self.saveAndSyncTripIfNeeded(trip)
                 } else {
                     trip.close() {
@@ -82,7 +82,7 @@ class NetworkManager {
             trip.isSynced = false
         }
         
-        CoreDataManager.sharedCoreDataManager.saveContext()
+        CoreDataManager.sharedManager.saveContext()
         
         if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -142,7 +142,7 @@ class NetworkManager {
             if (error == nil) {
                 trip.isSynced = true
                 DDLogWrapper.logError(String(format: "Response: %@", response!))
-                CoreDataManager.sharedCoreDataManager.saveContext()
+                CoreDataManager.sharedManager.saveContext()
             } else {
                 DDLogWrapper.logError(String(format: "Error: %@", error!))
             }

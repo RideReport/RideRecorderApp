@@ -91,13 +91,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogWrapper.logInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
         
-        // Start Managers
-        CoreDataManager.sharedCoreDataManager.startup()
-        RouteManager.sharedManager.startup()
-        SoftwareUpdateManager.sharedManager.startup()
-        NetworkManager.sharedManager.startup()
-        MotionManager.sharedManager.startup()
-        WeatherManager.sharedManager.startup()
+        // Start Managers. Note that order matters!
+        CoreDataManager.startup()
+        RouteManager.startup()
+        SoftwareUpdateManager.startup()
+        NetworkManager.startup()
+        MotionManager.startup()
+        WeatherManager.startup()
         
         return true
     }
@@ -137,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
         } else if (identifier == "FLAG_IDENTIFIER") {
             let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
-            CoreDataManager.sharedCoreDataManager.saveContext()
+            CoreDataManager.sharedManager.saveContext()
         } else if (identifier == "RESUME_IDENTIFIER") {
             RouteManager.sharedManager.resumeTracking()
         }

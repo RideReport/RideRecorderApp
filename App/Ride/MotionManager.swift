@@ -24,11 +24,12 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     
     
     class var sharedManager:MotionManager {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedManager = MotionManager()
-        }
-        
         return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = MotionManager()
+        Static.sharedManager?.startup()
     }
     
     override init () {

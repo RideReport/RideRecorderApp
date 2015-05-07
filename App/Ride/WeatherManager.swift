@@ -12,16 +12,16 @@ class WeatherManager {
     let openWeatherMapKey = "46cde0cc54593d8925337f942875ba7b"
     
     struct Static {
-        static var onceToken : dispatch_once_t = 0
         static var sharedManager : WeatherManager?
     }
     
     class var sharedManager:WeatherManager {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedManager = WeatherManager()
-        }
-        
         return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = WeatherManager()
+        Static.sharedManager?.startup()
     }
     
     func startup() {

@@ -16,26 +16,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var mainViewController: MainViewController! = nil
     
     
-    private var _fetchedResultsController : NSFetchedResultsController? = nil
-    private var fetchedResultsController : NSFetchedResultsController  {
-        get {
-            if (_fetchedResultsController != nil) {
-                return _fetchedResultsController!
-            }
-            
-            let cacheName = "RoutesViewControllerFetchedResultsController"
-            let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
-            NSFetchedResultsController.deleteCacheWithName(cacheName)
-            let fetchedRequest = NSFetchRequest(entityName: "Trip")
-            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-            
-            _fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
-            _fetchedResultsController!.delegate = self
-            _fetchedResultsController!.performFetch(nil)
-            
-            return _fetchedResultsController!
-        }
-    }
+    private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
     
@@ -52,13 +33,37 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.insertSubview(effectView, belowSubview: self.tableView)
         
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+                self.coreDataDidLoad()
+            }
+        } else {
+            self.coreDataDidLoad()
+        }
+    }
+    
+    func coreDataDidLoad() {
+        let cacheName = "RoutesViewControllerFetchedResultsController"
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        NSFetchedResultsController.deleteCacheWithName(cacheName)
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
+        self.fetchedResultsController!.delegate = self
+        self.fetchedResultsController!.performFetch(nil)
+        
+        self.refreshEmptyTableView()
+        
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.reloadData()
         
         if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
             let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
@@ -67,14 +72,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                     for trip in Trip.allTrips() {
                         (trip as! Trip).isSynced = false
                     }
-                    CoreDataManager.sharedCoreDataManager.saveContext()
+                    CoreDataManager.sharedManager.saveContext()
                     NetworkManager.sharedManager.syncTrips()
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
                     NSUserDefaults.standardUserDefaults().synchronize()
-
+                    
                 }
             }
-    
+            
             actionSheet.showFromToolbar(self.navigationController?.toolbar)
         }
 
@@ -102,15 +107,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     private func refreshEmptyTableView() {
-        let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
-        self.emptyTableView.hidden = shouldHideEmptyTableView
-        self.tableView.hidden = !shouldHideEmptyTableView
+        if (self.fetchedResultsController != nil) {
+            let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
+            self.emptyTableView.hidden = shouldHideEmptyTableView
+            self.tableView.hidden = !shouldHideEmptyTableView
+        } else {
+            self.emptyTableView.hidden = true
+            self.tableView.hidden = true
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
-        self.unloadFetchedResultsController()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -120,8 +128,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func unloadFetchedResultsController() {
-        _fetchedResultsController?.delegate = nil
-        _fetchedResultsController = nil
+        self.fetchedResultsController?.delegate = nil
+        self.fetchedResultsController = nil
     }
     
     func setSelectedTrip(trip : Trip!) {

@@ -63,6 +63,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.unloadTrips()
         }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            self.unloadTrips()
+        }
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+                self.loadTrips()
+            }
+        } else {
+            self.loadTrips()
+        }
     }
     
     
@@ -205,6 +217,10 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     
     func loadTrips() {
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            return
+        }
+        
         self.mainViewController.navigationItem.title = "Loading Trips…"
         
         if (self.tripsAreLoaded) {
@@ -300,9 +316,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             })
         }
         
+        let annotations = self.mapView.annotations!
+
         for item in trip.incidents {
             let incident = item as! Incident
-            self.mapView.removeAnnotation(incident)
+            if ((annotations as NSArray).containsObject(incident)) {
+                self.mapView.removeAnnotation(incident)
+            }
         }
         
         if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
@@ -384,10 +404,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             let incident = annotation as! Incident
             
             let reuseID = "IncidentAnnotationViewReuseID"
-            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKAnnotationView?
+            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as! MKAnnotationView?
             
             if (annotationView == nil) {
                 annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
+//                annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
                 annotationView!.image = Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage
                 annotationView!.draggable = true
                 annotationView!.canShowCallout = true
@@ -407,22 +428,14 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
-        if newState != .Ending {
-            return
+        if (newState == .Starting) {
+            view.dragState = .Dragging
+        } else if (newState == .Ending) {
+            view.dragState = .None
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+        } else if (newState == .Canceling) {
+            view.dragState = .None
         }
-        
-        var nearestLocation = self.mainViewController.selectedTrip.closestLocationToCoordinate(view!.annotation.coordinate)
-        if (nearestLocation == nil) {
-            nearestLocation = self.mainViewController.selectedTrip.mostRecentLocation()
-        }
-        if (nearestLocation == nil) {
-            // should never happen
-            return
-        }
-        
-        let incident = view!.annotation as! Incident
-        incident.location = nearestLocation
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
     }
     
     func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {

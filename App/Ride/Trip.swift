@@ -105,12 +105,12 @@ class Trip : NSManagedObject {
     }
     
     convenience init() {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
     }
     
     class func allTrips(limit: Int = 0) -> [AnyObject] {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
@@ -127,7 +127,7 @@ class Trip : NSManagedObject {
     }
     
     class func weekTrips() -> [AnyObject]? {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate().daysFrom(-7))
@@ -139,7 +139,7 @@ class Trip : NSManagedObject {
     }
     
     class func mostRecentTrip() -> Trip! {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
@@ -155,7 +155,7 @@ class Trip : NSManagedObject {
     }
     
     class func emptyTrips() -> [AnyObject]? {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "locations.@count == 0")
         
@@ -166,7 +166,7 @@ class Trip : NSManagedObject {
     }
     
     class func openTrips() -> [AnyObject]? {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "isClosed == NO")
         
@@ -177,7 +177,7 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfCycledTrips : Int {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
@@ -193,7 +193,7 @@ class Trip : NSManagedObject {
     }
     
     class var totalCycledMiles : Float {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
 
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
@@ -367,7 +367,7 @@ class Trip : NSManagedObject {
     }
     
     func locationWithCoordinate(coordinate: CLLocationCoordinate2D) -> Location {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let location = Location.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         location.course = self.locations.firstObject!.course
@@ -610,7 +610,7 @@ class Trip : NSManagedObject {
         }
         
         self.simplifyLocations(self.locations.array as! [Location], episilon: simplificationEpisilon)
-        CoreDataManager.sharedCoreDataManager.saveContext()
+        CoreDataManager.sharedManager.saveContext()
         handler()
     }
     

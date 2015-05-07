@@ -191,7 +191,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     
     @IBAction func newIncident(sender: AnyObject) {
         let incident = Incident(location: self.selectedTrip.mostRecentLocation()!, trip: self.selectedTrip)
-        CoreDataManager.sharedCoreDataManager.saveContext()
+        CoreDataManager.sharedManager.saveContext()
         self.refreshSelectrTrip()
     }
     

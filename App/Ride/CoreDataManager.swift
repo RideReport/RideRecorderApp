@@ -11,19 +11,20 @@ import CoreData
 import EventKit
 
 class CoreDataManager {
+    var isStartingUp : Bool = true
 
     struct Static {
-        static var onceToken : dispatch_once_t = 0
-        static var SharedInstance : CoreDataManager?
+        static var sharedManager : CoreDataManager?
     }
 
     
-    class var sharedCoreDataManager:CoreDataManager {
-        dispatch_once(&Static.onceToken) {
-            Static.SharedInstance = CoreDataManager()
-        }
-        
-        return Static.SharedInstance!
+    class var sharedManager:CoreDataManager {
+        return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = CoreDataManager()
+        Static.sharedManager?.startup()
     }
 
     
@@ -31,13 +32,17 @@ class CoreDataManager {
 
     }
     
-    func startup () {
-        // clean up bad trips
-        for trip in Trip.emptyTrips()! {
-            (trip as! Trip).managedObjectContext?.deleteObject((trip as! Trip))
-        }
-        
-        self.saveContext()
+    func startup () {        
+        dispatch_async(dispatch_get_main_queue(), {
+            // clean up bad trips
+            for trip in Trip.emptyTrips()! {
+                (trip as! Trip).managedObjectContext?.deleteObject((trip as! Trip))
+            }
+            
+            self.saveContext()
+            self.isStartingUp = false
+            NSNotificationCenter.defaultCenter().postNotificationName("CoreDataManagerDidStartup", object: nil)
+        })
     }
     
     func currentManagedObjectContext () -> NSManagedObjectContext {

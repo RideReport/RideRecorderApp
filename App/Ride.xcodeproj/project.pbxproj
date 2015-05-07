@@ -72,6 +72,7 @@
 		84EA5BF01A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEF1A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift */; };
 		84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F8E6291AF953CD00270C76 /* markers-soft.png */; };
 		84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */; };
+		84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -229,6 +230,7 @@
 		84F6B2911A37CF4D00D775F7 /* Ride 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 2.xcdatamodel"; sourceTree = "<group>"; };
 		84F8E6291AF953CD00270C76 /* markers-soft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft.png"; sourceTree = "<group>"; };
 		84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft@2x.png"; sourceTree = "<group>"; };
+		84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = Migration.xcmappingmodel; path = Ride/Migration.xcmappingmodel; sourceTree = "<group>"; };
 		BA743A6C616E49B6A36F8FD7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF43D4D1D1634F41BD61FBA3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -343,6 +345,7 @@
 				8429E5D71A5DCBA000EB3E94 /* Activity.swift */,
 				8429E5D91A5DCBFE00EB3E94 /* Incident.swift */,
 				84D1555619D2733500316995 /* Ride.xcdatamodeld */,
+				84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */,
 			);
 			name = Model;
 			path = ..;
@@ -752,6 +755,7 @@
 				844497221A3A4EB40009F889 /* NetworkManager.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */,
+				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
 				848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */,

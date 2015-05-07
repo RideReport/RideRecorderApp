@@ -101,7 +101,7 @@ class Incident : NSManagedObject, MKAnnotation {
     @NSManaged var location : Location
     
     convenience init(location: Location, trip: Trip) {
-        let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Incident", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.trip = trip
@@ -115,13 +115,32 @@ class Incident : NSManagedObject, MKAnnotation {
         self.uuid = NSUUID().UUIDString
     }
     
-    var coordinate: CLLocationCoordinate2D { get {
+    override func awakeFromFetch() {
+        super.awakeFromFetch()
+        if (self.uuid == "foo") {
+            self.uuid = NSUUID().UUIDString
+        }
+    }
+    
+    var coordinate: CLLocationCoordinate2D  {
+        get {
             return self.location.coordinate()
+        }
+        set {
+            self.willChangeValueForKey("coordinate")
+            var nearestLocation = self.trip!.closestLocationToCoordinate(newValue)
+            if (nearestLocation == nil) {
+                self.location = self.trip!.mostRecentLocation()!
+            } else {
+                self.location = nearestLocation
+            }
+            self.didChangeValueForKey("coordinate")
         }
     }
     
     // Title and subtitle for use by selection UI.
-    var title: String! { get {
+    var title: String! {
+        get {
             return Incident.IncidentType(rawValue: self.type.integerValue)!.text
         }
     }

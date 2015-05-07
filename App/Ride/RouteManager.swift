@@ -72,11 +72,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     class var sharedManager:RouteManager {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedManager = RouteManager()
-        }
-        
         return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = RouteManager()
+        Static.sharedManager?.startup()
     }
     
     override init () {
@@ -139,7 +140,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
         }
-        CoreDataManager.sharedCoreDataManager.saveContext()
+        CoreDataManager.sharedManager.saveContext()
         
         self.currentTrip?.sendTripStartedNotification(fromLocation)
         
@@ -175,7 +176,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            CoreDataManager.sharedCoreDataManager.currentManagedObjectContext().deleteObject(self.currentTrip!)
+            CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(self.currentTrip!)
         } else {
             let closingTrip = self.currentTrip
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
@@ -183,7 +184,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
-                CoreDataManager.sharedCoreDataManager.saveContext()
+                CoreDataManager.sharedManager.saveContext()
                 
                 self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 })
@@ -256,7 +257,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogWrapper.logVerbose("Nothing but unusable speeds. Awaiting next update")
             }
         } else {
-            CoreDataManager.sharedCoreDataManager.saveContext()
+            CoreDataManager.sharedManager.saveContext()
             NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
         }
     }

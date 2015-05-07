@@ -14,16 +14,16 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
     var lastUpdateCheck : NSDate?
     
     struct Static {
-        static var onceToken : dispatch_once_t = 0
         static var sharedManager : SoftwareUpdateManager?
     }
     
     class var sharedManager:SoftwareUpdateManager {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedManager = SoftwareUpdateManager()
-        }
-        
         return Static.sharedManager!
+    }
+    
+    class func startup() {
+        Static.sharedManager = SoftwareUpdateManager()
+        Static.sharedManager?.startup()
     }
     
     func startup() {

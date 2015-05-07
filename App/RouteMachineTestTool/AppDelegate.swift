@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
 
         
-//        CoreDataManager.sharedCoreDataManager.startup()
+//        CoreDataManager.sharedManager.startup()
 //        RouteManager.sharedManager.startup()
 //        RouteManager.sharedManager.minimumMonitoringSpeed = 0
         

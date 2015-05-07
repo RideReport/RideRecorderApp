@@ -18,7 +18,7 @@ class Profile : NSManagedObject {
     
     class func profile() -> Profile! {
         if (Static.profile == nil) {
-            let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+            let context = CoreDataManager.sharedManager.currentManagedObjectContext()
             let fetchedRequest = NSFetchRequest(entityName: "Profile")
             fetchedRequest.fetchLimit = 1
             
@@ -26,10 +26,10 @@ class Profile : NSManagedObject {
             let results = context.executeFetchRequest(fetchedRequest, error: &error)
             
             if (results!.count == 0) {
-                let context = CoreDataManager.sharedCoreDataManager.currentManagedObjectContext()
+                let context = CoreDataManager.sharedManager.currentManagedObjectContext()
                 Static.profile = Profile(entity: NSEntityDescription.entityForName("Profile", inManagedObjectContext: context)!, insertIntoManagedObjectContext:context)
                 Static.profile.uuid = NSUUID().UUIDString
-                CoreDataManager.sharedCoreDataManager.saveContext()
+                CoreDataManager.sharedManager.saveContext()
             } else {
                 Static.profile = (results!.first as! Profile)
             }
