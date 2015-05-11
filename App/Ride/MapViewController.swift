@@ -436,7 +436,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             view.dragState = .Dragging
         } else if (newState == .Ending) {
             view.dragState = .None
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.mainViewController.selectedTrip)
+            let incident = view.annotation as! Incident!
+            
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(incident.trip!)
         } else if (newState == .Canceling) {
             view.dragState = .None
         }

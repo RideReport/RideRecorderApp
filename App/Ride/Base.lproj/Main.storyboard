@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -1442,42 +1442,13 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <button opaque="NO" contentMode="left" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NBs-Ui-cPm">
-                                <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="36" id="P3t-ka-gqC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
-                                <state key="normal" image="markers-soft.png">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="P3t-ka-gqC"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular">
-                                    <mask key="constraints">
-                                        <include reference="P3t-ka-gqC"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="newIncident:" destination="A5D-RC-UCB" eventType="touchUpInside" id="bxe-Iv-6zJ"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="2lj-yV-Bo7"/>
-                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="58S-9L-BUX"/>
                             <constraint firstAttribute="trailingMargin" secondItem="GsO-Yw-fHd" secondAttribute="trailing" id="6AQ-hd-T7z"/>
-                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="Bdq-GH-ib5"/>
-                            <constraint firstItem="BRT-um-pLV" firstAttribute="top" secondItem="NBs-Ui-cPm" secondAttribute="bottom" constant="8" id="FB9-6J-3Yf"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" constant="10" id="FlL-mS-kK7"/>
                             <constraint firstAttribute="height" secondItem="GsO-Yw-fHd" secondAttribute="height" id="HhZ-io-xwE"/>
-                            <constraint firstItem="NBs-Ui-cPm" firstAttribute="bottom" secondItem="BRT-um-pLV" secondAttribute="top" constant="-8" id="MfG-Of-RmG"/>
-                            <constraint firstItem="NBs-Ui-cPm" firstAttribute="trailing" secondItem="DxI-1P-rL1" secondAttribute="trailingMargin" id="O5I-zt-juk"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="width" secondItem="GsO-Yw-fHd" secondAttribute="width" multiplier="2:3" id="PBH-wJ-oyn"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Tcc-m2-58E"/>
                             <constraint firstItem="BRT-um-pLV" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Ur6-L7-bP6"/>
@@ -1491,33 +1462,17 @@
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="yD6-Yc-GUL"/>
                         </constraints>
                         <variation key="default">
-                            <mask key="subviews">
-                                <exclude reference="NBs-Ui-cPm"/>
-                            </mask>
                             <mask key="constraints">
-                                <exclude reference="MfG-Of-RmG"/>
-                                <exclude reference="O5I-zt-juk"/>
                                 <exclude reference="kO0-6D-5PY"/>
                                 <exclude reference="PBH-wJ-oyn"/>
                                 <exclude reference="dg3-iH-On4"/>
                                 <exclude reference="wwX-xJ-447"/>
-                                <exclude reference="58S-9L-BUX"/>
-                                <exclude reference="Bdq-GH-ib5"/>
-                                <exclude reference="FB9-6J-3Yf"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
-                            <mask key="subviews">
-                                <include reference="NBs-Ui-cPm"/>
-                            </mask>
                             <mask key="constraints">
-                                <include reference="MfG-Of-RmG"/>
-                                <include reference="O5I-zt-juk"/>
                                 <exclude reference="6AQ-hd-T7z"/>
                                 <include reference="kO0-6D-5PY"/>
-                                <exclude reference="58S-9L-BUX"/>
-                                <exclude reference="Bdq-GH-ib5"/>
-                                <exclude reference="FB9-6J-3Yf"/>
                             </mask>
                         </variation>
                     </view>
@@ -1536,7 +1491,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="newIncidentButton" destination="NBs-Ui-cPm" id="TNI-4X-4sW"/>
                         <outlet property="pauseResumeTrackingButton" destination="5KM-wa-SB8" id="AvM-9J-8OD"/>
                         <outlet property="popupView" destination="5hK-0E-Yx5" id="eCB-cb-GKk"/>
                         <outlet property="routesContainerView" destination="BRT-um-pLV" id="UJS-jq-8fl"/>
@@ -1693,7 +1647,4 @@
             <point key="canvasLocation" x="2482" y="397.5"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="markers-soft.png" width="720" height="46"/>
-    </resources>
 </document>

@@ -50,10 +50,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.layoutMargins = UIEdgeInsetsZero
-        
-        let toolsButton = UIBarButtonItem(title: "New", style: UIBarButtonItemStyle.Bordered, target: self, action: "newIncident:")
-        self.navigationItem.rightBarButtonItem = toolsButton
-        
+                
         super.viewDidLoad()
     }
     

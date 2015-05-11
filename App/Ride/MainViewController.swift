@@ -9,14 +9,13 @@
 import Foundation
 import MessageUI
 
-class MainViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, PathMenuDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     
-    @IBOutlet weak var newIncidentButton: UIButton!
-    
+    private var newIncidentButton: PathMenu!
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
@@ -30,12 +29,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        for viewController in self.childViewControllers {
+            if (viewController.isKindOfClass(MapViewController)) {
+                self.mapViewController = viewController as! MapViewController
+            } else if (viewController.isKindOfClass(UINavigationController)) {
+                self.routesViewController = viewController.topViewController as! RoutesViewController
+                self.routesViewController.mainViewController = self
+            }
+        }
         
         var rect : CGRect
         let markersImage = UIImage(named: "markers-soft")!
         let pinColorsCount : CGFloat = 20
         let pinWidth = markersImage.size.width/pinColorsCount
-        let iconSize : CGFloat = 16.0        
+        let iconSize : CGFloat = 16.0
         var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
         
         let iconPoint = CGPoint(x: (pinWidth - icon.size.width)/2.0, y: 9)
@@ -46,7 +53,23 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         let newPinImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        self.newIncidentButton.setImage(newPinImage, forState: UIControlState.Normal)
+        var addPinButton = PathMenuItem(image: newPinImage, highlightedImage: newPinImage, ContentImage: nil, highlightedContentImage:nil)
+        let roadHazardButton: PathMenuItem = PathMenuItem(image: Incident.IncidentType.RoadHazard.pinImage, highlightedImage: Incident.IncidentType.RoadHazard.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let unsafeIntersectionButton = PathMenuItem(image: Incident.IncidentType.UnsafeIntersection.pinImage, highlightedImage: Incident.IncidentType.UnsafeIntersection.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let bikeLaneEndsButton = PathMenuItem(image: Incident.IncidentType.BikeLaneEnds.pinImage, highlightedImage: Incident.IncidentType.BikeLaneEnds.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let unsafeSpeedsButton = PathMenuItem(image: Incident.IncidentType.UnsafeSpeeds.pinImage, highlightedImage: Incident.IncidentType.UnsafeSpeeds.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let aggressiveMotoristButton = PathMenuItem(image: Incident.IncidentType.AggressiveMotorist.pinImage, highlightedImage: Incident.IncidentType.AggressiveMotorist.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let insufficientParkingButton = PathMenuItem(image: Incident.IncidentType.InsufficientParking.pinImage, highlightedImage: Incident.IncidentType.InsufficientParking.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let suspectedBikeTheifButton = PathMenuItem(image: Incident.IncidentType.SuspectedBikeTheif.pinImage, highlightedImage: Incident.IncidentType.SuspectedBikeTheif.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        let unknownButton = PathMenuItem(image: Incident.IncidentType.Unknown.pinImage, highlightedImage: Incident.IncidentType.Unknown.pinImage, ContentImage: nil, highlightedContentImage:nil)
+        
+        var menusButtons: [PathMenuItem] = [roadHazardButton, unsafeIntersectionButton, bikeLaneEndsButton, unsafeSpeedsButton, aggressiveMotoristButton, insufficientParkingButton, suspectedBikeTheifButton, unknownButton]
+        
+        self.newIncidentButton = PathMenu(frame: self.view.bounds, startItem: addPinButton, optionMenus: menusButtons)
+        self.newIncidentButton.menuWholeAngle = CGFloat(M_PI)
+        self.newIncidentButton.rotateAngle = -CGFloat(M_PI)
+        self.newIncidentButton.delegate = self
+        self.view.addSubview(self.newIncidentButton)
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
@@ -70,15 +93,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
-        
-        for viewController in self.childViewControllers {
-            if (viewController.isKindOfClass(MapViewController)) {
-                self.mapViewController = viewController as! MapViewController
-            } else if (viewController.isKindOfClass(UINavigationController)) {
-                self.routesViewController = viewController.topViewController as! RoutesViewController
-                self.routesViewController.mainViewController = self
-            }
-        }
         
         self.refreshPauseResumeTrackingButtonUI()
     }
@@ -114,6 +128,24 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             (segue.destinationViewController.topViewController as! IncidentEditorViewController).mainViewController = self
             (segue.destinationViewController.topViewController as! IncidentEditorViewController).incident = (sender as! Incident)
         }
+    }
+    
+    //
+    // MARK: - PathMenuDelegate
+    //
+    
+    func pathMenu(menu: PathMenu, didSelectIndex idx: Int) {
+        var incidentType : Incident.IncidentType
+        if (idx == Incident.IncidentType.count - 1) {
+            incidentType = Incident.IncidentType.Unknown
+        } else {
+            incidentType = Incident.IncidentType(rawValue: idx + 1)!
+        }
+        let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
+        let incident = Incident(location: location, trip: self.selectedTrip)
+        incident.type = NSNumber(integer: incidentType.rawValue)
+        CoreDataManager.sharedManager.saveContext()
+        self.refreshSelectrTrip()
     }
     
     //
@@ -207,13 +239,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.mapViewController.refreshTrip(self.selectedTrip)
     }
     
-    @IBAction func newIncident(sender: AnyObject) {
-        let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
-        let incident = Incident(location: location, trip: self.selectedTrip)
-        CoreDataManager.sharedManager.saveContext()
-        self.refreshSelectrTrip()
-    }
-    
     func setSelectedTrip(trip : Trip!,  sender: AnyObject) {
         let oldTrip = self.selectedTrip
         
@@ -223,6 +248,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             self.mapViewController.refreshTrip(oldTrip)
         }
         
+        self.newIncidentButton.startPoint = CGPointMake(self.view.bounds.width - 30, self.routesContainerView.frame.origin.y - 30)
         if (trip != nil) {
             self.newIncidentButton.hidden = false
             self.mapViewController.refreshTrip(trip)

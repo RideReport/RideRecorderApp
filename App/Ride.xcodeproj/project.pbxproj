@@ -56,6 +56,8 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
+		84DC816C1AFC23AC007F6AA2 /* PathMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */; };
+		84DC816D1AFC23AC007F6AA2 /* PathMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */; };
 		84E3957A1A757DF30015B682 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E395791A757DF30015B682 /* AppDelegate.swift */; };
 		84E3957C1A757DF30015B682 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E3957B1A757DF30015B682 /* ViewController.swift */; };
 		84E3957F1A757DF30015B682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E3957D1A757DF30015B682 /* Main.storyboard */; };
@@ -209,6 +211,8 @@
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathMenu.swift; path = PathMenu/PathMenu/PathMenu.swift; sourceTree = SOURCE_ROOT; };
+		84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathMenuItem.swift; path = PathMenu/PathMenu/PathMenuItem.swift; sourceTree = SOURCE_ROOT; };
 		84E395751A757DF30015B682 /* RouteMachineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RouteMachineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E395781A757DF30015B682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84E395791A757DF30015B682 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -283,6 +287,8 @@
 		843C1C821A36704B0005CE1D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */,
+				84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */,
 				8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */,
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */,
@@ -738,6 +744,8 @@
 				846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
+				84DC816C1AFC23AC007F6AA2 /* PathMenu.swift in Sources */,
+				84DC816D1AFC23AC007F6AA2 /* PathMenuItem.swift in Sources */,
 				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
