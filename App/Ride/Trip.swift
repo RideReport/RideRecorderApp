@@ -516,7 +516,7 @@ class Trip : NSManagedObject {
         
         var message = ""
         
-        if (self.startingPlacemark != nil) {
+        if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil) {
             message = String(format: "Started a trip in %@…", self.startingPlacemark!.subLocality)
         } else {
             message = "Started a trip…"
@@ -544,9 +544,9 @@ class Trip : NSManagedObject {
     func sendTripCompletionNotificationImmediately() {
         var message = ""
         
-        if (self.startingPlacemark != nil && self.endingPlacemark != nil) {
+        if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil && self.endingPlacemark != nil && self.endingPlacemark!.subLocality != nil) {
             message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality) as String
-        } else if (self.startingPlacemark != nil) {
+        } else if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil) {
             message = String(format: "%@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality) as String
         } else {
             message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles) as String
