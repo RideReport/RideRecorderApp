@@ -229,9 +229,11 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         
         self.tripsAreLoaded = true
         
+        // important to perform fetch on main thread
+        let trips = Trip.allTrips()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            for trip in Trip.allTrips() {
+            for trip in trips {
                 self.refreshTrip(trip as! Trip)
             }
             
