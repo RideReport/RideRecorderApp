@@ -27,6 +27,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
+        self.navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Map", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
         var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         var effectView = UIVisualEffectView(effect: blur)
@@ -89,16 +90,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        (segue.destinationViewController as! RouteDetailViewController).mainViewController = self.mainViewController
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
-        
-        self.mainViewController.setSelectedTrip(nil, sender:self)
+        self.mainViewController.selectedTrip = nil
         self.refreshEmptyTableView()
         
         if (self.tableView.indexPathForSelectedRow() != nil) {
@@ -119,12 +114,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     func unloadFetchedResultsController() {
@@ -247,7 +236,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.mainViewController.setSelectedTrip(self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip, sender:self)
+        self.mainViewController.selectedTrip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+        
+        self.pop()
+    }
+    
+    func pop() {
+        let transition = CATransition()
+        transition.duration = 0.25
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromRight
+        
+        self.mainViewController.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
+        self.mainViewController.navigationController?.popToRootViewControllerAnimated(false)
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

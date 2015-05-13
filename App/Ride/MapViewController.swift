@@ -32,7 +32,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     override func viewDidLoad() {        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MM/dd HH:mm:ss"
+        self.dateFormatter.dateFormat = "MM/dd"
         
         self.privacyCirclePanGesture = UIPanGestureRecognizer(target: self, action: "respondToPrivacyCirclePanGesture:")
         self.privacyCirclePanGesture.delegate = self
@@ -238,7 +238,18 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             }
             
             dispatch_async(dispatch_get_main_queue(), {
-                self.mainViewController.navigationItem.title = String(format: "%i trips", Trip.numberOfCycledTrips)
+                if (self.mainViewController.selectedTrip != nil) {
+                    let trip = self.mainViewController.selectedTrip
+                    var dateTitle = ""
+                    if (trip.startDate != nil) {
+                        dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate))
+                        
+                    }
+                    
+                    self.mainViewController.navigationItem.title = String(format: "%@ %.1f miles", trip.climoticon, trip.lengthMiles)
+                } else {
+                    self.mainViewController.navigationItem.title = String(format: "%i trips", Trip.numberOfCycledTrips)
+                }
             })
         })
     }

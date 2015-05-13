@@ -44,6 +44,9 @@
 		84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */; };
 		84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
+		84AFFE9D1B028044009ABC19 /* PopSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFE9C1B028044009ABC19 /* PopSegue.swift */; };
+		84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA31B029F85009ABC19 /* PCStackMenu.m */; };
+		84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */; };
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
 		84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */; };
 		84BD37031A706C6D0084B6AF /* GettingStartedFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */; };
@@ -56,8 +59,6 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
-		84DC816C1AFC23AC007F6AA2 /* PathMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */; };
-		84DC816D1AFC23AC007F6AA2 /* PathMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */; };
 		84E3957A1A757DF30015B682 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E395791A757DF30015B682 /* AppDelegate.swift */; };
 		84E3957C1A757DF30015B682 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E3957B1A757DF30015B682 /* ViewController.swift */; };
 		84E3957F1A757DF30015B682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E3957D1A757DF30015B682 /* Main.storyboard */; };
@@ -194,6 +195,11 @@
 		84AEAF091AF2A30D00C04E7D /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Profile.swift; path = Ride/Profile.swift; sourceTree = "<group>"; };
 		84AEAF0B1AF3F15A00C04E7D /* Ride 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 21.xcdatamodel"; sourceTree = "<group>"; };
 		84AEAF0E1AF4350900C04E7D /* Ride 22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 22.xcdatamodel"; sourceTree = "<group>"; };
+		84AFFE9C1B028044009ABC19 /* PopSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopSegue.swift; sourceTree = "<group>"; };
+		84AFFEA21B029F85009ABC19 /* PCStackMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenu.h; sourceTree = "<group>"; };
+		84AFFEA31B029F85009ABC19 /* PCStackMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenu.m; sourceTree = "<group>"; };
+		84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenuItem.h; sourceTree = "<group>"; };
+		84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenuItem.m; sourceTree = "<group>"; };
 		84B223A71A881C3900CA27EB /* UIDevice+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+HBAdditions.h"; sourceTree = "<group>"; };
 		84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+HBAdditions.m"; sourceTree = "<group>"; };
 		84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 6.xcdatamodel"; sourceTree = "<group>"; };
@@ -211,8 +217,6 @@
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathMenu.swift; path = PathMenu/PathMenu/PathMenu.swift; sourceTree = SOURCE_ROOT; };
-		84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PathMenuItem.swift; path = PathMenu/PathMenu/PathMenuItem.swift; sourceTree = SOURCE_ROOT; };
 		84E395751A757DF30015B682 /* RouteMachineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RouteMachineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E395781A757DF30015B682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84E395791A757DF30015B682 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -287,13 +291,13 @@
 		843C1C821A36704B0005CE1D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				84DC816A1AFC23AC007F6AA2 /* PathMenu.swift */,
-				84DC816B1AFC23AC007F6AA2 /* PathMenuItem.swift */,
+				84AFFEA11B029F85009ABC19 /* PCStackMenu */,
 				8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */,
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				8453309A1A3F823A00452EEB /* PrivacyCircleRenderer.swift */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
+				84AFFE9C1B028044009ABC19 /* PopSegue.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -388,6 +392,17 @@
 			children = (
 			);
 			name = "GPX Files";
+			sourceTree = "<group>";
+		};
+		84AFFEA11B029F85009ABC19 /* PCStackMenu */ = {
+			isa = PBXGroup;
+			children = (
+				84AFFEA21B029F85009ABC19 /* PCStackMenu.h */,
+				84AFFEA31B029F85009ABC19 /* PCStackMenu.m */,
+				84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */,
+				84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */,
+			);
+			path = PCStackMenu;
 			sourceTree = "<group>";
 		};
 		84D1554619D2733500316995 = {
@@ -744,10 +759,9 @@
 				846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
-				84DC816C1AFC23AC007F6AA2 /* PathMenu.swift in Sources */,
-				84DC816D1AFC23AC007F6AA2 /* PathMenuItem.swift in Sources */,
 				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
+				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
@@ -756,6 +770,7 @@
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
+				84AFFE9D1B028044009ABC19 /* PopSegue.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				844531871A0023580096F26E /* DDLogWrapper.m in Sources */,
 				84EA5BF01A6F3B7D00C71F53 /* GettingStartedPrivacyViewController.swift in Sources */,
@@ -764,6 +779,7 @@
 				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
+				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				8453309B1A3F823A00452EEB /* PrivacyCircleRenderer.swift in Sources */,
