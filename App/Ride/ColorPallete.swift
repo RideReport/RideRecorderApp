@@ -14,7 +14,11 @@ class ColorPallete : NSObject, CLLocationManagerDelegate {
         static var sharedPallete : ColorPallete?
     }
     
-    class var sharedPallete:ColorPallete {
+    class var sharedPallete: ColorPallete {
+        dispatch_once(&Static.onceToken) {
+            Static.sharedPallete = ColorPallete()
+        }
+        
         return Static.sharedPallete!
     }
     

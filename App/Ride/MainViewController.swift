@@ -16,9 +16,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     @IBOutlet weak var popupView: PopupView!
     @IBOutlet weak var newIncidentButton: UIButton!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var thumbsDownButton: UIButton!
     @IBOutlet weak var thumbsUpButton: UIButton!
+    @IBOutlet weak var closeRideButton: UIButton!
+    @IBOutlet weak var selectedRideToolBar: UIView!
     
+    private var settingsBarButtonItem: UIBarButtonItem!
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
@@ -41,6 +45,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             }
             
             self.mapViewController.setSelectedTrip(selectedTrip)
+            self.reloadTitleView()
         }
     }
     
@@ -79,15 +84,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.navigationItem.rightBarButtonItem?.customView = self.customButton
         
         self.navigationItem.titleView!.backgroundColor = UIColor.clearColor()
-        self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
         
-//        let settingsCustomButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
-//        settingsCustomButton.addTarget(self, action: "tools:", forControlEvents: UIControlEvents.TouchUpInside)
-//        settingsCustomButton.maskImage = UIImage(named: "gear.png")
-//        settingsCustomButton.primaryColor = self.navigationItem.rightBarButtonItem?.tintColor
-//        settingsCustomButton.secondaryColor = self.navigationItem.rightBarButtonItem?.tintColor
-//        settingsCustomButton.animates = false
-//        self.navigationItem.rightBarButtonItem?.customView = settingsCustomButton
+        self.settingsBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: self, action: "tools:")
+        
+        let settingsCustomButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
+        settingsCustomButton.addTarget(self, action: "tools:", forControlEvents: UIControlEvents.TouchUpInside)
+        settingsCustomButton.maskImage = UIImage(named: "gear.png")
+        settingsCustomButton.primaryColor = UIColor.whiteColor()
+        settingsCustomButton.secondaryColor = UIColor.whiteColor()
+        settingsCustomButton.animates = false
+        self.settingsBarButtonItem.customView = settingsCustomButton
+        self.navigationItem.leftBarButtonItem = self.settingsBarButtonItem
+        
+        self.thumbsDownButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
+        self.thumbsUpButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -108,17 +118,29 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             let trip = self.selectedTrip
             var dateTitle = ""
             if (trip.startDate != nil) {
-                dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate))
-                
+                if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
+                    dateTitle = "in progress"
+                } else if (trip.startDate.isToday()) {
+                    dateTitle = "today"
+                } else if (trip.startDate.isYesterday()) {
+                    dateTitle = "yesterday"
+                } else if (trip.startDate.isInLastWeek()) {
+                    dateTitle = trip.startDate.weekDay()
+                } else {
+                    dateTitle = String(format: "on %@", self.dateFormatter.stringFromDate(trip.startDate))
+                }
             }
-            self.thumbsUpButton.hidden = false
-            self.thumbsDownButton.hidden = false
-            self.titleLabel.text = String(format: "%@ %.1f miles", trip.climoticon, trip.lengthMiles)
+            
+            self.selectedRideToolBar.hidden = false
+            
+            self.titleLabel.text = String(format: "%@ %.1f miles %@", trip.climoticon, trip.lengthMiles, dateTitle)
         } else {
-            self.thumbsUpButton.hidden = true
-            self.thumbsDownButton.hidden = true
-            self.titleLabel.text = String(format: "%i trips", Trip.numberOfCycledTrips)
+            self.selectedRideToolBar.hidden = true
+            
         }
+        
+        self.ridesHistoryButton.setTitle(String(format: "%i Rides ▾", Trip.numberOfCycledTrips), forState: UIControlState.Normal)
+        self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
     }
     
     //
@@ -160,14 +182,30 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         if (segue.identifier == "showIncidentEditor") {
             (segue.destinationViewController as! IncidentEditorViewController).mainViewController = self
             (segue.destinationViewController as! IncidentEditorViewController).incident = (sender as! Incident)
-        } else if (segue.identifier == "showRoutes") {
-            (segue.destinationViewController as! RoutesViewController).mainViewController = self
         }
     }
     
     //
     // MARK: - UI Actions
     //
+    
+    @IBAction func showRides(sender: AnyObject) {
+        let transition = CATransition()
+        transition.duration = 0.25
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromBottom
+        
+        let routesVC = self.storyboard!.instantiateViewControllerWithIdentifier("RoutesViewController") as! RoutesViewController
+        routesVC.mainViewController = self
+        
+        routesVC.view.layer.addAnimation(transition, forKey: kCATransition)
+        self.navigationController?.pushViewController(routesVC, animated: false)
+    }
+    
+    @IBAction func closeRoute(sender: AnyObject) {
+        self.selectedTrip = nil
+    }
     
     @IBAction func thumbsUp(sender: AnyObject) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)

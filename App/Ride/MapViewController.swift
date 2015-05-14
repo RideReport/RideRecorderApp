@@ -234,9 +234,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         if (CoreDataManager.sharedManager.isStartingUp) {
             return
         }
-        
-        self.mainViewController.navigationItem.title = "Loading Trips…"
-        
+                
         if (self.tripsAreLoaded) {
             return
         }

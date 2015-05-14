@@ -65,7 +65,7 @@
 		_stackTitleLabel.backgroundColor = [UIColor clearColor];
 		_stackTitleLabel.textColor = [UIColor whiteColor];
 		_stackTitleLabel.shadowColor = [UIColor darkGrayColor];
-		_stackTitleLabel.shadowOffset = CGSizeMake(2, 2);
+		_stackTitleLabel.shadowOffset = CGSizeMake(1, 1);
 		_stackTitleLabel.text = title;
 		CGSize labelSize = [title sizeWithAttributes:@{NSFontAttributeName:_stackTitleLabel.font}];
 		rect.size.width = labelSize.width + 10;
@@ -81,6 +81,24 @@
 		rect = _stackIimageView.frame;
 		rect.origin.x = alignment == NSTextAlignmentLeft ? 0 : frame.size.width - frame.size.height;
 		_stackIimageView.frame = rect;
+        
+        UIColor *backgroundColor = [UIColor colorWithWhite:0 alpha:1.0];
+        UIView *backgroundView = [[UIView alloc] init];
+        backgroundView.frame = CGRectInset(self.bounds, -10, -6);
+        backgroundView.backgroundColor = backgroundColor;
+        
+        CALayer *maskLayer = [CALayer layer];
+        maskLayer.frame = backgroundView.bounds;
+        maskLayer.shadowRadius = 8;
+        maskLayer.shadowPath = CGPathCreateWithRoundedRect(CGRectInset(backgroundView.bounds, 12, 12), 10, 10, nil);
+        maskLayer.shadowOpacity = 1;
+        maskLayer.shadowOffset = CGSizeZero;
+        maskLayer.shadowColor = [UIColor whiteColor].CGColor;
+        
+        backgroundView.layer.mask = maskLayer;
+        
+        [self addSubview:backgroundView];
+        [self sendSubviewToBack:backgroundView];
     }
     return self;
 }

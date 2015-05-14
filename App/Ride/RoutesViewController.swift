@@ -25,7 +25,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationItem.hidesBackButton = true
         
-        self.title = "My Rides"
+        self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
