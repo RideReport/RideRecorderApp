@@ -648,8 +648,8 @@
                                         <inset key="separatorInset" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
                                     </tableViewCell>
                                 </prototypes>
-                                <variation key="heightClass=regular" ambiguous="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
+                                <variation key="heightClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="20" width="600" height="780"/>
                                 </variation>
                                 <variation key="widthClass=compact" ambiguous="YES">
                                     <rect key="frame" x="0.0" y="0.0" width="400" height="207"/>
@@ -666,6 +666,9 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="60" y="362" width="480" height="41"/>
+                                        </variation>
                                     </label>
                                 </subviews>
                                 <constraints>
@@ -697,23 +700,35 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="height" secondItem="hQC-Qb-oe8" secondAttribute="height" id="5FL-n1-NNL"/>
                             <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
                             <constraint firstAttribute="height" secondItem="W5I-Vg-qji" secondAttribute="height" id="JO5-OL-3Hf"/>
                             <constraint firstAttribute="height" secondItem="hQC-Qb-oe8" secondAttribute="height" id="MHG-pI-RLG"/>
                             <constraint firstAttribute="centerY" secondItem="hQC-Qb-oe8" secondAttribute="centerY" constant="-22" id="aJI-Ak-EC7"/>
+                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="hKj-FK-B2g"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="iVJ-kB-dFg"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="imG-Lc-gwV"/>
+                            <constraint firstAttribute="height" secondItem="W5I-Vg-qji" secondAttribute="height" id="pxs-QO-wcJ"/>
+                            <constraint firstItem="Q0Q-Ap-BP2" firstAttribute="top" secondItem="hQC-Qb-oe8" secondAttribute="bottom" constant="-22" id="qsT-ii-coy"/>
                             <constraint firstAttribute="width" secondItem="hQC-Qb-oe8" secondAttribute="width" id="vdh-vG-gQv"/>
                             <constraint firstAttribute="centerX" secondItem="hQC-Qb-oe8" secondAttribute="centerX" constant="-0.5" id="zPh-K4-S1r"/>
+                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="zaP-YD-bZu"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="hQC-Qb-oe8"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="hKj-FK-B2g"/>
+                                <exclude reference="pxs-QO-wcJ"/>
+                                <exclude reference="zaP-YD-bZu"/>
+                                <exclude reference="5FL-n1-NNL"/>
                                 <exclude reference="MHG-pI-RLG"/>
                                 <exclude reference="aJI-Ak-EC7"/>
+                                <exclude reference="imG-Lc-gwV"/>
                                 <exclude reference="vdh-vG-gQv"/>
                                 <exclude reference="zPh-K4-S1r"/>
+                                <exclude reference="qsT-ii-coy"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -721,16 +736,22 @@
                                 <include reference="hQC-Qb-oe8"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="MHG-pI-RLG"/>
+                                <exclude reference="JO5-OL-3Hf"/>
+                                <include reference="hKj-FK-B2g"/>
+                                <include reference="pxs-QO-wcJ"/>
+                                <include reference="zaP-YD-bZu"/>
+                                <include reference="5FL-n1-NNL"/>
+                                <exclude reference="MHG-pI-RLG"/>
                                 <include reference="aJI-Ak-EC7"/>
+                                <include reference="imG-Lc-gwV"/>
                                 <include reference="vdh-vG-gQv"/>
                                 <include reference="zPh-K4-S1r"/>
+                                <include reference="qsT-ii-coy"/>
                             </mask>
                         </variation>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="DL4-fm-rUA"/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="emptyTableView" destination="hQC-Qb-oe8" id="Zdc-71-QHN"/>
