@@ -460,6 +460,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     func isPausedDueToBatteryLife() -> Bool {
+#if (arch(i386) || arch(x86_64)) && os(iOS)
+    return false
+#endif
         return UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking
     }
     
@@ -635,11 +638,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
         DDLogWrapper.logVerbose("Received location updates.")
 
+#if (arch(i386) || arch(x86_64)) && os(iOS)
+        // skip this check
+#else
         if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
             self.pauseTrackingDueToLowBatteryLife()
             return
         }
-        
+#endif
         self.beginDeferringUpdatesIfAppropriate()
         
         if (self.currentTrip != nil) {

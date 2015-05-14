@@ -15,6 +15,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     @IBOutlet weak var newIncidentButton: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var thumbsDownButton: UIButton!
+    @IBOutlet weak var thumbsUpButton: UIButton!
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
@@ -34,7 +37,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
                 self.newIncidentButton.hidden = false
                 self.mapViewController.refreshTrip(self.selectedTrip)
             } else {
-                self.newIncidentButton.hidden = false
+                self.newIncidentButton.hidden = true
             }
             
             self.mapViewController.setSelectedTrip(selectedTrip)
@@ -75,6 +78,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
         self.navigationItem.rightBarButtonItem?.customView = self.customButton
         
+        self.navigationItem.titleView!.backgroundColor = UIColor.clearColor()
+        self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
+        
 //        let settingsCustomButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
 //        settingsCustomButton.addTarget(self, action: "tools:", forControlEvents: UIControlEvents.TouchUpInside)
 //        settingsCustomButton.maskImage = UIImage(named: "gear.png")
@@ -91,9 +97,28 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
         
-        self.selectedTrip = nil
+        self.selectedTrip = Trip.mostRecentTrip()
         
         self.refreshPauseResumeTrackingButtonUI()
+    }
+    
+    
+    func reloadTitleView() {
+        if (self.selectedTrip != nil) {
+            let trip = self.selectedTrip
+            var dateTitle = ""
+            if (trip.startDate != nil) {
+                dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate))
+                
+            }
+            self.thumbsUpButton.hidden = false
+            self.thumbsDownButton.hidden = false
+            self.titleLabel.text = String(format: "%@ %.1f miles", trip.climoticon, trip.lengthMiles)
+        } else {
+            self.thumbsUpButton.hidden = true
+            self.thumbsDownButton.hidden = true
+            self.titleLabel.text = String(format: "%i trips", Trip.numberOfCycledTrips)
+        }
     }
     
     //
@@ -104,6 +129,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         super.viewWillAppear(animated)
         
         self.refreshPauseResumeTrackingButtonUI()
+        self.reloadTitleView()
+        NSNotificationCenter.defaultCenter().addObserverForName("RouteManagerDidUpdatePoints", object: nil, queue: nil) { (notif) -> Void in
+            if (RouteManager.sharedManager.currentTrip != nil) {
+                self.selectedTrip = RouteManager.sharedManager.currentTrip
+            }
+            self.reloadTitleView()
+        }
         
         let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
         
@@ -120,12 +152,14 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "presentIncidentEditor") {
-            (segue.destinationViewController.topViewController as! IncidentEditorViewController).mainViewController = self
-            (segue.destinationViewController.topViewController as! IncidentEditorViewController).incident = (sender as! Incident)
+        if (segue.identifier == "showIncidentEditor") {
+            (segue.destinationViewController as! IncidentEditorViewController).mainViewController = self
+            (segue.destinationViewController as! IncidentEditorViewController).incident = (sender as! Incident)
         } else if (segue.identifier == "showRoutes") {
             (segue.destinationViewController as! RoutesViewController).mainViewController = self
         }
@@ -135,31 +169,45 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     // MARK: - UI Actions
     //
     
-    @IBAction func newIncident(sender: AnyObject) {
-        let roadHazardButton: PathMenuItem = PathMenuItem(image: Incident.IncidentType.RoadHazard.pinImage, highlightedImage: Incident.IncidentType.RoadHazard.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let unsafeIntersectionButton = PathMenuItem(image: Incident.IncidentType.UnsafeIntersection.pinImage, highlightedImage: Incident.IncidentType.UnsafeIntersection.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let bikeLaneEndsButton = PathMenuItem(image: Incident.IncidentType.BikeLaneEnds.pinImage, highlightedImage: Incident.IncidentType.BikeLaneEnds.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let unsafeSpeedsButton = PathMenuItem(image: Incident.IncidentType.UnsafeSpeeds.pinImage, highlightedImage: Incident.IncidentType.UnsafeSpeeds.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let aggressiveMotoristButton = PathMenuItem(image: Incident.IncidentType.AggressiveMotorist.pinImage, highlightedImage: Incident.IncidentType.AggressiveMotorist.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let insufficientParkingButton = PathMenuItem(image: Incident.IncidentType.InsufficientParking.pinImage, highlightedImage: Incident.IncidentType.InsufficientParking.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let suspectedBikeTheifButton = PathMenuItem(image: Incident.IncidentType.SuspectedBikeTheif.pinImage, highlightedImage: Incident.IncidentType.SuspectedBikeTheif.pinImage, ContentImage: nil, highlightedContentImage:nil)
-        let unknownButton = PathMenuItem(image: Incident.IncidentType.Unknown.pinImage, highlightedImage: Incident.IncidentType.Unknown.pinImage, ContentImage: nil, highlightedContentImage:nil)
+    @IBAction func thumbsUp(sender: AnyObject) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
         
-        var menusButtons: [PathMenuItem] = [roadHazardButton, unsafeIntersectionButton, bikeLaneEndsButton, unsafeSpeedsButton, aggressiveMotoristButton, insufficientParkingButton, suspectedBikeTheifButton, unknownButton]
+        self.mapViewController.refreshTrip(self.selectedTrip)
     }
     
-    func pathMenu(menu: PathMenu, didSelectIndex idx: Int) {
-        var incidentType : Incident.IncidentType
-        if (idx == Incident.IncidentType.count - 1) {
-            incidentType = Incident.IncidentType.Unknown
-        } else {
-            incidentType = Incident.IncidentType(rawValue: idx + 1)!
+    @IBAction func thumbsDown(sender: AnyObject) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.mapViewController.refreshTrip(self.selectedTrip)
+    }
+    
+    @IBAction func newIncident(sender: AnyObject) {
+        var titles: [AnyObject] = []
+        var images: [AnyObject] = []
+        
+        for index in 0..<Incident.IncidentType.count {
+            titles.append(Incident.IncidentType(rawValue: index)!.text)
+            images.append(Incident.IncidentType(rawValue: index)!.pinImage)
         }
-        let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
-        let incident = Incident(location: location, trip: self.selectedTrip)
-        incident.type = NSNumber(integer: incidentType.rawValue)
-        CoreDataManager.sharedManager.saveContext()
-        self.refreshSelectrTrip()
+        
+        let height = (images.first as! UIImage).size.height
+        
+        self.newIncidentButton.hidden = true
+        PCStackMenu.showStackMenuWithTitles(titles, withImages: images, atStartPoint: CGPointMake(self.newIncidentButton.frame.origin.x + self.newIncidentButton.frame.size.width, self.newIncidentButton.frame.origin.y + self.newIncidentButton.frame.size.height), inView: self.view, itemHeight: height, menuDirection: PCStackMenuDirectionClockWiseUp) { (selectedIndex) -> Void in
+            var incidentType : Incident.IncidentType
+            self.newIncidentButton.hidden = false
+            
+            if (selectedIndex != NSNotFound) {
+                incidentType = Incident.IncidentType(rawValue: selectedIndex)!
+                let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
+                let incident = Incident(location: location, trip: self.selectedTrip)
+                incident.type = NSNumber(integer: incidentType.rawValue)
+                CoreDataManager.sharedManager.saveContext()
+                self.mapViewController.addIncidentToMap(incident)
+            }
+        }
     }
     
     @IBAction func tools(sender: AnyObject) {

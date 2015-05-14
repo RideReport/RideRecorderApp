@@ -1,5 +1,5 @@
 //
-//  PopSegue.swift
+//  MyRidesSegue.swift
 //  Ride
 //
 //  Created by William Henderson on 5/12/15.
@@ -9,13 +9,13 @@
 import Foundation
 import UIKit
 
-class PopSegue : UIStoryboardSegue {
+class MyRidesSegue : UIStoryboardSegue {
     override func perform() {
         let transition = CATransition()
         transition.duration = 0.25
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromLeft
+        transition.type = kCATransitionMoveIn
+        transition.subtype = kCATransitionFromBottom
         
         let source = self.sourceViewController as! UIViewController
         let dest = self.destinationViewController as! UIViewController

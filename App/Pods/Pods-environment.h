@@ -42,6 +42,12 @@
 #define COCOAPODS_VERSION_MINOR_MBXMapKit 7
 #define COCOAPODS_VERSION_PATCH_MBXMapKit 0
 
+// SMCalloutView
+#define COCOAPODS_POD_AVAILABLE_SMCalloutView
+#define COCOAPODS_VERSION_MAJOR_SMCalloutView 2
+#define COCOAPODS_VERSION_MINOR_SMCalloutView 1
+#define COCOAPODS_VERSION_PATCH_SMCalloutView 2
+
 // UIActionSheet+Blocks
 #define COCOAPODS_POD_AVAILABLE_UIActionSheet_Blocks
 #define COCOAPODS_VERSION_MAJOR_UIActionSheet_Blocks 0

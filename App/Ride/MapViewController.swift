@@ -10,10 +10,10 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
+class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, SMCalloutViewDelegate {
     var mainViewController: MainViewController! = nil
     
-    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var mapView: HackedMapView!
     
     @IBOutlet weak var privacyCircleToolbar: UIToolbar!
     
@@ -26,8 +26,13 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     private var privacyCircleRenderer : PrivacyCircleRenderer?
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
+    
+    private var calloutView : SMCalloutView! = nil
+    private var selectedIncident : Incident? = nil
         
     private var dateFormatter : NSDateFormatter!
+    
+    private var annotationPopOverController : UIPopoverController? = nil
     
     override func viewDidLoad() {        
         self.dateFormatter = NSDateFormatter()
@@ -41,7 +46,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.showsUserLocation = true
 
         self.mapView.addGestureRecognizer(self.privacyCirclePanGesture)
-        
         self.mapView.mapType = MKMapType.Satellite
         
         // set the size of the url cache for tile caching.
@@ -55,6 +59,16 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         self.mapView.addOverlay(tiles)
         
         self.tripPolyLines = [:]
+        
+        self.calloutView = SMCalloutView.platformCalloutView()
+        self.calloutView.delegate = self
+        self.calloutView.rightAccessoryView = UIImageView(image: UIImage(named: "UITableNext"))
+        self.calloutView.rightAccessoryView.alpha = 0.2
+        self.mapView.calloutView = self.calloutView
+        
+        if (RouteManager.sharedManager.currentTrip != nil) {
+            self.mainViewController.selectedTrip = RouteManager.sharedManager.currentTrip
+        }
 
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
             self.loadTrips()
@@ -100,7 +114,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        
+                
         self.unloadTrips()
     }
     
@@ -236,21 +250,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             for trip in trips {
                 self.refreshTrip(trip as! Trip)
             }
-            
-            dispatch_async(dispatch_get_main_queue(), {
-                if (self.mainViewController.selectedTrip != nil) {
-                    let trip = self.mainViewController.selectedTrip
-                    var dateTitle = ""
-                    if (trip.startDate != nil) {
-                        dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate))
-                        
-                    }
-                    
-                    self.mainViewController.navigationItem.title = String(format: "%@ %.1f miles", trip.climoticon, trip.lengthMiles)
-                } else {
-                    self.mainViewController.navigationItem.title = String(format: "%i trips", Trip.numberOfCycledTrips)
-                }
-            })
         })
     }
     
@@ -322,25 +321,23 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     func refreshTrip(trip : Trip!) {
-        if (self.tripPolyLines[trip] != nil) {
-            let overlay = self.tripPolyLines[trip]
-            dispatch_async(dispatch_get_main_queue(), {
+        dispatch_async(dispatch_get_main_queue(), {
+            if (self.tripPolyLines[trip] != nil) {
+                let overlay = self.tripPolyLines[trip]
                 self.mapView.removeOverlay(overlay)
-            })
-        }
-        
-        if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            self.tripPolyLines[trip] = nil
-            return
-        }
-        
-        
-        if (trip.locations == nil || trip.locations.count == 0) {
-            return
-        }
+            }
+            
+            if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+                self.tripPolyLines[trip] = nil
+                return
+            }
+            
+            
+            if (trip.locations == nil || trip.locations.count == 0) {
+                return
+            }
 
-        if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
-            dispatch_async(dispatch_get_main_queue(), {
+            if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
                 trip.simplify() {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
                         if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
@@ -348,31 +345,27 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                         }
                     })
                 }
-            })
-            return
-        }
-        
-        var coordinates : [CLLocationCoordinate2D] = []
-        var count : Int = 0
-        for location in trip.simplifiedLocations.array {
-            let location = (location as! Location)
-            
-            let coord = location.coordinate()
-            
-            if (!location.isPrivate.boolValue) {
-                coordinates.append(coord)
-                count++
+                return
             }
-        }
+            
+            var coordinates : [CLLocationCoordinate2D] = []
+            var count : Int = 0
+            for location in trip.simplifiedLocations.array {
+                let location = (location as! Location)
+                
+                let coord = location.coordinate()
+                
+                if (!location.isPrivate.boolValue) {
+                    coordinates.append(coord)
+                    count++
+                }
+            }
 
-        let polyline = MKPolyline(coordinates: &coordinates, count: count)
-        self.tripPolyLines[trip] = polyline
+            let polyline = MKPolyline(coordinates: &coordinates, count: count)
+            self.tripPolyLines[trip] = polyline
 
-        dispatch_async(dispatch_get_main_queue(), {
             self.mapView.addOverlay(polyline)
-        })
-        
-        dispatch_async(dispatch_get_main_queue(), {
+            
             for annotation in self.mapView.annotations {
                 if (annotation.isKindOfClass(Incident)) {
                     let incident = annotation as! Incident
@@ -381,19 +374,28 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                     }
                 }
             }
-
+            
             for item in trip.incidents.array {
                 let incident = item as! Incident
-
+                
                 
                 self.mapView.addAnnotation(incident)
                 self.mapView(self.mapView, viewForAnnotation: incident) //unclear why this is needed, but without Pins sometimes dont appear.
             }
+            
+            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
+                self.setSelectedTrip(trip)
+            }
         })
-        
-        if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-            self.setSelectedTrip(trip)
-        }
+    }
+    
+    func addIncidentToMap(incident: Incident) {
+        self.mapView.addAnnotation(incident)
+        self.mapView.selectAnnotation(incident, animated: true)
+    }
+    
+    func calloutViewClicked(calloutView: SMCalloutView!) {
+        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
     }
 
     //
@@ -428,10 +430,6 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 annotationView!.image = Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage
                 annotationView!.centerOffset = CGPoint(x: 0, y: -annotationView!.image.size.height/2)
                 annotationView!.draggable = true
-                annotationView!.canShowCallout = true
-                
-                let button = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
-                annotationView!.rightCalloutAccessoryView = button
             }
             return annotationView
         }
@@ -439,9 +437,21 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         return nil;
     }
     
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        let incident = view.annotation as! Incident!
-        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
+    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
+        self.selectedIncident = (view.annotation as! Incident)
+        
+        self.calloutView.title = view.annotation.title
+        self.calloutView.subtitle = view.annotation.subtitle
+        
+        self.calloutView.calloutOffset = view.calloutOffset
+        
+        self.calloutView.presentCalloutFromRect(view.bounds, inView: view, constrainedToView: self.view, animated: true)
+    }
+    
+    func mapView(mapView: MKMapView!, didDeselectAnnotationView view: MKAnnotationView!) {
+        self.selectedIncident = nil
+        
+        self.calloutView.dismissCalloutAnimated(true)
     }
     
     func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
@@ -516,6 +526,20 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
         } else {
             return nil;
         }
+    }
+}
+
+class HackedMapView : MKMapView {
+    private var calloutView : SMCalloutView! = nil
+
+    // Allow touches to be sent to our calloutview.
+    // See this for some discussion of why we need to override this: https://github.com/nfarina/calloutview/pull/9
+    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        if let calloutMaybe = self.calloutView.hitTest(self.calloutView.convertPoint(point, fromView: self), withEvent: event) {
+            return calloutMaybe
+        }
+        
+        return super.hitTest(point, withEvent: event)
     }
 }
 

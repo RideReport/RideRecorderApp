@@ -135,7 +135,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
         
-        self.mainViewController.performSegueWithIdentifier("presentIncidentEditor", sender: incident)
+        self.mainViewController.performSegueWithIdentifier("showIncidentEditor", sender: incident)
     }
     
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

@@ -89,13 +89,13 @@ import Foundation
         scrollView.addSubview(controlsView)
         
         destructiveButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height))
-        destructiveButton.backgroundColor = UIColor.redColor()
+        destructiveButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
         destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(destructiveButton)
         
         actionButton = UIButton(frame: CGRect(x: buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height))
-        actionButton.backgroundColor = UIColor.blueColor()
+        actionButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
         actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(actionButton)

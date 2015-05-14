@@ -176,9 +176,9 @@ typedef enum
 			else if(_menuDirection == PCStackMenuDirectionHalfCircleLeftArea)
 				stackItem.transform = CGAffineTransformMakeRotationAt((int)(i - [_items count] / 2) * -6 * M_PI / 180, point);
 			else if(_menuDirection == PCStackMenuDirectionClockWiseUp || _menuDirection == PCStackMenuDirectionClockWiseDown)
-				stackItem.transform = CGAffineTransformMakeRotationAt(i * 2 * M_PI / 180, point);
+				stackItem.transform = CGAffineTransformMakeRotationAt(i * 1 * M_PI / 180, point);
 			else
-				stackItem.transform = CGAffineTransformMakeRotationAt(i * -2 * M_PI / 180, point);
+				stackItem.transform = CGAffineTransformMakeRotationAt(i * -1 * M_PI / 180, point);
 			stackItem.alpha = 1.0;
 		}
     } completion:^(BOOL finished) {
@@ -251,6 +251,8 @@ typedef enum
 			stackItem.alpha = 0.2;
 		}
     } completion:^(BOOL finished) {
+        if(_block)
+            _block(NSNotFound);
 		[self releaseMenu];
     }];
 }
@@ -314,7 +316,7 @@ typedef enum
 		NSString *title = (i < [titles count]) ? [titles objectAtIndex:i] : @"";
 		UIImage *image = (i < [images count]) ? [images objectAtIndex:i] : nil;
 		
-		NSTextAlignment alignment = (_clockArea == PCStackMenuClockAreaRight) ? NSTextAlignmentLeft : NSTextAlignmentRight;
+		NSTextAlignment alignment = NSTextAlignmentLeft;
 		PCStackMenuItem *stackItem = [[PCStackMenuItem alloc] initWithFrame:r withTitle:title withImage:image alignment:alignment];
 		
 		if(direction == PCStackMenuDirectionClockWiseUp || direction == PCStackMenuDirectionCounterClockWiseUp)

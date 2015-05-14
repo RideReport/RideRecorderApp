@@ -4,6 +4,7 @@ pod "MBXMapKit"
 pod "CZWeatherKit"
 pod 'UIActionSheet+Blocks'
 pod 'ionicons'
+pod 'SMCalloutView'
 
 # target "Ride" do
 # 

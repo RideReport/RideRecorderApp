@@ -23,11 +23,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Rides"
+        self.navigationItem.hidesBackButton = true
         
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
-        self.navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Map", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
+        self.title = "My Rides"
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
         var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         var effectView = UIVisualEffectView(effect: blur)
@@ -245,8 +245,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let transition = CATransition()
         transition.duration = 0.25
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromRight
+        transition.type = kCATransitionReveal
+        transition.subtype = kCATransitionFromTop
         
         self.mainViewController.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
         self.mainViewController.navigationController?.popToRootViewControllerAnimated(false)
