@@ -138,8 +138,12 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             self.selectedRideToolBar.hidden = true
             
         }
-        
-        self.ridesHistoryButton.setTitle(String(format: "%i Rides ▾", Trip.numberOfCycledTrips), forState: UIControlState.Normal)
+        let count = Trip.numberOfCycledTrips
+        if (count == 0) {
+            self.ridesHistoryButton.setTitle("No Rides ▾", forState: UIControlState.Normal)
+        } else {
+            self.ridesHistoryButton.setTitle(String(format: "%i Rides ▾", count), forState: UIControlState.Normal)
+        }
         self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
     }
     

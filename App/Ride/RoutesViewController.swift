@@ -25,7 +25,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationItem.hidesBackButton = true
         
-        self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
+        let count = Trip.numberOfCycledTrips
+        if (count == 0) {
+            self.title = "No Rides"
+        } else {
+            self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
+        }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
@@ -67,21 +72,26 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
         
         if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
-            let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
-            actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                if (buttonIndex == 1) {
-                    for trip in Trip.allTrips() {
-                        (trip as! Trip).isSynced = false
+            if (Trip.numberOfCycledTrips > 0) {
+                let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
+                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
+                    if (buttonIndex == 1) {
+                        for trip in Trip.allTrips() {
+                            (trip as! Trip).isSynced = false
+                        }
+                        CoreDataManager.sharedManager.saveContext()
+                        NetworkManager.sharedManager.syncTrips()
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                        
                     }
-                    CoreDataManager.sharedManager.saveContext()
-                    NetworkManager.sharedManager.syncTrips()
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                    
                 }
+                
+                actionSheet.showFromToolbar(self.navigationController?.toolbar)
+            } else {
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
+                NSUserDefaults.standardUserDefaults().synchronize()
             }
-            
-            actionSheet.showFromToolbar(self.navigationController?.toolbar)
         }
 
     }
