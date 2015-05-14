@@ -339,11 +339,9 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
 
             if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
                 trip.simplify() {
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                            self.refreshTrip(trip)
-                        }
-                    })
+                    if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
+                        self.refreshTrip(trip)
+                    }
                 }
                 return
             }
