@@ -476,6 +476,7 @@ class Trip : NSManagedObject {
     
     func reopen() {
         self.isClosed = false
+        self.simplifiedLocations = nil
     }
     
     var lengthMiles : Float {
