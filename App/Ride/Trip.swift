@@ -604,7 +604,7 @@ class Trip : NSManagedObject {
     }
     
     func simplify(handler: ()->Void = {}) {
-        if (self.locations == nil || self.locations.count == 0) {
+        if (!self.isClosed || self.locations == nil || self.locations.count == 0) {
             handler()
             return
         }

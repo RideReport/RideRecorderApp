@@ -334,13 +334,15 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
             if (trip.locations == nil || trip.locations.count == 0) {
                 return
             }
-
+            
             if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
-                trip.simplify() {
-                    if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                        self.refreshTrip(trip)
+                dispatch_async(dispatch_get_main_queue(), {
+                    trip.simplify() {
+                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
+                            self.refreshTrip(trip)
+                        }
                     }
-                }
+                })
                 return
             }
             

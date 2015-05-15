@@ -107,7 +107,7 @@
             <objects>
                 <tableViewController id="WQY-Ez-ieB" customClass="RouteDetailViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="vMs-yn-7BA">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="207"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -558,7 +558,7 @@
             <objects>
                 <tableViewController id="36a-aw-vC8" customClass="RouteIncidentsViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="PKP-V8-QWj">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="207"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -613,11 +613,11 @@
                         <viewControllerLayoutGuide type="bottom" id="Q0Q-Ap-BP2"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BOa-Zo-opp">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="207"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="48" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="W5I-Vg-qji">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="207"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -666,9 +666,6 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <variation key="heightClass=regular" misplaced="YES">
-                                            <rect key="frame" x="60" y="362" width="480" height="41"/>
-                                        </variation>
                                     </label>
                                 </subviews>
                                 <constraints>
@@ -722,13 +719,13 @@
                                 <exclude reference="hKj-FK-B2g"/>
                                 <exclude reference="pxs-QO-wcJ"/>
                                 <exclude reference="zaP-YD-bZu"/>
+                                <exclude reference="qsT-ii-coy"/>
                                 <exclude reference="5FL-n1-NNL"/>
                                 <exclude reference="MHG-pI-RLG"/>
                                 <exclude reference="aJI-Ak-EC7"/>
                                 <exclude reference="imG-Lc-gwV"/>
                                 <exclude reference="vdh-vG-gQv"/>
                                 <exclude reference="zPh-K4-S1r"/>
-                                <exclude reference="qsT-ii-coy"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -740,13 +737,13 @@
                                 <include reference="hKj-FK-B2g"/>
                                 <include reference="pxs-QO-wcJ"/>
                                 <include reference="zaP-YD-bZu"/>
+                                <include reference="qsT-ii-coy"/>
                                 <include reference="5FL-n1-NNL"/>
                                 <exclude reference="MHG-pI-RLG"/>
                                 <include reference="aJI-Ak-EC7"/>
                                 <include reference="imG-Lc-gwV"/>
                                 <include reference="vdh-vG-gQv"/>
                                 <include reference="zPh-K4-S1r"/>
-                                <include reference="qsT-ii-coy"/>
                             </mask>
                         </variation>
                     </view>
@@ -1449,7 +1446,7 @@
                                             <action selector="closeRoute:" destination="A5D-RC-UCB" eventType="touchUpInside" id="fKv-xA-a6S"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g2i-4N-txv">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g2i-4N-txv">
                                         <rect key="frame" x="541" y="7" width="51" height="30"/>
                                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -1477,7 +1474,7 @@
                                             <action selector="thumbsDown:" destination="A5D-RC-UCB" eventType="touchUpInside" id="l2u-jT-29g"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P0a-GZ-mLb">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P0a-GZ-mLb">
                                         <rect key="frame" x="495" y="7" width="47" height="30"/>
                                         <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
@@ -1525,7 +1522,7 @@
                                         </variation>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="kqw-OA-o3R" firstAttribute="leading" secondItem="8mW-Sz-0y6" secondAttribute="leading" constant="6" id="CZC-xe-hPt"/>
                                     <constraint firstAttribute="centerY" secondItem="P0a-GZ-mLb" secondAttribute="centerY" id="ECn-2H-tPv"/>
@@ -1550,18 +1547,18 @@
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="ip1-Pa-9MW"/>
-                                        <exclude reference="CZC-xe-hPt"/>
-                                        <exclude reference="UAA-Ao-qsq"/>
                                         <exclude reference="HVM-t1-a7S"/>
                                         <exclude reference="JbH-U5-F8G"/>
                                         <exclude reference="mos-LR-u8h"/>
-                                        <exclude reference="QL0-X2-2Fx"/>
-                                        <exclude reference="VCh-NU-o2N"/>
-                                        <exclude reference="buP-dS-DGn"/>
+                                        <exclude reference="CZC-xe-hPt"/>
+                                        <exclude reference="UAA-Ao-qsq"/>
                                         <exclude reference="ECn-2H-tPv"/>
                                         <exclude reference="GpM-ZO-I6Y"/>
                                         <exclude reference="eUz-Ol-LLw"/>
                                         <exclude reference="qYZ-Th-xqb"/>
+                                        <exclude reference="QL0-X2-2Fx"/>
+                                        <exclude reference="VCh-NU-o2N"/>
+                                        <exclude reference="buP-dS-DGn"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular">
@@ -1573,18 +1570,18 @@
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="ip1-Pa-9MW"/>
-                                        <include reference="CZC-xe-hPt"/>
-                                        <include reference="UAA-Ao-qsq"/>
                                         <exclude reference="HVM-t1-a7S"/>
                                         <include reference="JbH-U5-F8G"/>
                                         <include reference="mos-LR-u8h"/>
-                                        <include reference="QL0-X2-2Fx"/>
-                                        <include reference="VCh-NU-o2N"/>
-                                        <include reference="buP-dS-DGn"/>
+                                        <include reference="CZC-xe-hPt"/>
+                                        <include reference="UAA-Ao-qsq"/>
                                         <include reference="ECn-2H-tPv"/>
                                         <include reference="GpM-ZO-I6Y"/>
                                         <include reference="eUz-Ol-LLw"/>
                                         <include reference="qYZ-Th-xqb"/>
+                                        <include reference="QL0-X2-2Fx"/>
+                                        <include reference="VCh-NU-o2N"/>
+                                        <include reference="buP-dS-DGn"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1617,16 +1614,16 @@
                                 <exclude reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="kO0-6D-5PY"/>
-                                <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <exclude reference="plA-xe-GLn"/>
                                 <exclude reference="A1S-SV-ycq"/>
                                 <exclude reference="BCp-4R-ff0"/>
                                 <exclude reference="swd-uv-MjY"/>
+                                <exclude reference="kO0-6D-5PY"/>
+                                <exclude reference="uej-BC-eBx"/>
                                 <exclude reference="PBH-wJ-oyn"/>
                                 <exclude reference="dg3-iH-On4"/>
                                 <exclude reference="wwX-xJ-447"/>
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <exclude reference="plA-xe-GLn"/>
                                 <exclude reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
@@ -1636,14 +1633,14 @@
                                 <include reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="6AQ-hd-T7z"/>
-                                <include reference="kO0-6D-5PY"/>
-                                <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <include reference="plA-xe-GLn"/>
                                 <include reference="A1S-SV-ycq"/>
                                 <include reference="BCp-4R-ff0"/>
                                 <include reference="swd-uv-MjY"/>
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <include reference="plA-xe-GLn"/>
+                                <exclude reference="6AQ-hd-T7z"/>
+                                <include reference="kO0-6D-5PY"/>
+                                <exclude reference="uej-BC-eBx"/>
                                 <include reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
@@ -1660,9 +1657,6 @@
                                     <state key="normal" title="120 Rides">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
-                                    <variation key="heightClass=regular" misplaced="YES">
-                                        <rect key="frame" x="112" y="3" width="327" height="30"/>
-                                    </variation>
                                     <connections>
                                         <action selector="showRides:" destination="A5D-RC-UCB" eventType="touchUpInside" id="Qg0-dk-jey"/>
                                     </connections>
@@ -1814,6 +1808,7 @@
                         <viewControllerLayoutGuide type="bottom" id="tU5-gc-mIM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7YC-P5-pqd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
