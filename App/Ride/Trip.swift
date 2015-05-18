@@ -546,11 +546,11 @@ class Trip : NSManagedObject {
         var message = ""
         
         if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil && self.endingPlacemark != nil && self.endingPlacemark!.subLocality != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality, self.endingPlacemark!.subLocality) as String
+            message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality!, self.endingPlacemark!.subLocality!)
         } else if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil) {
-            message = String(format: "%@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality) as String
+            message = String(format: "%@ %@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality!)
         } else {
-            message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles) as String
+            message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles)
         }
         
         if (self.activityType == NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
