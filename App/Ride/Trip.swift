@@ -34,9 +34,9 @@ class Trip : NSManagedObject {
     }
     
     private var currentStateNotification : UILocalNotification? = nil
-    private var startingPlacemark : CLPlacemark? = nil
-    private var endingPlacemark : CLPlacemark? = nil
     
+    @NSManaged var startingPlacemarkName : String!
+    @NSManaged var endingPlacemarkName : String!
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
@@ -410,7 +410,7 @@ class Trip : NSManagedObject {
                 return
             }
             let startingPlacemark = placemarks[0] as! CLPlacemark
-            self.startingPlacemark = startingPlacemark
+            self.startingPlacemarkName = startingPlacemark.subLocality
             handler()
         })
 
@@ -431,7 +431,7 @@ class Trip : NSManagedObject {
                 return
             }
             let endingPlacemark = placemarks[0] as! CLPlacemark
-            self.endingPlacemark = endingPlacemark
+            self.endingPlacemarkName = endingPlacemark.subLocality
             handler()
         })
     }
@@ -503,7 +503,7 @@ class Trip : NSManagedObject {
     }
     
     func sendTripStartedNotification(startingLocation : CLLocation) {
-        if (self.startingPlacemark != nil) {
+        if (self.startingPlacemarkName != nil) {
             self.sendTripStartedNotificationImmediately()
         } else {
             self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
@@ -517,8 +517,8 @@ class Trip : NSManagedObject {
         
         var message = ""
         
-        if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil) {
-            message = String(format: "Started a trip in %@…", self.startingPlacemark!.subLocality)
+        if (self.startingPlacemarkName != nil) {
+            message = String(format: "Started a trip in %@…", self.startingPlacemarkName)
         } else {
             message = "Started a trip…"
         }
@@ -543,12 +543,31 @@ class Trip : NSManagedObject {
     }
     
     func sendTripCompletionNotificationImmediately() {
+        self.cancelTripStateNotification()
+        
+        self.currentStateNotification = UILocalNotification()
+        self.currentStateNotification?.alertBody = self.notificationString()
+        if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            // don't play a sound or show rating stuff for anything but bike trips.
+            self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
+            self.currentStateNotification?.alertAction = "rate"
+            self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
+        }
+        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+
+    }
+    
+    func notificationString()->String? {
         var message = ""
         
-        if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil && self.endingPlacemark != nil && self.endingPlacemark!.subLocality != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality!, self.endingPlacemark!.subLocality!)
-        } else if (self.startingPlacemark != nil && self.startingPlacemark!.subLocality != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemark!.subLocality!)
+        if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
+            if (self.startingPlacemarkName == self.endingPlacemarkName) {
+                message = String(format: "%@ %@ %.1f miles in %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            } else {
+                message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+            }
+        } else if (self.startingPlacemarkName != nil) {
+            message = String(format: "%@ %@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
         } else {
             message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles)
         }
@@ -559,18 +578,8 @@ class Trip : NSManagedObject {
                 message += (". " + rewardString!)
             }
         }
-        
-        self.cancelTripStateNotification()
-        
-        self.currentStateNotification = UILocalNotification()
-        self.currentStateNotification?.alertBody = message
-        if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            // don't play a sound or show rating stuff for anything but bike trips.
-            self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
-            self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
-        }
-        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
-
+    
+        return message
     }
     
     func rewardString()->String? {

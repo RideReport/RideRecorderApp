@@ -11,8 +11,10 @@ import Foundation
 @objc protocol PushSimulatorViewDelegate {
     optional func didOpenControls(view: PushSimulatorView)
     optional func didCloseControls(view: PushSimulatorView)
+    optional func didTapEditButton(view: PushSimulatorView)
     optional func didTapDestructiveButton(view: PushSimulatorView)
     optional func didTapActionButton(view: PushSimulatorView)
+    optional func didTapClearButton(view: PushSimulatorView)
 }
 
 @IBDesignable class PushSimulatorView : UIView, UIScrollViewDelegate {
@@ -22,6 +24,13 @@ import Foundation
             reloadUI()
         }
     }
+    
+    @IBInspectable var dateString: String = "now" {
+        didSet {
+            reloadUI()
+        }
+    }
+    
     @IBInspectable var appName: String = "Ride" {
         didSet {
             reloadUI()
@@ -43,22 +52,57 @@ import Foundation
         }
     }
     
+    @IBInspectable var editTitle: String = "Edit" {
+        didSet {
+            reloadUI()
+        }
+    }
+    
+    @IBInspectable var isInAppView: Bool = false {
+        didSet {
+            reloadUI()
+        }
+    }
+    
+    var showsEditButton : Bool = false {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    var showsActionButon : Bool = true {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    var showsDestructiveActionButon : Bool = true {
+        didSet {
+            layoutSubviews()
+        }
+    }
+    
     let buttonWidth : CGFloat = 75.0
     
     var delegate : PushSimulatorViewDelegate? = nil
     
     var isShowingControls = false
     
+    let insetX : CGFloat = 15
+    
     var scrollView : UIScrollView!
     var controlsView : UIView!
     var destructiveButton : UIButton!
     var actionButton : UIButton!
+    var editButton : UIButton!
+    var clearButton : UIVisualEffectView!
     
     var contentView : UIView!
     var appNameLabel : UILabel!
     var dateLabel : UILabel!
     var bodyLabel : UILabel!
     var slideLabel : UILabel!
+    
+    var lineViewTop : UIView!
+    var lineViewBottom : UIView!
     
     var appIconView : UIImageView!
     
@@ -75,36 +119,16 @@ import Foundation
     }
     
     func commonInit() {
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
-        scrollView.contentSize = CGSizeMake(self.bounds.width + buttonWidth*2, self.bounds.height)
+        scrollView = UIScrollView()
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
         
         self.addSubview(scrollView)
         
-        controlsView = UIView(frame: CGRect(x: self.bounds.width - buttonWidth*2, y: 0, width: 0, height: self.bounds.height))
-        controlsView.backgroundColor = UIColor.clearColor()
-        controlsView.clipsToBounds = true
-        scrollView.addSubview(controlsView)
-        
-        destructiveButton = UIButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height))
-        destructiveButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
-        destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
-        controlsView.addSubview(destructiveButton)
-        
-        actionButton = UIButton(frame: CGRect(x: buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height))
-        actionButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
-        actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
-        controlsView.addSubview(actionButton)
-        
-        contentView = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height))
+        contentView = UIView()
         contentView.backgroundColor = UIColor.clearColor()
         scrollView.addSubview(contentView)
-        
-        let insetX : CGFloat = 15
         
         appIconView = UIImageView(frame: CGRectMake(insetX, 10, 20, 20))
         appIconView.backgroundColor = UIColor.redColor()
@@ -127,29 +151,95 @@ import Foundation
         bodyLabel.textColor = UIColor.whiteColor()
         contentView.addSubview(bodyLabel)
         
-        let lineViewTop = UIView(frame: CGRectMake(insetX, 0.0, self.bounds.width, 1.0))
-        lineViewTop.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
-        contentView.addSubview(lineViewTop)
+        self.lineViewTop = UIView()
+        self.lineViewTop.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
+        contentView.addSubview(self.lineViewTop)
         
-        let lineViewBottom = UIView(frame: CGRectMake(insetX, self.bounds.height - 1, self.bounds.width, 1.0))
-        lineViewBottom.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
-        contentView.addSubview(lineViewBottom)
+        self.lineViewBottom = UIView()
+        self.lineViewBottom.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
+        contentView.addSubview(self.lineViewBottom)
         
         slideLabel = UILabel()
         slideLabel.font = UIFont.systemFontOfSize(14)
         slideLabel.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-        slideLabel.text = "slide to view"
+        slideLabel.text = "slide to rate"
         contentView.addSubview(slideLabel)
+        
+        clearButton = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.ExtraLight))
+        let clearButtonRect = CGRectMake(0, 0, 14, 14)
+        UIGraphicsBeginImageContextWithOptions(clearButtonRect.size, false, 0.0)
+        let circle = UIBezierPath(ovalInRect: clearButtonRect)
+        let line1 = UIBezierPath()
+        line1.moveToPoint(CGPointMake(4, 4))
+        line1.addLineToPoint(CGPointMake(10, 10))
+        line1.lineWidth = 1
+        let line2 = UIBezierPath()
+        line2.moveToPoint(CGPointMake(4, 10))
+        line2.addLineToPoint(CGPointMake(10, 4))
+        line2.lineWidth = 1
+        
+        UIColor.blackColor().setFill()
+        circle.fill()
+        let ctx = UIGraphicsGetCurrentContext()
+        CGContextSetBlendMode(ctx, kCGBlendModeDestinationOut)
+        line1.stroke()
+        line2.stroke()
+        let maskImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        UIGraphicsEndImageContext()
+        let maskLayer = CALayer()
+        maskLayer.contentsScale = maskImage.scale
+        maskLayer.frame = clearButtonRect
+        maskLayer.contents = maskImage.CGImage
+        clearButton.frame = clearButtonRect
+        clearButton.layer.mask = maskLayer
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "pressedClearButton")
+        clearButton.addGestureRecognizer(tapRecognizer)
+        contentView.addSubview(clearButton)
+        
+        controlsView = UIView()
+        controlsView.backgroundColor = UIColor.clearColor()
+        controlsView.clipsToBounds = true
+        scrollView.addSubview(controlsView)
+        
+        editButton = UIButton()
+        editButton.backgroundColor = ColorPallete.sharedPallete.notificationActionGrey
+        editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
+        controlsView.addSubview(editButton)
+        
+        destructiveButton = UIButton()
+        destructiveButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
+        destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
+        controlsView.addSubview(destructiveButton)
+        
+        actionButton = UIButton()
+        actionButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
+        actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
+        controlsView.addSubview(actionButton)
         
         reloadUI()
     }
     
+    func pressedEditButton() {
+        delegate?.didTapEditButton?(self)
+        self.hideControls()
+    }
+    
     func pressedDestructiveButton() {
         delegate?.didTapDestructiveButton?(self)
+        self.hideControls()
     }
     
     func pressedActionButton() {
         delegate?.didTapActionButton?(self)
+        self.hideControls()        
+    }
+    
+    func pressedClearButton() {
+        delegate?.didTapClearButton?(self)
+        self.hideControls()
     }
     
     override func prepareForInterfaceBuilder() {
@@ -159,44 +249,118 @@ import Foundation
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.scrollView.contentSize = CGSizeMake(self.bounds.width + 2*self.buttonWidth, self.bounds.height)
-        self.scrollView.contentInset = UIEdgeInsetsZero
+        destructiveButton.hidden = !self.showsDestructiveActionButon
+        actionButton.hidden = !self.showsActionButon
+        editButton.hidden = !self.showsEditButton
         
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        self.controlsView.frame = CGRect(x: self.bounds.width - buttonWidth*2, y: 0, width: 0, height: self.bounds.height)
+        self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
+
+        self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
+        self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
+
+        self.clearButton.frame = CGRect(x: self.bounds.width - self.clearButton.frame.size.width - 10, y: (self.bounds.height - self.clearButton.frame.size.height)/2.0, width: self.clearButton.frame.size.width, height: self.clearButton.frame.size.height)
+        
+        self.editButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height)
+        self.destructiveButton.frame = CGRect(x: self.totalButtonWidth - 2 * buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
+        self.actionButton.frame = CGRect(x: self.totalButtonWidth - buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
+        
+        self.lineViewTop.frame = CGRectMake(insetX, 0.0, self.bounds.width + self.totalButtonWidth, 1.0)
+        self.lineViewBottom.frame = CGRectMake(insetX, self.bounds.height - 1, self.bounds.width + self.totalButtonWidth, 1.0)
+        
+        self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
+        
+        self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
+        self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         
         reloadUI()
     }
     
+    private var totalButtonWidth : CGFloat {
+        get {
+            if (self.showsEditButton && self.showsActionButon && self.showsDestructiveActionButon) {
+                return buttonWidth * 3
+            } else if (self.showsEditButton && self.showsActionButon) {
+                return buttonWidth * 2
+            } else if (self.showsEditButton && self.showsDestructiveActionButon) {
+                return buttonWidth * 2
+            } else if (self.showsDestructiveActionButon && self.showsActionButon) {
+                return buttonWidth * 2
+            }
+            
+            return buttonWidth
+        }
+    }
+    
     func reloadUI() {
         destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
         actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)
+        editButton.setTitle(self.editTitle, forState: UIControlState.Normal)
         
         appNameLabel.text = self.appName
-        dateLabel.text = "now"
+        dateLabel.text = self.dateString
         bodyLabel.text = self.body
         
-        let insetX : CGFloat = 46
-        let insetY : CGFloat = 8
+        var insetX : CGFloat = 46
+        var insetY : CGFloat = 8
         
-        let appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
-        let bodySize = bodyLabel.text!.sizeWithAttributes([NSFontAttributeName: bodyLabel.font])
+        var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
+        var dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
+        var bodySize = bodyLabel.text!.sizeWithAttributes([NSFontAttributeName: bodyLabel.font])
+        
+        if (self.isInAppView) {
+            insetX = 8
+            insetY = 2
+            appNameSize = CGSizeMake(0, appNameSize.height - 5)
+            
+            self.appNameLabel.hidden = true
+            self.appIconView.hidden = true
+            self.slideLabel.hidden = true
+            self.lineViewTop.hidden = true
+            self.lineViewBottom.hidden = true
+            self.clearButton.hidden = false
+        } else {
+            self.appNameLabel.hidden = false
+            self.appIconView.hidden = false
+            self.slideLabel.hidden = false
+            self.lineViewTop.hidden = false
+            self.lineViewBottom.hidden = false
+            self.clearButton.hidden = true
+        }
         
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
-        dateLabel.frame = CGRectMake(appNameSize.width + insetX + 6, insetY, 60.0, appNameSize.height)
+        dateLabel.frame = CGRectMake(appNameSize.width + insetX + (self.isInAppView ? 0 : 6), insetY, dateLabelSize.width, appNameSize.height)
         bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, self.bounds.width - (1.5*insetX), bodySize.height * 2)
         slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
+    }
+    
+    func showControls(animated: Bool = true) {
+        dispatch_async(dispatch_get_main_queue(), {
+            self.scrollView.setContentOffset(CGPointMake(self.totalButtonWidth, 0), animated: animated)
+        })
+        self.isShowingControls = true
+        delegate?.didOpenControls?(self)
+    }
+    
+    func hideControls(animated: Bool = true) {
+        self.scrollView.setContentOffset(CGPointZero, animated: animated)
+        self.isShowingControls = false
+        delegate?.didCloseControls?(self)
     }
 
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if scrollView.contentOffset.x > (self.buttonWidth * 2) {
-            targetContentOffset.memory.x = self.buttonWidth*2
+        if scrollView.contentOffset.x > (self.buttonWidth*2) {
+            targetContentOffset.memory.x = self.totalButtonWidth
         } else {
             targetContentOffset.memory = CGPointZero;
             
             dispatch_async(dispatch_get_main_queue(), {
+                if (self.isInAppView) {
+                    self.clearButton.fadeIn()
+                }
+                
                 scrollView.setContentOffset(CGPointZero, animated: true)
             })
         }
@@ -207,16 +371,19 @@ import Foundation
             scrollView.contentOffset = CGPointZero
         }
         
-        if (scrollView.contentOffset.x > self.buttonWidth*2) {
-            self.controlsView.frame = CGRectMake(scrollView.contentOffset.x + self.bounds.width - 2*self.buttonWidth, 0, self.buttonWidth*2, self.bounds.height)
+        if (scrollView.contentOffset.x >= self.totalButtonWidth) {
+            self.controlsView.frame = CGRectMake(scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, 0, self.totalButtonWidth, self.bounds.height)
         } else {
             self.controlsView.frame = CGRectMake(self.bounds.width, 0, scrollView.contentOffset.x, self.bounds.height)
         }
         
-        if (scrollView.contentOffset.x >= self.buttonWidth*2) {
+        if (scrollView.contentOffset.x >= self.totalButtonWidth) {
             if !self.isShowingControls {
                 self.isShowingControls = true
                 delegate?.didOpenControls?(self)
+                if (!self.clearButton.hidden) {
+                    self.clearButton.fadeOut()
+                }
             }
         } else if (scrollView.contentOffset.x == 0) {
             if self.isShowingControls {

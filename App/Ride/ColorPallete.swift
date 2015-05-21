@@ -34,4 +34,10 @@ class ColorPallete : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    var notificationActionGrey: UIColor {
+        get {
+            return UIColor(red: 138.0/255.0, green: 140.0/255.0, blue: 148.0/255.0, alpha: 1.0)
+        }
+    }
+    
 }

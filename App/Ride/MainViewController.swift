@@ -9,16 +9,16 @@
 import Foundation
 import MessageUI
 
-class MainViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, PushSimulatorViewDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     @IBOutlet weak var newIncidentButton: UIButton!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var selectedTripView: UIView!
+    @IBOutlet weak var editModeView: UIView!
+    @IBOutlet weak var rideRushSimulatorView: PushSimulatorView!
     @IBOutlet weak var ridesHistoryButton: UIButton!
-    @IBOutlet weak var thumbsDownButton: UIButton!
-    @IBOutlet weak var thumbsUpButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
     
@@ -65,6 +65,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         let iconSize : CGFloat = 16.0
         var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
         
+        self.editModeView.hidden = true
+        
         let iconPoint = CGPoint(x: (pinWidth - icon.size.width)/2.0, y: 9)
         rect = CGRect(x: 0, y: 0.0, width: pinWidth, height: markersImage.size.height)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
@@ -96,9 +98,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.settingsBarButtonItem.customView = settingsCustomButton
         self.navigationItem.leftBarButtonItem = self.settingsBarButtonItem
         
-        self.thumbsDownButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
-        self.thumbsUpButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
-        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
@@ -106,6 +105,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
+        
+        self.rideRushSimulatorView.delegate = self
+        self.rideRushSimulatorView.showsEditButton = true
         
         self.selectedTrip = Trip.mostRecentTrip()
         
@@ -121,22 +123,33 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
                 if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
                     dateTitle = "in progress"
                 } else if (trip.startDate.isToday()) {
-                    dateTitle = "today"
+                    dateTitle = "today at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else if (trip.startDate.isYesterday()) {
-                    dateTitle = "yesterday"
+                    dateTitle = "yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else if (trip.startDate.isInLastWeek()) {
                     dateTitle = trip.startDate.weekDay()
                 } else {
-                    dateTitle = String(format: "on %@", self.dateFormatter.stringFromDate(trip.startDate))
+                    dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
                 }
             }
             
             self.selectedRideToolBar.hidden = false
             
-            self.titleLabel.text = String(format: "%@ %.1f miles %@", trip.climoticon, trip.lengthMiles, dateTitle)
+            self.rideRushSimulatorView.dateString = dateTitle
+            self.rideRushSimulatorView.body = trip.notificationString()!
+            
+            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
+                    self.rideRushSimulatorView.showControls()
+                }
+                self.rideRushSimulatorView.showsActionButon = true
+                self.rideRushSimulatorView.showsDestructiveActionButon = true
+            } else {
+                self.rideRushSimulatorView.showsActionButon = false
+                self.rideRushSimulatorView.showsDestructiveActionButon = false
+            }
         } else {
             self.selectedRideToolBar.hidden = true
-            
         }
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
@@ -193,6 +206,51 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     // MARK: - UI Actions
     //
     
+    private func transitionToTripView() {
+        CATransaction.begin()
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromLeft
+        self.editModeView.layer.addAnimation(transition, forKey: "transition")
+        self.editModeView.hidden = true
+        self.selectedTripView.hidden = false
+        CATransaction.commit()
+    }
+    
+    @IBAction func bikeButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
+    @IBAction func carButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
+    @IBAction func walkButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
+    @IBAction func runButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
     @IBAction func showRides(sender: AnyObject) {
         let transition = CATransition()
         transition.duration = 0.25
@@ -205,24 +263,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
         
         routesVC.view.layer.addAnimation(transition, forKey: kCATransition)
         self.navigationController?.pushViewController(routesVC, animated: false)
-    }
-    
-    @IBAction func closeRoute(sender: AnyObject) {
-        self.selectedTrip = nil
-    }
-    
-    @IBAction func thumbsUp(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.mapViewController.refreshTrip(self.selectedTrip)
-    }
-    
-    @IBAction func thumbsDown(sender: AnyObject) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.mapViewController.refreshTrip(self.selectedTrip)
     }
     
     @IBAction func newIncident(sender: AnyObject) {
@@ -266,6 +306,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
             } else if (buttonIndex == 3) {
                 self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
             } else if (buttonIndex == 4) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                    self.selectedTrip.sendTripCompletionNotification() {
+
+
+                    }
+                })
+
                 self.mapViewController.refreshGeofences()
             }
         }
@@ -337,6 +384,42 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate 
     
     func refreshSelectrTrip() {
         self.mapViewController.refreshTrip(self.selectedTrip)
+        self.reloadTitleView()
+    }
+    
+    //
+    // MARK: - Push Simulator View Actions
+    //
+    
+    func didTapEditButton(view: PushSimulatorView) {
+        CATransaction.begin()
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            transition.type = kCATransitionReveal
+            transition.subtype = kCATransitionFromRight
+            self.selectedTripView.layer.addAnimation(transition, forKey: "transition")
+            self.editModeView.hidden = false
+            self.selectedTripView.hidden = true
+        CATransaction.commit()
+    }
+    
+    func didTapDestructiveButton(view: PushSimulatorView) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+    }
+    
+    func didTapActionButton(view: PushSimulatorView) {
+        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+    }
+    
+    func didTapClearButton(view: PushSimulatorView) {
+        self.selectedTrip = nil
     }
     
     //
