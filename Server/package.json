@@ -11,16 +11,17 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "express": "4.x",
-    "body-parser":"*",
+    "body-parser": "*",
     "ejs": "~1.0.0",
-    "mongodb":"~2.0.6",
-    "monk":"0.7.x",
-    "forever":"0.10.x",
-    "pg":"*",
-    "pg-native":"*",
-    "memory-cache":"*",
+    "express": "4.x",
+    "forever": "0.10.x",
+    "geojson-tools": "*",
+    "memory-cache": "*",
+    "mongodb": "~2.0.6",
+    "monk": "0.7.x",
+    "pg": "*",
+    "pg-native": "*",
     "simplify-geometry": "*",
-    "geojson-tools": "*"
+    "underscore": "^1.8.3"
   }
 }
