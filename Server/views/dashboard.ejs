@@ -1,18 +1,9 @@
 <head>
   <title>Ride</title>
-	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+  <%- include head.ejs %>
 	<script src="dp.js"></script>
-	<script src="underscore.js"></script>
-	<script src="backbone.js"></script>
 	<link href="dp.css" rel="stylesheet"/>
-	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
-	<link href="leaflet.awesome-markers.css" rel="stylesheet"/>
-	<link href="css/ionicons.min.css" rel="stylesheet"></link>
-	<script src="leaflet.awesome-markers.min.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
 	<script type="text/x-underscore-template" name="incident-popup">
     <%- include popup.underscore-tpl %>
   </script>
@@ -98,7 +89,7 @@
   <script>
   	var incidentLayerGroup = L.layerGroup().addTo(map);
   function drawTripsAndIncidentsOnMap(geojson) {
-    drawIncidentsOnMap(geojson);
+    drawTripsOnMap(geojson);
     var router = window.router = new Router()
     var view = new IncidentsView();
     view.collection = new IncidentCollection(geojson.properties.incidents);
@@ -107,29 +98,6 @@
 
     Backbone.history.start();
   }
-
-  function drawIncidentsOnMap(geojson){
-	  var trips = geojson.features
-		map.removeLayer(incidentLayerGroup);
-		var incidentArray = [];
-
-		for (var i = 0; i < trips.length; i++){
-			trip = trips[i];
-			if (trip.properties.activity_type == 2) {
-			  if (trip.properties.incidents) {
-  			  for (var v = 0; v < trip.properties.incidents.length; v++) {
-  			    var incident = trip.properties.incidents[v];
-  			    var marker = L.marker(incident.pos, {icon: incidentTypeIcon(incident.type)});
-  			    marker.bindPopup("<b>" + incidentTypeString(incident.type) + "</b><br><i>" + incident.creationDate + "</i><br/>" + (incident.body ? incident.body : "") + "<br/><hr/><textarea rows='4' cols='40' placeholder='Enter a comment…'></textarea><a href='/comment/new'>Add</a>").openPopup();
-  			    incidentArray.push(marker);
-  			  }
-		    }
-			}
-		}
-
-		incidentLayerGroup = L.layerGroup(incidentArray).addTo(map);
-	}
-
 
   function incidentTypeString(type) {
       switch(type) {

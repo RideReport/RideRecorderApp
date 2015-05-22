@@ -148,7 +148,9 @@ interpolate: /\{\{(.+?)\}\}/g
 
 
   var IncidentsView = Backbone.View.extend({
-		popup_contents: _.template($('script[name=incident-popup]').html()),
+		initialize: function() {
+			this.popup_contents = _.template($('script[name=incident-popup]').html());
+		},
 
 		popup_context: function(incident) {
 			var ctx = { incident: incident.toJSON() }

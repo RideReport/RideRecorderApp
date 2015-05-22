@@ -1,14 +1,7 @@
 <head>
-  <title>Ride</title> 
-  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-  <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-
-	<script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.js'></script>
-  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.5/mapbox.css' rel='stylesheet' />
-
-	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
+  <title>Ride</title>
+  <%- include head.ejs %>
+	<style type="text/css">
 		body {
     		padding: 0;
 		    margin: 0;
@@ -20,8 +13,8 @@
 				margin-top: 20px;
 		    margin-left: 20px;
 		}
-	</style>	
-	
+	</style>
+
 </head>
 
 <body>
@@ -35,9 +28,9 @@
   	 reuseTiles: true
   	})
   </script>
-  <script src="../map.js"></script>  
+  <script src="../map.js"></script>
 	<script>
-  	function getTrips(e){			
+  	function getTrips(e){
   		bounds = map.getBounds();
       url = "../trips/date/<%=date%>";
   		$.get(url, drawTripsOnMap, "json");

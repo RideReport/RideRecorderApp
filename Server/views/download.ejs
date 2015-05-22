@@ -1,7 +1,7 @@
 <head>
-  <title>Ride</title> 
-	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-	<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+  <title>Ride</title>
+
+  <%- include head.ejs %>
 	<script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -10,7 +10,7 @@
 
     ga('create', 'UA-44840238-4', 'auto');
     ga('send', 'pageview');
-    
+
     function checkiPhone(){
       if ((navigator.platform.indexOf("iPhone") != -1))  {
         document.getElementById("not_phone").style.display = 'none';
@@ -22,8 +22,7 @@
     }
 
   </script>
-	<link href='http://fonts.googleapis.com/css?family=Milonga' rel='stylesheet' type='text/css'>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />	<style type="text/css">
+	<style type="text/css">
 		body {
     		padding: 10;
 		    margin: 10;
@@ -39,8 +38,8 @@
 	    margin-right: 60px;
   	  float: left;
 		}
-	</style>	
-	
+	</style>
+
 </head>
 
 <body onload="checkiPhone()">
@@ -71,6 +70,6 @@
 	    <p><strong>How to install</strong><br/>
     	  Visit this page on your iPhone to install Ride.</p>
 	  </p></span>
-    
+
 </div>
 </body>

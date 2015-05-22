@@ -6,38 +6,38 @@ var geojsonTools = require('geojson-tools');
 
 exports.show = function(req, res) {
   var trips = db.mongo_client.get('trips');
-  
+
   trips.find({"activityType": 2},{w:1},function(error,trips) {
 		if(error){
 			res.status(404).send('Not found');
-			console.error(error);    
+			console.error(error);
 		} else {
 		  var tripsData = [];
       var bikeTripsCount = 0
       var ratedTripsCount = 0
       var totalRatingMagnitude = 0
-      
+
       var today = new Date; // get current date
       var weekAgo = today - 1000 * 60 * 60 * 24 * 14;
       var weekData = {};
-      
+
 		  for(i=0; i<trips.length; i++) {
 		    var trip = trips[i];
-		    
+
 		    if (trip.locations.length == 0 || trip.activityType != 2) {
 		      continue;
 		    }
-		    
+
 		    bikeTripsCount++
-		    
+
   	    if (trip.rating != 0) {
     	   ratedTripsCount++
     	   if (trip.rating == 1) {
-    	    totalRatingMagnitude++ 
+    	    totalRatingMagnitude++
     	   }
     	  }
-  	    
-          
+
+
 		    var creationDate = new Date(trip.creationDate);
 		    if (creationDate > weekAgo) {
 		      var dateThing = ('0' + (creationDate.getMonth()+ 1)).slice(-2) + "/" + ('0' + creationDate.getDate()).slice(-2)
@@ -48,8 +48,8 @@ exports.show = function(req, res) {
 		      }
 		    }
 
-    	}	
-    	
+    	}
+
       return res.render('dashboard', {bikeTripsCount: bikeTripsCount, ratedTripsCount: ratedTripsCount, totalRatingMagnitude: totalRatingMagnitude, weekData: weekData});
 		}
 	});
