@@ -237,7 +237,7 @@ class Trip : NSManagedObject {
                 return false
             }
             
-            if (self.temperature != nil && self.temperature.integerValue < 45) {
+            if (self.temperature != nil && self.temperature.integerValue < 40) {
                 // BRrrrr
                 return true
             }
@@ -249,8 +249,7 @@ class Trip : NSManagedObject {
             }
             
             switch climaconChar {
-            case Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
-            Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
+            case Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
             Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
             Climacon.Umbrella.rawValue:
                 return true
