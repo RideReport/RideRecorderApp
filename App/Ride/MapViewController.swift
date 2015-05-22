@@ -325,7 +325,8 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
                 self.mapView.removeOverlay(overlay)
             }
             
-            if (trip.deleted == true || trip.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+            if (trip.deleted == true || (trip != self.mainViewController.selectedTrip && trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue)) {
+                // only show a non-cycling trip if it is the selected route
                 self.tripPolyLines[trip] = nil
                 return
             }
