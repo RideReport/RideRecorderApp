@@ -6,8 +6,6 @@ var tripCache = require('memory-cache');
 var simplify = require('simplify-geometry');
 
 exports.getAll = function(req, res){
-  var cache = db.mongo_client.get('cache');
-  cache.get({ uuid: 'the_cache'}
   var cachedTrips = tripCache.get("allTrips");
 
   if(cachedTrips){
