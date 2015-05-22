@@ -166,16 +166,16 @@ import Foundation
         contentView.addSubview(slideLabel)
         
         clearButton = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.ExtraLight))
-        let clearButtonRect = CGRectMake(0, 0, 14, 14)
+        let clearButtonRect = CGRectMake(0, 0, 18, 18)
         UIGraphicsBeginImageContextWithOptions(clearButtonRect.size, false, 0.0)
         let circle = UIBezierPath(ovalInRect: clearButtonRect)
         let line1 = UIBezierPath()
-        line1.moveToPoint(CGPointMake(4, 4))
-        line1.addLineToPoint(CGPointMake(10, 10))
+        line1.moveToPoint(CGPointMake(6, 6))
+        line1.addLineToPoint(CGPointMake(12, 12))
         line1.lineWidth = 1
         let line2 = UIBezierPath()
-        line2.moveToPoint(CGPointMake(4, 10))
-        line2.addLineToPoint(CGPointMake(10, 4))
+        line2.moveToPoint(CGPointMake(6, 12))
+        line2.addLineToPoint(CGPointMake(12, 6))
         line2.lineWidth = 1
         
         UIColor.blackColor().setFill()
@@ -345,6 +345,9 @@ import Foundation
     
     func hideControls(animated: Bool = true) {
         self.scrollView.setContentOffset(CGPointZero, animated: animated)
+        if (self.isInAppView) {
+            self.clearButton.fadeIn()
+        }
         self.isShowingControls = false
         delegate?.didCloseControls?(self)
     }
