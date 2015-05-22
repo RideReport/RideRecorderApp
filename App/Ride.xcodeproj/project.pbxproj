@@ -60,7 +60,6 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
-		84DDB1F11B0E6E03006B7196 /* PushSimulatorViewClearButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84DDB1F01B0E6E03006B7196 /* PushSimulatorViewClearButton@2x.png */; };
 		84E3957A1A757DF30015B682 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E395791A757DF30015B682 /* AppDelegate.swift */; };
 		84E3957C1A757DF30015B682 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E3957B1A757DF30015B682 /* ViewController.swift */; };
 		84E3957F1A757DF30015B682 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E3957D1A757DF30015B682 /* Main.storyboard */; };
@@ -221,7 +220,6 @@
 		84D1557919D2743900316995 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		84DDB1EC1B0E66FF006B7196 /* Ride 23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 23.xcdatamodel"; sourceTree = "<group>"; };
-		84DDB1F01B0E6E03006B7196 /* PushSimulatorViewClearButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "PushSimulatorViewClearButton@2x.png"; sourceTree = "<group>"; };
 		84E395751A757DF30015B682 /* RouteMachineTestTool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RouteMachineTestTool.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84E395781A757DF30015B682 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84E395791A757DF30015B682 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -383,7 +381,6 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				84DDB1F01B0E6E03006B7196 /* PushSimulatorViewClearButton@2x.png */,
 				84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */,
 				84F8E6291AF953CD00270C76 /* markers-soft.png */,
 				84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */,
@@ -667,7 +664,6 @@
 			files = (
 				8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */,
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
-				84DDB1F11B0E6E03006B7196 /* PushSimulatorViewClearButton@2x.png in Resources */,
 				8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
