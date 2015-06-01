@@ -31,7 +31,7 @@ class IncidentEditorViewController: UIViewController  {
     
     func refreshUI() {
         self.bodyTextView.text = self.incident.body
-        self.navigationController?.title = self.incident.title
+        self.title = self.incident.title
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -39,6 +39,20 @@ class IncidentEditorViewController: UIViewController  {
         
         NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.incident.trip!, syncInBackground: false)
         
-        self.navigationController?.dismissViewControllerAnimated(true, completion: {})
+        self.navigationController?.popToRootViewControllerAnimated(true)
+    }
+    
+    @IBAction func deleteIncident(sender: AnyObject) {
+        UIActionSheet.showInView(self.view, withTitle: "This incident will be permanently deleted", cancelButtonTitle: "Cancel", destructiveButtonTitle: "Delete", otherButtonTitles: []) { (sheet, tappedIndex) -> Void in
+            if (tappedIndex == 0) {
+                self.incident.managedObjectContext?.deleteObject(self.incident)
+                if (self.incident.trip != nil) {
+                    NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.incident.trip!)
+                    self.mainViewController.refreshSelectrTrip()
+                }
+                
+                self.navigationController?.popToRootViewControllerAnimated(true)
+            }
+        }
     }
  }
