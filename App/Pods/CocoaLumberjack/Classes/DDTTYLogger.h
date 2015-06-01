@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2014, Deusty, LLC
+// Copyright (c) 2010-2015, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -12,10 +12,6 @@
 // * Neither the name of Deusty nor the names of its contributors may be used
 //   to endorse or promote products derived from this software without specific
 //   prior written permission of Deusty, LLC.
-
-#import "DDLog.h"
-
-#define LOG_CONTEXT_ALL INT_MAX
 
 /**
  * This class provides a logger for Terminal output or Xcode console output,
@@ -31,6 +27,11 @@
  * However, if you instead choose to use file logging (for faster performance),
  * you may choose to use only a file logger and a tty logger.
  **/
+
+// Disable legacy macros
+#ifndef DD_LEGACY_MACROS
+    #define DD_LEGACY_MACROS 0
+#endif
 
 #import "DDLog.h"
 
@@ -95,22 +96,22 @@
  * custom formatters. Default value is YES.
  **/
 
-@property (readwrite, assign) BOOL automaticallyAppendNewlineForCustomFormatters;
+@property (nonatomic, readwrite, assign) BOOL automaticallyAppendNewlineForCustomFormatters;
 
 /**
  * The default color set (foregroundColor, backgroundColor) is:
  *
- * - LOG_FLAG_ERROR = (red, nil)
- * - LOG_FLAG_WARN  = (orange, nil)
+ * - DDLogFlagError   = (red, nil)
+ * - DDLogFlagWarning = (orange, nil)
  *
  * You can customize the colors however you see fit.
  * Please note that you are passing a flag, NOT a level.
  *
- * GOOD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:LOG_FLAG_INFO];  // <- Good :)
- *  BAD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:LOG_LEVEL_INFO]; // <- BAD! :(
+ * GOOD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:DDLogFlagInfo];  // <- Good :)
+ *  BAD : [ttyLogger setForegroundColor:pink backgroundColor:nil forFlag:DDLogLevelInfo]; // <- BAD! :(
  *
- * LOG_FLAG_INFO  = 0...00100
- * LOG_LEVEL_INFO = 0...00111 <- Would match LOG_FLAG_INFO and LOG_FLAG_WARN and LOG_FLAG_ERROR
+ * DDLogFlagInfo  = 0...00100
+ * DDLogLevelInfo = 0...00111 <- Would match DDLogFlagInfo and DDLogFlagWarning and DDLogFlagError
  *
  * If you run the application within Xcode, then the XcodeColors plugin is required.
  *
@@ -119,7 +120,7 @@
  *
  * This method invokes setForegroundColor:backgroundColor:forFlag:context: and applies it to `LOG_CONTEXT_ALL`.
  **/
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(int)mask;
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask;
 
 /**
  * Just like setForegroundColor:backgroundColor:flag, but allows you to specify a particular logging context.
@@ -132,7 +133,7 @@
  * Logging context's are explained in further detail here:
  * Documentation/CustomContext.md
  **/
-- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(int)mask context:(int)ctxt;
+- (void)setForegroundColor:(DDColor *)txtColor backgroundColor:(DDColor *)bgColor forFlag:(DDLogFlag)mask context:(NSInteger)ctxt;
 
 /**
  * Similar to the methods above, but allows you to map DDLogMessage->tag to a particular color profile.
@@ -162,8 +163,8 @@
 /**
  * Clearing color profiles.
  **/
-- (void)clearColorsForFlag:(int)mask;
-- (void)clearColorsForFlag:(int)mask context:(int)context;
+- (void)clearColorsForFlag:(DDLogFlag)mask;
+- (void)clearColorsForFlag:(DDLogFlag)mask context:(NSInteger)context;
 - (void)clearColorsForTag:(id <NSCopying>)tag;
 - (void)clearColorsForAllFlags;
 - (void)clearColorsForAllTags;

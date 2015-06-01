@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2014, Deusty, LLC
+// Copyright (c) 2010-2015, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -14,6 +14,12 @@
 //   prior written permission of Deusty, LLC.
 
 #import <Foundation/Foundation.h>
+
+// Disable legacy macros
+#ifndef DD_LEGACY_MACROS
+    #define DD_LEGACY_MACROS 0
+#endif
+
 #import "DDLog.h"
 
 /**
@@ -37,14 +43,14 @@
  **/
 @interface DDContextWhitelistFilterLogFormatter : NSObject <DDLogFormatter>
 
-- (id)init;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
-- (void)addToWhitelist:(int)loggingContext;
-- (void)removeFromWhitelist:(int)loggingContext;
+- (void)addToWhitelist:(NSUInteger)loggingContext;
+- (void)removeFromWhitelist:(NSUInteger)loggingContext;
 
-- (NSArray *)whitelist;
+@property (readonly, copy) NSArray *whitelist;
 
-- (BOOL)isOnWhitelist:(int)loggingContext;
+- (BOOL)isOnWhitelist:(NSUInteger)loggingContext;
 
 @end
 
@@ -57,13 +63,13 @@
  **/
 @interface DDContextBlacklistFilterLogFormatter : NSObject <DDLogFormatter>
 
-- (id)init;
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
 
-- (void)addToBlacklist:(int)loggingContext;
-- (void)removeFromBlacklist:(int)loggingContext;
+- (void)addToBlacklist:(NSUInteger)loggingContext;
+- (void)removeFromBlacklist:(NSUInteger)loggingContext;
 
-- (NSArray *)blacklist;
+@property (readonly, copy) NSArray *blacklist;
 
-- (BOOL)isOnBlacklist:(int)loggingContext;
+- (BOOL)isOnBlacklist:(NSUInteger)loggingContext;
 
 @end

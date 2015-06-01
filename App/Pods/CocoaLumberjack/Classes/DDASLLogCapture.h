@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2014, Deusty, LLC
+// Copyright (c) 2010-2015, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -25,8 +25,8 @@
 + (void)start;
 + (void)stop;
 
-// Default log level: LOG_LEVEL_VERBOSE (i.e. capture all ASL messages).
-+ (DDLogLevel)captureLogLevel;
-+ (void)setCaptureLogLevel:(DDLogLevel)LOG_LEVEL_XXX;
+// Default log level: DDLogLevelVerbose (i.e. capture all ASL messages).
++ (DDLogLevel)captureLevel;
++ (void)setCaptureLevel:(DDLogLevel)level;
 
 @end
