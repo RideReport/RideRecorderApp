@@ -138,6 +138,22 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class func tripWithUUID(uuid: String) -> Trip! {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "uuid == %@", uuid)
+        fetchedRequest.fetchLimit = 1
+        
+        var error : NSError?
+        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        
+        if (results!.count == 0) {
+            return nil
+        }
+        
+        return (results!.first as! Trip)
+    }
+    
     class func mostRecentTrip() -> Trip! {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -551,6 +567,7 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
+            self.currentStateNotification?.userInfo = ["RideNotificationTripUUID" : self.uuid]
         }
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
 

@@ -125,7 +125,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-        let trip = Trip.mostRecentTrip()
+        var trip : Trip! = nil
+        if (notification.userInfo != nil && notification.userInfo!["RideNotificationTripUUID"] != nil) {
+            trip = Trip.tripWithUUID(notification.userInfo!["RideNotificationTripUUID"] as! String)
+        }
+        
+        if (trip == nil) {
+            trip =  Trip.mostRecentTrip()
+        }
         
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
