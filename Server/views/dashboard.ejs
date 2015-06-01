@@ -87,39 +87,6 @@
   </script>
   <script src="map.js"></script>
   <script>
-  	var incidentLayerGroup = L.layerGroup().addTo(map);
-  function drawTripsAndIncidentsOnMap(geojson) {
-    drawTripsOnMap(geojson);
-    var router = window.router = new Router()
-    var view = new IncidentsView();
-    view.collection = new IncidentCollection(geojson.properties.incidents);
-    view.render();
-    router.incidentsView = view;
-
-    Backbone.history.start();
-  }
-
-  function incidentTypeString(type) {
-      switch(type) {
-          case 0:
-              return "Other"
-          case 1:
-              return "Road Hazard"
-          case 2:
-              return "Unsafe Intersection"
-          case 3:
-              return "Bike Lane Ends"
-          case 4:
-              return "Unsafe Speeds"
-          case 5:
-              return "Aggressive Motorist"
-          case 6:
-              return "Insufficient Parking"
-          case 7:
-              return "Suspected Stolen Bikes"
-          }
-    }
-
   	function getTrips(){
   		var url = "../trips";
   		$.get(url, drawTripsAndIncidentsOnMap, "json");

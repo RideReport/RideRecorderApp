@@ -3,6 +3,7 @@ interpolate: /\{\{(.+?)\}\}/g
 };
 
 	var tripLayerGroup = L.layerGroup().addTo(map);
+	var incidentLayerGroup = L.layerGroup().addTo(map);
 
   L.mapbox.accessToken = 'pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA';
   // Replace 'examples.map-i87786ca' with your map id.
@@ -10,6 +11,17 @@ interpolate: /\{\{(.+?)\}\}/g
       attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>'
   });
   map.addLayer(mapboxTiles)
+
+function drawTripsAndIncidentsOnMap(geojson) {
+	drawTripsOnMap(geojson);
+	var router = window.router = new Router()
+	var view = new IncidentsView();
+	view.collection = new IncidentCollection(geojson.properties.incidents);
+	view.render();
+	router.incidentsView = view;
+
+	Backbone.history.start();
+}
 
 	function drawTripsOnMap(geojson){
 	  var trips = geojson.features

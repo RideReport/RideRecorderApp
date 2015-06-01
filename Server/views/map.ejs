@@ -2,6 +2,10 @@
   <title>Ride</title>
 
   <%- include head.ejs %>
+  <script type="text/x-underscore-template" name="incident-popup">
+    <%- include popup.underscore-tpl %>
+  </script>
+  
 	<style type="text/css">
 		body {
     		padding: 0;
@@ -34,7 +38,7 @@
   	function getTrips(e){
   		bounds = map.getBounds();
   		url = "trips";
-  		$.get(url, drawTripsOnMap, "json");
+  		$.get(url, drawTripsAndIncidentsOnMap, "json");
   	}
 		map.whenReady(getTrips)
   </script>
