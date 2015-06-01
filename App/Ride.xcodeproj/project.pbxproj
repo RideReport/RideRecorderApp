@@ -25,7 +25,6 @@
 		8453309E1A3FAED800452EEB /* PrivacyCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453309D1A3FAED800452EEB /* PrivacyCircle.swift */; };
 		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
 		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
-		8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */; };
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
 		8453BD661A425F9200FE2645 /* locationArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 8453BD641A425F9200FE2645 /* locationArrow.png */; };
@@ -165,7 +164,6 @@
 		8453309D1A3FAED800452EEB /* PrivacyCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = PrivacyCircle.swift; path = Ride/PrivacyCircle.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteDetailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSDate+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBAnimatedGradientMaskButton.h; sourceTree = "<group>"; };
 		8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBAnimatedGradientMaskButton.m; sourceTree = "<group>"; };
@@ -335,7 +333,6 @@
 				847ED0901A40DA0D00CAA396 /* MainViewController.swift */,
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
-				8453BD4F1A420D9E00FE2645 /* RouteDetailViewController.swift */,
 				84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */,
 				84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */,
 				84EA5BE01A6DE84900C71F53 /* GettingStartedViewController.swift */,
@@ -770,7 +767,6 @@
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
-				8453BD501A420D9E00FE2645 /* RouteDetailViewController.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* GettingStartedViewController.swift in Sources */,

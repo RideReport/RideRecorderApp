@@ -130,16 +130,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.fetchedResultsController?.delegate = nil
         self.fetchedResultsController = nil
     }
-    
-    func setSelectedTrip(trip : Trip!) {
-        if (trip != nil) {
-            if (self.navigationController?.topViewController != self) {
-                (self.navigationController?.topViewController as! RouteDetailViewController).refreshTripUI()
-            } else {
-                self.performSegueWithIdentifier("routeSelectedSegue", sender: self)
-            }
-        }
-    }
 
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
         self.tableView.beginUpdates()
