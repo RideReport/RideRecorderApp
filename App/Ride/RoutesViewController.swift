@@ -261,6 +261,61 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.mainViewController.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
         self.mainViewController.navigationController?.popToRootViewControllerAnimated(false)
     }
+
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "🐞 Tools") { (action, indexPath) -> Void in
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            self.tableView.setEditing(false, animated: true)
+
+            var smoothButtonTitle = ""
+            if (trip.hasSmoothed) {
+                smoothButtonTitle = "Unsmooth"
+            } else {
+                smoothButtonTitle = "Smooth"
+            }
+            
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Close Trip", "Sync to Server"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+                self.tappedButtonIndex(tappedIndex, trip: trip)
+            })
+        }
+        
+        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            trip.managedObjectContext?.deleteObject(trip)
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+        }
+        
+        return [deleteAction, toolsAction]
+    }
+    
+    func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
+        if (buttonIndex == 0) {
+            trip.clasifyActivityType({})
+        } else if (buttonIndex == 1) {
+            if (trip.hasSmoothed) {
+                trip.undoSmoothWithCompletionHandler({})
+            } else {
+                trip.smoothIfNeeded({})
+            }
+        } else if (buttonIndex == 2) {
+            let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            })
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                trip.sendTripCompletionNotification() {
+                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                        UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                    }
+                }
+            })
+        } else if (buttonIndex == 3) {
+            trip.close() {
+                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            }
+        } else if (buttonIndex == 4) {
+            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+        }
+    }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
