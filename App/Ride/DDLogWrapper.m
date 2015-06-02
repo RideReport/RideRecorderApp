@@ -11,9 +11,9 @@
 
 // Definition of the current log level
 #ifdef DEBUG
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+static const int ddLogLevel = LOG_LEVEL_DEF;
 #else
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+static const int ddLogLevel = LOG_LEVEL_DEF;
 #endif
 
 
