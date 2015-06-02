@@ -328,7 +328,7 @@ import Foundation
         }
         
         var dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - (self.isInAppView ? 20 : 0), CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - (self.isInAppView ? 20 : 0), self.bounds.height - insetY - appNameSize.height), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
         dateLabel.frame = CGRectMake(appNameSize.width + insetX + (self.isInAppView ? 0 : 6), insetY, dateLabelSize.width, appNameSize.height)
