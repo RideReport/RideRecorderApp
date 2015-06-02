@@ -355,7 +355,13 @@ import Foundation
 
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-        if scrollView.contentOffset.x > (self.buttonWidth*2) {
+        var offsetXThreshold = self.totalButtonWidth
+        if (offsetXThreshold > self.buttonWidth*2) {
+            // if there are more than two buttons, lower the threshold to make it easier to slide over to the buttons
+            offsetXThreshold = self.buttonWidth*2
+        }
+        
+        if scrollView.contentOffset.x > offsetXThreshold {
             targetContentOffset.memory.x = self.totalButtonWidth
         } else {
             targetContentOffset.memory = CGPointZero;
