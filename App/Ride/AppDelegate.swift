@@ -138,16 +138,52 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
             
             NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            self.postTripRatedThanksNotification(true)
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             
             NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            self.postTripRatedThanksNotification(false)
         } else if (identifier == "FLAG_IDENTIFIER") {
             let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
             CoreDataManager.sharedManager.saveContext()
         } else if (identifier == "RESUME_IDENTIFIER") {
             RouteManager.sharedManager.resumeTracking()
         }
+    }
+    
+    func postTripRatedThanksNotification(wasGoodTrip: Bool) {
+        var emojicuteness : [Character] = []
+        var thanksPhrases : [String] = []
+        
+        if (wasGoodTrip) {
+            emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆")
+            thanksPhrases = ["Thanks!", "Sweet!", "YES!", "Dope.", "kewlll", "w00ts =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
+        } else {
+            emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭")
+            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/"]
+        }
+        
+        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(count(thanksPhrases)) - 1))]
+        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness)) - 1))])
+        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness)) - 1))])
+        
+        let notif = UILocalNotification()
+        notif.alertBody = emoji1 + thanksPhrase + emoji2
+        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            
+        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            UIApplication.sharedApplication().cancelLocalNotification(notif)
+        })
+
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            UIApplication.sharedApplication().cancelLocalNotification(notif)
+            
+            if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+            }
+        })
     }
 
     func applicationWillResignActive(application: UIApplication) {
