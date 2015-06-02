@@ -306,13 +306,11 @@ import Foundation
         var insetY : CGFloat = 8
         
         var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
-        var dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        var bodySize = bodyLabel.text!.sizeWithAttributes([NSFontAttributeName: bodyLabel.font])
         
         if (self.isInAppView) {
             insetX = 8
             insetY = 2
-            appNameSize = CGSizeMake(0, appNameSize.height - 5)
+            appNameSize = CGSizeMake(0, appNameSize.height + 2)
             
             self.appNameLabel.hidden = true
             self.appIconView.hidden = true
@@ -329,9 +327,12 @@ import Foundation
             self.clearButton.hidden = true
         }
         
+        var dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
+        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - (self.isInAppView ? 20 : 0), CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
         dateLabel.frame = CGRectMake(appNameSize.width + insetX + (self.isInAppView ? 0 : 6), insetY, dateLabelSize.width, appNameSize.height)
-        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, self.bounds.width - (1.5*insetX), bodySize.height * 2)
+        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, bodySize.width, bodySize.height)
         slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
     }
     

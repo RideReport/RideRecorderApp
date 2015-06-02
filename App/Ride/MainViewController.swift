@@ -121,11 +121,11 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             var dateTitle = ""
             if (trip.startDate != nil) {
                 if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
-                    dateTitle = "in progress"
+                    dateTitle = "In progress"
                 } else if (trip.startDate.isToday()) {
-                    dateTitle = "today at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else if (trip.startDate.isYesterday()) {
-                    dateTitle = "yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else if (trip.startDate.isInLastWeek()) {
                     dateTitle = trip.startDate.weekDay()
                 } else {

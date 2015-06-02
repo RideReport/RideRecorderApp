@@ -137,7 +137,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D0Q-8X-LJn">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                 <state key="normal" title="Delete Incident">
-                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -1069,6 +1069,9 @@
                                         <state key="normal" title="🚗">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="82" y="-5" width="48" height="70"/>
+                                        </variation>
                                         <connections>
                                             <action selector="carButton:" destination="A5D-RC-UCB" eventType="touchUpInside" id="oXk-fq-MlS"/>
                                         </connections>
@@ -1079,6 +1082,9 @@
                                         <state key="normal" title="🚶">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="211" y="-5" width="48" height="70"/>
+                                        </variation>
                                         <connections>
                                             <action selector="walkButton:" destination="A5D-RC-UCB" eventType="touchUpInside" id="ND0-Ff-hEB"/>
                                         </connections>
@@ -1089,6 +1095,9 @@
                                         <state key="normal" title="🏃">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="341" y="-5" width="48" height="70"/>
+                                        </variation>
                                         <connections>
                                             <action selector="runButton:" destination="A5D-RC-UCB" eventType="touchUpInside" id="blQ-sf-dmj"/>
                                         </connections>
@@ -1099,6 +1108,9 @@
                                         <state key="normal" title="🚲">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="470" y="-7" width="48" height="70"/>
+                                        </variation>
                                         <connections>
                                             <action selector="bikeButton:" destination="A5D-RC-UCB" eventType="touchUpInside" id="y2H-NW-Kqo"/>
                                         </connections>
@@ -1114,7 +1126,8 @@
                                                 <exclude reference="0hL-Dd-INi"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular">
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="130" y="15" width="81" height="30"/>
                                             <mask key="constraints">
                                                 <include reference="0hL-Dd-INi"/>
                                             </mask>
@@ -1133,7 +1146,8 @@
                                                 <exclude reference="h50-3G-5fR"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular">
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="15" width="82" height="30"/>
                                             <mask key="constraints">
                                                 <include reference="WRN-3Y-wui"/>
                                                 <exclude reference="h50-3G-5fR"/>
@@ -1151,7 +1165,8 @@
                                                 <exclude reference="9sq-gw-2EM"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular">
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="389" y="15" width="81" height="30"/>
                                             <mask key="constraints">
                                                 <include reference="9sq-gw-2EM"/>
                                             </mask>
@@ -1168,7 +1183,8 @@
                                                 <exclude reference="e6x-if-c3B"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular">
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="518" y="15" width="82" height="30"/>
                                             <mask key="constraints">
                                                 <include reference="e6x-if-c3B"/>
                                             </mask>
@@ -1185,7 +1201,8 @@
                                                 <exclude reference="OOn-bg-A52"/>
                                             </mask>
                                         </variation>
-                                        <variation key="heightClass=regular">
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="259" y="15" width="82" height="30"/>
                                             <mask key="constraints">
                                                 <include reference="OOn-bg-A52"/>
                                             </mask>
@@ -1287,8 +1304,8 @@
                                         <include reference="VUJ-MG-PcC"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <include reference="T9X-Nq-JKK"/>
-                                        <include reference="oUm-Ji-gCU"/>
+                                        <exclude reference="T9X-Nq-JKK"/>
+                                        <exclude reference="oUm-Ji-gCU"/>
                                         <include reference="Gnm-nf-nfY"/>
                                         <include reference="MTS-Ub-HmG"/>
                                         <include reference="iro-ro-J6K"/>
@@ -1330,7 +1347,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="5oV-BG-vTc"/>
-                                            <constraint firstAttribute="height" constant="60" id="Vgc-Y6-7N9"/>
+                                            <constraint firstAttribute="height" constant="64" id="Vgc-Y6-7N9"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
@@ -1348,7 +1365,7 @@
                                         <variation key="heightClass=regular">
                                             <mask key="constraints">
                                                 <exclude reference="5oV-BG-vTc"/>
-                                                <include reference="Vgc-Y6-7N9"/>
+                                                <exclude reference="Vgc-Y6-7N9"/>
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact" ambiguous="YES">
@@ -1363,9 +1380,10 @@
                                 <constraints>
                                     <constraint firstItem="XUD-tz-9dU" firstAttribute="top" secondItem="8mW-Sz-0y6" secondAttribute="top" id="3Dc-F7-el2"/>
                                     <constraint firstItem="XUD-tz-9dU" firstAttribute="leading" secondItem="8mW-Sz-0y6" secondAttribute="leading" id="HhQ-yq-U19"/>
+                                    <constraint firstItem="XUD-tz-9dU" firstAttribute="height" secondItem="8mW-Sz-0y6" secondAttribute="height" id="N2o-La-20X"/>
                                     <constraint firstAttribute="centerX" secondItem="XUD-tz-9dU" secondAttribute="centerX" id="U45-yT-mFB"/>
                                     <constraint firstItem="XUD-tz-9dU" firstAttribute="width" secondItem="8mW-Sz-0y6" secondAttribute="width" id="fEP-S6-dT6"/>
-                                    <constraint firstAttribute="height" constant="60" id="ip1-Pa-9MW"/>
+                                    <constraint firstAttribute="height" constant="72" id="ip1-Pa-9MW"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
@@ -1375,6 +1393,7 @@
                                         <exclude reference="ip1-Pa-9MW"/>
                                         <exclude reference="3Dc-F7-el2"/>
                                         <exclude reference="HhQ-yq-U19"/>
+                                        <exclude reference="N2o-La-20X"/>
                                         <exclude reference="U45-yT-mFB"/>
                                         <exclude reference="fEP-S6-dT6"/>
                                     </mask>
@@ -1387,6 +1406,7 @@
                                         <include reference="ip1-Pa-9MW"/>
                                         <include reference="3Dc-F7-el2"/>
                                         <include reference="HhQ-yq-U19"/>
+                                        <include reference="N2o-La-20X"/>
                                         <include reference="U45-yT-mFB"/>
                                         <include reference="fEP-S6-dT6"/>
                                     </mask>
@@ -1403,6 +1423,7 @@
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" constant="10" id="FlL-mS-kK7"/>
                             <constraint firstAttribute="height" secondItem="GsO-Yw-fHd" secondAttribute="height" id="HhZ-io-xwE"/>
                             <constraint firstAttribute="centerX" secondItem="Xsz-Tc-4Se" secondAttribute="centerX" id="I5j-v3-CWf"/>
+                            <constraint firstItem="Xsz-Tc-4Se" firstAttribute="height" secondItem="8mW-Sz-0y6" secondAttribute="height" id="I86-gy-d6r"/>
                             <constraint firstItem="Xsz-Tc-4Se" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="TTU-uW-sir"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Tcc-m2-58E"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="YcJ-wS-bsW"/>
@@ -1422,16 +1443,17 @@
                                 <exclude reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <exclude reference="plA-xe-GLn"/>
+                                <exclude reference="hUB-h0-YQ1"/>
+                                <exclude reference="kO0-6D-5PY"/>
+                                <exclude reference="uej-BC-eBx"/>
                                 <exclude reference="A1S-SV-ycq"/>
                                 <exclude reference="BCp-4R-ff0"/>
                                 <exclude reference="swd-uv-MjY"/>
                                 <exclude reference="I5j-v3-CWf"/>
+                                <exclude reference="I86-gy-d6r"/>
                                 <exclude reference="TTU-uW-sir"/>
-                                <exclude reference="hUB-h0-YQ1"/>
-                                <exclude reference="kO0-6D-5PY"/>
-                                <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <exclude reference="plA-xe-GLn"/>
                                 <exclude reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
@@ -1442,17 +1464,18 @@
                                 <include reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <include reference="plA-xe-GLn"/>
-                                <include reference="A1S-SV-ycq"/>
-                                <include reference="BCp-4R-ff0"/>
-                                <include reference="swd-uv-MjY"/>
-                                <include reference="I5j-v3-CWf"/>
-                                <include reference="TTU-uW-sir"/>
                                 <exclude reference="6AQ-hd-T7z"/>
                                 <include reference="hUB-h0-YQ1"/>
                                 <include reference="kO0-6D-5PY"/>
                                 <exclude reference="uej-BC-eBx"/>
+                                <include reference="A1S-SV-ycq"/>
+                                <include reference="BCp-4R-ff0"/>
+                                <include reference="swd-uv-MjY"/>
+                                <include reference="I5j-v3-CWf"/>
+                                <include reference="I86-gy-d6r"/>
+                                <include reference="TTU-uW-sir"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <include reference="plA-xe-GLn"/>
                                 <include reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
