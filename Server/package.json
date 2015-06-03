@@ -19,6 +19,7 @@
     "memory-cache": "*",
     "mongodb": "~2.0.6",
     "monk": "0.7.x",
+    "node-cache": "^3.0.0",
     "pg": "*",
     "pg-native": "*",
     "simplify-geometry": "*",
