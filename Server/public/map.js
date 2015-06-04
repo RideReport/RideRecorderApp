@@ -12,8 +12,7 @@ interpolate: /\{\{(.+?)\}\}/g
   });
   map.addLayer(mapboxTiles)
 
-function drawTripsAndIncidentsOnMap(geojson) {
-	drawTripsOnMap(geojson);
+function initStuff(geojson) {
 	var router = window.router = new Router()
 	var view = new IncidentsView();
 	view.collection = new IncidentCollection(geojson.properties.incidents);
@@ -21,9 +20,57 @@ function drawTripsAndIncidentsOnMap(geojson) {
 	router.incidentsView = view;
 
 	Backbone.history.start();
+
+  initCounts();
 }
 
+var initStuffOnce = _.once(initStuff);
+
+function drawTripsAndIncidentsOnMap(geojson) {
+	drawTripsOnMap(geojson);
+  initStuffOnce(geojson);
+}
+
+function initCounts() {
+  $.ajax('/count-daily.json').then(function(data, textStatus, jqxhr) {
+    var maxCount = _.max(_.pluck(_.pluck(data.features, 'properties'), 'count'));
+    var maxRadius = 40.0;
+    window.counterLayer = L.geoJson(data, {
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, {
+          stroke: false,
+          className: 'counter-circle',
+          radius: (1.0 * feature.properties.count / maxCount) * maxRadius
+        });
+      }
+    }).addTo(map);
+  });
+}
+
+$(function() {
+  var RATING_BAD = 2;
+  var RATING_GOOD = 1;
+  function drawFilteredTripsOnMap(conditions) {
+    var geojson = { type: 'FeatureCollection', properties: { incidents: [] } };
+    geojson.features = _.filter(window.all_trips.features, function(feature) {
+      return _.isMatch(feature.properties, conditions);
+    });
+    drawTripsOnMap(geojson);
+  }
+  $('.show-negative').on('click', function(ev) {
+    drawFilteredTripsOnMap({ rating: RATING_BAD});
+  });
+  $('.show-positive').on('click', function(ev) {
+    drawFilteredTripsOnMap({ rating: RATING_GOOD});
+  });
+  $('.show-all').on('click', function(ev) {
+    drawFilteredTripsOnMap({});
+  });
+});
+
+
 	function drawTripsOnMap(geojson){
+    window.all_trips = window.all_trips || geojson;
 	  var trips = geojson.features
 		map.removeLayer(tripLayerGroup);
 		var polylineArray = []
