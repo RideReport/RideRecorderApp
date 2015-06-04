@@ -43,7 +43,7 @@ function initCounts() {
           radius: (1.0 * feature.properties.count / maxCount) * maxRadius
         });
       }
-    }).addTo(map);
+    });
   });
 }
 
@@ -65,6 +65,10 @@ $(function() {
   });
   $('.show-all').on('click', function(ev) {
     drawFilteredTripsOnMap({});
+  });
+
+  $('.show-counters').on('click', function(ev) {
+    window.counterLayer.addTo(map);
   });
 });
 
