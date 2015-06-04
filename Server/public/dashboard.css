@@ -1,0 +1,12 @@
+.counter-circle {
+  fill: lightblue;
+  fill-opacity: 0.2;
+  -webkit-transition: fill-opacity 1s;
+  transition: fill-opacity 1s;
+}
+
+.counter-circle:hover {
+  fill-opacity: 1;
+  -webkit-transition: fill-opacity 1s;
+  transition: fill-opacity 1s;
+}
