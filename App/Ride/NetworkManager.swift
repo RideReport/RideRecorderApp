@@ -57,7 +57,7 @@ class NetworkManager {
     }
     
     init () {
-        self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
         configuration.timeoutIntervalForRequest = 60
         self.manager = Alamofire.Manager(configuration: configuration)
