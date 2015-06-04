@@ -3,6 +3,7 @@
   <%- include head.ejs %>
 	<script src="dp.js"></script>
 	<link href="dp.css" rel="stylesheet"/>
+  <link href="/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
 
 	<script type="text/x-underscore-template" name="incident-popup">
     <%- include popup.underscore-tpl %>
@@ -72,6 +73,7 @@
 
     .x.axis path {  display: none; }
 	</style>
+  <link href="/dashboard.css" rel="stylesheet">
 
 </head>
 
@@ -110,6 +112,11 @@
     </tr>
   </table>
   <body>
+  <div id='filters'>
+    <button class="show-negative"><i class="fa fa-thumbs-down"></i></button>
+    <button class="show-positive"><i class="fa fa-thumbs-up"></i></button>
+    <button class="show-all"><i class="fa fa-thumbs-up"></i> &amp; <i class="fa fa-thumbs-down"></i></button>
+  </div>
   <div id='dashboard'>
   </div>
 </div>
