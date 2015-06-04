@@ -140,7 +140,11 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
-                    self.rideRushSimulatorView.showControls()
+                    self.rideRushSimulatorView.delay(0.1, completionHandler: {
+                        self.rideRushSimulatorView.showControls()
+                    })
+                } else {
+                    self.rideRushSimulatorView.hideControls(animated: false)
                 }
                 self.rideRushSimulatorView.showsActionButon = true
                 self.rideRushSimulatorView.showsDestructiveActionButon = true
