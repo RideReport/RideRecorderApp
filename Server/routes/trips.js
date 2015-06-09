@@ -119,6 +119,7 @@ exports.save = function(req, res){
     })
   }
   trips.update({uuid:req.body.uuid}, {
+      original: req.body,
       activityType : req.body.activityType,
       creationDate : req.body.creationDate,
       rating : req.body.rating,
