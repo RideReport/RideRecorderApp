@@ -573,6 +573,7 @@
 		84D1554719D2733500316995 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {

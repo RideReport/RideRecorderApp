@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "8695F9610F28C2C5DE5773E7F33F1D6934DB725E",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "67620B5EFA902936DF04070AF595B76AB0333747" : 0,
+    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : 0,
+    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "00B5D283-9630-4CEF-89E2-AE6D716B7F77",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "67620B5EFA902936DF04070AF595B76AB0333747" : "RideApp\/Alamofire",
+    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : "Ride\/App\/PathMenu",
+    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Ride",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "App\/Ride.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:pixyzehn\/PathMenu.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Alamofire\/Alamofire.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "67620B5EFA902936DF04070AF595B76AB0333747"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:quicklywilliam\/Ride.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8695F9610F28C2C5DE5773E7F33F1D6934DB725E"
+    }
+  ]
+}
