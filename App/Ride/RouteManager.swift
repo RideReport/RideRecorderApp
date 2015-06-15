@@ -144,10 +144,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.currentTrip?.sendTripStartedNotification(fromLocation)
         
-        if (!self.locationManagerIsUpdating) {
-            self.locationManagerIsUpdating = true
-            self.locationManager.startUpdatingLocation()
-        }
+        self.startLocationTrackingIfNeeded()
         
         if (CLLocationManager.deferredLocationUpdatesAvailable()) {
             DDLogWrapper.logInfo("Deferring updates!")
@@ -286,10 +283,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        if (!self.locationManagerIsUpdating) {
-            self.locationManagerIsUpdating = true
-            self.locationManager.startUpdatingLocation()
-        }
+        self.startLocationTrackingIfNeeded()
         
         #if DEBUG2
             let notif = UILocalNotification()
@@ -549,6 +543,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // if we are not already getting location updates, get a single update for our geofence.
             self.isGettingInitialLocationForGeofence = true
             self.startMotionMonitoring()
+        }
+    }
+    
+    private func startLocationTrackingIfNeeded() {
+        if (!self.locationManagerIsUpdating) {
+            self.locationManagerIsUpdating = true
+            self.locationManager.startUpdatingLocation()
+            if (self.locationManager.respondsToSelector("allowsBackgroundLocationUpdates")) {
+                self.locationManager.allowsBackgroundLocationUpdates = true
+            }
         }
     }
 
