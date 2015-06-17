@@ -10,6 +10,7 @@ var db = require('./db.js');
 
 var app = express();
 
+app.use(express.compress());
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({
     extended: true
