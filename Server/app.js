@@ -1,5 +1,6 @@
 // set variables for environment
 var express = require('express');
+var compression = require('compression');
 var bodyParser = require('body-parser');
 var config = require('./config/config.js');
 var path = require('path');
@@ -10,7 +11,7 @@ var db = require('./db.js');
 
 var app = express();
 
-app.use(express.compress());
+app.use(compression());
 app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({
     extended: true
