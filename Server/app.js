@@ -39,7 +39,7 @@ app.get('/date/:date', function(req, res) {
   res.render('date');
 });
 
-app.get('/dashboard', dashboard.show);
+//app.get('/dashboard', dashboard.show);
 app.get('/trips', trips.getAll);
 app.get('/trips/date/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);
