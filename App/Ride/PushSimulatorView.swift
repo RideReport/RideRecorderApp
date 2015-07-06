@@ -202,18 +202,27 @@ import Foundation
         scrollView.addSubview(controlsView)
         
         editButton = UIButton()
+        editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        editButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        editButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         editButton.backgroundColor = ColorPallete.sharedPallete.notificationActionGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(editButton)
         
         destructiveButton = UIButton()
+        destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        destructiveButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         destructiveButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
         destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(destructiveButton)
         
         actionButton = UIButton()
+        actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        actionButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        actionButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         actionButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
         actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
@@ -253,9 +262,6 @@ import Foundation
         actionButton.hidden = !self.showsActionButon
         editButton.hidden = !self.showsEditButton
         
-        self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
-
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
 
@@ -267,10 +273,10 @@ import Foundation
         
         self.lineViewTop.frame = CGRectMake(insetX, 0.0, self.bounds.width + self.totalButtonWidth, 1.0)
         self.lineViewBottom.frame = CGRectMake(insetX, self.bounds.height - 1, self.bounds.width + self.totalButtonWidth, 1.0)
-        
+                
+        self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
         
-        self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         

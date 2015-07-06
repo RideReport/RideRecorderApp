@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E17e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -159,11 +159,11 @@
                                 <exclude reference="D0Q-8X-LJn"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="E69-rt-e1F"/>
+                                <exclude reference="Gju-fK-S8h"/>
                                 <exclude reference="NEy-Eb-F9N"/>
                                 <exclude reference="cXr-S2-pFR"/>
                                 <exclude reference="kjg-P4-RVt"/>
-                                <exclude reference="E69-rt-e1F"/>
-                                <exclude reference="Gju-fK-S8h"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -172,11 +172,11 @@
                                 <include reference="D0Q-8X-LJn"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="E69-rt-e1F"/>
+                                <include reference="Gju-fK-S8h"/>
                                 <include reference="NEy-Eb-F9N"/>
                                 <include reference="cXr-S2-pFR"/>
                                 <include reference="kjg-P4-RVt"/>
-                                <include reference="E69-rt-e1F"/>
-                                <include reference="Gju-fK-S8h"/>
                             </mask>
                         </variation>
                     </view>
@@ -698,25 +698,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="290" width="600" height="100"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Znd-fV-uZr"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle" value="👎"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="actionTitle" value="👍"/>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
-                                </userDefinedRuntimeAttributes>
-                                <variation key="widthClass=compact" ambiguous="YES">
-                                    <rect key="frame" x="0.0" y="290" width="400" height="100"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="290" width="800" height="100"/>
-                                </variation>
-                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="43" y="175" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -734,13 +715,40 @@
                                     <action selector="next:" destination="cUY-e3-8Xh" eventType="touchUpInside" id="YDm-hl-P3n"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="289" width="600" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="RCR-Qv-ILZ"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle">
+                                        <string key="value">Stressful
+👎</string>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="actionTitle">
+                                        <string key="value">Chill
+👍</string>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="widthClass=compact" ambiguous="YES">
+                                    <rect key="frame" x="0.0" y="290" width="400" height="100"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="290" width="800" height="100"/>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="bHA-2Y-YLz" secondAttribute="centerX" id="Gz8-wB-8Nx"/>
                             <constraint firstAttribute="width" secondItem="jcU-RA-OvC" secondAttribute="width" id="IyN-g2-Jqd"/>
+                            <constraint firstAttribute="centerY" secondItem="jcU-RA-OvC" secondAttribute="centerY" constant="-39" id="aN6-BW-6ok"/>
                             <constraint firstAttribute="centerX" secondItem="bHA-2Y-YLz" secondAttribute="centerX" constant="-0.5" id="deZ-Oo-BAd"/>
                             <constraint firstItem="jcU-RA-OvC" firstAttribute="top" secondItem="bHA-2Y-YLz" secondAttribute="bottom" constant="44" id="fTY-hd-DIc"/>
+                            <constraint firstAttribute="centerX" secondItem="jcU-RA-OvC" secondAttribute="centerX" id="kjk-zL-Y3h"/>
                             <constraint firstAttribute="centerX" secondItem="2tn-qi-wgx" secondAttribute="centerX" id="onY-MS-wuF"/>
                             <constraint firstAttribute="centerY" secondItem="2tn-qi-wgx" secondAttribute="centerY" constant="-39" id="p7L-qh-A5f"/>
                             <constraint firstAttribute="width" secondItem="bHA-2Y-YLz" secondAttribute="width" multiplier="5:4" id="vQK-xo-wGV"/>
@@ -1018,7 +1026,7 @@
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
                                 <rect key="frame" x="226" y="62" width="372" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1351,8 +1359,14 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle" value="👎"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="actionTitle" value="👍"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle">
+                                                <string key="value">Stressful
+👎</string>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="actionTitle">
+                                                <string key="value">Chill
+👍</string>
+                                            </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="showsSlideText" value="NO"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isInAppView" value="YES"/>
@@ -1443,17 +1457,17 @@
                                 <exclude reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="hUB-h0-YQ1"/>
-                                <exclude reference="kO0-6D-5PY"/>
-                                <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <exclude reference="plA-xe-GLn"/>
                                 <exclude reference="A1S-SV-ycq"/>
                                 <exclude reference="BCp-4R-ff0"/>
                                 <exclude reference="swd-uv-MjY"/>
                                 <exclude reference="I5j-v3-CWf"/>
                                 <exclude reference="I86-gy-d6r"/>
                                 <exclude reference="TTU-uW-sir"/>
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <exclude reference="plA-xe-GLn"/>
+                                <exclude reference="hUB-h0-YQ1"/>
+                                <exclude reference="kO0-6D-5PY"/>
+                                <exclude reference="uej-BC-eBx"/>
                                 <exclude reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
@@ -1464,18 +1478,18 @@
                                 <include reference="8mW-Sz-0y6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="6AQ-hd-T7z"/>
-                                <include reference="hUB-h0-YQ1"/>
-                                <include reference="kO0-6D-5PY"/>
-                                <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="7Qy-SH-O6E"/>
+                                <include reference="plA-xe-GLn"/>
                                 <include reference="A1S-SV-ycq"/>
                                 <include reference="BCp-4R-ff0"/>
                                 <include reference="swd-uv-MjY"/>
                                 <include reference="I5j-v3-CWf"/>
                                 <include reference="I86-gy-d6r"/>
                                 <include reference="TTU-uW-sir"/>
-                                <exclude reference="7Qy-SH-O6E"/>
-                                <include reference="plA-xe-GLn"/>
+                                <exclude reference="6AQ-hd-T7z"/>
+                                <include reference="hUB-h0-YQ1"/>
+                                <include reference="kO0-6D-5PY"/>
+                                <exclude reference="uej-BC-eBx"/>
                                 <include reference="g87-KH-Zxk"/>
                             </mask>
                         </variation>
@@ -1483,7 +1497,7 @@
                     <navigationItem key="navigationItem" id="z4R-cX-Dk7">
                         <nil key="title"/>
                         <view key="titleView" contentMode="scaleToFill" id="39M-oy-Gcs">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <rect key="frame" x="140" y="-262" width="320" height="568"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLL-QL-Es9">

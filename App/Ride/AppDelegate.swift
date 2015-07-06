@@ -34,14 +34,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = "👍"
+        goodRideAction.title = "Chill\n👍"
         goodRideAction.activationMode = UIUserNotificationActivationMode.Background
         goodRideAction.destructive = false
         goodRideAction.authenticationRequired = false
         
         let badRideAction = UIMutableUserNotificationAction()
         badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = "👎"
+        badRideAction.title = "Stressful\n👎"
         badRideAction.activationMode = UIUserNotificationActivationMode.Background
         badRideAction.destructive = true
         badRideAction.authenticationRequired = false
