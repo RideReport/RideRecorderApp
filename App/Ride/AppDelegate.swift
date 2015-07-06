@@ -91,6 +91,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogWrapper.logInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
         
+        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
+        
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        
+        var viewController : UIViewController? = nil
+        
+        if (hasSeenGettingStarted) {
+            // if they are new, do this later to avoid immediate permission dialogs.
+            startupManagers()
+            viewController = storyBoard.instantiateViewControllerWithIdentifier("mainNavController") as! UIViewController!
+        } else {
+            viewController = storyBoard.instantiateViewControllerWithIdentifier("gettingStartedNavController") as! UIViewController!
+        }
+        
+        
+        self.window?.rootViewController = viewController
+        self.window?.makeKeyAndVisible()
+        
+        return true
+    }
+    
+    func transitionToMainNavController() {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("mainNavController") as! UIViewController!
+        
+        let transition = CATransition()
+        transition.duration = 0.6
+        transition.type = kCATransitionFade
+        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        
+        self.window?.rootViewController = viewController
+        self.window?.makeKeyAndVisible()
+    }
+    
+    func startupManagers() {
         // Start Managers. Note that order matters!
         CoreDataManager.startup()
         RouteManager.startup()
@@ -98,8 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         NetworkManager.startup()
         MotionManager.startup()
         WeatherManager.startup()
-        
-        return true
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
@@ -202,7 +236,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        NetworkManager.sharedManager.syncTrips()
     }
 
     func applicationWillTerminate(application: UIApplication) {

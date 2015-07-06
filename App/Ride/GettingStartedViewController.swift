@@ -35,7 +35,7 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedPriacyVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedPrivacy") as! GettingStartedChildViewController
         self.setupVC(gettingStartedPriacyVC)
         
-        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedPriacyVC, gettingStartedBatteryVC]
+        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedPriacyVC]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
@@ -65,6 +65,6 @@ class GettingStartedViewController: UINavigationController {
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStartedv2")
         NSUserDefaults.standardUserDefaults().synchronize()
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        AppDelegate.appDelegate().transitionToMainNavController()
     }
 }

@@ -49,7 +49,16 @@ class NetworkManager {
             }
             
         })
-
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    @objc func appDidBecomeActive() {
+        self.syncTrips()
     }
     
     func jsonify(date: NSDate) -> String {

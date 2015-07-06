@@ -35,7 +35,7 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    func appDidBecomeActive() {
+    @objc func appDidBecomeActive() {
         self.checkForUpdateIfNeeded()
     }
     

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JUD-7G-dxw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -406,7 +406,7 @@
         <!--Navigation Controller-->
         <scene sceneID="UeG-mh-VCJ">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="mainNavController" automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -420,7 +420,6 @@
                     </toolbar>
                     <connections>
                         <segue destination="A5D-RC-UCB" kind="relationship" relationship="rootViewController" id="gLk-Sd-7ee"/>
-                        <segue destination="BEB-e9-RHq" kind="presentation" identifier="segueToGettingStarted" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="nsT-UZ-Khv"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YN6-Bi-xbb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -439,22 +438,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
-                                <rect key="frame" x="562" y="36" width="22" height="22"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="Av0-bw-c5D"/>
-                                    <constraint firstAttribute="width" constant="22" id="fPH-GA-fE3"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="tappedPauseButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="zze-bM-Ang"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
                                 <rect key="frame" x="43" y="183" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -485,7 +468,24 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="AZM-Ht-f28"/>
+                                    <action selector="tappedButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="Yqc-FQ-jt1"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
+                                <rect key="frame" x="562" y="36" width="22" height="22"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="Av0-bw-c5D"/>
+                                    <constraint firstAttribute="width" constant="22" id="fPH-GA-fE3"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                <state key="normal">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="next:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="i0Q-YM-SxV"/>
+                                    <action selector="tappedArrowButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="8vy-YA-plB"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1020,12 +1020,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <connections>
-                                    <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
-                                </connections>
-                            </containerView>
                             <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
                                 <rect key="frame" x="226" y="62" width="372" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -1368,7 +1362,6 @@
 👍</string>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="showsSlideText" value="NO"/>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="isInAppView" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
@@ -1426,6 +1419,12 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1561,7 +1560,7 @@
         <!--View Controller-->
         <scene sceneID="LvG-YY-C4E">
             <objects>
-                <viewController id="BEB-e9-RHq" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedNavController" id="BEB-e9-RHq" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Nds-K3-ECL"/>
                         <viewControllerLayoutGuide type="bottom" id="YPQ-Ui-XNv"/>
