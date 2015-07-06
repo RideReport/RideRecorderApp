@@ -552,7 +552,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManagerIsUpdating = true
             self.locationManager.startUpdatingLocation()
             if (self.locationManager.respondsToSelector("allowsBackgroundLocationUpdates")) {
-                self.locationManager.allowsBackgroundLocationUpdates = true
+                self.locationManager.setValue(true, forKey: "allowsBackgroundLocationUpdates")
             }
         }
     }
