@@ -179,12 +179,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
             DDLogWrapper.logInfo(String(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
             
+            self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            })
+            
             closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
                 CoreDataManager.sharedManager.saveContext()
                 
-                self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-                })
                 closingTrip!.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
