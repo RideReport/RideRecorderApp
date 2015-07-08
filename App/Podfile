@@ -1,10 +1,11 @@
 platform :ios, "7.0"
-pod 'CocoaLumberjack'
+pod 'CocoaLumberjack', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_support'
 pod "MBXMapKit"
 pod "CZWeatherKit"
 pod 'UIActionSheet+Blocks'
 pod 'ionicons'
 pod 'SMCalloutView'
+use_frameworks!
 
 # target "Ride" do
 # 

@@ -148,7 +148,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing
-            DDLogWrapper.logVerbose("Move/update section. Shouldn't happen?")
+            DDLogVerbose("Move/update section. Shouldn't happen?")
         }
     }
     

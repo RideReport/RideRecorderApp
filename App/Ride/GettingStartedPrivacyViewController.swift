@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import MapKit
+import MBXMapKit
 
 class GettingStartedPrivacyViewController: GettingStartedChildViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
     

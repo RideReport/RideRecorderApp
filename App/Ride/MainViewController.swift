@@ -8,6 +8,7 @@
 
 import Foundation
 import MessageUI
+import ionicons
 
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, PushSimulatorViewDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!

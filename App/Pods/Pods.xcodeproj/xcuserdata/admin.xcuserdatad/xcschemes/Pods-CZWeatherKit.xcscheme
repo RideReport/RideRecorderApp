@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B44A919877DC493DA5AB0038"
-               BuildableName = "libPods-CZWeatherKit.a"
+               BlueprintIdentifier = "46BF39F641A10BAD14A67E8A"
+               BuildableName = "CZWeatherKit.framework"
                BlueprintName = "Pods-CZWeatherKit"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

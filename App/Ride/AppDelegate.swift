@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         DDLog.addLogger(self.fileLogger)
         
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
-        DDLogWrapper.logInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
+        DDLogInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
         
         let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
         

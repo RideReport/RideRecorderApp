@@ -1,7 +1,7 @@
 PODS:
   - CocoaLumberjack (2.0.0):
-    - CocoaLumberjack/Default
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Default (= 2.0.0)
+    - CocoaLumberjack/Extensions (= 2.0.0)
   - CocoaLumberjack/Core (2.0.0)
   - CocoaLumberjack/Default (2.0.0):
     - CocoaLumberjack/Core
@@ -9,24 +9,38 @@ PODS:
     - CocoaLumberjack/Default
   - CZWeatherKit (1.0.0)
   - ionicons (2.0.1)
+  - MapboxGL (0.4.0)
   - MBXMapKit (0.7.0)
   - SMCalloutView (2.1.2)
   - UIActionSheet+Blocks (0.9)
 
 DEPENDENCIES:
-  - CocoaLumberjack
+  - CocoaLumberjack (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`,
+    branch `swift_support`)
   - CZWeatherKit
   - ionicons
+  - MapboxGL
   - MBXMapKit
   - SMCalloutView
   - UIActionSheet+Blocks
 
+EXTERNAL SOURCES:
+  CocoaLumberjack:
+    :branch: swift_support
+    :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+
+CHECKOUT OPTIONS:
+  CocoaLumberjack:
+    :commit: 398e9e7a3970ef9a8509d608725a2849646eb1f9
+    :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+
 SPEC CHECKSUMS:
-  CocoaLumberjack: a6f77d987d65dc7ba86b0f84db7d0b9084f77bcb
+  CocoaLumberjack: 52a5d1d495dbd04084fa0fb803dccd8ae83bfe18
   CZWeatherKit: 178157f722d93e68169699bde6d5d9b372aa23d3
   ionicons: c7b0867373392e85c17f613d19ade04ccfbe5a7c
+  MapboxGL: 294b348ca8367374468246a2a7d9f84612592cd0
   MBXMapKit: 1fd570fd955fb4475b7303360b3b96afb1ff9634
   SMCalloutView: 4078d89b847731e514b1a919fed33b383a24a106
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
 
-COCOAPODS: 0.33.1
+COCOAPODS: 0.37.2

@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import MapKit
+import ionicons
 
 class Incident : NSManagedObject, MKAnnotation {
     enum IncidentType : Int {

@@ -9,6 +9,8 @@
 import UIKit
 import CoreLocation
 import MapKit
+import SMCalloutView
+import MBXMapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, SMCalloutViewDelegate {
     var mainViewController: MainViewController! = nil
@@ -207,7 +209,7 @@ class MapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognize
     }
     
     @IBAction func addIncident(sender: AnyObject) {
-        DDLogWrapper.logVerbose("Add incident")
+        DDLogVerbose("Add incident")
     }
     
     

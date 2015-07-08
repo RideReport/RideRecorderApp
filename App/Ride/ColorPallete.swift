@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ColorPallete : NSObject, CLLocationManagerDelegate {
+class ColorPallete : NSObject {
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedPallete : ColorPallete?

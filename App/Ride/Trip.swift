@@ -11,6 +11,7 @@ import CoreData
 import CoreLocation
 import CoreMotion
 import MapKit
+import CZWeatherKit
 
 class Trip : NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
@@ -370,7 +371,7 @@ class Trip : NSManagedObject {
             return 0
         }
         if (self.batteryAtStart.shortValue < self.batteryAtEnd.shortValue) {
-            DDLogWrapper.logVerbose("Negative battery life used?")
+            DDLogVerbose("Negative battery life used?")
             return 0
         }
         
@@ -400,7 +401,7 @@ class Trip : NSManagedObject {
             return
         }
         
-        DDLogWrapper.logVerbose("De-Smoothing route…")
+        DDLogVerbose("De-Smoothing route…")
         
         for element in self.locations.array {
             let location = element as! Location
@@ -410,7 +411,7 @@ class Trip : NSManagedObject {
             }
         }
         
-        DDLogWrapper.logVerbose("Route de-smoothed!")
+        DDLogVerbose("Route de-smoothed!")
         
         self.hasSmoothed = false
         
@@ -691,7 +692,7 @@ class Trip : NSManagedObject {
             return
         }
         
-        DDLogWrapper.logVerbose("Smoothing route…")
+        DDLogVerbose("Smoothing route…")
         
         self.hasSmoothed = true
         
@@ -727,7 +728,7 @@ class Trip : NSManagedObject {
 //            self.locations.removeObject(location1)
 //            location1.managedObjectContext.deleteObject(location1)
             
-            DDLogWrapper.logVerbose("Route smoothed!")
+            DDLogVerbose("Route smoothed!")
             
             handler()
         }
@@ -794,7 +795,7 @@ class Trip : NSManagedObject {
     func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
-            DDLogWrapper.logInfo(String(format: "No activites! Found speed: %f", self.averageSpeed))
+            DDLogInfo(String(format: "No activites! Found speed: %f", self.averageSpeed))
             if (self.averageSpeed >= 8) {
                 self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
             } else if (self.averageSpeed >= 3) {
@@ -827,7 +828,7 @@ class Trip : NSManagedObject {
         }
         
         var scores = [walkScore, runScore, autoScore, cycleScore]
-        DDLogWrapper.logInfo(String(format: "Activities scores: %@, speed: %f", scores, self.averageSpeed))
+        DDLogInfo(String(format: "Activities scores: %@, speed: %f", scores, self.averageSpeed))
         
         scores.sort{$1 < $0}
         if scores[0] == 0 {

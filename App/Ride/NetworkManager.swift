@@ -150,10 +150,10 @@ class NetworkManager {
         self.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
             if (error == nil) {
                 trip.isSynced = true
-                DDLogWrapper.logError(String(format: "Response: %@", response!))
+                DDLogError(String(format: "Response: %@", response!))
                 CoreDataManager.sharedManager.saveContext()
             } else {
-                DDLogWrapper.logError(String(format: "Error: %@", error!))
+                DDLogError(String(format: "Error: %@", error!))
             }
         }
     }

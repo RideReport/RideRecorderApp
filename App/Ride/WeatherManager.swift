@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CZWeatherKit
 
 class WeatherManager {
     let openWeatherMapKey = "46cde0cc54593d8925337f942875ba7b"

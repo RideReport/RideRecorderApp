@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5BD4871B30EA444299741CF6"
-               BuildableName = "libPods-MBXMapKit.a"
+               BlueprintIdentifier = "BE132E7C21C813A4727FC1DC"
+               BuildableName = "MBXMapKit.framework"
                BlueprintName = "Pods-MBXMapKit"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

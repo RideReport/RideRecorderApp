@@ -35,7 +35,7 @@ class PrivacyCircle : NSManagedObject {
         let fetchedRequest = NSFetchRequest(entityName: "PrivacyCircle")
         fetchedRequest.fetchLimit = 1
     
-        DDLogWrapper.logVerbose("Looking for privacy circle…")
+        DDLogVerbose("Looking for privacy circle…")
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)

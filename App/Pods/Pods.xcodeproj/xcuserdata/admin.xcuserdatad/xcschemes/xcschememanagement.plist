@@ -19,6 +19,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-MapboxGL-MapboxGL.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-MapboxGL.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-SMCalloutView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -42,37 +52,47 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0EEC71F7B745444187A64521</key>
+		<key>2F2BBB0DDB446F596597C9F8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1332D994229F4BA48278133C</key>
+		<key>46BF39F641A10BAD14A67E8A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5BD4871B30EA444299741CF6</key>
+		<key>63F8C66A312CE15EB708F510</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>66D4894DCC3E45A597758AEC</key>
+		<key>91E59EDF02265735CA7E3094</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B44A919877DC493DA5AB0038</key>
+		<key>9CCAE683C3A69EC7B09C7CFF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EAD194791D7F4B51BA1A7233</key>
+		<key>B2868144A92A561670EDEA2B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F0C8A985181B4F23AAAF711D</key>
+		<key>BE132E7C21C813A4727FC1DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BFDD68EFE1FB9D27533D4EE9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F70440905D03B73210C56F43</key>
 		<dict>
 			<key>primary</key>
 			<true/>

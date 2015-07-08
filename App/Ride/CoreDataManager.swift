@@ -79,7 +79,7 @@ class CoreDataManager {
             error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            DDLogWrapper.logError("Unresolved error \(error), \(error!.userInfo)")
+            DDLogError("Unresolved error \(error), \(error!.userInfo)")
             abort()
         }
         
@@ -115,7 +115,7 @@ class CoreDataManager {
             if moc.hasChanges && !moc.save(&error) {
                 // Replace this implementation with code to handle the error appropriately.
                 // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                DDLogWrapper.logError("Unresolved error \(error), \(error!.userInfo)")
+                DDLogError("Unresolved error \(error), \(error!.userInfo)")
                 abort()
             }
         }

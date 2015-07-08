@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0640"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,8 +14,8 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EAD194791D7F4B51BA1A7233"
-               BuildableName = "libPods-ionicons.a"
+               BlueprintIdentifier = "63F8C66A312CE15EB708F510"
+               BuildableName = "ionicons.framework"
                BlueprintName = "Pods-ionicons"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
