@@ -19,19 +19,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="E6c-Xj-hL4" customClass="HackedMapView" customModule="Ride" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="500"/>
-                                </variation>
-                                <variation key="widthClass=regular" ambiguous="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="800" height="501"/>
-                                </variation>
-                            </mapView>
                             <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x7S-Bw-nY7">
                                 <rect key="frame" x="0.0" y="356" width="600" height="44"/>
                                 <constraints>
@@ -62,28 +49,28 @@
                                     <rect key="frame" x="0.0" y="556" width="800" height="44"/>
                                 </variation>
                             </toolbar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0W-sZ-4F3" customClass="MGLMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="x7S-Bw-nY7" secondAttribute="bottom" multiplier="3:2" id="2AI-YV-sfu"/>
-                            <constraint firstAttribute="centerX" secondItem="E6c-Xj-hL4" secondAttribute="centerX" id="CPR-30-5OY"/>
+                            <constraint firstItem="x7S-Bw-nY7" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="KWh-oT-ZkD"/>
                             <constraint firstItem="x7S-Bw-nY7" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Kzw-yj-sIw"/>
-                            <constraint firstAttribute="width" secondItem="E6c-Xj-hL4" secondAttribute="width" id="dXX-u0-O1M"/>
-                            <constraint firstItem="E6c-Xj-hL4" firstAttribute="width" secondItem="x7S-Bw-nY7" secondAttribute="width" id="mpL-V9-rHa"/>
-                            <constraint firstItem="E6c-Xj-hL4" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="nKW-gS-9tY"/>
-                            <constraint firstAttribute="centerY" secondItem="E6c-Xj-hL4" secondAttribute="centerY" id="yWs-hS-3sE"/>
+                            <constraint firstItem="A0W-sZ-4F3" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="MWO-C6-p9w"/>
+                            <constraint firstAttribute="centerY" secondItem="A0W-sZ-4F3" secondAttribute="centerY" id="bQK-ug-VYd"/>
+                            <constraint firstItem="A0W-sZ-4F3" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="clq-4h-DAI"/>
+                            <constraint firstAttribute="centerX" secondItem="A0W-sZ-4F3" secondAttribute="centerX" id="p0h-f2-n5z"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="CPR-30-5OY"/>
-                                <exclude reference="yWs-hS-3sE"/>
                                 <exclude reference="Kzw-yj-sIw"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
-                                <include reference="CPR-30-5OY"/>
-                                <include reference="yWs-hS-3sE"/>
                                 <include reference="Kzw-yj-sIw"/>
                                 <exclude reference="2AI-YV-sfu"/>
                             </mask>
@@ -94,13 +81,13 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="mapView" destination="E6c-Xj-hL4" id="q1j-n6-JEK"/>
+                        <outlet property="mapView" destination="A0W-sZ-4F3" id="DOK-9y-mV2"/>
                         <outlet property="privacyCircleToolbar" destination="x7S-Bw-nY7" id="Fw8-2A-i8S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1675" y="402.75"/>
+            <point key="canvasLocation" x="1675" y="402"/>
         </scene>
         <!--Unsafe Speeds-->
         <scene sceneID="RAx-bA-3Ey">
@@ -1020,7 +1007,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
                                 <rect key="frame" x="226" y="62" width="372" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>

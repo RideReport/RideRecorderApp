@@ -64,7 +64,8 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         let pinColorsCount : CGFloat = 20
         let pinWidth = markersImage.size.width/pinColorsCount
         let iconSize : CGFloat = 16.0
-        var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
+        var icon : UIImage! = UIImage(named: "markers-soft")!
+
         
         self.editModeView.hidden = true
         
@@ -305,7 +306,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         #endif
         actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
             if (buttonIndex == 1) {
-                self.mapViewController.enterPrivacyCircleEditor()
+//                self.mapViewController.enterPrivacyCircleEditor()
             } else if (buttonIndex == 2){
                 self.sendLogFile()
             } else if (buttonIndex == 3) {

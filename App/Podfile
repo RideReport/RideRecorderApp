@@ -4,7 +4,7 @@ pod "MBXMapKit"
 pod "CZWeatherKit"
 pod 'UIActionSheet+Blocks'
 pod 'ionicons'
-pod 'SMCalloutView'
+pod 'MapboxGL'
 use_frameworks!
 
 # target "Ride" do

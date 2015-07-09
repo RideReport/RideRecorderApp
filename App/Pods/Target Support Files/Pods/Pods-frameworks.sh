@@ -52,7 +52,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'CocoaLumberjack.framework'
   install_framework 'MBXMapKit.framework'
   install_framework 'MapboxGL.framework'
-  install_framework 'SMCalloutView.framework'
   install_framework 'UIActionSheet_Blocks.framework'
   install_framework 'ionicons.framework'
 fi
@@ -61,7 +60,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'CocoaLumberjack.framework'
   install_framework 'MBXMapKit.framework'
   install_framework 'MapboxGL.framework'
-  install_framework 'SMCalloutView.framework'
   install_framework 'UIActionSheet_Blocks.framework'
   install_framework 'ionicons.framework'
 fi
