@@ -57,34 +57,39 @@ exports.getAll = function(req, res){
 
 exports.getRaw = function(req, res){
   var trips = db.mongo_client.get('trips');
+  var geojson = { "type": "FeatureCollection",
+    "features": []
+  };
 
   trips.find({"activityType": 2},{w:1}).each(function(trip) {
-		if(error){
-			res.status(404).send('Not found');
-			console.error(error);
-		} else {
-		  var geojson = { "type": "FeatureCollection",
-          "features": []
-           };
-		  for(i=0; i<trips.length; i++) {
-        var trip = trips[i];
-        geojson.features.push({
-    			"type": "Feature",
-    			"geometry": {
-            "type": "LineString",
-            "coordinates": trip.locations.map(function(loc) {return loc.pos})
-          },
-    			"properties": {
-    				"activity_type" : trip.activityType,
-    				"rating" : trip.rating,
-    				"incidents" : trip.incidents
-    			}
-    		});
-    	}
-		  return res.json(geojson);
-	  }
-	});
-};
+    if (trip.locations.length == 0) {
+      return;
+    }
+    var unsimplifiedLocs = trip.locations.map(function(loc) {return loc.pos})
+    geojson.features.push({
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": unsimplifiedLocs
+      },
+      "properties": {
+        "activity_type" : trip.activityType,
+        "rating" : trip.rating,
+        "incidents" : trip.incidents
+      }
+    });
+  })
+  .error(function(err) {
+    res.status(404).send('Not found');
+    console.error(err);
+  })
+  .success(function() {
+    geojson.properties = {
+      incidents: _.compact(_.flatten(_.pluck(_.pluck(geojson.features, 'properties'), 'incidents')))
+    };
+
+    return res.json(geojson);
+  });};
 
 
 exports.getTripsOnDate = function(req, res){
