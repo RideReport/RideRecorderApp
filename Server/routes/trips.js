@@ -55,7 +55,7 @@ exports.getAll = function(req, res){
   }
 };
 
-exports.getTripsOnDate = function(req, res){
+exports.getRaw = function(req, res){
   var trips = db.mongo_client.get('trips');
 
   trips.find({"activityType": 2},{w:1}).each(function(trip) {
