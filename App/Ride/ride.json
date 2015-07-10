@@ -1618,7 +1618,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1639,7 +1639,7 @@
         [
           "<",
           "alltime_average_rating",
-          0.6
+          0.65
         ]
       ],
       "paint": {
@@ -1664,7 +1664,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1685,12 +1685,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.6
+          0.65
         ],
         [
           "<",
           "alltime_average_rating",
-          0.8
+          0.85
         ]
       ],
       "paint": {
@@ -1715,7 +1715,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1736,12 +1736,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.8
+          0.85
         ],
         [
           "<",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {
@@ -1766,7 +1766,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1787,7 +1787,7 @@
         [
           ">=",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {
@@ -1812,7 +1812,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1833,7 +1833,7 @@
         [
           "<",
           "alltime_average_rating",
-          0.6
+          0.65
         ]
       ],
       "paint": {
@@ -1858,7 +1858,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1879,12 +1879,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.6
+          0.65
         ],
         [
           "<",
           "alltime_average_rating",
-          0.8
+          0.85
         ]
       ],
       "paint": {
@@ -1909,7 +1909,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1930,12 +1930,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.8
+          0.85
         ],
         [
           "<",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {
@@ -1960,7 +1960,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -1981,7 +1981,7 @@
         [
           ">=",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {
@@ -2006,7 +2006,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -2022,7 +2022,7 @@
         [
           "<",
           "alltime_average_rating",
-          0.6
+          0.65
         ]
       ],
       "paint": {
@@ -2047,7 +2047,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -2063,12 +2063,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.6
+          0.65
         ],
         [
           "<",
           "alltime_average_rating",
-          0.8
+          0.85
         ]
       ],
       "paint": {
@@ -2093,7 +2093,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -2109,12 +2109,12 @@
         [
           ">=",
           "alltime_average_rating",
-          0.8
+          0.85
         ],
         [
           "<",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {
@@ -2139,7 +2139,7 @@
       "type": "line",
       "source": "ride",
       "source-layer": "segments",
-      "minzoom": 12,
+      "minzoom": 9,
       "layout": {
         "visibility": "visible",
         "line-cap": "round",
@@ -2155,7 +2155,7 @@
         [
           ">=",
           "alltime_average_rating",
-          0.95
+          0.97
         ]
       ],
       "paint": {

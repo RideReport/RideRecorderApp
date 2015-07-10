@@ -39,7 +39,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             }
             
             if (selectedTrip != nil) {
-                self.newIncidentButton.hidden = false
+                self.newIncidentButton.hidden = true
                 self.mapViewController.refreshTrip(self.selectedTrip)
             } else {
                 self.newIncidentButton.hidden = true

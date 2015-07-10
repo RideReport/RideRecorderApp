@@ -20,7 +20,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     @IBOutlet weak var privacyCircleToolbar: UIToolbar!
     
     private var tripsAreLoaded = false
-    private var tripPolyLines : [Trip : MKPolyline]!
+    private var tripPolyLines : [Trip : MGLPolyline]!
     private var hasCenteredMap : Bool = false
     
     private var privacyCircle : MKCircle?
@@ -128,7 +128,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - UI Methods
     //
     
-//    func enterPrivacyCircleEditor() {
+    func enterPrivacyCircleEditor() {
 //        if (self.privacyCircle == nil) {
 //            if (PrivacyCircle.privacyCircle() == nil) {
 //                self.privacyCircle = MKCircle(centerCoordinate: mapView.userLocation.coordinate, radius: PrivacyCircle.defaultRadius())
@@ -138,7 +138,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 //            self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
 //        }
 //        self.privacyCircleToolbar.hidden = false
-//    }
+    }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
@@ -244,26 +244,22 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.tripsAreLoaded = true
         
         // important to perform fetch on main thread
-        let trips = Trip.allTrips()
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            for trip in trips {
-                self.refreshTrip(trip as! Trip)
-            }
-        })
+//        let trips = Trip.allTrips()
+//        
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+//            for trip in trips {
+//                self.refreshTrip(trip as! Trip)
+//            }
+//        })
     }
     
     func unloadTrips() {
         self.setSelectedTrip(nil)
         
         for line in self.tripPolyLines.values {
-//            self.mapView.removeOverlay(line)
+            self.mapView.removeAnnotation(line)
         }
     
-        
-//        for annotation in self.mapView.annotations {
-//            self.mapView.removeAnnotation(annotation as! MKAnnotation)
-//        }
         
         self.tripPolyLines.removeAll(keepCapacity: false)
         self.tripsAreLoaded = false
@@ -274,47 +270,47 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        var coordinates : [CLLocationCoordinate2D] = []
-        var count : Int = 0
-        
         if (self.tripPolyLines[trip] == nil) {
             return
         }
         
-        let overlay = self.tripPolyLines[trip]! as MKPolyline
-        
-        if (overlay.pointCount == 0) {
-            return
-        }
-        
-        var i = 1
-        let point0 = overlay.points()[0]
-        var minX : Double = point0.x
-        var maxX : Double = point0.x
-        var minY : Double = point0.y
-        var maxY : Double = point0.y
-        
-        while i < overlay.pointCount {
-            let point = overlay.points()[i]
-            if (point.x < minX) {
-                minX = point.x
-            } else if (point.x > maxX) {
-                maxX = point.x
-            }
-            
-            if (point.y < minY) {
-                minY = point.y
-            } else if (point.y > maxY) {
-                maxY = point.y
-            }
-            i++
-        }
-        
-        let padFactor : Double = 0.1
-        let sizeX = (maxX - minX)
-        let sizeY = (maxY - minY)
-        
-        let mapRect = MKMapRectMake(minX - (sizeX * padFactor), minY - (sizeY * padFactor), sizeX * (1 + 2*padFactor), sizeY * (1 + 2*padFactor))
+//        let overlay = self.tripPolyLines[trip]! as MGLPolyline
+//        
+//        if (overlay.pointCount == 0) {
+//            return
+//        }
+//        
+//        var i = 1
+//        var pointCount = (Int)(overlay.pointCount)
+//        var coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
+//        overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
+//        let point0 = coordinates[0]
+//        var minLong : Double = point0.longitude
+//        var maxLong : Double = point0.longitude
+//        var minLat : Double = point0.latitude
+//        var maxLat : Double = point0.latitude
+//        
+//        while i < pointCount {
+//            let point = coordinates[i]
+//            if (point.longitude < minLong) {
+//                minLong = point.longitude
+//            } else if (point.longitude > maxLong) {
+//                maxLong = point.longitude
+//            }
+//            
+//            if (point.latitude < minLat) {
+//                minLat = point.latitude
+//            } else if (point.latitude > maxLat) {
+//                maxLat = point.latitude
+//            }
+//            i++
+//        }
+//        
+//        let padFactor : Double = 0.1
+//        let sizeLong = (maxLong - minLong)
+//        let sizeLat = (maxLat - minLat)
+//        
+//        let mapRect = MKMapRectMake(minLong - (sizeLong * padFactor), minLat - (sizeLat * padFactor), sizeLong * (1 + 2*padFactor), sizeLat * (1 + 2*padFactor))
 //        dispatch_async(dispatch_get_main_queue(), {
 //            self.mapView.setVisibleMapRect(mapRect, animated: true)
 //        })
@@ -323,8 +319,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     func refreshTrip(trip : Trip!) {
         dispatch_async(dispatch_get_main_queue(), {
             if (self.tripPolyLines[trip] != nil) {
-                let overlay = self.tripPolyLines[trip]
-//                self.mapView.removeOverlay(overlay)
+                let polyline = self.tripPolyLines[trip]
+                self.mapView.removeAnnotation(polyline!)
             }
             
             if (trip.deleted == true || (trip != self.mainViewController.selectedTrip && trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue)) {
@@ -350,7 +346,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             }
             
             var coordinates : [CLLocationCoordinate2D] = []
-            var count : Int = 0
+            var count : UInt = 0
             for location in trip.simplifiedLocations.array {
                 let location = (location as! Location)
                 
@@ -362,12 +358,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 }
             }
 
-            let polyline = MKPolyline(coordinates: &coordinates, count: count)
+            let polyline = MGLPolyline(coordinates: &coordinates, count: count)
+            
             self.tripPolyLines[trip] = polyline
 
-//            self.mapView.addOverlay(polyline)
+            self.mapView.addAnnotation(polyline)
             
-//            for annotation in self.mapView.annotations {
+//            for annotation in self.mapView.annotations! {
 //                if (annotation.isKindOfClass(Incident)) {
 //                    let incident = annotation as! Incident
 //                    if (incident.fault || incident.deleted) {
@@ -375,14 +372,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 //                    }
 //                }
 //            }
-            
-            for item in trip.incidents.array {
-                let incident = item as! Incident
-                
-                
-//                self.mapView.addAnnotation(incident)
-//                self.mapView(self.mapView, viewForAnnotation: incident) //unclear why this is needed, but without Pins sometimes dont appear.
-            }
+//            
+//            for item in trip.incidents.array {
+//                let incident = item as! Incident
+//                
+//                
+////                self.mapView.addAnnotation(incident)
+////                self.mapView(self.mapView, viewForAnnotation: incident) //unclear why this is needed, but without Pins sometimes dont appear.
+//            }
             
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
                 self.setSelectedTrip(trip)
@@ -465,66 +462,91 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 //            view.dragState = .None
 //        }
 //    }
-//    
-//    func mapView(mapView: MKMapView!, rendererForOverlay overlay: MKOverlay!) -> MKOverlayRenderer! {
-//        if (overlay.isKindOfClass(MBXRasterTileOverlay)) {
-//            let renderer = MBXRasterTileRenderer(overlay: overlay)
-//            return renderer
-//        } else if (overlay.isKindOfClass(MKPolyline)) {
-//            let renderer = MKPolylineRenderer(polyline:(overlay as! MKPolyline))
-//            
-//            var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(overlay).first as! Trip!)
-//            
-//            if (trip == nil) {
-//                return nil
-//            }
-//            
-//            var opacity : CGFloat
-//            var lineWidth : CGFloat
-//            
-//            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-//                opacity = 0.8
-//                lineWidth = 8
-//            } else {
-//                opacity = 0.2
-//                lineWidth = 2
-//            }
-//            
-//            if (trip == nil) {
-//                return nil;
-//            }
-//        
-//            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-//                if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-//                    renderer.strokeColor = UIColor.greenColor().colorWithAlphaComponent(opacity)
-//                } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-//                    renderer.strokeColor = UIColor.redColor().colorWithAlphaComponent(opacity)
-//                } else {
-//                    renderer.strokeColor = UIColor.yellowColor().colorWithAlphaComponent(opacity)
-//                }
-//            } else {
-//                renderer.strokeColor = UIColor.brownColor().colorWithAlphaComponent(opacity)
-//            }
-//            renderer.lineWidth = lineWidth
-//            return renderer;
-//        } else if (overlay.isKindOfClass(MKCircle)) {
-//            let circleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
-//            circleRenderer!.lineWidth = 1.0
-//            circleRenderer!.lineDashPattern = [3,5]
-//
-//            if (self.privacyCircle != nil && (overlay as! MKCircle) == self.privacyCircle!) {
-//                circleRenderer!.strokeColor = UIColor.redColor()
-//                circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
-//                self.privacyCircleRenderer = circleRenderer
-//            } else {
-//                circleRenderer!.strokeColor = UIColor.purpleColor()
-//                circleRenderer!.fillColor = UIColor.purpleColor().colorWithAlphaComponent(0.3)
-//            }
-//            
-//            return circleRenderer
-//        } else {
-//            return nil;
-//        }
-//    }
+    func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+        
+        if (trip != nil) {
+            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
+                return 16
+            } else {
+                return 8
+            }
+        } // else if (overlay.isKindOfClass(MKCircle)) {
+        //        let circleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
+        //        circleRenderer!.lineWidth = 1.0
+        //        circleRenderer!.lineDashPattern = [3,5]
+        //
+        //        if (self.privacyCircle != nil && (overlay as! MKCircle) == self.privacyCircle!) {
+        //            circleRenderer!.strokeColor = UIColor.redColor()
+        //            circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+        //            self.privacyCircleRenderer = circleRenderer
+        //        } else {
+        //            circleRenderer!.strokeColor = UIColor.purpleColor()
+        //            circleRenderer!.fillColor = UIColor.purpleColor().colorWithAlphaComponent(0.3)
+        //        }
+        //
+        //    }
+        return 0
+    }
+    
+    func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
+        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+        
+        if (trip != nil) {
+            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
+                return 0.8
+            } else {
+                return 0.2
+            }
+        } // else if (overlay.isKindOfClass(MKCircle)) {
+        //        let circleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
+        //        circleRenderer!.lineWidth = 1.0
+        //        circleRenderer!.lineDashPattern = [3,5]
+        //
+        //        if (self.privacyCircle != nil && (overlay as! MKCircle) == self.privacyCircle!) {
+        //            circleRenderer!.strokeColor = UIColor.redColor()
+        //            circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+        //            self.privacyCircleRenderer = circleRenderer
+        //        } else {
+        //            circleRenderer!.strokeColor = UIColor.purpleColor()
+        //            circleRenderer!.fillColor = UIColor.purpleColor().colorWithAlphaComponent(0.3)
+        //        }
+        //
+        //    }
+        return 0
+    }
+    
+    func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+
+        if (trip != nil) {
+            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+                    return UIColor.greenColor()
+                } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                    return UIColor.redColor()
+                } else {
+                    return UIColor.yellowColor()
+                }
+            }
+            
+            return UIColor.brownColor()
+        } // else if (overlay.isKindOfClass(MKCircle)) {
+        //        let circleRenderer = PrivacyCircleRenderer(circle: overlay as! MKCircle)
+        //        circleRenderer!.lineWidth = 1.0
+        //        circleRenderer!.lineDashPattern = [3,5]
+        //
+        //        if (self.privacyCircle != nil && (overlay as! MKCircle) == self.privacyCircle!) {
+        //            circleRenderer!.strokeColor = UIColor.redColor()
+        //            circleRenderer!.fillColor = UIColor.redColor().colorWithAlphaComponent(0.3)
+        //            self.privacyCircleRenderer = circleRenderer
+        //        } else {
+        //            circleRenderer!.strokeColor = UIColor.purpleColor()
+        //            circleRenderer!.fillColor = UIColor.purpleColor().colorWithAlphaComponent(0.3)
+        //        }
+        //
+        //    }
+        return UIColor.clearColor()
+    }
 }
 
