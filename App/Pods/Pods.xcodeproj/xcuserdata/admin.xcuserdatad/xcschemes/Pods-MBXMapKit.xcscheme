@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A364CCAB7ED8B73C8161865D"
+               BlueprintIdentifier = "E9183B2FDB2F9EB55386CC02"
                BuildableName = "MBXMapKit.framework"
                BlueprintName = "Pods-MBXMapKit"
                ReferencedContainer = "container:Pods.xcodeproj">

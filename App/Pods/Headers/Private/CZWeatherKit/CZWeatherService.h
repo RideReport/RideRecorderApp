@@ -1,1 +1,1 @@
-../../../CZWeatherKit/CZWeatherKit/Service/CZWeatherService.h
+../../../CZWeatherKit/CZWeatherKit/CZWeatherService.h

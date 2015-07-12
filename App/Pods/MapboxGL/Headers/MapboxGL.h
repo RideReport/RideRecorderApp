@@ -1,5 +1,7 @@
 #import "MGLAccountManager.h"
 #import "MGLAnnotation.h"
+#import "MGLAnnotationImage.h"
+#import "MGLGeometry.h"
 #import "MGLMapView.h"
 #import "MGLMultiPoint.h"
 #import "MGLOverlay.h"

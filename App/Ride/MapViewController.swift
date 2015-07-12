@@ -9,10 +9,9 @@
 import UIKit
 import CoreLocation
 import MapKit
-import SMCalloutView
 import MapboxGL
 
-class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate, SMCalloutViewDelegate {
+class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
     var mainViewController: MainViewController! = nil
     
     @IBOutlet weak var mapView:  MGLMapView!
@@ -29,7 +28,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
     
-    private var calloutView : SMCalloutView! = nil
     private var selectedIncident : Incident? = nil
         
     private var dateFormatter : NSDateFormatter!
@@ -61,12 +59,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
         
         self.tripPolyLines = [:]
-        
-        self.calloutView = SMCalloutView.platformCalloutView()
-        self.calloutView.delegate = self
-        self.calloutView.rightAccessoryView = UIImageView(image: UIImage(named: "UITableNext"))
-        self.calloutView.rightAccessoryView.alpha = 0.2
-//        self.mapView.calloutView = self.calloutView
         
         if (RouteManager.sharedManager.currentTrip != nil) {
             self.mainViewController.selectedTrip = RouteManager.sharedManager.currentTrip
@@ -391,10 +383,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 //        self.mapView.addAnnotation(incident)
 //        self.mapView.selectAnnotation(incident, animated: true)
     }
-    
-    func calloutViewClicked(calloutView: SMCalloutView!) {
-        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
-    }
+//    
+//    func calloutViewClicked(calloutView: SMCalloutView!) {
+//        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
+//    }
 
     //
     // MARK: - Map Kit

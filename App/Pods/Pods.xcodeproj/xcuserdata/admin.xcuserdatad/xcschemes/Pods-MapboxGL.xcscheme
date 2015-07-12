@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3383D9A5E2217D00522A80FD"
+               BlueprintIdentifier = "47C3E1A76E74925D8B139480"
                BuildableName = "MapboxGL.framework"
                BlueprintName = "Pods-MapboxGL"
                ReferencedContainer = "container:Pods.xcodeproj">

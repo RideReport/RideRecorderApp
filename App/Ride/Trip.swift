@@ -479,8 +479,8 @@ class Trip : NSManagedObject {
             if (self.climacon == nil || self.climacon == "") {
                 WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
                     if (condition != nil) {
-                        self.temperature = NSNumber(float: Float(condition!.temperature.f))
-                        self.climacon = String(UnicodeScalar(UInt32(condition!.climaconCharacter.rawValue)))
+                        self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
+                        self.climacon = String(UnicodeScalar(UInt32(condition!.current.climacon.rawValue)))
                     }
                     handler()
                 })

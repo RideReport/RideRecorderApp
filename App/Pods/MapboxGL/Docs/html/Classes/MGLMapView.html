@@ -11,7 +11,7 @@
 	<body>
 		<header id="top_header">
 			<div id="library" class="hideInXcode">
-				<h1><a id="libraryTitle" href="../index.html">Mapbox GL for iOS 0.4.0 </a></h1>
+				<h1><a id="libraryTitle" href="../index.html">Mapbox GL for iOS 0.5.0 </a></h1>
 				<a id="developerHome" href="../index.html">Mapbox</a>
 			</div>
 			
@@ -41,15 +41,21 @@
 	
 	<option value="//api/name/annotations">&nbsp;&nbsp;&nbsp;&nbsp;annotations</option>
 	
+	<option value="//api/name/attributionButton">&nbsp;&nbsp;&nbsp;&nbsp;attributionButton</option>
+	
 	<option value="//api/name/bundledStyleURLs">&nbsp;&nbsp;&nbsp;&nbsp;bundledStyleURLs</option>
 	
 	<option value="//api/name/centerCoordinate">&nbsp;&nbsp;&nbsp;&nbsp;centerCoordinate</option>
+	
+	<option value="//api/name/compassView">&nbsp;&nbsp;&nbsp;&nbsp;compassView</option>
 	
 	<option value="//api/name/debugActive">&nbsp;&nbsp;&nbsp;&nbsp;debugActive</option>
 	
 	<option value="//api/name/direction">&nbsp;&nbsp;&nbsp;&nbsp;direction</option>
 	
 	<option value="//api/name/displayHeadingCalibration">&nbsp;&nbsp;&nbsp;&nbsp;displayHeadingCalibration</option>
+	
+	<option value="//api/name/logoView">&nbsp;&nbsp;&nbsp;&nbsp;logoView</option>
 	
 	<option value="//api/name/rotateEnabled">&nbsp;&nbsp;&nbsp;&nbsp;rotateEnabled</option>
 	
@@ -71,6 +77,8 @@
 	
 	<option value="//api/name/userTrackingMode">&nbsp;&nbsp;&nbsp;&nbsp;userTrackingMode</option>
 	
+	<option value="//api/name/visibleCoordinateBounds">&nbsp;&nbsp;&nbsp;&nbsp;visibleCoordinateBounds</option>
+	
 	<option value="//api/name/zoomEnabled">&nbsp;&nbsp;&nbsp;&nbsp;zoomEnabled</option>
 	
 	<option value="//api/name/zoomLevel">&nbsp;&nbsp;&nbsp;&nbsp;zoomLevel</option>
@@ -91,6 +99,8 @@
 	<option value="//api/name/convertCoordinate:toPointToView:">&nbsp;&nbsp;&nbsp;&nbsp;- convertCoordinate:toPointToView:</option>
 	
 	<option value="//api/name/convertPoint:toCoordinateFromView:">&nbsp;&nbsp;&nbsp;&nbsp;- convertPoint:toCoordinateFromView:</option>
+	
+	<option value="//api/name/dequeueReusableAnnotationImageWithIdentifier:">&nbsp;&nbsp;&nbsp;&nbsp;- dequeueReusableAnnotationImageWithIdentifier:</option>
 	
 	<option value="//api/name/deselectAnnotation:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- deselectAnnotation:animated:</option>
 	
@@ -121,6 +131,12 @@
 	<option value="//api/name/setCenterCoordinate:zoomLevel:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setCenterCoordinate:zoomLevel:animated:</option>
 	
 	<option value="//api/name/setDirection:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setDirection:animated:</option>
+	
+	<option value="//api/name/setVisibleCoordinateBounds:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setVisibleCoordinateBounds:animated:</option>
+	
+	<option value="//api/name/setVisibleCoordinateBounds:edgePadding:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setVisibleCoordinateBounds:edgePadding:animated:</option>
+	
+	<option value="//api/name/setVisibleCoordinates:count:edgePadding:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setVisibleCoordinates:count:edgePadding:animated:</option>
 	
 	<option value="//api/name/setZoomLevel:animated:">&nbsp;&nbsp;&nbsp;&nbsp;- setZoomLevel:animated:</option>
 	
@@ -154,6 +170,8 @@
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Annotating the Map">Annotating the Map</a></span></li>
 	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Managing Annotation Selections">Managing Annotation Selections</a></span></li>
+	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Displaying the User&apos;s Location">Displaying the User&apos;s Location</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Debugging">Debugging</a></span></li>
@@ -168,15 +186,21 @@
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/annotations">annotations</a></span></li>
 	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/attributionButton">attributionButton</a></span></li>
+	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/bundledStyleURLs">bundledStyleURLs</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/centerCoordinate">centerCoordinate</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/compassView">compassView</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/debugActive">debugActive</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/direction">direction</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/displayHeadingCalibration">displayHeadingCalibration</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logoView">logoView</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/rotateEnabled">rotateEnabled</a></span></li>
 	
@@ -197,6 +221,8 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/userLocationVisible">userLocationVisible</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/userTrackingMode">userTrackingMode</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/visibleCoordinateBounds">visibleCoordinateBounds</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/zoomEnabled">zoomEnabled</a></span></li>
 	
@@ -219,6 +245,8 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/convertCoordinate:toPointToView:">convertCoordinate:toPointToView:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/convertPoint:toCoordinateFromView:">convertPoint:toCoordinateFromView:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/dequeueReusableAnnotationImageWithIdentifier:">dequeueReusableAnnotationImageWithIdentifier:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/deselectAnnotation:animated:">deselectAnnotation:animated:</a></span></li>
 	
@@ -249,6 +277,12 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setCenterCoordinate:zoomLevel:animated:">setCenterCoordinate:zoomLevel:animated:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setDirection:animated:">setDirection:animated:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setVisibleCoordinateBounds:animated:">setVisibleCoordinateBounds:animated:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setVisibleCoordinateBounds:edgePadding:animated:">setVisibleCoordinateBounds:edgePadding:animated:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setVisibleCoordinates:count:edgePadding:animated:">setVisibleCoordinates:count:edgePadding:animated:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setZoomLevel:animated:">setZoomLevel:animated:</a></span></li>
 	
@@ -347,6 +381,24 @@
 	</span>
 	<span class="task-item-suffix">property</span>
 	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/compassView">&nbsp;&nbsp;compassView</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logoView">&nbsp;&nbsp;logoView</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/attributionButton">&nbsp;&nbsp;attributionButton</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
 </li>
 						</ul>
 						
@@ -382,6 +434,30 @@
 </li><li>
 	<span class="tooltip">
 		<code><a href="#//api/name/setCenterCoordinate:zoomLevel:animated:">&ndash;&nbsp;setCenterCoordinate:zoomLevel:animated:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/visibleCoordinateBounds">&nbsp;&nbsp;visibleCoordinateBounds</a></code>
+	</span>
+	<span class="task-item-suffix">property</span>
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setVisibleCoordinateBounds:animated:">&ndash;&nbsp;setVisibleCoordinateBounds:animated:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setVisibleCoordinateBounds:edgePadding:animated:">&ndash;&nbsp;setVisibleCoordinateBounds:edgePadding:animated:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setVisibleCoordinates:count:edgePadding:animated:">&ndash;&nbsp;setVisibleCoordinates:count:edgePadding:animated:</a></code>
 	</span>
 	
 	
@@ -519,6 +595,20 @@
 	
 </li><li>
 	<span class="tooltip">
+		<code><a href="#//api/name/dequeueReusableAnnotationImageWithIdentifier:">&ndash;&nbsp;dequeueReusableAnnotationImageWithIdentifier:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+						
+						<a title="Managing Annotation Selections" name="task_Managing Annotation Selections"></a>
+						<h3 class="subsubtitle task-title">Managing Annotation Selections</h3>
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
 		<code><a href="#//api/name/selectedAnnotations">&nbsp;&nbsp;selectedAnnotations</a></code>
 	</span>
 	<span class="task-item-suffix">property</span>
@@ -630,7 +720,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly, nullable) NSArray *annotations</code></div>
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly, nullable) NSArray&lt;id&lt;MGLAnnotation&gt; &gt; *annotations</code></div>
 
     
 	
@@ -662,6 +752,47 @@
 </div>
 						
 						<div class="section-method">
+	<a name="//api/name/attributionButton" title="attributionButton"></a>
+	<h3 class="subsubtitle method-title">attributionButton</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The button shown in the lower-right of the map which when pressed displays the map attribution information.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) UIButton *attributionButton</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The button shown in the lower-right of the map which when pressed displays the map attribution information.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/bundledStyleURLs" title="bundledStyleURLs"></a>
 	<h3 class="subsubtitle method-title">bundledStyleURLs</h3>
 	
@@ -673,7 +804,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSArray *bundledStyleURLs</code></div>
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSArray&lt;NSURL*&gt; *bundledStyleURLs</code></div>
 
     
 	
@@ -731,6 +862,47 @@
 <p>Changing the value in this property centers the map on the new coordinate without changing the current zoom level.</p>
 
 <p>Changing the value of this property updates the map view immediately. If you want to animate the change, use the <a href="#//api/name/setCenterCoordinate:animated:">setCenterCoordinate:animated:</a> method instead.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/compassView" title="compassView"></a>
+	<h3 class="subsubtitle method-title">compassView</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The compass image view shown in the upper-right when the map is rotated.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) UIImageView *compassView</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The compass image view shown in the upper-right when the map is rotated.</p>
 	</div>
 	
 	
@@ -875,6 +1047,47 @@
 </div>
 						
 						<div class="section-method">
+	<a name="//api/name/logoView" title="logoView"></a>
+	<h3 class="subsubtitle method-title">logoView</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The Mapbox logo image view shown in the lower-left of the map.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) UIImageView *logoView</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The Mapbox logo image view shown in the lower-left of the map.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/rotateEnabled" title="rotateEnabled"></a>
 	<h3 class="subsubtitle method-title">rotateEnabled</h3>
 	
@@ -976,7 +1189,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSArray *selectedAnnotations</code></div>
+	<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSArray&lt;id&lt;MGLAnnotation&gt; &gt; *selectedAnnotations</code></div>
 
     
 	
@@ -1066,7 +1279,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic) NSArray *styleClasses</code></div>
+	<div class="method-subsection method-declaration"><code>@property (nonatomic) NSArray&lt;NSString*&gt; *styleClasses</code></div>
 
     
 	
@@ -1309,6 +1522,49 @@
 </div>
 						
 						<div class="section-method">
+	<a name="//api/name/visibleCoordinateBounds" title="visibleCoordinateBounds"></a>
+	<h3 class="subsubtitle method-title">visibleCoordinateBounds</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>The coordinate bounds visible in the receiver’s viewport.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>@property (nonatomic) MGLCoordinateBounds visibleCoordinateBounds</code></div>
+
+    
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>The coordinate bounds visible in the receiver’s viewport.</p>
+
+<p>Changing the value of this property updates the receiver immediately. If you want to animate the change, call <a href="#//api/name/setVisibleCoordinateBounds:animated:"><code>setVisibleCoordinateBounds:animated:</code></a> instead.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/zoomEnabled" title="zoomEnabled"></a>
 	<h3 class="subsubtitle method-title">zoomEnabled</h3>
 	
@@ -1471,7 +1727,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>- (void)addAnnotations:(NSArray *)<em>annotations</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)addAnnotations:(NSArray&lt;id&lt;MGLAnnotation&gt; &gt; *)<em>annotations</em></code></div>
 
     
 	
@@ -1667,6 +1923,64 @@
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
 		<p>Converts a point in the specified view’s coordinate system to a map coordinate.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/dequeueReusableAnnotationImageWithIdentifier:" title="dequeueReusableAnnotationImageWithIdentifier:"></a>
+	<h3 class="subsubtitle method-title">dequeueReusableAnnotationImageWithIdentifier:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Returns a reusable annotation image object located by its identifier.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (nullable MGLAnnotationImage *)dequeueReusableAnnotationImageWithIdentifier:(NSString *)<em>identifier</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>identifier</em></dt>
+			<dd><p>A string identifying the annotation image to be reused. This string is the same one you specify when initially returning the annotation image object using the mapView:imageForAnnotation: method.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>An annotation image object with the specified identifier, or <code>nil</code> if no such object exists in the reuse queue.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Returns a reusable annotation image object located by its identifier.</p>
+
+<p>For performance reasons, you should generally reuse MGLAnnotationImage objects for <a href="#//api/name/annotations">annotations</a> in your map views. Dequeueing saves time and memory during performance-critical operations such as scrolling.</p>
 	</div>
 	
 	
@@ -2076,7 +2390,7 @@
 	
     
 
-	<div class="method-subsection method-declaration"><code>- (void)removeAnnotations:(NSArray *)<em>annotations</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)removeAnnotations:(NSArray&lt;id&lt;MGLAnnotation&gt; &gt; *)<em>annotations</em></code></div>
 
     
 	
@@ -2486,6 +2800,189 @@
 </div>
 						
 						<div class="section-method">
+	<a name="//api/name/setVisibleCoordinateBounds:animated:" title="setVisibleCoordinateBounds:animated:"></a>
+	<h3 class="subsubtitle method-title">setVisibleCoordinateBounds:animated:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Changes the receiver’s viewport to fit the given coordinate bounds, optionally animating the change.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setVisibleCoordinateBounds:(MGLCoordinateBounds)<em>bounds</em> animated:(BOOL)<em>animated</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bounds</em></dt>
+			<dd><p>The bounds that the viewport will show in its entirety.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>animated</em></dt>
+			<dd><p>Specify <code>YES</code> to animate the change by smoothly scrolling and zooming or <code>NO</code> to immediately display the given bounds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Changes the receiver’s viewport to fit the given coordinate bounds, optionally animating the change.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setVisibleCoordinateBounds:edgePadding:animated:" title="setVisibleCoordinateBounds:edgePadding:animated:"></a>
+	<h3 class="subsubtitle method-title">setVisibleCoordinateBounds:edgePadding:animated:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Changes the receiver’s viewport to fit the given coordinate bounds and optionally some additional padding on each side.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setVisibleCoordinateBounds:(MGLCoordinateBounds)<em>bounds</em> edgePadding:(UIEdgeInsets)<em>insets</em> animated:(BOOL)<em>animated</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bounds</em></dt>
+			<dd><p>The bounds that the viewport will show in its entirety.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>insets</em></dt>
+			<dd><p>The minimum padding (in screen points) that will be visible around the given coordinate bounds.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>animated</em></dt>
+			<dd><p>Specify <code>YES</code> to animate the change by smoothly scrolling and zooming or <code>NO</code> to immediately display the given bounds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Changes the receiver’s viewport to fit the given coordinate bounds and optionally some additional padding on each side.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setVisibleCoordinates:count:edgePadding:animated:" title="setVisibleCoordinates:count:edgePadding:animated:"></a>
+	<h3 class="subsubtitle method-title">setVisibleCoordinates:count:edgePadding:animated:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Changes the receiver’s viewport to fit all of the given coordinates and optionally some additional padding on each side.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)setVisibleCoordinates:(CLLocationCoordinate2D *)<em>coordinates</em> count:(NSUInteger)<em>count</em> edgePadding:(UIEdgeInsets)<em>insets</em> animated:(BOOL)<em>animated</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>coordinates</em></dt>
+			<dd><p>The coordinates that the viewport will show.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>count</em></dt>
+			<dd><p>The number of coordinates. This number must not be greater than the number of elements in <code>coordinates</code>.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>insets</em></dt>
+			<dd><p>The minimum padding (in screen points) that will be visible around the given coordinate bounds.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>animated</em></dt>
+			<dd><p>Specify <code>YES</code> to animate the change by smoothly scrolling and zooming or <code>NO</code> to immediately display the given bounds.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Changes the receiver’s viewport to fit all of the given coordinates and optionally some additional padding on each side.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/setZoomLevel:animated:" title="setZoomLevel:animated:"></a>
 	<h3 class="subsubtitle method-title">setZoomLevel:animated:</h3>
 	
@@ -2599,7 +3096,7 @@
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2015 Mapbox. All rights reserved. (Last updated: 2015-06-19)</span><br />
+						<p><span class="copyright">&copy; 2015 Mapbox. All rights reserved. (Last updated: 2015-07-09)</span><br />
 						
 						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
 						

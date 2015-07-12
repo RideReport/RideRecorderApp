@@ -11,7 +11,7 @@
 	<body>
 		<header id="top_header">
 			<div id="library" class="hideInXcode">
-				<h1><a id="libraryTitle" href="../index.html">Mapbox GL for iOS 0.4.0 </a></h1>
+				<h1><a id="libraryTitle" href="../index.html">Mapbox GL for iOS 0.5.0 </a></h1>
 				<a id="developerHome" href="../index.html">Mapbox</a>
 			</div>
 			
@@ -55,6 +55,8 @@
 	
 	<option value="//api/name/mapView:fillColorForPolygonAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:fillColorForPolygonAnnotation:</option>
 	
+	<option value="//api/name/mapView:imageForAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:imageForAnnotation:</option>
+	
 	<option value="//api/name/mapView:leftCalloutAccessoryViewForAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:leftCalloutAccessoryViewForAnnotation:</option>
 	
 	<option value="//api/name/mapView:lineWidthForPolylineAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:lineWidthForPolylineAnnotation:</option>
@@ -62,8 +64,6 @@
 	<option value="//api/name/mapView:rightCalloutAccessoryViewForAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:rightCalloutAccessoryViewForAnnotation:</option>
 	
 	<option value="//api/name/mapView:strokeColorForShapeAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:strokeColorForShapeAnnotation:</option>
-	
-	<option value="//api/name/mapView:symbolNameForAnnotation:">&nbsp;&nbsp;&nbsp;&nbsp;- mapView:symbolNameForAnnotation:</option>
 	
 	<option value="//api/name/mapViewDidStopLocatingUser:">&nbsp;&nbsp;&nbsp;&nbsp;- mapViewDidStopLocatingUser:</option>
 	
@@ -113,6 +113,8 @@
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:fillColorForPolygonAnnotation:">mapView:fillColorForPolygonAnnotation:</a></span></li>
 	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:imageForAnnotation:">mapView:imageForAnnotation:</a></span></li>
+	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:leftCalloutAccessoryViewForAnnotation:">mapView:leftCalloutAccessoryViewForAnnotation:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:lineWidthForPolylineAnnotation:">mapView:lineWidthForPolylineAnnotation:</a></span></li>
@@ -120,8 +122,6 @@
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:rightCalloutAccessoryViewForAnnotation:">mapView:rightCalloutAccessoryViewForAnnotation:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:strokeColorForShapeAnnotation:">mapView:strokeColorForShapeAnnotation:</a></span></li>
-	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapView:symbolNameForAnnotation:">mapView:symbolNameForAnnotation:</a></span></li>
 	
 	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/mapViewDidStopLocatingUser:">mapViewDidStopLocatingUser:</a></span></li>
 	
@@ -182,7 +182,7 @@
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
-		<code><a href="#//api/name/mapView:symbolNameForAnnotation:">&ndash;&nbsp;mapView:symbolNameForAnnotation:</a></code>
+		<code><a href="#//api/name/mapView:imageForAnnotation:">&ndash;&nbsp;mapView:imageForAnnotation:</a></code>
 	</span>
 	
 	
@@ -650,6 +650,67 @@
 </div>
 						
 						<div class="section-method">
+	<a name="//api/name/mapView:imageForAnnotation:" title="mapView:imageForAnnotation:"></a>
+	<h3 class="subsubtitle method-title">mapView:imageForAnnotation:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Returns an image object to use for the marker for the specified point annotation object.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (nullable MGLAnnotationImage *)mapView:(MGLMapView *)<em>mapView</em> imageForAnnotation:(id&lt;MGLAnnotation&gt;)<em>annotation</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>mapView</em></dt>
+			<dd><p>The map view that requested the annotation image.</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>annotation</em></dt>
+			<dd><p>The object representing the annotation that is about to be displayed.</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>The image object to display for the specified annotation or <code>nil</code> if you want to display the default marker image.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>Returns an image object to use for the marker for the specified point annotation object.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">MGLMapView.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
 	<a name="//api/name/mapView:leftCalloutAccessoryViewForAnnotation:" title="mapView:leftCalloutAccessoryViewForAnnotation:"></a>
 	<h3 class="subsubtitle method-title">mapView:leftCalloutAccessoryViewForAnnotation:</h3>
 	
@@ -902,67 +963,6 @@
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/mapView:symbolNameForAnnotation:" title="mapView:symbolNameForAnnotation:"></a>
-	<h3 class="subsubtitle method-title">mapView:symbolNameForAnnotation:</h3>
-	
-	
-	
-	<div class="method-subsection brief-description">
-		<p>Returns the style&rsquo;s symbol name to use for the marker for the specified point annotation object.</p>
-	</div>		
-	
-    
-
-	<div class="method-subsection method-declaration"><code>- (nullable NSString *)mapView:(MGLMapView *)<em>mapView</em> symbolNameForAnnotation:(id&lt;MGLAnnotation&gt;)<em>annotation</em></code></div>
-
-    
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>mapView</em></dt>
-			<dd><p>The map view that requested the annotation symbol name.</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>annotation</em></dt>
-			<dd><p>The object representing the annotation that is about to be displayed.</p></dd>
-		</dl>
-		
-	</div>
-	
-	
-	
-	<div class="method-subsection return">
-		<h4 class="method-subtitle parameter-title">Return Value</h4>
-		<p>The marker symbol to display for the specified annotation or <code>nil</code> if you want to display the default symbol.</p>
-	</div>
-	
-	
-	
-	
-	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>Returns the style&rsquo;s symbol name to use for the marker for the specified point annotation object.</p>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection declared-in-section">
-		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">MGLMapView.h</code><br />
-	</div>				
-	
-	
-</div>
-						
-						<div class="section-method">
 	<a name="//api/name/mapViewDidStopLocatingUser:" title="mapViewDidStopLocatingUser:"></a>
 	<h3 class="subsubtitle method-title">mapViewDidStopLocatingUser:</h3>
 	
@@ -1083,7 +1083,7 @@
 				<div id="footer">
 					<hr />
 					<div class="footer-copyright">
-						<p><span class="copyright">&copy; 2015 Mapbox. All rights reserved. (Last updated: 2015-06-19)</span><br />
+						<p><span class="copyright">&copy; 2015 Mapbox. All rights reserved. (Last updated: 2015-07-09)</span><br />
 						
 						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
 						

@@ -1,10 +1,11 @@
-#import "MGLTypes.h"
+#import "MGLGeometry.h"
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class MGLAnnotationImage;
 @class MGLUserLocation;
 @class MGLPolyline;
 @class MGLPolygon;
@@ -73,6 +74,15 @@ IB_DESIGNABLE
 *   The default value of this property is `YES`. */
 @property(nonatomic, getter=isRotateEnabled) BOOL rotateEnabled;
 
+/** The compass image view shown in the upper-right when the map is rotated. */
+@property (nonatomic, readonly) UIImageView *compassView;
+
+/** The Mapbox logo image view shown in the lower-left of the map. */
+@property (nonatomic, readonly) UIImageView *logoView;
+
+/** The button shown in the lower-right of the map which when pressed displays the map attribution information. */
+@property (nonatomic, readonly) UIButton *attributionButton;
+
 #pragma mark - Accessing the Delegate
 
 /** @name Accessing the Delegate */
@@ -117,6 +127,29 @@ IB_DESIGNABLE
 *   @param zoomLevel The new zoom level for the map.
 *   @param animated Specify `YES` if you want the map view to animate scrolling and zooming to the new location or `NO` if you want the map to display the new location immediately. */
 - (void)setCenterCoordinate:(CLLocationCoordinate2D)centerCoordinate zoomLevel:(double)zoomLevel animated:(BOOL)animated;
+
+/** The coordinate bounds visible in the receiver’s viewport.
+*   
+*   Changing the value of this property updates the receiver immediately. If you want to animate the change, call `setVisibleCoordinateBounds:animated:` instead. */
+@property (nonatomic) MGLCoordinateBounds visibleCoordinateBounds;
+
+/** Changes the receiver’s viewport to fit the given coordinate bounds, optionally animating the change.
+*   @param bounds The bounds that the viewport will show in its entirety.
+*   @param animated Specify `YES` to animate the change by smoothly scrolling and zooming or `NO` to immediately display the given bounds. */
+- (void)setVisibleCoordinateBounds:(MGLCoordinateBounds)bounds animated:(BOOL)animated;
+
+/** Changes the receiver’s viewport to fit the given coordinate bounds and optionally some additional padding on each side.
+*   @param bounds The bounds that the viewport will show in its entirety.
+*   @param insets The minimum padding (in screen points) that will be visible around the given coordinate bounds.
+*   @param animated Specify `YES` to animate the change by smoothly scrolling and zooming or `NO` to immediately display the given bounds. */
+- (void)setVisibleCoordinateBounds:(MGLCoordinateBounds)bounds edgePadding:(UIEdgeInsets)insets animated:(BOOL)animated;
+
+/** Changes the receiver’s viewport to fit all of the given coordinates and optionally some additional padding on each side.
+*   @param coordinates The coordinates that the viewport will show.
+*   @param count The number of coordinates. This number must not be greater than the number of elements in `coordinates`.
+*   @param insets The minimum padding (in screen points) that will be visible around the given coordinate bounds.
+*   @param animated Specify `YES` to animate the change by smoothly scrolling and zooming or `NO` to immediately display the given bounds. */
+- (void)setVisibleCoordinates:(CLLocationCoordinate2D *)coordinates count:(NSUInteger)count edgePadding:(UIEdgeInsets)insets animated:(BOOL)animated;
 
 /** The heading of the map (measured in degrees) relative to true north. 
 *
@@ -170,7 +203,7 @@ IB_DESIGNABLE
 @property (nonatomic, nullable) NSString *mapID __attribute__((unavailable("Use styleID.")));
 
 /** URLs of the styles bundled with the library. */
-@property (nonatomic, readonly) NSArray *bundledStyleURLs;
+@property (nonatomic, readonly) NS_ARRAY_OF(NSURL *) *bundledStyleURLs;
 
 /** URL of the style currently displayed in the receiver.
 *
@@ -180,7 +213,7 @@ IB_DESIGNABLE
 @property (nonatomic, null_resettable) NSURL *styleURL;
 
 /** Currently active style classes, represented as an array of string identifiers. */
-@property (nonatomic) NSArray *styleClasses;
+@property (nonatomic) NS_ARRAY_OF(NSString *) *styleClasses;
 
 /** Returns a Boolean value indicating whether the style class with the given identifier is currently active.
     @param styleClass The style class to query for.
@@ -202,7 +235,7 @@ IB_DESIGNABLE
 /** The complete list of annotations associated with the receiver. (read-only)
 *
 *   The objects in this array must adopt the MGLAnnotation protocol. If no annotations are associated with the map view, the value of this property is `nil`. */
-@property (nonatomic, readonly, nullable) NSArray *annotations;
+@property (nonatomic, readonly, nullable) NS_ARRAY_OF(id <MGLAnnotation>) *annotations;
 
 /** Adds the specified annotation to the map view.
 *   @param annotation The annotation object to add to the receiver. This object must conform to the MGLAnnotation protocol. The map view retains the specified object. */
@@ -210,7 +243,7 @@ IB_DESIGNABLE
 
 /** Adds an array of annotation objects to the map view.
 *   @param annotations An array of annotation objects. Each object in the array must conform to the MGLAnnotation protocol. The map view retains the individual annotation objects. */
-- (void)addAnnotations:(NSArray *)annotations;
+- (void)addAnnotations:(NS_ARRAY_OF(id <MGLAnnotation>) *)annotations;
 
 /** Removes the specified annotation object from the map view.
 *
@@ -224,12 +257,24 @@ IB_DESIGNABLE
 *   Removing annotation objects disassociates them from the map view entirely, preventing them from being displayed on the map. Thus, you would typically call this method only when you want to hide or delete the specified annotations.
 *
 *   @param annotations The array of annotations to remove. Objects in the array must conform to the MGLAnnotation protocol. */
-- (void)removeAnnotations:(NSArray *)annotations;
+- (void)removeAnnotations:(NS_ARRAY_OF(id <MGLAnnotation>) *)annotations;
+
+/** Returns a reusable annotation image object located by its identifier.
+*
+*   For performance reasons, you should generally reuse MGLAnnotationImage objects for annotations in your map views. Dequeueing saves time and memory during performance-critical operations such as scrolling.
+*
+*   @param identifier A string identifying the annotation image to be reused. This string is the same one you specify when initially returning the annotation image object using the mapView:imageForAnnotation: method.
+*   @return An annotation image object with the specified identifier, or `nil` if no such object exists in the reuse queue. */
+- (nullable MGLAnnotationImage *)dequeueReusableAnnotationImageWithIdentifier:(NSString *)identifier;
+
+#pragma mark - Managing Annotation Selections
+
+/** @name Managing Annotation Selections */
 
 /** The annotations that are currently selected.
 *
 *   Assigning a new array to this property selects only the first annotation in the array. */
-@property (nonatomic, copy) NSArray *selectedAnnotations;
+@property (nonatomic, copy) NS_ARRAY_OF(id <MGLAnnotation>) *selectedAnnotations;
 
 /** Selects the specified annotation and displays a callout view for it.
 *
@@ -300,11 +345,13 @@ IB_DESIGNABLE
 
 /** @name Managing the Display of Annotations */
 
-/** Returns the style's symbol name to use for the marker for the specified point annotation object.
-*   @param mapView The map view that requested the annotation symbol name.
-*   @param annotation The object representing the annotation that is about to be displayed. 
-*   @return The marker symbol to display for the specified annotation or `nil` if you want to display the default symbol. */
-- (nullable NSString *)mapView:(MGLMapView *)mapView symbolNameForAnnotation:(id <MGLAnnotation>)annotation;
+- (nullable NSString *)mapView:(MGLMapView *)mapView symbolNameForAnnotation:(id <MGLAnnotation>)annotation __attribute__((unavailable("Use -mapView:imageForAnnotation:.")));
+
+/** Returns an image object to use for the marker for the specified point annotation object.
+*   @param mapView The map view that requested the annotation image.
+*   @param annotation The object representing the annotation that is about to be displayed.
+*   @return The image object to display for the specified annotation or `nil` if you want to display the default marker image. */
+- (nullable MGLAnnotationImage *)mapView:(MGLMapView *)mapView imageForAnnotation:(id <MGLAnnotation>)annotation;
 
 /** Returns the alpha value to use when rendering a shape annotation. Defaults to `1.0`.
 *   @param mapView The map view rendering the shape annotation.
@@ -394,6 +441,12 @@ IB_DESIGNABLE
 
 // TODO
 - (void)mapViewDidFinishRenderingMap:(MGLMapView *)mapView fullyRendered:(BOOL)fullyRendered;
+
+// TODO
+- (void)mapViewWillStartRenderingFrame:(MGLMapView *)mapView;
+
+// TODO
+- (void)mapViewDidFinishRenderingFrame:(MGLMapView *)mapView fullyRendered:(BOOL)fullyRendered;
 
 #pragma mark - Tracking the User Location
 

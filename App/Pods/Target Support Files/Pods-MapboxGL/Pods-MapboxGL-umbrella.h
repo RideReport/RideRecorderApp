@@ -3,6 +3,8 @@
 #import "MapboxGL.h"
 #import "MGLAccountManager.h"
 #import "MGLAnnotation.h"
+#import "MGLAnnotationImage.h"
+#import "MGLGeometry.h"
 #import "MGLMapView+IBAdditions.h"
 #import "MGLMapView.h"
 #import "MGLMultiPoint.h"

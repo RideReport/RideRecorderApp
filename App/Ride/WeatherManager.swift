@@ -28,15 +28,13 @@ class WeatherManager {
     func startup() {
     }
     
-    func queryCondition(date: NSDate, location: Location, handler: (CZWeatherCondition?)->Void) {
-        let request = CZWeatherRequest(type: CZWeatherRequestType.CurrentConditionsRequestType)
-        request.location = CZWeatherLocation(CLLocationCoordinate2D: location.coordinate())
-        request.service = CZOpenWeatherMapService(key: openWeatherMapKey)
+    func queryCondition(date: NSDate, location: Location, handler: (CZWeatherData?)->Void) {
+        let request = CZOpenWeatherMapRequest.newCurrentRequest()
+        request.location = CZWeatherLocation(fromCoordinate: location.coordinate())
         
-        request.performRequestWithHandler { (data, error) -> Void in
+        request.sendWithCompletion { (data, error) -> Void in
             if (data != nil && error == nil) {
-                let currentCondition = data as! CZWeatherCondition;
-                handler(currentCondition)
+                handler(data)
             }
             
             handler(nil)
