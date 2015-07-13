@@ -1,1 +1,1 @@
-https://github.com/mapbox/mapbox-gl-native/commit/7d250934b1
+https://github.com/mapbox/mapbox-gl-native/commit/f5e38ee21a
