@@ -38,6 +38,13 @@ static float animationTimeCurveWithGrey(float progress) {
         self.primaryColor = [UIColor colorWithRed:112.0/255.0 green:234.0/255.0 blue:176.0/255.0 alpha:1.0];
         self.secondaryColor = [UIColor colorWithRed:116.0/255.0 green:207.0/255.0 blue:230.0/255.0 alpha:1.0];
         self.neutralColor = [UIColor clearColor];
+        
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [self stopAnimating];
+        }];
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            [self animate];
+        }];
     }
     return self;
 }
@@ -50,6 +57,8 @@ static float animationTimeCurveWithGrey(float progress) {
     self.primaryColor = nil;
     self.secondaryColor = nil;
     self.neutralColor = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setAnimates:(BOOL)animates;
