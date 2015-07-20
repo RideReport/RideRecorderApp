@@ -86,7 +86,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UIDevice.currentDevice().batteryMonitoringEnabled = true
         
         self.locationManager = CLLocationManager()
-        self.locationManager.activityType = CLActivityType.Fitness
+        self.locationManager.activityType = CLActivityType.OtherNavigation
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
