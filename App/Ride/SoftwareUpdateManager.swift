@@ -28,7 +28,11 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
     
     func startup() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+#if DEBUG
+    // don't check for updates on debug builds
+#else
         self.checkForUpdateIfNeeded()
+#endif
     }
     
     deinit {
