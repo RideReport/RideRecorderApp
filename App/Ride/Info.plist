@@ -24,6 +24,8 @@
 	<string>????</string>
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA</string>
+	<key>MGLMapboxAccountType</key>
+	<integer>1</integer>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<true/>
 	<key>CFBundleVersion</key>
