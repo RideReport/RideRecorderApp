@@ -8,10 +8,9 @@
 
 import Foundation
 import CoreData
-import MapKit
 import ionicons
 
-class Incident : NSManagedObject, MKAnnotation {
+class Incident : NSManagedObject, MGLAnnotation {
     enum IncidentType : Int {
         case Unknown = 0
         case RoadHazard
@@ -145,7 +144,7 @@ class Incident : NSManagedObject, MKAnnotation {
     }
     
     // Title and subtitle for use by selection UI.
-    var title: String! {
+    var title: String? {
         get {
             return Incident.IncidentType(rawValue: self.type.integerValue)!.text
         }

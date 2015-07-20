@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreLocation
-import MapKit
 import MapboxGL
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
@@ -22,8 +21,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     private var tripPolyLines : [Trip : MGLPolyline]!
     private var hasCenteredMap : Bool = false
     
-    private var privacyCircle : MKCircle?
-    private var geofenceCircles : [MKCircle] = []
+//    private var privacyCircle : MKCircle?
+//    private var geofenceCircles : [MKCircle] = []
     private var privacyCircleRenderer : PrivacyCircleRenderer?
     private var isDraggingPrivacyCircle : Bool = false
     private var privacyCirclePanGesture : UIPanGestureRecognizer!
@@ -97,6 +96,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         super.viewWillAppear(animated)
         
         self.loadTrips()
+        self.refreshTrip(self.mainViewController.selectedTrip)
     }
     
     override func didReceiveMemoryWarning() {
@@ -136,67 +136,67 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func respondToPrivacyCirclePanGesture(sender: AnyObject) {
-        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
-            return
-        }
-        
-        if (sender.numberOfTouches() > 1) {
-            return
-        }
-        
-        if (sender.state == UIGestureRecognizerState.Began) {
-            let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
-            let gestureLocation = CLLocation(latitude: gestureCoord.latitude, longitude: gestureCoord.longitude)
-            
-            let circleLocation = CLLocation(latitude: self.privacyCircle!.coordinate.latitude, longitude: self.privacyCircle!.coordinate.longitude)
-            
-            if (gestureLocation.distanceFromLocation(circleLocation) <= self.privacyCircle!.radius) {
-                self.mapView.scrollEnabled = false
-                self.isDraggingPrivacyCircle = true
-            } else {
-                self.mapView.scrollEnabled = true
-                self.isDraggingPrivacyCircle = false
-            }
-        } else if (sender.state == UIGestureRecognizerState.Changed) {
-            if (self.isDraggingPrivacyCircle) {
-                let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
-                
-                let oldPrivacyCircle = self.privacyCircle
-                self.privacyCircle! = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle!.radius)
-//                self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
-//                self.mapView.removeOverlay(oldPrivacyCircle)
-            }
-        } else {
-            self.mapView.scrollEnabled = true
-            self.isDraggingPrivacyCircle = false
-        }
+//        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
+//            return
+//        }
+//        
+//        if (sender.numberOfTouches() > 1) {
+//            return
+//        }
+//        
+//        if (sender.state == UIGestureRecognizerState.Began) {
+//            let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
+//            let gestureLocation = CLLocation(latitude: gestureCoord.latitude, longitude: gestureCoord.longitude)
+//            
+//            let circleLocation = CLLocation(latitude: self.privacyCircle!.coordinate.latitude, longitude: self.privacyCircle!.coordinate.longitude)
+//            
+//            if (gestureLocation.distanceFromLocation(circleLocation) <= self.privacyCircle!.radius) {
+//                self.mapView.scrollEnabled = false
+//                self.isDraggingPrivacyCircle = true
+//            } else {
+//                self.mapView.scrollEnabled = true
+//                self.isDraggingPrivacyCircle = false
+//            }
+//        } else if (sender.state == UIGestureRecognizerState.Changed) {
+//            if (self.isDraggingPrivacyCircle) {
+//                let gestureCoord = self.mapView.convertPoint(sender.locationInView(self.mapView), toCoordinateFromView: self.mapView)
+//                
+//                let oldPrivacyCircle = self.privacyCircle
+//                self.privacyCircle! = MKCircle(centerCoordinate: gestureCoord, radius: self.privacyCircle!.radius)
+////                self.mapView.addOverlay(self.privacyCircle, level: MKOverlayLevel.AboveLabels)
+////                self.mapView.removeOverlay(oldPrivacyCircle)
+//            }
+//        } else {
+//            self.mapView.scrollEnabled = true
+//            self.isDraggingPrivacyCircle = false
+//        }
     }
-    
+
     @IBAction func cancelSetPrivacyCircle(sender: AnyObject) {
-        self.privacyCircleToolbar.hidden = true
-        
-//        self.mapView.removeOverlay(self.privacyCircle)
-        self.mapView.setNeedsDisplay()
-        self.privacyCircle = nil
-        self.privacyCircleRenderer = nil
-    }
-    
-    @IBAction func saveSetPrivacyCircle(sender: AnyObject) {
-        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
-            return
-        }
-        
-        PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle!)
-        
-        self.privacyCircleToolbar.hidden = true
-        
-//        self.mapView.removeOverlay(self.privacyCircle)
-        self.mapView.setNeedsDisplay()
-        self.privacyCircle = nil
-        self.privacyCircleRenderer = nil
-        
-        self.unloadTrips()
-        self.loadTrips()
+//        self.privacyCircleToolbar.hidden = true
+//        
+////        self.mapView.removeOverlay(self.privacyCircle)
+//        self.mapView.setNeedsDisplay()
+//        self.privacyCircle = nil
+//        self.privacyCircleRenderer = nil
+//    }
+//    
+//    @IBAction func saveSetPrivacyCircle(sender: AnyObject) {
+//        if (self.privacyCircle == nil || self.privacyCircleRenderer == nil) {
+//            return
+//        }
+//        
+//        PrivacyCircle.updateOrCreatePrivacyCircle(self.privacyCircle!)
+//        
+//        self.privacyCircleToolbar.hidden = true
+//        
+////        self.mapView.removeOverlay(self.privacyCircle)
+//        self.mapView.setNeedsDisplay()
+//        self.privacyCircle = nil
+//        self.privacyCircleRenderer = nil
+//        
+//        self.unloadTrips()
+//        self.loadTrips()
     }
     
     @IBAction func addIncident(sender: AnyObject) {
@@ -209,17 +209,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     //
     
     func refreshGeofences() {
-        for oldOverlay in self.geofenceCircles {
-//            self.mapView.removeOverlay(oldOverlay)
-        }
-        
-        self.geofenceCircles = []
-        
-        for region in RouteManager.sharedManager.geofenceSleepRegions {
-            let circle = MKCircle(centerCoordinate: region.center, radius: region.radius)
-            self.geofenceCircles.append(circle)
-//            self.mapView.addOverlay(circle, level: MKOverlayLevel.AboveLabels)
-        }
+//        for oldOverlay in self.geofenceCircles {
+////            self.mapView.removeOverlay(oldOverlay)
+//        }
+//        
+//        self.geofenceCircles = []
+//        
+//        for region in RouteManager.sharedManager.geofenceSleepRegions {
+//            let circle = MKCircle(centerCoordinate: region.center, radius: region.radius)
+//            self.geofenceCircles.append(circle)
+////            self.mapView.addOverlay(circle, level: MKOverlayLevel.AboveLabels)
+//        }
     }
     
     
@@ -265,46 +265,46 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-//        let overlay = self.tripPolyLines[trip]! as MGLPolyline
-//        
-//        if (overlay.pointCount == 0) {
-//            return
-//        }
-//        
-//        var i = 1
-//        var pointCount = (Int)(overlay.pointCount)
-//        var coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
-//        overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
-//        let point0 = coordinates[0]
-//        var minLong : Double = point0.longitude
-//        var maxLong : Double = point0.longitude
-//        var minLat : Double = point0.latitude
-//        var maxLat : Double = point0.latitude
-//        
-//        while i < pointCount {
-//            let point = coordinates[i]
-//            if (point.longitude < minLong) {
-//                minLong = point.longitude
-//            } else if (point.longitude > maxLong) {
-//                maxLong = point.longitude
-//            }
-//            
-//            if (point.latitude < minLat) {
-//                minLat = point.latitude
-//            } else if (point.latitude > maxLat) {
-//                maxLat = point.latitude
-//            }
-//            i++
-//        }
-//        
-//        let padFactor : Double = 0.1
-//        let sizeLong = (maxLong - minLong)
-//        let sizeLat = (maxLat - minLat)
-//        
-//        let mapRect = MKMapRectMake(minLong - (sizeLong * padFactor), minLat - (sizeLat * padFactor), sizeLong * (1 + 2*padFactor), sizeLat * (1 + 2*padFactor))
-//        dispatch_async(dispatch_get_main_queue(), {
-//            self.mapView.setVisibleMapRect(mapRect, animated: true)
-//        })
+        let overlay = self.tripPolyLines[trip]! as MGLPolyline
+        
+        if (overlay.pointCount == 0) {
+            return
+        }
+        
+        var i = 1
+        var pointCount = (Int)(overlay.pointCount)
+        var coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
+        overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
+        let point0 = coordinates[0]
+        var minLong : Double = point0.longitude
+        var maxLong : Double = point0.longitude
+        var minLat : Double = point0.latitude
+        var maxLat : Double = point0.latitude
+        
+        while i < pointCount {
+            let point = coordinates[i]
+            if (point.longitude < minLong) {
+                minLong = point.longitude
+            } else if (point.longitude > maxLong) {
+                maxLong = point.longitude
+            }
+            
+            if (point.latitude < minLat) {
+                minLat = point.latitude
+            } else if (point.latitude > maxLat) {
+                maxLat = point.latitude
+            }
+            i++
+        }
+        
+        let padFactor : Double = 0.1
+        let sizeLong = (maxLong - minLong)
+        let sizeLat = (maxLat - minLat)
+        
+        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactor), minLong - (sizeLong * padFactor)), CLLocationCoordinate2DMake(maxLat + (sizeLat * 3 * padFactor),maxLong + (sizeLong * padFactor))) // extra padding on the top so that it isn't under the notification bar.
+        dispatch_async(dispatch_get_main_queue(), {
+            self.mapView.setVisibleCoordinateBounds(bounds, animated: true)
+        })
     }
     
     func refreshTrip(trip : Trip!) {
@@ -352,25 +352,28 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             let polyline = MGLPolyline(coordinates: &coordinates, count: count)
             
             self.tripPolyLines[trip] = polyline
-
+            if (coordinates.count == 0) {
+                // can happen if all the points in simplifiedLocations are private
+                return
+            }
+            
             self.mapView.addAnnotation(polyline)
             
-//            for annotation in self.mapView.annotations! {
-//                if (annotation.isKindOfClass(Incident)) {
-//                    let incident = annotation as! Incident
-//                    if (incident.fault || incident.deleted) {
-//                        self.mapView.removeAnnotation(incident)
-//                    }
-//                }
-//            }
-//            
-//            for item in trip.incidents.array {
-//                let incident = item as! Incident
-//                
-//                
-////                self.mapView.addAnnotation(incident)
-////                self.mapView(self.mapView, viewForAnnotation: incident) //unclear why this is needed, but without Pins sometimes dont appear.
-//            }
+            for annotation in self.mapView.annotations! {
+                if (annotation.isKindOfClass(Incident)) {
+                    let incident = annotation as! Incident
+                    if (incident.fault || incident.deleted) {
+                        self.mapView.removeAnnotation(incident)
+                    }
+                }
+            }
+            
+            for item in trip.incidents.array {
+                let incident = item as! Incident
+                
+                
+                self.mapView.addAnnotation(incident)
+            }
             
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
                 self.setSelectedTrip(trip)
@@ -379,13 +382,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func addIncidentToMap(incident: Incident) {
-//        self.mapView.addAnnotation(incident)
-//        self.mapView.selectAnnotation(incident, animated: true)
+        self.mapView.addAnnotation(incident)
+        self.mapView.selectAnnotation(incident, animated: true)
     }
-//    
-//    func calloutViewClicked(calloutView: SMCalloutView!) {
-//        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
-//    }
 
     //
     // MARK: - Map Kit
@@ -403,44 +402,50 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 //        }
 //    }
     
-//    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
-//        if (annotation.isKindOfClass(MKUserLocation)) {
-//            return nil;
-//        } else if (annotation.isKindOfClass(Incident)) {
-//            let incident = annotation as! Incident
-//            
-//            let reuseID = "IncidentAnnotationViewReuseID" + incident.type.stringValue
-//            var annotationView = self.mapView.dequeueReusableAnnotationViewWithIdentifier(reuseID) as MKAnnotationView?
-//            
-//            if (annotationView == nil) {
-//                annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseID)
-//                annotationView!.image = Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage
-//                annotationView!.centerOffset = CGPoint(x: 0, y: -annotationView!.image.size.height/2)
-//                annotationView!.draggable = true
-//            }
-//            return annotationView
-//        }
-//        
-//        return nil;
-//    }
+
+    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        if (annotation.isKindOfClass(Incident)) {
+            let incident = annotation as! Incident
+
+            let reuseID = "IncidentAnnotationViewReuseID" + incident.type.stringValue
+            var annotationView = self.mapView.dequeueReusableAnnotationImageWithIdentifier(reuseID) as MGLAnnotationImage?
+
+            if (annotationView == nil) {
+                annotationView = MGLAnnotationImage(image: Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage, reuseIdentifier: reuseID)
+            }
+            return annotationView
+        }
+
+        return nil;
+    }
     
-//    func mapView(mapView: MKMapView!, didSelectAnnotationView view: MKAnnotationView!) {
-//        self.selectedIncident = (view.annotation as! Incident)
-//        
-//        self.calloutView.title = view.annotation.title
-//        self.calloutView.subtitle = view.annotation.subtitle
-//        
-//        self.calloutView.calloutOffset = view.calloutOffset
-//        
-//        self.calloutView.presentCalloutFromRect(view.bounds, inView: view, constrainedToView: self.view, animated: true)
-//    }
-//    
-//    func mapView(mapView: MKMapView!, didDeselectAnnotationView view: MKAnnotationView!) {
-//        self.selectedIncident = nil
-//        
-//        self.calloutView.dismissCalloutAnimated(true)
-//    }
-//    
+    func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        if (annotation.isKindOfClass(Incident)) {
+            return true
+        }
+        
+        return false
+    }
+    
+    func mapView(mapView: MGLMapView, rightCalloutAccessoryViewForAnnotation annotation: MGLAnnotation) -> UIView? {
+        let view = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+        
+        return view
+    }
+    
+    func mapView(mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
+        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
+    }
+    
+    func mapView(mapView: MGLMapView, didSelectAnnotation annotation: MGLAnnotation) {
+        self.selectedIncident = annotation as? Incident
+    }
+    
+    func mapView(mapView: MGLMapView, didDeselectAnnotation annotation: MGLAnnotation) {
+        self.selectedIncident = nil
+    }
+    
+//
 //    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
 //        if (newState == .Starting) {
 //            view.dragState = .Dragging
@@ -540,4 +545,3 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         return UIColor.clearColor()
     }
 }
-

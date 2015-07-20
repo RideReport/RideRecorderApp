@@ -14,6 +14,8 @@
 		<string>github.com:pixyzehn/PathMenu.git</string>
 		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
 		<string>https://github.com/Alamofire/Alamofire.git</string>
+		<key>7E68CB584078A487C0535CC191D3B7551EEE2095</key>
+		<string>https://github.com/mapbox/mapbox-gl-native.git</string>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
 		<string>github.com:quicklywilliam/Ride.git</string>
 	</dict>
@@ -25,6 +27,8 @@
 		<string>../../App/PathMenu</string>
 		<key>67620B5EFA902936DF04070AF595B76AB0333747</key>
 		<string>../..App/Alamofire</string>
+		<key>7E68CB584078A487C0535CC191D3B7551EEE2095</key>
+		<string>../../../mapbox-gl-native</string>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
 		<string>../..</string>
 	</dict>
@@ -43,6 +47,14 @@
 			<string>67620B5EFA902936DF04070AF595B76AB0333747</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Alamofire</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7E68CB584078A487C0535CC191D3B7551EEE2095</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mapbox-gl-native</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
