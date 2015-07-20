@@ -1,1 +1,0 @@
-../../../MapboxGL/Headers/MGLAnnotationImage.h

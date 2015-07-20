@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreLocation
-import MapboxGL
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
     var mainViewController: MainViewController! = nil

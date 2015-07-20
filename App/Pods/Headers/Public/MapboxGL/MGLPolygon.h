@@ -1,1 +1,0 @@
-../../../MapboxGL/Headers/MGLPolygon.h

@@ -1,1 +1,0 @@
-../../../MapboxGL/Headers/MGLShape.h
