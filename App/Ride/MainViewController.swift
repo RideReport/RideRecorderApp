@@ -39,7 +39,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             }
             
             if (selectedTrip != nil) {
-                self.newIncidentButton.hidden = true
+                self.newIncidentButton.hidden = false
                 self.mapViewController.refreshTrip(self.selectedTrip)
             } else {
                 self.newIncidentButton.hidden = true
@@ -64,8 +64,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         let pinColorsCount : CGFloat = 20
         let pinWidth = markersImage.size.width/pinColorsCount
         let iconSize : CGFloat = 16.0
-        var icon : UIImage! = UIImage(named: "markers-soft")!
-
+        var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
         
         self.editModeView.hidden = true
         
