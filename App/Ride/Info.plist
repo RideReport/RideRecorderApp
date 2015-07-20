@@ -14,7 +14,7 @@
 	<string>$(PRODUCT_NAME)</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>ionicons.ttf</string>
+		<string>Frameworks/ionicons.framework/ionicons.ttf</string>
 	</array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
