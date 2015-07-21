@@ -299,9 +299,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func tools(sender: AnyObject) {
         #if DEBUG
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Show Geofences")
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Map Info", "Show Geofences")
         #else
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant")
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Map Info")
         #endif
         actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
             if (buttonIndex == 1) {
@@ -311,13 +311,16 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             } else if (buttonIndex == 3) {
                 self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
             } else if (buttonIndex == 4) {
+                // show map attribution info
+                self.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+            } else if (buttonIndex == 5) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                     self.selectedTrip.sendTripCompletionNotification() {
-
-
+                        
+                        
                     }
                 })
-
+                
                 self.mapViewController.refreshGeofences()
             }
         }
