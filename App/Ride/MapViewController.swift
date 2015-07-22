@@ -311,6 +311,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func refreshTrip(trip : Trip!) {
         dispatch_async(dispatch_get_main_queue(), {
+            if (trip == nil) {
+                return
+            }
+            
             if (self.tripPolyLines[trip] != nil) {
                 let polyline = self.tripPolyLines[trip]
                 self.mapView.removeAnnotation(polyline!)
@@ -392,17 +396,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Map Kit
     //
     
-//    func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
-//        if (!self.hasCenteredMap && userLocation != nil) {
-////            if (self.mainViewController.selectedTrip == nil) {
-//                // don't recenter the map if the user has already selected a trip
-//                
-//                self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
-////            }
-//        
-//            self.hasCenteredMap = true
-//        }
-//    }
+    func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
+        if (!self.hasCenteredMap && userLocation != nil) {
+            if (self.mainViewController.selectedTrip == nil) {
+                // don't recenter the map if the user has already selected a trip
+                
+                self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
+            }
+        
+            self.hasCenteredMap = true
+        }
+    }
     
 
     func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
