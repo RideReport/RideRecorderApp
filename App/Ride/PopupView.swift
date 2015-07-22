@@ -38,7 +38,7 @@ import Foundation
     }
     
     func commonInit() {
-        self.textLabel = UILabel(frame: CGRectMake(7, 20, self.frame.size.width - 10, self.frame.size.height - 20))
+        self.textLabel = UILabel(frame: CGRectMake(7, 20, self.frame.size.width, self.frame.size.height - 20))
         self.textLabel.font = UIFont.systemFontOfSize(14)
         self.textLabel.textColor = UIColor.whiteColor()
         self.textLabel.numberOfLines = 1
