@@ -180,12 +180,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             }
             self.reloadTitleView()
         }
-        
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
-        
-        if (!hasSeenGettingStarted) {
-            self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -298,30 +292,15 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        #if DEBUG
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Map Info", "Show Geofences")
-        #else
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles: "Edit Privacy Circle", "Report Problem", "Setup Assistant", "Map Info")
-        #endif
+        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", "Setup Assistant", "Map Info")
         actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
             if (buttonIndex == 1) {
-//                self.mapViewController.enterPrivacyCircleEditor()
-            } else if (buttonIndex == 2){
                 self.sendLogFile()
+            } else if (buttonIndex == 2) {
+                AppDelegate.appDelegate().transitionToGettingStarted()
             } else if (buttonIndex == 3) {
-                self.navigationController?.performSegueWithIdentifier("segueToGettingStarted", sender: self)
-            } else if (buttonIndex == 4) {
                 // show map attribution info
                 self.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
-            } else if (buttonIndex == 5) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                    self.selectedTrip.sendTripCompletionNotification() {
-                        
-                        
-                    }
-                })
-                
-                self.mapViewController.refreshGeofences()
             }
         }
         

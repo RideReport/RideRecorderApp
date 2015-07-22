@@ -94,24 +94,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        
-        var viewController : UIViewController? = nil
         
         if (hasSeenGettingStarted) {
             // if they are new, do this later to avoid immediate permission dialogs.
             startupManagers()
-            viewController = storyBoard.instantiateViewControllerWithIdentifier("mainNavController") as! UIViewController!
+            self.transitionToMainNavController()
         } else {
-            viewController = storyBoard.instantiateViewControllerWithIdentifier("gettingStartedNavController") as! UIViewController!
+            self.transitionToGettingStarted()
         }
-        
-        
-        self.window?.rootViewController = viewController
-        self.window?.makeKeyAndVisible()
         
         return true
     }
+    
+    func transitionToGettingStarted() {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("gettingStartedNavController") as! UIViewController!
+        
+        let transition = CATransition()
+        transition.duration = 0.6
+        transition.type = kCATransitionFade
+        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        
+        self.window?.rootViewController = viewController
+        self.window?.makeKeyAndVisible()
+    }
+    
     
     func transitionToMainNavController() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)

@@ -15,7 +15,6 @@ import MapKit
 class Location : NSManagedObject {    
     @NSManaged var course : NSNumber?
     @NSManaged var horizontalAccuracy : NSNumber?
-    @NSManaged var isPrivate : Bool
     @NSManaged var isSmoothedLocation : Bool
     @NSManaged var latitude : NSNumber?
     @NSManaged var longitude : NSNumber?
@@ -37,31 +36,6 @@ class Location : NSManagedObject {
         self.longitude = NSNumber(double: location.coordinate.longitude)
         self.speed = NSNumber(double: location.speed)
         self.date = location.timestamp
-
-        if (PrivacyCircle.privacyCircle() != nil) {
-            let circleCenterLocation = CLLocation(latitude: PrivacyCircle.privacyCircle().latitude.doubleValue, longitude: PrivacyCircle.privacyCircle().longitude.doubleValue)
-
-            let distanceFromCenter = circleCenterLocation.distanceFromLocation(location)
-            if (distanceFromCenter <= PrivacyCircle.privacyCircle().radius.doubleValue) {
-                self.isPrivate = true
-            }
-        }
-    }
-    
-    class func privateLocations() -> [AnyObject] {
-        let fetchedRequest = NSFetchRequest(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "isPrivate = true")
-
-        var error : NSError?
-        let results = CoreDataManager.sharedManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
-        
-        
-        if (results == nil) {
-            return []
-        }
-        
-        
-        return results!
     }
     
     class func locationsInCircle(circle:MKCircle) -> [AnyObject] {
