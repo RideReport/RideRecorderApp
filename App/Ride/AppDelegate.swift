@@ -192,15 +192,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         if (wasGoodTrip) {
             emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆")
-            thanksPhrases = ["Thanks!", "Sweet!", "YES!", "Dope.", "kewlll", "w00ts =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
+            thanksPhrases = ["Thanks!", "Sweet!", "YES!", "kewlll", "w00t =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
         } else {
             emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭")
             thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/"]
         }
         
-        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(count(thanksPhrases)) - 1))]
-        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness)) - 1))])
-        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness)) - 1))])
+        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(count(thanksPhrases))))]
+        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness))))])
+        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness))))])
         
         let notif = UILocalNotification()
         notif.alertBody = emoji1 + thanksPhrase + emoji2
