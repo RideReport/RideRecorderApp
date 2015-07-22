@@ -33,17 +33,11 @@ app.get('/beta/u1z3', function(req, res) {
 });
 
 app.get('/map', function(req, res) {
-  res.render('map');
-});
-
-app.get('/date/:date', function(req, res) {
-  res.locals.date = req.params.date
-  res.render('date');
+  res.redirect('http://beta.ride.report');
 });
 
 //app.get('/dashboard', dashboard.show);
 app.get('/trips', trips.getAll);
-app.get('/trips/raw', trips.getRaw);
 app.get('/trips/date/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);
 
