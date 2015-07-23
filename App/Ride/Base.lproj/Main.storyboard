@@ -431,13 +431,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="43" y="175" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2tn-qi-wgx">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2tn-qi-wgx">
                                 <rect key="frame" x="266" y="322" width="68" height="34"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="Got it">
@@ -759,7 +759,7 @@
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
                                 <rect key="frame" x="598" y="64" width="0.0" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -847,7 +847,7 @@
                                             <action selector="bikeButton:" destination="A5D-RC-UCB" eventType="touchUpInside" id="y2H-NW-Kqo"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="awK-w8-EQ3">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="awK-w8-EQ3">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -865,7 +865,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ie1-jd-lnS">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ie1-jd-lnS">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -886,7 +886,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pMm-tR-WXf">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pMm-tR-WXf">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -904,7 +904,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pa8-J2-ONe">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pa8-J2-ONe">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -957,6 +957,7 @@
                                     <constraint firstAttribute="height" constant="72" id="T9X-Nq-JKK"/>
                                     <constraint firstItem="VUJ-MG-PcC" firstAttribute="width" secondItem="awK-w8-EQ3" secondAttribute="width" id="TuW-NN-5Y8"/>
                                     <constraint firstItem="Sov-o0-CnW" firstAttribute="width" secondItem="nBr-o9-NXf" secondAttribute="width" id="UDq-Yl-zEE"/>
+                                    <constraint firstAttribute="height" constant="72" id="WYP-BX-Nov"/>
                                     <constraint firstItem="VUJ-MG-PcC" firstAttribute="leading" secondItem="nBr-o9-NXf" secondAttribute="trailing" id="YPo-W6-kNx"/>
                                     <constraint firstAttribute="centerY" secondItem="pMm-tR-WXf" secondAttribute="centerY" id="aA3-rd-omD"/>
                                     <constraint firstAttribute="centerY" secondItem="ie1-jd-lnS" secondAttribute="centerY" id="c7r-Ud-dl2"/>
@@ -973,6 +974,7 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="T9X-Nq-JKK"/>
                                         <exclude reference="oUm-Ji-gCU"/>
                                     </mask>
                                 </variation>
@@ -1084,6 +1086,8 @@
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" constant="10" id="FlL-mS-kK7"/>
                             <constraint firstAttribute="height" secondItem="GsO-Yw-fHd" secondAttribute="height" id="HhZ-io-xwE"/>
                             <constraint firstAttribute="centerX" secondItem="Xsz-Tc-4Se" secondAttribute="centerX" id="I5j-v3-CWf"/>
+                            <constraint firstItem="Xsz-Tc-4Se" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="NEc-O5-fjM"/>
+                            <constraint firstItem="Xsz-Tc-4Se" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Neb-Hb-fHF"/>
                             <constraint firstItem="Xsz-Tc-4Se" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="TTU-uW-sir"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="DxI-1P-rL1" secondAttribute="width" id="Tcc-m2-58E"/>
                             <constraint firstAttribute="centerX" secondItem="8mW-Sz-0y6" secondAttribute="centerX" id="U7o-OZ-1n0"/>
@@ -1093,6 +1097,8 @@
                             <constraint firstItem="qQN-Gw-V0g" firstAttribute="top" secondItem="Es2-lH-UKH" secondAttribute="bottom" constant="20" id="g87-KH-Zxk"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="Xsz-Tc-4Se" secondAttribute="width" id="hUB-h0-YQ1"/>
                             <constraint firstAttribute="centerX" secondItem="GsO-Yw-fHd" secondAttribute="centerX" id="kO0-6D-5PY"/>
+                            <constraint firstAttribute="centerX" secondItem="Xsz-Tc-4Se" secondAttribute="centerX" id="kab-ig-WnS"/>
+                            <constraint firstItem="Xsz-Tc-4Se" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="oId-by-gdC"/>
                             <constraint firstItem="Es2-lH-UKH" firstAttribute="leading" secondItem="DxI-1P-rL1" secondAttribute="leadingMargin" id="plA-xe-GLn"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="leading" secondItem="Es2-lH-UKH" secondAttribute="trailing" constant="-62" id="uej-BC-eBx"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="yD6-Yc-GUL"/>
@@ -1104,12 +1110,15 @@
                             <mask key="constraints">
                                 <exclude reference="7Qy-SH-O6E"/>
                                 <exclude reference="6AQ-hd-T7z"/>
+                                <exclude reference="hUB-h0-YQ1"/>
                                 <exclude reference="uej-BC-eBx"/>
+                                <exclude reference="I5j-v3-CWf"/>
+                                <exclude reference="Neb-Hb-fHF"/>
+                                <exclude reference="TTU-uW-sir"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
-                                <include reference="Xsz-Tc-4Se"/>
                                 <include reference="Es2-lH-UKH"/>
                             </mask>
                             <mask key="constraints">
