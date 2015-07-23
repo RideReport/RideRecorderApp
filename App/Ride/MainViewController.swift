@@ -307,6 +307,33 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         actionSheet.showFromToolbar(self.navigationController?.toolbar)
     }
     
+#if DEBUG
+    
+    override func canBecomeFirstResponder()->Bool {
+        return true
+    }
+    
+    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if (motion == UIEventSubtype.MotionShake) {
+            showSampleNotification()
+        }
+    }
+
+    func showSampleNotification() {
+        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+        })
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            Trip.mostRecentTrip().sendTripCompletionNotification() {
+                if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                }
+            }
+        })
+    }
+    
+#endif
+    
     @IBAction func pauseResumeTracking(sender: AnyObject) {
         if (RouteManager.sharedManager.isPaused()) {
             RouteManager.sharedManager.resumeTracking()
