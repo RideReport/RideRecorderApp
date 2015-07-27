@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
+
         Crashlytics.startWithAPIKey("e04ad6106ec507d40d90a52437cc374949ab924e")
         
         let goodRideAction = UIMutableUserNotificationAction()

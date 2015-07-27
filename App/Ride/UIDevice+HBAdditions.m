@@ -8,8 +8,32 @@
 
 #import "UIDevice+HBAdditions.h"
 #import <dlfcn.h>
+#import <Foundation/Foundation.h>
+#import <ifaddrs.h>
+#import <net/if.h>
+#import <SystemConfiguration/CaptiveNetwork.h>
 
 @implementation UIDevice (UIDevice)
+
+- (BOOL)isWiFiEnabled;
+{
+    struct ifaddrs *interfaces;
+    
+    BOOL hasFoundAtLeastOne = NO;
+    
+    if(! getifaddrs(&interfaces) ) {
+        for(struct ifaddrs *interface = interfaces; interface; interface = interface->ifa_next) {
+            if ((interface->ifa_flags & IFF_UP) == IFF_UP && [[NSString stringWithUTF8String:interface->ifa_name] isEqualToString:@"awdl0"]) {
+                if (hasFoundAtLeastOne) {
+                    return YES;
+                }
+                hasFoundAtLeastOne = YES;
+            }
+        }
+    }
+    
+    return NO;
+}
 
 - (NSDictionary *)_usageStastics;
 {

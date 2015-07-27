@@ -9,6 +9,7 @@
 import Foundation
 import MessageUI
 import ionicons
+import SystemConfiguration
 
 class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, PushSimulatorViewDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
@@ -26,6 +27,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     private var settingsBarButtonItem: UIBarButtonItem!
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
+    private var reachability : Reachability!
     
     var customButton: HBAnimatedGradientMaskButton! = nil
     
@@ -180,12 +182,20 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             }
             self.reloadTitleView()
         }
+
+        self.reachability = Reachability.reachabilityForLocalWiFi()
+        self.reachability.startNotifier()
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
+            self.refreshPauseResumeTrackingButtonUI()
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
         self.selectedTrip = nil
+        self.reachability = nil
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -390,7 +400,13 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
             self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
             self.customButton.animates = true
-            if (!self.popupView.hidden) {
+            
+            if (!UIDevice.currentDevice().wifiEnabled) {
+                if (self.popupView.hidden) {
+                    self.popupView.popIn()
+                }
+                self.popupView.text = "Ride's accuracy is improved when Wi-Fi is on."
+            } else if (!self.popupView.hidden) {
                 self.popupView.fadeOut()
             }
         }
