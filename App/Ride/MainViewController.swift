@@ -40,13 +40,11 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 self.mapViewController.refreshTrip(oldValue)
             }
             
-            if (selectedTrip != nil) {
-                self.newIncidentButton.hidden = false
-                self.mapViewController.refreshTrip(self.selectedTrip)
-            } else {
-                self.newIncidentButton.hidden = true
-            }
+            self.newIncidentButton.hidden = true // disabling incidents for now
             
+            if (selectedTrip != nil) {
+                self.mapViewController.refreshTrip(self.selectedTrip)
+            }
             self.mapViewController.setSelectedTrip(selectedTrip)
             self.reloadTitleView()
         }
