@@ -18,6 +18,12 @@
 		<string>https://github.com/mapbox/mapbox-gl-native.git</string>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
 		<string>github.com:quicklywilliam/Ride.git</string>
+		<key>924C1C4700AD97D5AF0D9D08517061919DD2280B</key>
+		<string>https://github.com/mapbox/mapbox-gl-styles.git</string>
+		<key>B1E05D58146BF7B992144E82CC3F91DAC86DD1C5</key>
+		<string>https://github.com/mapbox/geojson-vt-cpp</string>
+		<key>D1BB63D501E0048981F00509C5A268D4AF5FEE4C</key>
+		<string>https://github.com/nfarina/calloutview.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>App/Ride.xcworkspace</string>
@@ -31,6 +37,12 @@
 		<string>../../../mapbox-gl-native</string>
 		<key>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</key>
 		<string>../..</string>
+		<key>924C1C4700AD97D5AF0D9D08517061919DD2280B</key>
+		<string>../../../mapbox-gl-native/styles</string>
+		<key>B1E05D58146BF7B992144E82CC3F91DAC86DD1C5</key>
+		<string>../../../mapbox-gl-native/src/mbgl/util/geojsonvt</string>
+		<key>D1BB63D501E0048981F00509C5A268D4AF5FEE4C</key>
+		<string>../../../mapbox-gl-native/platform/ios/vendor/SMCalloutView</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>github.com:quicklywilliam/Ride.git</string>
@@ -47,6 +59,14 @@
 			<string>67620B5EFA902936DF04070AF595B76AB0333747</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Alamofire</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B1E05D58146BF7B992144E82CC3F91DAC86DD1C5</string>
+			<key>IDESourceControlWCCName</key>
+			<string>geojsonvt</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
@@ -71,6 +91,22 @@
 			<string>8695F9610F28C2C5DE5773E7F33F1D6934DB725E</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Ride</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>D1BB63D501E0048981F00509C5A268D4AF5FEE4C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SMCalloutView</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>924C1C4700AD97D5AF0D9D08517061919DD2280B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>styles</string>
 		</dict>
 	</array>
 </dict>

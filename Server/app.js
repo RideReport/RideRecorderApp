@@ -21,7 +21,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 app.get('/', function(req, res) {
-  res.render('index');
+  res.redirect('http://beta.ride.report');
 });
 
 app.get('/utPjfzYgJGp69modBo', function(req, res) {
@@ -37,8 +37,6 @@ app.get('/map', function(req, res) {
 });
 
 //app.get('/dashboard', dashboard.show);
-app.get('/trips', trips.getAll);
-app.get('/trips/date/:date', trips.getTripsOnDate);
 app.post('/trips/save', trips.save);
 
 // Set server port
