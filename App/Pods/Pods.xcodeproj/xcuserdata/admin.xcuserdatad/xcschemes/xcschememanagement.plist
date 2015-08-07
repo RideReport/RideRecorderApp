@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Pods-Alamofire.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-CZWeatherKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -14,7 +19,17 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-MBXMapKit.xcscheme</key>
+		<key>Pods-Locksmith-Locksmith.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Locksmith.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-OAuthSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -42,37 +57,52 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>13A9BEA12DB2D4EBDD7FA0E2</key>
+		<key>021939D22B873EDBD3405259</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>37340CA20D3BDD01E55A1C6C</key>
+		<key>153995E740D46B1BF97C6FF0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3B82DD217E68A1179E104D12</key>
+		<key>1E640D531193DD6172773C28</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>887F7AE075CAA21DD7AF9F04</key>
+		<key>2F02FE65C637C36FC807A70B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>89A581B2F709C5BC5F9415D2</key>
+		<key>2F0BEF9403692E8FFF895394</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9EC06828AF935EC75FC353C3</key>
+		<key>428E96ED4B103F25B21A2D89</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E2E5E7082247E18D58BAE2EA</key>
+		<key>4740E394FC6F792ED37703C1</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8FA5CA526F5111D70E30B33E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9E301CC847912D18B58C6A65</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FAC39DBAED407DD59C390842</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -12,30 +12,55 @@
 	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Frameworks/ionicons.framework/ionicons.ttf</string>
-	</array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6</string>
+	<string>0.8</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>oauth-swift</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>45</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>e04ad6106ec507d40d90a52437cc374949ab924e</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA</string>
 	<key>MGLMapboxAccountType</key>
 	<integer>1</integer>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 	<true/>
-	<key>CFBundleVersion</key>
-	<string>44</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle trips.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle trips.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Frameworks/ionicons.framework/ionicons.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

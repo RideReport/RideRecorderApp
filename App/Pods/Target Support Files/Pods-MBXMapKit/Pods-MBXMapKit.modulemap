@@ -1,6 +1,0 @@
-framework module MBXMapKit {
-  umbrella header "Pods-MBXMapKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

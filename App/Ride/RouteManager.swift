@@ -660,7 +660,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else {
             if (UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full) {
                 // opportunistically sync trips if we are plugged in
-                NetworkManager.sharedManager.syncTrips(syncInBackground: true)
+                APIClient.sharedClient.syncTrips(syncInBackground: true)
             }
             
             // We are currently in background mode and got significant location change movement.

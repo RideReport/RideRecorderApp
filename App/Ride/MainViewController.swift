@@ -228,7 +228,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func bikeButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
         self.transitionToTripView()
@@ -236,7 +236,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func carButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
         self.transitionToTripView()
@@ -244,7 +244,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func walkButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
         self.transitionToTripView()
@@ -252,7 +252,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     @IBAction func runButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
         self.transitionToTripView()
@@ -434,14 +434,14 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     func didTapDestructiveButton(view: PushSimulatorView) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
     }
     
     func didTapActionButton(view: PushSimulatorView) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
     }

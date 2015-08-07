@@ -80,7 +80,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                             (trip as! Trip).isSynced = false
                         }
                         CoreDataManager.sharedManager.saveContext()
-                        NetworkManager.sharedManager.syncTrips()
+                        APIClient.sharedClient.syncTrips()
                         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
                         NSUserDefaults.standardUserDefaults().synchronize()
                         
@@ -272,7 +272,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
         
         return [deleteAction, toolsAction]
@@ -300,10 +300,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             })
         } else if (buttonIndex == 3) {
             trip.close() {
-                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
             }
         } else if (buttonIndex == 4) {
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
     }
     
@@ -311,7 +311,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
     }
     

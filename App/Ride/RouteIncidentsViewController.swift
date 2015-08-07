@@ -143,7 +143,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
             let incident : Incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
             incident.managedObjectContext?.deleteObject(incident)
             if (incident.trip != nil) {
-                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(incident.trip!)
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(incident.trip!)
             }
             self.mainViewController.refreshSelectrTrip()
         }

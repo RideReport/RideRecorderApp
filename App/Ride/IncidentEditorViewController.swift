@@ -37,7 +37,7 @@ class IncidentEditorViewController: UIViewController  {
     @IBAction func done(sender: AnyObject) {
         self.incident.body = self.bodyTextView.text
         
-        NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.incident.trip!, syncInBackground: false)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.incident.trip!, syncInBackground: false)
         
         self.navigationController?.popToRootViewControllerAnimated(true)
     }
@@ -47,7 +47,7 @@ class IncidentEditorViewController: UIViewController  {
             if (tappedIndex == 0) {
                 self.incident.managedObjectContext?.deleteObject(self.incident)
                 if (self.incident.trip != nil) {
-                    NetworkManager.sharedManager.saveAndSyncTripIfNeeded(self.incident.trip!)
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(self.incident.trip!)
                     self.mainViewController.refreshSelectrTrip()
                 }
                 
