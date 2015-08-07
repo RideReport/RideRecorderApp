@@ -46,7 +46,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 self.mapViewController.refreshTrip(self.selectedTrip)
             }
             self.mapViewController.setSelectedTrip(selectedTrip)
-            self.reloadTitleView()
+            self.reloadTripSelectedToolbar()
         }
     }
     
@@ -115,8 +115,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.refreshPauseResumeTrackingButtonUI()
     }
     
-    
-    func reloadTitleView() {
+    func reloadTripSelectedToolbar() {
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             var dateTitle = ""
@@ -156,6 +155,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         } else {
             self.selectedRideToolBar.hidden = true
         }
+    }
+    
+    func reloadTitleView() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
             self.ridesHistoryButton.setTitle("No Rides ▾", forState: UIControlState.Normal)
@@ -178,7 +180,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             if (RouteManager.sharedManager.currentTrip != nil) {
                 self.selectedTrip = RouteManager.sharedManager.currentTrip
             }
-            self.reloadTitleView()
+            self.reloadTripSelectedToolbar()
         }
 
         self.reachability = Reachability.reachabilityForLocalWiFi()
@@ -412,7 +414,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     func refreshSelectrTrip() {
         self.mapViewController.refreshTrip(self.selectedTrip)
-        self.reloadTitleView()
+        self.reloadTripSelectedToolbar()
     }
     
     //
