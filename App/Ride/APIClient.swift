@@ -117,6 +117,8 @@ class APIClient {
     //
     
     private func syncTrip(trip: Trip) {
+        if (!self.authenticated) {
+            return
         }
         
         if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
@@ -184,4 +186,52 @@ class APIClient {
         return manager.request(.POST, serverAddress + route, parameters: parameters, encoding: .JSON)
     }
     
+    //
+    // MARK: - OAuth
+    //
+    
+    var authenticated: Bool {
+        return (self.accessToken != nil)
+    }
+    
+    func authenticate(uuid: String? = nil) {
+        var parameters = ["client_id" : "someclientid", "response_type" : "token"]
+        if (uuid != nil) {
+            parameters["uuid"] = uuid
+        }
+    
+        manager.request(.POST, serverAddress + "/oauth_token", parameters: parameters, encoding: .JSON).response { (request, response, data, error)in
+            if (error == nil) {
+                // do stuff with the response
+            } else {
+                DDLogError(String(format: "Error retriving authentication token: %@", error!))
+            }
+        }
+    }
+    
+    private func saveAccessToken(token: String) {
+        let saveTokenRequest = LocksmithRequest(userAccount: "mainUser", requestType: RequestType.Create, data: ["token" : token])
+        saveTokenRequest.synchronizable = true
+        Locksmith.performRequest(saveTokenRequest)
+    }
+    
+    private var accessToken: String? {
+        let (dictionary, error) = Locksmith.loadDataForUserAccount("mainUser")
+        if (error != nil || dictionary == nil) {
+            return nil
+        }
+        
+        return dictionary?["token"] as? String
+    }
+    
+    private func setupAuthenciatedSessionConfiguration() {
+        let (dictionary, error) = Locksmith.loadDataForUserAccount("mainUser")
+        
+        var headers = self.manager.session.configuration.HTTPAdditionalHeaders ?? [:]
+        // set the authentication headers
+        let token = "foo"
+        headers["Authorization"] =  "token \(token)"
+        
+        self.manager.session.configuration.HTTPAdditionalHeaders = headers
+    }
 }
