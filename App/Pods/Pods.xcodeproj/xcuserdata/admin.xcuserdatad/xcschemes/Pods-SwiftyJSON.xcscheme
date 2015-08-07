@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "09A0FC235B1AE579DDA67D17"
-               BuildableName = "CZWeatherKit.framework"
-               BlueprintName = "Pods-CZWeatherKit"
+               BlueprintIdentifier = "727C8CF3A2A82080D91764CC"
+               BuildableName = "SwiftyJSON.framework"
+               BlueprintName = "Pods-SwiftyJSON"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

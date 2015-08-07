@@ -18,6 +18,7 @@ PODS:
   - Locksmith (1.2.2)
   - OAuthSwift (0.3.6)
   - PINCache (2.0)
+  - SwiftyJSON (2.2.1)
   - UIActionSheet+Blocks (0.9)
 
 DEPENDENCIES:
@@ -30,6 +31,7 @@ DEPENDENCIES:
   - ionicons
   - Locksmith
   - OAuthSwift
+  - SwiftyJSON
   - UIActionSheet+Blocks
 
 EXTERNAL SOURCES:
@@ -52,6 +54,7 @@ SPEC CHECKSUMS:
   Locksmith: c84c10bf23f99e6d04703dba65065dc38b038d88
   OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
   PINCache: ca953ba93ce1edde056fdd99121ee65b295a08c9
+  SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
 
 COCOAPODS: 0.37.2

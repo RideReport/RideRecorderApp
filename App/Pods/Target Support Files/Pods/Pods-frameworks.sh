@@ -54,6 +54,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Locksmith.framework'
   install_framework 'OAuthSwift.framework'
   install_framework 'PINCache.framework'
+  install_framework 'SwiftyJSON.framework'
   install_framework 'UIActionSheet_Blocks.framework'
   install_framework 'ionicons.framework'
 fi
@@ -64,6 +65,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Locksmith.framework'
   install_framework 'OAuthSwift.framework'
   install_framework 'PINCache.framework'
+  install_framework 'SwiftyJSON.framework'
   install_framework 'UIActionSheet_Blocks.framework'
   install_framework 'ionicons.framework'
 fi

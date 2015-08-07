@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 import Alamofire
 import OAuthSwift
 import Locksmith
@@ -14,12 +15,13 @@ import Locksmith
 #if (arch(i386) || arch(x86_64)) && os(iOS)
 let serverAddress = "http://127.0.0.1:8080/api/"
 #else
-let serverAddress = "http://ride.report/api/"
+let serverAddress = "http://beta.ride.report/api/"
 #endif
     
 class APIClient {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
+    private var rideKeychainUserName = "Ride Access Token"
     
     
     struct Static {
@@ -75,6 +77,7 @@ class APIClient {
         self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
         configuration.timeoutIntervalForRequest = 60
+
         self.manager = Alamofire.Manager(configuration: configuration)
     }
     
@@ -162,7 +165,7 @@ class APIClient {
             incidents.append(incDict)
         }
         tripDict["incidents"] = incidents
-        self.postRequest("trips/save", parameters: tripDict).response { (request, response, data, error) in
+        self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "trips/save", parameters: tripDict).validate().response { (request, response, data, error) in
             if (error == nil) {
                 trip.isSynced = true
                 DDLogError(String(format: "Response: %@", response!))
@@ -177,13 +180,22 @@ class APIClient {
     // MARK: - Helpers
     //
     
+    var requestHeaders: [String:String] {
+        var headers = ["Content-Type": "application/json", "Accept": "application/json"]
+        if let token = self.accessToken {
+            headers["Authorization"] =  "Bearer \(token)"
+        }
+        
+        return headers
+    }
+    
     private func jsonify(date: NSDate) -> String {
         return self.jsonDateFormatter.stringFromDate(date)
     }
     
     
-    private func postRequest(route: String, parameters: [String: AnyObject!]) -> Request {
-        return manager.request(.POST, serverAddress + route, parameters: parameters, encoding: .JSON)
+    private func makeAuthenticatedRequest(method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil) -> Request {
+        return self.manager.request(method, serverAddress + route, parameters: parameters, encoding: .JSON, headers: self.requestHeaders)
     }
     
     //
@@ -194,44 +206,79 @@ class APIClient {
         return (self.accessToken != nil)
     }
     
-    func authenticate(uuid: String? = nil) {
-        var parameters = ["client_id" : "someclientid", "response_type" : "token"]
-        if (uuid != nil) {
-            parameters["uuid"] = uuid
-        }
-    
-        manager.request(.POST, serverAddress + "/oauth_token", parameters: parameters, encoding: .JSON).response { (request, response, data, error)in
+    func authenticate() {
+        let uuid = Profile.profile().uuid
+        var parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
+        parameters["uuid"] = uuid
+        self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "oauth_token", parameters: parameters).validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
             if (error == nil) {
                 // do stuff with the response
+                let data = JSON(jsonData!)
+                if let accessToken = data["access_token"].string, expiresIn = data["expires_in"].string {
+                    self.saveAccessToken(accessToken, expiresIn: expiresIn)
+                }
             } else {
-                DDLogError(String(format: "Error retriving authentication token: %@", error!))
+                DDLogError(String(format: "Error retriving access token: %@", error!))
+            }
+        }
+        
+        APIClient.sharedClient.testAuthID()
+    }
+    
+    func testAuthID() {
+        self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "oauth_info").validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+            if (error == nil) {
+                // do stuff with the response
+                let data = JSON(jsonData!)
+
+            } else {
+                DDLogError(String(format: "Error retriving access token: %@", error!))
             }
         }
     }
-    
-    private func saveAccessToken(token: String) {
-        let saveTokenRequest = LocksmithRequest(userAccount: "mainUser", requestType: RequestType.Create, data: ["token" : token])
+
+    private func saveAccessToken(token: String, expiresIn: String) {
+        let deleteRequest = LocksmithRequest(userAccount: rideKeychainUserName, requestType: RequestType.Delete)
+        deleteRequest.synchronizable = true
+        deleteRequest.accessible = Accessible.AfterFirstUnlockThisDeviceOnly
+        Locksmith.performRequest(deleteRequest)
+        
+        let saveTokenRequest = LocksmithRequest(userAccount: rideKeychainUserName, requestType: RequestType.Create, data: ["accessToken" : token, "expiresIn" : expiresIn])
         saveTokenRequest.synchronizable = true
-        Locksmith.performRequest(saveTokenRequest)
+        saveTokenRequest.accessible = Accessible.AfterFirstUnlockThisDeviceOnly
+        let (dictionary, error) = Locksmith.performRequest(saveTokenRequest)
+        
+        if (error != nil) {
+            DDLogError(String(format: "Error storing access token: %@", error!))
+        } else {
+            // make sure any old access token isn't memoized
+            _hasLookedForAccessToken = false
+            _accessToken = nil
+        }
     }
     
+    private var _hasLookedForAccessToken: Bool = false
+    private var _accessToken: String? = nil
     private var accessToken: String? {
-        let (dictionary, error) = Locksmith.loadDataForUserAccount("mainUser")
-        if (error != nil || dictionary == nil) {
-            return nil
+        if (!_hasLookedForAccessToken) {
+            let loadTokenRequest = LocksmithRequest(userAccount: rideKeychainUserName, requestType: RequestType.Read)
+            loadTokenRequest.synchronizable = true
+            loadTokenRequest.accessible = Accessible.AfterFirstUnlockThisDeviceOnly
+            let (dictionary, error) = Locksmith.performRequest(loadTokenRequest)
+            _hasLookedForAccessToken = true
+
+            if (error != nil || dictionary == nil) {
+                DDLogError(String(format: "Error accessing access token: %@", error!))
+                if (error!.code == Int(errSecInteractionNotAllowed)) {
+                    // this is a special case. if we get this error, it's because the device isn't unlocked yet.
+                    // we'll want to try again later.
+                    _hasLookedForAccessToken = false
+                }
+            } else {
+                _accessToken = dictionary?["accessToken"] as? String
+            }
         }
         
-        return dictionary?["token"] as? String
-    }
-    
-    private func setupAuthenciatedSessionConfiguration() {
-        let (dictionary, error) = Locksmith.loadDataForUserAccount("mainUser")
-        
-        var headers = self.manager.session.configuration.HTTPAdditionalHeaders ?? [:]
-        // set the authentication headers
-        let token = "foo"
-        headers["Authorization"] =  "token \(token)"
-        
-        self.manager.session.configuration.HTTPAdditionalHeaders = headers
+        return _accessToken
     }
 }
