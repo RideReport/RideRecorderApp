@@ -1,6 +1,0 @@
-==notes to self==
-was in the middle of writing my migration.
-setup script doesnt work, see here:
-https://blog.openshift.com/instant-mapping-applications-with-postgis-and-nodejs/
-
-? maybe use a geojson importer to simplify import process

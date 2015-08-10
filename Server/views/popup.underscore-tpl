@@ -1,3 +1,0 @@
-<b>{{ incident.type_string }}</b><br>
-<i>{{ incident.creationDate }}</i><br>
-{{ incident.body }}
