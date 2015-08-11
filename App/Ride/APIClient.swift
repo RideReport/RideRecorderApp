@@ -149,21 +149,6 @@ class APIClient {
         }
         tripDict["locations"] = locations
         
-        var incidents : [AnyObject!] = []
-        for incident in trip.incidents.array {
-            let anIncident = incident as! Incident
-            var incDict = [
-                "creationDate": self.jsonify(anIncident.creationDate!),
-                "incidentType": anIncident.type,
-                "uuid": anIncident.uuid,
-                "longitude": anIncident.location.longitude!,
-                "latitude": anIncident.location.latitude!
-            ]
-            if (anIncident.body != nil) {
-                incDict["incidentBody"] = anIncident.body!
-            }
-            incidents.append(incDict)
-        }
         tripDict["incidents"] = incidents
         self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "trips/save", parameters: tripDict).validate().response { (request, response, data, error) in
             if (error == nil) {
