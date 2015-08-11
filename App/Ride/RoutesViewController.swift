@@ -70,30 +70,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.reloadData()
-        
-        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
-            if (Trip.numberOfCycledTrips > 0) {
-                let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
-                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                    if (buttonIndex == 1) {
-                        for trip in Trip.allTrips() {
-                            (trip as! Trip).isSynced = false
-                        }
-                        CoreDataManager.sharedManager.saveContext()
-                        NetworkManager.sharedManager.syncTrips()
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
-                        NSUserDefaults.standardUserDefaults().synchronize()
-                        
-                    }
-                }
-                
-                actionSheet.showFromToolbar(self.navigationController?.toolbar)
-            } else {
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
-                NSUserDefaults.standardUserDefaults().synchronize()
-            }
-        }
-
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -272,7 +248,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
         
         return [deleteAction, toolsAction]
@@ -300,10 +276,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             })
         } else if (buttonIndex == 3) {
             trip.close() {
-                NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
             }
         } else if (buttonIndex == 4) {
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
     }
     
@@ -311,7 +287,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             trip.managedObjectContext?.deleteObject(trip)
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
         }
     }
     

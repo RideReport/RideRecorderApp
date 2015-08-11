@@ -6,6 +6,12 @@
 // project.
 
 
+// Alamofire
+#define COCOAPODS_POD_AVAILABLE_Alamofire
+#define COCOAPODS_VERSION_MAJOR_Alamofire 1
+#define COCOAPODS_VERSION_MINOR_Alamofire 3
+#define COCOAPODS_VERSION_PATCH_Alamofire 0
+
 // CZWeatherKit
 #define COCOAPODS_POD_AVAILABLE_CZWeatherKit
 #define COCOAPODS_VERSION_MAJOR_CZWeatherKit 2
@@ -36,17 +42,47 @@
 #define COCOAPODS_VERSION_MINOR_CocoaLumberjack_Extensions 0
 #define COCOAPODS_VERSION_PATCH_CocoaLumberjack_Extensions 0
 
-// MBXMapKit
-#define COCOAPODS_POD_AVAILABLE_MBXMapKit
-#define COCOAPODS_VERSION_MAJOR_MBXMapKit 0
-#define COCOAPODS_VERSION_MINOR_MBXMapKit 7
-#define COCOAPODS_VERSION_PATCH_MBXMapKit 0
+// Crashlytics
+#define COCOAPODS_POD_AVAILABLE_Crashlytics
+#define COCOAPODS_VERSION_MAJOR_Crashlytics 3
+#define COCOAPODS_VERSION_MINOR_Crashlytics 1
+#define COCOAPODS_VERSION_PATCH_Crashlytics 0
+
+// Fabric
+#define COCOAPODS_POD_AVAILABLE_Fabric
+#define COCOAPODS_VERSION_MAJOR_Fabric 1
+#define COCOAPODS_VERSION_MINOR_Fabric 2
+#define COCOAPODS_VERSION_PATCH_Fabric 8
+
+// Fabric/Base
+#define COCOAPODS_POD_AVAILABLE_Fabric_Base
+#define COCOAPODS_VERSION_MAJOR_Fabric_Base 1
+#define COCOAPODS_VERSION_MINOR_Fabric_Base 2
+#define COCOAPODS_VERSION_PATCH_Fabric_Base 8
+
+// Locksmith
+#define COCOAPODS_POD_AVAILABLE_Locksmith
+#define COCOAPODS_VERSION_MAJOR_Locksmith 1
+#define COCOAPODS_VERSION_MINOR_Locksmith 2
+#define COCOAPODS_VERSION_PATCH_Locksmith 2
+
+// OAuthSwift
+#define COCOAPODS_POD_AVAILABLE_OAuthSwift
+#define COCOAPODS_VERSION_MAJOR_OAuthSwift 0
+#define COCOAPODS_VERSION_MINOR_OAuthSwift 3
+#define COCOAPODS_VERSION_PATCH_OAuthSwift 6
 
 // PINCache
 #define COCOAPODS_POD_AVAILABLE_PINCache
 #define COCOAPODS_VERSION_MAJOR_PINCache 2
 #define COCOAPODS_VERSION_MINOR_PINCache 0
 #define COCOAPODS_VERSION_PATCH_PINCache 0
+
+// SwiftyJSON
+#define COCOAPODS_POD_AVAILABLE_SwiftyJSON
+#define COCOAPODS_VERSION_MAJOR_SwiftyJSON 2
+#define COCOAPODS_VERSION_MINOR_SwiftyJSON 2
+#define COCOAPODS_VERSION_PATCH_SwiftyJSON 1
 
 // UIActionSheet+Blocks
 #define COCOAPODS_POD_AVAILABLE_UIActionSheet_Blocks

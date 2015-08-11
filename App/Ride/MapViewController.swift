@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
     var mainViewController: MainViewController! = nil
@@ -68,9 +69,49 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
                 self.loadTrips()
+                self.runTripsMigrationIfNeeded()
             }
         } else {
             self.loadTrips()
+            self.runTripsMigrationIfNeeded()
+        }
+    }
+    
+    private func runTripsMigrationIfNeeded() {
+        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration2")) {
+            let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+            let fetchedRequest = NSFetchRequest(entityName: "Trip")
+            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.locale = NSLocale.currentLocale()
+            dateFormatter.dateFormat = "MM/dd/yyyy"
+            
+            let date = dateFormatter.dateFromString("07/15/2015")
+            fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", date!)
+            
+            var error : NSError?
+            let results = context.executeFetchRequest(fetchedRequest, error: &error)
+            
+            if (results != nil && results?.count > 0) {
+                let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride may be unresponsive for several seconds.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
+                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
+                    if (buttonIndex == 1) {
+                        for trip in results! {
+                            (trip as! Trip).isSynced = false
+                        }
+                        CoreDataManager.sharedManager.saveContext()
+                        APIClient.sharedClient.syncTrips()
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration2")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                        
+                    }
+                }
+                
+                actionSheet.showFromToolbar(self.navigationController?.toolbar)
+            } else {
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration2")
+                NSUserDefaults.standardUserDefaults().synchronize()
+            }
         }
     }
     

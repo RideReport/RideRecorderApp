@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import Crashlytics
+import OAuthSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
@@ -138,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         CoreDataManager.startup()
         RouteManager.startup()
         SoftwareUpdateManager.startup()
-        NetworkManager.startup()
+        APIClient.startup()
         MotionManager.startup()
         WeatherManager.startup()
     }
@@ -178,12 +179,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
             
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
             self.postTripRatedThanksNotification(true)
         } else if (identifier == "BAD_RIDE_IDENTIFIER") {
             trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
             
-            NetworkManager.sharedManager.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
             self.postTripRatedThanksNotification(false)
         } else if (identifier == "FLAG_IDENTIFIER") {
             let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
@@ -225,6 +226,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
             }
         })
+    }
+    
+    func application(application: UIApplication!, openURL url: NSURL!, sourceApplication: String!, annotation: AnyObject!) -> Bool {
+        if (url.host == "oauth-callback") {
+            if ( url.path!.hasPrefix("/facebook" )){
+                OAuth2Swift.handleOpenURL(url)
+            }
+        }
+        return true
     }
 
     func applicationWillResignActive(application: UIApplication) {

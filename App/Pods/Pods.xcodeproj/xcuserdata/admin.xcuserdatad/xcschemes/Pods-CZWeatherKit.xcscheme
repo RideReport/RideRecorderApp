@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3B82DD217E68A1179E104D12"
+               BlueprintIdentifier = "3051C0C0F363EF634E6D46F9"
                BuildableName = "CZWeatherKit.framework"
                BlueprintName = "Pods-CZWeatherKit"
                ReferencedContainer = "container:Pods.xcodeproj">

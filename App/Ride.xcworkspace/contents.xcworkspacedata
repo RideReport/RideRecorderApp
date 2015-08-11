@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Sightglass-to-Square.gpx">
-   </FileRef>
-   <FileRef
       location = "group:Ride.xcodeproj">
    </FileRef>
    <FileRef
