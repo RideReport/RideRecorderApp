@@ -70,30 +70,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.reloadData()
-        
-        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration1")) {
-            if (Trip.numberOfCycledTrips > 0) {
-                let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride will be unresponsive for about a minute.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
-                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                    if (buttonIndex == 1) {
-                        for trip in Trip.allTrips() {
-                            (trip as! Trip).isSynced = false
-                        }
-                        CoreDataManager.sharedManager.saveContext()
-                        APIClient.sharedClient.syncTrips()
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
-                        NSUserDefaults.standardUserDefaults().synchronize()
-                        
-                    }
-                }
-                
-                actionSheet.showFromToolbar(self.navigationController?.toolbar)
-            } else {
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration1")
-                NSUserDefaults.standardUserDefaults().synchronize()
-            }
-        }
-
     }
     
     @IBAction func done(sender: AnyObject) {
