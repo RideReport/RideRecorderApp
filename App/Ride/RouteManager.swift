@@ -1,6 +1,6 @@
 //
 //  RouteManager.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 10/27/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -121,7 +121,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogInfo("Resuming ride")
             #if DEBUG2
                 let notif = UILocalNotification()
-                notif.alertBody = "🐞 Resumed Ride!"
+                notif.alertBody = "🐞 Resumed Ride Report!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
@@ -272,7 +272,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
                 #if DEBUG
                     let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Automatically unpausing Ride!"
+                    notif.alertBody = "🐞 Automatically unpausing Ride Report!"
                     notif.category = "RIDE_COMPLETION_CATEGORY"
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
@@ -497,7 +497,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             NSUserDefaults.standardUserDefaults().setObject(untilDate, forKey: "RouteManagerIsPausedUntilDate")
         } else {
             let reminderNotification = UILocalNotification()
-            reminderNotification.alertBody = "Ride is paused! Would you like to resume logging your bike trips?"
+            reminderNotification.alertBody = "Ride Report is paused! Would you like to resume logging your bike trips?"
             reminderNotification.category = "APP_PAUSED_CATEGORY"
             reminderNotification.fireDate = NSDate.tomorrow()
             UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
@@ -513,7 +513,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.locationManagerIsUpdating) {
             // if we are currently updating, send the user a push and stop.
             let notif = UILocalNotification()
-            notif.alertBody = "Whoa, your battery is pretty low. Ride will stop running until you get a charge!"
+            notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             
             DDLogInfo("Paused Tracking due to battery life")

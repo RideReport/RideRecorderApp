@@ -1,6 +1,6 @@
 //
 //  MapViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 9/23/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -93,7 +93,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             let results = context.executeFetchRequest(fetchedRequest, error: &error)
             
             if (results != nil && results?.count > 0) {
-                let actionSheet = UIActionSheet(title: "Ride needs to upgrade your trip database with the server. Ride may be unresponsive for several seconds.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
+                let actionSheet = UIActionSheet(title: "Ride Report needs to upgrade your trip database with the server. Ride Report may be unresponsive for several seconds.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
                         for trip in results! {

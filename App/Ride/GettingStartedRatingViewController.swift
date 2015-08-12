@@ -1,6 +1,6 @@
 //
 //  GettingStartedRatingViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -16,11 +16,11 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        helperTextLabel.markdownStringValue = "When a Ride ends, it reports straight to your lock screen. **Slide left to rate it.**"
+        helperTextLabel.markdownStringValue = "When your trip ends, a report is delievered straight to your lock screen. **Slide left to rate your ride.**"
     }
     
     func didOpenControls(view: PushSimulatorView) {
-        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill Ride, **thumbs down** if something stressed you out.")
+        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill trip, **thumbs down** if something stressed you out.")
     }
     
     func didTapActionButton(view: PushSimulatorView) {
@@ -30,7 +30,7 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your Rides will **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your trips will **improve biking in Portland**!")
     }
     
     func didTapDestructiveButton(view: PushSimulatorView) {
@@ -40,6 +40,6 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your Rides will **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your trips will **improve biking in Portland**!")
     }
 }

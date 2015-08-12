@@ -1,6 +1,6 @@
 //
 //  GettingStartedBatteryViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -21,7 +21,7 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
         self.pauseButton.secondaryColor = UIColor.grayColor()
         self.pauseButton.animates = false
 
-        self.helperTextLabel.markdownStringValue = "Ride uses your location and motion data in the background, but don't worry – it won't drain your battery."
+        self.helperTextLabel.markdownStringValue = "Ride Report uses your location and motion data in the background, but don't worry – it won't drain your battery."
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -38,7 +38,7 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
         
         self.nextButton.fadeOut()
         
-        helperTextLabel.animatedSetMarkdownStringValue("If you want to stop logging Rides for a while, tap that **arrow thing in the upper right**.")
+        helperTextLabel.animatedSetMarkdownStringValue("If you want to stop reporting trips for a while, tap that **arrow thing in the upper right**.")
         
         self.pauseButton.delay(1.0) {
             self.pauseButton.popIn()

@@ -1,6 +1,6 @@
 //
 //  RoutesViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 10/30/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -27,9 +27,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.title = "No Rides"
+            self.title = "No Trips"
         } else {
-            self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
+            self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")

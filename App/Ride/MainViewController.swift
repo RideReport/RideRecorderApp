@@ -1,6 +1,6 @@
 //
 //  MainViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 12/16/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -160,9 +160,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     func reloadTitleView() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.ridesHistoryButton.setTitle("No Rides ▾", forState: UIControlState.Normal)
+            self.ridesHistoryButton.setTitle("No Trips ▾", forState: UIControlState.Normal)
         } else {
-            self.ridesHistoryButton.setTitle(String(format: "%i Rides ▾", count), forState: UIControlState.Normal)
+            self.ridesHistoryButton.setTitle(String(format: "%i Trips ▾", count), forState: UIControlState.Normal)
         }
         self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
     }
@@ -349,7 +349,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             RouteManager.sharedManager.resumeTracking()
             refreshPauseResumeTrackingButtonUI()
         } else {
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride for an hour", "Pause Ride for the day", "Pause Ride for the week", "Turn off Ride for now")
+            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
             actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                 if (buttonIndex == 1) {
                     RouteManager.sharedManager.pauseTracking(untilDate: NSDate().hoursFrom(1))
@@ -377,22 +377,22 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 self.popupView.popIn()
             }
             if (RouteManager.sharedManager.isPausedDueToUnauthorized()) {
-                self.popupView.text = "Ride needs permission to run."
+                self.popupView.text = "Ride Report needs permission to run."
             } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
-                self.popupView.text = "Ride is paused until you charge your phone =)."
+                self.popupView.text = "Ride Report is paused until you charge your phone =)."
             } else {
                 if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
-                        self.popupView.text = "Ride is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate) + "."
+                        self.popupView.text = "Ride Report is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate) + "."
                     } else if (pausedUntilDate.isTomorrow()) {
-                        self.popupView.text = "Ride is paused until tomorrow."
+                        self.popupView.text = "Ride Report is paused until tomorrow."
                     } else if (pausedUntilDate.isThisWeek()) {
-                        self.popupView.text = "Ride is paused until " + pausedUntilDate.weekDay() + "."
+                        self.popupView.text = "Ride Report is paused until " + pausedUntilDate.weekDay() + "."
                     } else {
-                        self.popupView.text = "Ride is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate) + "."
+                        self.popupView.text = "Ride Report is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate) + "."
                     }
                 } else {
-                    self.popupView.text = "Ride is paused."
+                    self.popupView.text = "Ride Report is paused."
                 }
             }
         } else {
@@ -405,7 +405,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 if (self.popupView.hidden) {
                     self.popupView.popIn()
                 }
-                self.popupView.text = "Ride's accuracy is improved when Wi-Fi is on."
+                self.popupView.text = "Ride Report's accuracy is improved when Wi-Fi is on."
             } else if (!self.popupView.hidden) {
                 self.popupView.fadeOut()
             }
@@ -468,7 +468,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         let body = String(format: "\n\n\n===BATTERY LIFE USAGE STATISTICS===\nDaily: %@\nWeekly: %@", dailyStats, weeklyStats)
         
         let composer = MFMailComposeViewController()
-        composer.setSubject("Ride Bug Report")
+        composer.setSubject("Ride Report Bug Report")
         composer.setToRecipients(["logs@ride.report"])
         composer.mailComposeDelegate = self
         composer.setMessageBody(body as String, isHTML: false)

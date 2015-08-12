@@ -1,6 +1,6 @@
 //
 //  GettingStartedTermsViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -21,7 +21,7 @@ class GettingStartedTermsViewController: GettingStartedChildViewController, UITe
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "didTapLink:")
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
-        helperTextLabel.markdownStringValue = "You don't need to do anything to use Ride. Hop on your bike and Ride will begin automatically."
+        helperTextLabel.markdownStringValue = "You don't need to do anything to use Ride Report. Hop on your bike and Ride Report will begin automatically."
     }
     
     func didTapLink(tapGesture: UIGestureRecognizer) {

@@ -10,7 +10,7 @@
         <!--Map View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="MapView" id="BYZ-38-t0r" customClass="MapViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapView" id="BYZ-38-t0r" customClass="MapViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -47,7 +47,7 @@
         <!--Unsafe Speeds-->
         <scene sceneID="RAx-bA-3Ey">
             <objects>
-                <viewController id="8Cy-Yr-3g3" customClass="IncidentEditorViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="8Cy-Yr-3g3" customClass="IncidentEditorViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="alU-kF-XL8"/>
                         <viewControllerLayoutGuide type="bottom" id="m8Z-gh-min"/>
@@ -142,7 +142,7 @@
         <!--Routes View Controller-->
         <scene sceneID="Lkr-Jd-b0l">
             <objects>
-                <viewController storyboardIdentifier="RoutesViewController" id="gis-u1-pv6" customClass="RoutesViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RoutesViewController" id="gis-u1-pv6" customClass="RoutesViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="noH-Mh-pvM"/>
                         <viewControllerLayoutGuide type="bottom" id="Q0Q-Ap-BP2"/>
@@ -196,7 +196,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQC-Qb-oe8">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Rides yet. Hop on your bike and Ride will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No trips yet. Hop on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
                                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -320,7 +320,7 @@
         <!--Getting Started Battery View Controller-->
         <scene sceneID="l9V-b9-DzN">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" customClass="GettingStartedBatteryViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" customClass="GettingStartedBatteryViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ho-Nv-QxS"/>
                         <viewControllerLayoutGuide type="bottom" id="olm-Uf-1wd"/>
@@ -329,7 +329,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride won't drain your battery. You can pause Ride by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride Report won't drain your battery. You canRide Report by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
                                 <rect key="frame" x="43" y="183" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
@@ -422,7 +422,7 @@
         <!--Getting Started Rating View Controller-->
         <scene sceneID="7nf-DU-971">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" customClass="GettingStartedRatingViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" customClass="GettingStartedRatingViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X9A-Qz-D3z"/>
                         <viewControllerLayoutGuide type="bottom" id="GyA-j0-Rsb"/>
@@ -431,7 +431,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="43" y="175" width="514" height="71"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
@@ -448,14 +448,14 @@
                                     <action selector="next:" destination="cUY-e3-8Xh" eventType="touchUpInside" id="YDm-hl-P3n"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride_Report" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="289" width="600" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="RCR-Qv-ILZ"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride Report"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle">
                                         <string key="value">Stressful
 👎</string>
@@ -518,7 +518,7 @@
         <!--Getting Started Finished View Controller-->
         <scene sceneID="VKZ-XD-iWn">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedFinished" id="Tem-5b-8NB" customClass="GettingStartedFinishedViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedFinished" id="Tem-5b-8NB" customClass="GettingStartedFinishedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="U8P-mt-koQ"/>
                         <viewControllerLayoutGuide type="bottom" id="ytq-jA-YbT"/>
@@ -527,7 +527,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're set! Go get on your bike and Ride will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're set! Go get on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
                                 <rect key="frame" x="79" y="252" width="442" height="67"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -564,7 +564,7 @@
         <!--Getting Started Terms View Controller-->
         <scene sceneID="eaN-6Y-TvX">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedTerms" id="326-On-509" customClass="GettingStartedTermsViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedTerms" id="326-On-509" customClass="GettingStartedTermsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5om-HE-zGn"/>
                         <viewControllerLayoutGuide type="bottom" id="evp-5r-dTF"/>
@@ -573,7 +573,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride logs anonymous route data to improve biking in Portland. Ride never stores or shares personal data." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report logs anonymous route data to improve biking in PorRide Report never stores or shares personal data." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
                                 <rect key="frame" x="78" y="252" width="443" height="67"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -590,7 +590,7 @@
                                     <constraint firstAttribute="height" constant="67" id="Wha-pk-zEj"/>
                                 </constraints>
                                 <attributedString key="attributedText">
-                                    <fragment content="By tapping Sweet, you're agreeing to Ride's ">
+                                    <fragment content="By tapping Sweet, you're agreeing to Ride Report's ">
                                         <attributes>
                                             <color key="NSColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
@@ -607,7 +607,7 @@
                                             <color key="NSUnderlineColor" red="0.59607843137254901" green="0.71764705882352942" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                         </attributes>
                                     </fragment>
-                                    <fragment content=". Ride never stores or shares personal data.">
+                                    <fragment content=". Ride Report never shares personal data.">
                                         <attributes>
                                             <color key="NSColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
@@ -645,8 +645,8 @@
                                     <action selector="next:" destination="326-On-509" eventType="touchUpInside" id="aBs-bL-X9d"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Automatically Log your Rides." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
-                                <rect key="frame" x="167" y="79" width="267" height="38"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Automatically Report on your Rides." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
+                                <rect key="frame" x="102" y="79" width="398" height="38"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -744,7 +744,7 @@
         <!--Main View Controller-->
         <scene sceneID="9ej-R0-CEK">
             <objects>
-                <viewController id="A5D-RC-UCB" customClass="MainViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="A5D-RC-UCB" customClass="MainViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XdF-dK-F6R"/>
                         <viewControllerLayoutGuide type="bottom" id="qQN-Gw-V0g"/>
@@ -759,7 +759,7 @@
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                 <rect key="frame" x="598" y="64" width="0.0" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -1029,11 +1029,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8mW-Sz-0y6">
                                 <rect key="frame" x="0.0" y="64" width="600" height="72"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUD-tz-9dU" customClass="PushSimulatorView" customModule="Ride" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUD-tz-9dU" customClass="PushSimulatorView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride Report"/>
                                             <userDefinedRuntimeAttribute type="string" keyPath="desturctiveActionTitle">
                                                 <string key="value">Stressful
 👎</string>
@@ -1143,7 +1143,7 @@
                                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLL-QL-Es9">
                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                    <state key="normal" title="120 Rides">
+                                    <state key="normal" title="120 Trips">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
                                     <connections>
@@ -1268,7 +1268,7 @@
         <!--Getting Started View Controller-->
         <scene sceneID="e1g-Jf-LbT">
             <objects>
-                <navigationController modalTransitionStyle="crossDissolve" navigationBarHidden="YES" id="Vfc-5U-4UL" customClass="GettingStartedViewController" customModule="Ride" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController modalTransitionStyle="crossDissolve" navigationBarHidden="YES" id="Vfc-5U-4UL" customClass="GettingStartedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="aIy-Zm-fp3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -1,6 +1,6 @@
 //
 //  SoftwareUpdateManager.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 1/9/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -63,11 +63,11 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
                     // update is available
                     if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
                         let notif = UILocalNotification()
-                        notif.alertBody = "An update to Ride is available! Open Ride to upgrade."
+                        notif.alertBody = "An update to Ride Report is available! Open Ride Report to upgrade."
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
                     
-                    let alert = UIAlertView(title: "Ride Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
+                    let alert = UIAlertView(title: "Ride Report Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
                     alert.show()
                 }
             }

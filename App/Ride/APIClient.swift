@@ -1,6 +1,6 @@
 //
 //  APIClient.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 12/11/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -21,7 +21,7 @@ let serverAddress = "http://api.ride.report/api/v2/"
 class APIClient {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
-    private var rideKeychainUserName = "Ride Access Token"
+    private var rideKeychainUserName = "Ride Report Access Token"
     
     
     struct Static {
@@ -143,7 +143,7 @@ class APIClient {
             "activityType": trip.activityType,
             "creationDate": self.jsonify(trip.creationDate),
             "rating": trip.rating,
-            "ownerId": Profile.profile().uuid
+            "ownerId": Profile.profile().uuid!
         ]
         var locations : [AnyObject!] = []
         for location in trip.locations.array {

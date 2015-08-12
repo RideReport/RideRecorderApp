@@ -1,6 +1,6 @@
 //
 //  GettingStartedFinishedViewController.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
@@ -14,7 +14,7 @@ class GettingStartedFinishedViewController: GettingStartedChildViewController {
     
     
     override func viewDidLoad() {
-        helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride will take care of the rest."
+        helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
     }
     
     override func viewDidAppear(animated: Bool) {

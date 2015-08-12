@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 9/23/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
@@ -80,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let settings = UIUserNotificationSettings(forTypes: types, categories: Set([rideCompleteCategory, rideStartedCategory, appPausedCategory]))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         
-        // setup Ride to log to Xcode if available
+        // setup Ride Report to log to Xcode if available
         DDLog.addLogger(DDTTYLogger.sharedInstance())
         DDTTYLogger.sharedInstance().colorsEnabled = true
         
@@ -148,7 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         if ((notificationSettings.types&UIUserNotificationType.Alert) == nil) {
             // can't send alerts, let the user know.
             if (!NSUserDefaults.standardUserDefaults().boolForKey("UserKnowsNotificationsAreDisabled")) {
-                let alert = UIAlertView(title: "Notifications are disabled", message: "Ride needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
+                let alert = UIAlertView(title: "Notifications are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
                 alert.show()
             }
         }
@@ -257,7 +257,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         let notif = UILocalNotification()
-        notif.alertBody = "Hey, you quit Ride! That's cool, but if you want to pause it you can use the compass button in the app."
+        notif.alertBody = "Hey, you quit Ride Report! That's cool, but if you want to pause it you can use the compass button in the app."
         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
     }
 

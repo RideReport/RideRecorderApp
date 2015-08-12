@@ -1,6 +1,6 @@
 //
 //  MotionManager.swift
-//  Ride
+//  Ride Report
 //
 //  Created by William Henderson on 10/27/14.
 //  Copyright (c) 2014 Knock Softwae, Inc. All rights reserved.
