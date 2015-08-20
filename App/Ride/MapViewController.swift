@@ -38,7 +38,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.showsUserLocation = true
         self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
 
-        let styleURL = NSURL(string: "http://tiles.ride.report/styles/heatmap-style.json")
+        let styleURL = NSURL(string: "https://tiles.ride.report/styles/heatmap-style.json")
         self.mapView.styleURL = styleURL
         
         // set the size of the url cache for tile caching.
