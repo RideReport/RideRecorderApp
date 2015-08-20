@@ -302,7 +302,7 @@
 		84CA65B01B72E21D00696587 /* mapbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapbox@2x.png"; sourceTree = "<group>"; };
 		84CA65B11B72E21D00696587 /* mapbox@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapbox@3x.png"; sourceTree = "<group>"; };
 		84CA65B21B72E21D00696587 /* star_tilestream_net.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = star_tilestream_net.der; sourceTree = "<group>"; };
-		84D1554F19D2733500316995 /* Ride.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Ride.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1555419D2733500316995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1555719D2733500316995 /* Ride.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Ride.xcdatamodel; sourceTree = "<group>"; };
@@ -574,7 +574,7 @@
 		84D1555019D2733500316995 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				84D1554F19D2733500316995 /* Ride.app */,
+				84D1554F19D2733500316995 /* Ride Report.app */,
 				8429E5CB1A5DC58500EB3E94 /* Ride Tests.xctest */,
 				84E395751A757DF30015B682 /* RouteMachineTestTool.app */,
 			);
@@ -714,7 +714,7 @@
 			);
 			name = "Ride Report";
 			productName = Ride;
-			productReference = 84D1554F19D2733500316995 /* Ride.app */;
+			productReference = 84D1554F19D2733500316995 /* Ride Report.app */;
 			productType = "com.apple.product-type.application";
 		};
 		84E395741A757DF30015B682 /* RouteMachineTestTool */ = {
