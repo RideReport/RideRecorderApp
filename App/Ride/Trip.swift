@@ -844,13 +844,21 @@ class Trip : NSManagedObject {
         scores.sort{$1 < $0}
         if scores[0] == 0 {
             // if no one scored, possibly because there was no activity data available, fall back on speeds.
-            if (self.averageSpeed >= 3) {
+            DDLogInfo(String(format: "No activites scored! Found speed: %f", self.averageSpeed))
+            if (self.averageSpeed >= 8) {
+                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+            } else if (self.averageSpeed >= 3) {
                 self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
             } else {
                 self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
         } else if scores[0] == cycleScore {
-            self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            if (self.averageSpeed >= 8) {
+                // Core Motion misidentifies auto trips as cycling
+                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+            } else {
+                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            }
         } else if scores[0] == walkScore {
             if (self.averageSpeed >= 3) {
                 // Core Motion misidentifies cycling as walking, particularly when your phone is in your pocket during the ride
