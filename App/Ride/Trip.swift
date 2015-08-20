@@ -799,6 +799,13 @@ class Trip : NSManagedObject {
     func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
+            #if DEBUG
+                let notif = UILocalNotification()
+                notif.alertBody = "🐞 Got no motion activities!!"
+                notif.category = "RIDE_COMPLETION_CATEGORY"
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            #endif
+            
             DDLogInfo(String(format: "No activites! Found speed: %f", self.averageSpeed))
             if (self.averageSpeed >= 8) {
                 self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
