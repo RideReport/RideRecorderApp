@@ -48,7 +48,7 @@ url = AWS::S3::S3Object.url_for('Ride.ipa',
 puts url
 `cp Ride.ipa Ride.zip`
 `unzip Ride.zip -d Ride`
-current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride.app/Info.plist`.strip
+current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride\ Report.app/Info.plist`.strip
 `rm -r Ride`
 `rm Ride.zip`                 
 
