@@ -1237,7 +1237,7 @@
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					DEBUG,
+					"DEBUG=1",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1253,7 +1253,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/build/ios/pkg/static",
 					"/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib",
 				);
-				OTHER_SWIFT_FLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
@@ -1273,7 +1273,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

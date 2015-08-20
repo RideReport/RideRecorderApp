@@ -51,13 +51,29 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Ride/SoftwareUpdateManager.swift"
-            timestampString = "461799580.010294"
+            filePath = "Ride/Trip.swift"
+            timestampString = "461801869.027661"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
-            landmarkName = "checkForUpdateIfNeeded()"
+            startingLineNumber = "800"
+            endingLineNumber = "800"
+            landmarkName = "runActivityClassification()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ride/Trip.swift"
+            timestampString = "461802142.304431"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "854"
+            endingLineNumber = "854"
+            landmarkName = "runActivityClassification()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
