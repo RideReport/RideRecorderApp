@@ -780,14 +780,18 @@ class Trip : NSManagedObject {
             handler()
         } else {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
-                if (activities != nil) {
-                    for activity in activities {
-                        Activity(activity: activity as! CMMotionActivity, trip: self)
+                dispatch_async(dispatch_get_main_queue(), {
+                    if (activities != nil) {
+                        for activity in activities {
+                            Activity(activity: activity as! CMMotionActivity, trip: self)
+                        }
                     }
-                }
-                
-                self.runActivityClassification()
-                handler()
+                    
+                    CoreDataManager.sharedManager.saveContext()
+                    
+                    self.runActivityClassification()
+                    handler()
+                })
             }
         }
     }
