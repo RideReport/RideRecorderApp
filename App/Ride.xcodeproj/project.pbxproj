@@ -259,6 +259,7 @@
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMachineTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		846D32161AD736F400F58C00 /* WeatherManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WeatherManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		846D321B1AD73BA500F58C00 /* Ride 19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 19.xcdatamodel"; sourceTree = "<group>"; };
+		846DE2811B87DA0500F749BE /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SimpleRouteMachine.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Trip.swift; path = Ride/Trip.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -559,6 +560,7 @@
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
+				846DE2811B87DA0500F749BE /* Ride Report.entitlements */,
 				8445317919FEEC8C0096F26E /* CoreLocation.framework */,
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,
 				84D1557719D2737D00316995 /* MapKit.framework */,
@@ -752,6 +754,11 @@
 					84D1554E19D2733500316995 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 9NRH28TN93;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					84E395741A757DF30015B682 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1229,6 +1236,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1268,7 +1276,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Knock Software Inc";
+				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1293,7 +1303,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "0f146260-b870-4e97-a353-add1b815a438";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 			};

@@ -45,16 +45,13 @@ class APIClient {
     }
     
     func startup() {
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            if (!self.authenticated) {
-                self.authenticate(successHandler: {
-                    self.syncTrips(syncInBackground: false)
-                })
-            } else {
-                self.syncOpenTrips()
-            }
-            
-        })
+        if (!self.authenticated) {
+            self.authenticate(successHandler: {
+                self.syncTrips(syncInBackground: false)
+            })
+        } else {
+            self.syncOpenTrips()
+        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
