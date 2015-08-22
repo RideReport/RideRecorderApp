@@ -35,7 +35,7 @@ class GettingStartedTermsViewController: GettingStartedChildViewController, UITe
         
         let underline = attributes[NSUnderlineStyleAttributeName] as! NSNumber?
         if (underline?.integerValue == NSUnderlineStyle.StyleSingle.rawValue) {
-            UIApplication.sharedApplication().openURL(NSURL(string: "http://ride.report/terms")!)
+            UIApplication.sharedApplication().openURL(NSURL(string: "https://ride.report/terms")!)
 
         }
     }

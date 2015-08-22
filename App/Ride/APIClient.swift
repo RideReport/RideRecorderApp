@@ -13,9 +13,9 @@ import OAuthSwift
 import Locksmith
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
-let serverAddress = "http://192.168.1.32:8000/api/v2/"
+let serverAddress = "https://192.168.1.32:8000/api/v2/"
 #else
-let serverAddress = "http://api.ride.report/api/v2/"
+let serverAddress = "https://api.ride.report/api/v2/"
 #endif
     
 class APIClient {
@@ -68,8 +68,10 @@ class APIClient {
         self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
         configuration.timeoutIntervalForRequest = 60
-
-        self.manager = Alamofire.Manager(configuration: configuration)
+        let serverTrustPolicies : [String: ServerTrustPolicy] = [
+            "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
+        ]
+        self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
     }
     
     //

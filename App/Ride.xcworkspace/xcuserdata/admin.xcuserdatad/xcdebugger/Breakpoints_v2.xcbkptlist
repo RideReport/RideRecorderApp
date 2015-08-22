@@ -13,53 +13,5 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "461888634.619701"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "APIClient"
-            landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.APIClient.(accessToken in _054C050D5B4EDB2EB506B86EE7A7611A).getter : Swift.Optional&lt;Swift.String&gt;"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/APIClient.swift"
-                  timestampString = "461888961.322077"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "301"
-                  endingLineNumber = "301"
-                  offsetFromSymbolStart = "772">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.APIClient.((accessToken in _054C050D5B4EDB2EB506B86EE7A7611A).getter : Swift.Optional&lt;Swift.String&gt;).(implicit closure #2)"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/APIClient.swift"
-                  timestampString = "461888961.322301"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "301"
-                  endingLineNumber = "301"
-                  offsetFromSymbolStart = "16">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
