@@ -22,6 +22,7 @@ class APIClient {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var rideKeychainUserName = "Ride Report Access Token"
+    private var keychainDataIsInaccessible = false
     
     
     struct Static {
@@ -45,7 +46,7 @@ class APIClient {
     }
     
     func startup() {
-        if (!self.authenticated) {
+        if (!self.authenticated && !self.keychainDataIsInaccessible) {
             self.authenticate(successHandler: {
                 self.syncTrips(syncInBackground: false)
             })
@@ -298,13 +299,21 @@ class APIClient {
             loadTokenRequest.accessible = Accessible.AfterFirstUnlockThisDeviceOnly
             let (dictionary, error) = Locksmith.performRequest(loadTokenRequest)
             _hasLookedForAccessToken = true
+            self.keychainDataIsInaccessible = false
 
             if (error != nil || dictionary == nil) {
                 DDLogError(String(format: "Error accessing access token: %@", error!))
                 if (error!.code == Int(errSecInteractionNotAllowed)) {
+                    // this is a special case. if we get this error, it's due to an obscure keychain bug causing the keychain to be temporarily inaccessible
+                    // https://forums.developer.apple.com/message/9225#9225
+                    // we'll want to try again later.
+                    _hasLookedForAccessToken = false
+                    self.keychainDataIsInaccessible = true
+                } else if (error!.code == Int(-34018)) {
                     // this is a special case. if we get this error, it's because the device isn't unlocked yet.
                     // we'll want to try again later.
                     _hasLookedForAccessToken = false
+                    self.keychainDataIsInaccessible = true
                 }
             } else {
                 _accessToken = dictionary?["accessToken"] as? String
