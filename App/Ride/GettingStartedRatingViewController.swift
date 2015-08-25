@@ -16,7 +16,7 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        helperTextLabel.markdownStringValue = "When your trip ends, a report is delievered straight to your lock screen. **Slide left to rate your ride.**"
+        helperTextLabel.markdownStringValue = "When your trip ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
     }
     
     func didOpenControls(view: PushSimulatorView) {

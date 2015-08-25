@@ -46,7 +46,7 @@ class APIClient {
     }
     
     func startup() {
-        if (!self.authenticated && !self.keychainDataIsInaccessible) {
+        if (!self.authenticated && self.keychainDataIsInaccessible) {
             self.authenticate(successHandler: {
                 self.syncTrips(syncInBackground: false)
             })

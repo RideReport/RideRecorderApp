@@ -18,6 +18,10 @@
 		844497221A3A4EB40009F889 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
 		8445317619FEEB210096F26E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
+		844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */; };
+		844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */; };
+		8452AC0D1B8BC79E005B4C2D /* GettingStartedCreateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC0C1B8BC79E005B4C2D /* GettingStartedCreateProfileViewController.swift */; };
+		8452AC181B8BCACA005B4C2D /* GettingStartedConfirmEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC171B8BCACA005B4C2D /* GettingStartedConfirmEmailViewController.swift */; };
 		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
 		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
@@ -248,6 +252,12 @@
 		8445317519FEEB210096F26E /* RouteManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8445317919FEEC8C0096F26E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		844531811A001DA40096F26E /* Ride-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ride-Bridging-Header.h"; sourceTree = "<group>"; };
+		844B949B1B8BE1A3009F4E27 /* BKPasscodeField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKPasscodeField.h; sourceTree = "<group>"; };
+		844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeField.m; sourceTree = "<group>"; };
+		844B949D1B8BE1A3009F4E27 /* BKPasscodeInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKPasscodeInputView.h; sourceTree = "<group>"; };
+		844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeInputView.m; sourceTree = "<group>"; };
+		8452AC0C1B8BC79E005B4C2D /* GettingStartedCreateProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedCreateProfileViewController.swift; sourceTree = "<group>"; };
+		8452AC171B8BCACA005B4C2D /* GettingStartedConfirmEmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GettingStartedConfirmEmailViewController.swift; sourceTree = "<group>"; };
 		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSDate+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -428,6 +438,7 @@
 		843C1C821A36704B0005CE1D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				844B949A1B8BE1A3009F4E27 /* BKPasscodeView */,
 				84AFFEA11B029F85009ABC19 /* PCStackMenu */,
 				8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */,
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
@@ -463,6 +474,8 @@
 				84EA5BED1A6F226400C71F53 /* GettingStartedBatteryViewController.swift */,
 				84BD36FF1A706A0E0084B6AF /* GettingStartedTermsViewController.swift */,
 				84EA5BDE1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift */,
+				8452AC0C1B8BC79E005B4C2D /* GettingStartedCreateProfileViewController.swift */,
+				8452AC171B8BCACA005B4C2D /* GettingStartedConfirmEmailViewController.swift */,
 				84BD37021A706C6D0084B6AF /* GettingStartedFinishedViewController.swift */,
 			);
 			name = "View Controllers";
@@ -481,6 +494,17 @@
 			);
 			name = Model;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		844B949A1B8BE1A3009F4E27 /* BKPasscodeView */ = {
+			isa = PBXGroup;
+			children = (
+				844B949B1B8BE1A3009F4E27 /* BKPasscodeField.h */,
+				844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */,
+				844B949D1B8BE1A3009F4E27 /* BKPasscodeInputView.h */,
+				844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */,
+			);
+			path = BKPasscodeView;
 			sourceTree = "<group>";
 		};
 		8453BD541A424FEE00FE2645 /* Categories */ = {
@@ -967,6 +991,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8452AC0D1B8BC79E005B4C2D /* GettingStartedCreateProfileViewController.swift in Sources */,
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */,
@@ -986,11 +1011,14 @@
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
+				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* GettingStartedRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */,
+				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
+				8452AC181B8BCACA005B4C2D /* GettingStartedConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */,
 				84BD37001A706A0E0084B6AF /* GettingStartedTermsViewController.swift in Sources */,

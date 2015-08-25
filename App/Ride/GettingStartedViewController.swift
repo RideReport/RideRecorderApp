@@ -31,8 +31,15 @@ class GettingStartedViewController: UINavigationController {
         
         let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as! GettingStartedChildViewController
         self.setupVC(gettingStartedRatingVC)
-                
-        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC]
+        
+        let gettingStartedCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedCreateProfile") as! GettingStartedChildViewController
+        self.setupVC(gettingStartedCreateProfile)
+        
+        let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! GettingStartedChildViewController
+        self.setupVC(gettingStartedConfirmEmail)
+        
+        self.myViewControllers = [gettingStartedConfirmEmail]
+//        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
