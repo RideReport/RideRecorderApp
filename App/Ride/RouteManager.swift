@@ -76,8 +76,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     class func startup() {
-        Static.sharedManager = RouteManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = RouteManager()
+            Static.sharedManager?.startup()
+        }
     }
     
     override init () {

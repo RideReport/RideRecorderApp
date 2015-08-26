@@ -41,8 +41,10 @@ class APIClient {
     }
     
     class func startup() {
-        Static.sharedClient = APIClient()
-        Static.sharedClient?.startup()
+        if (Static.sharedClient == nil) {
+            Static.sharedClient = APIClient()
+            Static.sharedClient?.startup()
+        }
     }
     
     func startup() {

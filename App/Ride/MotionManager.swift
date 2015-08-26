@@ -28,8 +28,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     class func startup() {
-        Static.sharedManager = MotionManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = MotionManager()
+            Static.sharedManager?.startup()
+        }
     }
     
     override init () {

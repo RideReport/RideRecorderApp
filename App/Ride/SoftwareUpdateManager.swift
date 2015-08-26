@@ -22,8 +22,10 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
     }
     
     class func startup() {
-        Static.sharedManager = SoftwareUpdateManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = SoftwareUpdateManager()
+            Static.sharedManager?.startup()
+        }
     }
     
     func startup() {
