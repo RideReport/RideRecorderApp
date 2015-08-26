@@ -53,7 +53,7 @@ class APIClient {
                 self.syncTrips(syncInBackground: false)
             })
         } else {
-            self.syncOpenTrips()
+            self.syncTrips()
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
@@ -81,26 +81,22 @@ class APIClient {
     // MARK: - Trip Synchronization
     //
     
-    func syncOpenTrips(){
-        for aTrip in Trip.openTrips()! {
-            let trip = aTrip as! Trip
-            
-            if (trip.locations.count <= 6) {
-                // if it doesn't more than 6 points, toss it.
-                CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
-                self.saveAndSyncTripIfNeeded(trip)
-            } else {
-                trip.close() {
-                    self.saveAndSyncTripIfNeeded(trip)
-                }
-            }
-        }
-    }
-    
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            for trip in Trip.allTrips() {
-                    self.saveAndSyncTripIfNeeded(trip as! Trip, syncInBackground: syncInBackground)
+            for aTrip in Trip.allTrips() {
+                let trip = aTrip as! Trip
+
+                if (trip.locations.count <= 6) {
+                    // if it doesn't more than 6 points, toss it.
+                    CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
+                    self.saveAndSyncTripIfNeeded(trip)
+                } else if !trip.isClosed {
+                    trip.close() {
+                        self.saveAndSyncTripIfNeeded(trip)
+                    }
+                } else {
+                    self.saveAndSyncTripIfNeeded(trip, syncInBackground: syncInBackground)
+                }
             }
         })
     }
