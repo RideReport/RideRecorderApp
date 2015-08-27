@@ -34,7 +34,7 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
     }
     
     @IBAction func tappedButton(sender: AnyObject) {
-        AppDelegate.appDelegate().startupManagers()
+        AppDelegate.appDelegate().startupDataGatheringManagers()
         
         self.nextButton.fadeOut()
         

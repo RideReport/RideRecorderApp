@@ -20,8 +20,11 @@ class GettingStartedViewController: UINavigationController {
     var myViewControllers : [GettingStartedChildViewController]!
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         
         self.navigationBarHidden = true
+        self.navigationBar.tintColor = UIColor.whiteColor()
+        self.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
         let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as! GettingStartedChildViewController
         self.setupVC(gettingStartedTermsVC)
@@ -38,8 +41,8 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! GettingStartedChildViewController
         self.setupVC(gettingStartedConfirmEmail)
         
-        self.myViewControllers = [gettingStartedConfirmEmail]
-//        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile]
+//        self.myViewControllers = [gettingStartedCreateProfile, gettingStartedConfirmEmail]
+        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile, gettingStartedConfirmEmail]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
@@ -55,13 +58,27 @@ class GettingStartedViewController: UINavigationController {
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()
         } else {
-            let thisPage = self.myViewControllers[pageNumber!] as UIViewController
             let nextPage = self.myViewControllers[pageNumber! + 1]
             let transition = CATransition()
             transition.duration = 0.6
             transition.type = kCATransitionFade
             self.view.layer.addAnimation(transition, forKey: nil)
             self.setViewControllers([nextPage], animated: false)
+        }
+    }
+    
+    func previousPage() {
+        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as! GettingStartedChildViewController)
+        
+        if (pageNumber == nil || (pageNumber! - 1) < 0) {
+            // presumably we are already on the first page.
+        } else {
+            let prevPage = self.myViewControllers[pageNumber! - 1]
+            let transition = CATransition()
+            transition.duration = 0.6
+            transition.type = kCATransitionFade
+            self.view.layer.addAnimation(transition, forKey: nil)
+            self.setViewControllers([prevPage], animated: false)
         }
     }
     

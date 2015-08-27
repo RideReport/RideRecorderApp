@@ -96,11 +96,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
+        // Start Managers. Note that order matters!
+        CoreDataManager.startup()
+        APIClient.startup()
+        SoftwareUpdateManager.startup()
+        WeatherManager.startup()
+        
         if (hasSeenGettingStarted) {
-            // if they are new, do this later to avoid immediate permission dialogs.
-            startupManagers()
+            // if they are new, we wait to start data gathering managers
+            // this avoids immediately presenting the privacy permission dialogs.
+            startupDataGatheringManagers()
             self.transitionToMainNavController()
         } else {
+            // Getting started battery view controller calls startupDataGatheringManagers
             self.transitionToGettingStarted()
         }
         
@@ -134,14 +142,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.window?.makeKeyAndVisible()
     }
     
-    func startupManagers() {
-        // Start Managers. Note that order matters!
-        CoreDataManager.startup()
+    func startupDataGatheringManagers() {
         RouteManager.startup()
-        SoftwareUpdateManager.startup()
-        APIClient.startup()
         MotionManager.startup()
-        WeatherManager.startup()
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
