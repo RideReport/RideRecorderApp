@@ -237,8 +237,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         })
     }
     
-    func application(application: UIApplication!, openURL url: NSURL!, sourceApplication: String!, annotation: AnyObject!) -> Bool {
-        if (url.host == "oauth-callback") {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        if (url.scheme == "ridereport") {
+            if (url.host == "verify-email"){
+                if let queryItems = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems as? [NSURLQueryItem] {
+                    for item in queryItems {
+                        if (item.name == "code") {
+                            if let code = item.value {
+                                APIClient.sharedClient.verifyToken(code)
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (url.host == "oauth-callback") {
             if ( url.path!.hasPrefix("/facebook" )){
                 OAuth2Swift.handleOpenURL(url)
             }
