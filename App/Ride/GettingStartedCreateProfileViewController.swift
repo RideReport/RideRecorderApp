@@ -1,5 +1,5 @@
 //
-//  GettingStartedCreateProfileViewController.swift
+//  SetupCreateProfileViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-class GettingStartedCreateProfileViewController: GettingStartedChildViewController, UITextFieldDelegate {
+class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDelegate {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var emailTextField : UITextField!

@@ -1,5 +1,5 @@
 //
-//  GettingStartedBatteryViewController.swift
+//  SetupBatteryViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedBatteryViewController: GettingStartedChildViewController {
+class SetupBatteryViewController: SetupChildViewController {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var nextButton : UIButton!

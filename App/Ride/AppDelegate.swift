@@ -92,7 +92,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
         
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
+        var hasSeenSetup = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")
+        if (!hasSeenSetup && NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")) {
+            // in case they saw an old version, make sure they dont see it again.
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
+            NSUserDefaults.standardUserDefaults().synchronize()
+            hasSeenSetup = true
+        }
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
@@ -102,20 +108,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         SoftwareUpdateManager.startup()
         WeatherManager.startup()
         
-        if (hasSeenGettingStarted) {
+        if (hasSeenSetup) {
             // if they are new, we wait to start data gathering managers
             // this avoids immediately presenting the privacy permission dialogs.
             startupDataGatheringManagers()
             self.transitionToMainNavController()
         } else {
             // Getting started battery view controller calls startupDataGatheringManagers
-            self.transitionToGettingStarted()
+            self.transitionToSetup()
         }
         
         return true
     }
     
-    func transitionToGettingStarted() {
+    func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("gettingStartedNavController") as! UIViewController!
         

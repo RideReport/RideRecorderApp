@@ -317,10 +317,10 @@
             </objects>
             <point key="canvasLocation" x="306" y="253"/>
         </scene>
-        <!--Getting Started Battery View Controller-->
+        <!--Setup Battery View Controller-->
         <scene sceneID="l9V-b9-DzN">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" customClass="GettingStartedBatteryViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedBattery" id="JSN-k8-2Yb" customClass="SetupBatteryViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ho-Nv-QxS"/>
                         <viewControllerLayoutGuide type="bottom" id="olm-Uf-1wd"/>
@@ -418,10 +418,10 @@
             </objects>
             <point key="canvasLocation" x="863" y="1580"/>
         </scene>
-        <!--Getting Started Rating View Controller-->
+        <!--Setup Rating View Controller-->
         <scene sceneID="7nf-DU-971">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" customClass="GettingStartedRatingViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedRating" id="cUY-e3-8Xh" customClass="SetupRatingViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X9A-Qz-D3z"/>
                         <viewControllerLayoutGuide type="bottom" id="GyA-j0-Rsb"/>
@@ -514,10 +514,10 @@
             </objects>
             <point key="canvasLocation" x="233" y="1580"/>
         </scene>
-        <!--Getting Started Finished View Controller-->
+        <!--Setup Finished View Controller-->
         <scene sceneID="VKZ-XD-iWn">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedFinished" id="Tem-5b-8NB" customClass="GettingStartedFinishedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedFinished" id="Tem-5b-8NB" customClass="SetupFinishedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="U8P-mt-koQ"/>
                         <viewControllerLayoutGuide type="bottom" id="ytq-jA-YbT"/>
@@ -554,10 +554,10 @@
             </objects>
             <point key="canvasLocation" x="2762" y="1580"/>
         </scene>
-        <!--Getting Started Create Profile View Controller-->
+        <!--Setup Create Profile View Controller-->
         <scene sceneID="Bvj-Yk-ehI">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedCreateProfile" id="vbo-yq-yL7" customClass="GettingStartedCreateProfileViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedCreateProfile" id="vbo-yq-yL7" customClass="SetupCreateProfileViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="f4K-EL-rsY"/>
                         <viewControllerLayoutGuide type="bottom" id="H8R-wf-6Mt"/>
@@ -637,10 +637,10 @@
             </objects>
             <point key="canvasLocation" x="1497" y="1580"/>
         </scene>
-        <!--Getting Started Confirm Email View Controller-->
+        <!--Setup Confirm Email View Controller-->
         <scene sceneID="Gc1-K8-kPP">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedConfirmEmail" id="Y9i-yv-lUn" customClass="GettingStartedConfirmEmailViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedConfirmEmail" id="Y9i-yv-lUn" customClass="SetupConfirmEmailViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yel-Cg-m1y"/>
                         <viewControllerLayoutGuide type="bottom" id="i3V-Vp-9Tj"/>
@@ -702,10 +702,10 @@
             </objects>
             <point key="canvasLocation" x="2128" y="1580"/>
         </scene>
-        <!--Getting Started Terms View Controller-->
+        <!--Setup Terms View Controller-->
         <scene sceneID="eaN-6Y-TvX">
             <objects>
-                <viewController storyboardIdentifier="gettingStartedTerms" id="326-On-509" customClass="GettingStartedTermsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="gettingStartedTerms" id="326-On-509" customClass="SetupTermsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5om-HE-zGn"/>
                         <viewControllerLayoutGuide type="bottom" id="evp-5r-dTF"/>
@@ -1406,10 +1406,10 @@
             </objects>
             <point key="canvasLocation" x="-401" y="888"/>
         </scene>
-        <!--Getting Started View Controller-->
+        <!--Setup View Controller-->
         <scene sceneID="e1g-Jf-LbT">
             <objects>
-                <navigationController modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="GettingStartedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="SetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

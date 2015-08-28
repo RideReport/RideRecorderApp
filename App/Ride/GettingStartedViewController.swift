@@ -1,5 +1,5 @@
 //
-//  GettingStartedViewController.swift
+//  SetupViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/7/15.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-class GettingStartedChildViewController : UIViewController {
-    var parent : GettingStartedViewController?
+class SetupChildViewController : UIViewController {
+    var parent : SetupViewController?
     
     @IBAction func next(sender: AnyObject) {
         self.parent?.nextPage(self)
@@ -20,8 +20,8 @@ class GettingStartedChildViewController : UIViewController {
     }
 }
 
-class GettingStartedViewController: UINavigationController {
-    var myViewControllers : [GettingStartedChildViewController]!
+class SetupViewController: UINavigationController {
+    var myViewControllers : [SetupChildViewController]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,19 +30,19 @@ class GettingStartedViewController: UINavigationController {
         self.navigationBar.tintColor = UIColor.whiteColor()
         self.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
-        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as! GettingStartedChildViewController
+        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as! SetupChildViewController
         self.setupVC(gettingStartedTermsVC)
         
-        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as! GettingStartedChildViewController
+        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as! SetupChildViewController
         self.setupVC(gettingStartedBatteryVC)
         
-        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as! GettingStartedChildViewController
+        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as! SetupChildViewController
         self.setupVC(gettingStartedRatingVC)
         
-        let gettingStartedCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedCreateProfile") as! GettingStartedChildViewController
+        let gettingStartedCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedCreateProfile") as! SetupChildViewController
         self.setupVC(gettingStartedCreateProfile)
         
-        let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! GettingStartedChildViewController
+        let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! SetupChildViewController
         self.setupVC(gettingStartedConfirmEmail)
         
         self.myViewControllers = [gettingStartedCreateProfile, gettingStartedConfirmEmail]
@@ -51,13 +51,13 @@ class GettingStartedViewController: UINavigationController {
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
     
-    func setupVC(vc: GettingStartedChildViewController) {
+    func setupVC(vc: SetupChildViewController) {
         vc.view.backgroundColor = UIColor.clearColor()
         vc.parent = self
     }
     
     func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil) {
-        let pageNumber = find(self.myViewControllers!, sender as! GettingStartedChildViewController)
+        let pageNumber = find(self.myViewControllers!, sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()
@@ -73,7 +73,7 @@ class GettingStartedViewController: UINavigationController {
     }
     
     func previousPage(sender: AnyObject) {
-        let pageNumber = find(self.myViewControllers!, sender as! GettingStartedChildViewController)
+        let pageNumber = find(self.myViewControllers!, sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! - 1) < 0) {
             // presumably we are already on the first page.
@@ -88,7 +88,7 @@ class GettingStartedViewController: UINavigationController {
     }
     
     func done() {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenGettingStartedv2")
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
         NSUserDefaults.standardUserDefaults().synchronize()
         
         AppDelegate.appDelegate().transitionToMainNavController()

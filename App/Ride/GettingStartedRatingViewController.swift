@@ -1,5 +1,5 @@
 //
-//  GettingStartedRatingViewController.swift
+//  SetupRatingViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedRatingViewController: GettingStartedChildViewController, PushSimulatorViewDelegate {
+class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDelegate {
     
     @IBOutlet weak var pushSimulationView : PushSimulatorView!
     @IBOutlet weak var helperTextLabel : UILabel!

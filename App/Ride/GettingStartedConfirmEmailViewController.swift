@@ -1,5 +1,5 @@
 //
-//  GettingStartedConfirmEmailViewController.swift
+//  SetupConfirmEmailViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedConfirmEmailViewController: GettingStartedChildViewController, BKPasscodeInputViewDelegate {
+class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInputViewDelegate {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var passcodeInputView : BKPasscodeInputView!

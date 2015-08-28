@@ -1,5 +1,5 @@
 //
-//  GettingStartedFinishedViewController.swift
+//  SetupFinishedViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedFinishedViewController: GettingStartedChildViewController {
+class SetupFinishedViewController: SetupChildViewController {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     

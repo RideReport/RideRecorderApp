@@ -307,7 +307,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             if (buttonIndex == 1) {
                 self.sendLogFile()
             } else if (buttonIndex == 2) {
-                AppDelegate.appDelegate().transitionToGettingStarted()
+                AppDelegate.appDelegate().transitionToSetup()
             } else if (buttonIndex == 3) {
                 // show map attribution info
                 self.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)

@@ -1,5 +1,5 @@
 //
-//  GettingStartedTermsViewController.swift
+//  SetupTermsViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedTermsViewController: GettingStartedChildViewController, UITextViewDelegate {
+class SetupTermsViewController: SetupChildViewController, UITextViewDelegate {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var termsTextView : UITextView!
