@@ -21,7 +21,7 @@ class GettingStartedFinishedViewController: GettingStartedChildViewController {
         super.viewDidAppear(animated)
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(8 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-            self.parent?.nextPage()
+            self.parent?.nextPage(self)
             return
         }
     }

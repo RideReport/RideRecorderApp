@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 class GettingStartedCreateProfileViewController: GettingStartedChildViewController, UITextFieldDelegate {
     
@@ -33,17 +34,24 @@ class GettingStartedCreateProfileViewController: GettingStartedChildViewControll
         self.navigationItem.rightBarButtonItem?.enabled = false
         self.emailTextField.enabled = false
         
-        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text).response { (request, response, data, error) in
+        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text).responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
             self.navigationItem.rightBarButtonItem?.enabled = true
             self.emailTextField.enabled = true
-
+            
             if (error == nil) {
-                self.parent?.nextPage()
+                let data = JSON(jsonData!)
+                if let shortcodeLength = data["shortcode_length"].int {
+                    self.parent?.nextPage(self, userInfo: ["shortcodeLength": shortcodeLength])
+                } else {
+                    self.parent?.nextPage(self)
+                }
             } else {
                 self.emailTextField.becomeFirstResponder()
             }
         }
+
     }
+    
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)

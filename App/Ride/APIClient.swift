@@ -13,7 +13,7 @@ import OAuthSwift
 import Locksmith
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
-let serverAddress = "https://192.168.1.32:8000/api/v2/"
+let serverAddress = "https://api.ride.report/api/v2/"
 #else
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif

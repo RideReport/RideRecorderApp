@@ -18,27 +18,38 @@ class GettingStartedConfirmEmailViewController: GettingStartedChildViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        helperTextLabel.markdownStringValue = "**Enter the secret code** in the email we just sent."
         self.passcodeInputView.passcodeStyle = BKPasscodeInputViewNumericPasscodeStyle
         self.passcodeInputView.keyboardType = UIKeyboardType.NumberPad
         self.passcodeInputView.keyboardAppearance = UIKeyboardAppearance.Dark
         self.passcodeInputView.maximumLength = 6
         self.passcodeInputView.delegate = self
         
-        // make sure the keyboard does not animate in initially.
-        UIView.setAnimationsEnabled(false)
-        NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardDidShowNotification, object: nil, queue: nil) { (notif) -> Void in
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardDidShowNotification, object: nil)
-            UIView.setAnimationsEnabled(true)
-        }
-        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
-        
-        self.passcodeInputView.becomeFirstResponder()
     }
     
     func back() {
-        self.parent?.previousPage()
+        self.parent?.previousPage(self)
+    }
+    
+    override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
+        super.childViewControllerWillPresent(userInfo: userInfo)
+        if let shortCode = userInfo?["shortcodeLength"] as! Int? {
+            self.passcodeInputView.maximumLength = UInt(shortCode)
+            self.passcodeInputView.hidden = false
+            helperTextLabel.markdownStringValue = "**Enter the secret code** in the email we just sent."
+            
+            // make sure the keyboard does not animate in initially.
+            UIView.setAnimationsEnabled(false)
+            NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardDidShowNotification, object: nil, queue: nil) { (notif) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardDidShowNotification, object: nil)
+                UIView.setAnimationsEnabled(true)
+            }
+            self.passcodeInputView.becomeFirstResponder()
+        } else {
+            self.passcodeInputView.hidden = true
+            helperTextLabel.markdownStringValue = "Check your email! You'll find a **button to tap** in the email we just sent."
+            self.passcodeInputView.resignFirstResponder()
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -74,7 +85,7 @@ class GettingStartedConfirmEmailViewController: GettingStartedChildViewControlle
     func passcodeInputViewDidFinish(passcodeInputView: BKPasscodeInputView!) {
         APIClient.sharedClient.verifyToken(passcodeInputView.passcode).response { (request, response, data, error) in
             if (error == nil) {
-                self.parent?.nextPage()
+                self.parent?.nextPage(self)
             } else {
                 if (response?.statusCode == 404) {
                     passcodeInputView.errorMessage = "That's not it."

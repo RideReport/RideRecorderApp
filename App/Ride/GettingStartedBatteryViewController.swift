@@ -43,7 +43,6 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
         self.pauseButton.delay(1.0) {
             self.pauseButton.popIn()
             self.pauseButton.delay(10.0) {
-                // give the user 5 seconds to tap it themselves, then just do it
                 self.next(self)
                 return
             }
@@ -53,13 +52,13 @@ class GettingStartedBatteryViewController: GettingStartedChildViewController {
     }
     
     @IBAction func tappedArrowButton(sender: AnyObject) {
-        helperTextLabel.animatedSetMarkdownStringValue("Yeah, you got it.")
+        self.helperTextLabel.animatedSetMarkdownStringValue("Yeah, you got it.")
         self.pauseButton.maskImage = UIImage(named: "locationArrow.png")
         self.pauseButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
         self.pauseButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
         self.pauseButton.animates = true
         
-        self.pauseButton.delay(4.0) {
+        self.pauseButton.delay(3.0) {
             self.next(self)
         }
     }

@@ -12,7 +12,11 @@ class GettingStartedChildViewController : UIViewController {
     var parent : GettingStartedViewController?
     
     @IBAction func next(sender: AnyObject) {
-        self.parent?.nextPage()
+        self.parent?.nextPage(self)
+    }
+    
+    func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
+        // override to receive
     }
 }
 
@@ -41,8 +45,8 @@ class GettingStartedViewController: UINavigationController {
         let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! GettingStartedChildViewController
         self.setupVC(gettingStartedConfirmEmail)
         
-//        self.myViewControllers = [gettingStartedCreateProfile, gettingStartedConfirmEmail]
-        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile, gettingStartedConfirmEmail]
+        self.myViewControllers = [gettingStartedCreateProfile, gettingStartedConfirmEmail]
+//        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile, gettingStartedConfirmEmail]
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
@@ -52,13 +56,14 @@ class GettingStartedViewController: UINavigationController {
         vc.parent = self
     }
     
-    func nextPage() {
-        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as! GettingStartedChildViewController)
+    func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil) {
+        let pageNumber = find(self.myViewControllers!, sender as! GettingStartedChildViewController)
         
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()
         } else {
             let nextPage = self.myViewControllers[pageNumber! + 1]
+            nextPage.childViewControllerWillPresent(userInfo: userInfo)
             let transition = CATransition()
             transition.duration = 0.6
             transition.type = kCATransitionFade
@@ -67,8 +72,8 @@ class GettingStartedViewController: UINavigationController {
         }
     }
     
-    func previousPage() {
-        let pageNumber = find(self.myViewControllers!, self.viewControllers.first as! GettingStartedChildViewController)
+    func previousPage(sender: AnyObject) {
+        let pageNumber = find(self.myViewControllers!, sender as! GettingStartedChildViewController)
         
         if (pageNumber == nil || (pageNumber! - 1) < 0) {
             // presumably we are already on the first page.
