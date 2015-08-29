@@ -23,11 +23,12 @@ class CoreDataManager {
     }
     
     class func startup() {
-        Static.sharedManager = CoreDataManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = CoreDataManager()
+            Static.sharedManager?.startup()
+        }
     }
 
-    
     init () {
 
     }

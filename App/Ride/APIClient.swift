@@ -13,17 +13,26 @@ import OAuthSwift
 import Locksmith
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
-let serverAddress = "https://192.168.1.32:8000/api/v2/"
+let serverAddress = "https://api.ride.report/api/v2/"
 #else
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif
     
 class APIClient {
+    enum AccountVerificationStatus : Int16 { // has the user linked and verified an email to the account?
+        case Unknown = 0
+        case Unverified
+        case Verified
+    }
+    
+    // Status
+    var accountVerificationStatus = AccountVerificationStatus.Unknown
+    
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var rideKeychainUserName = "Ride Report Access Token"
     private var keychainDataIsInaccessible = false
-    
+    private var isRequestingAuthentication = false
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -41,20 +50,38 @@ class APIClient {
     }
     
     class func startup() {
-        Static.sharedClient = APIClient()
-        Static.sharedClient?.startup()
+        if (Static.sharedClient == nil) {
+            Static.sharedClient = APIClient()
+            Static.sharedClient?.startup()
+        }
     }
     
     func startup() {
-        if (!self.authenticated && !self.keychainDataIsInaccessible) {
-            self.authenticate(successHandler: {
-                self.syncTrips(syncInBackground: false)
-            })
-        } else {
-            self.syncOpenTrips()
+        self.authenticateIfNeeded()
+        if (self.authenticated) {
+            self.updateAccountStatus()
+            self.syncTrips()
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    func updateAccountStatus()-> Request {
+        return self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "status").validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+            if (error == nil) {
+                // do stuff with the response
+                let data = JSON(jsonData!)
+                if let account_verified = data["account_verified"].bool {
+                    if (account_verified) {
+                        self.accountVerificationStatus = .Verified
+                    } else {
+                        self.accountVerificationStatus = .Unverified
+                    }
+                }
+            } else {
+                DDLogError(String(format: "Error retriving account status: %@", error!))
+            }
+        }
     }
     
     deinit {
@@ -79,26 +106,22 @@ class APIClient {
     // MARK: - Trip Synchronization
     //
     
-    func syncOpenTrips(){
-        for aTrip in Trip.openTrips()! {
-            let trip = aTrip as! Trip
-            
-            if (trip.locations.count <= 6) {
-                // if it doesn't more than 6 points, toss it.
-                CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
-                self.saveAndSyncTripIfNeeded(trip)
-            } else {
-                trip.close() {
-                    self.saveAndSyncTripIfNeeded(trip)
-                }
-            }
-        }
-    }
-    
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            for trip in Trip.allTrips() {
-                    self.saveAndSyncTripIfNeeded(trip as! Trip, syncInBackground: syncInBackground)
+            for aTrip in Trip.allTrips() {
+                let trip = aTrip as! Trip
+
+                if (trip.locations.count <= 6) {
+                    // if it doesn't more than 6 points, toss it.
+                    CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
+                    self.saveAndSyncTripIfNeeded(trip)
+                } else if !trip.isClosed {
+                    trip.close() {
+                        self.saveAndSyncTripIfNeeded(trip)
+                    }
+                } else {
+                    self.saveAndSyncTripIfNeeded(trip, syncInBackground: syncInBackground)
+                }
             }
         })
     }
@@ -129,8 +152,37 @@ class APIClient {
     // MARK: - Authenciated API Methods
     //
     
+    func sendVerificationTokenForEmail(email: String)-> Request {
+        return self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]).validate().response { (request, response, data, error) in
+            if (error == nil) {
+                DDLogInfo(String(format: "Response: %@", response!))
+            } else {
+                DDLogError(String(format: "Error: %@", error!))
+
+                if (response?.statusCode == 400) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        let alert = UIAlertView(title:nil, message: "That doesn't look like a valid email address. Please double-check your typing and try again.", delegate: nil, cancelButtonTitle:"On it")
+                        alert.show()
+                    })
+                }
+            }
+        }
+    }
+    
+    func verifyToken(token: String)-> Request {
+        return self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]).validate().response { (request, response, data, error) in
+            if (error == nil) {
+                DDLogInfo(String(format: "Response: %@", response!))
+                self.updateAccountStatus()
+            } else {
+                DDLogError(String(format: "Error: %@", error!))
+            }
+        }
+    }
+    
     private func syncTrip(trip: Trip) {
         if (!self.authenticated) {
+            self.authenticateIfNeeded()
             return
         }
         
@@ -188,15 +240,20 @@ class APIClient {
     }
     
     
-    private func makeAuthenticatedRequest(method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = .JSON) -> Request {
+    private func makeAuthenticatedRequest(method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = .JSON) -> Request {        
         return self.manager.request(method, serverAddress + route, parameters: parameters, encoding: encoding, headers: self.requestHeaders).response { (request, response, data, error) in
             if (response?.statusCode == 401) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     if (self.authenticated) {
-                        let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to logs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
+                        let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                         alert.show()
+                        self.reauthenticate()
                     }
-                    self.reauthenticate()
+                })
+            } else if (response?.statusCode == 500) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
+                    alert.show()
                 })
             }
         }
@@ -217,24 +274,32 @@ class APIClient {
         }
         
         if (self.deleteAccessToken()) {
-            self.authenticate()
+            self.authenticateIfNeeded()
         }
     }
     
-    func authenticate(successHandler: ()->Void = {}) {
+    func authenticateIfNeeded() {
+        if (self.authenticated || self.isRequestingAuthentication || self.keychainDataIsInaccessible) {
+            return
+        }
+        
+        self.isRequestingAuthentication = true
+        
         let uuid = Profile.profile().uuid
         var parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
         parameters["uuid"] = uuid
         self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "oauth_token", parameters: parameters, encoding: .URL).validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+            self.isRequestingAuthentication = false
             if (error == nil) {
                 // do stuff with the response
                 let data = JSON(jsonData!)
                 if let accessToken = data["access_token"].string, expiresIn = data["expires_in"].string {
-                    if(self.saveAccessToken(accessToken, expiresIn: expiresIn)) {
-                        successHandler()
-                    }
+                    self.saveAccessToken(accessToken, expiresIn: expiresIn)
+                    self.updateAccountStatus()
                 }
             } else {
+                let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
+                alert.show()
                 DDLogError(String(format: "Error retriving access token: %@", error!))
             }
         }
@@ -251,6 +316,10 @@ class APIClient {
             }
         }
     }
+    
+    //
+    // MARK: - OAuth Token Keychain Management
+    //
 
     private func saveAccessToken(token: String, expiresIn: String) -> Bool {
         self.deleteAccessToken()

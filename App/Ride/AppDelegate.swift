@@ -33,6 +33,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
         Crashlytics.startWithAPIKey("e04ad6106ec507d40d90a52437cc374949ab924e")
         
+        // setup Ride Report to log to Xcode if available
+        DDLog.addLogger(DDTTYLogger.sharedInstance())
+        DDTTYLogger.sharedInstance().colorsEnabled = true
+        
+        self.fileLogger = DDFileLogger()
+        self.fileLogger.rollingFrequency = 60 * 60 * 24
+        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+        DDLog.addLogger(self.fileLogger)
+        
+        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
+        DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
+        
+        var hasSeenSetup = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")
+        if (!hasSeenSetup && NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")) {
+            // in case they saw an old version, make sure they dont see it again.
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
+            NSUserDefaults.standardUserDefaults().synchronize()
+            hasSeenSetup = true
+        }
+        
+        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        
+        // Start Managers. Note that order matters!
+        CoreDataManager.startup()
+        APIClient.startup()
+        SoftwareUpdateManager.startup()
+        WeatherManager.startup()
+        
+        if (hasSeenSetup) {
+            // if they are new, we wait to start data gathering managers
+            // this avoids immediately presenting the privacy permission dialogs.
+            registerNotifications()
+            startupDataGatheringManagers()
+            self.transitionToMainNavController()
+        } else {
+            // SetupRatingViewController calls registerNotifications
+            // SetupBatteryViewController calls startupDataGatheringManagers
+            self.transitionToSetup()
+        }
+        
+        return true
+    }
+    
+    func registerNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
         goodRideAction.title = "Chill\n👍"
@@ -79,44 +123,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
         let settings = UIUserNotificationSettings(forTypes: types, categories: Set([rideCompleteCategory, rideStartedCategory, appPausedCategory]))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        
-        // setup Ride Report to log to Xcode if available
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
-        DDTTYLogger.sharedInstance().colorsEnabled = true
-        
-        self.fileLogger = DDFileLogger()
-        self.fileLogger.rollingFrequency = 60 * 60 * 24
-        self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.addLogger(self.fileLogger)
-        
-        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
-        DDLogInfo(String(format: "========================STARTING RIDE APP v%@========================", versionString))
-        
-        let hasSeenGettingStarted = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")
-        
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        
-        if (hasSeenGettingStarted) {
-            // if they are new, do this later to avoid immediate permission dialogs.
-            startupManagers()
-            self.transitionToMainNavController()
-        } else {
-            self.transitionToGettingStarted()
-        }
-        
-        return true
     }
     
-    func transitionToGettingStarted() {
+    func startupDataGatheringManagers() {
+        RouteManager.startup()
+        MotionManager.startup()
+    }
+    
+    func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("gettingStartedNavController") as! UIViewController!
+        var setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController!
+        
+        setupVC.setupViewControllersForGettingStarted()
         
         let transition = CATransition()
         transition.duration = 0.6
         transition.type = kCATransitionFade
         self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
         
-        self.window?.rootViewController = viewController
+        self.window?.rootViewController = setupVC
+        self.window?.makeKeyAndVisible()
+    }
+    
+    func transitionToCreatProfile() {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        var setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController!
+        
+        setupVC.setupViewControllersForCreateProfile()
+        
+        let transition = CATransition()
+        transition.duration = 0.6
+        transition.type = kCATransitionFade
+        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        
+        self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
     }
     
@@ -132,16 +172,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window?.rootViewController = viewController
         self.window?.makeKeyAndVisible()
-    }
-    
-    func startupManagers() {
-        // Start Managers. Note that order matters!
-        CoreDataManager.startup()
-        RouteManager.startup()
-        SoftwareUpdateManager.startup()
-        APIClient.startup()
-        MotionManager.startup()
-        WeatherManager.startup()
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
@@ -203,7 +233,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             thanksPhrases = ["Thanks!", "Sweet!", "YES!", "kewlll", "w00t =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
         } else {
             emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭")
-            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/"]
+            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/", "(・_・)ヾ"]
         }
         
         let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(count(thanksPhrases))))]
@@ -228,8 +258,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         })
     }
     
-    func application(application: UIApplication!, openURL url: NSURL!, sourceApplication: String!, annotation: AnyObject!) -> Bool {
-        if (url.host == "oauth-callback") {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        if (url.scheme == "ridereport") {
+            if (url.host == "verify-email"){
+                if let queryItems = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems as? [NSURLQueryItem] {
+                    for item in queryItems {
+                        if let result = item.value where item.name == "result" {
+                            if result == "success" {
+                                //
+                            } else if result == "failure" {
+                                //
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (url.host == "oauth-callback") {
             if ( url.path!.hasPrefix("/facebook" )){
                 OAuth2Swift.handleOpenURL(url)
             }

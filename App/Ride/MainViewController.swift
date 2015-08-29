@@ -302,12 +302,24 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     }
     
     @IBAction func tools(sender: AnyObject) {
-        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", "Setup Assistant", "Map Info")
+        var accountButtonTitle = ""
+        switch APIClient.sharedClient.accountVerificationStatus {
+            case .Unknown: accountButtonTitle = "Updating Account Status…"
+            case .Unverified: accountButtonTitle = "Create Account"
+            case .Verified: accountButtonTitle = "Log Out…"
+        }
+        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", accountButtonTitle, "Map Info")
         actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
             if (buttonIndex == 1) {
                 self.sendLogFile()
             } else if (buttonIndex == 2) {
-                AppDelegate.appDelegate().transitionToGettingStarted()
+                if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
+                    AppDelegate.appDelegate().transitionToCreatProfile()
+                } else {
+                    // other cases currently do nothing
+                    let alert = UIAlertView(title:nil, message: "You can't. (・_・)ヾ", delegate: nil, cancelButtonTitle:"But soon")
+                    alert.show()
+                }
             } else if (buttonIndex == 3) {
                 // show map attribution info
                 self.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)

@@ -1,5 +1,5 @@
 //
-//  GettingStartedRatingViewController.swift
+//  SetupRatingViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class GettingStartedRatingViewController: GettingStartedChildViewController, PushSimulatorViewDelegate {
+class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDelegate {
     
     @IBOutlet weak var pushSimulationView : PushSimulatorView!
     @IBOutlet weak var helperTextLabel : UILabel!
@@ -16,7 +16,12 @@ class GettingStartedRatingViewController: GettingStartedChildViewController, Pus
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        helperTextLabel.markdownStringValue = "When your trip ends, a report is delievered straight to your lock screen. **Slide left to rate your ride.**"
+        helperTextLabel.markdownStringValue = "When your trip ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
+    }
+    
+    override func next(sender: AnyObject) {
+        super.next(sender)
+        AppDelegate.appDelegate().registerNotifications()
     }
     
     func didOpenControls(view: PushSimulatorView) {

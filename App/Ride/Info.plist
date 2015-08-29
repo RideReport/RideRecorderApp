@@ -28,9 +28,21 @@
 				<string>oauth-swift</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLIconFile</key>
+			<string>Icon@2x</string>
+			<key>CFBundleURLName</key>
+			<string>com.Knock.Ride</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ridereport</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>50</string>
+	<string>52</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>

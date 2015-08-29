@@ -18,6 +18,28 @@ extension UIView {
         return self
     }
     
+    func shake(completionHandler:() -> Void = {}) -> Self {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            completionHandler()
+        }
+        
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        
+        let bounceOffsets : [CGFloat] = [-13.0, 13.0, -10.0, 7.0, -5.0, 3.0, -2.0, 1.0, 0.0]
+        
+        shakeAnimation.values = bounceOffsets
+        shakeAnimation.duration = 0.5
+        shakeAnimation.keyTimes = [0, 0.1, 0.2, 0.35, 0.5, 0.75, 0.9, 1.0]
+  
+        self.layer.addAnimation(shakeAnimation, forKey:"transform.translation.x")
+        
+        CATransaction.commit()
+        
+        return self
+    }
+    
     func popIn(completionHandler:() -> Void = {}) -> Self {
         self.hidden = false
         

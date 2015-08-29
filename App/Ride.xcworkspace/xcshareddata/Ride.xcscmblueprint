@@ -4,18 +4,26 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "924C1C4700AD97D5AF0D9D08517061919DD2280B" : 0,
+    "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : 0,
     "67620B5EFA902936DF04070AF595B76AB0333747" : 0,
-    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : 0,
-    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0
+    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0,
+    "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : 0,
+    "7E68CB584078A487C0535CC191D3B7551EEE2095" : 0,
+    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "00B5D283-9630-4CEF-89E2-AE6D716B7F77",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "924C1C4700AD97D5AF0D9D08517061919DD2280B" : "mapbox-gl-native\/styles\/",
+    "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : "mapbox-gl-native\/platform\/ios\/vendor\/SMCalloutView\/",
     "67620B5EFA902936DF04070AF595B76AB0333747" : "RideApp\/Alamofire",
-    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : "Ride\/App\/PathMenu",
-    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride"
+    "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride",
+    "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : "mapbox-gl-native\/src\/mbgl\/util\/geojsonvt\/",
+    "7E68CB584078A487C0535CC191D3B7551EEE2095" : "mapbox-gl-native\/",
+    "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : "Ride\/App\/PathMenu"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Ride",
-  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "App\/Ride.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
@@ -29,9 +37,29 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "67620B5EFA902936DF04070AF595B76AB0333747"
     },
     {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mapbox\/mapbox-gl-native.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7E68CB584078A487C0535CC191D3B7551EEE2095"
+    },
+    {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:quicklywilliam\/Ride.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "8695F9610F28C2C5DE5773E7F33F1D6934DB725E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mapbox\/mapbox-gl-styles.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "924C1C4700AD97D5AF0D9D08517061919DD2280B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mapbox\/geojson-vt-cpp",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nfarina\/calloutview.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D1BB63D501E0048981F00509C5A268D4AF5FEE4C"
     }
   ]
 }

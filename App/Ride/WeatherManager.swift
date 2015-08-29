@@ -21,8 +21,10 @@ class WeatherManager {
     }
     
     class func startup() {
-        Static.sharedManager = WeatherManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = WeatherManager()
+            Static.sharedManager?.startup()
+        }
     }
     
     func startup() {

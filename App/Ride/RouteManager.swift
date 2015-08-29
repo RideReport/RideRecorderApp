@@ -76,8 +76,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     class func startup() {
-        Static.sharedManager = RouteManager()
-        Static.sharedManager?.startup()
+        if (Static.sharedManager == nil) {
+            Static.sharedManager = RouteManager()
+            Static.sharedManager?.startup()
+        }
     }
     
     override init () {
@@ -556,6 +558,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
     }
+    
+    private func opportunisticallySyncTrips() {
+        if (UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full) {
+            // opportunistically sync trips if we are plugged in
+            APIClient.sharedClient.syncTrips(syncInBackground: true)
+        }
+    }
 
     //
     // MARK: - CLLocationManger Delegate Methods
@@ -613,6 +622,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
+        self.opportunisticallySyncTrips()
+        
         if (!region!.identifier.hasPrefix(self.geofenceIdentifierPrefix)) {
             DDLogVerbose("Got geofence enter for backup or other irrelevant geofence. Skipping.")
             return;
@@ -627,6 +638,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
+        self.opportunisticallySyncTrips()
+        
         if (region!.identifier != self.backupGeofenceIdentifier) {
             DDLogVerbose("Got geofence exit for irrelevant geofence. Skipping.")
             return;
@@ -658,12 +671,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else if (self.isInMotionMonitoringState) {
             self.processMotionMonitoringLocations(locations as! [CLLocation]!)
         } else {
-            if (UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full) {
-                // opportunistically sync trips if we are plugged in
-                APIClient.sharedClient.syncTrips(syncInBackground: true)
-            }
-            
             // We are currently in background mode and got significant location change movement.
+            
+            self.opportunisticallySyncTrips()
+            
             if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
                 DDLogVerbose("Got significant location, entering Motion Monitoring state.")
                 self.startMotionMonitoring()
