@@ -19,6 +19,11 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
         helperTextLabel.markdownStringValue = "When your trip ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
     }
     
+    override func next(sender: AnyObject) {
+        super.next(sender)
+        AppDelegate.appDelegate().registerNotifications()
+    }
+    
     func didOpenControls(view: PushSimulatorView) {
         helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill trip, **thumbs down** if something stressed you out.")
     }

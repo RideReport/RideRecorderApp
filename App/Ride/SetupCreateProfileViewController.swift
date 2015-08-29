@@ -12,21 +12,33 @@ import SwiftyJSON
 class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDelegate {
     
     @IBOutlet weak var helperTextLabel : UILabel!
+    @IBOutlet weak var detailTextLabel : UILabel!
     @IBOutlet weak var emailTextField : UITextField!
+    @IBOutlet weak var haveAccountButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        helperTextLabel.markdownStringValue = "Create account so you can **recover your trip data** if your phone is lost."
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: "create")
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "didTap:")
         self.view.addGestureRecognizer(tapRecognizer)
     }
     
-    func skip() {
+    override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
+        super.childViewControllerWillPresent(userInfo: userInfo)
+        
+        
+        helperTextLabel.markdownStringValue = "Create an account so you can **recover your trip data** if your phone is lost."
+        detailTextLabel.markdownStringValue = "Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind."
+
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: "create")
+        if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.Plain, target: self, action: "done")
+        } else {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "done")
+        }
+    }
+    
+    func done() {
         self.parent?.done()
     }
     
@@ -52,7 +64,6 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
 
     }
     
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -77,6 +88,13 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         super.viewDidAppear(animated)
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    @IBAction func tappedHaveAccount(sender: AnyObject) {
+        self.navigationItem.rightBarButtonItem?.title = "Log In"
+        self.helperTextLabel.markdownStringValue = "Log in to your account to **load your trip data** onto this iPhone."
+        self.detailTextLabel.hidden = true
+        self.haveAccountButton.hidden = true
     }
     
     func didTap(tapGesture: UIGestureRecognizer) {

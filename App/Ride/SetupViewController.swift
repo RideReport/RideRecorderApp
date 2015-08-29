@@ -29,29 +29,46 @@ class SetupViewController: UINavigationController {
         self.navigationBarHidden = true
         self.navigationBar.tintColor = UIColor.whiteColor()
         self.toolbar.barStyle = UIBarStyle.BlackTranslucent
+    }
+    
+    func setupViewControllersForGettingStarted() {
+        let setupTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupTerms") as! SetupChildViewController
+        self.setupVC(setupTermsVC)
         
-        let gettingStartedTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedTerms") as! SetupChildViewController
-        self.setupVC(gettingStartedTermsVC)
+        let setupBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupBattery") as! SetupChildViewController
+        self.setupVC(setupBatteryVC)
         
-        let gettingStartedBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedBattery") as! SetupChildViewController
-        self.setupVC(gettingStartedBatteryVC)
+        let setupRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupRating") as! SetupChildViewController
+        self.setupVC(setupRatingVC)
         
-        let gettingStartedRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedRating") as! SetupChildViewController
-        self.setupVC(gettingStartedRatingVC)
+        let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
+        self.setupVC(setupCreateProfile)
         
-        let gettingStartedCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedCreateProfile") as! SetupChildViewController
-        self.setupVC(gettingStartedCreateProfile)
+        let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
+        self.setupVC(setupConfirmEmail)
         
-        let gettingStartedConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("gettingStartedConfirmEmail") as! SetupChildViewController
-        self.setupVC(gettingStartedConfirmEmail)
+        self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail]
         
-        self.myViewControllers = [gettingStartedCreateProfile, gettingStartedConfirmEmail]
-//        self.myViewControllers = [gettingStartedTermsVC, gettingStartedRatingVC, gettingStartedBatteryVC, gettingStartedCreateProfile, gettingStartedConfirmEmail]
+        self.myViewControllers.first!.childViewControllerWillPresent()
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
     
-    func setupVC(vc: SetupChildViewController) {
+    func setupViewControllersForCreateProfile() {
+        let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
+        self.setupVC(setupCreateProfile)
+        
+        let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
+        self.setupVC(setupConfirmEmail)
+        
+        self.myViewControllers = [setupCreateProfile, setupConfirmEmail]
+        
+        self.myViewControllers.first!.childViewControllerWillPresent(userInfo: ["isCreatingProfileOutsideGettingStarted": true])
+        
+        self.setViewControllers([self.myViewControllers.first!], animated: false)
+    }
+    
+    private func setupVC(vc: SetupChildViewController) {
         vc.view.backgroundColor = UIColor.clearColor()
         vc.parent = self
     }

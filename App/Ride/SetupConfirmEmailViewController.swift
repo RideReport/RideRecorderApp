@@ -9,11 +9,11 @@
 import Foundation
 
 class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInputViewDelegate {
-    
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var passcodeInputView : BKPasscodeInputView!
     @IBOutlet weak var passcodeInputViewBottomLayoutConstraint: NSLayoutConstraint!
-
+    
+    private var pollTimer : NSTimer? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,6 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         self.passcodeInputView.passcodeStyle = BKPasscodeInputViewNumericPasscodeStyle
         self.passcodeInputView.keyboardType = UIKeyboardType.NumberPad
         self.passcodeInputView.keyboardAppearance = UIKeyboardAppearance.Dark
-        self.passcodeInputView.maximumLength = 6
         self.passcodeInputView.delegate = self
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
@@ -37,7 +36,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
             self.passcodeInputView.maximumLength = UInt(shortCode)
             self.passcodeInputView.hidden = false
             helperTextLabel.markdownStringValue = "**Enter the secret code** in the email we just sent."
-            
+        
             // make sure the keyboard does not animate in initially.
             UIView.setAnimationsEnabled(false)
             NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardDidShowNotification, object: nil, queue: nil) { (notif) -> Void in
@@ -46,9 +45,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
             }
             self.passcodeInputView.becomeFirstResponder()
         } else {
-            self.passcodeInputView.hidden = true
-            helperTextLabel.markdownStringValue = "Check your email! You'll find a **button to tap** in the email we just sent."
-            self.passcodeInputView.resignFirstResponder()
+            self.showVerifyViaButtonUI()
         }
     }
 
@@ -56,12 +53,31 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillHideNotification, object: nil)
         
+        self.pollTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: Selector("pollAccountStatus"), userInfo: nil, repeats: true)
+        
         super.viewDidAppear(animated)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        
+        self.pollTimer?.invalidate()
+        self.pollTimer = nil
+    }
+    
+    func pollAccountStatus() {
+        APIClient.sharedClient.updateAccountStatus().response { (request, response, data, error) in
+            if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
+                self.parent?.nextPage(self)
+            }
+        }
+    }
+    
+    private func showVerifyViaButtonUI() {
+        self.passcodeInputView.hidden = true
+        helperTextLabel.markdownStringValue = "Check your email! You'll find a **button to tap** in the email we just sent."
+        self.passcodeInputView.resignFirstResponder()
     }
     
     func layoutPasscodeInputViewBottomContraints(notification: NSNotification) {

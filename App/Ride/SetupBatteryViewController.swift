@@ -58,7 +58,7 @@ class SetupBatteryViewController: SetupChildViewController {
         self.pauseButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
         self.pauseButton.animates = true
         
-        self.pauseButton.delay(3.0) {
+        self.pauseButton.delay(2.0) {
             self.next(self)
         }
     }

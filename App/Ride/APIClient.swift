@@ -19,6 +19,15 @@ let serverAddress = "https://api.ride.report/api/v2/"
 #endif
     
 class APIClient {
+    enum AccountVerificationStatus : Int16 { // has the user linked and verified an email to the account?
+        case Unknown = 0
+        case Unverified
+        case Verified
+    }
+    
+    // Status
+    var accountVerificationStatus = AccountVerificationStatus.Unknown
+    
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var rideKeychainUserName = "Ride Report Access Token"
@@ -49,9 +58,30 @@ class APIClient {
     
     func startup() {
         self.authenticateIfNeeded()
-        self.syncTrips()
+        if (self.authenticated) {
+            self.updateAccountStatus()
+            self.syncTrips()
+        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    func updateAccountStatus()-> Request {
+        return self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "status").validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+            if (error == nil) {
+                // do stuff with the response
+                let data = JSON(jsonData!)
+                if let account_verified = data["account_verified"].bool {
+                    if (account_verified) {
+                        self.accountVerificationStatus = .Verified
+                    } else {
+                        self.accountVerificationStatus = .Unverified
+                    }
+                }
+            } else {
+                DDLogError(String(format: "Error retriving account status: %@", error!))
+            }
+        }
     }
     
     deinit {
@@ -143,6 +173,7 @@ class APIClient {
         return self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]).validate().response { (request, response, data, error) in
             if (error == nil) {
                 DDLogInfo(String(format: "Response: %@", response!))
+                self.updateAccountStatus()
             } else {
                 DDLogError(String(format: "Error: %@", error!))
             }
@@ -264,6 +295,7 @@ class APIClient {
                 let data = JSON(jsonData!)
                 if let accessToken = data["access_token"].string, expiresIn = data["expires_in"].string {
                     self.saveAccessToken(accessToken, expiresIn: expiresIn)
+                    self.updateAccountStatus()
                 }
             } else {
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
