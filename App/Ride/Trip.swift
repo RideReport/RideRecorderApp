@@ -781,7 +781,14 @@ class Trip : NSManagedObject {
         } else {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
                 dispatch_async(dispatch_get_main_queue(), {
-                    if (activities != nil) {
+                    if (activities == nil || activities.count == 0) {
+                        #if DEBUG
+                            let notif = UILocalNotification()
+                            notif.alertBody = "🐞 Got no motion activities!!"
+                            notif.category = "RIDE_COMPLETION_CATEGORY"
+                            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                        #endif
+                    } else {
                         for activity in activities {
                             Activity(activity: activity as! CMMotionActivity, trip: self)
                         }
@@ -799,12 +806,6 @@ class Trip : NSManagedObject {
     func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
-            #if DEBUG
-                let notif = UILocalNotification()
-                notif.alertBody = "🐞 Got no motion activities!!"
-                notif.category = "RIDE_COMPLETION_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-            #endif
             
             DDLogInfo(String(format: "No activites! Found speed: %f", self.averageSpeed))
             if (self.averageSpeed >= 8) {
