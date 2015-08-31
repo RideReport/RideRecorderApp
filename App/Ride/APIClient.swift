@@ -181,12 +181,12 @@ class APIClient {
     }
     
     private func syncTrip(trip: Trip) {
-        if (!self.authenticated) {
-            self.authenticateIfNeeded()
+        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
             return
         }
         
-        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
+        if (!self.authenticated) {
+            self.authenticateIfNeeded()
             return
         }
         
