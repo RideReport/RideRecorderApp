@@ -372,13 +372,13 @@ class APIClient {
 
             if (error != nil || dictionary == nil) {
                 DDLogError(String(format: "Error accessing access token: %@", error!))
-                if (error!.code == Int(errSecInteractionNotAllowed)) {
+                if (error!.code == Int(-34018)) {
                     // this is a special case. if we get this error, it's due to an obscure keychain bug causing the keychain to be temporarily inaccessible
                     // https://forums.developer.apple.com/message/9225#9225
                     // we'll want to try again later.
                     _hasLookedForAccessToken = false
                     self.keychainDataIsInaccessible = true
-                } else if (error!.code == Int(-34018)) {
+                } else if (error!.code == Int(errSecInteractionNotAllowed)) {
                     // this is a special case. if we get this error, it's because the device isn't unlocked yet.
                     // we'll want to try again later.
                     _hasLookedForAccessToken = false
