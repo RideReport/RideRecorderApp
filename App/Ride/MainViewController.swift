@@ -475,9 +475,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         }
         
         let bundleID = NSBundle.mainBundle().bundleIdentifier
-        let dailyStats = UIDevice.currentDevice().dailyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
-        let weeklyStats = UIDevice.currentDevice().weeklyUsageStasticsForBundleIdentifier(bundleID) ?? NSDictionary()
-        let body = String(format: "\n\n\n===BATTERY LIFE USAGE STATISTICS===\nDaily: %@\nWeekly: %@", dailyStats, weeklyStats)
+        let body = "What happened?\n"
         
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Report Bug Report")
