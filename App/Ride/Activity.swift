@@ -29,7 +29,7 @@ class Activity : NSManagedObject {
         
         self.trip = trip
         
-        self.confidence = NSNumber(integer: activity.confidence.rawValue)
+        self.confidence = NSNumber(integer: activity.confidence.rawValue + 1)
         
         self.automotive = activity.automotive
         self.walking = activity.walking
