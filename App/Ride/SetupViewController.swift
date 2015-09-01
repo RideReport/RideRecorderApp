@@ -47,7 +47,10 @@ class SetupViewController: UINavigationController {
         let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
         self.setupVC(setupConfirmEmail)
         
-        self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail]
+        let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
+        self.setupVC(setupFinished)
+        
+        self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail, setupFinished]
         
         self.myViewControllers.first!.childViewControllerWillPresent()
         
@@ -61,7 +64,10 @@ class SetupViewController: UINavigationController {
         let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
         self.setupVC(setupConfirmEmail)
         
-        self.myViewControllers = [setupCreateProfile, setupConfirmEmail]
+        let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
+        self.setupVC(setupFinished)
+        
+        self.myViewControllers = [setupCreateProfile, setupConfirmEmail, setupFinished]
         
         self.myViewControllers.first!.childViewControllerWillPresent(userInfo: ["isCreatingProfileOutsideGettingStarted": true])
         
@@ -104,10 +110,17 @@ class SetupViewController: UINavigationController {
         }
     }
     
-    func done() {
+    func done(userInfo : [String: AnyObject]? = nil) {
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
         NSUserDefaults.standardUserDefaults().synchronize()
         
-        AppDelegate.appDelegate().transitionToMainNavController()
+        let lastPage = self.myViewControllers.last!
+        lastPage.childViewControllerWillPresent(userInfo: userInfo)
+
+        let transition = CATransition()
+        transition.duration = 0.6
+        transition.type = kCATransitionFade
+        self.view.layer.addAnimation(transition, forKey: nil)
+        self.setViewControllers([lastPage], animated: false)        
     }
 }

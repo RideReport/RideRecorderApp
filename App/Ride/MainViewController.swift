@@ -308,7 +308,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             case .Unverified: accountButtonTitle = "Create Account"
             case .Verified: accountButtonTitle = "Log Out…"
         }
-        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", accountButtonTitle, "Map Info")
+        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", accountButtonTitle, "About the Map")
         actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
             if (buttonIndex == 1) {
                 self.sendLogFile()
