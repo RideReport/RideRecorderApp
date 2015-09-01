@@ -12,8 +12,6 @@ class SetupFinishedViewController: SetupChildViewController {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     
-
-    
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo: userInfo)
         

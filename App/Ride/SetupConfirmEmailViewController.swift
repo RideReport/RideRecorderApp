@@ -15,6 +15,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     
     private var pollTimer : NSTimer? = nil
     private var timeOfInitialPresesntation : NSDate? = nil
+    private var isCreatingProfileOutsideGettingStarted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +36,12 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         super.childViewControllerWillPresent(userInfo: userInfo)
         
         self.timeOfInitialPresesntation = NSDate()
+        
+        if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
+            self.isCreatingProfileOutsideGettingStarted = true
+        } else {
+            self.isCreatingProfileOutsideGettingStarted = false
+        }
         
         if let shortCode = userInfo?["shortcodeLength"] as! Int? {
             self.passcodeInputView.maximumLength = UInt(shortCode)
@@ -83,7 +90,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     func pollAccountStatus() {
         APIClient.sharedClient.updateAccountStatus().after() { (response, jsonData, error) in
             if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-                self.parent?.nextPage(self)
+                self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
             }
         }
     }
@@ -115,7 +122,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     func passcodeInputViewDidFinish(passcodeInputView: BKPasscodeInputView!) {
         APIClient.sharedClient.verifyToken(passcodeInputView.passcode).after() { (response, jsonData, error) in
             if (error == nil) {
-                self.parent?.nextPage(self)
+                self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
             } else {
                 if (response?.statusCode == 404) {
                     passcodeInputView.errorMessage = "That's not it."

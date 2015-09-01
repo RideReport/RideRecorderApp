@@ -49,8 +49,12 @@ code_sign() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Alamofire.framework'
+  install_framework 'Bolts.framework'
   install_framework 'CZWeatherKit.framework'
   install_framework 'CocoaLumberjack.framework'
+  install_framework 'FBSDKCoreKit.framework'
+  install_framework 'FBSDKLoginKit.framework'
+  install_framework 'FBSDKShareKit.framework'
   install_framework 'Locksmith.framework'
   install_framework 'OAuthSwift.framework'
   install_framework 'PINCache.framework'
@@ -60,8 +64,12 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Alamofire.framework'
+  install_framework 'Bolts.framework'
   install_framework 'CZWeatherKit.framework'
   install_framework 'CocoaLumberjack.framework'
+  install_framework 'FBSDKCoreKit.framework'
+  install_framework 'FBSDKLoginKit.framework'
+  install_framework 'FBSDKShareKit.framework'
   install_framework 'Locksmith.framework'
   install_framework 'OAuthSwift.framework'
   install_framework 'PINCache.framework'

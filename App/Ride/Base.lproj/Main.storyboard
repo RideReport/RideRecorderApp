@@ -589,7 +589,7 @@
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mwQ-NZ-0tA">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mwQ-NZ-0tA" customClass="FBSDKLoginButton">
                                         <rect key="frame" x="55" y="101" width="218" height="30"/>
                                         <state key="normal" title="FB Connect Placeholder Button">
                                             <color key="titleColor" red="0.52941176469999995" green="0.64705882349999999" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -649,6 +649,7 @@
                     <connections>
                         <outlet property="detailTextLabel" destination="Scv-eR-rsP" id="l4n-AR-2IP"/>
                         <outlet property="emailTextField" destination="7eH-Vw-Tw4" id="3ev-Ra-bj5"/>
+                        <outlet property="facebookButton" destination="mwQ-NZ-0tA" id="aZo-3h-mgg"/>
                         <outlet property="haveAccountButton" destination="NMY-2y-IYc" id="ogF-vi-NUv"/>
                         <outlet property="helperTextLabel" destination="wQe-d2-N04" id="YvL-0a-wPj"/>
                     </connections>

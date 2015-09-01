@@ -250,6 +250,23 @@ class APIClient {
         }
     }
     
+    func verifyFacebook(token: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_facebook_login", parameters: ["token": token]) { (response, jsonData, error) in
+            if (error == nil) {
+                DDLogInfo(String(format: "Response: %@", response!))
+                self.updateAccountStatus()
+            } else {
+                DDLogError(String(format: "Error: %@", error!))
+                if (response?.statusCode == 400) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        let alert = UIAlertView(title:nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
+                        alert.show()
+                    })
+                }
+            }
+        }
+    }
+    
     private func syncTrip(trip: Trip) {
         if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
             return

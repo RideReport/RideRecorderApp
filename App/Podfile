@@ -9,4 +9,7 @@ pod 'Locksmith'
 pod 'SwiftyJSON'
 pod 'Alamofire'
 pod 'OAuthSwift'
+pod 'FBSDKCoreKit'
+pod 'FBSDKLoginKit'
+pod 'FBSDKShareKit'
 use_frameworks!

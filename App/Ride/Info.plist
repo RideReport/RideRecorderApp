@@ -20,6 +20,12 @@
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb1628624720751248</string>
+            </array>
+        </dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
@@ -57,6 +63,10 @@
 			</dict>
 		</array>
 	</dict>
+    <key>FacebookAppID</key>
+    <string>1628624720751248</string>
+    <key>FacebookDisplayName</key>
+    <string>Ride report</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MGLMapboxAccessToken</key>
@@ -69,6 +79,30 @@
 	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle trips.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle trips.</string>
+    <key>NSExceptionDomains</key>
+    <dict>
+        <key>facebook.com</key>
+        <dict>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+            <key>NSExceptionRequiresForwardSecrecy</key>
+            <false/>
+        </dict>
+        <key>fbcdn.net</key>
+        <dict>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+            <key>NSExceptionRequiresForwardSecrecy</key>
+            <false/>
+        </dict>
+        <key>akamaihd.net</key>
+        <dict>
+            <key>NSIncludesSubdomains</key>
+            <true/>
+            <key>NSExceptionRequiresForwardSecrecy</key>
+            <false/>
+        </dict>
+    </dict>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Frameworks/ionicons.framework/ionicons.ttf</string>
