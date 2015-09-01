@@ -111,6 +111,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         self.emailTextField.resignFirstResponder()
+        self.create()
         
         return true
     }
