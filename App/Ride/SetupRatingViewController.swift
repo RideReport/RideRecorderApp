@@ -35,7 +35,7 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Sweet. Rating your trips will **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Nice. Rating your trips will **improve biking in Portland**!")
     }
     
     func didTapDestructiveButton(view: PushSimulatorView) {
