@@ -17,7 +17,76 @@ let serverAddress = "https://api.ride.report/api/v2/"
 #else
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif
+
+public let AuthenticatedAPIRequestErrorDomain = "com.Knock.Ride.error"
+let APIClientBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json"]
+
+class AuthenticatedAPIRequest {
+    private var request: Request? = nil
+    private var authToken: String?
+    typealias AuthenticatedAPIRequestCompletionBlock = (NSHTTPURLResponse?, JSON, NSError?) -> Void
     
+    enum AuthenticatedAPIRequestErrorCode: Int {
+        case Unauthenticated = 1
+    }
+    
+    class func unauthenticatedError() -> NSError {
+        return NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.Unauthenticated.rawValue, userInfo: nil)
+    }
+    
+    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, completionHandler: AuthenticatedAPIRequestCompletionBlock) {
+        self.init()
+        
+        if (!client.authenticated) {
+            client.authenticateIfNeeded()
+            completionHandler(nil, nil, AuthenticatedAPIRequest.unauthenticatedError())
+        }
+        
+        var headers = APIClientBaseHeaders
+        if let token = client.accessToken {
+            self.authToken = token
+            headers["Authorization"] =  "Bearer \(token)"
+        }
+        
+        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: .JSON, headers: headers)
+        
+        request!.validate().responseJSON { (request, response, jsonData, error) in
+            if (response?.statusCode == 401) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if (self.authToken == client.accessToken) {
+                        // make sure the token that generated the 401 is still current
+                        // since it is possible we've already reauthenciated
+                        client.reauthenticate()
+                    }
+                })
+            } else if (response?.statusCode == 500) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
+                    alert.show()
+                })
+            }
+            var data = JSON("")
+            if (jsonData != nil) {
+                data = JSON(jsonData!)
+            }
+            
+            completionHandler(response, data, error)
+        }
+    }
+    
+    func after(completionHandler: AuthenticatedAPIRequestCompletionBlock) {
+        if (self.request == nil) {
+            completionHandler(nil, nil, AuthenticatedAPIRequest.unauthenticatedError())
+        }
+        
+        self.request!.responseJSON { (request, response, jsonData, error) in
+            let data = JSON(jsonData!)
+            
+            completionHandler(response, data, error)
+        }
+    }
+}
+
 class APIClient {
     enum AccountVerificationStatus : Int16 { // has the user linked and verified an email to the account?
         case Unknown = 0
@@ -58,30 +127,10 @@ class APIClient {
     
     func startup() {
         self.authenticateIfNeeded()
-        if (self.authenticated) {
-            self.updateAccountStatus()
-            self.syncTrips()
-        }
+        self.updateAccountStatus()
+        self.syncTrips()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-    }
-    
-    func updateAccountStatus()-> Request {
-        return self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "status").validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
-            if (error == nil) {
-                // do stuff with the response
-                let data = JSON(jsonData!)
-                if let account_verified = data["account_verified"].bool {
-                    if (account_verified) {
-                        self.accountVerificationStatus = .Verified
-                    } else {
-                        self.accountVerificationStatus = .Unverified
-                    }
-                }
-            } else {
-                DDLogError(String(format: "Error retriving account status: %@", error!))
-            }
-        }
     }
     
     deinit {
@@ -152,8 +201,25 @@ class APIClient {
     // MARK: - Authenciated API Methods
     //
     
-    func sendVerificationTokenForEmail(email: String)-> Request {
-        return self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]).validate().response { (request, response, data, error) in
+    func updateAccountStatus()-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.GET, route: "status") { (response, jsonData, error) -> Void in
+            if (error == nil) {
+                // do stuff with the response
+                if let account_verified = jsonData["account_verified"].bool {
+                    if (account_verified) {
+                        self.accountVerificationStatus = .Verified
+                    } else {
+                        self.accountVerificationStatus = .Unverified
+                    }
+                }
+            } else {
+                DDLogError(String(format: "Error retriving account status: %@", error!))
+            }
+        }
+    }
+    
+    func sendVerificationTokenForEmail(email: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]) { (response, jsonData, error) in
             if (error == nil) {
                 DDLogInfo(String(format: "Response: %@", response!))
             } else {
@@ -169,8 +235,8 @@ class APIClient {
         }
     }
     
-    func verifyToken(token: String)-> Request {
-        return self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]).validate().response { (request, response, data, error) in
+    func verifyToken(token: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]) { (response, jsonData, error) in
             if (error == nil) {
                 DDLogInfo(String(format: "Response: %@", response!))
                 self.updateAccountStatus()
@@ -182,11 +248,6 @@ class APIClient {
     
     private func syncTrip(trip: Trip) {
         if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
-            return
-        }
-        
-        if (!self.authenticated) {
-            self.authenticateIfNeeded()
             return
         }
         
@@ -211,7 +272,7 @@ class APIClient {
         }
         tripDict["locations"] = locations
 
-        self.makeAuthenticatedRequest(Alamofire.Method.POST, route: "save_trip", parameters: tripDict).validate().response { (request, response, data, error) in
+        AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "save_trip", parameters: tripDict) { (response, jsonData, error) in
             if (error == nil) {
                 trip.isSynced = true
                 DDLogInfo(String(format: "Response: %@", response!))
@@ -222,41 +283,22 @@ class APIClient {
         }
     }
     
+    func testAuthID() {
+        AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_info") { (response, jsonData, error) -> Void in
+            if (error == nil) {
+                // do stuff with the response
+            } else {
+                DDLogError(String(format: "Error retriving access token: %@", error!))
+            }
+        }
+    }
+    
     //
     // MARK: - Helpers
     //
     
-    var requestHeaders: [String:String] {
-        var headers = ["Content-Type": "application/json", "Accept": "application/json"]
-        if let token = self.accessToken {
-            headers["Authorization"] =  "Bearer \(token)"
-        }
-        
-        return headers
-    }
-    
     private func jsonify(date: NSDate) -> String {
         return self.jsonDateFormatter.stringFromDate(date)
-    }
-    
-    
-    private func makeAuthenticatedRequest(method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = .JSON) -> Request {        
-        return self.manager.request(method, serverAddress + route, parameters: parameters, encoding: encoding, headers: self.requestHeaders).response { (request, response, data, error) in
-            if (response?.statusCode == 401) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    if (self.authenticated) {
-                        let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
-                        alert.show()
-                        self.reauthenticate()
-                    }
-                })
-            } else if (response?.statusCode == 500) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
-                    alert.show()
-                })
-            }
-        }
     }
     
     //
@@ -288,11 +330,12 @@ class APIClient {
         let uuid = Profile.profile().uuid
         var parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
         parameters["uuid"] = uuid
-        self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "oauth_token", parameters: parameters, encoding: .URL).validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+        
+        self.manager.request(.GET, serverAddress + "oauth_token", parameters: parameters, encoding: .URL, headers: APIClientBaseHeaders).validate().responseJSON { (request, response, jsonData, error) in
+            let data = JSON(jsonData!)
             self.isRequestingAuthentication = false
             if (error == nil) {
                 // do stuff with the response
-                let data = JSON(jsonData!)
                 if let accessToken = data["access_token"].string, expiresIn = data["expires_in"].string {
                     self.saveAccessToken(accessToken, expiresIn: expiresIn)
                     self.updateAccountStatus()
@@ -302,20 +345,10 @@ class APIClient {
                 alert.show()
                 DDLogError(String(format: "Error retriving access token: %@", error!))
             }
-        }
-    }
-    
-    func testAuthID() {
-        self.makeAuthenticatedRequest(Alamofire.Method.GET, route: "oauth_info").validate().responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
-            if (error == nil) {
-                // do stuff with the response
-                let data = JSON(jsonData!)
 
-            } else {
-                DDLogError(String(format: "Error retriving access token: %@", error!))
-            }
         }
     }
+
     
     //
     // MARK: - OAuth Token Keychain Management

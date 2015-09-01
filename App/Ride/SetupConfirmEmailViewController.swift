@@ -67,7 +67,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func pollAccountStatus() {
-        APIClient.sharedClient.updateAccountStatus().response { (request, response, data, error) in
+        APIClient.sharedClient.updateAccountStatus().after() { (response, jsonData, error) in
             if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
                 self.parent?.nextPage(self)
             }
@@ -99,7 +99,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func passcodeInputViewDidFinish(passcodeInputView: BKPasscodeInputView!) {
-        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).response { (request, response, data, error) in
+        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).after() { (response, jsonData, error) in
             if (error == nil) {
                 self.parent?.nextPage(self)
             } else {

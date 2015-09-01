@@ -46,13 +46,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.navigationItem.rightBarButtonItem?.enabled = false
         self.emailTextField.enabled = false
         
-        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text).responseJSON(options: nil) { (request, response, jsonData, error) -> Void in
+        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text).after() { (response, jsonData, error) -> Void in
             self.navigationItem.rightBarButtonItem?.enabled = true
             self.emailTextField.enabled = true
             
             if (error == nil) {
-                let data = JSON(jsonData!)
-                if let shortcodeLength = data["shortcode_length"].int {
+                if let shortcodeLength = jsonData["shortcode_length"].int {
                     self.parent?.nextPage(self, userInfo: ["shortcodeLength": shortcodeLength])
                 } else {
                     self.parent?.nextPage(self)
