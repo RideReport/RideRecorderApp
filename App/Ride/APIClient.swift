@@ -158,7 +158,7 @@ class APIClient {
     
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            for aTrip in Trip.allTrips() {
+            for aTrip in Trip.openAndUnsyncedTrips() {
                 let trip = aTrip as! Trip
 
                 if (trip.locations.count <= 6) {

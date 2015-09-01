@@ -182,10 +182,12 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class func openTrips() -> [AnyObject]? {
+    class func openAndUnsyncedTrips() -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "isClosed == NO")
+        let closedPredicated = NSPredicate(format: "isClosed == NO")
+        let syncedPredicated = NSPredicate(format: "isSynced == NO")
+        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [closedPredicated, syncedPredicated])
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
