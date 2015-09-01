@@ -40,6 +40,7 @@ class AuthenticatedAPIRequest {
         if (!client.authenticated) {
             client.authenticateIfNeeded()
             completionHandler(nil, nil, AuthenticatedAPIRequest.unauthenticatedError())
+            return
         }
         
         var headers = APIClientBaseHeaders
