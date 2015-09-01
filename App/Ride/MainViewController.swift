@@ -389,22 +389,22 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 self.popupView.popIn()
             }
             if (RouteManager.sharedManager.isPausedDueToUnauthorized()) {
-                self.popupView.text = "Ride Report needs permission to run."
+                self.popupView.text = "Ride Report needs permission to run"
             } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
-                self.popupView.text = "Ride Report is paused until you charge your phone =)."
+                self.popupView.text = "Ride Report is paused until you charge your phone"
             } else {
                 if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
-                        self.popupView.text = "Ride Report is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate) + "."
+                        self.popupView.text = "Ride Report is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate)
                     } else if (pausedUntilDate.isTomorrow()) {
-                        self.popupView.text = "Ride Report is paused until tomorrow."
+                        self.popupView.text = "Ride Report is paused until tomorrow"
                     } else if (pausedUntilDate.isThisWeek()) {
-                        self.popupView.text = "Ride Report is paused until " + pausedUntilDate.weekDay() + "."
+                        self.popupView.text = "Ride Report is paused until " + pausedUntilDate.weekDay()
                     } else {
-                        self.popupView.text = "Ride Report is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate) + "."
+                        self.popupView.text = "Ride Report is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate)
                     }
                 } else {
-                    self.popupView.text = "Ride Report is paused."
+                    self.popupView.text = "Ride Report is paused"
                 }
             }
         } else {
@@ -417,7 +417,7 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
                 if (self.popupView.hidden) {
                     self.popupView.popIn()
                 }
-                self.popupView.text = "Ride Report's accuracy is improved when Wi-Fi is on."
+                self.popupView.text = "Ride Report's accuracy is improved when Wi-Fi is on"
             } else if (!self.popupView.hidden) {
                 self.popupView.fadeOut()
             }
