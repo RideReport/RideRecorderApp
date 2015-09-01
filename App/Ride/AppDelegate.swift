@@ -95,18 +95,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
         rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
         rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
-        
-        let flagAction = UIMutableUserNotificationAction()
-        flagAction.identifier = "FLAG_IDENTIFIER"
-        flagAction.title = "🚩"
-        flagAction.activationMode = UIUserNotificationActivationMode.Background
-        flagAction.destructive = true
-        flagAction.authenticationRequired = false
-        
+   
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
-        rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Minimal)
-        rideStartedCategory.setActions([flagAction], forContext: UIUserNotificationActionContext.Default)
         
         let resumeAction = UIMutableUserNotificationAction()
         resumeAction.identifier = "RESUME_IDENTIFIER"
