@@ -14,6 +14,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     @IBOutlet weak var passcodeInputViewBottomLayoutConstraint: NSLayoutConstraint!
     
     private var pollTimer : NSTimer? = nil
+    private var timeOfInitialPresesntation : NSDate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +33,9 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo: userInfo)
+        
+        self.timeOfInitialPresesntation = NSDate()
+        
         if let shortCode = userInfo?["shortcodeLength"] as! Int? {
             self.passcodeInputView.maximumLength = UInt(shortCode)
             self.passcodeInputView.hidden = false
@@ -52,9 +56,12 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     override func viewWillAppear(animated: Bool) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillHideNotification, object: nil)
-        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "hidePINUIIfExpired", name: UIApplicationDidBecomeActiveNotification, object: nil)
+
         self.pollTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: Selector("pollAccountStatus"), userInfo: nil, repeats: true)
         
+        self.hidePINUIIfExpired()
+    
         super.viewDidAppear(animated)
     }
     
@@ -64,6 +71,13 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         
         self.pollTimer?.invalidate()
         self.pollTimer = nil
+    }
+    
+    func hidePINUIIfExpired() {
+        if (self.timeOfInitialPresesntation != nil && abs(self.timeOfInitialPresesntation!.timeIntervalSinceNow) > 120.0) {
+            // if they are coming back into the app and it's been too long for the code to be valid, show the other UI
+            self.showVerifyViaButtonUI()
+        }
     }
     
     func pollAccountStatus() {

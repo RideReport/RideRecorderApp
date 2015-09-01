@@ -370,6 +370,11 @@
     return [self.passcodeField becomeFirstResponder];
 }
 
+- (BOOL)resignFirstResponder
+{
+    return [self.passcodeField resignFirstResponder];
+}
+
 - (BOOL)canResignFirstResponder
 {
     return [self.passcodeField canResignFirstResponder];
