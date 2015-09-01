@@ -81,7 +81,10 @@ class AuthenticatedAPIRequest {
         }
         
         self.request!.responseJSON { (request, response, jsonData, error) in
-            let data = JSON(jsonData!)
+            var data = JSON("")
+            if (jsonData != nil) {
+                data = JSON(jsonData!)
+            }
             
             completionHandler(response, data, error)
         }
