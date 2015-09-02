@@ -136,6 +136,10 @@ class Trip : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
+        if (results == nil || results!.count == 0) {
+            return []
+        }
+        
         return results!
     }
     
@@ -179,6 +183,10 @@ class Trip : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
+        if (results == nil || results!.count == 0) {
+            return []
+        }
+        
         return results!
     }
     
@@ -191,6 +199,10 @@ class Trip : NSManagedObject {
         
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        
+        if (results == nil || results!.count == 0) {
+            return []
+        }
         
         return results!
     }
@@ -421,6 +433,7 @@ class Trip : NSManagedObject {
     }
     
     func findStartingPlacemarkWithHandler(startingLocation : CLLocation, handler: ()->Void) {
+        
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(startingLocation, completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
@@ -554,7 +567,7 @@ class Trip : NSManagedObject {
                 handler()
                 return
             }
-        
+            
             self.sendTripCompletionNotificationImmediately()
             handler()
         }
