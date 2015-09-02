@@ -131,7 +131,9 @@ import Foundation
         scrollView.addSubview(contentView)
         
         appIconView = UIImageView(frame: CGRectMake(insetX, 10, 20, 20))
-        appIconView.backgroundColor = UIColor.redColor()
+        appIconView.layer.cornerRadius = 3
+        appIconView.layer.masksToBounds = true
+        appIconView.backgroundColor = UIColor.clearColor()
         contentView.addSubview(appIconView)
         
         appNameLabel = UILabel()
@@ -307,6 +309,7 @@ import Foundation
         appNameLabel.text = self.appName
         dateLabel.text = self.dateString
         bodyLabel.text = self.body
+        appIconView.image = self.appIcon
         
         var insetX : CGFloat = 46
         var insetY : CGFloat = 8

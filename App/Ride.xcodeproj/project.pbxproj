@@ -88,6 +88,8 @@
 		84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */; };
 		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
 		84EA5BEE1A6F226400C71F53 /* SetupBatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* SetupBatteryViewController.swift */; };
+		84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */; };
+		84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */; };
 		84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137521B5DADD30023EC82 /* CoreTelephony.framework */; };
 		84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137541B5DADD80023EC82 /* GLKit.framework */; };
 		84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137561B5DADDF0023EC82 /* ImageIO.framework */; };
@@ -346,6 +348,8 @@
 		84EA5BED1A6F226400C71F53 /* SetupBatteryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupBatteryViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EAFD561AA128180057282C /* Ride 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 15.xcdatamodel"; sourceTree = "<group>"; };
 		84EAFD571AA128960057282C /* Ride 16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 16.xcdatamodel"; sourceTree = "<group>"; };
+		84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconTiny@2x.png"; sourceTree = "<group>"; };
+		84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconTiny@3x.png"; sourceTree = "<group>"; };
 		84F137521B5DADD30023EC82 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		84F137541B5DADD80023EC82 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		84F137561B5DADDF0023EC82 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -534,6 +538,8 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */,
+				84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */,
 				842599D41B90EC1D0038C3CA /* Icon@2x.png */,
 				849FB1F51B87F1250002306F /* ride.report.cer */,
 				84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */,
@@ -887,12 +893,14 @@
 				84CA65B61B72E21D00696587 /* Compass@2x.png in Resources */,
 				84CA65B31B72E21D00696587 /* api_mapbox_com-digicert.der in Resources */,
 				8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */,
+				84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */,
 				84CA65B81B72E21D00696587 /* mapbox.png in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
+				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				84CA65B71B72E21D00696587 /* Compass@3x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,

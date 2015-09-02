@@ -16,6 +16,7 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
+        self.pushSimulationView.appIcon = UIImage(named: "IconTiny")
         helperTextLabel.markdownStringValue = "When your trip ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
     }
     
