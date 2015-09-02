@@ -21,9 +21,9 @@ class SetupFinishedViewController: SetupChildViewController {
             } else if (finishType == "InitialSetupCreatedAccount") {
                 helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
             } else if (finishType == "CreateAccountSkippedAccount") {
-                helperTextLabel.markdownStringValue = "**You're all set**!"
-            } else if (finishType == "CreatedAccountCreatedAccount") {
                 helperTextLabel.markdownStringValue = "Cool. You can always create an account later if you'd like to."
+            } else if (finishType == "CreatedAccountCreatedAccount") {
+                helperTextLabel.markdownStringValue = "**You're all set**!"
             }
         }
     }
