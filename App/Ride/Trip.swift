@@ -148,7 +148,7 @@ class Trip : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
-        if (results!.count == 0) {
+        if (results == nil || results!.count == 0) {
             return nil
         }
         
@@ -164,7 +164,7 @@ class Trip : NSManagedObject {
         var error : NSError?
         let results = context.executeFetchRequest(fetchedRequest, error: &error)
         
-        if (results!.count == 0) {
+        if (results == nil || results!.count == 0) {
             return nil
         }
         

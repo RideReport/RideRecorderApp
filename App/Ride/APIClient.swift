@@ -353,7 +353,10 @@ class APIClient {
         parameters["uuid"] = uuid
         
         self.manager.request(.GET, serverAddress + "oauth_token", parameters: parameters, encoding: .URL, headers: APIClientBaseHeaders).validate().responseJSON { (request, response, jsonData, error) in
-            let data = JSON(jsonData!)
+            var data = JSON("")
+            if (jsonData != nil) {
+                data = JSON(jsonData!)
+            }
             self.isRequestingAuthentication = false
             if (error == nil) {
                 // do stuff with the response
