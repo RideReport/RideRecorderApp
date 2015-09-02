@@ -34,6 +34,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.delegate = self
         self.mapView.logoView.hidden = true
         self.mapView.attributionButton.hidden = true
+        self.mapView.rotateEnabled = false
+        self.mapView.backgroundColor = UIColor.darkGrayColor()
         
         self.mapView.showsUserLocation = true
         self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)

@@ -35,38 +35,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "462918682.96725"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "439"
-            endingLineNumber = "439"
-            landmarkName = "APIClient"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "462918682.96725"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "433"
-            endingLineNumber = "433"
-            landmarkName = "APIClient"
-            landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Ride/SetupCreateProfileViewController.swift"
             timestampString = "462838183.328521"
             startingColumnNumber = "9223372036854775807"
@@ -84,12 +52,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
-                  timestampString = "462918791.091751"
+                  timestampString = "462928685.88412"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "145"
                   endingLineNumber = "145"
-                  offsetFromSymbolStart = "1242">
+                  offsetFromSymbolStart = "932">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -99,12 +67,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
-                  timestampString = "462918791.092032"
+                  timestampString = "462928685.884584"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "147"
                   endingLineNumber = "147"
-                  offsetFromSymbolStart = "45">
+                  offsetFromSymbolStart = "44">
                </Location>
             </Locations>
          </BreakpointContent>

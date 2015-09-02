@@ -432,10 +432,20 @@ class Trip : NSManagedObject {
         handler()
     }
     
-    func findStartingPlacemarkWithHandler(startingLocation : CLLocation, handler: ()->Void) {
+    func findStartingPlacemarkWithHandler(startingLocation : CLLocation? = nil, handler: ()->Void) {
+        if (startingLocation == nil && self.locations.count < 2) {
+            handler()
+            return
+        }
+        
+        var location = startingLocation
+        if (location == nil) {
+            location = (self.locations.firstObject as! Location).clLocation()
+        }
+        
         
         let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(startingLocation, completionHandler: { (placemarks, error) -> Void in
+        geocoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
             if (placemarks == nil || placemarks.count == 0) {
                 handler()
                 return
@@ -537,7 +547,7 @@ class Trip : NSManagedObject {
         if (self.startingPlacemarkName != nil) {
             self.sendTripStartedNotificationImmediately()
         } else {
-            self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
+            self.findStartingPlacemarkWithHandler(startingLocation: startingLocation) { () -> Void in
                 self.sendTripStartedNotificationImmediately()
             }
         }
@@ -561,7 +571,7 @@ class Trip : NSManagedObject {
     }
     
     func sendTripCompletionNotification(handler: ()->Void = {}) {
-        self.findDestinationPlacemarksWithHandler() {
+        let sendNotifBlock = { () -> Void in
             if (self.isClosed == false) {
                 // in case the trip was reopened while we were calculating things
                 handler()
@@ -570,6 +580,23 @@ class Trip : NSManagedObject {
             
             self.sendTripCompletionNotificationImmediately()
             handler()
+        }
+        let findDestBlock = { () -> Void in
+            if (self.endingPlacemarkName == nil) {
+                self.findDestinationPlacemarksWithHandler() {
+                    sendNotifBlock()
+                }
+            } else {
+                sendNotifBlock()
+            }
+        }
+        
+        if (self.startingPlacemarkName == nil) {
+            self.findStartingPlacemarkWithHandler() {
+                findDestBlock()
+            }
+        } else {
+           findDestBlock()
         }
     }
     

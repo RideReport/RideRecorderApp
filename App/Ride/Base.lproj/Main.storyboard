@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="15A263e" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -21,9 +21,11 @@
                         <subviews>
                             <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0W-sZ-4F3" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="A0W-sZ-4F3" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="MWO-C6-p9w"/>
@@ -58,6 +60,7 @@
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GLg-Hg-xMH">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="221" id="mbW-db-SAd"/>
@@ -78,6 +81,7 @@
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D0Q-8X-LJn">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
                                 <state key="normal" title="Delete Incident">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -87,6 +91,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="D0Q-8X-LJn" firstAttribute="top" secondItem="GLg-Hg-xMH" secondAttribute="bottom" constant="8" id="E69-rt-e1F"/>
@@ -153,6 +158,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="48" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="W5I-Vg-qji">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <color key="separatorColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -166,19 +172,23 @@
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vhJ-bT-UHK">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" red="0.0" green="0.0" blue="0.0" alpha="0.81000000000000005" colorSpace="calibratedRGB"/>
                                                 </label>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ipq-pH-1iE">
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="highlightedColor" red="0.0" green="0.0" blue="0.0" alpha="0.81000000000000005" colorSpace="calibratedRGB"/>
                                                 </label>
                                             </subviews>
+                                            <animations/>
                                             <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </tableViewCellContentView>
+                                        <animations/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <inset key="separatorInset" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
                                     </tableViewCell>
@@ -198,11 +208,13 @@
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No trips yet. Hop on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
                                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                 </subviews>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="OjU-pQ-Ua5" secondAttribute="width" multiplier="5:4" id="I3L-I3-EjW"/>
                                     <constraint firstAttribute="centerY" secondItem="OjU-pQ-Ua5" secondAttribute="centerY" constant="20" id="n4V-he-hhj"/>
@@ -230,6 +242,7 @@
                                 </variation>
                             </view>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" secondItem="hQC-Qb-oe8" secondAttribute="height" id="5FL-n1-NNL"/>
@@ -304,10 +317,12 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="itw-fS-GQj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Wkh-fD-nYg">
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </toolbar>
                     <connections>
                         <segue destination="A5D-RC-UCB" kind="relationship" relationship="rootViewController" id="gLk-Sd-7ee"/>
@@ -331,6 +346,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride Report won't drain your battery. You canRide Report by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
                                 <rect key="frame" x="43" y="183" width="514" height="71"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -340,6 +356,7 @@
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
                                 <rect key="frame" x="266" y="322" width="68" height="34"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="68" id="bSu-OQ-Lue"/>
                                 </constraints>
@@ -364,6 +381,7 @@
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
                                 <rect key="frame" x="562" y="36" width="22" height="22"/>
+                                <animations/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Av0-bw-c5D"/>
@@ -379,6 +397,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="3Fg-Qu-NLO" secondAttribute="width" multiplier="5:4" id="AHb-jO-KLs"/>
@@ -432,12 +451,14 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="43" y="175" width="514" height="71"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.56000000000000005" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2tn-qi-wgx">
                                 <rect key="frame" x="266" y="322" width="68" height="34"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="Got it">
                                     <color key="titleColor" red="0.52941176469999995" green="0.64705882349999999" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -449,6 +470,7 @@
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="PushSimulatorView" customModule="Ride_Report" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="289" width="600" height="100"/>
+                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="RCR-Qv-ILZ"/>
@@ -473,6 +495,7 @@
                                 </variation>
                             </view>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="bHA-2Y-YLz" secondAttribute="centerX" id="Gz8-wB-8Nx"/>
@@ -528,11 +551,13 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're set! Go get on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
                                 <rect key="frame" x="79" y="252" width="442" height="67"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="wjC-A5-4oV" secondAttribute="centerY" id="LY8-0T-Shd"/>
@@ -568,6 +593,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create account so you can get your trips back if your phone is lost or stolen." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wQe-d2-N04">
                                 <rect key="frame" x="23" y="28" width="555" height="67"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -577,6 +603,7 @@
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="enter your email address" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7eH-Vw-Tw4">
                                         <rect key="frame" x="20" y="20" width="288" height="30"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="emailAddress" keyboardAppearance="alert" enablesReturnKeyAutomatically="YES"/>
                                         <connections>
@@ -585,18 +612,21 @@
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="- or -" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="cWa-Hr-6Ue">
                                         <rect key="frame" x="136" y="65" width="57" height="28"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mwQ-NZ-0tA" customClass="FBSDKLoginButton">
                                         <rect key="frame" x="55" y="101" width="218" height="30"/>
+                                        <animations/>
                                         <state key="normal" title="FB Connect Placeholder Button">
                                             <color key="titleColor" red="0.52941176469999995" green="0.64705882349999999" blue="0.99215686270000003" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                 </subviews>
+                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="cWa-Hr-6Ue" firstAttribute="top" secondItem="7eH-Vw-Tw4" secondAttribute="bottom" constant="15" id="3yE-Bf-nOH"/>
@@ -609,12 +639,14 @@
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="Scv-eR-rsP">
                                 <rect key="frame" x="74" y="461" width="442" height="67"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMY-2y-IYc">
                                 <rect key="frame" x="211" y="87" width="178" height="30"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="HQs-S6-ewN"/>
                                     <constraint firstAttribute="width" constant="178" id="c1w-WJ-Vjr"/>
@@ -629,6 +661,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="NMY-2y-IYc" secondAttribute="centerX" id="3Uk-zL-8pb"/>
@@ -672,6 +705,7 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TAv-HU-0oo" customClass="BKPasscodeInputView">
                                 <rect key="frame" x="8" y="126" width="600" height="376"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="377" id="JLy-G1-VLp"/>
                                 </constraints>
@@ -694,6 +728,7 @@
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We just sent you an email! Go tap the button inside it or enter the PIN from the subject line." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="o3j-Gr-fam">
                                 <rect key="frame" x="60" y="28" width="480" height="67"/>
+                                <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="67" id="zqU-QM-Gzw"/>
                                 </constraints>
@@ -702,6 +737,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="o3j-Gr-fam" secondAttribute="centerX" id="1Ka-mU-zim"/>
@@ -737,6 +773,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report logs anonymous route data to improve biking in PorRide Report never stores or shares personal data." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
                                 <rect key="frame" x="78" y="252" width="443" height="67"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -746,6 +783,7 @@
                             </label>
                             <textView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8qs-Gs-CEz">
                                 <rect key="frame" x="139" y="193" width="320" height="61"/>
+                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="51" id="PrX-Dz-fZ8"/>
@@ -795,6 +833,7 @@
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzU-pM-JS3">
                                 <rect key="frame" x="267" y="342" width="76" height="34"/>
+                                <animations/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                 <state key="normal" title="Sweet">
                                     <color key="titleColor" red="0.52941176470588236" green="0.6470588235294118" blue="0.99215686274509807" alpha="1" colorSpace="calibratedRGB"/>
@@ -809,6 +848,7 @@
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Automatically Report on your Rides." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
                                 <rect key="frame" x="102" y="79" width="398" height="38"/>
+                                <animations/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -821,6 +861,7 @@
                                 </variation>
                             </label>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="8qs-Gs-CEz" firstAttribute="top" secondItem="JzU-pM-JS3" secondAttribute="bottom" constant="8" id="1eh-z9-z9W"/>
@@ -917,12 +958,14 @@
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <animations/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
                             <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hK-0E-Yx5" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                 <rect key="frame" x="598" y="64" width="0.0" height="45"/>
+                                <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="45" id="Qha-G2-Yyd"/>
@@ -959,6 +1002,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LHp-EP-Z8v">
                                         <rect key="frame" x="82" y="1" width="48" height="70"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                         <state key="normal" title="🚗">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -972,6 +1016,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nBr-o9-NXf">
                                         <rect key="frame" x="211" y="1" width="48" height="70"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                         <state key="normal" title="🚶">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -985,6 +1030,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sov-o0-CnW">
                                         <rect key="frame" x="341" y="1" width="48" height="70"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                         <state key="normal" title="🏃">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -998,6 +1044,7 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tJ0-cf-pX3">
                                         <rect key="frame" x="470" y="-1" width="48" height="70"/>
+                                        <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                         <state key="normal" title="🚲">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1011,6 +1058,7 @@
                                     </button>
                                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="awK-w8-EQ3">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="0hL-Dd-INi"/>
@@ -1029,6 +1077,7 @@
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ie1-jd-lnS">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="WRN-3Y-wui"/>
@@ -1050,6 +1099,7 @@
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pMm-tR-WXf">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="9sq-gw-2EM"/>
@@ -1068,6 +1118,7 @@
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pa8-J2-ONe">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="e6x-if-c3B"/>
@@ -1086,6 +1137,7 @@
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VUJ-MG-PcC">
                                         <rect key="frame" x="259" y="21" width="82" height="30"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="OOn-bg-A52"/>
@@ -1098,6 +1150,7 @@
                                         </variation>
                                     </view>
                                 </subviews>
+                                <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="awK-w8-EQ3" firstAttribute="width" secondItem="ie1-jd-lnS" secondAttribute="width" id="1QR-0c-lIS"/>
@@ -1193,6 +1246,7 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XUD-tz-9dU" customClass="PushSimulatorView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
+                                        <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride Report"/>
@@ -1215,6 +1269,7 @@
                                         </variation>
                                     </view>
                                 </subviews>
+                                <animations/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="XUD-tz-9dU" firstAttribute="width" secondItem="8mW-Sz-0y6" secondAttribute="width" id="Jgy-Vp-Sc8"/>
@@ -1231,6 +1286,7 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Es2-lH-UKH">
                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                <animations/>
                                 <state key="normal" title="New">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -1239,6 +1295,7 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" constant="-64" id="2lj-yV-Bo7"/>
@@ -1304,6 +1361,7 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BLL-QL-Es9">
                                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                    <animations/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                     <state key="normal" title="120 Trips">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1313,6 +1371,7 @@
                                     </connections>
                                 </button>
                             </subviews>
+                            <animations/>
                             <color key="backgroundColor" red="0.43921568989999998" green="0.91764706370000004" blue="0.69019609689999994" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="centerY" secondItem="BLL-QL-Es9" secondAttribute="centerY" constant="-1.5" id="9dk-Ja-WcP"/>
@@ -1359,6 +1418,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="M9M-28-7FJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1376,6 +1436,7 @@
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dN8-e3-AOk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>

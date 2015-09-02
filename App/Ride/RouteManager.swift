@@ -143,9 +143,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
         }
         CoreDataManager.sharedManager.saveContext()
-        
-        self.currentTrip?.sendTripStartedNotification(fromLocation)
-        
+                
         self.startLocationTrackingIfNeeded()
         
         if (CLLocationManager.deferredLocationUpdatesAvailable()) {
