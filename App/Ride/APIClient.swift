@@ -132,7 +132,14 @@ class APIClient {
     func startup() {
         self.authenticateIfNeeded()
         self.updateAccountStatus()
-        self.syncTrips()
+        
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
+                self.syncTrips()
+            }
+        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
@@ -161,20 +168,9 @@ class APIClient {
     
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            for aTrip in Trip.openAndUnsyncedTrips() {
+            for aTrip in Trip.closedUnsyncedTrips() {
                 let trip = aTrip as! Trip
-
-                if (trip.locations.count <= 6) {
-                    // if it doesn't more than 6 points, toss it.
-                    CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(trip)
-                    self.saveAndSyncTripIfNeeded(trip)
-                } else if !trip.isClosed {
-                    trip.close() {
-                        self.saveAndSyncTripIfNeeded(trip)
-                    }
-                } else {
-                    self.saveAndSyncTripIfNeeded(trip, syncInBackground: syncInBackground)
-                }
+                self.saveAndSyncTripIfNeeded(trip, syncInBackground: syncInBackground)
             }
         })
     }
@@ -185,11 +181,7 @@ class APIClient {
                 trip.isSynced = false
             }
         }
-        if (trip.hasChanges && trip.isSynced.boolValue) {
-            trip.isSynced = false
-        }
-        
-        CoreDataManager.sharedManager.saveContext()
+        trip.saveAndMarkDirty()
         
         if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in

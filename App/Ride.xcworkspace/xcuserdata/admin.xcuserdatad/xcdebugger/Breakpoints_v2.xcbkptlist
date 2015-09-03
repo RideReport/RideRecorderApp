@@ -43,38 +43,6 @@
             endingLineNumber = "145"
             landmarkName = "loginButton(_:didCompleteWithResult:error:)"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.SetupCreateProfileViewController.(loginButton (Ride_Report.SetupCreateProfileViewController) -&gt; (Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginButton&gt;, didCompleteWithResult : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginManagerLoginResult&gt;, error : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.NSError&gt;) -&gt; ()).(closure #1)"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
-                  timestampString = "462933772.584197"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "145"
-                  endingLineNumber = "145"
-                  offsetFromSymbolStart = "932">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.SetupCreateProfileViewController.(loginButton (Ride_Report.SetupCreateProfileViewController) -&gt; (Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginButton&gt;, didCompleteWithResult : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginManagerLoginResult&gt;, error : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.NSError&gt;) -&gt; ()).(closure #1).(closure #1)"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
-                  timestampString = "462933772.584411"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "147"
-                  endingLineNumber = "147"
-                  offsetFromSymbolStart = "44">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -106,6 +74,38 @@
             startingLineNumber = "149"
             endingLineNumber = "149"
             landmarkName = "loginButton(_:didCompleteWithResult:error:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ride/MainViewController.swift"
+            timestampString = "463003325.622908"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
+            landmarkName = "viewWillAppear(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ride/RouteManager.swift"
+            timestampString = "463003646.198589"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "stopTrip()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

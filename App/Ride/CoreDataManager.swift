@@ -35,9 +35,15 @@ class CoreDataManager {
     
     func startup () {        
         dispatch_async(dispatch_get_main_queue(), {
-            // clean up bad trips
-            for trip in Trip.emptyTrips()! {
-                (trip as! Trip).managedObjectContext?.deleteObject((trip as! Trip))
+            // clean up open trips
+            for aTrip in Trip.openTrips() {
+                let trip = aTrip as! Trip
+                if (trip.locations.count <= 6) {
+                    // if it doesn't more than 6 points, toss it.
+                    trip.cancel()
+                } else if !trip.isClosed {
+                    trip.close()
+                }
             }
             
             self.saveContext()
