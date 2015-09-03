@@ -110,6 +110,19 @@ class Trip : NSManagedObject {
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
     }
     
+    class func tripCount() -> Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
     class func allTrips(limit: Int = 0) -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")

@@ -68,55 +68,41 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             self.unloadTrips()
         }
         
-        if (CoreDataManager.sharedManager.isStartingUp) {
+        if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
                 self.loadTrips()
-                self.runTripsMigrationIfNeeded()
+                if APIClient.sharedClient.accountVerificationStatus != .Unknown {
+                    self.runCreateAccountOfferIfNeeded()
+                }
+            }
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidReturn", object: nil)
+                if !CoreDataManager.sharedManager.isStartingUp {
+                    self.runCreateAccountOfferIfNeeded()
+                }
             }
         } else {
             self.loadTrips()
-            self.runTripsMigrationIfNeeded()
         }
     }
     
-    private func runTripsMigrationIfNeeded() {
-        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasRunMigration2")) {
-            let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-            let fetchedRequest = NSFetchRequest(entityName: "Trip")
-            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale.currentLocale()
-            dateFormatter.dateFormat = "MM/dd/yyyy"
+    private func runCreateAccountOfferIfNeeded() {
+        if (Trip.tripCount() > 10 && !NSUserDefaults.standardUserDefaults().boolForKey("hasBeenOfferedCreateAccountAfter10Trips")) {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
+            NSUserDefaults.standardUserDefaults().synchronize()
             
-            let date = dateFormatter.dateFromString("07/15/2015")
-            fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", date!)
-            
-            var error : NSError?
-            let results = context.executeFetchRequest(fetchedRequest, error: &error)
-            
-            if (results != nil && results?.count > 0) {
-                let actionSheet = UIActionSheet(title: "Ride Report needs to upgrade your trip database with the server. Ride Report may be unresponsive for several seconds.", delegate: nil, cancelButtonTitle:"Later", destructiveButtonTitle: nil, otherButtonTitles: "Continue")
+            if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
+                let actionSheet = UIActionSheet(title: "You've logged over 10 trips! Would you like to create an account so you can recover your trips if your phone is lost?", delegate: nil, cancelButtonTitle:"Nope", destructiveButtonTitle: nil, otherButtonTitles: "Create Account")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
-                        for trip in results! {
-                            (trip as! Trip).isSynced = false
-                        }
-                        CoreDataManager.sharedManager.saveContext()
-                        APIClient.sharedClient.syncTrips()
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration2")
-                        NSUserDefaults.standardUserDefaults().synchronize()
+                        AppDelegate.appDelegate().transitionToCreatProfile()
                         
                     }
                 }
-                
                 actionSheet.showFromToolbar(self.navigationController?.toolbar)
-            } else {
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMigration2")
-                NSUserDefaults.standardUserDefaults().synchronize()
             }
         }
     }
-    
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)

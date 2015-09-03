@@ -209,6 +209,8 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.GET, route: "status") { (response, jsonData, error) -> Void in
             if (error == nil) {
                 // do stuff with the response
+                NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidReturn", object: nil)
+
                 if let account_verified = jsonData["account_verified"].bool {
                     if (account_verified) {
                         self.accountVerificationStatus = .Verified
