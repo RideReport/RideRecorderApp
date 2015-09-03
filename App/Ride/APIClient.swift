@@ -276,14 +276,19 @@ class APIClient {
         var locations : [AnyObject!] = []
         for location in trip.locations.array {
             let aLocation = location as! Location
-            locations.append([
+            var locDict = [
                 "course": aLocation.course!,
                 "date": self.jsonify(aLocation.date!),
                 "horizontalAccuracy": aLocation.horizontalAccuracy!,
                 "speed": aLocation.speed!,
                 "longitude": aLocation.longitude!,
                 "latitude": aLocation.latitude!
-            ])
+            ]
+            if let altitude = aLocation.altitude, let verticalAccuracy = aLocation.verticalAccuracy {
+                locDict["altitude"] = altitude
+                locDict["verticalAccuracy"] = verticalAccuracy
+            }
+            locations.append(locDict)
         }
         tripDict["locations"] = locations
 

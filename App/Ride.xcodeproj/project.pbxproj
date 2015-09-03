@@ -286,6 +286,7 @@
 		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PopupView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777BA1A698BCE00B59B06 /* Ride 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 11.xcdatamodel"; sourceTree = "<group>"; };
 		849162A11ADC3FCB0035900B /* Ride Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ride Tests-Bridging-Header.h"; sourceTree = "<group>"; };
+		849E0F011B98FA61008506DC /* Ride 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 25.xcdatamodel"; sourceTree = "<group>"; };
 		849FB1F51B87F1250002306F /* ride.report.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = ride.report.cer; sourceTree = "<group>"; };
 		84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "CLLocation+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84A08C721AA54E4F00CADC04 /* Ride 17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 17.xcdatamodel"; sourceTree = "<group>"; };
@@ -1438,6 +1439,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				849E0F011B98FA61008506DC /* Ride 25.xcdatamodel */,
 				84F7AEBE1B605656003979DE /* Ride 24.xcdatamodel */,
 				84DDB1EC1B0E66FF006B7196 /* Ride 23.xcdatamodel */,
 				84AEAF0E1AF4350900C04E7D /* Ride 22.xcdatamodel */,
@@ -1463,7 +1465,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 84F7AEBE1B605656003979DE /* Ride 24.xcdatamodel */;
+			currentVersion = 849E0F011B98FA61008506DC /* Ride 25.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

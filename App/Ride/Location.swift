@@ -12,7 +12,9 @@ import CoreLocation
 import CoreMotion
 import MapKit
 
-class Location : NSManagedObject {    
+class Location : NSManagedObject {
+    @NSManaged var altitude : NSNumber?
+    @NSManaged var verticalAccuracy : NSNumber?
     @NSManaged var course : NSNumber?
     @NSManaged var horizontalAccuracy : NSNumber?
     @NSManaged var isSmoothedLocation : Bool
@@ -35,6 +37,8 @@ class Location : NSManagedObject {
         self.latitude = NSNumber(double: location.coordinate.latitude)
         self.longitude = NSNumber(double: location.coordinate.longitude)
         self.speed = NSNumber(double: location.speed)
+        self.altitude = NSNumber(double: location.altitude)
+        self.verticalAccuracy = NSNumber(double: location.verticalAccuracy)
         self.date = location.timestamp
     }
     
@@ -85,6 +89,6 @@ class Location : NSManagedObject {
     }
     
     func clLocation() -> CLLocation {
-        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date)
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: (self.altitude != nil) ? self.altitude!.doubleValue : 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: (self.verticalAccuracy != nil) ? self.verticalAccuracy!.doubleValue : 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date)
     }
 }
