@@ -9,6 +9,6 @@
 #import "UIDevice+HBAdditions.h"
 #import "PCStackMenu.h"
 #import "PCStackMenuItem.h"
-#import "MapboxGL.h"
+#import "Mapbox.h"
 #import "Reachability.h"
 #import "BKPasscodeInputView.h"
