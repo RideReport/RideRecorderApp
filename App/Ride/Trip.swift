@@ -490,6 +490,20 @@ class Trip : NSManagedObject {
         })
     }
     
+    func cancel() {
+        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(self)
+        CoreDataManager.sharedManager.saveContext()
+        NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+    }
+    
+    func saveAndMarkDirty() {
+        if (self.hasChanges && self.isSynced.boolValue) {
+            self.isSynced = false
+        }
+        
+        CoreDataManager.sharedManager.saveContext()
+    }
+    
     func close(handler: ()->Void = {}) {
         if (self.isClosed == true) {
             handler()
@@ -520,9 +534,13 @@ class Trip : NSManagedObject {
                         self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
                         self.climacon = String(UnicodeScalar(UInt32(condition!.current.climacon.rawValue)))
                     }
+                    NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+                    self.saveAndMarkDirty()
                     handler()
                 })
             } else {
+                NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+                self.saveAndMarkDirty()
                 handler()
             }
         }

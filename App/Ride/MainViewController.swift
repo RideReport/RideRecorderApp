@@ -119,39 +119,42 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             var dateTitle = ""
-            if (trip.startDate != nil) {
-                if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
-                    dateTitle = "In progress"
-                } else if (trip.startDate.isToday()) {
-                    dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
-                } else if (trip.startDate.isYesterday()) {
-                    dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
-                } else if (trip.startDate.isInLastWeek()) {
-                    dateTitle = trip.startDate.weekDay()
+            
+            if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
+                self.rideRushSimulatorView.dateString = ""
+                self.rideRushSimulatorView.body = "Trip in Progress…"
+            } else {
+                if (trip.startDate != nil) {
+                    if (trip.startDate.isToday()) {
+                        dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    } else if (trip.startDate.isYesterday()) {
+                        dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    } else if (trip.startDate.isInLastWeek()) {
+                        dateTitle = trip.startDate.weekDay()
+                    } else {
+                        dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    }
+                }
+                self.rideRushSimulatorView.dateString = dateTitle
+                self.rideRushSimulatorView.body = trip.notificationString()!
+                
+                if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                    if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
+                        self.rideRushSimulatorView.delay(0.1, completionHandler: {
+                            self.rideRushSimulatorView.showControls()
+                        })
+                    } else {
+                        self.rideRushSimulatorView.hideControls(animated: false)
+                    }
+                    self.rideRushSimulatorView.showsActionButon = true
+                    self.rideRushSimulatorView.showsDestructiveActionButon = true
                 } else {
-                    dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
+                    self.rideRushSimulatorView.showsActionButon = false
+                    self.rideRushSimulatorView.showsDestructiveActionButon = false
                 }
             }
             
             self.selectedRideToolBar.hidden = false
-            
-            self.rideRushSimulatorView.dateString = dateTitle
-            self.rideRushSimulatorView.body = trip.notificationString()!
-            
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
-                    self.rideRushSimulatorView.delay(0.1, completionHandler: {
-                        self.rideRushSimulatorView.showControls()
-                    })
-                } else {
-                    self.rideRushSimulatorView.hideControls(animated: false)
-                }
-                self.rideRushSimulatorView.showsActionButon = true
-                self.rideRushSimulatorView.showsDestructiveActionButon = true
-            } else {
-                self.rideRushSimulatorView.showsActionButon = false
-                self.rideRushSimulatorView.showsDestructiveActionButon = false
-            }
         } else {
             self.selectedRideToolBar.hidden = true
         }
@@ -180,6 +183,9 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
             if (RouteManager.sharedManager.currentTrip != nil) {
                 self.selectedTrip = RouteManager.sharedManager.currentTrip
             }
+            self.reloadTripSelectedToolbar()
+        }
+        NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) { (notif) -> Void in
             self.reloadTripSelectedToolbar()
         }
 

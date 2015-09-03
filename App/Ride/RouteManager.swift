@@ -142,8 +142,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             let newLocation = Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
         }
-        CoreDataManager.sharedManager.saveContext()
-                
+        self.currentTrip?.saveAndMarkDirty()
+        
         self.startLocationTrackingIfNeeded()
         
         if (CLLocationManager.deferredLocationUpdatesAvailable()) {
@@ -173,7 +173,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(self.currentTrip!)
+            self.currentTrip!.cancel()
         } else {
             let closingTrip = self.currentTrip
             closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
@@ -184,7 +184,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             closingTrip!.close() {
                 // don't sync it yet. wait until the user has rated the trip.
-                CoreDataManager.sharedManager.saveContext()
                 
                 closingTrip!.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
@@ -194,6 +193,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
             }
         }
+        
         
         self.stopMotionMonitoring(self.lastActiveMonitoringLocation)
         
@@ -209,7 +209,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
             var manualSpeed : CLLocationSpeed = 0
-            
             if (location.speed >= 0) {
                 foundGPSSpeed = true
             } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
@@ -255,7 +254,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
             }
         } else {
-            CoreDataManager.sharedManager.saveContext()
+            self.currentTrip?.saveAndMarkDirty()
             NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
         }
     }
