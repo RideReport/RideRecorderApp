@@ -19,6 +19,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     @IBOutlet weak var facebookButton: FBSDKLoginButton!
     
     private var isCreatingProfileOutsideGettingStarted = false
+    private var isInAlreadyHaveAccountState = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,17 +33,30 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo: userInfo)
         
-        
-        helperTextLabel.markdownStringValue = "Create an account so you can **recover your trip data** if your phone is lost."
-        detailTextLabel.markdownStringValue = "Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind."
-
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: "create")
         if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
             self.isCreatingProfileOutsideGettingStarted = true
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
         } else {
             self.isCreatingProfileOutsideGettingStarted = false
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
+        }
+        
+        self.reloadUI()
+    }
+    
+    func reloadUI() {
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: "create")
+        
+        if (isInAlreadyHaveAccountState) {
+            self.navigationItem.rightBarButtonItem?.title = "Log In"
+            self.helperTextLabel.markdownStringValue = "Log in to your account to **load your trip data** onto this iPhone."
+            self.detailTextLabel.markdownStringValue = ""
+            self.haveAccountButton.setTitle("Don't have an account?", forState: UIControlState.Normal)
+        } else {
+            self.navigationItem.rightBarButtonItem?.title = "Create"
+            self.helperTextLabel.markdownStringValue = "Create an account so you can **recover your trip data** if your phone is lost."
+            self.detailTextLabel.markdownStringValue = "Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind."
+            self.haveAccountButton.setTitle("Already have an account?", forState: UIControlState.Normal)
         }
     }
     
@@ -104,10 +118,8 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     @IBAction func tappedHaveAccount(sender: AnyObject) {
-        self.navigationItem.rightBarButtonItem?.title = "Log In"
-        self.helperTextLabel.markdownStringValue = "Log in to your account to **load your trip data** onto this iPhone."
-        self.detailTextLabel.hidden = true
-        self.haveAccountButton.hidden = true
+        self.isInAlreadyHaveAccountState = !self.isInAlreadyHaveAccountState
+        self.reloadUI()
     }
     
     func didTap(tapGesture: UIGestureRecognizer) {
