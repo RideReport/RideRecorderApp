@@ -697,7 +697,7 @@ class Trip : NSManagedObject {
         return nil
     }
     
-    private func cancelTripStateNotification() {
+    func cancelTripStateNotification() {
         if (self.currentStateNotification != nil) {
             UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil

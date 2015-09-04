@@ -129,6 +129,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             #endif
             self.currentTrip = mostRecentTrip
             self.currentTrip?.reopen()
+            self.currentTrip?.cancelTripStateNotification()
         } else {
             self.currentTrip = Trip()
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
