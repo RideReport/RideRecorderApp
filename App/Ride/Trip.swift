@@ -635,17 +635,16 @@ class Trip : NSManagedObject {
     func sendTripCompletionNotificationImmediately() {
         self.cancelTripStateNotification()
         
-        self.currentStateNotification = UILocalNotification()
-        self.currentStateNotification?.alertBody = self.notificationString()
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            // don't play a sound or show rating stuff for anything but bike trips.
+            // don't show a notification for anything but bike trips.
+            self.currentStateNotification = UILocalNotification()
+            self.currentStateNotification?.alertBody = self.notificationString()
             self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             self.currentStateNotification?.userInfo = ["RideNotificationTripUUID" : self.uuid]
+            UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
         }
-        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
-
     }
     
     func notificationString()->String? {
