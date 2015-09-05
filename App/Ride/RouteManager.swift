@@ -181,6 +181,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogInfo(String(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
             
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                DDLogInfo("Background task expired!")
             })
             
             closingTrip!.close() {
