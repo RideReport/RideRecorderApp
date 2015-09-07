@@ -15,12 +15,16 @@
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
-		8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 8429E5E01A5F0F6B00EB3E94 /* gear.png */; };
 		844497221A3A4EB40009F889 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
 		8445317619FEEB210096F26E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
 		844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */; };
 		844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */; };
+		8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */; };
+		8451FA871B9E2F6E008ACDCD /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA841B9E2F6E008ACDCD /* menu.png */; };
+		8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA851B9E2F6E008ACDCD /* menu@2x.png */; };
+		8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA861B9E2F6E008ACDCD /* menu@3x.png */; };
+		8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */; };
 		8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */; };
 		8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */; };
 		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
@@ -248,7 +252,6 @@
 		8429E5DB1A5DD1DD00EB3E94 /* Ride 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 8.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DC1A5DD2A900EB3E94 /* Ride 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* Ride 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 10.xcdatamodel"; sourceTree = "<group>"; };
-		8429E5E01A5F0F6B00EB3E94 /* gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear.png; sourceTree = "<group>"; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497211A3A4EB40009F889 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = APIClient.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		844497241A3A695C0009F889 /* Ride 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -260,6 +263,11 @@
 		844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeField.m; sourceTree = "<group>"; };
 		844B949D1B8BE1A3009F4E27 /* BKPasscodeInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKPasscodeInputView.h; sourceTree = "<group>"; };
 		844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeInputView.m; sourceTree = "<group>"; };
+		8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HamburgerViewController.swift; sourceTree = "<group>"; };
+		8451FA841B9E2F6E008ACDCD /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
+		8451FA851B9E2F6E008ACDCD /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
+		8451FA861B9E2F6E008ACDCD /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@3x.png"; sourceTree = "<group>"; };
+		8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupCreateProfileViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupConfirmEmailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -488,6 +496,8 @@
 			children = (
 				842599D61B90F3540038C3CA /* Setup */,
 				847ED0901A40DA0D00CAA396 /* MainViewController.swift */,
+				8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */,
+				8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */,
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */,
@@ -539,6 +549,9 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8451FA841B9E2F6E008ACDCD /* menu.png */,
+				8451FA851B9E2F6E008ACDCD /* menu@2x.png */,
+				8451FA861B9E2F6E008ACDCD /* menu@3x.png */,
 				84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */,
 				84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */,
 				842599D41B90EC1D0038C3CA /* Icon@2x.png */,
@@ -546,7 +559,6 @@
 				84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */,
 				84F8E6291AF953CD00270C76 /* markers-soft.png */,
 				84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */,
-				8429E5E01A5F0F6B00EB3E94 /* gear.png */,
 				8453BD641A425F9200FE2645 /* locationArrow.png */,
 				8453BD651A425F9200FE2645 /* locationArrowDisabled.png */,
 			);
@@ -889,22 +901,24 @@
 			files = (
 				84CA65B51B72E21D00696587 /* Compass.png in Resources */,
 				84CA65B91B72E21D00696587 /* mapbox@2x.png in Resources */,
+				8451FA871B9E2F6E008ACDCD /* menu.png in Resources */,
 				8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */,
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				84CA65B61B72E21D00696587 /* Compass@2x.png in Resources */,
 				84CA65B31B72E21D00696587 /* api_mapbox_com-digicert.der in Resources */,
-				8429E5E11A5F0F6B00EB3E94 /* gear.png in Resources */,
 				84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */,
 				84CA65B81B72E21D00696587 /* mapbox.png in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
+				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				84CA65B71B72E21D00696587 /* Compass@3x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
+				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
 				84CA65B41B72E21D00696587 /* api_mapbox_com-geotrust.der in Resources */,
 				84CA65BA1B72E21D00696587 /* mapbox@3x.png in Resources */,
@@ -1019,6 +1033,7 @@
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,
+				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
@@ -1028,6 +1043,7 @@
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
+				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,

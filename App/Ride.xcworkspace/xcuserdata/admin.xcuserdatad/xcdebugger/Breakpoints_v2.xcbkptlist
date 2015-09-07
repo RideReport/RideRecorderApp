@@ -43,6 +43,38 @@
             endingLineNumber = "157"
             landmarkName = "loginButton(_:didCompleteWithResult:error:)"
             landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Ride_Report.SetupCreateProfileViewController.(loginButton (Ride_Report.SetupCreateProfileViewController) -&gt; (Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginButton&gt;, didCompleteWithResult : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginManagerLoginResult&gt;, error : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.NSError&gt;) -&gt; ()).(closure #1)"
+                  moduleName = "Ride Report"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
+                  timestampString = "463358361.395132"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "157"
+                  endingLineNumber = "157"
+                  offsetFromSymbolStart = "932">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Ride_Report.SetupCreateProfileViewController.(loginButton (Ride_Report.SetupCreateProfileViewController) -&gt; (Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginButton&gt;, didCompleteWithResult : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.FBSDKLoginManagerLoginResult&gt;, error : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.NSError&gt;) -&gt; ()).(closure #1).(closure #1)"
+                  moduleName = "Ride Report"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/SetupCreateProfileViewController.swift"
+                  timestampString = "463358361.395447"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "159"
+                  endingLineNumber = "159"
+                  offsetFromSymbolStart = "44">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -74,22 +106,6 @@
             startingLineNumber = "161"
             endingLineNumber = "161"
             landmarkName = "loginButton(_:didCompleteWithResult:error:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/RouteManager.swift"
-            timestampString = "463077208.531698"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "stopTrip()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

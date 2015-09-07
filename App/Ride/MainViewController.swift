@@ -7,13 +7,11 @@
 //
 
 import Foundation
-import MessageUI
 import ionicons
 import SystemConfiguration
 
-class MainViewController: UIViewController, MFMailComposeViewControllerDelegate, PushSimulatorViewDelegate {
+class MainViewController: UIViewController, PushSimulatorViewDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
-    @IBOutlet weak var settingsButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     @IBOutlet weak var newIncidentButton: UIButton!
@@ -24,7 +22,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
     
-    private var settingsBarButtonItem: UIBarButtonItem!
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     private var reachability : Reachability!
@@ -87,17 +84,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         self.navigationItem.rightBarButtonItem?.customView = self.customButton
         
         self.navigationItem.titleView!.backgroundColor = UIColor.clearColor()
-        
-        self.settingsBarButtonItem = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: self, action: "tools:")
-        
-        let settingsCustomButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 25, 25))
-        settingsCustomButton.addTarget(self, action: "tools:", forControlEvents: UIControlEvents.TouchUpInside)
-        settingsCustomButton.maskImage = UIImage(named: "gear.png")
-        settingsCustomButton.primaryColor = UIColor.whiteColor()
-        settingsCustomButton.secondaryColor = UIColor.whiteColor()
-        settingsCustomButton.animates = false
-        self.settingsBarButtonItem.customView = settingsCustomButton
-        self.navigationItem.leftBarButtonItem = self.settingsBarButtonItem
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -307,34 +293,6 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
         }
     }
     
-    @IBAction func tools(sender: AnyObject) {
-        var accountButtonTitle = ""
-        switch APIClient.sharedClient.accountVerificationStatus {
-            case .Unknown: accountButtonTitle = "Updating Account Status…"
-            case .Unverified: accountButtonTitle = "Create Account"
-            case .Verified: accountButtonTitle = "Log Out…"
-        }
-        let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle:"Dismiss", destructiveButtonTitle: nil, otherButtonTitles:"Report Problem", accountButtonTitle, "About the Map")
-        actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-            if (buttonIndex == 1) {
-                self.sendLogFile()
-            } else if (buttonIndex == 2) {
-                if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
-                    AppDelegate.appDelegate().transitionToCreatProfile()
-                } else {
-                    // other cases currently do nothing
-                    let alert = UIAlertView(title:nil, message: "You can't. (・_・)ヾ", delegate: nil, cancelButtonTitle:"But soon")
-                    alert.show()
-                }
-            } else if (buttonIndex == 3) {
-                // show map attribution info
-                self.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
-            }
-        }
-        
-        actionSheet.showFromToolbar(self.navigationController?.toolbar)
-    }
-    
 #if DEBUG
     
     override func canBecomeFirstResponder()->Bool {
@@ -468,42 +426,5 @@ class MainViewController: UIViewController, MFMailComposeViewControllerDelegate,
     
     func didTapClearButton(view: PushSimulatorView) {
         self.selectedTrip = nil
-    }
-    
-    //
-    // MARK: - Action Sheet Actions
-    //
-    
-    func sendLogFile() {
-        let fileInfos = AppDelegate.appDelegate().fileLogger.logFileManager.sortedLogFileInfos()
-        if (fileInfos == nil || fileInfos.count == 0) {
-            return
-        }
-        
-        let bundleID = NSBundle.mainBundle().bundleIdentifier
-        let body = "What happened?\n"
-        
-        let composer = MFMailComposeViewController()
-        composer.setSubject("Ride Report Bug Report")
-        composer.setToRecipients(["logs@ride.report"])
-        composer.mailComposeDelegate = self
-        composer.setMessageBody(body as String, isHTML: false)
-        
-        let firstFileInfo = fileInfos.first! as! DDLogFileInfo
-        let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
-        composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
-        
-        if (fileInfos.count > 1) {
-            let secondFileInfo = fileInfos[1] as! DDLogFileInfo
-            let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath)!)
-            composer.addAttachmentData(secondFileData, mimeType: "text/plain", fileName: secondFileInfo.fileName)
-        }
-        
-        
-        self.presentViewController(composer, animated:true, completion:nil)
-    }
-    
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }

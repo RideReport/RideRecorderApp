@@ -11,6 +11,7 @@ import CoreData
 import Crashlytics
 import OAuthSwift
 import FBSDKCoreKit
+import ECSlidingViewController
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
@@ -135,6 +136,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.window?.makeKeyAndVisible()
     }
     
+    func showMapAttribution() {
+        if let mapViewController = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController)?.mapViewController {
+            mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+        }
+    }
+    
     func transitionToCreatProfile() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         var setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController!
@@ -153,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToMainNavController() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("mainNavController") as! UIViewController!
+        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("slidingViewController") as! UIViewController!
         
         let transition = CATransition()
         transition.duration = 0.6

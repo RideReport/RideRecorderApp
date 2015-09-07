@@ -1,5 +1,6 @@
 platform :ios, '8.0'
 pod 'CocoaLumberjack', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_support'
+pod 'ECSlidingViewController', '~> 2.0.3'
 pod 'CZWeatherKit'
 pod 'UIActionSheet+Blocks'
 pod 'Fabric'
