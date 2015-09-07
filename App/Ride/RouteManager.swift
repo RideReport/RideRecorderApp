@@ -18,6 +18,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
     let routeResumeTimeout : NSTimeInterval = 240
+    let longerRouteThresholdMiles : Float = 15.0
+    let longerRouteResumeTimeout : NSTimeInterval = 900
     let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     
 
@@ -116,10 +118,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogInfo("Starting Active Tracking")
         
-        let mostRecentTrip = Trip.mostRecentTrip()
-        
         // Resume the most recent trip if it was recent enough
-        if (mostRecentTrip != nil && abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout) {
+        if let mostRecentTrip = Trip.mostRecentTrip() where
+            abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout ||
+            (mostRecentTrip.lengthMiles >= self.longerRouteThresholdMiles && abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.longerRouteResumeTimeout) {
             DDLogInfo("Resuming ride")
             #if DEBUG2
                 let notif = UILocalNotification()
