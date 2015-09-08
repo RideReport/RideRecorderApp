@@ -14,6 +14,11 @@ class HelpViewController: UITableViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
+        self.slidingViewController().viewDidLayoutSubviews()
+    }
+    
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
         return CGFloat.min
@@ -23,7 +28,9 @@ class HelpViewController: UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
 
         if (indexPath.row == 0) {
-            UIApplication.sharedApplication().openURL(NSURL(string: "http://help.ride.report")!)
+            self.slidingViewController().anchorRightPeekAmount = 0.0
+            self.slidingViewController().viewDidLayoutSubviews()
+            self.slidingViewController().topViewAnchoredGesture = ECSlidingViewControllerAnchoredGesture.Tapping | ECSlidingViewControllerAnchoredGesture.Panning
         } else if (indexPath.row == 1) {
             AppDelegate.appDelegate().transitionToSetup()
         } else if (indexPath.row == 2) {
