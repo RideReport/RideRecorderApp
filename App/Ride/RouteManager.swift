@@ -119,9 +119,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogInfo("Starting Active Tracking")
         
         // Resume the most recent trip if it was recent enough
-        if let mostRecentTrip = Trip.mostRecentTrip() where
-            abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout ||
-            (mostRecentTrip.lengthMiles >= self.longerRouteThresholdMiles && abs(mostRecentTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.longerRouteResumeTimeout) {
+        if let mostRecentBikeTrip = Trip.mostRecentBikeTrip() where
+            abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.routeResumeTimeout ||
+            (mostRecentBikeTrip.lengthMiles >= self.longerRouteThresholdMiles && abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < self.longerRouteResumeTimeout) {
             DDLogInfo("Resuming ride")
             #if DEBUG2
                 let notif = UILocalNotification()
@@ -129,7 +129,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            self.currentTrip = mostRecentTrip
+            self.currentTrip = mostRecentBikeTrip
             self.currentTrip?.reopen()
             self.currentTrip?.cancelTripStateNotification()
         } else {

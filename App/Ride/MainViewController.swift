@@ -96,7 +96,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.rideRushSimulatorView.delegate = self
         self.rideRushSimulatorView.showsEditButton = true
         
-        self.selectedTrip = Trip.mostRecentTrip()
+        self.selectedTrip = Trip.mostRecentBikeTrip()
         
         self.refreshPauseResumeTrackingButtonUI()
     }
@@ -310,7 +310,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         })
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            Trip.mostRecentTrip().sendTripCompletionNotification() {
+            Trip.mostRecentBikeTrip().sendTripCompletionNotification() {
                 if (backgroundTaskID != UIBackgroundTaskInvalid) {
                     UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
                 }

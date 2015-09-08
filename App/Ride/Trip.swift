@@ -172,9 +172,10 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
-    class func mostRecentTrip() -> Trip! {
+    class func mostRecentBikeTrip() -> Trip! {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
         

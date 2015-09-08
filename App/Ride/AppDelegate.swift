@@ -200,7 +200,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
         
         if (trip == nil) {
-            trip =  Trip.mostRecentTrip()
+            trip =  Trip.mostRecentBikeTrip()
         }
         
         if (identifier == "GOOD_RIDE_IDENTIFIER") {
