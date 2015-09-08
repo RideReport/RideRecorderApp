@@ -927,7 +927,7 @@ class Trip : NSManagedObject {
                 self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
         } else if scores[0] == cycleScore {
-            if (self.averageSpeed >= 8) {
+            if (self.averageSpeed >= 8.5) {
                 // Core Motion misidentifies auto trips as cycling
                 self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
             } else {
@@ -941,11 +941,12 @@ class Trip : NSManagedObject {
                 self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
         } else if scores[0] == autoScore {
-            if (self.averageSpeed >= 7) {
-                // Core Motion misidentifies cycling as automotive, particularly when the phone is *not* in your pocket
-                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            } else {
+            if ((Double(walkScore + cycleScore)/Double(autoScore)) > 0.5 && self.averageSpeed < 8.5) {
+                // Core Motion misidentifies cycling as automotive
+                // if it isn't a decisive victory, also look at speed
                 self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            } else {
+                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
             }
         } else if scores[0] == runScore {
             self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
