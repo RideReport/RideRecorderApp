@@ -44,7 +44,7 @@ import Foundation
         self.textLabel.numberOfLines = 1
         self.textLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
         self.textLabel.adjustsFontSizeToFitWidth = true
-        self.textLabel.minimumScaleFactor = 0.7
+        self.textLabel.minimumScaleFactor = 0.4
         self.reloadView()
         self.addSubview(self.textLabel)
     }

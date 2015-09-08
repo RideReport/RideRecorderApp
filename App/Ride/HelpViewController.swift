@@ -14,6 +14,11 @@ class HelpViewController: UITableViewController {
         super.viewDidLoad()
     }
     
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // returning 0 uses the default, not what you think it does
+        return CGFloat.min
+    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
 

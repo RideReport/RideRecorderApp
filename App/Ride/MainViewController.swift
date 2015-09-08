@@ -381,7 +381,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                 if (self.popupView.hidden) {
                     self.popupView.popIn()
                 }
-                self.popupView.text = "Ride Report's accuracy is improved when Wi-Fi is on"
+                self.popupView.text = "Ride Report works best when Wi-Fi is on"
             } else if (!self.popupView.hidden) {
                 self.popupView.fadeOut()
             }

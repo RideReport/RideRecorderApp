@@ -12,6 +12,11 @@ import MessageUI
 
 class HamburgerNavController: UINavigationController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.edgesForExtendedLayout = UIRectEdge.Bottom | UIRectEdge.Top | UIRectEdge.Left
+    }
+    
     @IBAction func unwind(segue: UIStoryboardSegue) {
         
     }
@@ -36,10 +41,15 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         switch APIClient.sharedClient.accountVerificationStatus {
         case .Unknown: accountCellTitle = "Updating Account Status…"
         case .Unverified: accountCellTitle = "Create Account"
-        case .Verified: accountCellTitle = "Log Out…"
+        case .Verified: accountCellTitle = "Log Out"
         }
         
         self.accountTableViewCell.textLabel?.text = accountCellTitle
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // returning 0 uses the default, not what you think it does
+        return CGFloat.min
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

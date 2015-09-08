@@ -50,7 +50,11 @@ class SetupViewController: UINavigationController {
         let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
         self.setupVC(setupFinished)
         
-        self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail, setupFinished]
+        if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupFinished]
+        } else {
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail, setupFinished]
+        }
         
         self.myViewControllers.first!.childViewControllerWillPresent()
         
