@@ -29,7 +29,9 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         UINavigationBar.appearance().barStyle = UIBarStyle.BlackTranslucent
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         var accountCellTitle = ""
         switch APIClient.sharedClient.accountVerificationStatus {
         case .Unknown: accountCellTitle = "Updating Account Status…"
