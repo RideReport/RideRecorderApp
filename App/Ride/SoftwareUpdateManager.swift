@@ -9,7 +9,7 @@
 import Foundation
 
 class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
-    let manifestUrl = NSURL(string: "https://s3-us-west-2.amazonaws.com/rideenterprise/manifest.plist")!
+    let manifestUrl = NSURL(string: "https://app.ride.report/manifest.plist")!
     let minimumUpdateCheckInterval : NSTimeInterval = 60*60*4 // 4 hours
     var lastUpdateCheck : NSDate?
     

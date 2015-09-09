@@ -24,7 +24,7 @@ AWS::S3::Base.establish_connection!(
   :secret_access_key => '/mke0kt1SLrtSGSZGJzOewQ4Blz8wSO39mHcZqZR'
 )
 
-puts AWS::S3::Bucket.find('rideenterprise')
+puts AWS::S3::Bucket.find('app-ride-report')
 
 def upload(path, dest_path, bucket, access)
   raise "File does not exist: #{path}" unless File.exists?(path)
@@ -38,13 +38,14 @@ def upload(path, dest_path, bucket, access)
 end
 
 if (upload_build)
-  upload("Ride.ipa", "Ride.ipa", "rideenterprise", "private")
+  upload("Ride.ipa", "Ride.ipa", "app-ride-report", "private")
 end
 
 url = AWS::S3::S3Object.url_for('Ride.ipa',
-                 'rideenterprise',
+                 'app-ride-report',
                  :use_ssl => true,
                  :expires_in => 60 * 60 * 24 * 30)
+url = url.sub("s3-us-west-2.amazonaws.com/app-ride-report", "app.ride.report")
 puts url
 `cp Ride.ipa Ride.zip`
 `unzip Ride.zip -d Ride`
@@ -54,13 +55,14 @@ current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Paylo
 
 `/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-version #{current_version}" "manifest.plist"`
 `/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url #{url}" "manifest.plist"`
+upload("manifest.plist", "manifest.plist", "app-ride-report", "public_read")      
 upload("manifest.plist", "manifest.plist", "rideenterprise", "public_read")      
 
 url = AWS::S3::S3Object.url_for('manifest.plist',
-                 'rideenterprise',
+                 'app-ride-report',
                  :use_ssl => true,
                  :authenticated => false)                         
-                 
+url = url.sub("s3-us-west-2.amazonaws.com/app-ride-report", "app.ride.report")                 
 # reset plist URL
 `/usr/libexec/PlistBuddy -c "Set items:0:metadata:bundle-version IPA_VERSION" "manifest.plist"`                  
 `/usr/libexec/PlistBuddy -c "Set items:0:assets:0:url IPA_URL" "manifest.plist"`                 
