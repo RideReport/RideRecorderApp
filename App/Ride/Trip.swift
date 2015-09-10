@@ -942,7 +942,7 @@ class Trip : NSManagedObject {
                 self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
             }
         } else if scores[0] == autoScore {
-            if ((Double(walkScore + cycleScore)/Double(autoScore)) > 0.5 && self.averageSpeed < 8.5) {
+            if ((Double(walkScore + cycleScore + runScore)/Double(autoScore)) > 0.5 && self.averageSpeed < 8.5) {
                 // Core Motion misidentifies cycling as automotive
                 // if it isn't a decisive victory, also look at speed
                 self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
