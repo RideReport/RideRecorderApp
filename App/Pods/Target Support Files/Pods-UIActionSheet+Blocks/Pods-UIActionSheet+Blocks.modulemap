@@ -1,6 +1,0 @@
-framework module UIActionSheet_Blocks {
-  umbrella header "Pods-UIActionSheet+Blocks-umbrella.h"
-
-  export *
-  module * { export * }
-}

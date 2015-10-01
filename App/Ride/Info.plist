@@ -71,6 +71,33 @@
 	<true/>
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>facebook.com</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+			<key>fbcdn.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+			<key>akamaihd.net</key>
+			<dict>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
 	<key>MGLMapboxAccountType</key>
 	<integer>1</integer>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
@@ -83,34 +110,6 @@
 	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle trips.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle trips.</string>
-	<key>NSExceptionDomains</key>
-	<dict>
-		<key>facebook.com</key>
-		<dict>
-			<key>NSIncludesSubdomains</key>
-			<true/>
-			<key>NSExceptionRequiresForwardSecrecy</key>
-			<false/>
-		</dict>
-		<key>fbcdn.net</key>
-		<dict>
-			<key>NSIncludesSubdomains</key>
-			<true/>
-			<key>NSExceptionRequiresForwardSecrecy</key>
-			<false/>
-		</dict>
-		<key>akamaihd.net</key>
-		<dict>
-			<key>NSIncludesSubdomains</key>
-			<true/>
-			<key>NSExceptionRequiresForwardSecrecy</key>
-			<false/>
-		</dict>
-	</dict>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Frameworks/ionicons.framework/ionicons.ttf</string>
-	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>

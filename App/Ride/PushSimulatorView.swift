@@ -107,7 +107,7 @@ import Foundation
     var appIconView : UIImageView!
     
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -183,7 +183,7 @@ import Foundation
         UIColor.blackColor().setFill()
         circle.fill()
         let ctx = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(ctx, kCGBlendModeDestinationOut)
+        CGContextSetBlendMode(ctx, CGBlendMode.DestinationOut)
         line1.stroke()
         line2.stroke()
         let maskImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
@@ -336,7 +336,7 @@ import Foundation
             self.clearButton.hidden = true
         }
         
-        var dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
+        let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
         let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - (self.isInAppView ? 20 : 0), self.bounds.height - insetY - appNameSize.height), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)

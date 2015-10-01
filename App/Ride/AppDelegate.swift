@@ -79,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func registerNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = "Chill\n👍"
+        goodRideAction.title = "No Issues\n👍"
         goodRideAction.activationMode = UIUserNotificationActivationMode.Background
         goodRideAction.destructive = false
         goodRideAction.authenticationRequired = false
@@ -111,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Minimal)
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
         
-        let types = UIUserNotificationType.Badge | UIUserNotificationType.Sound | UIUserNotificationType.Alert
+        let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
         let settings = UIUserNotificationSettings(forTypes: types, categories: Set([rideCompleteCategory, rideStartedCategory, appPausedCategory]))
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
     }
@@ -123,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController!
+        let setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController
         
         setupVC.setupViewControllersForGettingStarted()
         
@@ -144,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToCreatProfile() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController!
+        let setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController
         
         setupVC.setupViewControllersForCreateProfile()
         
@@ -160,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToMainNavController() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("slidingViewController") as! UIViewController!
+        let viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("slidingViewController") as UIViewController!
         
         let transition = CATransition()
         transition.duration = 0.6
@@ -172,7 +172,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-        if ((notificationSettings.types&UIUserNotificationType.Alert) == nil) {
+        if ((notificationSettings.types.intersect(UIUserNotificationType.Alert)) == []) {
             // can't send alerts, let the user know.
             if (!NSUserDefaults.standardUserDefaults().boolForKey("UserKnowsNotificationsAreDisabled")) {
                 let alert = UIAlertView(title: "Notifications are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
@@ -214,7 +214,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
             self.postTripRatedThanksNotification(false)
         } else if (identifier == "FLAG_IDENTIFIER") {
-            let incident = Incident(location: trip.mostRecentLocation()!, trip: trip)
+            Incident(location: trip.mostRecentLocation()!, trip: trip)
             CoreDataManager.sharedManager.saveContext()
         } else if (identifier == "RESUME_IDENTIFIER") {
             RouteManager.sharedManager.resumeTracking()
@@ -226,16 +226,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         var thanksPhrases : [String] = []
         
         if (wasGoodTrip) {
-            emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆")
+            emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆".characters)
             thanksPhrases = ["Thanks!", "Sweet!", "YES!", "kewlll", "w00t =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
         } else {
-            emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭")
+            emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭".characters)
             thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/", "(・_・)ヾ"]
         }
         
-        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(count(thanksPhrases))))]
-        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness))))])
-        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(count(emojicuteness))))])
+        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(thanksPhrases.count)))]
+        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(emojicuteness.count)))])
+        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(emojicuteness.count)))])
         
         let notif = UILocalNotification()
         notif.alertBody = emoji1 + thanksPhrase + emoji2
@@ -255,10 +255,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         })
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         if (url.scheme == "ridereport") {
             if (url.host == "verify-email"){
-                if let queryItems = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems as? [NSURLQueryItem] {
+                if let queryItems = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems {
                     for item in queryItems {
                         if let result = item.value where item.name == "result" {
                             if result == "success" {

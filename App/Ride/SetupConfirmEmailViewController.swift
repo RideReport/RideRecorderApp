@@ -33,7 +33,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
-        super.childViewControllerWillPresent(userInfo: userInfo)
+        super.childViewControllerWillPresent(userInfo)
         
         self.timeOfInitialPresesntation = NSDate()
         
@@ -88,9 +88,9 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func pollAccountStatus() {
-        APIClient.sharedClient.updateAccountStatus().after() { (response, jsonData, error) in
+        APIClient.sharedClient.updateAccountStatus().apiResponse() { (response, result) in
             if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-                self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+                self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
             }
         }
     }
@@ -114,20 +114,21 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         
         passcodeInputViewBottomLayoutConstraint.constant = CGRectGetMaxY(view.bounds) - CGRectGetMinY(convertedKeyboardEndFrame) + margin
         
-        UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
+        UIView.animateWithDuration(animationDuration, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState.union(animationCurve), animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
     
     func passcodeInputViewDidFinish(passcodeInputView: BKPasscodeInputView!) {
-        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).after() { (response, jsonData, error) in
-            if (error == nil) {
-                self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
-            } else {
+        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).apiResponse() { (response, result) in
+            switch result {
+            case .Success:
+                self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+            case .Failure:
                 if (response?.statusCode == 404) {
                     passcodeInputView.errorMessage = "That's not it."
                     passcodeInputView.passcodeField.shake() {
-                        UIView.transitionWithView(passcodeInputView, duration: 0.3, options: UIViewAnimationOptions.OverrideInheritedDuration|UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
+                        UIView.transitionWithView(passcodeInputView, duration: 0.3, options: [UIViewAnimationOptions.OverrideInheritedDuration, UIViewAnimationOptions.TransitionCrossDissolve], animations: { () -> Void in
                             passcodeInputView.passcode = nil
                             }, completion: nil)
                     }

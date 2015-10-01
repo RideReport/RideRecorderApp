@@ -13,7 +13,7 @@ class SetupFinishedViewController: SetupChildViewController {
     @IBOutlet weak var helperTextLabel : UILabel!
     
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
-        super.childViewControllerWillPresent(userInfo: userInfo)
+        super.childViewControllerWillPresent(userInfo)
         
         if let finishType = userInfo?["finishType"] as! String? {
             if (finishType == "InitialSetupSkippedAccount") {

@@ -30,7 +30,7 @@ class HelpViewController: UITableViewController {
         if (indexPath.row == 0) {
             self.slidingViewController().anchorRightPeekAmount = 0.0
             self.slidingViewController().viewDidLayoutSubviews()
-            self.slidingViewController().topViewAnchoredGesture = ECSlidingViewControllerAnchoredGesture.Tapping | ECSlidingViewControllerAnchoredGesture.Panning
+            self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.Tapping, ECSlidingViewControllerAnchoredGesture.Panning]
         } else if (indexPath.row == 1) {
             AppDelegate.appDelegate().transitionToSetup()
         } else if (indexPath.row == 2) {

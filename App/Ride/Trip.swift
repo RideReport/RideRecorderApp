@@ -46,6 +46,8 @@ class Trip : NSManagedObject {
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
+    @NSManaged var locationsAreSynced : Bool
+    
     var isClosed : Bool {
         get {
             if let num = (self.primitiveValueForKey("isClosed") as! NSNumber?) {
@@ -131,8 +133,13 @@ class Trip : NSManagedObject {
             fetchedRequest.fetchLimit = limit
         }
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         if (results == nil) {
             return []
         }
@@ -146,8 +153,13 @@ class Trip : NSManagedObject {
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate().daysFrom(-7))
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         
         if (results == nil || results!.count == 0) {
             return []
@@ -162,8 +174,13 @@ class Trip : NSManagedObject {
         fetchedRequest.predicate = NSPredicate(format: "uuid == %@", uuid)
         fetchedRequest.fetchLimit = 1
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         
         if (results == nil || results!.count == 0) {
             return nil
@@ -179,8 +196,13 @@ class Trip : NSManagedObject {
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         
         if (results == nil || results!.count == 0) {
             return nil
@@ -195,8 +217,13 @@ class Trip : NSManagedObject {
         let closedPredicate = NSPredicate(format: "isClosed == NO")
         fetchedRequest.predicate = closedPredicate
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         
         if (results == nil || results!.count == 0) {
             return []
@@ -212,8 +239,13 @@ class Trip : NSManagedObject {
         let syncedPredicate = NSPredicate(format: "isSynced == NO")
         fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedPredicate])
         
-        var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
         
         if (results == nil || results!.count == 0) {
             return []
@@ -252,7 +284,13 @@ class Trip : NSManagedObject {
         fetchedRequest.propertiesToFetch = [sumDescription]
         
         var error : NSError?
-        let results = context.executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
+        }
         if (results == nil || error != nil) {
             return 0.0
         }
@@ -279,7 +317,7 @@ class Trip : NSManagedObject {
     
     var isShittyWeather : Bool {
         get {
-            if (self.climacon == nil || count(self.climacon!) == 0) {
+            if (self.climacon == nil || (self.climacon!).characters.count == 0) {
                 return false
             }
             
@@ -315,7 +353,7 @@ class Trip : NSManagedObject {
     
     var climoticon : String {
         get {
-            if (self.climacon == nil || count(self.climacon!) == 0) {
+            if (self.climacon == nil || (self.climacon!).characters.count == 0) {
                 return ""
             }
             
@@ -460,12 +498,12 @@ class Trip : NSManagedObject {
         
         
         let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(location, completionHandler: { (placemarks, error) -> Void in
-            if (placemarks == nil || placemarks.count == 0) {
+        geocoder.reverseGeocodeLocation(location!, completionHandler: { (placemarks, error) -> Void in
+            if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
             }
-            let startingPlacemark = placemarks[0] as! CLPlacemark
+            let startingPlacemark = placemarks![0]
             self.startingPlacemarkName = startingPlacemark.subLocality
             handler()
         })
@@ -482,11 +520,11 @@ class Trip : NSManagedObject {
         let endingLocation = self.locations.lastObject as! Location
         
         geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
-            if (placemarks == nil || placemarks.count == 0) {
+            if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
             }
-            let endingPlacemark = placemarks[0] as! CLPlacemark
+            let endingPlacemark = placemarks![0] 
             self.endingPlacemarkName = endingPlacemark.subLocality
             handler()
         })
@@ -550,6 +588,7 @@ class Trip : NSManagedObject {
     
     func reopen() {
         self.isClosed = false
+        self.locationsAreSynced = false
         self.simplifiedLocations = nil
     }
     
@@ -580,7 +619,7 @@ class Trip : NSManagedObject {
         if (self.startingPlacemarkName != nil) {
             self.sendTripStartedNotificationImmediately()
         } else {
-            self.findStartingPlacemarkWithHandler(startingLocation: startingLocation) { () -> Void in
+            self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
                 self.sendTripStartedNotificationImmediately()
             }
         }
@@ -774,15 +813,15 @@ class Trip : NSManagedObject {
         let location1 = self.locations.objectAtIndex(1) as! Location
         
         let request = MKDirectionsRequest()
-        request.setSource((location0 as Location).mapItem())
-        request.setDestination((location1 as Location).mapItem())
+        request.source = (location0 as Location).mapItem()
+        request.destination = (location1 as Location).mapItem()
         request.transportType = MKDirectionsTransportType.Walking
         request.requestsAlternateRoutes = false
         let directions = MKDirections(request: request)
         directions.calculateDirectionsWithCompletionHandler { (directionsResponse, error) -> Void in
             if (error == nil) {
-                let route : MKRoute = directionsResponse.routes.first! as! MKRoute
-                let pointCount = route.polyline!.pointCount
+                let route : MKRoute = directionsResponse!.routes.first!
+                let pointCount = route.polyline.pointCount
                 var coords = [CLLocationCoordinate2D](count: pointCount, repeatedValue: kCLLocationCoordinate2DInvalid)
                 route.polyline.getCoordinates(&coords, range: NSMakeRange(0, pointCount))
                 let mutableLocations = self.locations.mutableCopy() as! NSMutableOrderedSet
@@ -855,7 +894,7 @@ class Trip : NSManagedObject {
         } else {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
                 dispatch_async(dispatch_get_main_queue(), {
-                    if (activities == nil || activities.count == 0) {
+                    if (activities == nil || activities!.count == 0) {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
@@ -863,8 +902,8 @@ class Trip : NSManagedObject {
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {
-                        for activity in activities {
-                            Activity(activity: activity as! CMMotionActivity, trip: self)
+                        for activity in activities! {
+                            Activity(activity: activity , trip: self)
                         }
                     }
                     
@@ -916,7 +955,7 @@ class Trip : NSManagedObject {
         var scores = [walkScore, runScore, autoScore, cycleScore]
         DDLogInfo(String(format: "Activities scores: %@, speed: %f", scores, self.averageSpeed))
         
-        scores.sort{$1 < $0}
+        scores.sortInPlace{$1 < $0}
         if scores[0] == 0 {
             // if no one scored, possibly because there was no activity data available, fall back on speeds.
             DDLogInfo(String(format: "No activites scored! Found speed: %f", self.averageSpeed))
@@ -943,7 +982,7 @@ class Trip : NSManagedObject {
             }
         } else if scores[0] == autoScore {
             if (((Double(walkScore + cycleScore + runScore)/Double(autoScore)) > 0.5 && self.averageSpeed < 8.5) ||
-                self.averageSpeed < 5) {
+                self.averageSpeed < 5.5) {
                 // Core Motion misidentifies cycling as automotive
                 // if it isn't a decisive victory, also look at speed
                 self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)

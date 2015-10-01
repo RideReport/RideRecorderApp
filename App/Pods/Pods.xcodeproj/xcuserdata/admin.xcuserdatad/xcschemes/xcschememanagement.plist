@@ -4,77 +4,77 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-Alamofire.xcscheme</key>
+		<key>Alamofire.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Bolts.xcscheme</key>
+		<key>Bolts.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-CZWeatherKit.xcscheme</key>
+		<key>CZWeatherKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-CocoaLumberjack.xcscheme</key>
+		<key>CocoaLumberjack.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-ECSlidingViewController.xcscheme</key>
+		<key>ECSlidingViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-FBSDKCoreKit.xcscheme</key>
+		<key>FBSDKCoreKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-FBSDKLoginKit.xcscheme</key>
+		<key>FBSDKLoginKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-FBSDKShareKit.xcscheme</key>
+		<key>FBSDKShareKit.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Locksmith-Locksmith.xcscheme</key>
+		<key>KeychainAccess.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Locksmith.xcscheme</key>
+		<key>Locksmith-Locksmith.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-OAuthSwift.xcscheme</key>
+		<key>Locksmith.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-PINCache.xcscheme</key>
+		<key>Mapbox-iOS-SDK-Mapbox.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-SwiftyJSON.xcscheme</key>
+		<key>Mapbox-iOS-SDK.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-UIActionSheet+Blocks.xcscheme</key>
+		<key>OAuthSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-ionicons.xcscheme</key>
+		<key>PINCache.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -84,85 +84,105 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SwiftyJSON.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>UIActionSheet+Blocks.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0846B3770D596278332EA27B</key>
+		<key>02DC9C977F758EDEA06550669615D7EB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>0C00C35D9160538EBEC1B504</key>
+		<key>033A8E7215CFDB2A46F61F744AA9BDB9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>19A95074A246FEEEFF55780E</key>
+		<key>116B238671368497D2D5B2078C668FE6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1D9D5ECAD35025AD2959F916</key>
+		<key>25756447C37A5892A2C3DA484DCBF713</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>20B60EBA065A6AA425CC7D53</key>
+		<key>27435E66B99E61C56020187293BBB3EF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3572D6D2FC9EB25506FA1A1B</key>
+		<key>3F8E6FD54E9FAA5D49E63075C814425A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3FA02BAFE2F51E85887081C1</key>
+		<key>4CD48EA3620AE0C5FFB7A880DF7E54EA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>5A619B4FB3D414120A73CDAB</key>
+		<key>66E066D1192986814D288480FDCF5325</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>732D13055F3A9E1A778C6B8D</key>
+		<key>84A183705776DEF1313171F3CB53ABB2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8F37A245516B211F880A3044</key>
+		<key>AB06A508049C406FC9E8A5A4B3CB391F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9B9EC4EF9081BBDB16411F73</key>
+		<key>AB8CC9C4B91E88E456E18EC80360EDD8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A046FBE8401E785AE2E0E632</key>
+		<key>AE25B6370EA4E6741D0551C04808EC9B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AA838C66C832A3541834EAA9</key>
+		<key>B9A04D3C9B208813656510FDA8ADAE02</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D77BFF5448962AB0927CD379</key>
+		<key>DADA4C904EA43DEC47AFFAC295D958C6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D8C8B1E9C244CB807B41CC23</key>
+		<key>DE5F1AE738C65F1F4BDF33FBFB206C80</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>FC92A2DF6CA64FE0E834CB7E</key>
+		<key>ED49C939E0368043254FB7CD8FE89463</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>ED622FA6AADA0882C660B130AFBB08CA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F5BF54E929A60170D8732F19790175A3</key>
 		<dict>
 			<key>primary</key>
 			<true/>

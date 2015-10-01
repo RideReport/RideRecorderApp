@@ -22,8 +22,13 @@ class Profile : NSManagedObject {
             let fetchedRequest = NSFetchRequest(entityName: "Profile")
             fetchedRequest.fetchLimit = 1
             
-            var error : NSError?
-            let results = context.executeFetchRequest(fetchedRequest, error: &error)
+            let results: [AnyObject]?
+            do {
+                results = try context.executeFetchRequest(fetchedRequest)
+            } catch let error {
+                DDLogError(String(format: "Error finding profile: %@", error as NSError))
+                results = nil
+            }
             
             if (results!.count == 0 || (results!.first as! Profile).uuid == nil) {
                 let context = CoreDataManager.sharedManager.currentManagedObjectContext()

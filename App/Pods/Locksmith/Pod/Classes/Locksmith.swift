@@ -9,7 +9,7 @@ import UIKit
 import Security
 
 public let LocksmithErrorDomain = "com.locksmith.error"
-public let LocksmithDefaultService = NSBundle.mainBundle().infoDictionary![kCFBundleIdentifierKey] as? String ?? "com.locksmith.defaultService"
+public let LocksmithDefaultService =  "com.Knock.Ride"
 
 
 public class Locksmith: NSObject {

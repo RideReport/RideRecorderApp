@@ -1,16 +1,24 @@
 platform :ios, '8.0'
-pod 'CocoaLumberjack', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_support'
+pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
 pod 'ECSlidingViewController', '~> 2.0.3'
 pod 'CZWeatherKit'
 pod 'UIActionSheet+Blocks'
 pod 'Fabric'
 pod 'Crashlytics'
-pod 'ionicons'
-pod 'Locksmith'
+pod 'KeychainAccess'
 pod 'SwiftyJSON'
-pod 'Alamofire'
+pod 'Alamofire', '~> 2.0'
 pod 'OAuthSwift'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'FBSDKShareKit'
+pod 'Mapbox-iOS-SDK'
 use_frameworks!
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+        end
+    end
+end

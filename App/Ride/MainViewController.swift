@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import ionicons
 import SystemConfiguration
 
 class MainViewController: UIViewController, PushSimulatorViewDelegate {
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
-    @IBOutlet weak var popupView: PopupView!
+    weak var popupView: PopupView!
     @IBOutlet weak var newIncidentButton: UIButton!
     @IBOutlet weak var selectedTripView: UIView!
     @IBOutlet weak var editModeView: UIView!
-    @IBOutlet weak var rideRushSimulatorView: PushSimulatorView!
+    weak var rideRushSimulatorView: PushSimulatorView!
     @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
@@ -60,16 +59,12 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         let markersImage = UIImage(named: "markers-soft")!
         let pinColorsCount : CGFloat = 20
         let pinWidth = markersImage.size.width/pinColorsCount
-        let iconSize : CGFloat = 16.0
-        var icon : UIImage! = IonIcons.imageWithIcon(ion_plus_circled, size: iconSize, color: UIColor.whiteColor())
         
         self.editModeView.hidden = true
         
-        let iconPoint = CGPoint(x: (pinWidth - icon.size.width)/2.0, y: 9)
         rect = CGRect(x: 0, y: 0.0, width: pinWidth, height: markersImage.size.height)
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
         markersImage.drawAtPoint(rect.origin)
-        icon.drawAtPoint(iconPoint)
         let newPinImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         UIGraphicsEndImageContext()
         
@@ -130,7 +125,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                             self.rideRushSimulatorView.showControls()
                         })
                     } else {
-                        self.rideRushSimulatorView.hideControls(animated: false)
+                        self.rideRushSimulatorView.hideControls(false)
                     }
                     self.rideRushSimulatorView.showsActionButon = true
                     self.rideRushSimulatorView.showsDestructiveActionButon = true
@@ -328,17 +323,17 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
             let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
             actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                 if (buttonIndex == 1) {
-                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate().hoursFrom(1))
+                    RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
                 } else if (buttonIndex == 2){
-                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate.tomorrow())
+                    RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
                 } else if (buttonIndex == 3) {
-                    RouteManager.sharedManager.pauseTracking(untilDate: NSDate.nextWeek())
+                    RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
                 } else if (buttonIndex == 4) {
                     RouteManager.sharedManager.pauseTracking()
                 }
                 self.refreshPauseResumeTrackingButtonUI()
             }
-            actionSheet.showFromToolbar(self.navigationController?.toolbar)
+            actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
         }
     }
     

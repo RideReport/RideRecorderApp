@@ -19,7 +19,7 @@ extension NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.weekOfYear = 1
         
-        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:NSDate().beginingOfDay(), options: nil)!
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:NSDate().beginingOfDay(), options: [])!
     }
     
     class func yesterday() -> NSDate {
@@ -30,26 +30,26 @@ extension NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.hour = hoursFrom
         
-        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: nil)!
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: [])!
     }
     
     func daysFrom(daysFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.day = daysFrom
         
-        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: nil)!
+        return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: [])!
     }
     
     func beginingOfDay() -> NSDate {
-        let dayComponents = NSCalendar.currentCalendar().components(.YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit, fromDate: self)
+        let dayComponents = NSCalendar.currentCalendar().components([.Year, .Month, .Day], fromDate: self)
         
         return NSCalendar.currentCalendar().dateFromComponents(dayComponents)!
     }
     
     func isEqualToDay(date:NSDate) -> Bool
     {
-        var selfComponents = NSCalendar.autoupdatingCurrentCalendar().components(.YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit, fromDate: self);
-        var dateComponents = NSCalendar.autoupdatingCurrentCalendar().components(.YearCalendarUnit | .MonthCalendarUnit | .DayCalendarUnit, fromDate: date);
+        let selfComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year, .Month, .Day], fromDate: self);
+        let dateComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year, .Month, .Day], fromDate: date);
         
         return ((selfComponents.year == dateComponents.year) &&
                 (selfComponents.month == dateComponents.month) &&
@@ -58,8 +58,8 @@ extension NSDate {
     
     func isThisWeek() -> Bool
     {
-        var selfComponents = NSCalendar.autoupdatingCurrentCalendar().components(.YearCalendarUnit | .WeekOfYearCalendarUnit, fromDate: self);
-        var dateComponents = NSCalendar.autoupdatingCurrentCalendar().components(.YearCalendarUnit | .WeekOfYearCalendarUnit, fromDate: NSDate());
+        let selfComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year, .WeekOfYear], fromDate: self);
+        let dateComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year, .WeekOfYear], fromDate: NSDate());
         
         return ((selfComponents.year == dateComponents.year) && (selfComponents.weekOfYear == dateComponents.weekOfYear))
     }

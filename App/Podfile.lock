@@ -1,50 +1,50 @@
 PODS:
-  - Alamofire (1.3.0)
-  - Bolts (1.2.1):
-    - Bolts/AppLinks (= 1.2.1)
-    - Bolts/Tasks (= 1.2.1)
-  - Bolts/AppLinks (1.2.1):
+  - Alamofire (2.0.2)
+  - Bolts (1.3.0):
+    - Bolts/AppLinks (= 1.3.0)
+    - Bolts/Tasks (= 1.3.0)
+  - Bolts/AppLinks (1.3.0):
     - Bolts/Tasks
-  - Bolts/Tasks (1.2.1)
-  - CocoaLumberjack (2.0.0):
-    - CocoaLumberjack/Default (= 2.0.0)
-    - CocoaLumberjack/Extensions (= 2.0.0)
-  - CocoaLumberjack/Core (2.0.0)
-  - CocoaLumberjack/Default (2.0.0):
+  - Bolts/Tasks (1.3.0)
+  - CocoaLumberjack/Core (2.0.1)
+  - CocoaLumberjack/Default (2.0.1):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.0):
+  - CocoaLumberjack/Extensions (2.0.1):
     - CocoaLumberjack/Default
-  - Crashlytics (3.1.0)
+  - CocoaLumberjack/Swift (2.0.1):
+    - CocoaLumberjack/Extensions
+  - Crashlytics (3.3.1)
   - CZWeatherKit (2.2.0):
     - PINCache (~> 2.0)
   - ECSlidingViewController (2.0.3)
-  - Fabric (1.2.8):
-    - Fabric/Base (= 1.2.8)
-  - Fabric/Base (1.2.8)
-  - FBSDKCoreKit (4.5.1):
+  - Fabric (1.5.1):
+    - Fabric/Base (= 1.5.1)
+  - Fabric/Base (1.5.1)
+  - FBSDKCoreKit (4.6.0):
     - Bolts (~> 1.1)
-    - FBSDKCoreKit/arc (= 4.5.1)
-    - FBSDKCoreKit/no-arc (= 4.5.1)
-  - FBSDKCoreKit/arc (4.5.1):
+    - FBSDKCoreKit/arc (= 4.6.0)
+    - FBSDKCoreKit/no-arc (= 4.6.0)
+  - FBSDKCoreKit/arc (4.6.0):
     - Bolts (~> 1.1)
-  - FBSDKCoreKit/no-arc (4.5.1):
+  - FBSDKCoreKit/no-arc (4.6.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc
-  - FBSDKLoginKit (4.5.1):
+  - FBSDKLoginKit (4.6.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.5.1):
+  - FBSDKShareKit (4.6.0):
     - FBSDKCoreKit
-  - ionicons (2.0.1)
-  - Locksmith (1.2.2)
-  - OAuthSwift (0.3.6)
-  - PINCache (2.0)
-  - SwiftyJSON (2.2.1)
+  - KeychainAccess (2.0.0)
+  - Locksmith (1.2.1)
+  - Mapbox-iOS-SDK (2.1.2)
+  - OAuthSwift (0.4.4)
+  - PINCache (2.1)
+  - SwiftyJSON (2.3.0)
   - UIActionSheet+Blocks (0.9)
 
 DEPENDENCIES:
-  - Alamofire
-  - CocoaLumberjack (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`,
-    branch `swift_support`)
+  - Alamofire (~> 2.0)
+  - CocoaLumberjack/Swift (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`,
+    branch `swift_2.0`)
   - Crashlytics
   - CZWeatherKit
   - ECSlidingViewController (~> 2.0.3)
@@ -52,38 +52,46 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - ionicons
-  - Locksmith
+  - KeychainAccess
+  - Locksmith (from `https://github.com/matthewpalmer/Locksmith.git`, branch `1.2.2`)
+  - Mapbox-iOS-SDK
   - OAuthSwift
   - SwiftyJSON
   - UIActionSheet+Blocks
 
 EXTERNAL SOURCES:
   CocoaLumberjack:
-    :branch: swift_support
+    :branch: swift_2.0
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+  Locksmith:
+    :branch: 1.2.2
+    :git: https://github.com/matthewpalmer/Locksmith.git
 
 CHECKOUT OPTIONS:
   CocoaLumberjack:
-    :commit: 398e9e7a3970ef9a8509d608725a2849646eb1f9
+    :commit: 479279f102a8ab23084290697bafa77aac0d1bdf
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+  Locksmith:
+    :commit: e7ece35421fb9460247ff2b2bb9570925670e28d
+    :git: https://github.com/matthewpalmer/Locksmith.git
 
 SPEC CHECKSUMS:
-  Alamofire: 220403a8d5840e0b4c946a6fbaf209dbca124282
-  Bolts: 7686a5cb204d1ac54cee26f12d9b7622db3f80d1
-  CocoaLumberjack: 52a5d1d495dbd04084fa0fb803dccd8ae83bfe18
-  Crashlytics: 93e2f86363d53c002c6366a9d87e41f2eaee87c3
+  Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
+  Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
+  CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
+  Crashlytics: 0e61bdda9def51f1e99720f804eebe94865442b2
   CZWeatherKit: d7707d997a2c7215741db9c3d4dcfba25a21f0ce
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
-  Fabric: a9eabe53915e9f1db55a84dd2838737928675878
-  FBSDKCoreKit: f335eaf6865e1e1597dee1debfb533045500da47
-  FBSDKLoginKit: 225cc9a388a92916ee3f3bb14422017b6e44b65b
-  FBSDKShareKit: 642034ac9f30793dfd897851b724bb4281750266
-  ionicons: c7b0867373392e85c17f613d19ade04ccfbe5a7c
-  Locksmith: c84c10bf23f99e6d04703dba65065dc38b038d88
-  OAuthSwift: 3517e94380923085dfa7f23421bc3d4a61ce48c0
-  PINCache: ca953ba93ce1edde056fdd99121ee65b295a08c9
-  SwiftyJSON: ae2d0a3d68025d136602a33c4ee215091ced3e33
+  Fabric: 03c3b3fe77e11a2bc31421b989a9c7adaa4779a5
+  FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
+  FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
+  FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
+  KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
+  Locksmith: 7edf9ba4b1e965450d8ae76006e0d336d77ff5d7
+  Mapbox-iOS-SDK: f8a8fd3ccf918196d27a52ab1694414be20f2210
+  OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
+  PINCache: 0581b0a7578fc0bbc6c7a8b70b0615388bea064c
+  SwiftyJSON: 8d6b61a70277ef2a5d710d372e06e7e2d87fb9e4
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
 
-COCOAPODS: 0.37.2
+COCOAPODS: 0.38.2

@@ -10,7 +10,7 @@ import Foundation
 
 class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDelegate {
     
-    @IBOutlet weak var pushSimulationView : PushSimulatorView!
+    weak var pushSimulationView : PushSimulatorView!
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var nextButton : UIButton!
     

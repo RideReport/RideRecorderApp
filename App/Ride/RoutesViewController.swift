@@ -34,8 +34,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
-        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        var effectView = UIVisualEffectView(effect: blur)
+        let blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let effectView = UIVisualEffectView(effect: blur)
         effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.insertSubview(effectView, belowSubview: self.tableView)
         
@@ -46,7 +46,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter.dateFormat = "h:mma"
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 self.coreDataDidLoad()
             }
         } else {
@@ -63,7 +63,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController!.delegate = self
-        self.fetchedResultsController!.performFetch(nil)
+        do {
+            try self.fetchedResultsController!.performFetch()
+        } catch _ {
+        }
         
         self.refreshEmptyTableView()
         
@@ -82,8 +85,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.mainViewController.selectedTrip = nil
         self.refreshEmptyTableView()
         
-        if (self.tableView.indexPathForSelectedRow() != nil) {
-            self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow()!, animated: animated)
+        if (self.tableView.indexPathForSelectedRow != nil) {
+            self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow!, animated: animated)
         }
     }
     
@@ -127,7 +130,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             DDLogVerbose("Move/update section. Shouldn't happen?")
         }
     }
-    
+
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch(type) {
             
@@ -157,13 +160,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let theSection = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        let theSection = self.fetchedResultsController.sections![section] 
         
-        return "  ".stringByAppendingString(theSection.name!)
+        return "  ".stringByAppendingString(theSection.name)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] as! NSFetchedResultsSectionInfo
+        let sectionInfo = self.fetchedResultsController.sections![section] 
         
         return sectionInfo.numberOfObjects
     }
@@ -172,7 +175,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
         let reuseID = "RoutesViewTableCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as! UITableViewCell
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) 
         tableCell.layoutMargins = UIEdgeInsetsZero
 
         configureCell(tableCell, trip: trip)
@@ -184,8 +187,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let headerView = view as! UITableViewHeaderFooterView
         headerView.tintColor = UIColor(white: 0.2, alpha: 1.0)
         headerView.opaque = false
-        headerView.textLabel.font = UIFont.boldSystemFontOfSize(14.0)
-        headerView.textLabel.textColor = UIColor(white: 0.9, alpha: 1.0)
+        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
+        headerView.textLabel!.textColor = UIColor(white: 0.9, alpha: 1.0)
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
@@ -228,7 +231,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.mainViewController.navigationController?.popToRootViewControllerAnimated(false)
     }
 
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "🐞 Tools") { (action, indexPath) -> Void in
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             self.tableView.setEditing(false, animated: true)

@@ -1,6 +1,0 @@
-framework module ionicons {
-  umbrella header "Pods-ionicons-umbrella.h"
-
-  export *
-  module * { export * }
-}

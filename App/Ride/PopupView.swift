@@ -26,7 +26,7 @@ import Foundation
     private var textLabel : UILabel! = nil
     private var widthConstraint : NSLayoutConstraint! = nil
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -97,13 +97,13 @@ import Foundation
         arrowPath.moveToPoint(arrowPoint)
         arrowPath.addLineToPoint(tipPt)
         arrowPath.addLineToPoint(endPt)
-        arrowPath.lineCapStyle = kCGLineCapButt
+        arrowPath.lineCapStyle = CGLineCap.Butt
         
         arrowPath.lineWidth = strokeWidth
         arrowPath.stroke()
-        arrowPath.fillWithBlendMode(kCGBlendModeClear, alpha:1.0)
+        arrowPath.fillWithBlendMode(CGBlendMode.Clear, alpha:1.0)
         arrowPath.fill()
-        path.fillWithBlendMode(kCGBlendModeClear, alpha:1.0)
+        path.fillWithBlendMode(CGBlendMode.Clear, alpha:1.0)
         path.fill()
     }
 

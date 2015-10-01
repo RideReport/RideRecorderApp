@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-import ionicons
 
 class Incident : NSManagedObject, MGLAnnotation {
     enum IncidentType : Int {
@@ -50,41 +49,29 @@ class Incident : NSManagedObject, MGLAnnotation {
             let pinColorsCount : CGFloat = 20
             let pinWidth = markersImage.size.width/pinColorsCount
             var pinIndex : CGFloat = 0
-            var icon : UIImage! = nil
-            let iconSize : CGFloat = 16.0
             
             switch(self) {
                 case Unknown:
                     pinIndex = 17
-                    icon = IonIcons.imageWithIcon(ion_flag, size: iconSize, color: UIColor.whiteColor())
                 case RoadHazard:
                     pinIndex = 0
-                    icon = IonIcons.imageWithIcon(ion_alert, size: iconSize, color: UIColor.whiteColor())
                 case UnsafeIntersection:
                     pinIndex = 0
-                    icon = IonIcons.imageWithIcon(ion_network, size: iconSize, color: UIColor.whiteColor())
                 case BikeLaneEnds:
                     pinIndex = 0
-                    icon = IonIcons.imageWithIcon(ion_arrow_graph_down_right, size: iconSize, color: UIColor.whiteColor())
                 case UnsafeSpeeds:
                     pinIndex = 0
-                    icon = IonIcons.imageWithIcon(ion_speedometer, size: iconSize, color: UIColor.whiteColor())
                 case AggressiveMotorist:
                     pinIndex = 1
-                    icon = IonIcons.imageWithIcon(ion_model_s, size: iconSize, color: UIColor.whiteColor())
                 case InsufficientParking:
                     pinIndex = 8
-                    icon = IonIcons.imageWithIcon(ion_code, size: iconSize, color: UIColor.whiteColor())
                 case SuspectedBikeTheif:
                     pinIndex = 19
-                    icon = IonIcons.imageWithIcon(ion_eye, size: iconSize, color: UIColor.whiteColor())
             }
             
-            let iconPoint = CGPoint(x: (pinWidth - icon.size.width)/2.0, y: 9)
             rect = CGRect(x: -pinIndex * pinWidth, y: 0.0, width: pinWidth, height: markersImage.size.height)
             UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
             markersImage.drawAtPoint(rect.origin)
-            icon.drawAtPoint(iconPoint)
             let pinImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             
@@ -133,7 +120,7 @@ class Incident : NSManagedObject, MGLAnnotation {
         }
         set {
             self.willChangeValueForKey("coordinate")
-            var nearestLocation = self.trip!.closestLocationToCoordinate(newValue)
+            let nearestLocation = self.trip!.closestLocationToCoordinate(newValue)
             if (nearestLocation == nil) {
                 self.location = self.trip!.mostRecentLocation()!
             } else {

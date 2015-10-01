@@ -1,3 +1,5 @@
+> This is Locksmith’s compatibility branch for Swift 1.2
+
 # Locksmith
 
 A sane way to work with the iOS Keychain in Swift.
@@ -16,8 +18,7 @@ A sane way to work with the iOS Keychain in Swift.
 Locksmith is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
-    pod "Locksmith"
-
+    pod "Locksmith", :git => 'https://github.com/matthewpalmer/Locksmith.git', :branch => '1.2.2'
 
 ### Manual
 
@@ -28,6 +29,8 @@ Alternatively, you can simply drag the two files `Locksmith.swift` and `Locksmit
 In the following examples, you can choose not to provide a value for the `inService` parameter, and it will default to your Bundle Identifier.
 
 **Save data**
+
+- writes the data to the keychain if it does not exist already
 
 ```swift
 let error = Locksmith.saveData(["some key": "some value"], forUserAccount: "myUserAccount")
@@ -52,6 +55,8 @@ let (dictionary, error) = Locksmith.loadDataForUserAccount("myUserAccount", inSe
 ```
 
 **Update data**
+
+- overwrites whatever is stored on the keychain under this user account (if nothing is stored, we save as normal)
 
 ```swift
 let error = Locksmith.updateData(["some key": "another value"], forUserAccount: "myUserAccount")

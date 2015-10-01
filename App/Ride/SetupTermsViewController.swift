@@ -31,12 +31,12 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate {
         
         let tapLocation = tapGesture.locationInView(self.termsTextView)
         let textPosition = self.termsTextView.closestPositionToPoint(tapLocation)
-        let attributes = self.termsTextView.textStylingAtPosition(textPosition, inDirection: UITextStorageDirection.Forward)
-        
-        let underline = attributes[NSUnderlineStyleAttributeName] as! NSNumber?
-        if (underline?.integerValue == NSUnderlineStyle.StyleSingle.rawValue) {
-            UIApplication.sharedApplication().openURL(NSURL(string: "https://ride.report/legal")!)
+        if let attributes = self.termsTextView.textStylingAtPosition(textPosition!, inDirection: UITextStorageDirection.Forward) {
+            let underline = attributes[NSUnderlineStyleAttributeName] as! NSNumber?
+            if (underline?.integerValue == NSUnderlineStyle.StyleSingle.rawValue) {
+                UIApplication.sharedApplication().openURL(NSURL(string: "https://ride.report/legal")!)
 
+            }
         }
     }
 }

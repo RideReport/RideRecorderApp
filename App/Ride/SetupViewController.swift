@@ -73,7 +73,7 @@ class SetupViewController: UINavigationController {
         
         self.myViewControllers = [setupCreateProfile, setupConfirmEmail, setupFinished]
         
-        self.myViewControllers.first!.childViewControllerWillPresent(userInfo: ["isCreatingProfileOutsideGettingStarted": true])
+        self.myViewControllers.first!.childViewControllerWillPresent(["isCreatingProfileOutsideGettingStarted": true])
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
@@ -84,13 +84,13 @@ class SetupViewController: UINavigationController {
     }
     
     func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil) {
-        let pageNumber = find(self.myViewControllers!, sender as! SetupChildViewController)
+        let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
             self.done()
         } else {
             let nextPage = self.myViewControllers[pageNumber! + 1]
-            nextPage.childViewControllerWillPresent(userInfo: userInfo)
+            nextPage.childViewControllerWillPresent(userInfo)
             let transition = CATransition()
             transition.duration = 0.6
             transition.type = kCATransitionFade
@@ -100,7 +100,7 @@ class SetupViewController: UINavigationController {
     }
     
     func previousPage(sender: AnyObject) {
-        let pageNumber = find(self.myViewControllers!, sender as! SetupChildViewController)
+        let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! - 1) < 0) {
             // presumably we are already on the first page.
@@ -119,7 +119,7 @@ class SetupViewController: UINavigationController {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         let lastPage = self.myViewControllers.last!
-        lastPage.childViewControllerWillPresent(userInfo: userInfo)
+        lastPage.childViewControllerWillPresent(userInfo)
 
         let transition = CATransition()
         transition.duration = 0.6

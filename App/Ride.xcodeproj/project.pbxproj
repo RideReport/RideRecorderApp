@@ -56,21 +56,7 @@
 		84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */; };
 		84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */; };
 		84CA64EB1B72BBF400696587 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA64EA1B72BBF400696587 /* Fabric.framework */; };
-		84CA65901B72DED900696587 /* libmbgl-asset-fs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65791B72DE5800696587 /* libmbgl-asset-fs.a */; };
-		84CA65911B72DED900696587 /* libmbgl-cache-sqlite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA657B1B72DE5800696587 /* libmbgl-cache-sqlite.a */; };
-		84CA65921B72DED900696587 /* libmbgl-core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65731B72DE5800696587 /* libmbgl-core.a */; };
-		84CA65931B72DED900696587 /* libmbgl-http-nsurl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65771B72DE5800696587 /* libmbgl-http-nsurl.a */; };
-		84CA65941B72DED900696587 /* libmbgl-platform-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65751B72DE5800696587 /* libmbgl-platform-ios.a */; };
 		84CA65961B72DEFC00696587 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65951B72DEFC00696587 /* libuv.a */; };
-		84CA65B31B72E21D00696587 /* api_mapbox_com-digicert.der in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AA1B72E21D00696587 /* api_mapbox_com-digicert.der */; };
-		84CA65B41B72E21D00696587 /* api_mapbox_com-geotrust.der in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AB1B72E21D00696587 /* api_mapbox_com-geotrust.der */; };
-		84CA65B51B72E21D00696587 /* Compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AC1B72E21D00696587 /* Compass.png */; };
-		84CA65B61B72E21D00696587 /* Compass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AD1B72E21D00696587 /* Compass@2x.png */; };
-		84CA65B71B72E21D00696587 /* Compass@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AE1B72E21D00696587 /* Compass@3x.png */; };
-		84CA65B81B72E21D00696587 /* mapbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65AF1B72E21D00696587 /* mapbox.png */; };
-		84CA65B91B72E21D00696587 /* mapbox@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65B01B72E21D00696587 /* mapbox@2x.png */; };
-		84CA65BA1B72E21D00696587 /* mapbox@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65B11B72E21D00696587 /* mapbox@3x.png */; };
-		84CA65BB1B72E21D00696587 /* star_tilestream_net.der in Resources */ = {isa = PBXBuildFile; fileRef = 84CA65B21B72E21D00696587 /* star_tilestream_net.der */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
 		84D1555A19D2733500316995 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
@@ -117,111 +103,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 84D1554E19D2733500316995;
 			remoteInfo = Ride;
-		};
-		84CA65701B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A8A01B4F4EEF85662BED052A;
-			remoteInfo = standalone;
-		};
-		84CA65721B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4D2B30CE576263CCB8C46247;
-			remoteInfo = core;
-		};
-		84CA65741B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3A9B8E08D013CE40D127E3FA;
-			remoteInfo = "platform-ios";
-		};
-		84CA65761B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CF7906BE6FD38DB9997D16DA;
-			remoteInfo = "http-nsurl";
-		};
-		84CA65781B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 62366B92C5E3E3A8423577D1;
-			remoteInfo = "asset-fs";
-		};
-		84CA657A1B72DE5800696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 76415DBBA4A5F23BE86B535F;
-			remoteInfo = "cache-sqlite";
-		};
-		84CA65971B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A185B64D1BA1B6CB55F7043A;
-			remoteInfo = shaders;
-		};
-		84CA65991B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A8AF0F0F01DA817B2837A453;
-			remoteInfo = version;
-		};
-		84CA659B1B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 29881B563394BA0C8A6284E5;
-			remoteInfo = touch_styles;
-		};
-		84CA659D1B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A5075759B3BED0C00D704699;
-			remoteInfo = bundle_styles;
-		};
-		84CA659F1B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1F3F7E274EE7D0F502E0305B;
-			remoteInfo = core;
-		};
-		84CA65A11B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 9E1A139B5E2ADC192EEE3047;
-			remoteInfo = "platform-ios";
-		};
-		84CA65A31B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = A133D7BA39AA7B4CAD82ED78;
-			remoteInfo = "http-nsurl";
-		};
-		84CA65A51B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 3E004818D79F67B2F0ECBE78;
-			remoteInfo = "asset-fs";
-		};
-		84CA65A71B72DF1E00696587 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CC3DD2CE303823CA426F4FC0;
-			remoteInfo = "cache-sqlite";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -317,17 +198,7 @@
 		84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupTermsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupFinishedViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84CA64EA1B72BBF400696587 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		84CA655B1B72DE5800696587 /* mbgl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mbgl.xcodeproj; path = "../../mapbox-gl-native/build/ios-all/mbgl.xcodeproj"; sourceTree = "<group>"; };
 		84CA65951B72DEFC00696587 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = "../../mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib/libuv.a"; sourceTree = "<group>"; };
-		84CA65AA1B72E21D00696587 /* api_mapbox_com-digicert.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert.der"; sourceTree = "<group>"; };
-		84CA65AB1B72E21D00696587 /* api_mapbox_com-geotrust.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust.der"; sourceTree = "<group>"; };
-		84CA65AC1B72E21D00696587 /* Compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Compass.png; sourceTree = "<group>"; };
-		84CA65AD1B72E21D00696587 /* Compass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Compass@2x.png"; sourceTree = "<group>"; };
-		84CA65AE1B72E21D00696587 /* Compass@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Compass@3x.png"; sourceTree = "<group>"; };
-		84CA65AF1B72E21D00696587 /* mapbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mapbox.png; sourceTree = "<group>"; };
-		84CA65B01B72E21D00696587 /* mapbox@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapbox@2x.png"; sourceTree = "<group>"; };
-		84CA65B11B72E21D00696587 /* mapbox@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mapbox@3x.png"; sourceTree = "<group>"; };
-		84CA65B21B72E21D00696587 /* star_tilestream_net.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = star_tilestream_net.der; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84D1555419D2733500316995 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -376,6 +247,7 @@
 		84F8E6291AF953CD00270C76 /* markers-soft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft.png"; sourceTree = "<group>"; };
 		84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft@2x.png"; sourceTree = "<group>"; };
 		84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = Migration.xcmappingmodel; path = Ride/Migration.xcmappingmodel; sourceTree = "<group>"; };
+		84FBE2131BBCA2E5000FF7E5 /* Ride 26.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 26.xcdatamodel"; sourceTree = "<group>"; };
 		84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		A04FD857EA3DBEEC77C22CC3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -393,11 +265,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				84CA65961B72DEFC00696587 /* libuv.a in Frameworks */,
-				84CA65901B72DED900696587 /* libmbgl-asset-fs.a in Frameworks */,
-				84CA65911B72DED900696587 /* libmbgl-cache-sqlite.a in Frameworks */,
-				84CA65921B72DED900696587 /* libmbgl-core.a in Frameworks */,
-				84CA65931B72DED900696587 /* libmbgl-http-nsurl.a in Frameworks */,
-				84CA65941B72DED900696587 /* libmbgl-platform-ios.a in Frameworks */,
 				84F137631B5DAE160023EC82 /* libz.dylib in Frameworks */,
 				84F137611B5DAE0C0023EC82 /* libsqlite3.dylib in Frameworks */,
 				84F1375F1B5DAE040023EC82 /* libc++.dylib in Frameworks */,
@@ -432,8 +299,6 @@
 			isa = PBXGroup;
 			children = (
 				84CA65951B72DEFC00696587 /* libuv.a */,
-				84CA65A91B72E21D00696587 /* mapbox resources */,
-				84CA655B1B72DE5800696587 /* mbgl.xcodeproj */,
 				84F137621B5DAE160023EC82 /* libz.dylib */,
 				84F137601B5DAE0C0023EC82 /* libsqlite3.dylib */,
 				84F1375E1B5DAE040023EC82 /* libc++.dylib */,
@@ -486,7 +351,7 @@
 				848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */,
 				8445317519FEEB210096F26E /* RouteManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
-				844497211A3A4EB40009F889 /* APIClient.swift */,
+				849EF0B21BBB1E9F006CEDD7 /* API */,
 				84033D981A8BD26900339171 /* MotionManager.swift */,
 				846D32161AD736F400F58C00 /* WeatherManager.swift */,
 			);
@@ -575,6 +440,14 @@
 			name = "GPX Files";
 			sourceTree = "<group>";
 		};
+		849EF0B21BBB1E9F006CEDD7 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				844497211A3A4EB40009F889 /* APIClient.swift */,
+			);
+			name = API;
+			sourceTree = "<group>";
+		};
 		84AFFEA11B029F85009ABC19 /* PCStackMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -584,36 +457,6 @@
 				84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */,
 			);
 			path = PCStackMenu;
-			sourceTree = "<group>";
-		};
-		84CA655C1B72DE5800696587 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				84CA65711B72DE5800696587 /* libmbgl.a */,
-				84CA65731B72DE5800696587 /* libmbgl-core.a */,
-				84CA65751B72DE5800696587 /* libmbgl-platform-ios.a */,
-				84CA65771B72DE5800696587 /* libmbgl-http-nsurl.a */,
-				84CA65791B72DE5800696587 /* libmbgl-asset-fs.a */,
-				84CA657B1B72DE5800696587 /* libmbgl-cache-sqlite.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		84CA65A91B72E21D00696587 /* mapbox resources */ = {
-			isa = PBXGroup;
-			children = (
-				84CA65AA1B72E21D00696587 /* api_mapbox_com-digicert.der */,
-				84CA65AB1B72E21D00696587 /* api_mapbox_com-geotrust.der */,
-				84CA65AC1B72E21D00696587 /* Compass.png */,
-				84CA65AD1B72E21D00696587 /* Compass@2x.png */,
-				84CA65AE1B72E21D00696587 /* Compass@3x.png */,
-				84CA65AF1B72E21D00696587 /* mapbox.png */,
-				84CA65B01B72E21D00696587 /* mapbox@2x.png */,
-				84CA65B11B72E21D00696587 /* mapbox@3x.png */,
-				84CA65B21B72E21D00696587 /* star_tilestream_net.der */,
-			);
-			name = "mapbox resources";
-			path = "../../mapbox-gl-native/platform/ios/resources";
 			sourceTree = "<group>";
 		};
 		84D1554619D2733500316995 = {
@@ -762,15 +605,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				84CA65981B72DF1E00696587 /* PBXTargetDependency */,
-				84CA659A1B72DF1E00696587 /* PBXTargetDependency */,
-				84CA659C1B72DF1E00696587 /* PBXTargetDependency */,
-				84CA659E1B72DF1E00696587 /* PBXTargetDependency */,
-				84CA65A01B72DF1E00696587 /* PBXTargetDependency */,
-				84CA65A21B72DF1E00696587 /* PBXTargetDependency */,
-				84CA65A41B72DF1E00696587 /* PBXTargetDependency */,
-				84CA65A61B72DF1E00696587 /* PBXTargetDependency */,
-				84CA65A81B72DF1E00696587 /* PBXTargetDependency */,
 			);
 			name = "Ride Report";
 			productName = Ride;
@@ -801,8 +635,9 @@
 		84D1554719D2733500316995 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
 					8429E5CA1A5DC58500EB3E94 = {
@@ -830,12 +665,6 @@
 			mainGroup = 84D1554619D2733500316995;
 			productRefGroup = 84D1555019D2733500316995 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 84CA655C1B72DE5800696587 /* Products */;
-					ProjectRef = 84CA655B1B72DE5800696587 /* mbgl.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				84D1554E19D2733500316995 /* Ride Report */,
@@ -844,51 +673,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		84CA65711B72DE5800696587 /* libmbgl.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = libmbgl.a;
-			remoteRef = 84CA65701B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84CA65731B72DE5800696587 /* libmbgl-core.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbgl-core.a";
-			remoteRef = 84CA65721B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84CA65751B72DE5800696587 /* libmbgl-platform-ios.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbgl-platform-ios.a";
-			remoteRef = 84CA65741B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84CA65771B72DE5800696587 /* libmbgl-http-nsurl.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbgl-http-nsurl.a";
-			remoteRef = 84CA65761B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84CA65791B72DE5800696587 /* libmbgl-asset-fs.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbgl-asset-fs.a";
-			remoteRef = 84CA65781B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		84CA657B1B72DE5800696587 /* libmbgl-cache-sqlite.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libmbgl-cache-sqlite.a";
-			remoteRef = 84CA657A1B72DE5800696587 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8429E5C91A5DC58500EB3E94 /* Resources */ = {
@@ -902,15 +686,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84CA65B51B72E21D00696587 /* Compass.png in Resources */,
-				84CA65B91B72E21D00696587 /* mapbox@2x.png in Resources */,
 				8451FA871B9E2F6E008ACDCD /* menu.png in Resources */,
 				8453BD671A425F9200FE2645 /* locationArrowDisabled.png in Resources */,
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
-				84CA65B61B72E21D00696587 /* Compass@2x.png in Resources */,
-				84CA65B31B72E21D00696587 /* api_mapbox_com-digicert.der in Resources */,
 				84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */,
-				84CA65B81B72E21D00696587 /* mapbox.png in Resources */,
 				8453BD661A425F9200FE2645 /* locationArrow.png in Resources */,
 				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
@@ -919,13 +698,9 @@
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
-				84CA65B71B72E21D00696587 /* Compass@3x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
-				84CA65B41B72E21D00696587 /* api_mapbox_com-geotrust.der in Resources */,
-				84CA65BA1B72E21D00696587 /* mapbox@3x.png in Resources */,
-				84CA65BB1B72E21D00696587 /* star_tilestream_net.der in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1097,51 +872,6 @@
 			target = 84D1554E19D2733500316995 /* Ride Report */;
 			targetProxy = 8429E5D11A5DC58500EB3E94 /* PBXContainerItemProxy */;
 		};
-		84CA65981B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = shaders;
-			targetProxy = 84CA65971B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA659A1B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = version;
-			targetProxy = 84CA65991B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA659C1B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = touch_styles;
-			targetProxy = 84CA659B1B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA659E1B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = bundle_styles;
-			targetProxy = 84CA659D1B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA65A01B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = core;
-			targetProxy = 84CA659F1B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA65A21B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "platform-ios";
-			targetProxy = 84CA65A11B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA65A41B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "http-nsurl";
-			targetProxy = 84CA65A31B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA65A61B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "asset-fs";
-			targetProxy = 84CA65A51B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
-		84CA65A81B72DF1E00696587 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "cache-sqlite";
-			targetProxy = 84CA65A71B72DF1E00696587 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -1241,6 +971,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1304,6 +1035,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1318,6 +1050,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
 				);
 				INFOPLIST_FILE = Ride/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1341,6 +1074,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1355,6 +1089,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
 				);
 				INFOPLIST_FILE = Ride/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1459,6 +1194,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				84FBE2131BBCA2E5000FF7E5 /* Ride 26.xcdatamodel */,
 				849E0F011B98FA61008506DC /* Ride 25.xcdatamodel */,
 				84F7AEBE1B605656003979DE /* Ride 24.xcdatamodel */,
 				84DDB1EC1B0E66FF006B7196 /* Ride 23.xcdatamodel */,
@@ -1485,7 +1221,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 849E0F011B98FA61008506DC /* Ride 25.xcdatamodel */;
+			currentVersion = 84FBE2131BBCA2E5000FF7E5 /* Ride 26.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

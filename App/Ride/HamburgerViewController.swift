@@ -14,7 +14,7 @@ class HamburgerNavController: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.edgesForExtendedLayout = UIRectEdge.Bottom | UIRectEdge.Top | UIRectEdge.Left
+        self.edgesForExtendedLayout = [UIRectEdge.Bottom, UIRectEdge.Top, UIRectEdge.Left]
     }
     
     @IBAction func unwind(segue: UIStoryboardSegue) {
@@ -28,7 +28,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.slidingViewController().topViewAnchoredGesture = ECSlidingViewControllerAnchoredGesture.Tapping | ECSlidingViewControllerAnchoredGesture.Panning
+        self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.Tapping, ECSlidingViewControllerAnchoredGesture.Panning]
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         UINavigationBar.appearance().barStyle = UIBarStyle.BlackTranslucent
@@ -72,7 +72,6 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             return
         }
         
-        let bundleID = NSBundle.mainBundle().bundleIdentifier
         let body = "What happened?\n"
         
         let composer = MFMailComposeViewController()
@@ -82,20 +81,21 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         composer.setMessageBody(body as String, isHTML: false)
         
         let firstFileInfo = fileInfos.first! as! DDLogFileInfo
-        let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)!)
-        composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
-        
-        if (fileInfos.count > 1) {
-            let secondFileInfo = fileInfos[1] as! DDLogFileInfo
-            let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath)!)
-            composer.addAttachmentData(secondFileData, mimeType: "text/plain", fileName: secondFileInfo.fileName)
+        if let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)) {
+            composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
+            
+            if (fileInfos.count > 1) {
+                let secondFileInfo = fileInfos[1] as! DDLogFileInfo
+                let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath!))
+                composer.addAttachmentData(secondFileData!, mimeType: "text/plain", fileName: secondFileInfo.fileName)
+            }
         }
         
         
         self.presentViewController(composer, animated:true, completion:nil)
     }
     
-    func mailComposeController(controller: MFMailComposeViewController!, didFinishWithResult result: MFMailComposeResult, error: NSError!) {
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 }

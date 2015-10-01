@@ -31,7 +31,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
-        super.childViewControllerWillPresent(userInfo: userInfo)
+        super.childViewControllerWillPresent(userInfo)
         
         if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
             self.isCreatingProfileOutsideGettingStarted = true
@@ -61,7 +61,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     func skip() {
-        self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreateAccountSkippedAccount" : "InitialSetupSkippedAccount"])
+        self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreateAccountSkippedAccount" : "InitialSetupSkippedAccount"])
     }
     
     func create() {
@@ -69,22 +69,23 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.navigationItem.rightBarButtonItem?.enabled = false
         self.emailTextField.enabled = false
         
-        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text).after() { (response, jsonData, error) -> Void in
+        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response, result) -> Void in
             self.facebookButton.enabled = true
             self.navigationItem.rightBarButtonItem?.enabled = true
             self.emailTextField.enabled = true
             
-            if (error == nil) {
-                self.verifyEmailWithJsonData(jsonData)
-            } else {
+            switch result {
+            case .Success(let json):
+                self.verifyEmailWithJson(json)
+            case .Failure:
                 self.emailTextField.becomeFirstResponder()
             }
         }
 
     }
     
-    func verifyEmailWithJsonData(jsonData: JSON) {
-        if let shortcodeLength = jsonData["shortcode_length"].int {
+    func verifyEmailWithJson(json: JSON) {
+        if let shortcodeLength = json["shortcode_length"].int {
             self.parent?.nextPage(self, userInfo: ["shortcodeLength": shortcodeLength, "isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
         } else {
             self.parent?.nextPage(self, userInfo: ["isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
@@ -150,33 +151,36 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.facebookButton.enabled = false
             self.navigationItem.rightBarButtonItem?.enabled = false
             self.emailTextField.enabled = false
+
             
-            APIClient.sharedClient.verifyFacebook(token).after({ (response, jsonData, error) -> Void in
-                if (error == nil) {
-                    if let needsEmailVerification = jsonData["needs_email_verification"].bool, let email = jsonData["facebook"]["email"].string where needsEmailVerification {
-                        APIClient.sharedClient.sendVerificationTokenForEmail(email).after() { (response, jsonData, error) -> Void in
+            APIClient.sharedClient.verifyFacebook(token).apiResponse() { (response, result) -> Void in
+                switch result {
+                case .Success(let json):
+                    if let needsEmailVerification = json["needs_email_verification"].bool, let email = json["facebook"]["email"].string where needsEmailVerification {
+                        APIClient.sharedClient.sendVerificationTokenForEmail(email).apiResponse() { (response, result) -> Void in
                             
                             self.facebookButton.enabled = true
                             self.navigationItem.rightBarButtonItem?.enabled = true
                             self.emailTextField.enabled = true
-
-                            if (error == nil) {
-                                self.verifyEmailWithJsonData(jsonData)
-                            } else {
+                            
+                            switch result {
+                            case .Success(let json):
+                                self.verifyEmailWithJson(json)
+                            case .Failure:
                                 let alert = UIAlertView(title:nil, message: "There was an error validating your email from Facebook. Please try signing up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
                                 alert.show()
                                 self.emailTextField.becomeFirstResponder()
                             }
-                        }
+                         }
                     } else {
-                        self.parent?.done(userInfo: ["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+                        self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
                     }
-                } else {
+                case .Failure:
                     self.facebookButton.enabled = true
                     self.navigationItem.rightBarButtonItem?.enabled = true
                     self.emailTextField.enabled = true
                 }
-            })
+            }
         }
     }
     

@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class RouteIncidentsViewController: UITableViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
+class RouteIncidentsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     var mainViewController: MainViewController! = nil
     
     private var fetchedResultsController : NSFetchedResultsController! = nil
@@ -22,8 +22,8 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         
         self.view.backgroundColor = UIColor.clearColor()
         
-        var blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        var effectView = UIVisualEffectView(effect: blur)
+        let blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        let effectView = UIVisualEffectView(effect: blur)
         effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
         self.view.addSubview(effectView)
         self.view.sendSubviewToBack(effectView)
@@ -45,7 +45,10 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
-        self.fetchedResultsController.performFetch(nil)
+        do {
+            try self.fetchedResultsController.performFetch()
+        } catch _ {
+        }
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -56,7 +59,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
     
     @IBAction func newIncident(sender: AnyObject) {
         let location = self.mainViewController.selectedTrip.closestLocationToCoordinate(self.mainViewController.mapViewController.mapView.centerCoordinate)
-        let incident = Incident(location: location, trip: self.mainViewController.selectedTrip)
+        Incident(location: location, trip: self.mainViewController.selectedTrip)
         CoreDataManager.sharedManager.saveContext()
         self.mainViewController.refreshSelectrTrip()
     }
@@ -101,7 +104,7 @@ class RouteIncidentsViewController: UITableViewController, UITableViewDataSource
         let incident = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Incident
         let reuseID = "RouteIncidentsTableCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) as! UITableViewCell
+        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) 
         tableCell.layoutMargins = UIEdgeInsetsZero
 
         configureCell(tableCell, incident: incident)

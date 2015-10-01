@@ -1,6 +1,0 @@
-framework module CZWeatherKit {
-  umbrella header "Pods-CZWeatherKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

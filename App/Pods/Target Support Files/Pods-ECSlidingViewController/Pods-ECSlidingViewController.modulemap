@@ -1,6 +1,0 @@
-framework module ECSlidingViewController {
-  umbrella header "Pods-ECSlidingViewController-umbrella.h"
-
-  export *
-  module * { export * }
-}

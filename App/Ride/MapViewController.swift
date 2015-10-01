@@ -56,26 +56,26 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             self.mainViewController.selectedTrip = RouteManager.sharedManager.currentTrip
         }
 
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
             self.loadTrips()
         }
 
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
             self.unloadTrips()
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
             self.unloadTrips()
         }
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 self.loadTrips()
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
                     self.runCreateAccountOfferIfNeeded()
                 }
             }
-            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification!) -> Void in
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidReturn", object: nil)
                 if !CoreDataManager.sharedManager.isStartingUp {
                     self.runCreateAccountOfferIfNeeded()
@@ -99,7 +99,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                         
                     }
                 }
-                actionSheet.showFromToolbar(self.navigationController?.toolbar)
+                actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
             }
         }
     }
@@ -198,8 +198,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         var i = 1
-        var pointCount = (Int)(overlay.pointCount)
-        var coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
+        let pointCount = (Int)(overlay.pointCount)
+        let coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
         overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
         let point0 = coordinates[0]
         var minLong : Double = point0.longitude
@@ -356,7 +356,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, rightCalloutAccessoryViewForAnnotation annotation: MGLAnnotation) -> UIView? {
-        let view = UIButton.buttonWithType(UIButtonType.DetailDisclosure) as! UIButton
+        let view = UIButton(type: UIButtonType.DetailDisclosure)
         
         return view
     }
@@ -374,7 +374,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
-        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
         
         if (trip != nil) {
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
@@ -388,7 +388,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
-        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
         
         if (trip != nil) {
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
@@ -402,7 +402,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
-        var trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
+        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
 
         if (trip != nil) {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {

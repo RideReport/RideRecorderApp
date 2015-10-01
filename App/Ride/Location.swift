@@ -59,8 +59,13 @@ class Location : NSManagedObject {
         
         fetchedRequest.returnsObjectsAsFaults = false
         
-        var error : NSError?
-        let results = CoreDataManager.sharedManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest, error: &error)
+        let results: [AnyObject]?
+        do {
+            results = try CoreDataManager.sharedManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogError(String(format: "Error finding locations for circle: %@", error as NSError))
+            results = nil
+        }
         
         if (results!.count == 0) {
             return []
@@ -89,6 +94,6 @@ class Location : NSManagedObject {
     }
     
     func clLocation() -> CLLocation {
-        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: (self.altitude != nil) ? self.altitude!.doubleValue : 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: (self.verticalAccuracy != nil) ? self.verticalAccuracy!.doubleValue : 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date)
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: (self.altitude != nil) ? self.altitude!.doubleValue : 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: (self.verticalAccuracy != nil) ? self.verticalAccuracy!.doubleValue : 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date!)
     }
 }
