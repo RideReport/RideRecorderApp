@@ -26,7 +26,7 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
     }
     
     func didOpenControls(view: PushSimulatorView) {
-        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill trip, **thumbs down** if something stressed you out.")
+        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a trip with no issues, **thumbs down** if something stressed you out.")
     }
     
     func didTapActionButton(view: PushSimulatorView) {
