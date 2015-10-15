@@ -127,7 +127,7 @@ import Foundation
         self.addSubview(scrollView)
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor.clearColor()
+        contentView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.01)
         scrollView.addSubview(contentView)
         
         appIconView = UIImageView(frame: CGRectMake(insetX, 10, 20, 20))
