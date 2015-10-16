@@ -232,10 +232,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            trip.managedObjectContext?.deleteObject(trip)
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
+        }
+        
+    #if DEBUG
         let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "🐞 Tools") { (action, indexPath) -> Void in
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
             self.tableView.setEditing(false, animated: true)
-
+            
             var smoothButtonTitle = ""
             if (trip.hasSmoothed) {
                 smoothButtonTitle = "Unsmooth"
@@ -247,14 +254,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
-        
-        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
-            trip.managedObjectContext?.deleteObject(trip)
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
-        }
-        
         return [deleteAction, toolsAction]
+    #else
+        return [deleteAction]
+    #endif
     }
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
