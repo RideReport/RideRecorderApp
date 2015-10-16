@@ -183,6 +183,30 @@ class APIClient {
     // MARK: - Trip Synchronization
     //
     
+    func getAllTrips()->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (_, result) -> Void in
+            switch result {
+            case .Success(let json):
+                for tripJson in json.array! {
+                    if (Trip.tripWithUUID(tripJson["uuid"].string!) == nil) {
+                        let trip = Trip()
+                        trip.uuid = tripJson["uuid"].string!
+                        trip.activityType = tripJson["activityType"].number!
+                        trip.rating = tripJson["rating"].number!
+                        trip.isClosed = true
+                        trip.isSynced = true
+                        trip.locationsAreSynced = true
+                        trip.length = tripJson["length"].number!
+                        trip.creationDate = self.jsonDateFormatter.dateFromString(tripJson["creationDate"].string!)
+                    }
+                }
+                CoreDataManager.sharedManager.saveContext()
+            case .Failure(_, let error):
+                DDLogError(String(format: "Error retriving account status: %@", error as NSError))
+            }
+        })
+    }
+    
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             for aTrip in Trip.closedUnsyncedTrips() {
