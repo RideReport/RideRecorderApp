@@ -898,7 +898,8 @@ class Trip : NSManagedObject {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
-                            notif.category = "RIDE_COMPLETION_CATEGORY"
+                            notif.category = "NO_MOTION_DATA_CATEGORY"
+                            notif.userInfo = ["RideNotificationTripUUID" : self.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {
