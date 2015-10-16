@@ -32,17 +32,19 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     
     var selectedTrip : Trip! {
         didSet {
-            if (oldValue != nil) {
-                self.mapViewController.refreshTrip(oldValue)
-            }
-            
-            self.newIncidentButton.hidden = true // disabling incidents for now
-            
-            if (selectedTrip != nil) {
-                self.mapViewController.refreshTrip(self.selectedTrip)
-            }
-            self.mapViewController.setSelectedTrip(selectedTrip)
-            self.reloadTripSelectedToolbar()
+            dispatch_async(dispatch_get_main_queue(), {
+                if (oldValue != nil) {
+                    self.mapViewController.refreshTrip(oldValue)
+                }
+                
+                self.newIncidentButton.hidden = true // disabling incidents for now
+                
+                if (self.selectedTrip != nil) {
+                    self.mapViewController.refreshTrip(self.selectedTrip)
+                }
+                self.mapViewController.setSelectedTrip(self.selectedTrip)
+                self.reloadTripSelectedToolbar()
+            })
         }
     }
     
@@ -91,7 +93,9 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.rideRushSimulatorView.delegate = self
         self.rideRushSimulatorView.showsEditButton = true
         
-        self.selectedTrip = Trip.mostRecentBikeTrip()
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            self.selectedTrip = Trip.mostRecentBikeTrip()
+        })
         
         self.refreshPauseResumeTrackingButtonUI()
     }

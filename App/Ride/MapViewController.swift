@@ -17,6 +17,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
     private var tripsAreLoaded = false
     private var tripPolyLines : [Trip : MGLPolyline]!
+    private var selectedTripBackingLine : MGLPolyline?
     private var hasCenteredMap : Bool = false
     
     private var selectedIncident : Incident? = nil
@@ -176,14 +177,22 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         for line in self.tripPolyLines.values {
             self.mapView.removeAnnotation(line)
         }
-    
+        
+        if let selectedTripLine = self.selectedTripBackingLine {
+            self.mapView.removeAnnotation(selectedTripLine)
+        }
         
         self.tripPolyLines.removeAll(keepCapacity: false)
         self.tripsAreLoaded = false
     }
     
     func setSelectedTrip(trip : Trip!) {
+        if let selectedTripLine = self.selectedTripBackingLine {
+            self.mapView.removeAnnotation(selectedTripLine)
+        }
+        
         if (trip == nil) {
+            self.selectedTripBackingLine = nil
             return
         }
         
@@ -201,6 +210,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let pointCount = (Int)(overlay.pointCount)
         let coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
         overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
+        
+        self.selectedTripBackingLine = MGLPolyline(coordinates: coordinates, count: UInt(pointCount))
+        self.mapView.removeOverlay(overlay)
+        self.mapView.addOverlay(self.selectedTripBackingLine!)
+        self.mapView.addOverlay(overlay)
+
+        
         let point0 = coordinates[0]
         var minLong : Double = point0.longitude
         var maxLong : Double = point0.longitude
@@ -244,8 +260,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 self.mapView.removeAnnotation(polyline!)
             }
             
-            if (trip.deleted == true || (trip != self.mainViewController.selectedTrip && trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue)) {
-                // only show a non-cycling trip if it is the selected route
+            if (trip.deleted == true || trip != self.mainViewController.selectedTrip) {
+                // only show a trip if it is the selected route
                 self.tripPolyLines[trip] = nil
                 return
             }
@@ -374,11 +390,15 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        if (annotation == self.selectedTripBackingLine) {
+            return 14
+        }
+        
         let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
         
         if (trip != nil) {
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-                return 16
+                return 8
             } else {
                 return 8
             }
@@ -388,11 +408,15 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
+        if (annotation == self.selectedTripBackingLine) {
+            return 1.0
+        }
+        
         let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
         
         if (trip != nil) {
             if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-                return 0.8
+                return 1.0
             } else {
                 return 0.2
             }
@@ -402,6 +426,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        if (annotation == self.selectedTripBackingLine) {
+            return UIColor.whiteColor()
+        }
+        
         let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
 
         if (trip != nil) {
