@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         APIClient.startup()
         SoftwareUpdateManager.startup()
         WeatherManager.startup()
-        HealthKitManager.startup()
+//        HealthKitManager.startup()
         
         if (hasSeenSetup) {
             // if they are new, we wait to start data gathering managers
