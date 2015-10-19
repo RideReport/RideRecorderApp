@@ -171,7 +171,7 @@ class Trip : NSManagedObject {
     class func tripWithUUID(uuid: String) -> Trip! {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "uuid == %@", uuid)
+        fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", uuid)
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
