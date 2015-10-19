@@ -49,16 +49,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Locksmith-Locksmith.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>Locksmith.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Mapbox-iOS-SDK-Mapbox.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -97,92 +87,82 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>02DC9C977F758EDEA06550669615D7EB</key>
+		<key>186A4D495E661376A89DA5603CDBA8C0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>033A8E7215CFDB2A46F61F744AA9BDB9</key>
+		<key>2F378E1CFC263C983E4CB7A8553A9E49</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>116B238671368497D2D5B2078C668FE6</key>
+		<key>4A31CEA90D258DAA1C52CF9B1139C66D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>25756447C37A5892A2C3DA484DCBF713</key>
+		<key>4B2F30D90D85A544E9EFE2A49D392C25</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>27435E66B99E61C56020187293BBB3EF</key>
+		<key>53EE821E93435331AFD2EDE9A0545B76</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3F8E6FD54E9FAA5D49E63075C814425A</key>
+		<key>57ADC05E440A960212657DE6DA1FEDD5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4CD48EA3620AE0C5FFB7A880DF7E54EA</key>
+		<key>5D69761C2CD2A1E5C013537B29CAB4CF</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>66E066D1192986814D288480FDCF5325</key>
+		<key>6618B30786139FCD27E1CF439C61FF20</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>84A183705776DEF1313171F3CB53ABB2</key>
+		<key>838A2C6DA366DE138E5FDF1AF19D94C0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AB06A508049C406FC9E8A5A4B3CB391F</key>
+		<key>94A50FB884552F1E25589DD6EA641782</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AB8CC9C4B91E88E456E18EC80360EDD8</key>
+		<key>9B616DC0DEE9F1BD8E924286299E95F4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AE25B6370EA4E6741D0551C04808EC9B</key>
+		<key>C3AAC7026505AA67E5E48DC98F926D26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B9A04D3C9B208813656510FDA8ADAE02</key>
+		<key>D082FD9722F53B9C3A1229257D4008F7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DADA4C904EA43DEC47AFFAC295D958C6</key>
+		<key>DE93970FB68874F2C2C5274B42422D36</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DE5F1AE738C65F1F4BDF33FBFB206C80</key>
+		<key>E0ECC3BD18CAEBE408E9023D3847041A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>ED49C939E0368043254FB7CD8FE89463</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>ED622FA6AADA0882C660B130AFBB08CA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>F5BF54E929A60170D8732F19790175A3</key>
+		<key>F5ACF367AE3BD7A7F2AF2D430901DF7B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

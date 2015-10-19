@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8429E5CA1A5DC58500EB3E94"
-               BuildableName = "Ride Tests.xctest"
-               BlueprintName = "Ride Tests"
+               BuildableName = "Ride Report Tests.xctest"
+               BlueprintName = "Ride Report Tests"
                ReferencedContainer = "container:Ride.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,10 +46,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8435A0611A5DC3BC00BDB7A4"
-            BuildableName = "HoneyBeeTests"
-            BlueprintName = "HoneyBeeTests"
-            ReferencedContainer = "container:HoneyBee.xcodeproj">
+            BlueprintIdentifier = "84D1554E19D2733500316995"
+            BuildableName = "Ride Report.app"
+            BlueprintName = "Ride Report"
+            ReferencedContainer = "container:Ride.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,15 +65,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8435A0611A5DC3BC00BDB7A4"
-            BuildableName = "HoneyBeeTests"
-            BlueprintName = "HoneyBeeTests"
-            ReferencedContainer = "container:HoneyBee.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

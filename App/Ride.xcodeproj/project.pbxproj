@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033D9A1A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
@@ -16,6 +16,40 @@
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
+		842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842FDCA21BD56E020079AFCC /* APIClientTests.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA61BD56EF70079AFCC /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; settings = {ASSET_TAGS = (); }; };
+		842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; settings = {ASSET_TAGS = (); }; };
+		842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCB41BD56F880079AFCC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375C1B5DADF60023EC82 /* SystemConfiguration.framework */; };
+		842FDCB51BD56F8D0079AFCC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375A1B5DADEF0023EC82 /* QuartzCore.framework */; };
+		842FDCB61BD56F920079AFCC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137581B5DADE60023EC82 /* MobileCoreServices.framework */; };
+		842FDCB71BD56F960079AFCC /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137561B5DADDF0023EC82 /* ImageIO.framework */; };
+		842FDCB81BD56F9B0079AFCC /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137541B5DADD80023EC82 /* GLKit.framework */; };
+		842FDCB91BD56F9F0079AFCC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137521B5DADD30023EC82 /* CoreTelephony.framework */; };
+		842FDCBA1BD56FA30079AFCC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
+		842FDCBB1BD56FA70079AFCC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
+		842FDCBC1BD56FAC0079AFCC /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
+		842FDCBD1BD56FB00079AFCC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
+		842FDCBF1BD56FB50079AFCC /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCBE1BD56FB50079AFCC /* Pods.framework */; };
+		842FDCC11BD56FBC0079AFCC /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC01BD56FBC0079AFCC /* libc++.tbd */; };
+		842FDCC31BD56FC20079AFCC /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */; };
+		842FDCC41BD56FD90079AFCC /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65951B72DEFC00696587 /* libuv.a */; };
+		842FDCC61BD56FEB0079AFCC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
+		842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; settings = {ASSET_TAGS = (); }; };
+		842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; settings = {ASSET_TAGS = (); }; };
 		844497221A3A4EB40009F889 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
 		8445317619FEEB210096F26E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
@@ -131,12 +165,18 @@
 		840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 27.xcdatamodel"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
-		8429E5CB1A5DC58500EB3E94 /* Ride Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8429E5D71A5DCBA000EB3E94 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Activity.swift; path = Ride/Activity.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8429E5D91A5DCBFE00EB3E94 /* Incident.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Incident.swift; path = Ride/Incident.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8429E5DB1A5DD1DD00EB3E94 /* Ride 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 8.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DC1A5DD2A900EB3E94 /* Ride 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 9.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5DD1A5DD31400EB3E94 /* Ride 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 10.xcdatamodel"; sourceTree = "<group>"; };
+		842FDCA21BD56E020079AFCC /* APIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		842FDCB21BD56F470079AFCC /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "Pods/../build/Debug-iphoneos/Bolts.framework"; sourceTree = "<group>"; };
+		842FDCBE1BD56FB50079AFCC /* Pods.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods.framework; path = "Pods/../build/Debug-iphoneos/Pods.framework"; sourceTree = "<group>"; };
+		842FDCC01BD56FBC0079AFCC /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		842FDCC51BD56FEB0079AFCC /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ContentInfo.plist; sourceTree = "<group>"; };
 		844497211A3A4EB40009F889 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = APIClient.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		844497241A3A695C0009F889 /* Ride 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 4.xcdatamodel"; sourceTree = "<group>"; };
@@ -260,6 +300,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				842FDCC61BD56FEB0079AFCC /* libz.tbd in Frameworks */,
+				842FDCC41BD56FD90079AFCC /* libuv.a in Frameworks */,
+				842FDCC31BD56FC20079AFCC /* libsqlite3.tbd in Frameworks */,
+				842FDCC11BD56FBC0079AFCC /* libc++.tbd in Frameworks */,
+				842FDCBF1BD56FB50079AFCC /* Pods.framework in Frameworks */,
+				842FDCBD1BD56FB00079AFCC /* MapKit.framework in Frameworks */,
+				842FDCBC1BD56FAC0079AFCC /* CoreMotion.framework in Frameworks */,
+				842FDCBB1BD56FA70079AFCC /* CoreLocation.framework in Frameworks */,
+				842FDCBA1BD56FA30079AFCC /* MessageUI.framework in Frameworks */,
+				842FDCB91BD56F9F0079AFCC /* CoreTelephony.framework in Frameworks */,
+				842FDCB81BD56F9B0079AFCC /* GLKit.framework in Frameworks */,
+				842FDCB71BD56F960079AFCC /* ImageIO.framework in Frameworks */,
+				842FDCB61BD56F920079AFCC /* MobileCoreServices.framework in Frameworks */,
+				842FDCB51BD56F8D0079AFCC /* QuartzCore.framework in Frameworks */,
+				842FDCB41BD56F880079AFCC /* SystemConfiguration.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +356,11 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				842FDCC51BD56FEB0079AFCC /* libz.tbd */,
+				842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */,
+				842FDCC01BD56FBC0079AFCC /* libc++.tbd */,
+				842FDCBE1BD56FB50079AFCC /* Pods.framework */,
+				842FDCB21BD56F470079AFCC /* Bolts.framework */,
 				84CA65951B72DEFC00696587 /* libuv.a */,
 				84F137621B5DAE160023EC82 /* libz.dylib */,
 				84F137601B5DAE0C0023EC82 /* libsqlite3.dylib */,
@@ -482,7 +542,7 @@
 			isa = PBXGroup;
 			children = (
 				84D1554F19D2733500316995 /* Ride Report.app */,
-				8429E5CB1A5DC58500EB3E94 /* Ride Tests.xctest */,
+				8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */,
 				84E395751A757DF30015B682 /* RouteMachineTestTool.app */,
 			);
 			name = Products;
@@ -523,6 +583,7 @@
 				8478621F1A267BB600176500 /* Info.plist */,
 				8467175B1A01729C00851AD5 /* GPX Files */,
 				84D1556D19D2733500316995 /* RideTests.swift */,
+				842FDCA21BD56E020079AFCC /* APIClientTests.swift */,
 				8467175E1A01966C00851AD5 /* RouteMachineTests.swift */,
 				84D1556B19D2733500316995 /* Supporting Files */,
 				849162A11ADC3FCB0035900B /* Ride Tests-Bridging-Header.h */,
@@ -575,22 +636,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8429E5CA1A5DC58500EB3E94 /* Ride Tests */ = {
+		8429E5CA1A5DC58500EB3E94 /* Ride Report Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "Ride Tests" */;
+			buildConfigurationList = 8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "Ride Report Tests" */;
 			buildPhases = (
 				8429E5C71A5DC58500EB3E94 /* Sources */,
 				8429E5C81A5DC58500EB3E94 /* Frameworks */,
 				8429E5C91A5DC58500EB3E94 /* Resources */,
+				842FDCCC1BD580AE0079AFCC /* Copy Pods Resources */,
+				D29E99E9653884A41171FC6B /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				8429E5D21A5DC58500EB3E94 /* PBXTargetDependency */,
 			);
-			name = "Ride Tests";
+			name = "Ride Report Tests";
 			productName = "Ride Tests";
-			productReference = 8429E5CB1A5DC58500EB3E94 /* Ride Tests.xctest */;
+			productReference = 8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		84D1554E19D2733500316995 /* Ride Report */ = {
@@ -672,7 +735,7 @@
 			projectRoot = "";
 			targets = (
 				84D1554E19D2733500316995 /* Ride Report */,
-				8429E5CA1A5DC58500EB3E94 /* Ride Tests */,
+				8429E5CA1A5DC58500EB3E94 /* Ride Report Tests */,
 				84E395741A757DF30015B682 /* RouteMachineTestTool */,
 			);
 		};
@@ -751,6 +814,20 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		842FDCCC1BD580AE0079AFCC /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+		};
 		84D7E1461AB0D6F5005187E0 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -793,6 +870,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D29E99E9653884A41171FC6B /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -800,7 +892,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */,
+				842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */,
+				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
+				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
 				849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */,
+				842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */,
+				842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */,
+				842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */,
+				842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */,
+				842FDCA61BD56EF70079AFCC /* Location.swift in Sources */,
+				842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */,
+				842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */,
+				842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */,
+				842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */,
+				842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */,
+				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
+				842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */,
+				842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */,
+				842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */,
+				842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,42 +1028,54 @@
 /* Begin XCBuildConfiguration section */
 		8429E5D41A5DC58500EB3E94 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A04FD857EA3DBEEC77C22CC3 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
+				);
 				INFOPLIST_FILE = RideTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride.app/Ride";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride Report.app/Ride Report";
 			};
 			name = Debug;
 		};
 		8429E5D51A5DC58500EB3E94 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79593058F9250D4F54FC5447 /* Pods.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
 				);
 				INFOPLIST_FILE = RideTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride.app/Ride";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Ride Report.app/Ride Report";
 			};
 			name = Release;
 		};
@@ -1058,8 +1181,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Mapbox",
-					"/Users/admin/Developer/mapbox-gl-native/build/ios/pkg/static",
 					"/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
@@ -1096,8 +1217,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Mapbox",
-					"/Users/admin/Developer/mapbox-gl-native/build/ios/pkg/static",
 					"/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited)";
@@ -1154,7 +1273,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "Ride Tests" */ = {
+		8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "Ride Report Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8429E5D41A5DC58500EB3E94 /* Debug */,
