@@ -36,7 +36,20 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.updateAccountStatusText()
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+            dispatch_async(dispatch_get_main_queue(), {
+            self.updateAccountStatusText()
+            })
+        }
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func updateAccountStatusText() {
         var accountCellTitle = ""
         switch APIClient.sharedClient.accountVerificationStatus {
         case .Unknown: accountCellTitle = "Updating Account Status…"
@@ -59,9 +72,8 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else {
-                // other cases currently do nothing
-                let alert = UIAlertView(title:nil, message: "You can't. (・_・)ヾ", delegate: nil, cancelButtonTitle:"But soon")
-                alert.show()
+                APIClient.sharedClient.logout()
+                AppDelegate.appDelegate().transitionToCreatProfile()
             }
         }
     }

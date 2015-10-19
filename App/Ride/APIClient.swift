@@ -149,7 +149,9 @@ class APIClient {
     
     func startup() {
         self.authenticateIfNeeded()
-        self.updateAccountStatus()
+        if (self.authenticated) {
+            self.updateAccountStatus()
+        }
         
         
         if (CoreDataManager.sharedManager.isStartingUp) {
@@ -279,6 +281,19 @@ class APIClient {
                 }
             case .Failure(_, let error):
                 DDLogError(String(format: "Error retriving account status: %@", error as NSError))
+            }
+        }
+    }
+    
+    func logout()-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response, result) in
+            switch result {
+            case .Success(_):
+                self.deleteAccessToken()
+                Profile.deleteProfile()
+                self.authenticateIfNeeded()
+            case .Failure(_, let error):
+                DDLogError(String(format: "Error logging out: %@", error as NSError))
             }
         }
     }
@@ -449,7 +464,6 @@ class APIClient {
                 DDLogError(String(format: "Error retriving access token: %@", error as NSError))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
-                self.updateAccountStatus()
             }
 
         }

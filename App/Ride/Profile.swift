@@ -42,4 +42,12 @@ class Profile : NSManagedObject {
         
         return Static.profile
     }
+    
+    class func deleteProfile() {
+        if (Static.profile != nil) {
+            CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(Static.profile)
+            CoreDataManager.sharedManager.saveContext()
+            Static.profile = nil
+        }
+    }
 }
