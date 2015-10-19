@@ -47,6 +47,7 @@ class Trip : NSManagedObject {
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
     @NSManaged var locationsAreSynced : Bool
+    @NSManaged var locationsNotYetDownloaded : Bool
     
     var isClosed : Bool {
         get {

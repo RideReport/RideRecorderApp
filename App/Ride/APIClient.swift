@@ -13,7 +13,8 @@ import OAuthSwift
 import KeychainAccess
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
-let serverAddress = "https://localhost/api/v2/"
+//let serverAddress = "https://localhost/api/v2/"
+let serverAddress = "https://api.ride.report/api/v2/"
     #else
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif
@@ -198,13 +199,37 @@ class APIClient {
                         trip.locationsAreSynced = true
                         trip.length = tripJson["length"].number!
                         trip.creationDate = self.jsonDateFormatter.dateFromString(tripJson["creationDate"].string!)
+                        trip.locationsNotYetDownloaded = true
                     }
                 }
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error retriving account status: %@", error as NSError))
+                DDLogError(String(format: "Error retriving getting trip data: %@", error as NSError))
             }
         })
+    }
+    
+    func getTrip(trip: Trip)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + trip.uuid, completionHandler: { (_, result) -> Void in
+            switch result {
+            case .Success(let json):
+                trip.locations = NSOrderedSet() // just in case
+                for locationJson in json["locations"].array! {
+                    let loc = Location(trip: trip)
+                    loc.date = self.jsonDateFormatter.dateFromString(locationJson["date"].string!)
+                    loc.latitude = locationJson["latitude"].number!
+                    loc.longitude = locationJson["longitude"].number!
+                    loc.course = locationJson["course"].number!
+                    loc.speed = locationJson["speed"].number!
+                    loc.horizontalAccuracy = locationJson["horizontalAccuracy"].number!
+                }
+                trip.locationsNotYetDownloaded = false
+                CoreDataManager.sharedManager.saveContext()
+            case .Failure(_, let error):
+                DDLogError(String(format: "Error retriving getting individual trip data: %@", error as NSError))
+            }
+        })
+
     }
     
     func syncTrips(syncInBackground: Bool = false) {
@@ -243,6 +268,10 @@ class APIClient {
                 
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
+                        if (self.accountVerificationStatus == .Unverified) {
+                            // if we are just moved to an authenticated account, get any trips on the server
+                            self.getAllTrips()
+                        }
                         self.accountVerificationStatus = .Verified
                     } else {
                         self.accountVerificationStatus = .Unverified
@@ -317,7 +346,7 @@ class APIClient {
         var method = Alamofire.Method.POST
         
         if (trip.locationsAreSynced.boolValue) {
-            routeURL = "/trips/" + trip.uuid
+            routeURL = "trips/" + trip.uuid
             method = Alamofire.Method.PATCH
         } else {
             tripDict["uuid"] = trip.uuid
@@ -420,6 +449,7 @@ class APIClient {
                 DDLogError(String(format: "Error retriving access token: %@", error as NSError))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
+                self.updateAccountStatus()
             }
 
         }

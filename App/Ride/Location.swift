@@ -42,6 +42,13 @@ class Location : NSManagedObject {
         self.date = location.timestamp
     }
     
+    convenience init(trip: Trip) {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        
+        self.trip = trip
+    }
+    
     class func locationsInCircle(circle:MKCircle) -> [AnyObject] {
         let fetchedRequest = NSFetchRequest(entityName: "Location")
         

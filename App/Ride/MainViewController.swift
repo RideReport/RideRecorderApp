@@ -40,7 +40,14 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                 self.newIncidentButton.hidden = true // disabling incidents for now
                 
                 if (self.selectedTrip != nil) {
-                    self.mapViewController.refreshTrip(self.selectedTrip)
+                    if (self.selectedTrip.locationsNotYetDownloaded) {
+                        APIClient.sharedClient.getTrip(self.selectedTrip).apiResponse({ (_, _) -> Void in
+                            self.mapViewController.refreshTrip(self.selectedTrip)
+                            self.reloadTripSelectedToolbar()
+                        })
+                    } else {
+                        self.mapViewController.refreshTrip(self.selectedTrip)
+                    }
                 }
                 self.mapViewController.setSelectedTrip(self.selectedTrip)
                 self.reloadTripSelectedToolbar()
@@ -105,7 +112,10 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
             let trip = self.selectedTrip
             var dateTitle = ""
             
-            if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
+            if (trip.locationsNotYetDownloaded) {
+                self.rideRushSimulatorView.dateString = ""
+                self.rideRushSimulatorView.body = "Downloading Trip Data…"
+            } else if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
                 self.rideRushSimulatorView.dateString = ""
                 self.rideRushSimulatorView.body = "Trip in Progress…"
             } else {
