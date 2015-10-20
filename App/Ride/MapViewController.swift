@@ -76,8 +76,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                     self.runCreateAccountOfferIfNeeded()
                 }
             }
-            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidReturn", object: nil)
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidChange", object: nil)
                 if !CoreDataManager.sharedManager.isStartingUp {
                     self.runCreateAccountOfferIfNeeded()
                 }

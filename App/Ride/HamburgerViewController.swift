@@ -37,7 +37,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
-        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidReturn", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
             dispatch_async(dispatch_get_main_queue(), {
             self.updateAccountStatusText()
             })
@@ -71,7 +71,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         } else if (indexPath.row == 2) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
-            } else {
+            } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
                 APIClient.sharedClient.logout()
                 AppDelegate.appDelegate().transitionToCreatProfile()
             }
