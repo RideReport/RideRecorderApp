@@ -12,3 +12,4 @@
 #import "Mapbox.h"
 #import "Reachability.h"
 #import "BKPasscodeInputView.h"
+#import "RCounter.h"

@@ -10,16 +10,17 @@ import Foundation
 import SystemConfiguration
 
 class MainViewController: UIViewController, PushSimulatorViewDelegate {
+    @IBOutlet weak var counter: RCounter!
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     weak var popupView: PopupView!
-    @IBOutlet weak var newIncidentButton: UIButton!
     @IBOutlet weak var selectedTripView: UIView!
     @IBOutlet weak var editModeView: UIView!
     weak var rideRushSimulatorView: PushSimulatorView!
     @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
+    @IBOutlet weak var mapInfoToolBar: UIView!
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
@@ -36,8 +37,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                 if (oldValue != nil) {
                     self.mapViewController.refreshTrip(oldValue)
                 }
-                
-                self.newIncidentButton.hidden = true // disabling incidents for now
                 
                 if (self.selectedTrip != nil) {
                     if (self.selectedTrip.locationsNotYetDownloaded) {
@@ -64,21 +63,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
             }
         }
         
-        var rect : CGRect
-        let markersImage = UIImage(named: "markers-soft")!
-        let pinColorsCount : CGFloat = 20
-        let pinWidth = markersImage.size.width/pinColorsCount
-        
         self.editModeView.hidden = true
-        
-        rect = CGRect(x: 0, y: 0.0, width: pinWidth, height: markersImage.size.height)
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-        markersImage.drawAtPoint(rect.origin)
-        let newPinImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        UIGraphicsEndImageContext()
-        
-        self.newIncidentButton.setImage(newPinImage, forState: UIControlState.Normal)
-        self.newIncidentButton.setTitle("", forState: UIControlState.Normal)
         
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
@@ -99,7 +84,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         
         self.rideRushSimulatorView.delegate = self
         self.rideRushSimulatorView.showsEditButton = true
-        
+                
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
             self.selectedTrip = Trip.mostRecentBikeTrip()
         })
@@ -183,6 +168,11 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) { (notif) -> Void in
             self.reloadTripSelectedToolbar()
         }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) { (notif) -> Void in
+            self.reloadMapInfoToolBar()
+        }
+
 
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
@@ -215,6 +205,18 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     //
     // MARK: - UI Actions
     //
+    
+    private func reloadMapInfoToolBar() {
+        switch APIClient.sharedClient.area {
+        case .Unknown:
+            self.counter.hidden = true
+        case .NonArea:
+            self.counter.hidden = true
+        case .Area(let name, let count, let countPerHour, let launched):
+            self.counter.hidden = false
+            self.counter.updateCounter(count, animate: true)
+        }
+    }
     
     private func transitionToTripView() {
         CATransaction.begin()
@@ -274,34 +276,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         routesVC.view.layer.addAnimation(transition, forKey: kCATransition)
         self.navigationController?.pushViewController(routesVC, animated: false)
     }
-    
-    @IBAction func newIncident(sender: AnyObject) {
-        var titles: [AnyObject] = []
-        var images: [AnyObject] = []
         
-        for index in 0..<Incident.IncidentType.count {
-            titles.append(Incident.IncidentType(rawValue: index)!.text)
-            images.append(Incident.IncidentType(rawValue: index)!.pinImage)
-        }
-        
-        let height = (images.first as! UIImage).size.height
-        
-        self.newIncidentButton.hidden = true
-        PCStackMenu.showStackMenuWithTitles(titles, withImages: images, atStartPoint: CGPointMake(self.newIncidentButton.frame.origin.x + self.newIncidentButton.frame.size.width, self.newIncidentButton.frame.origin.y + self.newIncidentButton.frame.size.height), inView: self.view, itemHeight: height, menuDirection: PCStackMenuDirectionClockWiseUp) { (selectedIndex) -> Void in
-            var incidentType : Incident.IncidentType
-            self.newIncidentButton.hidden = false
-            
-            if (selectedIndex != NSNotFound) {
-                incidentType = Incident.IncidentType(rawValue: selectedIndex)!
-                let location = self.selectedTrip.closestLocationToCoordinate(self.mapViewController.mapView.centerCoordinate)
-                let incident = Incident(location: location, trip: self.selectedTrip)
-                incident.type = NSNumber(integer: incidentType.rawValue)
-                CoreDataManager.sharedManager.saveContext()
-                self.mapViewController.addIncidentToMap(incident)
-            }
-        }
-    }
-    
 #if DEBUG
     
     override func canBecomeFirstResponder()->Bool {

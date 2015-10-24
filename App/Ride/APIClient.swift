@@ -117,6 +117,14 @@ class APIClient {
         case Unverified
         case Verified
     }
+
+    enum Area {
+        case Unknown
+        case Area(name: String, count: UInt, countRatePerHour: UInt, launched: Bool)
+        case NonArea
+    }
+    
+    var area : Area = .Unknown
     
     // Status
     var accountVerificationStatus = AccountVerificationStatus.Unknown {
@@ -125,6 +133,7 @@ class APIClient {
         }
     }
     
+    
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var keychainDataIsInaccessible = false
@@ -132,7 +141,7 @@ class APIClient {
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
-        static var sharedClient : APIClient?
+        static var sharedClient : APIClient? = nil
     }
     
     //
@@ -158,6 +167,7 @@ class APIClient {
                 self.authenticateIfNeeded()
                 if (self.authenticated) {
                     self.updateAccountStatus()
+                    NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
                 }
             } else {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
@@ -184,8 +194,6 @@ class APIClient {
                 self.syncTrips()
             }
         }
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
     deinit {
@@ -194,6 +202,7 @@ class APIClient {
     
     @objc func appDidBecomeActive() {
         self.syncTrips()
+        self.updateAccountStatus()
     }
     
     init () {
@@ -287,9 +296,25 @@ class APIClient {
     //
     
     func updateAccountStatus()-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.GET, route: "status") { (response, result) -> Void in
+        var params : [String: String] = [:]
+        if let loc = RouteManager.sharedManager.location {
+            params["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
+        }
+        
+        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: params) { (response, result) -> Void in
             switch result {
             case .Success(let json):
+                if let areaJson = json["area"].dictionary {
+                    if let name = areaJson["name"]?.string, let count = areaJson["count_info"]?["count"].uInt, let countRatePerHour = areaJson["count_info"]?["per_hour"].uInt, let launched = areaJson["launched"]?.bool {
+                        self.area = .Area(name: name, count: count, countRatePerHour: countRatePerHour, launched: launched)
+                    } else {
+                        self.area = .NonArea
+                    }
+                    NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidGetArea", object: nil)
+                } else {
+                    self.area = .Unknown
+                }
+                
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
                         if (self.accountVerificationStatus == .Unverified) {

@@ -20,44 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/APIClient.swift"
-            timestampString = "467074014.054879"
+            timestampString = "467337593.093612"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "542"
-            endingLineNumber = "542"
-            landmarkName = "saveAccessToken(_:expiresIn:completionHandler:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "467075159.851177"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "573"
-            endingLineNumber = "573"
+            startingLineNumber = "598"
+            endingLineNumber = "598"
             landmarkName = "deleteAccessToken(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "467074764.336005"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
-            landmarkName = "authenticateIfNeeded()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

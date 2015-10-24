@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'FEAE5F1206B919A17D926C20'
+               BlueprintIdentifier = '5F2A18B70F79055E4B5A7622'
                BlueprintName = 'Mapbox-iOS-SDK-Mapbox'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Mapbox.bundle'>

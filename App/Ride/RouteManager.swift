@@ -99,6 +99,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.requestAlwaysAuthorization()
     }
     
+    var location: CLLocation? {
+        get {
+            return self.locationManager.location
+        }
+    }
+    
     //
     // MARK: - Active Trip Tracking methods
     // We are in the active trip tracking while a route is ongoing.

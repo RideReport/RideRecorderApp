@@ -12,6 +12,11 @@
 		84033D9A1A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
 		84033DA31A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
+		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; settings = {ASSET_TAGS = (); }; };
+		84091CDE1BD848C000264652 /* counter-numbers.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDA1BD848C000264652 /* counter-numbers.png */; settings = {ASSET_TAGS = (); }; };
+		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; settings = {ASSET_TAGS = (); }; };
+		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; settings = {ASSET_TAGS = (); }; };
+		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; settings = {ASSET_TAGS = (); }; };
 		840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; settings = {ASSET_TAGS = (); }; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
@@ -161,6 +166,12 @@
 		84033D9F1A97C1E500339171 /* Ride 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 13.xcdatamodel"; sourceTree = "<group>"; };
 		84033DA01A97C34C00339171 /* Ride 14.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 14.xcdatamodel"; sourceTree = "<group>"; };
 		84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteIncidentsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84091CD71BD848A400264652 /* RCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCounter.h; sourceTree = "<group>"; };
+		84091CD81BD848A400264652 /* RCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCounter.m; sourceTree = "<group>"; };
+		84091CDA1BD848C000264652 /* counter-numbers.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-numbers.png"; sourceTree = "<group>"; };
+		84091CDB1BD848C000264652 /* counter-numbers@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-numbers@2x.png"; sourceTree = "<group>"; };
+		84091CDC1BD848C000264652 /* counter-shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow.png"; sourceTree = "<group>"; };
+		84091CDD1BD848C000264652 /* counter-shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow@2x.png"; sourceTree = "<group>"; };
 		840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 27.xcdatamodel"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
@@ -405,6 +416,8 @@
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
+				84091CD71BD848A400264652 /* RCounter.h */,
+				84091CD81BD848A400264652 /* RCounter.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -482,6 +495,10 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				84091CDA1BD848C000264652 /* counter-numbers.png */,
+				84091CDB1BD848C000264652 /* counter-numbers@2x.png */,
+				84091CDC1BD848C000264652 /* counter-shadow.png */,
+				84091CDD1BD848C000264652 /* counter-shadow@2x.png */,
 				8451FA841B9E2F6E008ACDCD /* menu.png */,
 				8451FA851B9E2F6E008ACDCD /* menu@2x.png */,
 				8451FA861B9E2F6E008ACDCD /* menu@3x.png */,
@@ -767,8 +784,12 @@
 				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
+				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
+				84091CE01BD848C000264652 /* counter-shadow.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
+				84091CDE1BD848C000264652 /* counter-numbers.png in Resources */,
+				84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -954,6 +975,7 @@
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */,
+				84091CD91BD848A400264652 /* RCounter.m in Sources */,
 				84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */,
