@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:RideTests/Portland.gpx">
+   </FileRef>
+   <FileRef
       location = "group:Ride.xcodeproj">
    </FileRef>
    <FileRef

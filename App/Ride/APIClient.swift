@@ -19,7 +19,7 @@ let serverAddress = "https://api.ride.report/api/v2/"
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif
 
-public let AuthenticatedAPIRequestErrorDomain = "com.Knock.Ride.error"
+public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json"]
 
 class AuthenticatedAPIRequest {
@@ -207,7 +207,7 @@ class APIClient {
     
     init () {
         self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
-        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
+        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
         configuration.timeoutIntervalForRequest = 60
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
             "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
@@ -550,7 +550,7 @@ class APIClient {
 
     private var keychainItem: Keychain {
         get {
-            let keychain = Keychain(service: "com.Knock.Ride")
+            let keychain = Keychain(service: "com.Knock.RideReport")
             .synchronizable(true)
             .accessibility(.AfterFirstUnlock)
             

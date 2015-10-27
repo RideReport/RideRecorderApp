@@ -30,9 +30,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let numberOfGeofenceSleepRegions = 9
     let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0035
     let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
-    let backupGeofenceIdentifier = "com.Knock.Ride.backupGeofence"
+    let backupGeofenceIdentifier = "com.Knock.RideReport.backupGeofence"
     let geofenceSleepRegionRadius : CLLocationDistance = 80
-    let geofenceIdentifierPrefix = "com.Knock.Ride.geofence"
+    let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
