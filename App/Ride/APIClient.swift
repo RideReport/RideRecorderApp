@@ -297,10 +297,12 @@ class APIClient {
     
     func updateAccountStatus()-> AuthenticatedAPIRequest {
         var params : [String: String] = [:]
-        if let loc = RouteManager.sharedManager.location {
-            params["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
+        if (RouteManager.hasStarted()) {
+            if let loc = RouteManager.sharedManager.location {
+                params["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
+            }
         }
-        
+            
         return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: params) { (response, result) -> Void in
             switch result {
             case .Success(let json):
