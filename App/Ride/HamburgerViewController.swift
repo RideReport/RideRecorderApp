@@ -25,6 +25,7 @@ class HamburgerNavController: UINavigationController {
 
 class HamburgerViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
+    @IBOutlet weak var mapStatsTableViewCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,10 +38,16 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
+        self.tableView.reloadData()
+
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
             dispatch_async(dispatch_get_main_queue(), {
             self.updateAccountStatusText()
             })
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) { (notif) -> Void in
+            self.tableView.reloadData()
         }
     }
     
@@ -65,6 +72,19 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         return CGFloat.min
     }
     
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch (APIClient.sharedClient.area) {
+        case .Area(_,_, _, _):
+            if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) where mainViewController.mapInfoIsDismissed {
+                return 4
+            } else {
+                return 3
+            }
+        default:
+            return 3
+        }
+    }
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if (indexPath.row == 1) {
             self.sendLogFile()
@@ -75,6 +95,11 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 APIClient.sharedClient.logout()
                 AppDelegate.appDelegate().transitionToCreatProfile()
             }
+        } else if (indexPath.row == 3) {
+            if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
+                mainViewController.showMapInfo(self)
+            }
+            self.slidingViewController().resetTopViewAnimated(true)
         }
     }
     

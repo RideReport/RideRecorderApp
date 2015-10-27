@@ -1305,25 +1305,9 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n0W-nW-qiU">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n0W-nW-qiU">
                                 <rect key="frame" x="0.0" y="480" width="600" height="120"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="The map shows average ratings from Portland riders. Better routes are green, stressful routes are red." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sdZ-Fv-4Uy">
-                                        <rect key="frame" x="8" y="0.0" width="584" height="42"/>
-                                        <animations/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="56" id="puB-lh-WFN"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="8" y="8" width="384" height="34"/>
-                                            <mask key="constraints">
-                                                <exclude reference="puB-lh-WFN"/>
-                                            </mask>
-                                        </variation>
-                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rides Logged in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="htf-Nu-PNo">
                                         <rect key="frame" x="143" y="50" width="449" height="70"/>
                                         <animations/>
@@ -1340,15 +1324,13 @@
                                                 <exclude reference="x6u-CR-Npd"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="143" y="35" width="249" height="70"/>
-                                        </variation>
                                     </label>
                                     <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sBa-LB-Q1X" customClass="RCounter">
                                         <rect key="frame" x="0.0" y="50" width="135" height="70"/>
                                         <animations/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.73999999999999999" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstAttribute="height" constant="70" id="1Y3-09-xgm"/>
                                             <constraint firstAttribute="height" constant="70" id="M7e-4N-UzR"/>
                                             <constraint firstAttribute="width" constant="240" id="Med-lE-PT2"/>
                                             <constraint firstAttribute="width" constant="194" id="WyM-8h-eDb"/>
@@ -1359,7 +1341,7 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="currentReading">
-                                                <integer key="value" value="3"/>
+                                                <integer key="value" value="0"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="numberOfDigits">
                                                 <integer key="value" value="5"/>
@@ -1367,6 +1349,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
                                             <mask key="constraints">
+                                                <exclude reference="1Y3-09-xgm"/>
                                                 <exclude reference="Med-lE-PT2"/>
                                                 <exclude reference="WyM-8h-eDb"/>
                                                 <exclude reference="czx-iJ-zoG"/>
@@ -1374,28 +1357,71 @@
                                                 <exclude reference="z7q-5J-OKM"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact">
+                                        <variation key="widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="67" y="38" width="135" height="70"/>
                                             <mask key="constraints">
+                                                <include reference="1Y3-09-xgm"/>
                                                 <exclude reference="M7e-4N-UzR"/>
-                                                <include reference="z7q-5J-OKM"/>
+                                                <exclude reference="z7q-5J-OKM"/>
                                             </mask>
                                         </variation>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Map shows average ratings from Portland riders. Better routes are green, stressful routes are red." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sdZ-Fv-4Uy">
+                                        <rect key="frame" x="8" y="0.0" width="584" height="42"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="56" id="puB-lh-WFN"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <variation key="widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="8" y="8" width="355" height="34"/>
+                                            <mask key="constraints">
+                                                <exclude reference="puB-lh-WFN"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nuk-LD-1ju" customClass="ClearButton" customModule="Ride_Report" customModuleProvider="target">
+                                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="19" id="O4f-Qk-Wal"/>
+                                            <constraint firstAttribute="height" constant="18" id="ZBJ-fH-mYb"/>
+                                        </constraints>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="O4f-Qk-Wal"/>
+                                                <exclude reference="ZBJ-fH-mYb"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="O4f-Qk-Wal"/>
+                                                <include reference="ZBJ-fH-mYb"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="dismissMapInfo:" destination="A5D-RC-UCB" eventType="touchUpInside" id="beJ-Iy-2u7"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <animations/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.77435344827586206" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80250538793103443" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="sBa-LB-Q1X" secondAttribute="bottom" id="18M-i3-EgJ"/>
+                                    <constraint firstAttribute="trailing" secondItem="nuk-LD-1ju" secondAttribute="trailing" constant="8" id="AQ2-cf-jaT"/>
                                     <constraint firstAttribute="height" constant="72" id="BBE-xZ-Vm6"/>
                                     <constraint firstAttribute="trailing" secondItem="sBa-LB-Q1X" secondAttribute="trailing" id="CCC-Ul-d1d"/>
                                     <constraint firstAttribute="width" constant="600" id="J2X-Uc-x6U"/>
                                     <constraint firstAttribute="trailing" secondItem="htf-Nu-PNo" secondAttribute="trailing" constant="8" id="Q83-xp-CbJ"/>
-                                    <constraint firstItem="htf-Nu-PNo" firstAttribute="leading" secondItem="sBa-LB-Q1X" secondAttribute="trailing" constant="8" id="TDf-4w-pod"/>
+                                    <constraint firstItem="htf-Nu-PNo" firstAttribute="leading" secondItem="sBa-LB-Q1X" secondAttribute="trailing" constant="10" id="TDf-4w-pod"/>
                                     <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="top" secondItem="n0W-nW-qiU" secondAttribute="top" constant="8" id="TuV-xU-iEE"/>
                                     <constraint firstItem="htf-Nu-PNo" firstAttribute="top" secondItem="sdZ-Fv-4Uy" secondAttribute="bottom" constant="14" id="UmQ-PY-mvb"/>
+                                    <constraint firstItem="nuk-LD-1ju" firstAttribute="top" secondItem="n0W-nW-qiU" secondAttribute="top" constant="9" id="XFu-Vh-11x"/>
                                     <constraint firstAttribute="bottom" secondItem="htf-Nu-PNo" secondAttribute="bottom" id="b29-Br-w6d"/>
-                                    <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="centerX" secondItem="n0W-nW-qiU" secondAttribute="centerX" id="cmG-zb-PWT"/>
-                                    <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="width" secondItem="n0W-nW-qiU" secondAttribute="width" constant="-16" id="emI-CQ-ApC"/>
+                                    <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="centerX" secondItem="n0W-nW-qiU" secondAttribute="centerX" constant="-10" id="cmG-zb-PWT"/>
+                                    <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="width" secondItem="n0W-nW-qiU" secondAttribute="width" constant="-45" id="emI-CQ-ApC"/>
                                     <constraint firstItem="sdZ-Fv-4Uy" firstAttribute="leading" secondItem="n0W-nW-qiU" secondAttribute="leading" constant="8" id="fHy-df-qNj"/>
                                     <constraint firstItem="htf-Nu-PNo" firstAttribute="leading" secondItem="sBa-LB-Q1X" secondAttribute="trailing" constant="8" id="fUf-zT-Yxn"/>
                                     <constraint firstAttribute="height" constant="120" id="hg8-C7-4eu"/>
@@ -1407,6 +1433,9 @@
                                     <constraint firstItem="sBa-LB-Q1X" firstAttribute="leading" secondItem="n0W-nW-qiU" secondAttribute="leading" id="zHq-1v-TSH"/>
                                 </constraints>
                                 <variation key="default">
+                                    <mask key="subviews">
+                                        <exclude reference="nuk-LD-1ju"/>
+                                    </mask>
                                     <mask key="constraints">
                                         <exclude reference="BBE-xZ-Vm6"/>
                                         <exclude reference="J2X-Uc-x6U"/>
@@ -1419,15 +1448,22 @@
                                         <exclude reference="UmQ-PY-mvb"/>
                                         <exclude reference="b29-Br-w6d"/>
                                         <exclude reference="fUf-zT-Yxn"/>
+                                        <exclude reference="AQ2-cf-jaT"/>
+                                        <exclude reference="XFu-Vh-11x"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
+                                    <mask key="subviews">
+                                        <include reference="nuk-LD-1ju"/>
+                                    </mask>
                                     <mask key="constraints">
                                         <exclude reference="hg8-C7-4eu"/>
                                         <include reference="uAn-Wk-2CW"/>
                                         <include reference="18M-i3-EgJ"/>
                                         <exclude reference="uvw-GS-Q4w"/>
                                         <include reference="b29-Br-w6d"/>
+                                        <include reference="AQ2-cf-jaT"/>
+                                        <include reference="XFu-Vh-11x"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1526,7 +1562,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="counter" destination="sBa-LB-Q1X" id="YQ3-1B-Dea"/>
+                        <outlet property="counterText" destination="htf-Nu-PNo" id="G28-t7-h4f"/>
                         <outlet property="editModeView" destination="Xsz-Tc-4Se" id="r8a-tk-olr"/>
+                        <outlet property="mapInfoText" destination="sdZ-Fv-4Uy" id="Ate-uI-J5h"/>
                         <outlet property="mapInfoToolBar" destination="n0W-nW-qiU" id="Wwq-WC-orZ"/>
                         <outlet property="pauseResumeTrackingButton" destination="5KM-wa-SB8" id="AvM-9J-8OD"/>
                         <outlet property="popupView" destination="5hK-0E-Yx5" id="eCB-cb-GKk"/>
@@ -1635,6 +1673,27 @@
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="IUS-op-4II" style="IBUITableViewCellStyleDefault" id="WmV-PX-PGY">
+                                        <rect key="frame" x="0.0" y="187" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WmV-PX-PGY" id="sxn-x5-ijt">
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Show Map Info" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="IUS-op-4II">
+                                                    <rect key="frame" x="15" y="0.0" width="550" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -1646,6 +1705,7 @@
                     <navigationItem key="navigationItem" title="Ride Report" id="tT2-Fl-8cR"/>
                     <connections>
                         <outlet property="accountTableViewCell" destination="nWe-Xk-x3y" id="UL1-oF-Y0u"/>
+                        <outlet property="mapStatsTableViewCell" destination="WmV-PX-PGY" id="fXi-z3-hSr"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N25-Lo-xsp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1742,7 +1802,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6uU-qL-3ax" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1118" y="-445"/>
+            <point key="canvasLocation" x="1165.5" y="-454"/>
         </scene>
         <!--Help Center-->
         <scene sceneID="c1g-5d-oLl">
@@ -1767,7 +1827,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PNh-Rp-gTU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1808" y="-445"/>
+            <point key="canvasLocation" x="1884" y="-454"/>
         </scene>
         <!--Hamburger Nav Controller-->
         <scene sceneID="abg-fz-xni">

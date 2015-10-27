@@ -10,7 +10,6 @@ import Foundation
 import SystemConfiguration
 
 class MainViewController: UIViewController, PushSimulatorViewDelegate {
-    @IBOutlet weak var counter: RCounter!
     @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     weak var popupView: PopupView!
@@ -20,11 +19,18 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
+    
+    @IBOutlet weak var counter: RCounter!
     @IBOutlet weak var mapInfoToolBar: UIView!
+    @IBOutlet weak var mapInfoText: UILabel!
+    @IBOutlet weak var counterText: UILabel!
+    
+    var mapInfoIsDismissed : Bool = false
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     private var reachability : Reachability!
+    private var counterTimer : NSTimer?
     
     var customButton: HBAnimatedGradientMaskButton! = nil
     
@@ -173,7 +179,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
             self.reloadMapInfoToolBar()
         }
 
-
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
         
@@ -192,6 +197,11 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
+        if let timer = self.counterTimer {
+            timer.invalidate()
+            self.counterTimer = nil
+        }
+        
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -207,16 +217,56 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     //
     
     private func reloadMapInfoToolBar() {
-        switch APIClient.sharedClient.area {
-        case .Unknown:
-            self.counter.hidden = true
-        case .NonArea:
-            self.counter.hidden = true
-        case .Area(let name, let count, let countPerHour, let launched):
-            self.counter.hidden = false
-            self.counter.updateCounter(count, animate: true)
+        if let timer = self.counterTimer {
+            timer.invalidate()
+            self.counterTimer = nil
+        }
+        
+        if (!self.mapInfoIsDismissed) {
+            self.mapInfoToolBar.hidden = false
+            
+            switch APIClient.sharedClient.area {
+            case .Unknown:
+                self.mapInfoToolBar.hidden = true
+            case .NonArea:
+                self.counter.hidden = true
+                self.counterText.hidden = true
+                
+                self.mapInfoText.text = String(format: "Ride Report is not yet available in your area. Every ride you take get us closer to launching!")
+            case .Area(let name, let count, let countPerHour, let launched) where count < 1000 && !launched:
+                self.counter.hidden = true
+                self.counterText.hidden = true
+                
+                self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take get us closer to launching!", name)
+            case .Area(let name, let count, let countPerHour, let launched):
+                self.counter.hidden = false
+                self.counterText.hidden = false
+                
+                self.counter.updateCounter(count, animate: true)
+                self.counterTimer = NSTimer.scheduledTimerWithTimeInterval(3600.0/Double(countPerHour), target: self.counter, selector: "incrementCounter", userInfo: nil, repeats: true)
+                self.counterText.text = String(format: "Rides in %@", name)
+
+                if (launched) {
+                    self.mapInfoText.text = String(format: "Map shows average ratings from %@ riders. Better routes are green, stressful routes are red.", name)
+                }  else {
+                    self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take get us closer to launching!", name)
+                }
+            }
+        } else {
+            self.mapInfoToolBar.hidden = true
         }
     }
+    
+    @IBAction func dismissMapInfo(sender: AnyObject) {
+        self.mapInfoIsDismissed = true
+        self.reloadMapInfoToolBar()
+    }
+    
+    @IBAction func showMapInfo(sender: AnyObject) {
+        self.mapInfoIsDismissed = false
+        self.reloadMapInfoToolBar()
+    }
+    
     
     private func transitionToTripView() {
         CATransaction.begin()

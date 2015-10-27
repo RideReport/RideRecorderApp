@@ -93,7 +93,7 @@ import Foundation
     var destructiveButton : UIButton!
     var actionButton : UIButton!
     var editButton : UIButton!
-    var clearButton : UIVisualEffectView!
+    var clearButton : ClearButton!
     
     var contentView : UIView!
     var appNameLabel : UILabel!
@@ -167,35 +167,8 @@ import Foundation
         slideLabel.text = "slide to rate"
         contentView.addSubview(slideLabel)
         
-        clearButton = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.ExtraLight))
-        let clearButtonRect = CGRectMake(0, 0, 18, 18)
-        UIGraphicsBeginImageContextWithOptions(clearButtonRect.size, false, 0.0)
-        let circle = UIBezierPath(ovalInRect: clearButtonRect)
-        let line1 = UIBezierPath()
-        line1.moveToPoint(CGPointMake(6, 6))
-        line1.addLineToPoint(CGPointMake(12, 12))
-        line1.lineWidth = 1
-        let line2 = UIBezierPath()
-        line2.moveToPoint(CGPointMake(6, 12))
-        line2.addLineToPoint(CGPointMake(12, 6))
-        line2.lineWidth = 1
-        
-        UIColor.blackColor().setFill()
-        circle.fill()
-        let ctx = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(ctx, CGBlendMode.DestinationOut)
-        line1.stroke()
-        line2.stroke()
-        let maskImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        UIGraphicsEndImageContext()
-        let maskLayer = CALayer()
-        maskLayer.contentsScale = maskImage.scale
-        maskLayer.frame = clearButtonRect
-        maskLayer.contents = maskImage.CGImage
-        clearButton.frame = clearButtonRect
-        clearButton.layer.mask = maskLayer
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "pressedClearButton")
-        clearButton.addGestureRecognizer(tapRecognizer)
+        clearButton = ClearButton(frame: CGRectMake(0, 0, 18, 18))
+        clearButton.addTarget(self, action: "pressedClearButton", forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(clearButton)
         
         controlsView = UIView()

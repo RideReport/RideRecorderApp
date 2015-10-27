@@ -12,30 +12,30 @@
 		84033D9A1A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
 		84033DA31A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
-		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; settings = {ASSET_TAGS = (); }; };
-		84091CDE1BD848C000264652 /* counter-numbers.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDA1BD848C000264652 /* counter-numbers.png */; settings = {ASSET_TAGS = (); }; };
-		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; settings = {ASSET_TAGS = (); }; };
-		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; settings = {ASSET_TAGS = (); }; };
-		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; settings = {ASSET_TAGS = (); }; };
-		840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; settings = {ASSET_TAGS = (); }; };
+		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
+		84091CDE1BD848C000264652 /* counter-numbers.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDA1BD848C000264652 /* counter-numbers.png */; };
+		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; };
+		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; };
+		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; };
+		840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
-		842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842FDCA21BD56E020079AFCC /* APIClientTests.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA61BD56EF70079AFCC /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; settings = {ASSET_TAGS = (); }; };
-		842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; settings = {ASSET_TAGS = (); }; };
-		842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; settings = {ASSET_TAGS = (); }; };
+		842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842FDCA21BD56E020079AFCC /* APIClientTests.swift */; };
+		842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
+		842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
+		842FDCA61BD56EF70079AFCC /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
+		842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
+		842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
+		842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
+		842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
+		842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; };
+		842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; };
+		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
+		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
+		842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; };
+		842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
+		842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; };
 		842FDCB41BD56F880079AFCC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375C1B5DADF60023EC82 /* SystemConfiguration.framework */; };
 		842FDCB51BD56F8D0079AFCC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375A1B5DADEF0023EC82 /* QuartzCore.framework */; };
 		842FDCB61BD56F920079AFCC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137581B5DADE60023EC82 /* MobileCoreServices.framework */; };
@@ -51,10 +51,10 @@
 		842FDCC31BD56FC20079AFCC /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */; };
 		842FDCC41BD56FD90079AFCC /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65951B72DEFC00696587 /* libuv.a */; };
 		842FDCC61BD56FEB0079AFCC /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
-		842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; settings = {ASSET_TAGS = (); }; };
-		842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; settings = {ASSET_TAGS = (); }; };
-		842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; settings = {ASSET_TAGS = (); }; };
+		842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
+		842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
+		842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
+		842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
 		844497221A3A4EB40009F889 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
 		8445317619FEEB210096F26E /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
@@ -95,6 +95,7 @@
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
 		84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */; };
 		84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */; };
+		84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C29F6C1BDEDD070003A26B /* ClearButton.swift */; };
 		84CA64EB1B72BBF400696587 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA64EA1B72BBF400696587 /* Fabric.framework */; };
 		84CA65961B72DEFC00696587 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65951B72DEFC00696587 /* libuv.a */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
@@ -252,6 +253,7 @@
 		84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 6.xcdatamodel"; sourceTree = "<group>"; };
 		84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupTermsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupFinishedViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84C29F6C1BDEDD070003A26B /* ClearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClearButton.swift; sourceTree = "<group>"; };
 		84CA64EA1B72BBF400696587 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		84CA65951B72DEFC00696587 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = "../../mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib/libuv.a"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -415,6 +417,7 @@
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
+				84C29F6C1BDEDD070003A26B /* ClearButton.swift */,
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
 				84091CD71BD848A400264652 /* RCounter.h */,
 				84091CD81BD848A400264652 /* RCounter.m */,
@@ -952,6 +955,7 @@
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
+				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,

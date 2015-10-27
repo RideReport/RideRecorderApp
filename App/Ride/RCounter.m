@@ -59,7 +59,7 @@
     tagCounterLeftToRight = tagCounterRightToLeft + 1 - self.numberOfDigits;
     
     // Load the background
-    [self setBackgroundColor:[UIColor clearColor]];
+    [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.2]];
     
     // Load the counters
     if (self.counterCanvas) {
@@ -71,8 +71,7 @@
     for (int i = 0; i < self.numberOfDigits; i++) {
         UIImageView *img = [[UIImageView alloc] initWithFrame:frame];
         [img setImage:[UIImage imageNamed:@"counter-numbers.png"]];
-        centerStart = img.center;
-        
+        img.layer.anchorPoint = CGPointMake(0, 0);
         [img setTag: (tagCounterRightToLeft - i)];
         [self.counterCanvas addSubview:img];
         frame.origin.x += 25;
@@ -82,7 +81,7 @@
     [self addSubview:self.counterCanvas];
     
     // Add a shadow over top
-    UIImageView *shadowOverlay = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 10 + (self.numberOfDigits * 25), 50.0)];
+    UIImageView *shadowOverlay = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 10 + (self.numberOfDigits * 25), 70.0)];
     [shadowOverlay setImage:[UIImage imageNamed:@"counter-shadow.png"]];
     [self addSubview:shadowOverlay];
     [self bringSubviewToFront:shadowOverlay];
@@ -98,7 +97,7 @@
     CGRect frame = CGRectMake(10.0, kCounterDigitStartY, 17.0, 299.0);
     for (int i = 0; i < self.numberOfDigits; i++) {
         UIImageView *img = (UIImageView*)[self viewWithTag:(tagCounterLeftToRight - i)];
-        centerStart = img.center;
+        img.layer.anchorPoint = CGPointMake(0, 0);
         
         frame.origin.x += 25;
     }
@@ -116,18 +115,19 @@
     [self layoutSubviews];
 }
 
+- (void)incrementCounter;
+{
+    [self incrementCounter:true];
+}
+
 - (void)incrementCounter:(BOOL)animate {
     [self updateCounter:(self.currentReading + 1) animate:animate];
 }
 
--(void)updateFrame:(UIImageView*)img withValue:(long)newValue andImageCentre:(CGPoint)imgCentre andImageFrame:(CGRect)frame{
+-(void)updateFrame:(UIImageView*)img fromImageCenter:(CGPoint)imgCenterFrom toImageCenter:(CGPoint)imgCenterTo andImageFrame:(CGRect)frame{
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"position"];
-    anim.fromValue = [NSValue valueWithCGPoint:img.center];
-    if (newValue == 0) {
-        imgCentre.y = centerStart.y - 11 * kCounterDigitDiff;
-        anim.toValue = [NSValue valueWithCGPoint:imgCentre];
-    } else
-        anim.toValue = [NSValue valueWithCGPoint:imgCentre];
+    anim.fromValue = [NSValue valueWithCGPoint:imgCenterFrom];
+    anim.toValue = [NSValue valueWithCGPoint:imgCenterTo];
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     anim.duration = 0.3;
     [img.layer addAnimation:anim forKey:@"rollLeft"];
@@ -136,39 +136,56 @@
 
 - (void)updateCounter:(NSUInteger)newValue animate:(BOOL)animate {
     // Work out the digits
-    int hthousandth = (newValue % 1000000)/100000;
-    int tenthounsandth = (newValue % 100000) / 10000;
-    int thounsandth = (newValue % 10000)/1000;
-    int hundredth = (newValue % 1000)/ 100;
-    int ten = (newValue % 100) / 10;
-    int unit = newValue % 10;
+    int hthousandthOld = (self.currentReading % 1000000)/100000;
+    int tenthounsandthOld = (self.currentReading % 100000) / 10000;
+    int thounsandthOld = (self.currentReading % 10000)/1000;
+    int hundredthOld = (self.currentReading % 1000)/ 100;
+    int tenOld = (self.currentReading % 100) / 10;
+    int unitOld = self.currentReading % 10;
     
-    NSMutableArray *array = [[NSMutableArray alloc] init];
-    [array addObject: [NSNumber numberWithInt:unit]];
-    [array addObject: [NSNumber numberWithInt:ten]];
-    [array addObject: [NSNumber numberWithInt:hundredth]];
-    [array addObject: [NSNumber numberWithInt:thounsandth]];
-    [array addObject: [NSNumber numberWithInt:tenthounsandth]];
-    [array addObject: [NSNumber numberWithInt:hthousandth]];
+    NSMutableArray *oldValueArray = [[NSMutableArray alloc] init];
+    [oldValueArray addObject: [NSNumber numberWithInt:unitOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:tenOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:hundredthOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:thounsandthOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:tenthounsandthOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:hthousandthOld]];
+    
+    int hthousandthNew = (newValue % 1000000)/100000;
+    int tenthounsandthNew = (newValue % 100000) / 10000;
+    int thounsandthNew = (newValue % 10000)/1000;
+    int hundredthNew = (newValue % 1000)/ 100;
+    int tenNew = (newValue % 100) / 10;
+    int unitNew = newValue % 10;
+    
+    NSMutableArray *newValueArray = [[NSMutableArray alloc] init];
+    [newValueArray addObject: [NSNumber numberWithInt:unitNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:tenNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:hundredthNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:thounsandthNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:tenthounsandthNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:hthousandthNew]];
+    
     
     for (int i = 0; i < self.numberOfDigits; i++) {
         UIImageView *img = (UIImageView*)[self viewWithTag:(tagCounterLeftToRight + i)];
         
         CGRect imgFrame = img.frame;
-        CGPoint imgCenter = img.center;
+        CGPoint imgCenterTo = img.center;
+        CGPoint imgCenterFrom = img.center;
         
-        CGFloat fudge = 10.0f;
-        imgFrame.origin.y = kCounterDigitStartY - (([array[i] integerValue] + 1) * kCounterDigitDiff) - fudge;
-        imgCenter.y = centerStart.y - (([array[i] integerValue] + 1) * kCounterDigitDiff) - fudge;
-        
-        BOOL imgChanged = NO;
+        imgFrame.origin.y = kCounterDigitStartY - (([newValueArray[i] integerValue] + 1) * kCounterDigitDiff);
+        imgCenterFrom.y = kCounterDigitStartY - (([oldValueArray[i] integerValue] + 1) * kCounterDigitDiff);
+        imgCenterTo.y = kCounterDigitStartY - (([newValueArray[i] integerValue] + 1) * kCounterDigitDiff);
         
         if (imgFrame.origin.y != img.frame.origin.y) {
-            imgChanged = YES;
+            if ([newValueArray[i] integerValue] == 0) {
+                imgCenterTo.y = kCounterDigitStartY - 11*kCounterDigitDiff;
+            }
+            
+            [self updateFrame:img fromImageCenter:imgCenterFrom toImageCenter:imgCenterTo andImageFrame:imgFrame];
         }
-        if (imgChanged) {
-            [self updateFrame:img withValue:[array[i] integerValue] andImageCentre:imgCenter andImageFrame:imgFrame];
-        }
+
     }
 
     self.currentReading = newValue;

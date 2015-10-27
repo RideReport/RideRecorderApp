@@ -11,13 +11,12 @@
 #import <UIKit/UIKit.h>
 
 IB_DESIGNABLE
-@interface RCounter : UIControl {
-    CGPoint centerStart;
-}
+@interface RCounter : UIControl
 
 @property (nonatomic) IBInspectable NSUInteger currentReading;
 @property (nonatomic) IBInspectable NSUInteger numberOfDigits;
 
+- (void)incrementCounter;
 - (void)incrementCounter:(BOOL)animate;
 - (void)updateCounter:(NSUInteger)newValue animate:(BOOL)animate;
 
