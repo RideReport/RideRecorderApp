@@ -23,10 +23,13 @@ public let AuthenticatedAPIRequestErrorDomain = "com.Knock.Ride.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json"]
 
 class AuthenticatedAPIRequest {
+    typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
+
+    // a block that fires once at completion, unlike APIResponseBlocks which are appended
+    var requestCompletetionBlock: ()->Void = {}
+    
     private var request: Request? = nil
     private var authToken: String?
-
-    typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
     
     enum AuthenticatedAPIRequestErrorCode: Int {
         case Unauthenticated = 1
@@ -58,6 +61,7 @@ class AuthenticatedAPIRequest {
         if (!client.authenticated) {
             client.authenticateIfNeeded()
             completionHandler(nil, .Failure(nil, AuthenticatedAPIRequest.unauthenticatedError()))
+            self.requestCompletetionBlock()
             return
         }
         
@@ -91,6 +95,9 @@ class AuthenticatedAPIRequest {
                 }
                 completionHandler(response, .Failure(data, error))
             }
+            
+            // requestCompletetionBlock should fire after all APIResponseBlocks
+            self.requestCompletetionBlock()
         }
     }
     
@@ -415,9 +422,13 @@ class APIClient {
         
         if let existingRequest = self.tripRequests[trip] {
             // if an existing API request is in flight, wait to sync until after it completes
-            existingRequest.apiResponse({ (_, _) -> Void in
+            
+            existingRequest.requestCompletetionBlock = {
+                // we need to reset isSynced since the changes were made after the request went out.
+                trip.isSynced = false
                 self.syncTrip(trip)
-            })
+            }
+            return
         }
         
         var tripDict = [
