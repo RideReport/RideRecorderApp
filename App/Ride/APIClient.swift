@@ -25,6 +25,7 @@ let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "appl
 class AuthenticatedAPIRequest {
     private var request: Request? = nil
     private var authToken: String?
+
     typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
     
     enum AuthenticatedAPIRequestErrorCode: Int {
@@ -136,6 +137,7 @@ class APIClient {
     
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
+    private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     private var keychainDataIsInaccessible = false
     private var isRequestingAuthentication = false
     
@@ -276,7 +278,7 @@ class APIClient {
         })
     }
     
-    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false)->AuthenticatedAPIRequest {
+    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -285,9 +287,7 @@ class APIClient {
         trip.saveAndMarkDirty()
         
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-            return self.syncTrip(trip)
-        } else {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            self.syncTrip(trip)
         }
     }
     
@@ -408,9 +408,16 @@ class APIClient {
         }
     }
     
-    private func syncTrip(trip: Trip)->AuthenticatedAPIRequest {
+    private func syncTrip(trip: Trip) {
         if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.duplicateRequestError())
+            return
+        }
+        
+        if let existingRequest = self.tripRequests[trip] {
+            // if an existing API request is in flight, wait to sync until after it completes
+            existingRequest.apiResponse({ (_, _) -> Void in
+                self.syncTrip(trip)
+            })
         }
         
         var tripDict = [
@@ -448,18 +455,21 @@ class APIClient {
 
         }
         
-        return AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+            self.tripRequests[trip] = nil
             switch result {
             case .Success(let json):
                 trip.isSynced = true
                 trip.locationsAreSynced = true
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 CoreDataManager.sharedManager.saveContext()
-
+                
             case .Failure(_, let error):
                 DDLogError(String(format: "Error syncing trip: %@", error as NSError))
             }
         }
+        
+        return
     }
     
     func testAuthID()->AuthenticatedAPIRequest {

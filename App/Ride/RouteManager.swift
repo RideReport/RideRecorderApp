@@ -197,14 +197,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             closingTrip!.close() {
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true).apiResponse({ (_, _) -> Void in
-                    closingTrip!.sendTripCompletionNotification() {
-                        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                            self.backgroundTaskID = UIBackgroundTaskInvalid
-                        }
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
+                closingTrip!.sendTripCompletionNotification() {
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
-                })
+                }
             }
         }
         
