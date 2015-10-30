@@ -10,7 +10,6 @@ import Foundation
 import SystemConfiguration
 
 class MainViewController: UIViewController, PushSimulatorViewDelegate {
-    @IBOutlet weak var pauseResumeTrackingButton: UIBarButtonItem!
     @IBOutlet weak var routesContainerView: UIView!
     weak var popupView: PopupView!
     @IBOutlet weak var selectedTripView: UIView!
@@ -31,8 +30,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     private var dateFormatter : NSDateFormatter!
     private var reachability : Reachability!
     private var counterTimer : NSTimer?
-    
-    var customButton: HBAnimatedGradientMaskButton! = nil
     
     var mapViewController: MapViewController! = nil
     var routesViewController: RoutesViewController! = nil
@@ -74,10 +71,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
         
-        self.customButton = HBAnimatedGradientMaskButton(frame: CGRectMake(0, 0, 22, 22))
-        self.customButton.addTarget(self, action: "pauseResumeTracking:", forControlEvents: UIControlEvents.TouchUpInside)
-        self.navigationItem.rightBarButtonItem?.customView = self.customButton
-        
         self.navigationItem.titleView!.backgroundColor = UIColor.clearColor()
         
         self.dateFormatter = NSDateFormatter()
@@ -92,10 +85,12 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.rideRushSimulatorView.showsEditButton = true
                 
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            self.selectedTrip = Trip.mostRecentBikeTrip()
+            if let trip = Trip.mostRecentBikeTrip() where trip.rating == NSNumber(short: Trip.Rating.NotSet.rawValue) {
+                self.selectedTrip = Trip.mostRecentBikeTrip()
+            }
         })
         
-        self.refreshPauseResumeTrackingButtonUI()
+        self.reloadTripSelectedToolbar()
     }
     
     func reloadTripSelectedToolbar() {
@@ -163,7 +158,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.refreshPauseResumeTrackingButtonUI()
+        self.refreshHelperPopupUI()
         self.reloadTitleView()
         NSNotificationCenter.defaultCenter().addObserverForName("RouteManagerDidUpdatePoints", object: nil, queue: nil) { (notif) -> Void in
             if (RouteManager.sharedManager.currentTrip != nil) {
@@ -183,7 +178,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.reachability.startNotifier()
         
         NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
-            self.refreshPauseResumeTrackingButtonUI()
+            self.refreshHelperPopupUI()
         }
     }
     
@@ -192,6 +187,10 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         
         self.selectedTrip = nil
         self.reachability = nil
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.refreshHelperPopupUI()
     }
     
     override func viewDidDisappear(animated: Bool) {
@@ -344,9 +343,11 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         })
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            Trip.mostRecentBikeTrip().sendTripCompletionNotification() {
-                if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+            if let trip = Trip.mostRecentBikeTrip() {
+                trip.sendTripCompletionNotification() {
+                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                        UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                    }
                 }
             }
         })
@@ -354,35 +355,8 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     
 #endif
     
-    @IBAction func pauseResumeTracking(sender: AnyObject) {
+    func refreshHelperPopupUI() {
         if (RouteManager.sharedManager.isPaused()) {
-            RouteManager.sharedManager.resumeTracking()
-            refreshPauseResumeTrackingButtonUI()
-        } else {
-            let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
-            actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                if (buttonIndex == 1) {
-                    RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
-                } else if (buttonIndex == 2){
-                    RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
-                } else if (buttonIndex == 3) {
-                    RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
-                } else if (buttonIndex == 4) {
-                    RouteManager.sharedManager.pauseTracking()
-                }
-                self.refreshPauseResumeTrackingButtonUI()
-            }
-            actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
-        }
-    }
-    
-    func refreshPauseResumeTrackingButtonUI() {
-        if (RouteManager.sharedManager.isPaused()) {
-            self.customButton.maskImage = UIImage(named: "locationArrowDisabled.png")
-            self.customButton.primaryColor = UIColor.grayColor()
-            self.customButton.secondaryColor = UIColor.grayColor()
-            self.customButton.animates = false
-            
             if (self.popupView.hidden) {
                 self.popupView.popIn()
             }
@@ -406,11 +380,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                 }
             }
         } else {
-            self.customButton.maskImage = UIImage(named: "locationArrow.png")
-            self.customButton.primaryColor = UIColor(red: 112/255, green: 234/255, blue: 156/255, alpha: 1.0)
-            self.customButton.secondaryColor = UIColor(red: 116.0/255, green: 187.0/255, blue: 240.0/255, alpha: 1.0)
-            self.customButton.animates = true
-            
             if (!UIDevice.currentDevice().wifiEnabled) {
                 if (self.popupView.hidden) {
                     self.popupView.popIn()

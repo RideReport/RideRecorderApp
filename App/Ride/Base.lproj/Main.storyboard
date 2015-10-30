@@ -406,23 +406,6 @@
                                     <action selector="tappedButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="Yqc-FQ-jt1"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3c-4P-41g" customClass="HBAnimatedGradientMaskButton">
-                                <rect key="frame" x="562" y="36" width="22" height="22"/>
-                                <animations/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="Av0-bw-c5D"/>
-                                    <constraint firstAttribute="width" constant="22" id="fPH-GA-fE3"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="tappedArrowButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="8vy-YA-plB"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
@@ -431,11 +414,9 @@
                             <constraint firstAttribute="centerX" secondItem="Vhn-3o-faj" secondAttribute="centerX" id="BqY-qP-zeD"/>
                             <constraint firstAttribute="centerY" secondItem="3Fg-Qu-NLO" secondAttribute="centerY" id="FLO-qP-ULV"/>
                             <constraint firstAttribute="centerX" secondItem="3Fg-Qu-NLO" secondAttribute="centerX" id="WVR-Ui-Rv9"/>
-                            <constraint firstItem="E3c-4P-41g" firstAttribute="trailing" secondItem="rpN-6i-TQ7" secondAttribute="trailingMargin" id="cG7-Cm-vsE"/>
                             <constraint firstAttribute="centerY" secondItem="Vhn-3o-faj" secondAttribute="centerY" id="ibX-He-VNM"/>
                             <constraint firstItem="Vhn-3o-faj" firstAttribute="top" secondItem="3Fg-Qu-NLO" secondAttribute="bottom" constant="60" id="juy-Kk-Wl3"/>
                             <constraint firstItem="Vhn-3o-faj" firstAttribute="top" secondItem="3Fg-Qu-NLO" secondAttribute="bottom" constant="40" id="lJE-V0-uMv"/>
-                            <constraint firstItem="E3c-4P-41g" firstAttribute="top" secondItem="2Ho-Nv-QxS" secondAttribute="bottom" constant="16" id="lV1-te-d5a"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -457,7 +438,6 @@
                     <connections>
                         <outlet property="helperTextLabel" destination="3Fg-Qu-NLO" id="z6n-XX-aPX"/>
                         <outlet property="nextButton" destination="Vhn-3o-faj" id="gY7-g3-9ZE"/>
-                        <outlet property="pauseButton" destination="E3c-4P-41g" id="t1i-4X-xY9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pca-mh-ubT" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1440,6 +1420,8 @@
                                         <exclude reference="BBE-xZ-Vm6"/>
                                         <exclude reference="J2X-Uc-x6U"/>
                                         <exclude reference="uAn-Wk-2CW"/>
+                                        <exclude reference="AQ2-cf-jaT"/>
+                                        <exclude reference="XFu-Vh-11x"/>
                                         <exclude reference="fHy-df-qNj"/>
                                         <exclude reference="18M-i3-EgJ"/>
                                         <exclude reference="CCC-Ul-d1d"/>
@@ -1448,8 +1430,6 @@
                                         <exclude reference="UmQ-PY-mvb"/>
                                         <exclude reference="b29-Br-w6d"/>
                                         <exclude reference="fUf-zT-Yxn"/>
-                                        <exclude reference="AQ2-cf-jaT"/>
-                                        <exclude reference="XFu-Vh-11x"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
@@ -1459,11 +1439,11 @@
                                     <mask key="constraints">
                                         <exclude reference="hg8-C7-4eu"/>
                                         <include reference="uAn-Wk-2CW"/>
+                                        <include reference="AQ2-cf-jaT"/>
+                                        <include reference="XFu-Vh-11x"/>
                                         <include reference="18M-i3-EgJ"/>
                                         <exclude reference="uvw-GS-Q4w"/>
                                         <include reference="b29-Br-w6d"/>
-                                        <include reference="AQ2-cf-jaT"/>
-                                        <include reference="XFu-Vh-11x"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1486,7 +1466,7 @@
                             <constraint firstAttribute="centerX" secondItem="8mW-Sz-0y6" secondAttribute="centerX" id="U7o-OZ-1n0"/>
                             <constraint firstItem="5hK-0E-Yx5" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="YcJ-wS-bsW"/>
                             <constraint firstItem="n0W-nW-qiU" firstAttribute="centerX" secondItem="GsO-Yw-fHd" secondAttribute="centerX" id="cfv-xW-ELh"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="5hK-0E-Yx5" secondAttribute="trailing" constant="-14" id="d3f-So-cFD"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="5hK-0E-Yx5" secondAttribute="leading" constant="14" id="d3f-So-cFD"/>
                             <constraint firstItem="8mW-Sz-0y6" firstAttribute="top" secondItem="XdF-dK-F6R" secondAttribute="bottom" id="ekB-Wg-a1O"/>
                             <constraint firstItem="GsO-Yw-fHd" firstAttribute="width" secondItem="Xsz-Tc-4Se" secondAttribute="width" id="hUB-h0-YQ1"/>
                             <constraint firstAttribute="centerX" secondItem="GsO-Yw-fHd" secondAttribute="centerX" id="kO0-6D-5PY"/>
@@ -1553,12 +1533,6 @@
                                 </mask>
                             </variation>
                         </view>
-                        <barButtonItem key="rightBarButtonItem" title="P" id="5KM-wa-SB8">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="pauseResumeTracking:" destination="A5D-RC-UCB" id="aMn-w2-ihG"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="counter" destination="sBa-LB-Q1X" id="YQ3-1B-Dea"/>
@@ -1566,7 +1540,6 @@
                         <outlet property="editModeView" destination="Xsz-Tc-4Se" id="r8a-tk-olr"/>
                         <outlet property="mapInfoText" destination="sdZ-Fv-4Uy" id="Ate-uI-J5h"/>
                         <outlet property="mapInfoToolBar" destination="n0W-nW-qiU" id="Wwq-WC-orZ"/>
-                        <outlet property="pauseResumeTrackingButton" destination="5KM-wa-SB8" id="AvM-9J-8OD"/>
                         <outlet property="popupView" destination="5hK-0E-Yx5" id="eCB-cb-GKk"/>
                         <outlet property="rideRushSimulatorView" destination="XUD-tz-9dU" id="1jX-AX-tru"/>
                         <outlet property="ridesHistoryButton" destination="BLL-QL-Es9" id="VM2-qj-U9O"/>
@@ -1673,8 +1646,29 @@
                                         <animations/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="WGx-xr-lo2" style="IBUITableViewCellStyleDefault" id="OkS-MW-BCC">
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OkS-MW-BCC" id="1Fk-Bo-qYp">
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Pause Ride Report" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WGx-xr-lo2">
+                                                    <rect key="frame" x="15" y="0.0" width="550" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <animations/>
+                                        </tableViewCellContentView>
+                                        <animations/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="IUS-op-4II" style="IBUITableViewCellStyleDefault" id="WmV-PX-PGY">
-                                        <rect key="frame" x="0.0" y="187" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WmV-PX-PGY" id="sxn-x5-ijt">
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -1706,6 +1700,7 @@
                     <connections>
                         <outlet property="accountTableViewCell" destination="nWe-Xk-x3y" id="UL1-oF-Y0u"/>
                         <outlet property="mapStatsTableViewCell" destination="WmV-PX-PGY" id="fXi-z3-hSr"/>
+                        <outlet property="pauseResueTableViewCell" destination="OkS-MW-BCC" id="jU3-WF-51S"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N25-Lo-xsp" userLabel="First Responder" sceneMemberID="firstResponder"/>

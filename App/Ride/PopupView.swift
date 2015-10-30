@@ -84,7 +84,7 @@ import Foundation
         path.lineWidth = strokeWidth
         path.stroke()
         
-        let arrowPoint = CGPointMake(rect.size.width - arrowBaseWidth - arrowInset, arrowHeight + strokeWidth)
+        let arrowPoint = CGPointMake(arrowInset, arrowHeight + strokeWidth)
         let arrowPath = UIBezierPath()
         
         let halfArrowWidth = arrowBaseWidth / 2.0
