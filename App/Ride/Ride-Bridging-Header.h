@@ -13,3 +13,4 @@
 #import "Reachability.h"
 #import "BKPasscodeInputView.h"
 #import "RCounter.h"
+#include <zlib.h>
