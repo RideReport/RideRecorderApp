@@ -234,8 +234,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
-            trip.managedObjectContext?.deleteObject(trip)
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.deleteTrip(trip)
         }
         
     #if DEBUG
@@ -294,8 +293,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
-            trip.managedObjectContext?.deleteObject(trip)
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.deleteTrip(trip)
         }
     }
     
