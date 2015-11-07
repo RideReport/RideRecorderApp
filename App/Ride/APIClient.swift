@@ -71,7 +71,7 @@ class AuthenticatedAPIRequest {
             headers["Authorization"] =  "Bearer \(token)"
         }
         
-        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: .JSON, headers: headers)
+        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: ParameterEncoding.JSON.gzipped, headers: headers)
         
         let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
             if (response?.statusCode == 401) {
