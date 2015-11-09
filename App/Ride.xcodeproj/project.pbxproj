@@ -30,7 +30,6 @@
 		842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
 		842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; };
-		842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; };
 		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; };
@@ -82,7 +81,6 @@
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
 		847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* RoutesViewController.swift */; };
 		847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847ED0901A40DA0D00CAA396 /* MainViewController.swift */; };
-		848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */; };
 		848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
 		849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
@@ -98,7 +96,6 @@
 		84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */; };
 		84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */; };
 		84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C29F6C1BDEDD070003A26B /* ClearButton.swift */; };
-		84C29F731BE44DDE0003A26B /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C29F721BE44DDE0003A26B /* HealthKit.framework */; };
 		84CA64EB1B72BBF400696587 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA64EA1B72BBF400696587 /* Fabric.framework */; };
 		84CA65961B72DEFC00696587 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA65951B72DEFC00696587 /* libuv.a */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
@@ -230,7 +227,6 @@
 		847A056E1A02E757008F5371 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RoutesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847ED0901A40DA0D00CAA396 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MainViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847ED0921A41112800CAA396 /* Ride 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 7.xcdatamodel"; sourceTree = "<group>"; };
-		848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SoftwareUpdateManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777B61A6834C300B59B06 /* UIView+HBadditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIView+HBadditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777B81A683A4A00B59B06 /* PopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PopupView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		848777BA1A698BCE00B59B06 /* Ride 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 11.xcdatamodel"; sourceTree = "<group>"; };
@@ -258,7 +254,6 @@
 		84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupFinishedViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84C29F6C1BDEDD070003A26B /* ClearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClearButton.swift; sourceTree = "<group>"; };
 		84C29F711BE44DDD0003A26B /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
-		84C29F721BE44DDE0003A26B /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		84CA64EA1B72BBF400696587 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		84CA65951B72DEFC00696587 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = "../../mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib/libuv.a"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -350,7 +345,6 @@
 				84F137591B5DADE60023EC82 /* MobileCoreServices.framework in Frameworks */,
 				84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */,
 				84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */,
-				84C29F731BE44DDE0003A26B /* HealthKit.framework in Frameworks */,
 				84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */,
 				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
@@ -376,7 +370,6 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				84C29F721BE44DDE0003A26B /* HealthKit.framework */,
 				842FDCC51BD56FEB0079AFCC /* libz.tbd */,
 				842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */,
 				842FDCC01BD56FBC0079AFCC /* libc++.tbd */,
@@ -435,7 +428,6 @@
 		8445317719FEEB2A0096F26E /* Service Managers */ = {
 			isa = PBXGroup;
 			children = (
-				848777AF1A605EB000B59B06 /* SoftwareUpdateManager.swift */,
 				8445317519FEEB210096F26E /* RouteManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
 				840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */,
@@ -742,10 +734,10 @@
 					};
 					84D1554E19D2733500316995 = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = 2N9RJZK5GE;
+						DevelopmentTeam = 9NRH28TN93;
 						SystemCapabilities = {
 							com.apple.HealthKit = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.HomeKit = {
 								enabled = 0;
@@ -950,7 +942,6 @@
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
 				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
 				842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */,
-				842FDCAC1BD56F070079AFCC /* SoftwareUpdateManager.swift in Sources */,
 				842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */,
 				842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */,
 			);
@@ -990,7 +981,6 @@
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
-				848777B01A605EB000B59B06 /* SoftwareUpdateManager.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
 				840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */,
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
@@ -1206,7 +1196,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -1246,7 +1235,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
