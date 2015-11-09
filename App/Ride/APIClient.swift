@@ -20,12 +20,16 @@ let serverAddress = "https://api.ride.report/api/v2/"
 #endif
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
-let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json"]
+let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
 
 class AuthenticatedAPIRequest {
+    typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
+
+    // a block that fires once at completion, unlike APIResponseBlocks which are appended
+    var requestCompletetionBlock: ()->Void = {}
+    
     private var request: Request? = nil
     private var authToken: String?
-    typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
     
     enum AuthenticatedAPIRequestErrorCode: Int {
         case Unauthenticated = 1
@@ -57,6 +61,7 @@ class AuthenticatedAPIRequest {
         if (!client.authenticated) {
             client.authenticateIfNeeded()
             completionHandler(nil, .Failure(nil, AuthenticatedAPIRequest.unauthenticatedError()))
+            self.requestCompletetionBlock()
             return
         }
         
@@ -66,29 +71,52 @@ class AuthenticatedAPIRequest {
             headers["Authorization"] =  "Bearer \(token)"
         }
         
-        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: .JSON, headers: headers)
+        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: ParameterEncoding.JSON.gzipped, headers: headers)
         
-        request!.validate().responseJSON { (request, response, result) in
-            switch result {
-            case .Success(let jsonData):
-                let json = JSON(jsonData)
-                completionHandler(response, .Success(json))
-            case .Failure(let data, let error):
-                if (response?.statusCode == 401) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        if (self.authToken == client.accessToken) {
-                            // make sure the token that generated the 401 is still current
-                            // since it is possible we've already reauthenciated
-                            client.reauthenticate()
-                        }
-                    })
-                } else if (response?.statusCode == 500) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
-                        alert.show()
-                    })
+        let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
+            if (response?.statusCode == 401) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if (self.authToken == client.accessToken) {
+                        // make sure the token that generated the 401 is still current
+                        // since it is possible we've already reauthenciated
+                        client.reauthenticate()
+                    }
+                })
+            } else if (response?.statusCode == 500) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
+                    alert.show()
+                })
+            }
+        }
+        
+        if (method == .DELETE) {
+            // delete does not return JSON https://github.com/KnockSoftware/rideserver/issues/48
+            request!.validate().responseString(encoding: NSASCIIStringEncoding, completionHandler: { (request, response, result) in
+                switch result {
+                case .Success(_):
+                    completionHandler(response, .Success(JSON("")))
+                case .Failure(let data, let error):
+                    handleHTTPResonseErrors(response)
+                    completionHandler(response, .Failure(data, error))
                 }
-                completionHandler(response, .Failure(data, error))
+                
+                // requestCompletetionBlock should fire after all APIResponseBlocks
+                self.requestCompletetionBlock()
+            })
+        } else {
+            request!.validate().responseJSON { (request, response, result) in
+                switch result {
+                case .Success(let jsonData):
+                    let json = JSON(jsonData)
+                    completionHandler(response, .Success(json))
+                case .Failure(let data, let error):
+                    handleHTTPResonseErrors(response)
+                    completionHandler(response, .Failure(data, error))
+                }
+                
+                // requestCompletetionBlock should fire after all APIResponseBlocks
+                self.requestCompletetionBlock()
             }
         }
     }
@@ -136,6 +164,7 @@ class APIClient {
     
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
+    private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     private var keychainDataIsInaccessible = false
     private var isRequestingAuthentication = false
     
@@ -267,6 +296,26 @@ class APIClient {
 
     }
     
+    func deleteTrip(trip: Trip)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + trip.uuid, completionHandler: { (response, result) -> Void in
+            switch result {
+            case .Success(_), .Failure(_,_) where response?.statusCode == 404:
+                // it's possible the server already deleted the object, in which case it will send a 404.
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    trip.managedObjectContext?.deleteObject(trip)
+                    CoreDataManager.sharedManager.saveContext()
+                })
+            case .Failure(_, let error):
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let alert = UIAlertView(title:nil, message: "There was an error deleting that trip. Please try again later.", delegate: nil, cancelButtonTitle:"Darn")
+                    alert.show()
+                })
+                DDLogError(String(format: "Error deleting trip data: %@", error as NSError))
+            }
+        })
+        
+    }
+    
     func syncTrips(syncInBackground: Bool = false) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             for aTrip in Trip.closedUnsyncedTrips() {
@@ -276,7 +325,7 @@ class APIClient {
         })
     }
     
-    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false)->AuthenticatedAPIRequest {
+    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -285,9 +334,7 @@ class APIClient {
         trip.saveAndMarkDirty()
         
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-            return self.syncTrip(trip)
-        } else {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            self.syncTrip(trip)
         }
     }
     
@@ -408,9 +455,20 @@ class APIClient {
         }
     }
     
-    private func syncTrip(trip: Trip)->AuthenticatedAPIRequest {
+    private func syncTrip(trip: Trip) {
         if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.duplicateRequestError())
+            return
+        }
+        
+        if let existingRequest = self.tripRequests[trip] {
+            // if an existing API request is in flight, wait to sync until after it completes
+            
+            existingRequest.requestCompletetionBlock = {
+                // we need to reset isSynced since the changes were made after the request went out.
+                trip.isSynced = false
+                self.syncTrip(trip)
+            }
+            return
         }
         
         var tripDict = [
@@ -448,18 +506,21 @@ class APIClient {
 
         }
         
-        return AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+            self.tripRequests[trip] = nil
             switch result {
             case .Success(let json):
                 trip.isSynced = true
                 trip.locationsAreSynced = true
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 CoreDataManager.sharedManager.saveContext()
-
+                
             case .Failure(_, let error):
                 DDLogError(String(format: "Error syncing trip: %@", error as NSError))
             }
         }
+        
+        return
     }
     
     func testAuthID()->AuthenticatedAPIRequest {

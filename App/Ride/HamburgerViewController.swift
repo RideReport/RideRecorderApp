@@ -26,6 +26,7 @@ class HamburgerNavController: UINavigationController {
 class HamburgerViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
     @IBOutlet weak var mapStatsTableViewCell: UITableViewCell!
+    @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
+        self.updatePauseResumeText()
         self.tableView.reloadData()
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
@@ -67,6 +69,14 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         self.accountTableViewCell.textLabel?.text = accountCellTitle
     }
     
+    func updatePauseResumeText() {
+        if (RouteManager.sharedManager.isPaused()) {
+            self.pauseResueTableViewCell.textLabel?.text = "Resume Ride Report"
+        } else {
+            self.pauseResueTableViewCell.textLabel?.text = "Pause Ride Report"
+        }
+    }
+    
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
         return CGFloat.min
@@ -76,12 +86,12 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         switch (APIClient.sharedClient.area) {
         case .Area(_,_, _, _):
             if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) where mainViewController.mapInfoIsDismissed {
-                return 4
+                return 5
             } else {
-                return 3
+                return 4
             }
         default:
-            return 3
+            return 4
         }
     }
     
@@ -96,6 +106,35 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 AppDelegate.appDelegate().transitionToCreatProfile()
             }
         } else if (indexPath.row == 3) {
+            if (RouteManager.sharedManager.isPaused()) {
+                RouteManager.sharedManager.resumeTracking()
+                self.updatePauseResumeText()
+                if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
+                    mainViewController.refreshHelperPopupUI()
+                }
+            } else {
+                let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
+                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
+                    if (buttonIndex == 1) {
+                        RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
+                    } else if (buttonIndex == 2){
+                        RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
+                    } else if (buttonIndex == 3) {
+                        RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
+                    } else if (buttonIndex == 4) {
+                        RouteManager.sharedManager.pauseTracking()
+                    }
+                    
+                    self.updatePauseResumeText()
+                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
+                        mainViewController.refreshHelperPopupUI()
+                    }
+                }
+                actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
+            }
+            
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        } else if (indexPath.row == 4) {
             if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
                 mainViewController.showMapInfo(self)
             }

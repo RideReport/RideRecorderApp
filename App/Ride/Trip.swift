@@ -69,8 +69,8 @@ class Trip : NSManagedObject {
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String!
     @NSManaged var temperature : NSNumber!
-
     @NSManaged var simplifiedLocations : NSOrderedSet!
+    
     var sectionIdentifier : String? {
         get {
             self.willAccessValueForKey("sectionIdentifier")
@@ -190,7 +190,7 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
-    class func mostRecentBikeTrip() -> Trip! {
+    class func mostRecentBikeTrip() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
