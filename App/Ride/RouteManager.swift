@@ -46,6 +46,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let minimumBatteryForTracking : Float = 0.2
     
     private var isGettingInitialLocationForGeofence : Bool = false
+    private var didStartFromBackground : Bool = false
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
@@ -81,10 +82,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         return (Static.sharedManager != nil)
     }
     
-    class func startup() {
+    class func startup(fromBackground: Bool) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = RouteManager()
-            Static.sharedManager?.startup()
+            Static.sharedManager?.startup(fromBackground)
         }
     }
     
@@ -98,9 +99,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
-    func startup() {
+    func startup(fromBackground: Bool) {
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
+        if (fromBackground) {
+            self.didStartFromBackground = true
+        }
     }
     
     var location: CLLocation? {
@@ -381,8 +385,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             self.isGettingInitialLocationForGeofence = false
-            DDLogVerbose("Got intial location for geofence. Stopping!")
-            self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+            if (!self.didStartFromBackground) {
+                DDLogVerbose("Got intial location for geofence. Stopping!")
+                self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+            }
         } else if (foundSufficientMovement) {
             if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {

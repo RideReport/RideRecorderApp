@@ -66,7 +66,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             // if they are new, we wait to start data gathering managers
             // this avoids immediately presenting the privacy permission dialogs.
             registerNotifications()
-            startupDataGatheringManagers()
+            if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
+                DDLogInfo("Launched in background due to location update")
+                startupDataGatheringManagers(true)
+            } else {
+                startupDataGatheringManagers(false)
+            }
             self.transitionToMainNavController()
         } else {
             // SetupRatingViewController calls registerNotifications
@@ -134,8 +139,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
     }
     
-    func startupDataGatheringManagers() {
-        RouteManager.startup()
+    func startupDataGatheringManagers(fromBackground: Bool) {
+        RouteManager.startup(fromBackground)
         MotionManager.startup()
     }
     
