@@ -321,8 +321,8 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         
         let routesVC = self.storyboard!.instantiateViewControllerWithIdentifier("RoutesViewController") as! RoutesViewController
         routesVC.mainViewController = self
-        
-        routesVC.view.layer.addAnimation(transition, forKey: kCATransition)
+                
+        self.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
         self.navigationController?.pushViewController(routesVC, animated: false)
     }
         

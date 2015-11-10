@@ -75,10 +75,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
     }
     
-    @IBAction func done(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
