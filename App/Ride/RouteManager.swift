@@ -201,13 +201,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             closingTrip!.close() {
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
                 closingTrip!.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending background task.")
+
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
                 }
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
             }
         }
         

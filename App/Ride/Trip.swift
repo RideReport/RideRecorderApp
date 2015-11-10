@@ -500,6 +500,8 @@ class Trip : NSManagedObject {
         
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location!, completionHandler: { (placemarks, error) -> Void in
+            DDLogInfo("Starting placemark query returned.")
+
             if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
@@ -521,6 +523,8 @@ class Trip : NSManagedObject {
         let endingLocation = self.locations.lastObject as! Location
         
         geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+            DDLogInfo("Destination placemark query returned.")
+
             if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
@@ -571,6 +575,7 @@ class Trip : NSManagedObject {
             
             if (self.climacon == nil || self.climacon == "") {
                 WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
+                    DDLogInfo("Weather data returned.")
                     if (condition != nil) {
                         self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
                         self.climacon = String(UnicodeScalar(UInt32(condition!.current.climacon.rawValue)))
@@ -674,6 +679,8 @@ class Trip : NSManagedObject {
     }
     
     func sendTripCompletionNotificationImmediately() {
+        DDLogInfo("Sending notification…")
+
         self.cancelTripStateNotification()
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
