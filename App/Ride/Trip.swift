@@ -138,7 +138,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         if (results == nil) {
@@ -158,7 +158,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -179,7 +179,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -201,7 +201,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -222,7 +222,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -244,7 +244,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         

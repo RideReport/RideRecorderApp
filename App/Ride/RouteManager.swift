@@ -594,16 +594,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {
         // Should never happen
-        DDLogError("Did Pause location updates!")
+        DDLogWarn("Did Pause location updates!")
     }
     
     func locationManagerDidResumeLocationUpdates(manager: CLLocationManager) {
         // Should never happen
-        DDLogError("Did Resume location updates!")
+        DDLogWarn("Did Resume location updates!")
     }
     
     func locationManager(manager: CLLocationManager, monitoringDidFailForRegion region: CLRegion?, withError error: NSError) {
-        DDLogError(String(format: "Got location monitoring error! %@", error))
+        DDLogWarn(String(format: "Got location monitoring error! %@", error))
         
         if (error.code == CLError.RegionMonitoringFailure.rawValue) {
             // exceeded max number of geofences
@@ -611,7 +611,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        DDLogError(String(format: "Got active tracking location error! %@", error))
+        DDLogWarn(String(format: "Got active tracking location error! %@", error))
         
         if (error.code == CLError.Denied.rawValue) {
             // alert the user and pause tracking.

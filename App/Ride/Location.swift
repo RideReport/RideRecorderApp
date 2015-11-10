@@ -70,7 +70,7 @@ class Location : NSManagedObject {
         do {
             results = try CoreDataManager.sharedManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error finding locations for circle: %@", error as NSError))
+            DDLogWarn(String(format: "Error finding locations for circle: %@", error as NSError))
             results = nil
         }
         

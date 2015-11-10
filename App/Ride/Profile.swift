@@ -26,7 +26,7 @@ class Profile : NSManagedObject {
             do {
                 results = try context.executeFetchRequest(fetchedRequest)
             } catch let error {
-                DDLogError(String(format: "Error finding profile: %@", error as NSError))
+                DDLogWarn(String(format: "Error finding profile: %@", error as NSError))
                 results = nil
             }
             

@@ -269,7 +269,7 @@ class APIClient {
                 }
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error retriving getting trip data: %@", error as NSError))
+                DDLogWarn(String(format: "Error retriving getting trip data: %@", error as NSError))
             }
         })
     }
@@ -291,7 +291,7 @@ class APIClient {
                 trip.locationsNotYetDownloaded = false
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error retriving getting individual trip data: %@", error as NSError))
+                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as NSError))
             }
         })
 
@@ -311,7 +311,7 @@ class APIClient {
                     let alert = UIAlertView(title:nil, message: "There was an error deleting that trip. Please try again later.", delegate: nil, cancelButtonTitle:"Darn")
                     alert.show()
                 })
-                DDLogError(String(format: "Error deleting trip data: %@", error as NSError))
+                DDLogWarn(String(format: "Error deleting trip data: %@", error as NSError))
             }
         })
         
@@ -377,7 +377,7 @@ class APIClient {
                     }
                 }
             case .Failure(_, let error):
-                DDLogError(String(format: "Error retriving account status: %@", error as NSError))
+                DDLogWarn(String(format: "Error retriving account status: %@", error as NSError))
                 if (response?.statusCode == 401) {
                     self.deauthortizeClient()
                 }
@@ -392,7 +392,7 @@ class APIClient {
                 DDLogInfo("Logged out!")
                 self.deauthortizeClient()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error logging out: %@", error as NSError))
+                DDLogWarn(String(format: "Error logging out: %@", error as NSError))
                 self.authenticateIfNeeded()
             }
         }
@@ -414,7 +414,7 @@ class APIClient {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
             case .Failure(_, let error):
-                DDLogError(String(format: "Error sending verification email: %@", error as NSError))
+                DDLogWarn(String(format: "Error sending verification email: %@", error as NSError))
                 
                 if let code = response?.statusCode where code == 400 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -433,7 +433,7 @@ class APIClient {
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error verifying email token: %@", error as NSError))
+                DDLogWarn(String(format: "Error verifying email token: %@", error as NSError))
             }
         }
     }
@@ -445,7 +445,7 @@ class APIClient {
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
             case .Failure(_, let error):
-                DDLogError(String(format: "Error verifying facebook token: %@", error as NSError))
+                DDLogWarn(String(format: "Error verifying facebook token: %@", error as NSError))
                 if let code = response?.statusCode where code == 400 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         let alert = UIAlertView(title:nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
@@ -517,7 +517,7 @@ class APIClient {
                 CoreDataManager.sharedManager.saveContext()
                 
             case .Failure(_, let error):
-                DDLogError(String(format: "Error syncing trip: %@", error as NSError))
+                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
             }
         }
         
@@ -530,7 +530,7 @@ class APIClient {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
             case .Failure(_, let error):
-                DDLogError(String(format: "Error retriving access token: %@", error as NSError))
+                DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
             }
         }
     }
@@ -593,7 +593,7 @@ class APIClient {
                 if (response?.statusCode == 401) {
                     self.deauthortizeClient()
                 }
-                DDLogError(String(format: "Error retriving access token: %@", error as NSError))
+                DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
             }
@@ -634,7 +634,7 @@ class APIClient {
                         completionHandler(true)
                     } catch let error {
                         
-                        DDLogError(String(format: "Error storing access token: %@", error as NSError))
+                        DDLogWarn(String(format: "Error storing access token: %@", error as NSError))
                         completionHandler(false)
                     }
                 })
@@ -658,7 +658,7 @@ class APIClient {
                 
                 completionHandler(true)
             } catch let error {
-                DDLogError(String(format: "Error deleting access token: %@", error as NSError))
+                DDLogWarn(String(format: "Error deleting access token: %@", error as NSError))
                 completionHandler(false)
             }
         })
@@ -678,7 +678,7 @@ class APIClient {
                 completionHandler(true)
             } catch let err {
                 let error = err as NSError
-                DDLogError(String(format: "Error accessing access token: %@", error))
+                DDLogWarn(String(format: "Error accessing access token: %@", error))
                 if (error.code == Int(-34018)) {
                     // this is a special case. if we get this error, it's due to an obscure keychain bug causing the keychain to be temporarily inaccessible
                     // https://forums.developer.apple.com/message/9225#9225
