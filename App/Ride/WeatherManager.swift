@@ -30,9 +30,10 @@ class WeatherManager {
     func startup() {
     }
     
-    func queryCondition(date: NSDate, location: Location, handler: (CZWeatherData?)->Void) {
+    func queryCondition(date: NSDate, endDate: NSDate, location: Location, handler: (CZWeatherData?)->Void) {
         let request = CZOpenWeatherMapRequest.newCurrentRequest()
         request.location = CZWeatherLocation(fromCoordinate: location.coordinate())
+        request.key = openWeatherMapKey
         
         request.sendWithCompletion { (data, error) -> Void in
             if (data != nil && error == nil) {

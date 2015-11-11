@@ -12,6 +12,8 @@ import CoreData
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
+    @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerLabel1: UILabel!
     
     var mainViewController: MainViewController! = nil
     
@@ -25,11 +27,22 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationItem.hidesBackButton = true
         
+        var headerFrame = self.headerView.frame;
+        headerFrame.size.height = 36
+        self.headerView.frame = headerFrame
+        self.tableView.tableHeaderView = self.headerView
+        self.headerView.backgroundColor = UIColor.clearColor()
+        
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
             self.title = "No Trips"
+            self.headerView.hidden = false
         } else {
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
+            let formatter = NSNumberFormatter()
+            formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+            formatter.maximumFractionDigits = 0
+            self.headerLabel1.text = String(format: "%@ miles and counting…", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!)
         }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")

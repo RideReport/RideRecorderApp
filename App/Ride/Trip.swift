@@ -300,14 +300,32 @@ class Trip : NSManagedObject {
     }
     
     class var totalCycledMilesThisWeek : Float {
-        var miles : Float = 0
-        for trip in Trip.weekTrips()! {
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                miles += trip.lengthMiles
-            }
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-7))
+        
+        let sumDescription = NSExpressionDescription()
+        sumDescription.name = "sumOfLengths"
+        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
+        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
+        fetchedRequest.propertiesToFetch = [sumDescription]
+
+        var error : NSError?
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
+        }
+        if (results == nil || error != nil) {
+            return 0.0
         }
         
-        return miles
+        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
+        return (totalLength.floatValue * 0.000621371)
     }
     
     override func awakeFromInsert() {
@@ -334,8 +352,7 @@ class Trip : NSManagedObject {
             }
             
             switch climaconChar {
-            case Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
-            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+            case Climacon.Rain.rawValue, Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
             Climacon.Umbrella.rawValue:
                 return true
             case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
@@ -574,7 +591,7 @@ class Trip : NSManagedObject {
             let endingLocation = self.locations.lastObject as! Location
             
             if (self.climacon == nil || self.climacon == "") {
-                WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
+                WeatherManager.sharedManager.queryCondition(self.startDate, endDate: self.endDate, location: endingLocation, handler: { (condition) -> Void in
                     DDLogInfo("Weather data returned.")
                     if (condition != nil) {
                         self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
@@ -721,15 +738,8 @@ class Trip : NSManagedObject {
     }
     
     func rewardString()->String? {
-        let totalMiles = Trip.totalCycledMiles
-        
-        
         if (self.isShittyWeather) {
             return "🏆 Crappy weather bonus points!"
-        }
-        
-        if (totalMiles % 25 == 0) {
-            return String(format: "💪 Your %.0fth mile!", totalMiles)
         }
         
         let numTrips = Trip.numberOfCycledTrips
