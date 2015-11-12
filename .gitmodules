@@ -1,3 +1,6 @@
 [submodule "App/Alamofire"]
 	path = App/Alamofire
 	url = https://github.com/Alamofire/Alamofire.git
+[submodule "Submodules/PNChart"]
+	path = Submodules/PNChart
+	url = git@github.com:KnockSoftware/PNChart.git

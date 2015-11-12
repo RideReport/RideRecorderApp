@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Trip.swift"
-            timestampString = "468985071.282842"
+            timestampString = "469060252.232232"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "678"
-            endingLineNumber = "678"
+            startingLineNumber = "739"
+            endingLineNumber = "739"
             landmarkName = "close(_:)"
             landmarkType = "5">
             <Locations>
@@ -100,12 +100,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468985175.286503"
+                  timestampString = "469062022.951678"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "678"
-                  endingLineNumber = "678"
-                  offsetFromSymbolStart = "28">
+                  startingLineNumber = "739"
+                  endingLineNumber = "739"
+                  offsetFromSymbolStart = "32">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -115,12 +115,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468985175.287075"
+                  timestampString = "469062022.951971"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "678"
-                  endingLineNumber = "678"
-                  offsetFromSymbolStart = "0">
+                  startingLineNumber = "739"
+                  endingLineNumber = "739"
+                  offsetFromSymbolStart = "4">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -139,6 +139,54 @@
             endingLineNumber = "39"
             landmarkName = "queryCondition(_:endDate:location:handler:)"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Ride/RoutesViewController.swift"
+            timestampString = "469061837.345009"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "309"
+            endingLineNumber = "309"
+            landmarkName = "tableView(_:editActionsForRowAtIndexPath:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Ride_Report.RoutesViewController.tableView (Ride_Report.RoutesViewController)(__ObjC.UITableView, editActionsForRowAtIndexPath : __ObjC.NSIndexPath) -&gt; Swift.Optional&lt;Swift.Array&lt;__ObjC.UITableViewRowAction&gt;&gt;"
+                  moduleName = "Ride Report"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/RoutesViewController.swift"
+                  timestampString = "469062022.957667"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "309"
+                  endingLineNumber = "309"
+                  offsetFromSymbolStart = "23">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Ride_Report.RoutesViewController.(tableView (Ride_Report.RoutesViewController) -&gt; (__ObjC.UITableView, editActionsForRowAtIndexPath : __ObjC.NSIndexPath) -&gt; Swift.Optional&lt;Swift.Array&lt;__ObjC.UITableViewRowAction&gt;&gt;).(closure #1)"
+                  moduleName = "Ride Report"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/RoutesViewController.swift"
+                  timestampString = "469062022.957886"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "310"
+                  endingLineNumber = "310"
+                  offsetFromSymbolStart = "23">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

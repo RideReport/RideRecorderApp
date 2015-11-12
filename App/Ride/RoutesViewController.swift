@@ -16,9 +16,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     
-    var pieChart: PNPieChart!
-    var pieChart2: PNPieChart!
-    var pieChart3: PNPieChart!
+    var pieChartModeShare: PNPieChart!
+    var pieChartRatings: PNPieChart!
+    var pieChartDaysBiked: PNPieChart!
+    var pieChartWeather: PNPieChart!
     
     var mainViewController: MainViewController! = nil
     
@@ -106,7 +107,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.title = "No Trips"
             self.headerView.hidden = false
         } else {
-            let numCharts = 3
+            let numCharts = 4
             let margin: CGFloat = 16
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
@@ -116,29 +117,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView.tableHeaderView = self.headerView
             
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
-            let items = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue, description: "🚋")]
-            
-            self.pieChart = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: items)
-            self.pieChart.strokeChart()
-            self.pieChart.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-            self.headerView.addSubview(self.pieChart)
-            
-            self.pieChart.legendStyle = PNLegendItemStyle.Stacked
-            self.pieChart.legendFont = UIFont.boldSystemFontOfSize(12)
-            
-            let items2 = [PNPieChartDataItem(value: CGFloat(Trip.numberOfGoodTrips), color: ColorPallete.sharedPallete.goodGreen, description: "👍"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfBadTrips), color: ColorPallete.sharedPallete.badRed, description: "👎"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfUnratedTrips), color: ColorPallete.sharedPallete.unknownGrey)]
-            
-            self.pieChart2 = PNPieChart(frame: CGRectMake(margin*2 + chartWidth, margin, chartWidth, chartWidth), items: items2)
-            self.pieChart2.strokeChart()
-            self.pieChart2.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-            self.headerView.addSubview(self.pieChart2)
-            
-            self.pieChart.legendStyle = PNLegendItemStyle.Stacked
-            self.pieChart.legendFont = UIFont.boldSystemFontOfSize(12)
             
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
@@ -154,17 +132,46 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 self.headerLabel1.text = String(format: "%@ miles biked since %@", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
                 
-                let items3 = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen, description: "Days Biked"),
-                    PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.badRed)]
+                let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen, description: "Days\nBiked"),
+                    PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
                 
-                self.pieChart3 = PNPieChart(frame: CGRectMake(margin*3 + 2*chartWidth, margin, chartWidth, chartWidth), items: items3)
-                self.pieChart3.strokeChart()
-                self.pieChart3.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-                self.headerView.addSubview(self.pieChart3)
-                
-                self.pieChart3.legendStyle = PNLegendItemStyle.Stacked
-                self.pieChart3.legendFont = UIFont.boldSystemFontOfSize(12)
+                self.pieChartDaysBiked = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: daysBikedData)
+                self.pieChartDaysBiked.showOnlyDescriptions = true
+                self.pieChartDaysBiked.strokeChart()
+                self.pieChartDaysBiked.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+                self.headerView.addSubview(self.pieChartDaysBiked)
             }
+            
+            let modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue)]
+            
+            self.pieChartModeShare = PNPieChart(frame: CGRectMake(margin*2 + chartWidth, margin, chartWidth, chartWidth), items: modeShareData)
+            self.pieChartModeShare.showOnlyDescriptions = true
+            self.pieChartModeShare.strokeChart()
+            self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+            self.headerView.addSubview(self.pieChartModeShare)
+
+            
+            let ratingsData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfGoodTrips), color: ColorPallete.sharedPallete.goodGreen, description: "👍"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfBadTrips), color: ColorPallete.sharedPallete.badRed, description: "👎"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfUnratedTrips), color: ColorPallete.sharedPallete.unknownGrey)]
+            
+            self.pieChartRatings = PNPieChart(frame: CGRectMake(margin*3 + 2*chartWidth, margin, chartWidth, chartWidth), items: ratingsData)
+            self.pieChartRatings.showOnlyDescriptions = true
+            self.pieChartRatings.strokeChart()
+            self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+            self.headerView.addSubview(self.pieChartRatings)
+            
+            let weatherData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfWarmSunnyTrips), color: ColorPallete.sharedPallete.goodGreen, description: "☀️"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfRainyTrips), color: ColorPallete.sharedPallete.unknownGrey, description: "☔️"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfColdTrips), color: ColorPallete.sharedPallete.transitBlue, description: "❄️")]
+            
+            self.pieChartWeather = PNPieChart(frame: CGRectMake(margin*4 + 3*chartWidth, margin, chartWidth, chartWidth), items: weatherData)
+            self.pieChartWeather.showOnlyDescriptions = true
+            self.pieChartWeather.strokeChart()
+            self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+            self.headerView.addSubview(self.pieChartWeather)
         }
     }
     

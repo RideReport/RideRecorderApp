@@ -260,7 +260,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         
         var error : NSError?
@@ -276,7 +276,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Automotive.rawValue)
         
         var error : NSError?
@@ -292,7 +292,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Transit.rawValue)
         
         var error : NSError?
@@ -308,7 +308,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.NotSet.rawValue)
         
         var error : NSError?
@@ -324,7 +324,7 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Bad.rawValue)
         
         var error : NSError?
@@ -340,8 +340,69 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Good.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    private class func rainClimaconSet()->Set<String> {
+        var climaconSet: Set<String> = Set([])
+        for climaconRaw in [Climacon.Drizzle.rawValue, Climacon.DrizzleSun.rawValue, Climacon.DrizzleMoon.rawValue,
+            Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
+            Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
+            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+            Climacon.Umbrella.rawValue] {
+                climaconSet.insert(String(UnicodeScalar(Int(climaconRaw))))
+        }
+        
+        return climaconSet
+    }
+    
+    class var numberOfWarmSunnyTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfRainyTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon != nil AND climacon IN %@", ActivityType.Cycling.rawValue, rainClimaconSet())
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfColdTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
