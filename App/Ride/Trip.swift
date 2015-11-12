@@ -271,6 +271,70 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class var numberOfAutomotiveTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Automotive.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfUnratedTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.NotSet.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfBadTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Bad.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfGoodTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Good.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
     class var totalCycledMiles : Float {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
 

@@ -33,6 +33,16 @@ extension NSDate {
         return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: [])!
     }
     
+    func countOfDaysSinceNow() -> Int {
+        let calendar: NSCalendar = NSCalendar.currentCalendar()
+        
+        let date1 = calendar.startOfDayForDate(self)
+        let date2 = calendar.startOfDayForDate(NSDate())
+        
+        let components = calendar.components(.Day, fromDate: date1, toDate: date2, options: [])
+        return components.day
+    }
+    
     func daysFrom(daysFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.day = daysFrom

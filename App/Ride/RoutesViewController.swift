@@ -8,12 +8,17 @@
 
 import Foundation
 import CoreData
+import PNChart
 
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
+    
+    var pieChart: PNPieChart!
+    var pieChart2: PNPieChart!
+    var pieChart3: PNPieChart!
     
     var mainViewController: MainViewController! = nil
     
@@ -27,23 +32,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.navigationItem.hidesBackButton = true
         
-        var headerFrame = self.headerView.frame;
-        headerFrame.size.height = 36
-        self.headerView.frame = headerFrame
-        self.tableView.tableHeaderView = self.headerView
         self.headerView.backgroundColor = UIColor.clearColor()
-        
-        let count = Trip.numberOfCycledTrips
-        if (count == 0) {
-            self.title = "No Trips"
-            self.headerView.hidden = false
-        } else {
-            self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
-            let formatter = NSNumberFormatter()
-            formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-            formatter.maximumFractionDigits = 0
-            self.headerLabel1.text = String(format: "%@ miles and counting…", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!)
-        }
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
         
@@ -82,6 +71,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         self.refreshEmptyTableView()
+        self.refreshCharts()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -107,6 +97,67 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             self.emptyTableView.hidden = true
             self.tableView.hidden = true
+        }
+    }
+    
+    private func refreshCharts() {
+        let count = Trip.numberOfCycledTrips
+        if (count == 0) {
+            self.title = "No Trips"
+            self.headerView.hidden = false
+        } else {
+            let numCharts = 3
+            let margin: CGFloat = 16
+            let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
+            
+            var headerFrame = self.headerView.frame;
+            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 16
+            self.headerView.frame = headerFrame
+            self.tableView.tableHeaderView = self.headerView
+            
+            self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
+            let formatter = NSNumberFormatter()
+            formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+            formatter.maximumFractionDigits = 0
+            self.headerLabel1.text = String(format: "%@ total miles biked", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!)
+            
+            let items = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗")]
+            
+            self.pieChart = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: items)
+            self.pieChart.strokeChart()
+            self.pieChart.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+            self.headerView.addSubview(self.pieChart)
+            
+            self.pieChart.legendStyle = PNLegendItemStyle.Stacked
+            self.pieChart.legendFont = UIFont.boldSystemFontOfSize(12)
+            
+            let items2 = [PNPieChartDataItem(value: CGFloat(Trip.numberOfGoodTrips), color: ColorPallete.sharedPallete.goodGreen, description: "👍"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfBadTrips), color: ColorPallete.sharedPallete.badRed, description: "👎"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfUnratedTrips), color: ColorPallete.sharedPallete.unknownGrey)]
+            
+            self.pieChart2 = PNPieChart(frame: CGRectMake(margin*2 + chartWidth, margin, chartWidth, chartWidth), items: items2)
+            self.pieChart2.strokeChart()
+            self.pieChart2.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+            self.headerView.addSubview(self.pieChart2)
+            
+            self.pieChart.legendStyle = PNLegendItemStyle.Stacked
+            self.pieChart.legendFont = UIFont.boldSystemFontOfSize(12)
+            
+            if let sections = self.fetchedResultsController.sections {
+                let bikedDays = sections.count
+                let unbikedDays = (self.fetchedResultsController.fetchedObjects?.last as! Trip).creationDate.countOfDaysSinceNow() - sections.count
+                let items3 = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen, description: "Days Biked"),
+                    PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.badRed)]
+                
+                self.pieChart3 = PNPieChart(frame: CGRectMake(margin*3 + 2*chartWidth, margin, chartWidth, chartWidth), items: items3)
+                self.pieChart3.strokeChart()
+                self.pieChart3.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
+                self.headerView.addSubview(self.pieChart3)
+                
+                self.pieChart3.legendStyle = PNLegendItemStyle.Stacked
+                self.pieChart3.legendFont = UIFont.boldSystemFontOfSize(12)
+            }
         }
     }
     

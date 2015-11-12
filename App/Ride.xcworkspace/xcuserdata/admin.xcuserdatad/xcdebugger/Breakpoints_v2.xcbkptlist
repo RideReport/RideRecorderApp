@@ -19,22 +19,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Ride/APIClient.swift"
-            timestampString = "468805851.80688"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "662"
-            endingLineNumber = "662"
-            landmarkName = "deleteAccessToken(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Pods/Alamofire/Source/ResponseSerialization.swift"
             timestampString = "468380143.854574"
             startingColumnNumber = "9223372036854775807"
@@ -100,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Trip.swift"
-            timestampString = "468897519.402805"
+            timestampString = "468978560.510122"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "595"
-            endingLineNumber = "595"
+            startingLineNumber = "659"
+            endingLineNumber = "659"
             landmarkName = "close(_:)"
             landmarkType = "5">
             <Locations>
@@ -116,11 +100,11 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468899898.803113"
+                  timestampString = "468980890.049898"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "595"
-                  endingLineNumber = "595"
+                  startingLineNumber = "659"
+                  endingLineNumber = "659"
                   offsetFromSymbolStart = "28">
                </Location>
                <Location
@@ -131,11 +115,11 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468899898.803413"
+                  timestampString = "468980890.050108"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "595"
-                  endingLineNumber = "595"
+                  startingLineNumber = "659"
+                  endingLineNumber = "659"
                   offsetFromSymbolStart = "0">
                </Location>
             </Locations>

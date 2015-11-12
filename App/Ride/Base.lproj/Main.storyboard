@@ -175,7 +175,7 @@
                                             <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                             <variation key="widthClass=compact" misplaced="YES">
-                                                <rect key="frame" x="15" y="8" width="209" height="21"/>
+                                                <rect key="frame" x="8" y="121" width="209" height="21"/>
                                             </variation>
                                         </label>
                                     </subviews>
@@ -183,7 +183,7 @@
                                     <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="36" id="UKa-S7-QGO"/>
-                                        <constraint firstItem="1TN-jZ-DIY" firstAttribute="top" secondItem="Lfj-vn-Z6q" secondAttribute="top" constant="8" id="W5q-Au-g6o"/>
+                                        <constraint firstAttribute="bottom" secondItem="1TN-jZ-DIY" secondAttribute="bottom" constant="8" id="jYb-Ud-BZs"/>
                                         <constraint firstItem="1TN-jZ-DIY" firstAttribute="leading" secondItem="Lfj-vn-Z6q" secondAttribute="leading" constant="19" id="uML-aj-5Cg"/>
                                     </constraints>
                                     <variation key="default">
@@ -192,7 +192,7 @@
                                         </mask>
                                         <mask key="constraints">
                                             <exclude reference="UKa-S7-QGO"/>
-                                            <exclude reference="W5q-Au-g6o"/>
+                                            <exclude reference="jYb-Ud-BZs"/>
                                             <exclude reference="uML-aj-5Cg"/>
                                         </mask>
                                     </variation>
@@ -202,7 +202,7 @@
                                         </mask>
                                         <mask key="constraints">
                                             <include reference="UKa-S7-QGO"/>
-                                            <include reference="W5q-Au-g6o"/>
+                                            <include reference="jYb-Ud-BZs"/>
                                             <include reference="uML-aj-5Cg"/>
                                         </mask>
                                     </variation>

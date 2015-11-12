@@ -96,8 +96,10 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/Mapbox.framework"
   install_framework "Pods/OAuthSwift.framework"
   install_framework "Pods/PINCache.framework"
+  install_framework "Pods/PNChart.framework"
   install_framework "Pods/SwiftyJSON.framework"
   install_framework "Pods/UIActionSheet_Blocks.framework"
+  install_framework "Pods/UICountingLabel.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Alamofire.framework"
@@ -112,6 +114,8 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Mapbox.framework"
   install_framework "Pods/OAuthSwift.framework"
   install_framework "Pods/PINCache.framework"
+  install_framework "Pods/PNChart.framework"
   install_framework "Pods/SwiftyJSON.framework"
   install_framework "Pods/UIActionSheet_Blocks.framework"
+  install_framework "Pods/UICountingLabel.framework"
 fi
