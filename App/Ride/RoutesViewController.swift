@@ -116,11 +116,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.tableView.tableHeaderView = self.headerView
             
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
-            let formatter = NSNumberFormatter()
-            formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-            formatter.maximumFractionDigits = 0
-            self.headerLabel1.text = String(format: "%@ total miles biked", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!)
-            
             let items = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
                 PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗")]
             
@@ -146,7 +141,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
-                let unbikedDays = (self.fetchedResultsController.fetchedObjects?.last as! Trip).creationDate.countOfDaysSinceNow() - sections.count
+                let firstTrip = (self.fetchedResultsController.fetchedObjects?.last as! Trip)
+                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count
+                
+                let formatter = NSNumberFormatter()
+                formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
+                formatter.maximumFractionDigits = 0
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.locale = NSLocale.currentLocale()
+                dateFormatter.dateStyle = .ShortStyle
+                
+                self.headerLabel1.text = String(format: "%@ miles biked since %@", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
+                
                 let items3 = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen, description: "Days Biked"),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.badRed)]
                 
