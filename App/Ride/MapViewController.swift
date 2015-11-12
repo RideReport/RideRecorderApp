@@ -441,6 +441,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+                return ColorPallete.sharedPallete.transitBlue
             }
             
             return ColorPallete.sharedPallete.autoBrown

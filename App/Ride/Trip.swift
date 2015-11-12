@@ -22,6 +22,7 @@ class Trip : NSManagedObject {
         case Cycling
         case Automotive
         case Walking
+        case Transit
     }
     
     enum Rating : Int16 {
@@ -287,6 +288,22 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class var numberOfTransitTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Transit.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
     class var numberOfUnratedTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
@@ -508,6 +525,8 @@ class Trip : NSManagedObject {
             tripTypeString = "🏃"
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
+        } else if (self.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+            tripTypeString = "🚋"
         } else {
             tripTypeString = ""
         }

@@ -280,6 +280,14 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         CATransaction.commit()
     }
     
+    @IBAction func transitButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Transit.rawValue)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
     @IBAction func bikeButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)

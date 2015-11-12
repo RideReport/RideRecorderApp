@@ -28,6 +28,13 @@ class ColorPallete : NSObject {
         }
     }
     
+    var transitBlue: UIColor {
+        get {
+            return UIColor.blueColor()
+        }
+    }
+
+    
     var goodGreen: UIColor {
         get {
             return UIColor(red: 51/255, green: 204/255, blue: 51/255, alpha: 1.0)

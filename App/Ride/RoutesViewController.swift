@@ -117,7 +117,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
             let items = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗")]
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue, description: "🚋")]
             
             self.pieChart = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: items)
             self.pieChart.strokeChart()

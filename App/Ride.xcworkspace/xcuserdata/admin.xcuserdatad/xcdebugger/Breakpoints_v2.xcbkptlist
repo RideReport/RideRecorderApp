@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Trip.swift"
-            timestampString = "468978560.510122"
+            timestampString = "468985071.282842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "659"
-            endingLineNumber = "659"
+            startingLineNumber = "678"
+            endingLineNumber = "678"
             landmarkName = "close(_:)"
             landmarkType = "5">
             <Locations>
@@ -100,11 +100,11 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468981486.131105"
+                  timestampString = "468985175.286503"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "659"
-                  endingLineNumber = "659"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
                   offsetFromSymbolStart = "28">
                </Location>
                <Location
@@ -115,11 +115,11 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "468981486.131673"
+                  timestampString = "468985175.287075"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "659"
-                  endingLineNumber = "659"
+                  startingLineNumber = "678"
+                  endingLineNumber = "678"
                   offsetFromSymbolStart = "0">
                </Location>
             </Locations>
