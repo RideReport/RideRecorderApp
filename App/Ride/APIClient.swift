@@ -403,7 +403,6 @@ class APIClient {
             // if we can't do this, we are in a bad state.
             assert(success)
             
-            Profile.deleteProfile()
             self.authenticateIfNeeded()
         }
     }
