@@ -176,10 +176,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 let daysBikedLabel = UILabel()
                 daysBikedLabel.textColor = UIColor.whiteColor()
                 daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
+                daysBikedLabel.adjustsFontSizeToFitWidth = true
+                daysBikedLabel.minimumScaleFactor = 0.6
                 daysBikedLabel.numberOfLines = 2
                 daysBikedLabel.textAlignment = NSTextAlignment.Center
-                daysBikedLabel.text = "All Time\n% Days Biked"
+                daysBikedLabel.text = "All Time\nDays Biked"
                 daysBikedLabel.sizeToFit()
+                if daysBikedLabel.frame.width > chartWidth {
+                    daysBikedLabel.frame = CGRectMake(daysBikedLabel.frame.origin.x, daysBikedLabel.frame.origin.y, chartWidth, daysBikedLabel.frame.size.height)
+                }
                 daysBikedLabel.frame = CGRectMake(margin + (chartWidth - daysBikedLabel.frame.width)/2, margin + 8 + chartWidth, daysBikedLabel.frame.width, daysBikedLabel.frame.height)
                 self.headerView.addSubview(daysBikedLabel)
             }
@@ -211,10 +216,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let modeShareLabel = UILabel()
             modeShareLabel.textColor = UIColor.whiteColor()
             modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
+            modeShareLabel.adjustsFontSizeToFitWidth = true
+            modeShareLabel.minimumScaleFactor = 0.6
             modeShareLabel.numberOfLines = 2
             modeShareLabel.textAlignment = NSTextAlignment.Center
             modeShareLabel.text = modeShareLabelTitle
             modeShareLabel.sizeToFit()
+            if modeShareLabel.frame.width > chartWidth {
+                modeShareLabel.frame = CGRectMake(modeShareLabel.frame.origin.x, modeShareLabel.frame.origin.y, chartWidth, modeShareLabel.frame.size.height)
+            }
             modeShareLabel.frame = CGRectMake(margin*2 + chartWidth + (chartWidth - modeShareLabel.frame.width)/2, margin + 8 + chartWidth, modeShareLabel.frame.width, modeShareLabel.frame.height)
             self.headerView.addSubview(modeShareLabel)
 
@@ -231,8 +241,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let ratingsLabel = UILabel()
             ratingsLabel.textColor = UIColor.whiteColor()
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
-            ratingsLabel.text = "Trip Ratings"
+            ratingsLabel.adjustsFontSizeToFitWidth = true
+            ratingsLabel.minimumScaleFactor = 0.6
+            ratingsLabel.text = "Ratings"
             ratingsLabel.sizeToFit()
+            if ratingsLabel.frame.width > chartWidth {
+                ratingsLabel.frame = CGRectMake(ratingsLabel.frame.origin.x, ratingsLabel.frame.origin.y, chartWidth, ratingsLabel.frame.size.height)
+            }
             ratingsLabel.frame = CGRectMake(margin*3 + chartWidth*2 + (chartWidth - ratingsLabel.frame.width)/2, margin + 8 + chartWidth, ratingsLabel.frame.width, ratingsLabel.frame.height)
             self.headerView.addSubview(ratingsLabel)
             
@@ -248,10 +263,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let weatherLabel = UILabel()
             weatherLabel.textColor = UIColor.whiteColor()
             weatherLabel.font = UIFont.boldSystemFontOfSize(14)
+            weatherLabel.adjustsFontSizeToFitWidth = true
+            weatherLabel.minimumScaleFactor = 0.6
             weatherLabel.numberOfLines = 2
             weatherLabel.textAlignment = NSTextAlignment.Center
             weatherLabel.text = "Weather\nBiked In"
             weatherLabel.sizeToFit()
+            if weatherLabel.frame.width > chartWidth {
+                weatherLabel.frame = CGRectMake(weatherLabel.frame.origin.x, weatherLabel.frame.origin.y, chartWidth, weatherLabel.frame.size.height)
+            }
             weatherLabel.frame = CGRectMake(margin*4 + chartWidth*3 + (chartWidth - weatherLabel.frame.width)/2, margin + 8 + chartWidth, weatherLabel.frame.width, weatherLabel.frame.height)
             self.headerView.addSubview(weatherLabel)
         }
