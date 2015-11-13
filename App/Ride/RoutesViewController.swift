@@ -119,32 +119,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
             
-            let rideStreak = Trip.currentRideStreakNumber
-            if rideStreak == 0 {
-                self.headerLabel1.text = "😢  No rides today"
+            Profile.profile().updateCurrentRideStreakLength()
+
+            if Profile.profile().currentStreakLength.integerValue == 0 {
+                self.headerLabel1.text = "🐣  No rides today"
             } else {
-                let jewel = { ()->String in
-                    if rideStreak > 50 {
-                        return "🏆  "
-                    } else if rideStreak > 50 {
-                        return "🏅  "
-                    } else if rideStreak > 25 {
-                        return "🚀  "
-                    } else if rideStreak > 14 {
-                        return "🔥  "
-                    } else if rideStreak > 10 {
-                        return "💙  "
-                    } else if rideStreak > 7 {
-                        return "💚  "
-                    } else if rideStreak > 5 {
-                        return "💛  "
-                    } else if rideStreak > 3 {
-                        return "❤️  "
-                    } else {
-                        return ""
-                    }
-                }()
-                self.headerLabel1.text = String(format: "%@%i day ride streak", jewel, Trip.currentRideStreakNumber)
+                self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
             }
             
             if let sections = self.fetchedResultsController.sections {

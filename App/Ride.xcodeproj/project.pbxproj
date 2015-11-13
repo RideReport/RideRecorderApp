@@ -220,6 +220,7 @@
 		8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBAnimatedGradientMaskButton.m; sourceTree = "<group>"; };
 		845FF6C71A783AD500607316 /* DEBUGCLLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DEBUGCLLocationManager.h; sourceTree = "<group>"; };
 		845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DEBUGCLLocationManager.m; sourceTree = "<group>"; };
+		84646C531BF6965F007CB19D /* Ride 29.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 29.xcdatamodel"; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMachineTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		846D32161AD736F400F58C00 /* WeatherManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WeatherManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		846D321B1AD73BA500F58C00 /* Ride 19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 19.xcdatamodel"; sourceTree = "<group>"; };
@@ -1368,6 +1369,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				84646C531BF6965F007CB19D /* Ride 29.xcdatamodel */,
 				842FDCCD1BD58B9C0079AFCC /* Ride 28.xcdatamodel */,
 				840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */,
 				84FBE2131BBCA2E5000FF7E5 /* Ride 26.xcdatamodel */,
@@ -1397,7 +1399,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 842FDCCD1BD58B9C0079AFCC /* Ride 28.xcdatamodel */;
+			currentVersion = 84646C531BF6965F007CB19D /* Ride 29.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

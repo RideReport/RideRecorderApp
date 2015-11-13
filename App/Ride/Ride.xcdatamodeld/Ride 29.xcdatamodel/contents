@@ -34,6 +34,8 @@
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="Profile" representedClassName="Ride_Report.Profile" syncable="YES">
+        <attribute name="currentStreakLength" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="currentStreakStartDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Trip" representedClassName="Ride_Report.Trip" syncable="YES">
@@ -63,7 +65,7 @@
         <element name="Activity" positionX="-54" positionY="81" width="128" height="180"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="135"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="225"/>
-        <element name="Profile" positionX="-45" positionY="144" width="128" height="60"/>
+        <element name="Profile" positionX="-45" positionY="144" width="128" height="90"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="360"/>
     </elements>
 </model>

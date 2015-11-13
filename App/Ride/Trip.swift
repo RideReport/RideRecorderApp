@@ -214,6 +214,26 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
+    class func bikeTripsToday() -> [Trip]? {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().beginingOfDay())
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return results! as? [Trip]
+    }
+    
     class func mostRecentBikeTrip() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -434,24 +454,6 @@ class Trip : NSManagedObject {
         }
         
         return climaconSet
-    }
-    
-    class var currentRideStreakNumber: Int {
-        var count = 0
-        var currentDate = NSDate()
-        for trip in Trip.allBikeTrips() {
-            let tripDate = (trip as! Trip).creationDate
-            if (tripDate.isEqualToDay(currentDate)) {
-                currentDate = currentDate.daysFrom(-1)
-                count++
-            } else if (tripDate.compare(currentDate) == NSComparisonResult.OrderedDescending) {
-                // if the tripDate is after the currentDate, keep going
-            } else {
-                break
-            }
-        }
-        
-        return count
     }
     
     class var numberOfWarmSunnyTrips : Int {
@@ -961,6 +963,8 @@ class Trip : NSManagedObject {
         }
         
         if (self.activityType == NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
+            Profile.profile().updateCurrentRideStreakLength()
+            
             let rewardString = self.rewardString()
             if (rewardString != nil) {
                 message += (". " + rewardString!)
@@ -970,7 +974,19 @@ class Trip : NSManagedObject {
         return message
     }
     
+    var isFirstBikeTripToday: Bool {
+        if let tripsToday = Trip.bikeTripsToday() {
+            return tripsToday.contains(self) && tripsToday.count == 1
+        }
+        
+        return false
+    }
+    
     func rewardString()->String? {
+        if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
+            return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+        }
+        
         if (self.isShittyWeather) {
             return "🏆 Crappy weather bonus points!"
         }
