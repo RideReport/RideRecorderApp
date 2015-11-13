@@ -127,6 +127,29 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class func allBikeTrips(limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if (limit != 0) {
+            fetchedRequest.fetchLimit = limit
+        }
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        if (results == nil) {
+            return []
+        }
+        
+        return results!
+    }
+    
     class func allTrips(limit: Int = 0) -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -416,7 +439,7 @@ class Trip : NSManagedObject {
     class var currentRideStreakNumber: Int {
         var count = 0
         var currentDate = NSDate()
-        for trip in Trip.allTrips() {
+        for trip in Trip.allBikeTrips() {
             let tripDate = (trip as! Trip).creationDate
             if (tripDate.isEqualToDay(currentDate)) {
                 currentDate = currentDate.daysFrom(-1)
