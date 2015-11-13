@@ -168,20 +168,54 @@
                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TN-jZ-DIY">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TN-jZ-DIY">
                                             <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                             <animations/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="ODH-pt-odR"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="ODH-pt-odR"/>
+                                                </mask>
+                                            </variation>
                                             <variation key="widthClass=compact" misplaced="YES">
                                                 <rect key="frame" x="8" y="121" width="209" height="21"/>
+                                                <mask key="constraints">
+                                                    <include reference="ODH-pt-odR"/>
+                                                </mask>
+                                            </variation>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hK6-NJ-5DO">
+                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                            <animations/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="aIL-JX-plS"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="aIL-JX-plS"/>
+                                                </mask>
+                                            </variation>
+                                            <variation key="widthClass=compact" misplaced="YES">
+                                                <rect key="frame" x="8" y="92" width="209" height="21"/>
+                                                <mask key="constraints">
+                                                    <include reference="aIL-JX-plS"/>
+                                                </mask>
                                             </variation>
                                         </label>
                                     </subviews>
                                     <animations/>
                                     <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                     <constraints>
+                                        <constraint firstItem="hK6-NJ-5DO" firstAttribute="leading" secondItem="Lfj-vn-Z6q" secondAttribute="leading" constant="19" id="0p2-0d-Qfr"/>
+                                        <constraint firstItem="1TN-jZ-DIY" firstAttribute="top" secondItem="hK6-NJ-5DO" secondAttribute="bottom" constant="6" id="CHw-NY-Aap"/>
                                         <constraint firstAttribute="height" constant="36" id="UKa-S7-QGO"/>
                                         <constraint firstAttribute="bottom" secondItem="1TN-jZ-DIY" secondAttribute="bottom" constant="8" id="jYb-Ud-BZs"/>
                                         <constraint firstItem="1TN-jZ-DIY" firstAttribute="leading" secondItem="Lfj-vn-Z6q" secondAttribute="leading" constant="19" id="uML-aj-5Cg"/>
@@ -189,9 +223,12 @@
                                     <variation key="default">
                                         <mask key="subviews">
                                             <exclude reference="1TN-jZ-DIY"/>
+                                            <exclude reference="hK6-NJ-5DO"/>
                                         </mask>
                                         <mask key="constraints">
                                             <exclude reference="UKa-S7-QGO"/>
+                                            <exclude reference="0p2-0d-Qfr"/>
+                                            <exclude reference="CHw-NY-Aap"/>
                                             <exclude reference="jYb-Ud-BZs"/>
                                             <exclude reference="uML-aj-5Cg"/>
                                         </mask>
@@ -199,9 +236,12 @@
                                     <variation key="widthClass=compact">
                                         <mask key="subviews">
                                             <include reference="1TN-jZ-DIY"/>
+                                            <include reference="hK6-NJ-5DO"/>
                                         </mask>
                                         <mask key="constraints">
                                             <include reference="UKa-S7-QGO"/>
+                                            <include reference="0p2-0d-Qfr"/>
+                                            <include reference="CHw-NY-Aap"/>
                                             <include reference="jYb-Ud-BZs"/>
                                             <include reference="uML-aj-5Cg"/>
                                         </mask>
@@ -349,7 +389,8 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="emptyTableView" destination="hQC-Qb-oe8" id="Zdc-71-QHN"/>
-                        <outlet property="headerLabel1" destination="1TN-jZ-DIY" id="1CX-al-dtx"/>
+                        <outlet property="headerLabel1" destination="hK6-NJ-5DO" id="h53-rm-2sv"/>
+                        <outlet property="headerLabel2" destination="1TN-jZ-DIY" id="jTM-oW-2kl"/>
                         <outlet property="headerView" destination="Lfj-vn-Z6q" id="L0F-g3-S19"/>
                         <outlet property="tableView" destination="W5I-Vg-qji" id="ICZ-R4-rgn"/>
                     </connections>

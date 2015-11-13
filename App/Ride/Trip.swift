@@ -304,6 +304,54 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class var numberOfCycledTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfAutomotiveTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Automotive.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfTransitTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Transit.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
     class var numberOfUnratedTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
@@ -363,6 +411,24 @@ class Trip : NSManagedObject {
         }
         
         return climaconSet
+    }
+    
+    class var currentRideStreakNumber: Int {
+        var count = 0
+        var currentDate = NSDate()
+        for trip in Trip.allTrips() {
+            let tripDate = (trip as! Trip).creationDate
+            if (tripDate.isEqualToDay(currentDate)) {
+                currentDate = currentDate.daysFrom(-1)
+                count++
+            } else if (tripDate.compare(currentDate) == NSComparisonResult.OrderedDescending) {
+                // if the tripDate is after the currentDate, keep going
+            } else {
+                break
+            }
+        }
+        
+        return count
     }
     
     class var numberOfWarmSunnyTrips : Int {

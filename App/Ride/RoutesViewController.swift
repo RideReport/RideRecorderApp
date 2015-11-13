@@ -15,6 +15,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
+    @IBOutlet weak var headerLabel2: UILabel!
     
     var pieChartModeShare: PNPieChart!
     var pieChartRatings: PNPieChart!
@@ -112,11 +113,39 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
             var headerFrame = self.headerView.frame;
-            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 16
+            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + self.headerLabel2.frame.size.height + 64
             self.headerView.frame = headerFrame
             self.tableView.tableHeaderView = self.headerView
             
             self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
+            
+            let rideStreak = Trip.currentRideStreakNumber
+            if rideStreak == 0 {
+                self.headerLabel1.text = "No rides today =("
+            } else {
+                let jewel = { ()->String in
+                    if rideStreak > 50 {
+                        return "🏆  "
+                    } else if rideStreak > 50 {
+                        return "🏅  "
+                    } else if rideStreak > 25 {
+                        return "🚀  "
+                    } else if rideStreak > 14 {
+                        return "🔥  "
+                    } else if rideStreak > 10 {
+                        return "💙  "
+                    } else if rideStreak > 7 {
+                        return "💚  "
+                    } else if rideStreak > 5 {
+                        return "💛  "
+                    } else if rideStreak > 3 {
+                        return "❤️  "
+                    } else {
+                        return ""
+                    }
+                }()
+                self.headerLabel1.text = String(format: "%@%i day ride streak", jewel, Trip.currentRideStreakNumber)
+            }
             
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
@@ -130,9 +159,32 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 dateFormatter.locale = NSLocale.currentLocale()
                 dateFormatter.dateStyle = .ShortStyle
                 
-                self.headerLabel1.text = String(format: "%@ miles biked since %@", formatter.stringFromNumber(NSNumber(float: Trip.totalCycledMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
                 
-                let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen, description: "Days\nBiked"),
+                let totalMiles = Trip.totalCycledMiles
+                let jewel = { ()->String in
+                    if totalMiles > 5000 {
+                        return "🌈  "
+                    } else if totalMiles > 2000 {
+                        return "🌌  "
+                    } else if totalMiles > 1000 {
+                        return "🌠  "
+                    } else if totalMiles > 500 {
+                        return "🌋  "
+                    } else if totalMiles > 100 {
+                        return "🗻  "
+                    } else if totalMiles > 50 {
+                        return "🏔  "
+                    } else if totalMiles > 25 {
+                        return "⛰  "
+                    } else if totalMiles > 10 {
+                        return "🌅  "
+                    } else {
+                        return ""
+                    }
+                }()
+                self.headerLabel2.text = String(format: "%@%@ miles biked since %@", jewel, formatter.stringFromNumber(NSNumber(float: totalMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
+                
+                let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
                 
                 self.pieChartDaysBiked = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: daysBikedData)
@@ -140,17 +192,51 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.pieChartDaysBiked.strokeChart()
                 self.pieChartDaysBiked.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
                 self.headerView.addSubview(self.pieChartDaysBiked)
+                
+                let daysBikedLabel = UILabel()
+                daysBikedLabel.textColor = UIColor.whiteColor()
+                daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
+                daysBikedLabel.numberOfLines = 2
+                daysBikedLabel.textAlignment = NSTextAlignment.Center
+                daysBikedLabel.text = "All Time\n% Days Biked"
+                daysBikedLabel.sizeToFit()
+                daysBikedLabel.frame = CGRectMake(margin + (chartWidth - daysBikedLabel.frame.width)/2, margin + 8 + chartWidth, daysBikedLabel.frame.width, daysBikedLabel.frame.height)
+                self.headerView.addSubview(daysBikedLabel)
             }
             
-            let modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTrips), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTrips), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue)]
+            var modeShareData : [PNPieChartDataItem] = []
+            var modeShareLabelTitle = ""
+            let numCycledTripsAllTime = CGFloat(Trip.numberOfCycledTrips)
+            let numCarTripsAllTime = CGFloat(Trip.numberOfAutomotiveTrips)
+            
+            if (numCycledTripsAllTime/numCarTripsAllTime >= 2) {
+                // if they have at least a 2/3 mode share by bike, show all time
+                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
+                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue)]
+                modeShareLabelTitle = "All Time\nMode Use"
+            } else {
+                // otherwise show last 30 days to make it more actionable
+                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
+                modeShareLabelTitle = "Mode Use\nThis Month"
+            }
             
             self.pieChartModeShare = PNPieChart(frame: CGRectMake(margin*2 + chartWidth, margin, chartWidth, chartWidth), items: modeShareData)
             self.pieChartModeShare.showOnlyDescriptions = true
             self.pieChartModeShare.strokeChart()
             self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartModeShare)
+            let modeShareLabel = UILabel()
+            modeShareLabel.textColor = UIColor.whiteColor()
+            modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
+            modeShareLabel.numberOfLines = 2
+            modeShareLabel.textAlignment = NSTextAlignment.Center
+            modeShareLabel.text = modeShareLabelTitle
+            modeShareLabel.sizeToFit()
+            modeShareLabel.frame = CGRectMake(margin*2 + chartWidth + (chartWidth - modeShareLabel.frame.width)/2, margin + 8 + chartWidth, modeShareLabel.frame.width, modeShareLabel.frame.height)
+            self.headerView.addSubview(modeShareLabel)
 
             
             let ratingsData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfGoodTrips), color: ColorPallete.sharedPallete.goodGreen, description: "👍"),
@@ -162,6 +248,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartRatings.strokeChart()
             self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartRatings)
+            let ratingsLabel = UILabel()
+            ratingsLabel.textColor = UIColor.whiteColor()
+            ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
+            ratingsLabel.text = "Trip Ratings"
+            ratingsLabel.sizeToFit()
+            ratingsLabel.frame = CGRectMake(margin*3 + chartWidth*2 + (chartWidth - ratingsLabel.frame.width)/2, margin + 8 + chartWidth, ratingsLabel.frame.width, ratingsLabel.frame.height)
+            self.headerView.addSubview(ratingsLabel)
             
             let weatherData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfWarmSunnyTrips), color: ColorPallete.sharedPallete.goodGreen, description: "☀️"),
                 PNPieChartDataItem(value: CGFloat(Trip.numberOfRainyTrips), color: ColorPallete.sharedPallete.unknownGrey, description: "☔️"),
@@ -172,6 +265,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartWeather.strokeChart()
             self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartWeather)
+            let weatherLabel = UILabel()
+            weatherLabel.textColor = UIColor.whiteColor()
+            weatherLabel.font = UIFont.boldSystemFontOfSize(14)
+            weatherLabel.numberOfLines = 2
+            weatherLabel.textAlignment = NSTextAlignment.Center
+            weatherLabel.text = "Weather\nBiked In"
+            weatherLabel.sizeToFit()
+            weatherLabel.frame = CGRectMake(margin*4 + chartWidth*3 + (chartWidth - weatherLabel.frame.width)/2, margin + 8 + chartWidth, weatherLabel.frame.width, weatherLabel.frame.height)
+            self.headerView.addSubview(weatherLabel)
         }
     }
     
