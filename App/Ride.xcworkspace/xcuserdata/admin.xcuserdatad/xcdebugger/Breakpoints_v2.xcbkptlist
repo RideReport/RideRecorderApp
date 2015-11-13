@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Trip.swift"
-            timestampString = "469067586.09208"
+            timestampString = "469142963.384842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "805"
-            endingLineNumber = "805"
+            startingLineNumber = "828"
+            endingLineNumber = "828"
             landmarkName = "close(_:)"
             landmarkType = "5">
             <Locations>
@@ -100,12 +100,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "469072898.808452"
+                  timestampString = "469142964.960736"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "805"
-                  endingLineNumber = "805"
-                  offsetFromSymbolStart = "28">
+                  startingLineNumber = "828"
+                  endingLineNumber = "828"
+                  offsetFromSymbolStart = "32">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -115,12 +115,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/Trip.swift"
-                  timestampString = "469072898.808981"
+                  timestampString = "469142964.961455"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "805"
-                  endingLineNumber = "805"
-                  offsetFromSymbolStart = "0">
+                  startingLineNumber = "828"
+                  endingLineNumber = "828"
+                  offsetFromSymbolStart = "4">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -164,12 +164,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/RoutesViewController.swift"
-                  timestampString = "469072898.815345"
+                  timestampString = "469142964.968742"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "411"
                   endingLineNumber = "411"
-                  offsetFromSymbolStart = "28">
+                  offsetFromSymbolStart = "23">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -179,12 +179,12 @@
                   moduleName = "Ride Report"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/admin/Developer/Ride/App/Ride/RoutesViewController.swift"
-                  timestampString = "469072898.815829"
+                  timestampString = "469142964.969627"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "412"
                   endingLineNumber = "412"
-                  offsetFromSymbolStart = "32">
+                  offsetFromSymbolStart = "23">
                </Location>
             </Locations>
          </BreakpointContent>

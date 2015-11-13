@@ -121,7 +121,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             let rideStreak = Trip.currentRideStreakNumber
             if rideStreak == 0 {
-                self.headerLabel1.text = "No rides today =("
+                self.headerLabel1.text = "😢  No rides today"
             } else {
                 let jewel = { ()->String in
                     if rideStreak > 50 {
@@ -179,7 +179,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                     } else if totalMiles > 10 {
                         return "🌅  "
                     } else {
-                        return ""
+                        return "🌄  "
                     }
                 }()
                 self.headerLabel2.text = String(format: "%@%@ miles biked since %@", jewel, formatter.stringFromNumber(NSNumber(float: totalMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
