@@ -983,6 +983,19 @@ class Trip : NSManagedObject {
     }
     
     func rewardString()->String? {
+        let numTrips = Trip.numberOfCycledTrips
+        if (numTrips % 1000 == 0) {
+            return String(format: "🙌 Holy moly, that's your %ith trip!", numTrips)
+        }
+        
+        if (numTrips % 100 == 0) {
+            return String(format: "💯 Whoa, your %ith trip!", numTrips)
+        }
+        
+        if (self.lengthMiles > 20.0) {
+            return "🌄 Epic Ride!"
+        }
+        
         if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
             return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
         }
@@ -991,13 +1004,8 @@ class Trip : NSManagedObject {
             return "🏆 Crappy weather bonus points!"
         }
         
-        let numTrips = Trip.numberOfCycledTrips
         if (numTrips % 10 == 0) {
             return String(format: "🎉 Your %ith trip!", numTrips)
-        }
-        
-        if (self.lengthMiles > 10.0) {
-            return "🌄 Epic Ride!"
         }
         
         return nil
