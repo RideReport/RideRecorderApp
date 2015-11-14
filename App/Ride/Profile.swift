@@ -81,12 +81,19 @@ class Profile : NSManagedObject {
                     count++
                 } else if (tripDate.compare(currentDate) == NSComparisonResult.OrderedDescending) {
                     // if the tripDate is after the currentDate, keep going
+                } else if (currentDate.isEqualToDay(NSDate())) {
+                    // if the trip wasn't today but there was a trip yesterday,
+                    // they could still take a trip today so the streak is still valid
+                    // even though today doesn't count
+                    if (tripDate.isEqualToDay(currentDate.daysFrom(-1))) {
+                        currentDate = currentDate.daysFrom(-1)
+                        count++
+                    }
                 } else {
                     break
                 }
             }
             self.currentStreakLength = NSNumber(integer: count)
-            CoreDataManager.sharedManager.saveContext()
         } else if (self.currentStreakStartDate.daysFrom(self.currentStreakLength.integerValue).isToday()) {
             // if the streak counts up to today, the count is current
         } else if (self.currentStreakStartDate.daysFrom(self.currentStreakLength.integerValue + 1).isToday()) {

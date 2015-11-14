@@ -26,6 +26,10 @@ extension NSDate {
         return NSDate().beginingOfDay().daysFrom(-1)
     }
     
+    func isBeforeNoon()->Bool {
+        return (self.compare(self.beginingOfDay().hoursFrom(12)) == NSComparisonResult.OrderedAscending)
+    }
+    
     func hoursFrom(hoursFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.hour = hoursFrom

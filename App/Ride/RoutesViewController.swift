@@ -124,7 +124,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if Profile.profile().currentStreakLength.integerValue == 0 {
                 self.headerLabel1.text = "🐣  No rides today"
             } else {
-                self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+                if (Trip.bikeTripsToday() == nil) {
+                    if (NSDate().isBeforeNoon()) {
+                        self.headerLabel1.text = String(format: "💗 Ride today for a %i day streak", Profile.profile().currentStreakLength.integerValue + 1)
+                    } else {
+                        self.headerLabel1.text = String(format: "💔 Don't end your %i day streak!", Profile.profile().currentStreakLength.integerValue)
+                    }
+                } else {
+                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+                }
             }
             
             if let sections = self.fetchedResultsController.sections {
