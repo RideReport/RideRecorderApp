@@ -16,6 +16,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var headerLabel2: UILabel!
+    @IBOutlet weak var headerLabel3: UILabel!
     
     var pieChartModeShare: PNPieChart!
     var pieChartRatings: PNPieChart!
@@ -108,12 +109,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.title = "No Trips"
             self.headerView.hidden = false
         } else {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.locale = NSLocale.currentLocale()
+            dateFormatter.dateStyle = .ShortStyle
+            
             let numCharts = 4
             let margin: CGFloat = 16
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
             var headerFrame = self.headerView.frame;
-            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + self.headerLabel2.frame.size.height + 64
+            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + self.headerLabel2.frame.size.height + 86
             self.headerView.frame = headerFrame
             self.tableView.tableHeaderView = self.headerView
             
@@ -126,14 +131,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             } else {
                 if (Trip.bikeTripsToday() == nil) {
                     if (NSDate().isBeforeNoon()) {
-                        self.headerLabel1.text = String(format: "💗 Ride today for a %i day streak", Profile.profile().currentStreakLength.integerValue + 1)
+                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", Profile.profile().currentStreakLength.integerValue)
                     } else {
-                        self.headerLabel1.text = String(format: "💔 Don't end your %i day streak!", Profile.profile().currentStreakLength.integerValue)
+                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", Profile.profile().currentStreakLength.integerValue)
                     }
                 } else {
                     self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
                 }
             }
+            
+            self.headerLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
+
             
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
@@ -143,10 +151,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 let formatter = NSNumberFormatter()
                 formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
                 formatter.maximumFractionDigits = 0
-                let dateFormatter = NSDateFormatter()
-                dateFormatter.locale = NSLocale.currentLocale()
-                dateFormatter.dateStyle = .ShortStyle
-                
                 
                 let totalMiles = Trip.totalCycledMiles
                 let jewel = { ()->String in
@@ -170,7 +174,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                         return "🌄  "
                     }
                 }()
-                self.headerLabel2.text = String(format: "%@%@ miles biked since %@", jewel, formatter.stringFromNumber(NSNumber(float: totalMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
+                self.headerLabel3.text = String(format: "%@%@ miles biked since %@", jewel, formatter.stringFromNumber(NSNumber(float: totalMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
                 
                 let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]

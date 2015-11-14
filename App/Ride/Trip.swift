@@ -997,7 +997,11 @@ class Trip : NSManagedObject {
         }
         
         if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
-            return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+            if (Profile.profile().currentStreakStartDate.isEqualToDate(Profile.profile().longestStreakStartDate)) {
+                return String(format: "🎉%@  you set a new %i day streak record!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+            } else {
+                return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+            }
         }
         
         if (self.isShittyWeather) {
