@@ -997,7 +997,7 @@ class Trip : NSManagedObject {
         }
         
         if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
-            if (Profile.profile().currentStreakStartDate.isEqualToDate(Profile.profile().longestStreakStartDate)) {
+            if let currentStreakStartDate = Profile.profile().currentStreakStartDate, longestStreakStartDate = Profile.profile().longestStreakStartDate where currentStreakStartDate.isEqualToDate(longestStreakStartDate) {
                 return String(format: "🎉%@  you set a new %i day streak record!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
             } else {
                 return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
