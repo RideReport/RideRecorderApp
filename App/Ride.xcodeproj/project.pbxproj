@@ -752,6 +752,9 @@
 							com.apple.HomeKit = {
 								enabled = 0;
 							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
 						};
 					};
 					84E395741A757DF30015B682 = {
