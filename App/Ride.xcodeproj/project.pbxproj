@@ -17,7 +17,6 @@
 		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; };
 		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; };
 		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; };
-		840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -32,7 +31,6 @@
 		842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = 84F8E63A1AFAA09C00270C76 /* Migration.xcmappingmodel */; };
 		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
-		842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */; };
 		842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; };
 		842FDCB41BD56F880079AFCC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375C1B5DADF60023EC82 /* SystemConfiguration.framework */; };
@@ -174,7 +172,6 @@
 		84091CDC1BD848C000264652 /* counter-shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow.png"; sourceTree = "<group>"; };
 		84091CDD1BD848C000264652 /* counter-shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow@2x.png"; sourceTree = "<group>"; };
 		840AE4011BF7DE61004E4997 /* Ride 30.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 30.xcdatamodel"; sourceTree = "<group>"; };
-		840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 27.xcdatamodel"; sourceTree = "<group>"; };
 		841D87111BFD4E3000CE28CD /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
@@ -256,7 +253,6 @@
 		84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupTermsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupFinishedViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84C29F6C1BDEDD070003A26B /* ClearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClearButton.swift; sourceTree = "<group>"; };
-		84C29F711BE44DDD0003A26B /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		84CA64EA1B72BBF400696587 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		84CA65951B72DEFC00696587 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = "../../mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib/libuv.a"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -433,7 +429,6 @@
 			children = (
 				8445317519FEEB210096F26E /* RouteManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
-				840F1AC71BBF52D600DBE7BD /* HealthKitManager.swift */,
 				849EF0B21BBB1E9F006CEDD7 /* API */,
 				84033D981A8BD26900339171 /* MotionManager.swift */,
 				846D32161AD736F400F58C00 /* WeatherManager.swift */,
@@ -749,7 +744,7 @@
 								enabled = 0;
 							};
 							com.apple.Keychain = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -951,7 +946,6 @@
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
 				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
 				842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */,
-				842FDCAF1BD56F070079AFCC /* HealthKitManager.swift in Sources */,
 				842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -991,7 +985,6 @@
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
-				840F1AC81BBF52D600DBE7BD /* HealthKitManager.swift in Sources */,
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */,
@@ -1205,8 +1198,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: William Henderson (67UFABH99C)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1244,7 +1236,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
