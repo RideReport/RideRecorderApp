@@ -37,8 +37,11 @@ PODS:
   - Mapbox-iOS-SDK (2.1.2)
   - OAuthSwift (0.4.4)
   - PINCache (2.1)
+  - PNChart (0.8.6):
+    - UICountingLabel (~> 1.2.0)
   - SwiftyJSON (2.3.0)
   - UIActionSheet+Blocks (0.9)
+  - UICountingLabel (1.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 2.0)
@@ -54,6 +57,7 @@ DEPENDENCIES:
   - KeychainAccess
   - Mapbox-iOS-SDK
   - OAuthSwift
+  - PNChart (from `../Submodules/PNChart`)
   - SwiftyJSON
   - UIActionSheet+Blocks
 
@@ -61,6 +65,8 @@ EXTERNAL SOURCES:
   CocoaLumberjack:
     :branch: swift_2.0
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+  PNChart:
+    :path: ../Submodules/PNChart
 
 CHECKOUT OPTIONS:
   CocoaLumberjack:
@@ -82,7 +88,9 @@ SPEC CHECKSUMS:
   Mapbox-iOS-SDK: f8a8fd3ccf918196d27a52ab1694414be20f2210
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   PINCache: 0581b0a7578fc0bbc6c7a8b70b0615388bea064c
+  PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftyJSON: 8d6b61a70277ef2a5d710d372e06e7e2d87fb9e4
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
+  UICountingLabel: 1db4e7d023e1762171eb226d6dff47a7a84f27aa
 
 COCOAPODS: 0.39.0

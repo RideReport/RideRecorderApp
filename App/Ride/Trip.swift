@@ -22,6 +22,7 @@ class Trip : NSManagedObject {
         case Cycling
         case Automotive
         case Walking
+        case Transit
     }
     
     enum Rating : Int16 {
@@ -126,6 +127,29 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class func allBikeTrips(limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if (limit != 0) {
+            fetchedRequest.fetchLimit = limit
+        }
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        if (results == nil) {
+            return []
+        }
+        
+        return results!
+    }
+    
     class func allTrips(limit: Int = 0) -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -138,7 +162,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         if (results == nil) {
@@ -158,7 +182,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -179,7 +203,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -188,6 +212,26 @@ class Trip : NSManagedObject {
         }
         
         return (results!.first as! Trip)
+    }
+    
+    class func bikeTripsToday() -> [Trip]? {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().beginingOfDay())
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return results! as? [Trip]
     }
     
     class func mostRecentBikeTrip() -> Trip? {
@@ -201,7 +245,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -222,7 +266,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -244,7 +288,7 @@ class Trip : NSManagedObject {
         do {
             results = try context.executeFetchRequest(fetchedRequest)
         } catch let error {
-            DDLogError(String(format: "Error executing fetch request: %@", error as NSError))
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
         }
         
@@ -259,8 +303,197 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfAutomotiveTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Automotive.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfTransitTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Transit.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfCycledTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfAutomotiveTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Automotive.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfTransitTripsLast30Days : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Transit.rawValue, NSDate().daysFrom(-30))
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfUnratedTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.NotSet.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfBadTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Bad.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfGoodTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Good.rawValue)
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    private class func rainClimaconSet()->Set<String> {
+        var climaconSet: Set<String> = Set([])
+        for climaconRaw in [Climacon.Drizzle.rawValue, Climacon.DrizzleSun.rawValue, Climacon.DrizzleMoon.rawValue,
+            Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
+            Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
+            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+            Climacon.Umbrella.rawValue] {
+                climaconSet.insert(String(UnicodeScalar(Int(climaconRaw))))
+        }
+        
+        return climaconSet
+    }
+    
+    class var numberOfWarmSunnyTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfRainyTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon != nil AND climacon IN %@", ActivityType.Cycling.rawValue, rainClimaconSet())
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
+    class var numberOfColdTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -300,14 +533,32 @@ class Trip : NSManagedObject {
     }
     
     class var totalCycledMilesThisWeek : Float {
-        var miles : Float = 0
-        for trip in Trip.weekTrips()! {
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-                miles += trip.lengthMiles
-            }
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-7))
+        
+        let sumDescription = NSExpressionDescription()
+        sumDescription.name = "sumOfLengths"
+        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
+        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
+        fetchedRequest.propertiesToFetch = [sumDescription]
+
+        var error : NSError?
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
+        }
+        if (results == nil || error != nil) {
+            return 0.0
         }
         
-        return miles
+        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
+        return (totalLength.floatValue * 0.000621371)
     }
     
     override func awakeFromInsert() {
@@ -334,8 +585,7 @@ class Trip : NSManagedObject {
             }
             
             switch climaconChar {
-            case Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
-            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
+            case Climacon.Rain.rawValue, Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
             Climacon.Umbrella.rawValue:
                 return true
             case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
@@ -427,6 +677,8 @@ class Trip : NSManagedObject {
             tripTypeString = "🏃"
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
+        } else if (self.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+            tripTypeString = "🚋"
         } else {
             tripTypeString = ""
         }
@@ -500,6 +752,8 @@ class Trip : NSManagedObject {
         
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location!, completionHandler: { (placemarks, error) -> Void in
+            DDLogInfo("Starting placemark query returned.")
+
             if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
@@ -521,6 +775,8 @@ class Trip : NSManagedObject {
         let endingLocation = self.locations.lastObject as! Location
         
         geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
+            DDLogInfo("Destination placemark query returned.")
+
             if (placemarks == nil || placemarks!.count == 0) {
                 handler()
                 return
@@ -570,7 +826,8 @@ class Trip : NSManagedObject {
             let endingLocation = self.locations.lastObject as! Location
             
             if (self.climacon == nil || self.climacon == "") {
-                WeatherManager.sharedManager.queryCondition(NSDate(), location: endingLocation, handler: { (condition) -> Void in
+                WeatherManager.sharedManager.queryCondition(self.startDate, endDate: self.endDate, location: endingLocation, handler: { (condition) -> Void in
+                    DDLogInfo("Weather data returned.")
                     if (condition != nil) {
                         self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
                         self.climacon = String(UnicodeScalar(UInt32(condition!.current.climacon.rawValue)))
@@ -674,6 +931,8 @@ class Trip : NSManagedObject {
     }
     
     func sendTripCompletionNotificationImmediately() {
+        DDLogInfo("Sending notification…")
+
         self.cancelTripStateNotification()
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
@@ -704,6 +963,8 @@ class Trip : NSManagedObject {
         }
         
         if (self.activityType == NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
+            Profile.profile().updateCurrentRideStreakLength()
+            
             let rewardString = self.rewardString()
             if (rewardString != nil) {
                 message += (". " + rewardString!)
@@ -713,25 +974,42 @@ class Trip : NSManagedObject {
         return message
     }
     
-    func rewardString()->String? {
-        let totalMiles = Trip.totalCycledMiles
+    var isFirstBikeTripToday: Bool {
+        if let tripsToday = Trip.bikeTripsToday() {
+            return tripsToday.contains(self) && tripsToday.count == 1
+        }
         
+        return false
+    }
+    
+    func rewardString()->String? {
+        let numTrips = Trip.numberOfCycledTrips
+        if (numTrips % 1000 == 0) {
+            return String(format: "🙌 Holy moly, that's your %ith trip!", numTrips)
+        }
+        
+        if (numTrips % 100 == 0) {
+            return String(format: "💯 Whoa, your %ith trip!", numTrips)
+        }
+        
+        if (self.lengthMiles > 20.0) {
+            return "🌄 Epic Ride!"
+        }
+        
+        if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
+            if let currentStreakStartDate = Profile.profile().currentStreakStartDate, longestStreakStartDate = Profile.profile().longestStreakStartDate where currentStreakStartDate.isEqualToDate(longestStreakStartDate) {
+                return String(format: "🎉%@  you set a new %i day streak record!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+            } else {
+                return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+            }
+        }
         
         if (self.isShittyWeather) {
             return "🏆 Crappy weather bonus points!"
         }
         
-        if (totalMiles % 25 == 0) {
-            return String(format: "💪 Your %.0fth mile!", totalMiles)
-        }
-        
-        let numTrips = Trip.numberOfCycledTrips
         if (numTrips % 10 == 0) {
             return String(format: "🎉 Your %ith trip!", numTrips)
-        }
-        
-        if (self.lengthMiles > 10.0) {
-            return "🌄 Epic Ride!"
         }
         
         return nil

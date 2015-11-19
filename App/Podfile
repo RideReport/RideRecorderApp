@@ -15,6 +15,7 @@ pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'FBSDKShareKit'
 pod 'Mapbox-iOS-SDK'
+pod 'PNChart',:path => '../Submodules/PNChart'
 use_frameworks!
 
 post_install do |installer|

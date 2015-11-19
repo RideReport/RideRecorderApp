@@ -46,6 +46,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let minimumBatteryForTracking : Float = 0.2
     
     private var isGettingInitialLocationForGeofence : Bool = false
+    private var didStartFromBackground : Bool = false
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
@@ -81,10 +82,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         return (Static.sharedManager != nil)
     }
     
-    class func startup() {
+    class func startup(fromBackground: Bool) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = RouteManager()
-            Static.sharedManager?.startup()
+            Static.sharedManager?.startup(fromBackground)
         }
     }
     
@@ -98,9 +99,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
-    func startup() {
+    func startup(fromBackground: Bool) {
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
+        if (fromBackground) {
+            self.didStartFromBackground = true
+        }
     }
     
     var location: CLLocation? {
@@ -197,13 +201,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             closingTrip!.close() {
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
                 closingTrip!.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending background task.")
+
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
                 }
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
             }
         }
         
@@ -381,8 +387,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= self.acceptableLocationAccuracy) {
             self.isGettingInitialLocationForGeofence = false
-            DDLogVerbose("Got intial location for geofence. Stopping!")
-            self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+            if (!self.didStartFromBackground) {
+                DDLogVerbose("Got intial location for geofence. Stopping!")
+                self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+            }
         } else if (foundSufficientMovement) {
             if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
@@ -586,16 +594,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {
         // Should never happen
-        DDLogError("Did Pause location updates!")
+        DDLogWarn("Did Pause location updates!")
     }
     
     func locationManagerDidResumeLocationUpdates(manager: CLLocationManager) {
         // Should never happen
-        DDLogError("Did Resume location updates!")
+        DDLogWarn("Did Resume location updates!")
     }
     
     func locationManager(manager: CLLocationManager, monitoringDidFailForRegion region: CLRegion?, withError error: NSError) {
-        DDLogError(String(format: "Got location monitoring error! %@", error))
+        DDLogWarn(String(format: "Got location monitoring error! %@", error))
         
         if (error.code == CLError.RegionMonitoringFailure.rawValue) {
             // exceeded max number of geofences
@@ -603,7 +611,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        DDLogError(String(format: "Got active tracking location error! %@", error))
+        DDLogWarn(String(format: "Got active tracking location error! %@", error))
         
         if (error.code == CLError.Denied.rawValue) {
             // alert the user and pause tracking.

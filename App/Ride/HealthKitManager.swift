@@ -51,7 +51,7 @@ class HealthKitManager {
         
         healthStore.requestAuthorizationToShareTypes(writeTypes, readTypes: readTypes) { (success, error) -> Void in
             if !success || error != nil {
-                DDLogError("Error accesing health kit data!: \(error! as NSError), \((error! as NSError).userInfo)")
+                DDLogWarn("Error accesing health kit data!: \(error! as NSError), \((error! as NSError).userInfo)")
             } else {
                 self.getWeight()
                 self.getGender()

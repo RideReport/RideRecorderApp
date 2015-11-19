@@ -27,7 +27,7 @@ class SetupBatteryViewController: SetupChildViewController {
     }
     
     @IBAction func tappedButton(sender: AnyObject) {
-        AppDelegate.appDelegate().startupDataGatheringManagers()
+        AppDelegate.appDelegate().startupDataGatheringManagers(false)
         self.next(self)
     }
 }

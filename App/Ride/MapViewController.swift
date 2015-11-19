@@ -435,15 +435,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         if (trip != nil) {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-                    return UIColor.greenColor()
+                    return ColorPallete.sharedPallete.goodGreen
                 } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-                    return UIColor.redColor()
+                    return ColorPallete.sharedPallete.badRed
                 } else {
-                    return UIColor.yellowColor()
+                    return ColorPallete.sharedPallete.unknownGrey
                 }
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+                return ColorPallete.sharedPallete.transitBlue
             }
             
-            return UIColor.brownColor()
+            return ColorPallete.sharedPallete.autoBrown
         }
         
         return UIColor.clearColor()

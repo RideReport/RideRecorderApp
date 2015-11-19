@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '66B3547B7CD5454BE06F7BF1'
+               BlueprintIdentifier = '6E0DDB6CC99E7C087588BA05'
                BlueprintName = 'ECSlidingViewController'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'ECSlidingViewController.framework'>

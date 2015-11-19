@@ -26,11 +26,25 @@ extension NSDate {
         return NSDate().beginingOfDay().daysFrom(-1)
     }
     
+    func isBeforeNoon()->Bool {
+        return (self.compare(self.beginingOfDay().hoursFrom(12)) == NSComparisonResult.OrderedAscending)
+    }
+    
     func hoursFrom(hoursFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.hour = hoursFrom
         
         return NSCalendar.currentCalendar().dateByAddingComponents(dayComponents, toDate:self, options: [])!
+    }
+    
+    func countOfDaysSinceNow() -> Int {
+        let calendar: NSCalendar = NSCalendar.currentCalendar()
+        
+        let date1 = calendar.startOfDayForDate(self)
+        let date2 = calendar.startOfDayForDate(NSDate())
+        
+        let components = calendar.components(.Day, fromDate: date1, toDate: date2, options: [])
+        return components.day
     }
     
     func daysFrom(daysFrom: Int) -> NSDate {

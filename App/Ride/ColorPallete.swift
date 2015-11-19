@@ -22,6 +22,37 @@ class ColorPallete : NSObject {
         return Static.sharedPallete!
     }
     
+    var autoBrown: UIColor {
+        get {
+            return UIColor.brownColor()
+        }
+    }
+    
+    var transitBlue: UIColor {
+        get {
+            return UIColor.blueColor()
+        }
+    }
+
+    
+    var goodGreen: UIColor {
+        get {
+            return UIColor(red: 51/255, green: 204/255, blue: 51/255, alpha: 1.0)
+        }
+    }
+    
+    var badRed: UIColor {
+        get {
+            return UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1.0)
+        }
+    }
+    
+    var unknownGrey: UIColor {
+        get {
+            return UIColor(red: 164/255, green: 164/255, blue: 164/255, alpha: 1.0)
+        }
+    }
+    
     var notificationDestructiveActionRed: UIColor {
         get {
             return UIColor(red: 255.0/255.0, green: 59.0/255.0, blue: 48.0/255.0, alpha: 1.0)

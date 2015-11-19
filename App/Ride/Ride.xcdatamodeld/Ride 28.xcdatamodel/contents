@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="15A282b" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Automatic">
     <entity name="Activity" representedClassName="Ride_Report.Activity" syncable="YES">
         <attribute name="automotive" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="confidence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>

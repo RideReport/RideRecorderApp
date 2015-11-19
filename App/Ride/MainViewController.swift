@@ -280,6 +280,14 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         CATransaction.commit()
     }
     
+    @IBAction func transitButton(sender: AnyObject) {
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Transit.rawValue)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        
+        self.refreshSelectrTrip()
+        self.transitionToTripView()
+    }
+    
     @IBAction func bikeButton(sender: AnyObject) {
         self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
@@ -320,10 +328,11 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         transition.subtype = kCATransitionFromBottom
         
         let routesVC = self.storyboard!.instantiateViewControllerWithIdentifier("RoutesViewController") as! RoutesViewController
-        routesVC.mainViewController = self
-        
-        routesVC.view.layer.addAnimation(transition, forKey: kCATransition)
+                
+        self.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
         self.navigationController?.pushViewController(routesVC, animated: false)
+        
+        routesVC.mainViewController = self
     }
         
 #if DEBUG

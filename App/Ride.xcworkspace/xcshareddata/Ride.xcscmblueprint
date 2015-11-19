@@ -10,6 +10,7 @@
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0,
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : 0,
     "7E68CB584078A487C0535CC191D3B7551EEE2095" : 0,
+    "ABBC29B0DBA23FF98210CC04F237C8AA532E10C1" : 0,
     "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "00B5D283-9630-4CEF-89E2-AE6D716B7F77",
@@ -20,6 +21,7 @@
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride",
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : "mapbox-gl-native\/src\/mbgl\/util\/geojsonvt\/",
     "7E68CB584078A487C0535CC191D3B7551EEE2095" : "mapbox-gl-native\/",
+    "ABBC29B0DBA23FF98210CC04F237C8AA532E10C1" : "Ride\/Submodules\/PNChart\/",
     "45D94AD7CF9ADDC359FD6D8922BA195F423FA34B" : "Ride\/App\/PathMenu"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Ride",
@@ -50,6 +52,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mapbox\/mapbox-gl-styles.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "924C1C4700AD97D5AF0D9D08517061919DD2280B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:KnockSoftware\/PNChart.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ABBC29B0DBA23FF98210CC04F237C8AA532E10C1"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/mapbox\/geojson-vt-cpp",

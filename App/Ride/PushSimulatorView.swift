@@ -237,9 +237,6 @@ import Foundation
         actionButton.hidden = !self.showsActionButon
         editButton.hidden = !self.showsEditButton
         
-        self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
-
         self.clearButton.frame = CGRect(x: self.bounds.width - self.clearButton.frame.size.width - 10, y: (self.bounds.height - self.clearButton.frame.size.height)/2.0, width: self.clearButton.frame.size.width, height: self.clearButton.frame.size.height)
         
         self.editButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height)
@@ -252,7 +249,7 @@ import Foundation
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
         
-        self.controlsView.frame = CGRect(x: self.bounds.width - self.totalButtonWidth, y: 0, width: 0, height: self.bounds.height)
+        self.controlsView.frame = CGRect(x: scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, y: 0, width: self.isShowingControls ? self.totalButtonWidth : 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         
         reloadUI()
@@ -319,6 +316,10 @@ import Foundation
     }
     
     func showControls(animated: Bool = true) {
+        if (self.isShowingControls) {
+            return
+        }
+        
         dispatch_async(dispatch_get_main_queue(), {
             self.scrollView.setContentOffset(CGPointMake(self.totalButtonWidth, 0), animated: animated)
         })
@@ -327,6 +328,10 @@ import Foundation
     }
     
     func hideControls(animated: Bool = true) {
+        if (!self.isShowingControls) {
+            return
+        }
+        
         self.scrollView.setContentOffset(CGPointZero, animated: animated)
         if (self.isInAppView) {
             self.clearButton.fadeIn()
