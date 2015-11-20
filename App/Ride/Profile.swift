@@ -10,6 +10,8 @@ import Foundation
 import CoreData
 
 class Profile : NSManagedObject {
+    @NSManaged var accessToken : String?
+    @NSManaged var accessTokenExpiresIn : NSDate?
     @NSManaged var uuid : String?
     @NSManaged var currentStreakStartDate : NSDate!
     @NSManaged var currentStreakLength : NSNumber!

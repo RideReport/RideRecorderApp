@@ -66,7 +66,7 @@ class AuthenticatedAPIRequest {
         }
         
         var headers = APIRequestBaseHeaders
-        if let token = client.accessToken {
+        if let token = Profile.profile().accessToken {
             self.authToken = token
             headers["Authorization"] =  "Bearer \(token)"
         }
@@ -76,7 +76,7 @@ class AuthenticatedAPIRequest {
         let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
             if (response?.statusCode == 401) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    if (self.authToken == client.accessToken) {
+                    if (self.authToken == Profile.profile().accessToken) {
                         // make sure the token that generated the 401 is still current
                         // since it is possible we've already reauthenciated
                         client.reauthenticate()
@@ -191,37 +191,27 @@ class APIClient {
     }
     
     func startup() {
-        self.getAccessToken() { (success) in
-            if (success) {
-                self.authenticateIfNeeded()
-                if (self.authenticated) {
-                    self.updateAccountStatus()
-                    NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        let startupBlock = {
+            self.authenticateIfNeeded()
+            if (self.authenticated) {
+                self.updateAccountStatus()
+                if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+                    self.syncTrips()
                 }
-            } else {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                    self.getAccessToken() { (success) in
-                        if (success) {
-                            self.authenticateIfNeeded()
-                            if (self.authenticated) {
-                                self.updateAccountStatus()
-                            }
-                        } else {
-                            let notif = UILocalNotification()
-                            notif.alertBody = "It looks like you restarted your phone! Plese unlock it to use Ride Report."
-                            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                        }
-                    }
+                    // run after a second to avoid double-syncing.
+                    NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
                 })
             }
         }
         
-        
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                self.syncTrips()
+                startupBlock()
             }
+        } else {
+            startupBlock()
         }
     }
     
@@ -230,8 +220,11 @@ class APIClient {
     }
     
     @objc func appDidBecomeActive() {
-        self.syncTrips()
-        self.updateAccountStatus()
+        self.authenticateIfNeeded()
+        if (self.authenticated) {
+            self.updateAccountStatus()
+            self.syncTrips()
+        }
     }
     
     init () {
@@ -378,9 +371,6 @@ class APIClient {
                 }
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error retriving account status: %@", error as NSError))
-                if (response?.statusCode == 401) {
-                    self.deauthortizeClient()
-                }
             }
         }
     }
@@ -390,20 +380,10 @@ class APIClient {
             switch result {
             case .Success(_):
                 DDLogInfo("Logged out!")
-                self.deauthortizeClient()
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error logging out: %@", error as NSError))
                 self.authenticateIfNeeded()
             }
-        }
-    }
-    
-    private func deauthortizeClient() {
-        self.deleteAccessToken() { (success) -> Void in
-            // if we can't do this, we are in a bad state.
-            assert(success)
-            
-            self.authenticateIfNeeded()
         }
     }
     
@@ -547,7 +527,7 @@ class APIClient {
     //
     
     var authenticated: Bool {
-        return (self.accessToken != nil)
+        return (Profile.profile().accessToken != nil)
     }
     
     func reauthenticate() {
@@ -556,9 +536,11 @@ class APIClient {
             return
         }
         
-        self.deleteAccessToken() { (success) in
-            self.authenticateIfNeeded()
-        }
+        Profile.profile().accessToken = nil
+        Profile.profile().accessTokenExpiresIn = nil
+        CoreDataManager.sharedManager.saveContext()
+        
+        self.authenticateIfNeeded()
     }
     
     func authenticateIfNeeded() {
@@ -580,116 +562,18 @@ class APIClient {
                 let json = JSON(jsonData)
                 
                 if let accessToken = json["access_token"].string, expiresIn = json["expires_in"].string {
-                    self.saveAccessToken(accessToken, expiresIn: expiresIn) { (success) -> Void in
-                        if (success) {
-                            self.accountVerificationStatus = .Unverified
-                        } else {
-                            self.deauthortizeClient()
-                        }
-                    }
+                    Profile.profile().accessToken = accessToken
+                    Profile.profile().accessTokenExpiresIn = self.jsonDateFormatter.dateFromString(expiresIn)
+                    CoreDataManager.sharedManager.saveContext()
+
+                    self.updateAccountStatus()
                 }
             case .Failure(_, let error):
-                if (response?.statusCode == 401) {
-                    self.deauthortizeClient()
-                }
                 DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
             }
 
         }
-    }
-
-    
-    //
-    // MARK: - OAuth Token Keychain Management
-    // It is very important that actual keychain code occurs on the main thread.
-    //
-    
-    private var rideKeychainUserName = "Ride Report Access Token"
-    private var accessToken: String? = nil
-
-    private var keychainItem: Keychain {
-        get {
-            let keychain = Keychain(service: "com.Knock.Ride")
-            .synchronizable(true)
-            .accessibility(.AfterFirstUnlock)
-            
-            return keychain
-        }
-    }
-
-    private func saveAccessToken(token: String, expiresIn: String, completionHandler:(Bool) -> Void = {(_) in }) {
-        let data = ["accessToken" : token, "expiresIn" : expiresIn]
-        let encodedData = NSKeyedArchiver.archivedDataWithRootObject(data)
-
-        self.deleteAccessToken() { (success) in
-            if (success) {
-                dispatch_barrier_async(dispatch_get_main_queue(), { () -> Void in
-                    do {
-                        try self.keychainItem.set(encodedData, key: self.rideKeychainUserName)
-                        self.accessToken = token
-                        
-                        completionHandler(true)
-                    } catch let error {
-                        
-                        DDLogWarn(String(format: "Error storing access token: %@", error as NSError))
-                        completionHandler(false)
-                    }
-                })
-            } else {
-                completionHandler(false)
-            }
-        }
-    }
-    
-    private func deleteAccessToken(completionHandler:(Bool) -> Void = {(_) in }) {
-        dispatch_barrier_async(dispatch_get_main_queue(), { () -> Void in
-            if (self.accessToken == nil) {
-                completionHandler(true)
-                return
-            }
-            
-            do {
-                try self.keychainItem.remove(self.rideKeychainUserName)
-                // make sure any old access token isn't memoized
-                self.accessToken = nil
-                
-                completionHandler(true)
-            } catch let error {
-                DDLogWarn(String(format: "Error deleting access token: %@", error as NSError))
-                completionHandler(false)
-            }
-        })
-    }
-    
-    private func getAccessToken(completionHandler:(Bool) -> Void = {(_) in }) {
-        self.keychainDataIsInaccessible = false
-        dispatch_barrier_async(dispatch_get_main_queue(), { () -> Void in
-            do {
-                if let data = try self.keychainItem.getData(self.rideKeychainUserName) {
-                    if let dict = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDictionary {
-                        // make sure any old access token isn't memoized
-                        self.accessToken = dict["accessToken"] as? String
-                    }
-                }
-                
-                completionHandler(true)
-            } catch let err {
-                let error = err as NSError
-                DDLogWarn(String(format: "Error accessing access token: %@", error))
-                if (error.code == Int(-34018)) {
-                    // this is a special case. if we get this error, it's due to an obscure keychain bug causing the keychain to be temporarily inaccessible
-                    // https://forums.developer.apple.com/message/9225#9225
-                    // we'll want to try again later.
-                    self.keychainDataIsInaccessible = true
-                } else if (error.code == Int(errSecInteractionNotAllowed)) {
-                    // this is a special case. if we get this error, it's because the device isn't unlocked yet.
-                    // we'll want to try again later.
-                    self.keychainDataIsInaccessible = true
-                }
-                completionHandler(false)
-            }
-        })
     }
 }
