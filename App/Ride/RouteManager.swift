@@ -163,6 +163,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.startLocationTrackingIfNeeded()
         
+        self.locationManager.activityType = CLActivityType.OtherNavigation
+        
         if (CLLocationManager.deferredLocationUpdatesAvailable()) {
             DDLogInfo("Deferring updates!")
             self.locationManager.distanceFilter = kCLDistanceFilterNone
@@ -314,6 +316,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.activityType = CLActivityType.OtherNavigation
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (!self.isInMotionMonitoringState) {
