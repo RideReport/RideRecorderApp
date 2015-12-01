@@ -231,7 +231,6 @@ class APIClient {
         self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.Ride.background")
         configuration.timeoutIntervalForRequest = 10
-        configuration.discretionary = true // allows background tasks to be scheduled at the discretion of the system for optimal performance
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
             "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
         ]
