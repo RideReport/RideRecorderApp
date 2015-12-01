@@ -100,11 +100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Profile.swift"
-            timestampString = "469232700.453434"
+            timestampString = "469740954.175803"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "109"
-            endingLineNumber = "109"
+            startingLineNumber = "111"
+            endingLineNumber = "111"
             landmarkName = "updateCurrentRideStreakLength()"
             landmarkType = "5">
          </BreakpointContent>

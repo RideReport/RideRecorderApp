@@ -222,8 +222,7 @@
                                                     <exclude reference="Xds-It-sLt"/>
                                                 </mask>
                                             </variation>
-                                            <variation key="widthClass=compact" misplaced="YES">
-                                                <rect key="frame" x="19" y="45" width="187" height="21"/>
+                                            <variation key="widthClass=compact">
                                                 <mask key="constraints">
                                                     <include reference="Xds-It-sLt"/>
                                                 </mask>
@@ -250,11 +249,11 @@
                                         <mask key="constraints">
                                             <exclude reference="UKa-S7-QGO"/>
                                             <exclude reference="aYQ-tn-Hj7"/>
-                                            <exclude reference="0p2-0d-Qfr"/>
-                                            <exclude reference="Of9-3v-g7q"/>
                                             <exclude reference="CHw-NY-Aap"/>
                                             <exclude reference="jYb-Ud-BZs"/>
                                             <exclude reference="uML-aj-5Cg"/>
+                                            <exclude reference="0p2-0d-Qfr"/>
+                                            <exclude reference="Of9-3v-g7q"/>
                                         </mask>
                                     </variation>
                                     <variation key="widthClass=compact">
@@ -266,11 +265,11 @@
                                         <mask key="constraints">
                                             <include reference="UKa-S7-QGO"/>
                                             <include reference="aYQ-tn-Hj7"/>
-                                            <include reference="0p2-0d-Qfr"/>
-                                            <include reference="Of9-3v-g7q"/>
                                             <include reference="CHw-NY-Aap"/>
                                             <include reference="jYb-Ud-BZs"/>
                                             <include reference="uML-aj-5Cg"/>
+                                            <include reference="0p2-0d-Qfr"/>
+                                            <include reference="Of9-3v-g7q"/>
                                         </mask>
                                     </variation>
                                 </view>
