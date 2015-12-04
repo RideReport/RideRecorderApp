@@ -665,6 +665,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         DDLogVerbose("Received location updates.")
+        
+        self.locationManager.activityType = CLActivityType.OtherNavigation
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
         // skip this check
