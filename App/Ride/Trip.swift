@@ -461,7 +461,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != \"\" AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -477,7 +477,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon != nil AND climacon IN %@", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon IN %@", ActivityType.Cycling.rawValue, rainClimaconSet())
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -493,7 +493,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 45 AND climacon != nil AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 40 AND climacon != \"\" AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
