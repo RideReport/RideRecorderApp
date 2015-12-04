@@ -12,7 +12,6 @@ import CoreData
 class Profile : NSManagedObject {
     @NSManaged var accessToken : String?
     @NSManaged var accessTokenExpiresIn : NSDate?
-    @NSManaged var uuid : String?
     @NSManaged var currentStreakStartDate : NSDate!
     @NSManaged var currentStreakLength : NSNumber!
     @NSManaged var longestStreakStartDate : NSDate!
@@ -37,10 +36,9 @@ class Profile : NSManagedObject {
                 results = nil
             }
             
-            if (results!.count == 0 || (results!.first as! Profile).uuid == nil) {
+            if (results!.count == 0) {
                 let context = CoreDataManager.sharedManager.currentManagedObjectContext()
                 Static.profile = Profile(entity: NSEntityDescription.entityForName("Profile", inManagedObjectContext: context)!, insertIntoManagedObjectContext:context)
-                Static.profile.uuid = NSUUID().UUIDString
                 CoreDataManager.sharedManager.saveContext()
             } else {
                 Static.profile = (results!.first as! Profile)

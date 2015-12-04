@@ -165,7 +165,6 @@ class APIClient {
     private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
-    private var keychainDataIsInaccessible = false
     private var isRequestingAuthentication = false
     
     struct Static {
@@ -378,6 +377,7 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response, result) in
             switch result {
             case .Success(_):
+                self.reauthenticate()
                 DDLogInfo("Logged out!")
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error logging out: %@", error as NSError))
@@ -453,8 +453,7 @@ class APIClient {
         var tripDict = [
             "activityType": trip.activityType,
             "creationDate": self.jsonify(trip.creationDate),
-            "rating": trip.rating,
-            "ownerId": Profile.profile().uuid!
+            "rating": trip.rating
         ]
         var routeURL = "save_trip"
         var method = Alamofire.Method.POST
@@ -543,15 +542,13 @@ class APIClient {
     }
     
     func authenticateIfNeeded() {
-        if (self.authenticated || self.isRequestingAuthentication || self.keychainDataIsInaccessible) {
+        if (self.authenticated || self.isRequestingAuthentication) {
             return
         }
         
         self.isRequestingAuthentication = true
         
-        let uuid = Profile.profile().uuid
-        var parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
-        parameters["uuid"] = uuid
+        let parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
         
         self.manager.request(.GET, serverAddress + "oauth_token", parameters: parameters, encoding: .URL, headers: APIRequestBaseHeaders).validate().responseJSON { (request, response, result) in
             self.isRequestingAuthentication = false
