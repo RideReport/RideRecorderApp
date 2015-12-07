@@ -334,35 +334,6 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         
         routesVC.mainViewController = self
     }
-        
-#if DEBUG
-    
-    override func canBecomeFirstResponder()->Bool {
-        return true
-    }
-    
-    override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
-        if (motion == UIEventSubtype.MotionShake) {
-            showSampleNotification()
-        }
-    }
-
-    func showSampleNotification() {
-        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-        })
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            if let trip = Trip.mostRecentBikeTrip() {
-                trip.sendTripCompletionNotification() {
-                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                        UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
-                    }
-                }
-            }
-        })
-    }
-    
-#endif
     
     func refreshHelperPopupUI() {
         if (RouteManager.sharedManager.isPaused()) {
