@@ -558,15 +558,14 @@ class APIClient {
                 let json = JSON(jsonData)
                 
                 if let accessToken = json["access_token"].string, expiresIn = json["expires_in"].string {
-                    if (Profile.profile().accessToken != nil) {
+                    if (Profile.profile().accessToken == nil) {
                         Profile.profile().accessToken = accessToken
                         Profile.profile().accessTokenExpiresIn = self.jsonDateFormatter.dateFromString(expiresIn)
                         CoreDataManager.sharedManager.saveContext()
+                        self.updateAccountStatus()
                     } else {
                         DDLogWarn("Got a new access token when one was already set!")
                     }
-
-                    self.updateAccountStatus()
                 }
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
