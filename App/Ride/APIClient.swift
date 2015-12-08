@@ -196,6 +196,12 @@ class APIClient {
                 self.updateAccountStatus()
                 if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                     self.syncTrips()
+                    let hasRunTripUUIDMigrationUpload = NSUserDefaults.standardUserDefaults().boolForKey("HasRunTripUUIDMigrationUpload")
+                    if (!hasRunTripUUIDMigrationUpload) {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.uploadTripUUIDs()
+                        })
+                    }
                 }
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                     // run after a second to avoid double-syncing.
@@ -285,7 +291,6 @@ class APIClient {
                 DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as NSError))
             }
         })
-
     }
     
     func deleteTrip(trip: Trip)->AuthenticatedAPIRequest {
@@ -306,6 +311,23 @@ class APIClient {
             }
         })
         
+    }
+    
+    func uploadTripUUIDs()-> AuthenticatedAPIRequest {
+        let uuids = Trip.allTrips().map { trip in
+            trip.uuid
+        }
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "uploadTripUUIDS", parameters: ["UUIDS": uuids]) { (response, result) in
+            switch result {
+            case .Success(_):
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "HasRunTripUUIDMigrationUpload")
+                NSUserDefaults.standardUserDefaults().synchronize()
+
+                DDLogInfo("Uploaded trip UUIDs!")
+            case .Failure(_, let error):
+                DDLogWarn(String(format: "Error uploading uuids out: %@", error as NSError))
+            }
+        }
     }
     
     func syncTrips(syncInBackground: Bool = false) {
