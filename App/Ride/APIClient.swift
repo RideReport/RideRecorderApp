@@ -233,7 +233,7 @@ class APIClient {
     }
     
     init () {
-        self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZZZ"
+        self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
         configuration.timeoutIntervalForRequest = 10
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
