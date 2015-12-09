@@ -352,8 +352,76 @@ class APIClient {
         }
     }
     
+    private func syncTrip(trip: Trip) {
+        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
+            return
+        }
+        
+        if let existingRequest = self.tripRequests[trip] {
+            // if an existing API request is in flight, wait to sync until after it completes
+            
+            existingRequest.requestCompletetionBlock = {
+                // we need to reset isSynced since the changes were made after the request went out.
+                trip.isSynced = false
+                self.syncTrip(trip)
+            }
+            return
+        }
+        
+        var tripDict = [
+            "activityType": trip.activityType,
+            "creationDate": self.jsonify(trip.creationDate),
+            "rating": trip.rating
+        ]
+        var routeURL = "save_trip"
+        var method = Alamofire.Method.POST
+        
+        if (trip.locationsAreSynced.boolValue) {
+            routeURL = "trips/" + trip.uuid
+            method = Alamofire.Method.PATCH
+        } else {
+            tripDict["uuid"] = trip.uuid
+            var locations : [AnyObject!] = []
+            for location in trip.locations.array {
+                let aLocation = location as! Location
+                var locDict = [
+                    "course": aLocation.course!,
+                    "date": self.jsonify(aLocation.date!),
+                    "horizontalAccuracy": aLocation.horizontalAccuracy!,
+                    "speed": aLocation.speed!,
+                    "longitude": aLocation.longitude!,
+                    "latitude": aLocation.latitude!
+                ]
+                if let altitude = aLocation.altitude, let verticalAccuracy = aLocation.verticalAccuracy {
+                    locDict["altitude"] = altitude
+                    locDict["verticalAccuracy"] = verticalAccuracy
+                }
+                locations.append(locDict)
+            }
+            tripDict["locations"] = locations
+            
+        }
+        
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+            self.tripRequests[trip] = nil
+            switch result {
+            case .Success(let json):
+                trip.isSynced = true
+                trip.locationsAreSynced = true
+                DDLogInfo(String(format: "Response: %@", json.stringValue))
+                CoreDataManager.sharedManager.saveContext()
+                
+            case .Failure(_, let error):
+                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
+            }
+        }
+        
+        return
+    }
+
+    
     //
-    // MARK: - Authenciated API Methods
+    // MARK: - Authenciatation API Methods
     //
     
     func updateAccountStatus()-> AuthenticatedAPIRequest {
@@ -454,73 +522,6 @@ class APIClient {
                 }
             }
         }
-    }
-    
-    private func syncTrip(trip: Trip) {
-        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
-            return
-        }
-        
-        if let existingRequest = self.tripRequests[trip] {
-            // if an existing API request is in flight, wait to sync until after it completes
-            
-            existingRequest.requestCompletetionBlock = {
-                // we need to reset isSynced since the changes were made after the request went out.
-                trip.isSynced = false
-                self.syncTrip(trip)
-            }
-            return
-        }
-        
-        var tripDict = [
-            "activityType": trip.activityType,
-            "creationDate": self.jsonify(trip.creationDate),
-            "rating": trip.rating
-        ]
-        var routeURL = "save_trip"
-        var method = Alamofire.Method.POST
-        
-        if (trip.locationsAreSynced.boolValue) {
-            routeURL = "trips/" + trip.uuid
-            method = Alamofire.Method.PATCH
-        } else {
-            tripDict["uuid"] = trip.uuid
-            var locations : [AnyObject!] = []
-            for location in trip.locations.array {
-                let aLocation = location as! Location
-                var locDict = [
-                    "course": aLocation.course!,
-                    "date": self.jsonify(aLocation.date!),
-                    "horizontalAccuracy": aLocation.horizontalAccuracy!,
-                    "speed": aLocation.speed!,
-                    "longitude": aLocation.longitude!,
-                    "latitude": aLocation.latitude!
-                ]
-                if let altitude = aLocation.altitude, let verticalAccuracy = aLocation.verticalAccuracy {
-                    locDict["altitude"] = altitude
-                    locDict["verticalAccuracy"] = verticalAccuracy
-                }
-                locations.append(locDict)
-            }
-            tripDict["locations"] = locations
-
-        }
-        
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
-            self.tripRequests[trip] = nil
-            switch result {
-            case .Success(let json):
-                trip.isSynced = true
-                trip.locationsAreSynced = true
-                DDLogInfo(String(format: "Response: %@", json.stringValue))
-                CoreDataManager.sharedManager.saveContext()
-                
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
-            }
-        }
-        
-        return
     }
     
     func testAuthID()->AuthenticatedAPIRequest {
