@@ -70,7 +70,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.fetchedResultsController!.delegate = self
         do {
             try self.fetchedResultsController!.performFetch()
-        } catch _ {
+        } catch let error {
+            DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
+            abort()
         }
         
         self.refreshEmptyTableView()

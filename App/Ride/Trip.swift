@@ -33,6 +33,7 @@ class Trip : NSManagedObject {
     
     private struct Static {
         static var dateFormatter : NSDateFormatter!
+        static var yearDateFormatter : NSDateFormatter!
     }
     
     private var currentStateNotification : UILocalNotification? = nil
@@ -87,8 +88,10 @@ class Trip : NSManagedObject {
                     sectionString = "Yesterday"
                 } else if (self.creationDate.isInLastWeek()) {
                     sectionString = self.creationDate.weekDay()
-                } else {
+                } else if (self.creationDate.isThisYear()) {
                     sectionString = Trip.dateFormatter.stringFromDate(self.creationDate)
+                } else {
+                    sectionString = Trip.yearDateFormatter.stringFromDate(self.creationDate)
                 }
                 self.setPrimitiveValue(sectionString, forKey: "sectionIdentifier")
             }
@@ -106,6 +109,18 @@ class Trip : NSManagedObject {
             }
             
             return Static.dateFormatter
+        }
+    }
+    
+    class var yearDateFormatter : NSDateFormatter {
+        get {
+            if (Static.yearDateFormatter == nil) {
+                Static.yearDateFormatter = NSDateFormatter()
+                Static.yearDateFormatter.locale = NSLocale.currentLocale()
+                Static.yearDateFormatter.dateFormat = "MMM d ''yy"
+            }
+            
+            return Static.yearDateFormatter
         }
     }
     

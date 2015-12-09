@@ -83,6 +83,14 @@ extension NSDate {
         return (self.compare(NSDate().daysFrom(-6)) == NSComparisonResult.OrderedDescending)
     }
     
+    func isThisYear() -> Bool
+    {
+        let selfComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year], fromDate: self);
+        let dateComponents = NSCalendar.autoupdatingCurrentCalendar().components([.Year], fromDate: NSDate());
+        
+        return (selfComponents.year == dateComponents.year)
+    }
+    
     func weekDay() -> String {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "EEEE"
