@@ -54,11 +54,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Mapbox-iOS-SDK.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>OAuthSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -102,7 +97,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>4A31CEA90D258DAA1C52CF9B1139C66D</key>
+		<key>2DB59219DEF5D393F19F0753F2D9C161</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -127,6 +122,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>69E38E49DFC2C5E428E704538576BE32</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6C18C789438292FED01EB702705FC9AA</key>
 		<dict>
 			<key>primary</key>
@@ -147,22 +147,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9FE4E6756A266F683B2EEF406AB7448A</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>A04E0BB0A0F0B7A079DE457B922BC12E</key>
+		<key>B17B7553FE8DF3FC8DAE00F8EE8146E4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>C3AAC7026505AA67E5E48DC98F926D26</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C3F6989D45B71AC3AE4694EF97E34F66</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -177,7 +167,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E0ECC3BD18CAEBE408E9023D3847041A</key>
+		<key>EEB1A1FC979A0802431275C2A456B041</key>
 		<dict>
 			<key>primary</key>
 			<true/>

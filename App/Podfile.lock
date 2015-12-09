@@ -34,7 +34,7 @@ PODS:
   - FBSDKShareKit (4.6.0):
     - FBSDKCoreKit
   - KeychainAccess (2.0.0)
-  - Mapbox-iOS-SDK (2.1.2)
+  - Mapbox-iOS-SDK (3.0.1)
   - OAuthSwift (0.4.4)
   - PINCache (2.1)
   - PNChart (0.8.6):
@@ -85,7 +85,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
   KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
-  Mapbox-iOS-SDK: f8a8fd3ccf918196d27a52ab1694414be20f2210
+  Mapbox-iOS-SDK: 61e79f3dd8432617bd1a66b2d7273ab5ce923ca9
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   PINCache: 0581b0a7578fc0bbc6c7a8b70b0615388bea064c
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
