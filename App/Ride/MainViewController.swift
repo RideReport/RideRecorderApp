@@ -85,9 +85,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.rideRushSimulatorView.showsEditButton = true
                 
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            if let trip = Trip.mostRecentBikeTrip() where trip.rating == NSNumber(short: Trip.Rating.NotSet.rawValue) {
-                self.selectedTrip = Trip.mostRecentBikeTrip()
-            }
+            self.selectedTrip = Trip.mostRecentBikeTrip()
         })
         
         self.reloadTripSelectedToolbar()
@@ -118,20 +116,22 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                 }
                 self.rideRushSimulatorView.dateString = dateTitle
                 self.rideRushSimulatorView.body = trip.notificationString()!
+                self.rideRushSimulatorView.hideControls(false)
                 
                 if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                     if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
                         self.rideRushSimulatorView.delay(0.1, completionHandler: {
                             self.rideRushSimulatorView.showControls()
                         })
-                    } else {
-                        self.rideRushSimulatorView.hideControls(false)
                     }
                     self.rideRushSimulatorView.showsActionButon = true
                     self.rideRushSimulatorView.showsDestructiveActionButon = true
                 } else {
                     self.rideRushSimulatorView.showsActionButon = false
                     self.rideRushSimulatorView.showsDestructiveActionButon = false
+                    self.rideRushSimulatorView.delay(0.5, completionHandler: {
+                        self.rideRushSimulatorView.showControls()
+                    })
                 }
             }
             
