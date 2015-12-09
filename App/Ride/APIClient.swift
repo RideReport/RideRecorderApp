@@ -55,7 +55,7 @@ class AuthenticatedAPIRequest {
         completionHandler(nil, .Failure(nil, requestError))
     }
     
-    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, completionHandler: APIResponseBlock) {
+    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, idempotencyKey: String? = nil, completionHandler: APIResponseBlock) {
         self.init()
         
         if (!client.authenticated) {
@@ -69,6 +69,9 @@ class AuthenticatedAPIRequest {
         if let token = Profile.profile().accessToken {
             self.authToken = token
             headers["Authorization"] =  "Bearer \(token)"
+        }
+        if let theIdempotencyKey = idempotencyKey {
+            headers["Idempotence-Key"] = theIdempotencyKey
         }
         
         self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: ParameterEncoding.JSON.gzipped, headers: headers)
@@ -272,7 +275,12 @@ class APIClient {
     }
     
     func getTrip(trip: Trip)->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + trip.uuid, completionHandler: { (_, result) -> Void in
+        guard let uuid = trip.uuid else {
+            // the server doesn't know about this trip yet
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (_, result) -> Void in
             switch result {
             case .Success(let json):
                 trip.locations = NSOrderedSet() // just in case
@@ -294,7 +302,17 @@ class APIClient {
     }
     
     func deleteTrip(trip: Trip)->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + trip.uuid, completionHandler: { (response, result) -> Void in
+        guard let uuid = trip.uuid else {
+            // the server doesn't know about this trip yet
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                trip.managedObjectContext?.deleteObject(trip)
+                CoreDataManager.sharedManager.saveContext()
+            })
+            
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + uuid, completionHandler: { (response, result) -> Void in
             switch result {
             case .Success(_), .Failure(_,_) where response?.statusCode == 404:
                 // it's possible the server already deleted the object, in which case it will send a 404.
@@ -314,9 +332,10 @@ class APIClient {
     }
     
     func uploadTripUUIDs()-> AuthenticatedAPIRequest {
-        let uuids = Trip.allTrips().map { trip in
-            trip.uuid
+        let uuids = Trip.allTripsWithUUIDs().map { trip in
+            (trip as! Trip).uuid!
         }
+        
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "uploadTripUUIDS", parameters: ["UUIDS": uuids]) { (response, result) in
             switch result {
             case .Success(_):
@@ -373,14 +392,19 @@ class APIClient {
             "creationDate": self.jsonify(trip.creationDate),
             "rating": trip.rating
         ]
-        var routeURL = "save_trip"
+        var routeURL = "trips"
         var method = Alamofire.Method.POST
-        
-        if (trip.locationsAreSynced.boolValue) {
-            routeURL = "trips/" + trip.uuid
+        var idempotencyKey: String? = self.jsonify(trip.creationDate)
+
+        if let uuid = trip.uuid {
+            routeURL = "trips/" + uuid
             method = Alamofire.Method.PATCH
-        } else {
-            tripDict["uuid"] = trip.uuid
+            
+            // idempotence only applies to POST requests.
+            idempotencyKey = nil
+        }
+        
+        if (!trip.locationsAreSynced.boolValue) {
             var locations : [AnyObject!] = []
             for location in trip.locations.array {
                 let aLocation = location as! Location
@@ -399,18 +423,23 @@ class APIClient {
                 locations.append(locDict)
             }
             tripDict["locations"] = locations
-            
         }
         
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response, result) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response, result) in
             self.tripRequests[trip] = nil
             switch result {
             case .Success(let json):
+                if trip.uuid == nil {
+                    if let uuid = json["uuid"].string {
+                        trip.uuid = uuid
+                    } else {
+                        DDLogWarn("Did not get a UUID back from server!")
+                        return
+                    }
+                }
                 trip.isSynced = true
                 trip.locationsAreSynced = true
-                DDLogInfo(String(format: "Response: %@", json.stringValue))
                 CoreDataManager.sharedManager.saveContext()
-                
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
             }

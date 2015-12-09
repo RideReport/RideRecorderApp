@@ -64,7 +64,7 @@ class Trip : NSManagedObject {
             self.didChangeValueForKey("isClosed")
         }
     }
-    @NSManaged var uuid : String
+    @NSManaged var uuid : String?
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
@@ -153,6 +153,29 @@ class Trip : NSManagedObject {
     class func allTrips(limit: Int = 0) -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        if (limit != 0) {
+            fetchedRequest.fetchLimit = limit
+        }
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        if (results == nil) {
+            return []
+        }
+        
+        return results!
+    }
+    
+    class func allTripsWithUUIDs(limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "uuid != \"\" AND uuid != nil")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
             fetchedRequest.fetchLimit = limit
@@ -564,7 +587,6 @@ class Trip : NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = NSDate()
-        self.uuid = NSUUID().UUIDString
     }
     
     var isShittyWeather : Bool {
@@ -942,7 +964,10 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
-            self.currentStateNotification?.userInfo = ["RideNotificationTripUUID" : self.uuid]
+            
+            if let uuid = self.uuid {
+                self.currentStateNotification?.userInfo = ["RideNotificationTripUUID" : uuid]
+            }
             UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
         }
     }
@@ -1178,7 +1203,9 @@ class Trip : NSManagedObject {
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
                             notif.category = "NO_MOTION_DATA_CATEGORY"
-                            notif.userInfo = ["RideNotificationTripUUID" : self.uuid]
+                            if let uuid = self.uuid {
+                                notif.userInfo = ["RideNotificationTripUUID" : uuid]
+                            }
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {
