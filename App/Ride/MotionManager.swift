@@ -56,6 +56,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
-        self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
+        self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
+            // request active updates in order to get the motion coprocessor to process historical data
+            self.motionActivityManager.stopActivityUpdates()
+            self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
+        })
     }
 }
