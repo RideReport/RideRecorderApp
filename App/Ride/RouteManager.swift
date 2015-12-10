@@ -178,11 +178,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func stopTrip() {
-        if (self.currentTrip == nil) {
+        guard let stoppedTrip = self.currentTrip else {
             return
         }
         
-        if (self.currentTrip!.locations.count <= 6) {
+        
+        self.stopMotionMonitoring(self.lastActiveMonitoringLocation)
+        self.currentTrip = nil
+        self.lastActiveMonitoringLocation = nil
+        self.lastMovingLocation = nil
+        
+        if (stoppedTrip.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
             #if DEBUG2
                 let notif = UILocalNotification()
@@ -190,18 +196,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            self.currentTrip!.cancel()
+            stoppedTrip.cancel()
         } else {
-            let closingTrip = self.currentTrip
-            closingTrip!.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
-            DDLogInfo(String(format: "Battery Life Used: %d", closingTrip!.batteryLifeUsed()))
+            stoppedTrip.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+            DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
             
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 DDLogInfo("Background task expired!")
             })
             
-            closingTrip!.close() {
-                closingTrip!.sendTripCompletionNotification() {
+            stoppedTrip.close() {
+                stoppedTrip.sendTripCompletionNotification() {
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         DDLogInfo("Ending background task.")
 
@@ -209,16 +214,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
                 }
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(closingTrip!, syncInBackground: true)
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(stoppedTrip, syncInBackground: true)
             }
         }
-        
-        
-        self.stopMotionMonitoring(self.lastActiveMonitoringLocation)
-        
-        self.currentTrip = nil
-        self.lastActiveMonitoringLocation = nil
-        self.lastMovingLocation = nil
     }
     
     private func processActiveTrackingLocations(locations: [CLLocation]!) {
