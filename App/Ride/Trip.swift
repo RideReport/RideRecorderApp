@@ -253,6 +253,29 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
+    class func tripWithCreationDate(creationDate: NSDate) -> Trip! {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        
+        // fudge the creation date by a second, just in case
+        fetchedRequest.predicate = NSPredicate(format: "(creationDate >= %@) AND (creationDate =< %@)", creationDate.secondsFrom(-1), creationDate.secondsFrom(1))
+        fetchedRequest.fetchLimit = 1
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return (results!.first as! Trip)
+    }
+    
     class func bikeTripsToday() -> [Trip]? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -316,12 +339,13 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class func closedUnsyncedTrips() -> [AnyObject] {
+    class func nextClosedUnsyncedTrips() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == YES")
         let syncedPredicate = NSPredicate(format: "isSynced == NO")
         fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedPredicate])
+        fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
@@ -332,10 +356,10 @@ class Trip : NSManagedObject {
         }
         
         if (results == nil || results!.count == 0) {
-            return []
+            return nil
         }
         
-        return results!
+        return (results!.first as! Trip)
     }
     
     class var numberOfCycledTrips : Int {

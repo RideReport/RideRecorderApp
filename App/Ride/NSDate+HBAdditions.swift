@@ -51,6 +51,13 @@ extension NSDate {
         return (self.compare(self.beginingOfDay().hoursFrom(12)) == NSComparisonResult.OrderedAscending)
     }
     
+    func secondsFrom(secondsFrom: Int) -> NSDate {
+        let secondComponents = NSDateComponents()
+        secondComponents.second = secondsFrom
+        
+        return NSCalendar.currentCalendar().dateByAddingComponents(secondComponents, toDate:self, options: [])!
+    }
+    
     func hoursFrom(hoursFrom: Int) -> NSDate {
         let dayComponents = NSDateComponents()
         dayComponents.hour = hoursFrom

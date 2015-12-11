@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
+		840042631C1B774700368A82 /* RideShareToImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareToImageView.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033D9A1A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */; };
@@ -158,6 +159,7 @@
 /* Begin PBXFileReference section */
 		2BEE9E09918B3E44BAE32A45 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79593058F9250D4F54FC5447 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		840042621C1B774700368A82 /* RideShareToImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareToImageView.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84033D9E1A969B3600339171 /* Ride 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 12.xcdatamodel"; sourceTree = "<group>"; };
 		84033D9F1A97C1E500339171 /* Ride 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 13.xcdatamodel"; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
+				840042621C1B774700368A82 /* RideShareToImageView.swift */,
 				84C29F6C1BDEDD070003A26B /* ClearButton.swift */,
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
 				84091CD71BD848A400264652 /* RCounter.h */,
@@ -990,6 +993,7 @@
 				84091CD91BD848A400264652 /* RCounter.m in Sources */,
 				84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
+				840042631C1B774700368A82 /* RideShareToImageView.swift in Sources */,
 				8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */,
 				84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */,
 				84033D991A8BD26900339171 /* MotionManager.swift in Sources */,

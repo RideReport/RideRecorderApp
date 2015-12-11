@@ -14,8 +14,7 @@ import KeychainAccess
 import CZWeatherKit
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
-//let serverAddress = "https://localhost/api/v2/"
-let serverAddress = "https://api.ride.report/api/v2/"
+let serverAddress = "https://localhost:3000/api/v2/"
     #else
 let serverAddress = "https://api.ride.report/api/v2/"
 #endif
@@ -196,8 +195,11 @@ class APIClient {
             self.authenticateIfNeeded()
             if (self.authenticated) {
                 self.updateAccountStatus()
+
                 if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-                    self.syncTrips()
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.syncUnsyncedTrips()
+                    })
                     let hasRunTripUUIDMigrationUpload = NSUserDefaults.standardUserDefaults().boolForKey("HasRunTripUUIDMigrationUpload")
                     if (!hasRunTripUUIDMigrationUpload) {
                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -230,7 +232,7 @@ class APIClient {
         self.authenticateIfNeeded()
         if (self.authenticated) {
             self.updateAccountStatus()
-            self.syncTrips()
+            self.syncUnsyncedTrips()
         }
     }
     
@@ -361,13 +363,16 @@ class APIClient {
         }
     }
     
-    func syncTrips(syncInBackground: Bool = false) {
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            for aTrip in Trip.closedUnsyncedTrips() {
-                let trip = aTrip as! Trip
-                self.saveAndSyncTripIfNeeded(trip, syncInBackground: syncInBackground)
+    func syncUnsyncedTrips(syncInBackground: Bool = false) {
+        if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+            if let trip = Trip.nextClosedUnsyncedTrips() {
+                self.syncTrip(trip).apiResponse({ (_, _) -> Void in
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                        self.syncUnsyncedTrips(syncInBackground)
+                    })
+                })
             }
-        })
+        }
     }
     
     func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
@@ -446,9 +451,9 @@ class APIClient {
         return self.tripRequests[trip]!
     }
     
-    private func syncTrip(trip: Trip) {
+    private func syncTrip(trip: Trip)->AuthenticatedAPIRequest {
         guard (!trip.isSynced.boolValue && trip.isClosed.boolValue) else {
-            return
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
         }
         
         if let existingRequest = self.tripRequests[trip] {
@@ -459,7 +464,7 @@ class APIClient {
                 trip.isSynced = false
                 self.syncTrip(trip)
             }
-            return
+            return existingRequest
         }
         
         var tripDict = [
@@ -510,7 +515,7 @@ class APIClient {
             }
         }
         
-        return
+        return self.tripRequests[trip]!
     }
 
     

@@ -18,7 +18,6 @@ import Foundation
 }
 
 @IBDesignable class PushSimulatorView : UIView, UIScrollViewDelegate {
-    
     @IBInspectable var body: String = "Lorem ipsum dolor sit amet" {
         didSet {
             reloadUI()
