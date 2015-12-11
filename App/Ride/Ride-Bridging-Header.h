@@ -14,3 +14,10 @@
 #import "BKPasscodeInputView.h"
 #import "RCounter.h"
 #include <zlib.h>
+#include <CZWeatherKit/CZWeatherKit.h>
+
+@interface CZForecastioAPI ()
+
++ (Climacon)climaconForIconName:(NSString *)iconName;
+
+@end

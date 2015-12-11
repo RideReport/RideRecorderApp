@@ -32,7 +32,6 @@
 		842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
 		842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
-		842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; };
 		842FDCB41BD56F880079AFCC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375C1B5DADF60023EC82 /* SystemConfiguration.framework */; };
 		842FDCB51BD56F8D0079AFCC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375A1B5DADEF0023EC82 /* QuartzCore.framework */; };
 		842FDCB61BD56F920079AFCC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137581B5DADE60023EC82 /* MobileCoreServices.framework */; };
@@ -73,7 +72,6 @@
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
 		845FF6C91A783AD500607316 /* DEBUGCLLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */; };
-		846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846D32161AD736F400F58C00 /* WeatherManager.swift */; };
 		846F50D61A80397C008DF801 /* SimpleRouteMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
@@ -218,7 +216,6 @@
 		845FF6C81A783AD500607316 /* DEBUGCLLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DEBUGCLLocationManager.m; sourceTree = "<group>"; };
 		84646C531BF6965F007CB19D /* Ride 29.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 29.xcdatamodel"; sourceTree = "<group>"; };
 		8467175E1A01966C00851AD5 /* RouteMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMachineTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		846D32161AD736F400F58C00 /* WeatherManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = WeatherManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		846D321B1AD73BA500F58C00 /* Ride 19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 19.xcdatamodel"; sourceTree = "<group>"; };
 		846F50D51A80397C008DF801 /* SimpleRouteMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SimpleRouteMachine.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -432,7 +429,6 @@
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
 				849EF0B21BBB1E9F006CEDD7 /* API */,
 				84033D981A8BD26900339171 /* MotionManager.swift */,
-				846D32161AD736F400F58C00 /* WeatherManager.swift */,
 			);
 			name = "Service Managers";
 			sourceTree = "<group>";
@@ -944,7 +940,6 @@
 				842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */,
 				842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */,
 				842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */,
-				842FDCB11BD56F0D0079AFCC /* WeatherManager.swift in Sources */,
 				844B0B921BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */,
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
@@ -961,7 +956,6 @@
 				8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */,
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
-				846D32171AD736F400F58C00 /* WeatherManager.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 import CoreData
 import CoreLocation
 import CoreMotion
@@ -645,11 +646,6 @@ class Trip : NSManagedObject {
                 return ""
             }
             
-            if (self.activityType != NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
-                // no climacon for car trips!
-                return ""
-            }
-            
             var climaconChar : Int8 = 0 // fml
             for c in self.climacon!.unicodeScalars {
                 climaconChar = Int8(c.value)
@@ -838,12 +834,7 @@ class Trip : NSManagedObject {
         CoreDataManager.sharedManager.saveContext()
     }
     
-    func close(handler: ()->Void = {}) {
-        if (self.isClosed == true) {
-            handler()
-            return
-        }
-        
+    private func calculateLength()-> Void {
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
         for element in self.locations.array {
@@ -857,27 +848,21 @@ class Trip : NSManagedObject {
         }
         
         self.length = NSNumber(double: length)
+    }
+    
+    func close(handler: ()->Void = {}) {
+        if (self.isClosed == true) {
+            handler()
+            return
+        }
+        
+        self.calculateLength()
         self.isClosed = true
         
         self.clasifyActivityType { () -> Void in
-            let endingLocation = self.locations.lastObject as! Location
-            
-            if (self.climacon == nil || self.climacon == "") {
-                WeatherManager.sharedManager.queryCondition(self.startDate, endDate: self.endDate, location: endingLocation, handler: { (condition) -> Void in
-                    DDLogInfo("Weather data returned.")
-                    if (condition != nil) {
-                        self.temperature = NSNumber(float: Float(condition!.current.temperature.f))
-                        self.climacon = String(UnicodeScalar(UInt32(condition!.current.climacon.rawValue)))
-                    }
-                    NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
-                    self.saveAndMarkDirty()
-                    handler()
-                })
-            } else {
-                NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
-                self.saveAndMarkDirty()
-                handler()
-            }
+            NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+            self.saveAndMarkDirty()
+            handler()
         }
     }
     
@@ -885,6 +870,15 @@ class Trip : NSManagedObject {
         self.isClosed = false
         self.locationsAreSynced = false
         self.simplifiedLocations = nil
+    }
+    
+    func loadSummaryFromJSON(summary: [String: JSON]) {
+        if let conditions = summary["weather"]?["conditions"],
+            climacon = conditions["icon"].string,
+            temperature = conditions["temperature"].number {
+                self.temperature = temperature
+                self.climacon = String(UnicodeScalar(UInt32(CZForecastioAPI.climaconForIconName(climacon).rawValue)))
+        }
     }
     
     var lengthMiles : Float {

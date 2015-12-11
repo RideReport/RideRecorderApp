@@ -91,6 +91,23 @@ class Location : NSManagedObject {
         return filteredResults
     }
     
+    func jsonDictionary() -> [String: AnyObject] {
+        var locDict = [
+            "course": self.course!,
+            "date": self.date!.JSONString(),
+            "horizontalAccuracy": self.horizontalAccuracy!,
+            "speed": self.speed!,
+            "longitude": self.longitude!,
+            "latitude": self.latitude!
+        ]
+        if let altitude = self.altitude, let verticalAccuracy = self.verticalAccuracy {
+            locDict["altitude"] = altitude
+            locDict["verticalAccuracy"] = verticalAccuracy
+        }
+        
+        return locDict
+    }
+    
     func coordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2DMake(self.latitude!.doubleValue, self.longitude!.doubleValue)
     }

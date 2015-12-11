@@ -26,6 +26,27 @@ extension NSDate {
         return NSDate().beginingOfDay().daysFrom(-1)
     }
     
+    //
+    // MARK: - Helpers
+    //
+    
+    class var jsonDateFormatter: NSDateFormatter {
+        get {
+            let jsonDateFormatter = NSDateFormatter()
+            jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
+            
+            return jsonDateFormatter
+        }
+    }
+    
+    class func dateFromJSONString(string: String)->NSDate? {
+        return NSDate.jsonDateFormatter.dateFromString(string)
+    }
+    
+    func JSONString() -> String {
+        return NSDate.jsonDateFormatter.stringFromDate(self)
+    }
+    
     func isBeforeNoon()->Bool {
         return (self.compare(self.beginingOfDay().hoursFrom(12)) == NSComparisonResult.OrderedAscending)
     }

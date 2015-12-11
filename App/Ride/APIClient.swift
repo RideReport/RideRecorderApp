@@ -11,6 +11,7 @@ import SwiftyJSON
 import Alamofire
 import OAuthSwift
 import KeychainAccess
+import CZWeatherKit
 
 #if (arch(i386) || arch(x86_64)) && os(iOS)
 //let serverAddress = "https://localhost/api/v2/"
@@ -164,8 +165,6 @@ class APIClient {
         }
     }
     
-    
-    private var jsonDateFormatter = NSDateFormatter()
     private var manager : Manager
     private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     private var isRequestingAuthentication = false
@@ -236,7 +235,6 @@ class APIClient {
     }
     
     init () {
-        self.jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
         let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
         configuration.timeoutIntervalForRequest = 10
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
@@ -254,17 +252,21 @@ class APIClient {
             switch result {
             case .Success(let json):
                 for tripJson in json.array! {
-                    if (Trip.tripWithUUID(tripJson["uuid"].string!) == nil) {
+                    if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) where Trip.tripWithUUID(uuid) == nil {
                         let trip = Trip()
-                        trip.uuid = tripJson["uuid"].string!
+                        trip.uuid = uuid
                         trip.activityType = tripJson["activityType"].number!
                         trip.rating = tripJson["rating"].number!
                         trip.isClosed = true
                         trip.isSynced = true
                         trip.locationsAreSynced = true
                         trip.length = tripJson["length"].number!
-                        trip.creationDate = self.jsonDateFormatter.dateFromString(tripJson["creationDate"].string!)
+                        trip.creationDate = creationDate
                         trip.locationsNotYetDownloaded = true
+                        
+                        if let summary = json["summary"].dictionary {
+                            trip.loadSummaryFromJSON(summary)
+                        }
                     }
                 }
                 CoreDataManager.sharedManager.saveContext()
@@ -285,15 +287,25 @@ class APIClient {
             case .Success(let json):
                 trip.locations = NSOrderedSet() // just in case
                 for locationJson in json["locations"].array! {
-                    let loc = Location(trip: trip)
-                    loc.date = self.jsonDateFormatter.dateFromString(locationJson["date"].string!)
-                    loc.latitude = locationJson["latitude"].number!
-                    loc.longitude = locationJson["longitude"].number!
-                    loc.course = locationJson["course"].number!
-                    loc.speed = locationJson["speed"].number!
-                    loc.horizontalAccuracy = locationJson["horizontalAccuracy"].number!
+                    if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
+                            latitude = locationJson["latitude"].number,
+                            longitude = locationJson["longitude"].number,
+                            course = locationJson["course"].number,
+                            speed = locationJson["speed"].number,
+                            horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                        let loc = Location(trip: trip)
+                        loc.date = date
+                        loc.latitude = latitude
+                        loc.longitude = longitude
+                        loc.course = course
+                        loc.speed = speed
+                        loc.horizontalAccuracy = horizontalAccuracy
+                    } else {
+                        DDLogWarn("Error parsing location dictionary when fetched trip data!")
+                    }
                 }
                 trip.locationsNotYetDownloaded = false
+
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(_, let error):
                 DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as NSError))
@@ -371,8 +383,63 @@ class APIClient {
         }
     }
     
+    func syncTripSummary(trip: Trip)->AuthenticatedAPIRequest {
+        guard (trip.isClosed.boolValue) else {
+            DDLogWarn("Tried to sync trip info on unclosed trip!")
+            
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        guard let startingLocation = trip.locations.firstObject as? Location, endingLocation = trip.locations.lastObject as? Location else {
+            DDLogWarn("No starting and/or ending location found when syncing trip info!")
+
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        guard self.tripRequests[trip] == nil else {
+            // if an existing API request is in flight, simply skip this
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        let tripDict = [
+            "activityType": trip.activityType,
+            "creationDate": trip.creationDate.JSONString(),
+            "startLocation": startingLocation.jsonDictionary(),
+            "endLocation": endingLocation.jsonDictionary()
+        ]
+        
+        let routeURL = "trips"
+        let method = Alamofire.Method.POST
+        let idempotencyKey: String? = trip.creationDate.JSONString()
+        
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response, result) in
+            self.tripRequests[trip] = nil
+            switch result {
+            case .Success(let json):
+                if trip.uuid == nil {
+                    if let uuid = json["uuid"].string {
+                        trip.uuid = uuid
+                    } else {
+                        DDLogWarn("Did not get a UUID back from server!")
+                        return
+                    }
+                }
+                
+                if let summary = json["summary"].dictionary {
+                    trip.loadSummaryFromJSON(summary)
+                }
+                    
+                CoreDataManager.sharedManager.saveContext()
+            case .Failure(_, let error):
+                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
+            }
+        }
+        
+        return self.tripRequests[trip]!
+    }
+    
     private func syncTrip(trip: Trip) {
-        if (trip.isSynced.boolValue || !trip.isClosed.boolValue) {
+        guard (!trip.isSynced.boolValue && trip.isClosed.boolValue) else {
             return
         }
         
@@ -389,12 +456,12 @@ class APIClient {
         
         var tripDict = [
             "activityType": trip.activityType,
-            "creationDate": self.jsonify(trip.creationDate),
+            "creationDate": trip.creationDate.JSONString(),
             "rating": trip.rating
         ]
         var routeURL = "trips"
         var method = Alamofire.Method.POST
-        var idempotencyKey: String? = self.jsonify(trip.creationDate)
+        var idempotencyKey: String? = trip.creationDate.JSONString()
 
         if let uuid = trip.uuid {
             routeURL = "trips/" + uuid
@@ -407,20 +474,7 @@ class APIClient {
         if (!trip.locationsAreSynced.boolValue) {
             var locations : [AnyObject!] = []
             for location in trip.locations.array {
-                let aLocation = location as! Location
-                var locDict = [
-                    "course": aLocation.course!,
-                    "date": self.jsonify(aLocation.date!),
-                    "horizontalAccuracy": aLocation.horizontalAccuracy!,
-                    "speed": aLocation.speed!,
-                    "longitude": aLocation.longitude!,
-                    "latitude": aLocation.latitude!
-                ]
-                if let altitude = aLocation.altitude, let verticalAccuracy = aLocation.verticalAccuracy {
-                    locDict["altitude"] = altitude
-                    locDict["verticalAccuracy"] = verticalAccuracy
-                }
-                locations.append(locDict)
+                locations.append((location as! Location).jsonDictionary())
             }
             tripDict["locations"] = locations
         }
@@ -565,14 +619,6 @@ class APIClient {
     }
     
     //
-    // MARK: - Helpers
-    //
-    
-    private func jsonify(date: NSDate) -> String {
-        return self.jsonDateFormatter.stringFromDate(date)
-    }
-    
-    //
     // MARK: - OAuth
     //
     
@@ -609,10 +655,10 @@ class APIClient {
             case .Success(let jsonData):
                 let json = JSON(jsonData)
                 
-                if let accessToken = json["access_token"].string, expiresIn = json["expires_in"].string {
+                if let accessToken = json["access_token"].string, expiresInString = json["expires_in"].string, expiresIn = NSDate.dateFromJSONString(expiresInString) {
                     if (Profile.profile().accessToken == nil) {
                         Profile.profile().accessToken = accessToken
-                        Profile.profile().accessTokenExpiresIn = self.jsonDateFormatter.dateFromString(expiresIn)
+                        Profile.profile().accessTokenExpiresIn = expiresIn
                         CoreDataManager.sharedManager.saveContext()
                         self.updateAccountStatus()
                     } else {
