@@ -408,9 +408,17 @@ class APIClient {
             "endLocation": endingLocation.jsonDictionary()
         ]
         
-        let routeURL = "trips"
-        let method = Alamofire.Method.POST
-        let idempotencyKey: String? = trip.creationDate.JSONString()
+        var routeURL = "trips"
+        var method = Alamofire.Method.POST
+        var idempotencyKey: String? = trip.creationDate.JSONString()
+        
+        if let uuid = trip.uuid {
+            routeURL = "trips/" + uuid
+            method = Alamofire.Method.PATCH
+            
+            // idempotence only applies to POST requests.
+            idempotencyKey = nil
+        }
         
         self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response, result) in
             self.tripRequests[trip] = nil
@@ -490,6 +498,9 @@ class APIClient {
                         DDLogWarn("Did not get a UUID back from server!")
                         return
                     }
+                }
+                if let summary = json["summary"].dictionary {
+                    trip.loadSummaryFromJSON(summary)
                 }
                 trip.isSynced = true
                 trip.locationsAreSynced = true
