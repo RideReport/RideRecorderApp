@@ -51,6 +51,8 @@ class Trip : NSManagedObject {
     @NSManaged var isSynced : Bool
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var locationsNotYetDownloaded : Bool
+    @NSManaged var rewardDescription : String!
+    @NSManaged var rewardEmoji : String!
     
     var isClosed : Bool {
         get {
@@ -900,8 +902,14 @@ class Trip : NSManagedObject {
         if let conditions = summary["weather"]?["conditions"],
             climacon = conditions["icon"].string,
             temperature = conditions["temperature"].number {
-                self.temperature = temperature
-                self.climacon = String(UnicodeScalar(UInt32(CZForecastioAPI.climaconForIconName(climacon).rawValue)))
+            self.temperature = temperature
+            self.climacon = String(UnicodeScalar(UInt32(CZForecastioAPI.climaconForIconName(climacon).rawValue)))
+        }
+        
+        if let rewardEmoji = summary["rewardEmoji"]?.string,
+            rewardDescription = summary["rewardDescription"]?.string {
+            self.rewardDescription = rewardDescription
+            self.rewardEmoji = rewardEmoji
         }
     }
     
@@ -1010,25 +1018,22 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles in %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ %.1f miles from %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ %.1f miles", self.climoticon, self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ %.1f miles.", self.climoticon, self.activityTypeString(), self.lengthMiles)
         }
         
-        if (self.activityType == NSNumber(short: Trip.ActivityType.Cycling.rawValue)) {
-            Profile.profile().updateCurrentRideStreakLength()
-            
-            let rewardString = self.rewardString()
-            if (rewardString != nil) {
-                message += (". " + rewardString!)
-            }
+        if let rewardDescription = self.rewardDescription,
+            rewardEmoji = self.rewardEmoji {
+                message += (" " + rewardEmoji + " " + rewardDescription)
         }
-    
+        
+        
         return message
     }
     
@@ -1038,39 +1043,6 @@ class Trip : NSManagedObject {
         }
         
         return false
-    }
-    
-    func rewardString()->String? {
-        let numTrips = Trip.numberOfCycledTrips
-        if (numTrips % 1000 == 0) {
-            return String(format: "🙌 Holy moly, that's your %ith trip!", numTrips)
-        }
-        
-        if (numTrips % 100 == 0) {
-            return String(format: "💯 Whoa, your %ith trip!", numTrips)
-        }
-        
-        if (self.lengthMiles > 20.0) {
-            return "🌄 Epic Ride!"
-        }
-        
-        if (self.isFirstBikeTripToday && Profile.profile().currentStreakLength >= 3) {
-            if let currentStreakStartDate = Profile.profile().currentStreakStartDate, longestStreakStartDate = Profile.profile().longestStreakStartDate where currentStreakStartDate.isEqualToDate(longestStreakStartDate) {
-                return String(format: "🎉%@  you set a new %i day streak record!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
-            } else {
-                return String(format: "%@  %i day ride streak!", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
-            }
-        }
-        
-        if (self.isShittyWeather) {
-            return "🏆 Crappy weather bonus points!"
-        }
-        
-        if (numTrips % 10 == 0) {
-            return String(format: "🎉 Your %ith trip!", numTrips)
-        }
-        
-        return nil
     }
     
     func cancelTripStateNotification() {

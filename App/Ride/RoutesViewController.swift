@@ -399,7 +399,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
             
         }
-        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles", trip.climoticon,  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles)
+        
+        var rewardString = ""
+        if let emoji = trip.rewardEmoji {
+            rewardString = " " + trip.rewardEmoji
+        }
+        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles%@", trip.climoticon,  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles, rewardString)
         
         tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }
@@ -439,7 +444,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync to Server"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip summary"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -470,7 +475,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
             })
         } else if (buttonIndex == 3) {
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip)
+            APIClient.sharedClient.syncTripSummary(trip)
         }
     }
     
