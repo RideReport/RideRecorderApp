@@ -254,17 +254,27 @@ class APIClient {
             switch result {
             case .Success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) where Trip.tripWithUUID(uuid) == nil {
-                        let trip = Trip()
-                        trip.uuid = uuid
-                        trip.activityType = tripJson["activityType"].number!
-                        trip.rating = tripJson["rating"].number!
+                    if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
+                        var trip = Trip.tripWithUUID(uuid)
+                        if (trip == nil) {
+                            trip = Trip()
+                            trip.uuid = uuid
+                            trip.locationsNotYetDownloaded = true
+                        }
+                        
+                        trip.creationDate = creationDate
                         trip.isClosed = true
                         trip.isSynced = true
                         trip.locationsAreSynced = true
-                        trip.length = tripJson["length"].number!
-                        trip.creationDate = creationDate
-                        trip.locationsNotYetDownloaded = true
+                        
+                        if let activityType = tripJson["activityType"].number,
+                                rating = tripJson["rating"].number,
+                                length = tripJson["length"].number {
+                            trip.activityType = activityType
+                            trip.rating = rating
+
+                            trip.length = length
+                        }
                         
                         if let summary = json["summary"].dictionary {
                             trip.loadSummaryFromJSON(summary)
@@ -307,6 +317,10 @@ class APIClient {
                     }
                 }
                 trip.locationsNotYetDownloaded = false
+                
+                if let summary = json["summary"].dictionary {
+                    trip.loadSummaryFromJSON(summary)
+                }
 
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(_, let error):
