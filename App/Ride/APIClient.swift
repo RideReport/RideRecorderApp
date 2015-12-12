@@ -276,7 +276,7 @@ class APIClient {
                             trip.length = length
                         }
                         
-                        if let summary = json["summary"].dictionary {
+                        if let summary = tripJson["summary"].dictionary {
                             trip.loadSummaryFromJSON(summary)
                         }
                     }
