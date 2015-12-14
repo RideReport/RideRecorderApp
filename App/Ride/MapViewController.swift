@@ -16,7 +16,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     @IBOutlet weak var mapView:  MGLMapView!
         
     private var tripsAreLoaded = false
-    private var tripPolyLines : [Trip : MGLPolyline]!
+    private var selectedTripLine : MGLPolyline?
     private var selectedTripBackingLine : MGLPolyline?
     private var hasCenteredMap : Bool = false
     
@@ -50,28 +50,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
         NSURLCache.setSharedURLCache(urlCache)
     
-        
-        self.tripPolyLines = [:]
-        
         if (RouteManager.sharedManager.currentTrip != nil) {
             self.mainViewController.selectedTrip = RouteManager.sharedManager.currentTrip
-        }
-
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
-            self.loadTrips()
-        }
-
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
-            self.unloadTrips()
-        }
-        
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (notification : NSNotification) -> Void in
-            self.unloadTrips()
         }
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.loadTrips()
+                self.setSelectedTrip(self.mainViewController.selectedTrip)
+
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
                     self.runCreateAccountOfferIfNeeded()
                 }
@@ -83,7 +69,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 }
             }
         } else {
-            self.loadTrips()
+            self.setSelectedTrip(self.mainViewController.selectedTrip)
         }
     }
     
@@ -116,20 +102,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.loadTrips()
-        self.refreshTrip(self.mainViewController.selectedTrip)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        
-        self.unloadTrips()
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        super.viewDidDisappear(animated)
-                
-        self.unloadTrips()
+        self.setSelectedTrip(self.mainViewController.selectedTrip)
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
@@ -149,73 +122,48 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Update Map UI
     //
     
-    
-    func loadTrips() {
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            return
+    func setSelectedTrip(selectedTrip : Trip?) {
+        if let tripBackingLine = self.selectedTripLine {
+            self.mapView.removeAnnotation(tripBackingLine)
         }
-                
-        if (self.tripsAreLoaded) {
-            return
+        if let tripLine = self.selectedTripBackingLine {
+            self.mapView.removeAnnotation(tripLine)
         }
         
-        self.tripsAreLoaded = true
-        
-        // important to perform fetch on main thread
-//        let trips = Trip.allTrips()
-//        
-//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-//            for trip in trips {
-//                self.refreshTrip(trip as! Trip)
-//            }
-//        })
-    }
-    
-    func unloadTrips() {
-        self.setSelectedTrip(nil)
-        
-        for line in self.tripPolyLines.values {
-            self.mapView.removeAnnotation(line)
-        }
-        
-        if let selectedTripLine = self.selectedTripBackingLine {
-            self.mapView.removeAnnotation(selectedTripLine)
-        }
-        
-        self.tripPolyLines.removeAll(keepCapacity: false)
-        self.tripsAreLoaded = false
-    }
-    
-    func setSelectedTrip(trip : Trip!) {
-        if let selectedTripLine = self.selectedTripBackingLine {
-            self.mapView.removeAnnotation(selectedTripLine)
-        }
-        
-        if (trip == nil) {
+        guard let trip = selectedTrip else {
+            self.selectedTripLine = nil
             self.selectedTripBackingLine = nil
+            
             return
         }
         
-        if (self.tripPolyLines[trip] == nil) {
+        guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
+            dispatch_async(dispatch_get_main_queue(), {
+                trip.simplify() {
+                    if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
+                        self.setSelectedTrip(trip)
+                    }
+                }
+            })
             return
         }
-        
-        let overlay = self.tripPolyLines[trip]! as MGLPolyline
-        
-        if (overlay.pointCount == 0) {
-            return
-        }
-        
-        var i = 1
-        let pointCount = (Int)(overlay.pointCount)
-        let coordinates = UnsafeMutablePointer<CLLocationCoordinate2D>.alloc(pointCount)
-        overlay.getCoordinates(coordinates, range: NSMakeRange(0, pointCount))
-        
-        self.selectedTripBackingLine = MGLPolyline(coordinates: coordinates, count: UInt(pointCount))
-        self.mapView.removeOverlay(overlay)
-        self.mapView.addOverlay(self.selectedTripBackingLine!)
-        self.mapView.addOverlay(overlay)
 
+        var coordinates : [CLLocationCoordinate2D] = []
+        var count : UInt = 0
+        for location in trip.simplifiedLocations.array {
+            let location = (location as! Location)
+            
+            let coord = location.coordinate()
+            
+            coordinates.append(coord)
+            count++
+        }
+        
+        self.selectedTripLine = MGLPolyline(coordinates: &coordinates, count: count)
+        self.selectedTripBackingLine = MGLPolyline(coordinates: &coordinates, count: count)
+
+        self.mapView.addOverlay(self.selectedTripBackingLine!)
+        self.mapView.addOverlay(self.selectedTripLine!)
         
         let point0 = coordinates[0]
         var minLong : Double = point0.longitude
@@ -223,6 +171,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         var minLat : Double = point0.latitude
         var maxLat : Double = point0.latitude
         
+        var i = 1
+        let pointCount = (Int)(count)
+
         while i < pointCount {
             let point = coordinates[i]
             if (point.longitude < minLong) {
@@ -246,82 +197,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactor), minLong - (sizeLong * padFactor)), CLLocationCoordinate2DMake(maxLat + (sizeLat * 3 * padFactor),maxLong + (sizeLong * padFactor))) // extra padding on the top so that it isn't under the notification bar.
         dispatch_async(dispatch_get_main_queue(), {
             self.mapView.setVisibleCoordinateBounds(bounds, animated: true)
-        })
-    }
-    
-    func refreshTrip(trip : Trip!) {
-        dispatch_async(dispatch_get_main_queue(), {
-            if (trip == nil) {
-                return
-            }
-            
-            if (self.tripPolyLines[trip] != nil) {
-                let polyline = self.tripPolyLines[trip]
-                self.mapView.removeAnnotation(polyline!)
-            }
-            
-            if (trip.deleted == true || trip != self.mainViewController.selectedTrip) {
-                // only show a trip if it is the selected route
-                self.tripPolyLines[trip] = nil
-                return
-            }
-            
-            
-            if (trip.locations == nil || trip.locations.count == 0) {
-                return
-            }
-            
-            if (trip.simplifiedLocations == nil || trip.simplifiedLocations.count == 0) {
-                dispatch_async(dispatch_get_main_queue(), {
-                    trip.simplify() {
-                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                            self.refreshTrip(trip)
-                        }
-                    }
-                })
-                return
-            }
-            
-            var coordinates : [CLLocationCoordinate2D] = []
-            var count : UInt = 0
-            for location in trip.simplifiedLocations.array {
-                let location = (location as! Location)
-                
-                let coord = location.coordinate()
-                
-                coordinates.append(coord)
-                count++
-            }
-
-            let polyline = MGLPolyline(coordinates: &coordinates, count: count)
-            
-            self.tripPolyLines[trip] = polyline
-            if (coordinates.count == 0) {
-                // can happen if all the points in simplifiedLocations are private
-                return
-            }
-            
-            self.mapView.addAnnotation(polyline)
-            
-            for annotation in self.mapView.annotations! {
-                if (annotation.isKindOfClass(Incident)) {
-                    let incident = annotation as! Incident
-                    if (incident.fault || incident.deleted) {
-                        self.mapView.removeAnnotation(incident)
-                    }
-                }
-            }
-            
-            for item in trip.incidents.array {
-                let incident = item as! Incident
-                
-                
-                self.mapView.addAnnotation(incident)
-            }
-            
-            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-                self.setSelectedTrip(trip)
-            }
         })
     }
     
@@ -392,34 +267,18 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
         if (annotation == self.selectedTripBackingLine) {
             return 14
+        } else if (annotation == self.selectedTripLine) {
+            return 8
         }
-        
-        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
-        
-        if (trip != nil) {
-            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-                return 8
-            } else {
-                return 8
-            }
-        }
-        
+
         return 0
     }
     
     func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
         if (annotation == self.selectedTripBackingLine) {
             return 1.0
-        }
-        
-        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
-        
-        if (trip != nil) {
-            if (self.mainViewController.selectedTrip != nil && trip == self.mainViewController.selectedTrip) {
-                return 1.0
-            } else {
-                return 0.2
-            }
+        } else if (annotation == self.selectedTripLine) {
+            return 1.0
         }
         
         return 0
@@ -430,9 +289,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return UIColor.whiteColor()
         }
         
-        let trip = ((self.tripPolyLines! as NSDictionary).allKeysForObject(annotation).first as! Trip!)
-
-        if (trip != nil) {
+        if let trip = self.mainViewController.selectedTrip {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen

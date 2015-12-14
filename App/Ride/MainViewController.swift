@@ -37,18 +37,14 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     var selectedTrip : Trip! {
         didSet {
             dispatch_async(dispatch_get_main_queue(), {
-                if (oldValue != nil) {
-                    self.mapViewController.refreshTrip(oldValue)
-                }
-                
                 if (self.selectedTrip != nil) {
                     if (self.selectedTrip.locationsNotYetDownloaded) {
                         APIClient.sharedClient.getTrip(self.selectedTrip).apiResponse({ (_, _) -> Void in
-                            self.mapViewController.refreshTrip(self.selectedTrip)
+                            self.mapViewController.setSelectedTrip(self.selectedTrip)
                             self.reloadTripSelectedToolbar()
                         })
                     } else {
-                        self.mapViewController.refreshTrip(self.selectedTrip)
+                        self.mapViewController.setSelectedTrip(self.selectedTrip)
                     }
                 }
                 self.mapViewController.setSelectedTrip(self.selectedTrip)
@@ -372,10 +368,10 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     }
     
     func refreshSelectrTrip() {
-        self.mapViewController.refreshTrip(self.selectedTrip)
+        self.mapViewController.setSelectedTrip(self.selectedTrip)
         self.reloadTripSelectedToolbar()
     }
-    
+
     //
     // MARK: - Push Simulator View Actions
     //
