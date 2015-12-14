@@ -215,32 +215,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-        var trip : Trip! = nil
-        if (notification.userInfo != nil && notification.userInfo!["RideNotificationTripUUID"] != nil) {
-            trip = Trip.tripWithUUID(notification.userInfo!["RideNotificationTripUUID"] as! String)
+        if let userInfo = notification.userInfo, uuid = userInfo["RideNotificationTripUUID"] as? String,
+        trip = Trip.tripWithUUID(uuid) {
+            if (identifier == "GOOD_RIDE_IDENTIFIER") {
+                trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+                
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+                self.postTripRatedThanksNotification(true)
+            } else if (identifier == "BAD_RIDE_IDENTIFIER") {
+                trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+                
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
+                self.postTripRatedThanksNotification(false)
+            } else if (identifier == "FLAG_IDENTIFIER") {
+                Incident(location: trip.mostRecentLocation()!, trip: trip)
+                CoreDataManager.sharedManager.saveContext()
+            } else if (identifier == "RETRY_IDENTIFIER") {
+                trip.clasifyActivityType({})
+            }
         }
         
-        if (trip == nil) {
-            trip =  Trip.mostRecentBikeTrip()
-        }
-        
-        if (identifier == "GOOD_RIDE_IDENTIFIER") {
-            trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-            
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
-            self.postTripRatedThanksNotification(true)
-        } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-            trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-            
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
-            self.postTripRatedThanksNotification(false)
-        } else if (identifier == "FLAG_IDENTIFIER") {
-            Incident(location: trip.mostRecentLocation()!, trip: trip)
-            CoreDataManager.sharedManager.saveContext()
-        } else if (identifier == "RESUME_IDENTIFIER") {
+        if (identifier == "RESUME_IDENTIFIER") {
             RouteManager.sharedManager.resumeTracking()
-        } else if (identifier == "RETRY_IDENTIFIER") {
-            trip.clasifyActivityType({})
         }
     }
     
