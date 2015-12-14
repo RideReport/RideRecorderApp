@@ -96,16 +96,16 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 1) {
+        if (indexPath.row == 2) {
             self.sendLogFile()
-        } else if (indexPath.row == 2) {
+        } else if (indexPath.row == 3) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
                 APIClient.sharedClient.logout()
                 AppDelegate.appDelegate().transitionToCreatProfile()
             }
-        } else if (indexPath.row == 3) {
+        } else if (indexPath.row == 0) {
             if (RouteManager.sharedManager.isPaused()) {
                 RouteManager.sharedManager.resumeTracking()
                 self.updatePauseResumeText()
