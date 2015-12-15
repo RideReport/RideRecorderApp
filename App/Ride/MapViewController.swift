@@ -11,7 +11,7 @@ import CoreLocation
 import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
-    var mainViewController: MainViewController! = nil
+    var mainViewController: MainViewController? = nil
     
     @IBOutlet weak var mapView:  MGLMapView!
         
@@ -53,14 +53,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let diskCapacity = 40 * 1024 * 1024
         let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
         NSURLCache.setSharedURLCache(urlCache)
-    
-        if (RouteManager.sharedManager.currentTrip != nil) {
-            self.mainViewController.selectedTrip = RouteManager.sharedManager.currentTrip
-        }
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.setSelectedTrip(self.mainViewController.selectedTrip)
+                if let mainVC = self.mainViewController {
+                    self.setSelectedTrip(mainVC.selectedTrip)
+                }
 
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
                     self.runCreateAccountOfferIfNeeded()
@@ -73,7 +71,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 }
             }
         } else {
-            self.setSelectedTrip(self.mainViewController.selectedTrip)
+            if let mainVC = self.mainViewController {
+                self.setSelectedTrip(mainVC.selectedTrip)
+            }
         }
     }
     
@@ -106,11 +106,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.setSelectedTrip(self.mainViewController.selectedTrip)
+        if let mainVC = self.mainViewController {
+            self.setSelectedTrip(mainVC.selectedTrip)
+        }
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
-        self.mainViewController = parent as! MainViewController
+        self.mainViewController = parent as? MainViewController
     }
     
     //
@@ -254,10 +256,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
         if (!self.hasCenteredMap && userLocation != nil) {
-            if (self.mainViewController.selectedTrip == nil) {
-                // don't recenter the map if the user has already selected a trip
-                
-                self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
+            if let mainVC = self.mainViewController {
+                if (mainVC.selectedTrip == nil) {
+                    // don't recenter the map if the user has already selected a trip
+                    
+                    self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
+                }
             }
         
             self.hasCenteredMap = true
@@ -315,7 +319,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return UIColor.whiteColor()
         }
         
-        if let trip = self.mainViewController.selectedTrip {
+        if let mainVC = self.mainViewController, trip = mainVC.selectedTrip {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen

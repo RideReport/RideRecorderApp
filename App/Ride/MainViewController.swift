@@ -187,6 +187,10 @@ class MainViewController: UIViewController, RideSummaryViewDelegate {
     
     override func viewDidAppear(animated: Bool) {
         self.refreshHelperPopupUI()
+        
+        if (RouteManager.sharedManager.currentTrip != nil) {
+            self.selectedTrip = RouteManager.sharedManager.currentTrip
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
