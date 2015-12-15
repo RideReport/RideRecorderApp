@@ -120,9 +120,11 @@ class MainViewController: UIViewController, RideSummaryViewDelegate {
                             self.rideSummaryView.showControls()
                         })
                     }
+                    self.rideSummaryView.showsShareButon = true
                     self.rideSummaryView.showsActionButon = true
                     self.rideSummaryView.showsDestructiveActionButon = true
                 } else {
+                    self.rideSummaryView.showsShareButon = false
                     self.rideSummaryView.showsActionButon = false
                     self.rideSummaryView.showsDestructiveActionButon = false
                     self.rideSummaryView.delay(0.5, completionHandler: {
@@ -140,9 +142,9 @@ class MainViewController: UIViewController, RideSummaryViewDelegate {
     func reloadTitleView() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.ridesHistoryButton.setTitle("No Trips ▾", forState: UIControlState.Normal)
+            self.ridesHistoryButton.setTitle("No Rides ▾", forState: UIControlState.Normal)
         } else {
-            self.ridesHistoryButton.setTitle(String(format: "%i Trips ▾", count), forState: UIControlState.Normal)
+            self.ridesHistoryButton.setTitle(String(format: "%i Rides ▾", count), forState: UIControlState.Normal)
         }
         self.navigationItem.titleView!.frame = CGRectMake(0, 0, self.view.frame.size.width, self.navigationController!.navigationBar.frame.size.height)
     }

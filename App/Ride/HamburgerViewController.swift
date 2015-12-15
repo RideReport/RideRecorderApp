@@ -8,7 +8,6 @@
 
 import Foundation
 import ECSlidingViewController
-import MessageUI
 
 class HamburgerNavController: UINavigationController {
     
@@ -23,7 +22,7 @@ class HamburgerNavController: UINavigationController {
     
 }
 
-class HamburgerViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+class HamburgerViewController: UITableViewController {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
     @IBOutlet weak var mapStatsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
@@ -86,19 +85,17 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         switch (APIClient.sharedClient.area) {
         case .Area(_,_, _, _):
             if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) where mainViewController.mapInfoIsDismissed {
-                return 5
-            } else {
                 return 4
+            } else {
+                return 3
             }
         default:
-            return 4
+            return 3
         }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if (indexPath.row == 2) {
-            self.sendLogFile()
-        } else if (indexPath.row == 3) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
@@ -134,45 +131,12 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             }
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        } else if (indexPath.row == 4) {
+        } else if (indexPath.row == 3) {
             if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
                 mainViewController.showMapInfo(self)
             }
             self.slidingViewController().resetTopViewAnimated(true)
         }
-    }
-    
-    func sendLogFile() {
-        let fileInfos = AppDelegate.appDelegate().fileLogger.logFileManager.sortedLogFileInfos()
-        if (fileInfos == nil || fileInfos.count == 0) {
-            return
-        }
-        
-        let body = "What happened?\n"
-        
-        let composer = MFMailComposeViewController()
-        composer.setSubject("Ride Report Bug Report")
-        composer.setToRecipients(["logs@ride.report"])
-        composer.mailComposeDelegate = self
-        composer.setMessageBody(body as String, isHTML: false)
-        
-        let firstFileInfo = fileInfos.first! as! DDLogFileInfo
-        if let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)) {
-            composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
-            
-            if (fileInfos.count > 1) {
-                let secondFileInfo = fileInfos[1] as! DDLogFileInfo
-                let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath!))
-                composer.addAttachmentData(secondFileData!, mimeType: "text/plain", fileName: secondFileInfo.fileName)
-            }
-        }
-        
-        
-        self.presentViewController(composer, animated:true, completion:nil)
-    }
-    
-    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 
