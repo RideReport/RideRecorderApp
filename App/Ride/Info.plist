@@ -48,7 +48,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>70</string>
+	<string>71</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -66,7 +66,7 @@
 	<key>FacebookAppID</key>
 	<string>1628624720751248</string>
 	<key>FacebookDisplayName</key>
-	<string>Ride report</string>
+	<string>Ride Report</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -128,9 +128,9 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle rides.</string>
+	<string>$(PRODUCT_NAME) uses your location information to automatically log your bike rides.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle rides.</string>
+	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bike rides.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
