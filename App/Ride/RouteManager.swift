@@ -518,7 +518,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             NSUserDefaults.standardUserDefaults().setObject(untilDate, forKey: "RouteManagerIsPausedUntilDate")
         } else {
             let reminderNotification = UILocalNotification()
-            reminderNotification.alertBody = "Ride Report is paused! Would you like to resume logging your bike trips?"
+            reminderNotification.alertBody = "Ride Report is paused! Would you like to resume logging your bike rides?"
             reminderNotification.category = "APP_PAUSED_CATEGORY"
             reminderNotification.fireDate = NSDate.tomorrow()
             UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)

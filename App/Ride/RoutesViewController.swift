@@ -108,7 +108,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshCharts() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.title = "No Trips"
+            self.title = "No Rides"
             self.headerView.hidden = false
         } else {
             let dateFormatter = NSDateFormatter()
@@ -124,7 +124,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.headerView.frame = headerFrame
             self.tableView.tableHeaderView = self.headerView
             
-            self.title = String(format: "%i Trips ", Trip.numberOfCycledTrips)
+            self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
             
             Profile.profile().updateCurrentRideStreakLength()
 

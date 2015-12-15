@@ -17,7 +17,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
         self.pushSimulationView.appIcon = UIImage(named: "IconTiny")
-        helperTextLabel.markdownStringValue = "When your trip ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
+        helperTextLabel.markdownStringValue = "When your ride ends, a report is delivered straight to your lock screen. **Slide left to rate your ride.**"
     }
     
     override func next(sender: AnyObject) {
@@ -26,7 +26,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     }
     
     func didOpenControls(view: RideSummaryView) {
-        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a trip with no issues, **thumbs down** if something stressed you out.")
+        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a ride with no issues, **thumbs down** if something stressed you out.")
     }
     
     func didTapActionButton(view: RideSummaryView) {
@@ -36,7 +36,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Nice. Rating your trips will **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Nice. Rating your rides will **improve biking in Portland**!")
     }
     
     func didTapDestructiveButton(view: RideSummaryView) {
@@ -46,6 +46,6 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
             // ew: http://stackoverflow.com/questions/24070544/suppressing-implicit-returns-in-swift
             return
         }
-        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your trips will **improve biking in Portland**!")
+        helperTextLabel.animatedSetMarkdownStringValue("Aw =(. Rating your rides will **improve biking in Portland**!")
     }
 }

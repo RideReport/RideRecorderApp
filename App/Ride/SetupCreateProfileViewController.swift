@@ -49,12 +49,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         
         if (isInAlreadyHaveAccountState) {
             self.navigationItem.rightBarButtonItem?.title = "Log In"
-            self.helperTextLabel.markdownStringValue = "Log in to your account to **load your trip data** onto this iPhone."
+            self.helperTextLabel.markdownStringValue = "Log in to your account to **load your ride data** onto this iPhone."
             self.detailTextLabel.markdownStringValue = ""
             self.haveAccountButton.setTitle("Don't have an account?", forState: UIControlState.Normal)
         } else {
             self.navigationItem.rightBarButtonItem?.title = "Create"
-            self.helperTextLabel.markdownStringValue = "Create an account so you can **recover your trip data** if your phone is lost."
+            self.helperTextLabel.markdownStringValue = "Create an account so you can **recover your ride data** if your phone is lost."
             self.detailTextLabel.markdownStringValue = "Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind."
             self.haveAccountButton.setTitle("Already have an account?", forState: UIControlState.Normal)
         }

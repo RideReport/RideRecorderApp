@@ -78,12 +78,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     private func runCreateAccountOfferIfNeeded() {
-        if (Trip.tripCount() > 10 && !NSUserDefaults.standardUserDefaults().boolForKey("hasBeenOfferedCreateAccountAfter10Trips")) {
+        if (Trip.numberOfCycledTrips > 10 && !NSUserDefaults.standardUserDefaults().boolForKey("hasBeenOfferedCreateAccountAfter10Trips")) {
             NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
             NSUserDefaults.standardUserDefaults().synchronize()
             
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
-                let actionSheet = UIActionSheet(title: "You've logged over 10 trips! Would you like to create an account so you can recover your trips if your phone is lost?", delegate: nil, cancelButtonTitle:"Nope", destructiveButtonTitle: nil, otherButtonTitles: "Create Account")
+                let actionSheet = UIActionSheet(title: "You've logged over 10 rides! Would you like to create an account so you can recover your rides if your phone is lost?", delegate: nil, cancelButtonTitle:"Nope", destructiveButtonTitle: nil, otherButtonTitles: "Create Account")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
                         AppDelegate.appDelegate().transitionToCreatProfile()

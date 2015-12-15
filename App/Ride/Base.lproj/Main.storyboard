@@ -117,10 +117,6 @@
                                                 <exclude reference="VU2-g3-2S2"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <exclude reference="04N-7G-fdd"/>
-                                                <exclude reference="cIg-lt-a30"/>
-                                                <exclude reference="eiZ-Nu-pCZ"/>
-                                                <exclude reference="hUr-7a-HTc"/>
                                                 <exclude reference="IuP-FD-E8e"/>
                                                 <exclude reference="TwX-oa-EVf"/>
                                                 <exclude reference="U0J-8d-QBg"/>
@@ -128,6 +124,10 @@
                                                 <exclude reference="iz6-Mo-Bue"/>
                                                 <exclude reference="oPH-Hz-KMY"/>
                                                 <exclude reference="zUG-8u-r0Q"/>
+                                                <exclude reference="04N-7G-fdd"/>
+                                                <exclude reference="cIg-lt-a30"/>
+                                                <exclude reference="eiZ-Nu-pCZ"/>
+                                                <exclude reference="hUr-7a-HTc"/>
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact">
@@ -137,10 +137,6 @@
                                                 <include reference="VU2-g3-2S2"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <include reference="04N-7G-fdd"/>
-                                                <exclude reference="cIg-lt-a30"/>
-                                                <include reference="eiZ-Nu-pCZ"/>
-                                                <exclude reference="hUr-7a-HTc"/>
                                                 <include reference="IuP-FD-E8e"/>
                                                 <include reference="TwX-oa-EVf"/>
                                                 <include reference="U0J-8d-QBg"/>
@@ -148,6 +144,10 @@
                                                 <include reference="iz6-Mo-Bue"/>
                                                 <include reference="oPH-Hz-KMY"/>
                                                 <include reference="zUG-8u-r0Q"/>
+                                                <include reference="04N-7G-fdd"/>
+                                                <exclude reference="cIg-lt-a30"/>
+                                                <include reference="eiZ-Nu-pCZ"/>
+                                                <exclude reference="hUr-7a-HTc"/>
                                             </mask>
                                         </variation>
                                     </view>
@@ -575,7 +575,7 @@
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQC-Qb-oe8">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No trips yet. Hop on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No rides yet. Hop on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
                                         <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -954,7 +954,7 @@
                         <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create account so you can get your trips back if your phone is lost or stolen." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wQe-d2-N04">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create account so you can get your rides back if your phone is lost or stolen." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wQe-d2-N04">
                                 <rect key="frame" x="23" y="28" width="555" height="67"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -2059,7 +2059,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="Gf6-3o-b0J" style="IBUITableViewCellStyleDefault" id="nWe-Xk-x3y">
-                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="187" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nWe-Xk-x3y" id="JGP-3D-gtB">
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -2077,7 +2077,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="IUS-op-4II" style="IBUITableViewCellStyleDefault" id="WmV-PX-PGY">
-                                        <rect key="frame" x="0.0" y="275" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WmV-PX-PGY" id="sxn-x5-ijt">
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>
@@ -2182,7 +2182,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="XwB-Dj-d75" style="IBUITableViewCellStyleDefault" id="KHq-F6-eQx">
-                                        <rect key="frame" x="0.0" y="187" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KHq-F6-eQx" id="t1N-eO-Gyz">
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="43"/>

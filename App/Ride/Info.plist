@@ -128,9 +128,9 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle trips.</string>
+	<string>$(PRODUCT_NAME) uses your location information to automatically log your bicycle rides.</string>
 	<key>NSMotionUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle trips.</string>
+	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bicycle rides.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>location</string>
