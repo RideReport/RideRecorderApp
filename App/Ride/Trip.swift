@@ -320,6 +320,28 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
+    class func leastRecentBikeTrip() -> Trip? {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        fetchedRequest.fetchLimit = 1
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return (results!.first as! Trip)
+    }
+    
     class func openTrips() -> [AnyObject] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -567,34 +589,6 @@ class Trip : NSManagedObject {
         }
         
         return count
-    }
-    
-    class var totalCycledMiles : Float {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
-        
-        let sumDescription = NSExpressionDescription()
-        sumDescription.name = "sumOfLengths"
-        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
-        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
-        fetchedRequest.propertiesToFetch = [sumDescription]
-        
-        var error : NSError?
-        let results: [AnyObject]?
-        do {
-            results = try context.executeFetchRequest(fetchedRequest)
-        } catch let error1 as NSError {
-            error = error1
-            results = nil
-        }
-        if (results == nil || error != nil) {
-            return 0.0
-        }
-        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
-        return (totalLength.floatValue * 0.000621371)
     }
     
     class var totalCycledMilesThisWeek : Float {
@@ -908,8 +902,17 @@ class Trip : NSManagedObject {
         
         if let rewardEmoji = summary["rewardEmoji"]?.string,
             rewardDescription = summary["rewardDescription"]?.string {
-            self.rewardDescription = rewardDescription
-            self.rewardEmoji = rewardEmoji
+                if (rewardDescription == "") {
+                    self.rewardDescription = nil
+                } else {
+                    self.rewardDescription = rewardDescription
+                }
+                
+                if (rewardEmoji == "") {
+                    self.rewardEmoji = nil
+                } else {
+                    self.rewardEmoji = rewardEmoji
+                }
         }
     }
     

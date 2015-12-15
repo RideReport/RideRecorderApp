@@ -154,29 +154,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
                 formatter.maximumFractionDigits = 0
                 
-                let totalMiles = Trip.totalCycledMiles
-                let jewel = { ()->String in
-                    if totalMiles > 5000 {
-                        return "🌈  "
-                    } else if totalMiles > 2000 {
-                        return "🌌  "
-                    } else if totalMiles > 1000 {
-                        return "🌠  "
-                    } else if totalMiles > 500 {
-                        return "🌋  "
-                    } else if totalMiles > 100 {
-                        return "🗻  "
-                    } else if totalMiles > 50 {
-                        return "🏔  "
-                    } else if totalMiles > 25 {
-                        return "⛰  "
-                    } else if totalMiles > 10 {
-                        return "🌅  "
-                    } else {
-                        return "🌄  "
-                    }
-                }()
-                self.headerLabel3.text = String(format: "%@%@ miles biked since %@", jewel, formatter.stringFromNumber(NSNumber(float: totalMiles))!, dateFormatter.stringFromDate(firstTrip.creationDate))
+                if let firstTripDate = Profile.profile().firstTripDate {
+                    self.headerLabel3.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, formatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
+                }
                 
                 let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]

@@ -57,7 +57,21 @@ import Foundation
         }
     }
     
-    @IBInspectable var isInAppView: Bool = false {
+    enum PushSimulatorViewStyle : NSInteger {
+        case LockScreenStyle = 1
+        case AppStyle
+        case ShareStyle
+    }
+    
+    @IBInspectable var interfaceStyle: NSInteger = 1 {
+        didSet {
+            if let newStyle = PushSimulatorViewStyle(rawValue: self.interfaceStyle) {
+                self.style = newStyle
+            }
+        }
+    }
+    
+    var style: PushSimulatorViewStyle = .LockScreenStyle {
         didSet {
             reloadUI()
         }
@@ -284,8 +298,11 @@ import Foundation
         var insetY : CGFloat = 8
         
         var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
+        var bodySizeOffset: CGFloat = 0
+        var dateLabelOffset: CGFloat = 0
         
-        if (self.isInAppView) {
+        switch self.style {
+        case .AppStyle:
             insetX = 8
             insetY = 2
             appNameSize = CGSizeMake(0, appNameSize.height + 2)
@@ -296,20 +313,34 @@ import Foundation
             self.lineViewTop.hidden = true
             self.lineViewBottom.hidden = true
             self.clearButton.hidden = false
-        } else {
+            bodySizeOffset = 20
+        case .LockScreenStyle:
             self.appNameLabel.hidden = false
             self.appIconView.hidden = false
             self.slideLabel.hidden = false
             self.lineViewTop.hidden = false
             self.lineViewBottom.hidden = false
             self.clearButton.hidden = true
+            dateLabelOffset = 6
+        case .ShareStyle:
+            insetX = 8
+            insetY = 2
+            
+            self.appNameLabel.hidden = false
+            self.appIconView.hidden = true
+            self.slideLabel.hidden = true
+            self.lineViewTop.hidden = true
+            self.lineViewBottom.hidden = true
+            self.clearButton.hidden = true
+            bodySizeOffset = 20
+            dateLabelOffset = 6
         }
         
         let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - (self.isInAppView ? 20 : 0), self.bounds.height - insetY - appNameSize.height), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
         appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
-        dateLabel.frame = CGRectMake(appNameSize.width + insetX + (self.isInAppView ? 0 : 6), insetY, dateLabelSize.width, appNameSize.height)
+        dateLabel.frame = CGRectMake(appNameSize.width + insetX + dateLabelOffset, insetY, dateLabelSize.width, appNameSize.height)
         bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, bodySize.width, bodySize.height)
         slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
     }
@@ -332,7 +363,7 @@ import Foundation
         }
         
         self.scrollView.setContentOffset(CGPointZero, animated: animated)
-        if (self.isInAppView) {
+        if (self.style == .AppStyle) {
             self.clearButton.fadeIn()
         }
         self.isShowingControls = false
@@ -353,7 +384,7 @@ import Foundation
             targetContentOffset.memory = CGPointZero;
             
             dispatch_async(dispatch_get_main_queue(), {
-                if (self.isInAppView) {
+                if (self.style == .AppStyle) {
                     self.clearButton.fadeIn()
                 }
                 

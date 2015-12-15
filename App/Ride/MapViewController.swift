@@ -16,8 +16,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     @IBOutlet weak var mapView:  MGLMapView!
         
     private var tripsAreLoaded = false
+    
     private var selectedTripLine : MGLPolyline?
     private var selectedTripBackingLine : MGLPolyline?
+    private var startPoint: MGLPointAnnotation?
+    private var endPoint: MGLPointAnnotation?
+    
     private var hasCenteredMap : Bool = false
     
     private var selectedIncident : Incident? = nil
@@ -41,7 +45,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.showsUserLocation = true
         self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
 
-        let styleURL = NSURL(string: "https://tiles.ride.report/styles/heatmap-style.json")
+        let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json")
         self.mapView.styleURL = styleURL
         
         // set the size of the url cache for tile caching.
@@ -129,6 +133,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         if let tripLine = self.selectedTripBackingLine {
             self.mapView.removeAnnotation(tripLine)
         }
+        if let startPoint = self.startPoint {
+            self.mapView.removeAnnotation(startPoint)
+        }
+        if let endPoint = self.endPoint {
+            self.mapView.removeAnnotation(endPoint)
+        }
         
         guard let trip = selectedTrip else {
             self.selectedTripLine = nil
@@ -146,6 +156,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 }
             })
             return
+        }
+        
+        if let startLoc = trip.simplifiedLocations.firstObject as? Location,
+            endLoc = trip.simplifiedLocations.lastObject as? Location {
+                self.startPoint = MGLPointAnnotation()
+                self.startPoint!.coordinate = startLoc.coordinate()
+                mapView.addAnnotation(self.startPoint!)
+                
+                self.endPoint = MGLPointAnnotation()
+                self.endPoint!.coordinate = endLoc.coordinate()
+                mapView.addAnnotation(self.endPoint!)
         }
 
         var coordinates : [CLLocationCoordinate2D] = []
@@ -190,11 +211,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             i++
         }
         
-        let padFactor : Double = 0.1
+        let padFactorX : Double = 0.1
+        let padFactorTop : Double = 0.45
+        let padFactorBottom : Double = 0.3
+        
         let sizeLong = (maxLong - minLong)
         let sizeLat = (maxLat - minLat)
         
-        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactor), minLong - (sizeLong * padFactor)), CLLocationCoordinate2DMake(maxLat + (sizeLat * 3 * padFactor),maxLong + (sizeLong * padFactor))) // extra padding on the top so that it isn't under the notification bar.
+        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX))) // extra padding on the top so that it isn't under the notification bar.
         dispatch_async(dispatch_get_main_queue(), {
             self.mapView.setVisibleCoordinateBounds(bounds, animated: true)
         })
@@ -209,6 +233,25 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Map Kit
     //
     
+    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        var annotationImage: MGLAnnotationImage? = nil
+        if let startPoint = self.startPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == startPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("startMarker")
+            if (annotationImage == nil) {
+                let image = UIImage(named: "pinGreen.png")
+                annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "startMarker")
+            }
+        } else if let endPoint = self.endPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == endPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("endMarker")
+            if (annotationImage == nil) {
+                let image = UIImage(named: "pinRed.png")
+                annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "endMarker")
+            }
+        }
+        
+        return annotationImage
+    }
+    
     func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
         if (!self.hasCenteredMap && userLocation != nil) {
             if (self.mainViewController.selectedTrip == nil) {
@@ -219,23 +262,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
             self.hasCenteredMap = true
         }
-    }
-    
-
-    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        if (annotation.isKindOfClass(Incident)) {
-            let incident = annotation as! Incident
-
-            let reuseID = "IncidentAnnotationViewReuseID" + incident.type.stringValue
-            var annotationView = self.mapView.dequeueReusableAnnotationImageWithIdentifier(reuseID) as MGLAnnotationImage?
-
-            if (annotationView == nil) {
-                annotationView = MGLAnnotationImage(image: Incident.IncidentType(rawValue: incident.type.integerValue)!.pinImage, reuseIdentifier: reuseID)
-            }
-            return annotationView
-        }
-
-        return nil;
     }
     
     func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {

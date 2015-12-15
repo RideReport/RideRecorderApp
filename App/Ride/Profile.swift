@@ -48,6 +48,65 @@ class Profile : NSManagedObject {
         return Static.profile
     }
     
+    var firstTripDate: NSDate? {
+        if let trip = Trip.leastRecentBikeTrip() {
+            return trip.creationDate
+        }
+        
+        return nil
+    }
+    
+    var milesBiked : Float {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", Trip.ActivityType.Cycling.rawValue)
+        
+        let sumDescription = NSExpressionDescription()
+        sumDescription.name = "sumOfLengths"
+        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
+        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
+        fetchedRequest.propertiesToFetch = [sumDescription]
+        
+        var error : NSError?
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
+        }
+        if (results == nil || error != nil) {
+            return 0.0
+        }
+        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
+        return (totalLength.floatValue * 0.000621371)
+    }
+    
+    var milesBikedJewel: String {
+        let totalMiles = self.milesBiked
+        if totalMiles > 5000 {
+            return "🌈  "
+        } else if totalMiles > 2000 {
+            return "🌌  "
+        } else if totalMiles > 1000 {
+            return "🌠  "
+        } else if totalMiles > 500 {
+            return "🌋  "
+        } else if totalMiles > 100 {
+            return "🗻  "
+        } else if totalMiles > 50 {
+            return "🏔  "
+        } else if totalMiles > 25 {
+            return "⛰  "
+        } else if totalMiles > 10 {
+            return "🌅  "
+        } else {
+            return "🌄  "
+        }
+    }
+    
     var currentStreakJewel: String {
         return self.jewelForLength(self.currentStreakLength.integerValue)
     }
