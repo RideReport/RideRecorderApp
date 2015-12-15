@@ -686,7 +686,8 @@ class APIClient {
             case .Success(let jsonData):
                 let json = JSON(jsonData)
                 
-                if let accessToken = json["access_token"].string, expiresInString = json["expires_in"].string, expiresIn = NSDate.dateFromJSONString(expiresInString) {
+                if let accessToken = json["access_token"].string, expiresInString = json["expires_in"].string, expiresInInt = Int(expiresInString) {
+                    let expiresIn = NSDate().secondsFrom(expiresInInt)
                     if (Profile.profile().accessToken == nil) {
                         Profile.profile().accessToken = accessToken
                         Profile.profile().accessTokenExpiresIn = expiresIn
