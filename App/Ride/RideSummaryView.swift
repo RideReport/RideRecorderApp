@@ -93,6 +93,11 @@ import Foundation
             layoutSubviews()
         }
     }
+    var showsShareButon : Bool = true {
+        didSet {
+            layoutSubviews()
+        }
+    }
     
     let buttonWidth : CGFloat = 75.0
     
@@ -262,6 +267,7 @@ import Foundation
         destructiveButton.hidden = !self.showsDestructiveActionButon
         actionButton.hidden = !self.showsActionButon
         editButton.hidden = !self.showsEditButton
+        shareButton.hidden = !self.showsShareButon || self.style != .AppStyle
         
         self.clearButton.frame = CGRect(x: self.bounds.width - self.clearButton.frame.size.width - 10, y: (self.bounds.height - self.clearButton.frame.size.height)/2.0, width: self.clearButton.frame.size.width, height: self.clearButton.frame.size.height)
 
@@ -380,7 +386,7 @@ import Foundation
         }
         
         self.scrollView.setContentOffset(CGPointZero, animated: animated)
-        if (self.style == .AppStyle) {
+        if (self.style == .AppStyle && self.showsShareButon) {
             self.shareButton.fadeIn()
         }
         self.isShowingControls = false
@@ -401,7 +407,7 @@ import Foundation
             targetContentOffset.memory = CGPointZero;
             
             dispatch_async(dispatch_get_main_queue(), {
-                if (self.style == .AppStyle) {
+                if (self.style == .AppStyle && self.showsShareButon) {
                     self.shareButton.fadeIn()
                 }
                 

@@ -1040,6 +1040,25 @@ class Trip : NSManagedObject {
         return message
     }
     
+    func shareString()->String {
+        var message = ""
+        
+        if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
+            if (self.startingPlacemarkName == self.endingPlacemarkName) {
+                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            } else {
+                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+            }
+        } else if (self.startingPlacemarkName != nil) {
+            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+        } else {
+            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles)
+        }
+        
+        
+        return message
+    }
+    
     var isFirstBikeTripToday: Bool {
         if let tripsToday = Trip.bikeTripsToday() {
             return tripsToday.contains(self) && tripsToday.count == 1

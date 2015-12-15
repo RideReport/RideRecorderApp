@@ -87,7 +87,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        self.activityViewController = UIActivityViewController(activityItems: [image, "http://ride.report/ride/fds271"], applicationActivities: nil)
+        self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: nil)
         self.presentViewController(self.activityViewController, animated: true, completion: nil)
     }
     
