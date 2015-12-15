@@ -424,7 +424,8 @@ class APIClient {
             "activityType": trip.activityType,
             "creationDate": trip.creationDate.JSONString(),
             "startLocation": startingLocation.jsonDictionary(),
-            "endLocation": endingLocation.jsonDictionary()
+            "endLocation": endingLocation.jsonDictionary(),
+            "length": trip.length
         ]
         
         var routeURL = "trips"
