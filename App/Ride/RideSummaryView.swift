@@ -1,5 +1,5 @@
 //
-//  PushSimulatorView.swift
+//  RideSummaryView.swift
 //  Ride Report
 //
 //  Created by William Henderson on 1/19/15.
@@ -8,16 +8,17 @@
 
 import Foundation
 
-@objc protocol PushSimulatorViewDelegate {
-    optional func didOpenControls(view: PushSimulatorView)
-    optional func didCloseControls(view: PushSimulatorView)
-    optional func didTapEditButton(view: PushSimulatorView)
-    optional func didTapDestructiveButton(view: PushSimulatorView)
-    optional func didTapActionButton(view: PushSimulatorView)
-    optional func didTapClearButton(view: PushSimulatorView)
+@objc protocol RideSummaryViewDelegate {
+    optional func didOpenControls(view: RideSummaryView)
+    optional func didCloseControls(view: RideSummaryView)
+    optional func didTapEditButton(view: RideSummaryView)
+    optional func didTapDestructiveButton(view: RideSummaryView)
+    optional func didTapActionButton(view: RideSummaryView)
+    optional func didTapClearButton(view: RideSummaryView)
+    optional func didTapShareButton(view: RideSummaryView)
 }
 
-@IBDesignable class PushSimulatorView : UIView, UIScrollViewDelegate {
+@IBDesignable class RideSummaryView : UIView, UIScrollViewDelegate {
     @IBInspectable var body: String = "Lorem ipsum dolor sit amet" {
         didSet {
             reloadUI()
@@ -57,7 +58,7 @@ import Foundation
         }
     }
     
-    enum PushSimulatorViewStyle : NSInteger {
+    enum RideSummaryViewStyle : NSInteger {
         case LockScreenStyle = 1
         case AppStyle
         case ShareStyle
@@ -65,13 +66,13 @@ import Foundation
     
     @IBInspectable var interfaceStyle: NSInteger = 1 {
         didSet {
-            if let newStyle = PushSimulatorViewStyle(rawValue: self.interfaceStyle) {
+            if let newStyle = RideSummaryViewStyle(rawValue: self.interfaceStyle) {
                 self.style = newStyle
             }
         }
     }
     
-    var style: PushSimulatorViewStyle = .LockScreenStyle {
+    var style: RideSummaryViewStyle = .LockScreenStyle {
         didSet {
             reloadUI()
         }
@@ -95,7 +96,7 @@ import Foundation
     
     let buttonWidth : CGFloat = 75.0
     
-    var delegate : PushSimulatorViewDelegate? = nil
+    var delegate : RideSummaryViewDelegate? = nil
     
     var isShowingControls = false
     
@@ -106,6 +107,7 @@ import Foundation
     var destructiveButton : UIButton!
     var actionButton : UIButton!
     var editButton : UIButton!
+    var shareButton : UIButton!
     var clearButton : ClearButton!
     
     var contentView : UIView!
@@ -184,6 +186,13 @@ import Foundation
         clearButton.addTarget(self, action: "pressedClearButton", forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(clearButton)
         
+        let shareImage = UIImage(named: "Action.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        shareButton = UIButton(frame: CGRectMake(0,0,19,27))
+        shareButton.tintColor = UIColor.whiteColor()
+        shareButton.setImage(shareImage, forState: UIControlState.Normal)
+        shareButton.addTarget(self, action: "pressedShareButton", forControlEvents: UIControlEvents.TouchUpInside)
+        contentView.addSubview(shareButton)
+        
         controlsView = UIView()
         controlsView.backgroundColor = UIColor.clearColor()
         controlsView.clipsToBounds = true
@@ -239,6 +248,10 @@ import Foundation
         self.hideControls()
     }
     
+    func pressedShareButton() {
+        delegate?.didTapShareButton?(self)
+    }
+    
     override func prepareForInterfaceBuilder() {
         reloadUI()
     }
@@ -251,6 +264,8 @@ import Foundation
         editButton.hidden = !self.showsEditButton
         
         self.clearButton.frame = CGRect(x: self.bounds.width - self.clearButton.frame.size.width - 10, y: (self.bounds.height - self.clearButton.frame.size.height)/2.0, width: self.clearButton.frame.size.width, height: self.clearButton.frame.size.height)
+
+        self.shareButton.frame = CGRect(x: self.bounds.width - self.shareButton.frame.size.width - 10, y: (self.bounds.height - self.shareButton.frame.size.height)/2.0, width: self.shareButton.frame.size.width, height: self.shareButton.frame.size.height)
         
         self.editButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height)
         self.destructiveButton.frame = CGRect(x: self.totalButtonWidth - 2 * buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
@@ -312,8 +327,9 @@ import Foundation
             self.slideLabel.hidden = true
             self.lineViewTop.hidden = true
             self.lineViewBottom.hidden = true
-            self.clearButton.hidden = false
-            bodySizeOffset = 20
+            self.clearButton.hidden = true
+            self.shareButton.hidden = false
+            bodySizeOffset = 30
         case .LockScreenStyle:
             self.appNameLabel.hidden = false
             self.appIconView.hidden = false
@@ -321,6 +337,7 @@ import Foundation
             self.lineViewTop.hidden = false
             self.lineViewBottom.hidden = false
             self.clearButton.hidden = true
+            self.shareButton.hidden = true
             dateLabelOffset = 6
         case .ShareStyle:
             insetX = 8
@@ -332,7 +349,7 @@ import Foundation
             self.lineViewTop.hidden = true
             self.lineViewBottom.hidden = true
             self.clearButton.hidden = true
-            bodySizeOffset = 20
+            self.shareButton.hidden = true
             dateLabelOffset = 6
         }
         
@@ -364,7 +381,7 @@ import Foundation
         
         self.scrollView.setContentOffset(CGPointZero, animated: animated)
         if (self.style == .AppStyle) {
-            self.clearButton.fadeIn()
+            self.shareButton.fadeIn()
         }
         self.isShowingControls = false
         delegate?.didCloseControls?(self)
@@ -385,7 +402,7 @@ import Foundation
             
             dispatch_async(dispatch_get_main_queue(), {
                 if (self.style == .AppStyle) {
-                    self.clearButton.fadeIn()
+                    self.shareButton.fadeIn()
                 }
                 
                 scrollView.setContentOffset(CGPointZero, animated: true)
@@ -408,8 +425,8 @@ import Foundation
             if !self.isShowingControls {
                 self.isShowingControls = true
                 delegate?.didOpenControls?(self)
-                if (!self.clearButton.hidden) {
-                    self.clearButton.fadeOut()
+                if (!self.shareButton.hidden) {
+                    self.shareButton.fadeOut()
                 }
             }
         } else if (scrollView.contentOffset.x == 0) {

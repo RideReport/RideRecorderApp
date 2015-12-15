@@ -9,12 +9,12 @@
 import Foundation
 import SystemConfiguration
 
-class MainViewController: UIViewController, PushSimulatorViewDelegate {
+class MainViewController: UIViewController, RideSummaryViewDelegate {
     @IBOutlet weak var routesContainerView: UIView!
     weak var popupView: PopupView!
     @IBOutlet weak var selectedTripView: UIView!
     @IBOutlet weak var editModeView: UIView!
-    weak var rideRushSimulatorView: PushSimulatorView!
+    weak var rideSummaryView: RideSummaryView!
     @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
@@ -77,8 +77,8 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
         
-        self.rideRushSimulatorView.delegate = self
-        self.rideRushSimulatorView.showsEditButton = true
+        self.rideSummaryView.delegate = self
+        self.rideSummaryView.showsEditButton = true
                 
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
             self.selectedTrip = Trip.mostRecentBikeTrip()
@@ -93,11 +93,11 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
             var dateTitle = ""
             
             if (trip.locationsNotYetDownloaded) {
-                self.rideRushSimulatorView.dateString = ""
-                self.rideRushSimulatorView.body = "Downloading Trip Data…"
+                self.rideSummaryView.dateString = ""
+                self.rideSummaryView.body = "Downloading Trip Data…"
             } else if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
-                self.rideRushSimulatorView.dateString = ""
-                self.rideRushSimulatorView.body = "Trip in Progress…"
+                self.rideSummaryView.dateString = ""
+                self.rideSummaryView.body = "Trip in Progress…"
             } else {
                 if (trip.startDate != nil) {
                     if (trip.startDate.isToday()) {
@@ -110,23 +110,23 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
                         dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
                     }
                 }
-                self.rideRushSimulatorView.dateString = dateTitle
-                self.rideRushSimulatorView.body = trip.notificationString()!
-                self.rideRushSimulatorView.hideControls(false)
+                self.rideSummaryView.dateString = dateTitle
+                self.rideSummaryView.body = trip.notificationString()!
+                self.rideSummaryView.hideControls(false)
                 
                 if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                     if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
-                        self.rideRushSimulatorView.delay(0.1, completionHandler: {
-                            self.rideRushSimulatorView.showControls()
+                        self.rideSummaryView.delay(0.1, completionHandler: {
+                            self.rideSummaryView.showControls()
                         })
                     }
-                    self.rideRushSimulatorView.showsActionButon = true
-                    self.rideRushSimulatorView.showsDestructiveActionButon = true
+                    self.rideSummaryView.showsActionButon = true
+                    self.rideSummaryView.showsDestructiveActionButon = true
                 } else {
-                    self.rideRushSimulatorView.showsActionButon = false
-                    self.rideRushSimulatorView.showsDestructiveActionButon = false
-                    self.rideRushSimulatorView.delay(0.5, completionHandler: {
-                        self.rideRushSimulatorView.showControls()
+                    self.rideSummaryView.showsActionButon = false
+                    self.rideSummaryView.showsDestructiveActionButon = false
+                    self.rideSummaryView.delay(0.5, completionHandler: {
+                        self.rideSummaryView.showControls()
                     })
                 }
             }
@@ -376,7 +376,7 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
     // MARK: - Push Simulator View Actions
     //
     
-    func didTapEditButton(view: PushSimulatorView) {
+    func didTapEditButton(view: RideSummaryView) {
         CATransaction.begin()
             let transition = CATransition()
             transition.duration = 0.5
@@ -389,21 +389,30 @@ class MainViewController: UIViewController, PushSimulatorViewDelegate {
         CATransaction.commit()
     }
     
-    func didTapDestructiveButton(view: PushSimulatorView) {
+    func didTapShareButton(view: RideSummaryView) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let rideShareNavVC = storyBoard.instantiateViewControllerWithIdentifier("RideShareNavViewController") as! UINavigationController
+        if let rideShareVC = rideShareNavVC.topViewController as? RideShareViewController {
+            rideShareVC.trip = self.selectedTrip
+        }
+        self.presentViewController(rideShareNavVC, animated: true, completion: nil)
+    }
+    
+    func didTapDestructiveButton(view: RideSummaryView) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
     }
     
-    func didTapActionButton(view: PushSimulatorView) {
+    func didTapActionButton(view: RideSummaryView) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
     }
     
-    func didTapClearButton(view: PushSimulatorView) {
+    func didTapClearButton(view: RideSummaryView) {
         self.selectedTrip = nil
     }
 }

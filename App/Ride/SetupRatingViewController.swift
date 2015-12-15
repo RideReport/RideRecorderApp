@@ -8,9 +8,9 @@
 
 import Foundation
 
-class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDelegate {
+class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelegate {
     
-    weak var pushSimulationView : PushSimulatorView!
+    weak var pushSimulationView : RideSummaryView!
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var nextButton : UIButton!
     
@@ -25,11 +25,11 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
         AppDelegate.appDelegate().registerNotifications()
     }
     
-    func didOpenControls(view: PushSimulatorView) {
+    func didOpenControls(view: RideSummaryView) {
         helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a trip with no issues, **thumbs down** if something stressed you out.")
     }
     
-    func didTapActionButton(view: PushSimulatorView) {
+    func didTapActionButton(view: RideSummaryView) {
         self.pushSimulationView.fadeOut {
             self.nextButton.fadeIn()
             
@@ -39,7 +39,7 @@ class SetupRatingViewController: SetupChildViewController, PushSimulatorViewDele
         helperTextLabel.animatedSetMarkdownStringValue("Nice. Rating your trips will **improve biking in Portland**!")
     }
     
-    func didTapDestructiveButton(view: PushSimulatorView) {
+    func didTapDestructiveButton(view: RideSummaryView) {
         self.pushSimulationView.fadeOut {
             self.nextButton.fadeIn()
             

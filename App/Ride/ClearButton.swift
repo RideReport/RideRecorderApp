@@ -55,7 +55,11 @@ import Foundation
     }
     
     override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-        return self
+        if !self.hidden {
+            return self
+        }
+        
+        return super.hitTest(point, withEvent: event)
     }
     
 }

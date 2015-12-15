@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocumentInteractionControllerDelegate {
+class RideShareViewController : UIViewController, MGLMapViewDelegate {
     var trip: Trip! {
         didSet {
             guard self.view != nil else {
@@ -17,7 +17,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
             }
             
             self.updateTripPolylines()
-            self.updatePushSimulatorView()
+            self.updateRideSummaryView()
         }
     }
     
@@ -30,12 +30,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
     private var dateTimeFormatter: NSDateFormatter!
 
     @IBOutlet weak var shareView: UIView!
-    @IBOutlet weak var rideRushSimulatorView: PushSimulatorView!
+    @IBOutlet weak var rideSummaryView: RideSummaryView!
     @IBOutlet weak var mapView:  MGLMapView!
     @IBOutlet weak var statsFirstLineLabel:  UILabel!
     @IBOutlet weak var statsSecondLineLabel:  UILabel!
     
-    private var interactionController: UIDocumentInteractionController!
+    private var activityViewController: UIActivityViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +60,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
         self.mapView.styleURL = styleURL
         
         self.updateTripPolylines()
-        self.updatePushSimulatorView()
+        self.updateRideSummaryView()
         
         let formatter = NSNumberFormatter()
         formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
@@ -86,21 +86,16 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
         self.shareView.drawViewHierarchyInRect(self.shareView.bounds, afterScreenUpdates: false)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        let documentsDirectory = (NSHomeDirectory() as NSString).stringByAppendingPathComponent("Documents")
-        let saveImagePath = (documentsDirectory as NSString).stringByAppendingPathComponent("Image.igo")
-        UIImagePNGRepresentation(image)?.writeToFile(saveImagePath, atomically: true)
-        self.interactionController = UIDocumentInteractionController(URL: NSURL(fileURLWithPath: saveImagePath))
-        self.interactionController.UTI = "com.instagram.exclusivegram"
-        self.interactionController.delegate = self
-        self.interactionController.annotation = ["#RideReport": "InstagramCaption"]
-        self.interactionController.presentOpenInMenuFromRect(CGRect.zero, inView: self.view, animated: true)
+        
+        self.activityViewController = UIActivityViewController(activityItems: [image, "http://ride.report/ride/fds271"], applicationActivities: nil)
+        self.presentViewController(self.activityViewController, animated: true, completion: nil)
     }
     
     //
     // MARK: - UI Code
     //
     
-    func updatePushSimulatorView() {
+    func updateRideSummaryView() {
         guard let trip = self.trip else {
             self.tripLine = nil
             self.tripBackingLine = nil
@@ -109,10 +104,10 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
         }
         
         if let date = trip.startDate {
-            self.rideRushSimulatorView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(date))
+            self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(date))
         }
-        self.rideRushSimulatorView.body = trip.notificationString()!
-        self.rideRushSimulatorView.hideControls(false)
+        self.rideSummaryView.body = trip.notificationString()!
+        self.rideSummaryView.hideControls(false)
 
     }
     
@@ -262,15 +257,6 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate, UIDocument
         }
         
         return UIColor.clearColor()
-    }
-    
-    //
-    // MARK: - UIDocumentInteractionControllerDelegate
-    //
-    
-    
-    func documentInteractionControllerDidEndPreview(controller: UIDocumentInteractionController) {
-        self.interactionController = nil
     }
     
 }

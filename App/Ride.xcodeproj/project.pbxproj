@@ -61,6 +61,8 @@
 		844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */; };
 		844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */; };
 		844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */; };
+		8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451037C1C20BAE600ABD323 /* Action@2x.png */; };
+		8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451037D1C20BAE600ABD323 /* Action@3x.png */; };
 		8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */; };
 		8451FA871B9E2F6E008ACDCD /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA841B9E2F6E008ACDCD /* menu.png */; };
 		8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA851B9E2F6E008ACDCD /* menu@2x.png */; };
@@ -115,7 +117,7 @@
 		84E395841A757DF30015B682 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84E395821A757DF30015B682 /* LaunchScreen.xib */; };
 		84E3959F1A757E6F0015B682 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
 		84E395A61A76B5A80015B682 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84E395A51A76B5A80015B682 /* libPods.a */; };
-		84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */; };
+		84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */; };
 		84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* SetupRatingViewController.swift */; };
 		84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */; };
 		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
@@ -206,6 +208,8 @@
 		844B949C1B8BE1A3009F4E27 /* BKPasscodeField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeField.m; sourceTree = "<group>"; };
 		844B949D1B8BE1A3009F4E27 /* BKPasscodeInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKPasscodeInputView.h; sourceTree = "<group>"; };
 		844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeInputView.m; sourceTree = "<group>"; };
+		8451037C1C20BAE600ABD323 /* Action@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Action@2x.png"; sourceTree = "<group>"; };
+		8451037D1C20BAE600ABD323 /* Action@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Action@3x.png"; sourceTree = "<group>"; };
 		8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HamburgerViewController.swift; sourceTree = "<group>"; };
 		8451FA841B9E2F6E008ACDCD /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
 		8451FA851B9E2F6E008ACDCD /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
@@ -286,7 +290,7 @@
 		84E395831A757DF30015B682 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		84E395A21A757FF20015B682 /* RouteMachineTestTool-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RouteMachineTestTool-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E395A51A76B5A80015B682 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
-		84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PushSimulatorView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RideSummaryView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EA5BDE1A6DE17F00C71F53 /* SetupRatingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupRatingViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+HBAdditions.h"; sourceTree = "<group>"; };
@@ -424,7 +428,7 @@
 				8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */,
 				8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
-				84EA5BDA1A6DA8DF00C71F53 /* PushSimulatorView.swift */,
+				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
 				84C29F6C1BDEDD070003A26B /* ClearButton.swift */,
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
 				84091CD71BD848A400264652 /* RCounter.h */,
@@ -506,6 +510,8 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8451037C1C20BAE600ABD323 /* Action@2x.png */,
+				8451037D1C20BAE600ABD323 /* Action@3x.png */,
 				845A04491C1F795000556CD9 /* pinGreen@2x.png */,
 				845A044A1C1F795000556CD9 /* pinGreen@3x.png */,
 				845A044B1C1F795000556CD9 /* pinRed@2x.png */,
@@ -812,11 +818,13 @@
 				845A044E1C1F795000556CD9 /* pinGreen@3x.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
+				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
 				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				845A044F1C1F795000556CD9 /* pinRed@2x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
+				8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */,
 				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
 				84091CE01BD848C000264652 /* counter-shadow.png in Resources */,
@@ -997,7 +1005,7 @@
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
-				84EA5BDB1A6DA8DF00C71F53 /* PushSimulatorView.swift in Sources */,
+				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
