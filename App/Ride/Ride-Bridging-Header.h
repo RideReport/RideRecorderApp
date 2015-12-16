@@ -13,6 +13,7 @@
 #import "Reachability.h"
 #import "BKPasscodeInputView.h"
 #import "RCounter.h"
+#import "DMActivityInstagram.h"
 #include <zlib.h>
 #include <CZWeatherKit/CZWeatherKit.h>
 

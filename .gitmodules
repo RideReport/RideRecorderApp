@@ -4,3 +4,6 @@
 [submodule "Submodules/PNChart"]
 	path = Submodules/PNChart
 	url = git@github.com:KnockSoftware/PNChart.git
+[submodule "Submodules/DMActivityInstagram"]
+	path = Submodules/DMActivityInstagram
+	url = git@github.com:KnockSoftware/DMActivityInstagram.git

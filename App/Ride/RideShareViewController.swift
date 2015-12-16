@@ -87,7 +87,17 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: nil)
+        let instagramActivity = DMActivityInstagram()
+        instagramActivity.presentingView = self.view
+        instagramActivity.includeURL = false
+        
+        var excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+        if #available(iOS 9.0, *) {
+            excludedActivityTypes.append(UIActivityTypeOpenInIBooks)
+        }
+        
+        self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: [instagramActivity])
+        self.activityViewController.excludedActivityTypes = excludedActivityTypes
         self.presentViewController(self.activityViewController, animated: true, completion: nil)
     }
     

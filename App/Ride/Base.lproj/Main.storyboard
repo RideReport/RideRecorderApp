@@ -168,7 +168,6 @@
 👍</string>
                                                     </userDefinedRuntimeAttribute>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="isInAppView" value="YES"/>
                                                     <userDefinedRuntimeAttribute type="number" keyPath="interfaceStyle">
                                                         <integer key="value" value="3"/>
                                                     </userDefinedRuntimeAttribute>
@@ -1359,7 +1358,6 @@
 👍</string>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="body" value="🚲 1.7 miles from Downtown Portland to Hawthorne"/>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isInAppView" value="YES"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="interfaceStyle">
                                                 <integer key="value" value="2"/>
                                             </userDefinedRuntimeAttribute>

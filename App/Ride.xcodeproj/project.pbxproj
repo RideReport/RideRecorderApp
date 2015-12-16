@@ -18,6 +18,9 @@
 		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; };
 		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; };
 		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; };
+		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
+		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
+		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -179,6 +182,10 @@
 		84091CDD1BD848C000264652 /* counter-shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow@2x.png"; sourceTree = "<group>"; };
 		840AE4011BF7DE61004E4997 /* Ride 30.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 30.xcdatamodel"; sourceTree = "<group>"; };
 		840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 27.xcdatamodel"; sourceTree = "<group>"; };
+		8411B0601C20EC20002E8E80 /* DMActivityInstagram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMActivityInstagram.h; sourceTree = "<group>"; };
+		8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMActivityInstagram.m; sourceTree = "<group>"; };
+		8411B0731C20EC20002E8E80 /* instagram@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@2x.png"; sourceTree = "<group>"; };
+		8411B0751C20EC20002E8E80 /* instagram@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@3x.png"; sourceTree = "<group>"; };
 		841D87111BFD4E3000CE28CD /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
@@ -382,6 +389,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8411B04F1C20EC20002E8E80 /* DMActivityInstagram */,
 				842FDCC51BD56FEB0079AFCC /* libz.tbd */,
 				842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */,
 				842FDCC01BD56FBC0079AFCC /* libc++.tbd */,
@@ -404,6 +412,18 @@
 				84CA64EA1B72BBF400696587 /* Fabric.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8411B04F1C20EC20002E8E80 /* DMActivityInstagram */ = {
+			isa = PBXGroup;
+			children = (
+				8411B0601C20EC20002E8E80 /* DMActivityInstagram.h */,
+				8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */,
+				8411B0731C20EC20002E8E80 /* instagram@2x.png */,
+				8411B0751C20EC20002E8E80 /* instagram@3x.png */,
+			);
+			name = DMActivityInstagram;
+			path = ../Submodules/DMActivityInstagram/DMActivityInstagram;
 			sourceTree = "<group>";
 		};
 		842599D61B90F3540038C3CA /* Setup */ = {
@@ -812,6 +832,7 @@
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				845A044D1C1F795000556CD9 /* pinGreen@2x.png in Resources */,
 				84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */,
+				8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */,
 				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
@@ -821,6 +842,7 @@
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
 				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
+				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				845A044F1C1F795000556CD9 /* pinRed@2x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
@@ -995,6 +1017,7 @@
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
+				8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
