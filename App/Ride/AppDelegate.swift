@@ -58,7 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         // Start Managers. Note that order matters!
         CoreDataManager.startup()
         APIClient.startup()
-        SoftwareUpdateManager.startup()
 //        HealthKitManager.startup()
         
         if (hasSeenSetup) {

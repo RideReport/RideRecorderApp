@@ -21,7 +21,6 @@
 		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
 		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
-		8411B09A1C20F3B7002E8E80 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -187,7 +186,6 @@
 		8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMActivityInstagram.m; sourceTree = "<group>"; };
 		8411B0731C20EC20002E8E80 /* instagram@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@2x.png"; sourceTree = "<group>"; };
 		8411B0751C20EC20002E8E80 /* instagram@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@3x.png"; sourceTree = "<group>"; };
-		8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftwareUpdateManager.swift; sourceTree = "<group>"; };
 		841D87111BFD4E3000CE28CD /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
@@ -462,7 +460,6 @@
 		8445317719FEEB2A0096F26E /* Service Managers */ = {
 			isa = PBXGroup;
 			children = (
-				8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */,
 				8445317519FEEB210096F26E /* RouteManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
 				849EF0B21BBB1E9F006CEDD7 /* API */,
@@ -1021,7 +1018,6 @@
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
 				8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */,
-				8411B09A1C20F3B7002E8E80 /* SoftwareUpdateManager.swift in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
