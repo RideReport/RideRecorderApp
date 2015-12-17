@@ -117,6 +117,18 @@ public enum GzipError: ErrorType {
 
 public extension NSData
 {
+    public func hexadecimalString() -> String {
+        var string = ""
+        var byte: UInt8 = 0
+        
+        for i in 0 ..< length {
+            getBytes(&byte, range: NSMakeRange(i, 1))
+            string += String(format: "%02x", byte)
+        }
+        
+        return string
+    }
+    
     /**
     Create a new `NSData` object by compressing the reciver using zlib.
     Throws an error if compression failed.

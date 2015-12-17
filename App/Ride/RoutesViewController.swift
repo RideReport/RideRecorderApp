@@ -448,10 +448,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             })
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                trip.sendTripCompletionNotification() {
-                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                        UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
-                    }
+                trip.sendTripCompletionNotificationLocally()
+                if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
                 }
             })
         } else if (buttonIndex == 3) {

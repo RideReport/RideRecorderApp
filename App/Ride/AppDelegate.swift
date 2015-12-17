@@ -135,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
         let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
     }
     
     func startupDataGatheringManagers(fromBackground: Bool) {
@@ -202,6 +203,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        APIClient.sharedClient.appDidReceiveNotificationDeviceToken(deviceToken)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        APIClient.sharedClient.appDidReceiveNotificationDeviceToken(nil)
+    }
+    
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         if (buttonIndex == 1) {
             let url = NSURL(string: UIApplicationOpenSettingsURLString)
@@ -215,28 +224,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
-        if let userInfo = notification.userInfo, uuid = userInfo["RideNotificationTripUUID"] as? String,
-        trip = Trip.tripWithUUID(uuid) {
-            if (identifier == "GOOD_RIDE_IDENTIFIER") {
-                trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-                
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
-                self.postTripRatedThanksNotification(true)
-            } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-                trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-                
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true)
-                self.postTripRatedThanksNotification(false)
-            } else if (identifier == "FLAG_IDENTIFIER") {
-                Incident(location: trip.mostRecentLocation()!, trip: trip)
-                CoreDataManager.sharedManager.saveContext()
-            } else if (identifier == "RETRY_IDENTIFIER") {
-                trip.clasifyActivityType({})
-            }
+        if let userInfo = notification.userInfo {
+            self.handleNotificationAction(identifier, userInfo: userInfo, completionHandler: completionHandler)
+        }
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        self.handleNotificationAction(identifier, userInfo: userInfo, completionHandler: completionHandler)
+    }
+    
+    func handleNotificationAction(identifier: String?, userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        if let uuid = userInfo["uuid"] as? String,
+            trip = Trip.tripWithUUID(uuid) {
+                if (identifier == "GOOD_RIDE_IDENTIFIER") {
+                    trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+                    self.postTripRatedThanksNotification(true)
+
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                        completionHandler()
+                    })
+                } else if (identifier == "BAD_RIDE_IDENTIFIER") {
+                    trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+                    
+                    self.postTripRatedThanksNotification(false)
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                        completionHandler()
+                    })
+                } else if (identifier == "FLAG_IDENTIFIER") {
+                    Incident(location: trip.mostRecentLocation()!, trip: trip)
+                    CoreDataManager.sharedManager.saveContext()
+                    completionHandler()
+                } else if (identifier == "RETRY_IDENTIFIER") {
+                    trip.clasifyActivityType() {
+                        completionHandler()
+                    }
+                }
         }
         
         if (identifier == "RESUME_IDENTIFIER") {
             RouteManager.sharedManager.resumeTracking()
+            completionHandler()
         }
     }
     

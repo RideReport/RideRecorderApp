@@ -164,6 +164,9 @@ class APIClient {
         }
     }
     
+    var hasRegisteredForRemoteNotifications: Bool = false
+    var notificationDeviceToken: NSData?
+    
     private var manager : Manager
     private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     private var isRequestingAuthentication = false
@@ -194,8 +197,6 @@ class APIClient {
         let startupBlock = {
             self.authenticateIfNeeded()
             if (self.authenticated) {
-                self.updateAccountStatus()
-
                 if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.syncUnsyncedTrips()
@@ -243,6 +244,12 @@ class APIClient {
             "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
         ]
         self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
+    }
+    
+    func appDidReceiveNotificationDeviceToken(token: NSData?) {
+        self.hasRegisteredForRemoteNotifications = true
+        self.notificationDeviceToken = token
+        self.updateAccountStatus()
     }
     
     //
@@ -389,7 +396,7 @@ class APIClient {
         }
     }
     
-    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false) {
+    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false)->AuthenticatedAPIRequest {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -398,8 +405,10 @@ class APIClient {
         trip.saveAndMarkDirty()
         
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-            self.syncTrip(trip)
+            return self.syncTrip(trip)
         }
+        
+        return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
     }
     
     func syncTripSummary(trip: Trip)->AuthenticatedAPIRequest {
@@ -539,14 +548,25 @@ class APIClient {
     //
     
     func updateAccountStatus()-> AuthenticatedAPIRequest {
-        var params : [String: String] = [:]
+        guard self.hasRegisteredForRemoteNotifications else {
+            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        }
+        
+        var parameters: [String: AnyObject] = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
+        if let deviceToken = self.notificationDeviceToken {
+            parameters["device_token"] = deviceToken.hexadecimalString()
+            #if DEBUG
+                parameters["is_development_client"] = true
+            #endif
+        }
+        
         if (RouteManager.hasStarted()) {
             if let loc = RouteManager.sharedManager.location {
-                params["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
+                parameters["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
             }
         }
             
-        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: params) { (response, result) -> Void in
+        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: parameters) { (response, result) -> Void in
             switch result {
             case .Success(let json):
                 if let areaJson = json["area"].dictionary {

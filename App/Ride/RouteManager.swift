@@ -95,7 +95,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UIDevice.currentDevice().batteryMonitoringEnabled = true
         
         self.locationManager = CLLocationManager()
-        self.locationManager.activityType = CLActivityType.OtherNavigation
+        self.locationManager.activityType = CLActivityType.Fitness
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
@@ -206,17 +206,24 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             stoppedTrip.close() {
-               APIClient.sharedClient.syncTripSummary(stoppedTrip).apiResponse() { (_, _) -> Void in
-                    stoppedTrip.sendTripCompletionNotification() {
-                        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                            DDLogInfo("Ending background task.")
-                            
-                            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                            self.backgroundTaskID = UIBackgroundTaskInvalid
-                        }
+               APIClient.sharedClient.syncTripSummary(stoppedTrip).apiResponse() { (response, result) -> Void in
+                switch result {
+                case .Success(_):
+                    DDLogInfo("Trip summary was successfully sync'd.")
+                case .Failure(_, _):
+                    // if it fails, go ahead and send the notification locally
+                    stoppedTrip.sendTripCompletionNotificationLocally()
+                }
+                
+                // now sync the rest of the trip
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(stoppedTrip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending background task.")
+                        
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
-
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(stoppedTrip, syncInBackground: true)
+                })
                }
             }
         }

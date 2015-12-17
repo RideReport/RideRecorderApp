@@ -791,55 +791,6 @@ class Trip : NSManagedObject {
         handler()
     }
     
-    func findStartingPlacemarkWithHandler(startingLocation : CLLocation? = nil, handler: ()->Void) {
-        if (startingLocation == nil && self.locations.count < 2) {
-            handler()
-            return
-        }
-        
-        var location = startingLocation
-        if (location == nil) {
-            location = (self.locations.firstObject as! Location).clLocation()
-        }
-        
-        
-        let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(location!, completionHandler: { (placemarks, error) -> Void in
-            DDLogInfo("Starting placemark query returned.")
-
-            if (placemarks == nil || placemarks!.count == 0) {
-                handler()
-                return
-            }
-            let startingPlacemark = placemarks![0]
-            self.startingPlacemarkName = startingPlacemark.subLocality
-            handler()
-        })
-
-    }
-    
-    func findDestinationPlacemarksWithHandler(handler: ()->Void) {
-        if (self.locations.count < 2) {
-            handler()
-            return
-        }
-        
-        let geocoder = CLGeocoder()
-        let endingLocation = self.locations.lastObject as! Location
-        
-        geocoder.reverseGeocodeLocation(endingLocation.clLocation(), completionHandler: { (placemarks, error) -> Void in
-            DDLogInfo("Destination placemark query returned.")
-
-            if (placemarks == nil || placemarks!.count == 0) {
-                handler()
-                return
-            }
-            let endingPlacemark = placemarks![0] 
-            self.endingPlacemarkName = endingPlacemark.subLocality
-            handler()
-        })
-    }
-    
     func cancel() {
         CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(self)
         CoreDataManager.sharedManager.saveContext()
@@ -939,16 +890,6 @@ class Trip : NSManagedObject {
         return closestLocation
     }
     
-    func sendTripStartedNotification(startingLocation : CLLocation) {
-        if (self.startingPlacemarkName != nil) {
-            self.sendTripStartedNotificationImmediately()
-        } else {
-            self.findStartingPlacemarkWithHandler(startingLocation) { () -> Void in
-                self.sendTripStartedNotificationImmediately()
-            }
-        }
-    }
-    
     private func sendTripStartedNotificationImmediately() {
         self.cancelTripStateNotification()
         
@@ -966,37 +907,7 @@ class Trip : NSManagedObject {
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
-    func sendTripCompletionNotification(handler: ()->Void = {}) {
-        let sendNotifBlock = { () -> Void in
-            if (self.isClosed == false) {
-                // in case the trip was reopened while we were calculating things
-                handler()
-                return
-            }
-            
-            self.sendTripCompletionNotificationImmediately()
-            handler()
-        }
-        let findDestBlock = { () -> Void in
-            if (self.endingPlacemarkName == nil) {
-                self.findDestinationPlacemarksWithHandler() {
-                    sendNotifBlock()
-                }
-            } else {
-                sendNotifBlock()
-            }
-        }
-        
-        if (self.startingPlacemarkName == nil) {
-            self.findStartingPlacemarkWithHandler() {
-                findDestBlock()
-            }
-        } else {
-           findDestBlock()
-        }
-    }
-    
-    func sendTripCompletionNotificationImmediately() {
+    func sendTripCompletionNotificationLocally() {
         DDLogInfo("Sending notification…")
 
         self.cancelTripStateNotification()
@@ -1010,7 +921,7 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
             if let uuid = self.uuid {
-                self.currentStateNotification?.userInfo = ["RideNotificationTripUUID" : uuid]
+                self.currentStateNotification?.userInfo = ["uuid" : uuid]
             }
             UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
         }
@@ -1231,7 +1142,7 @@ class Trip : NSManagedObject {
                             notif.alertBody = "🐞 Got no motion activities!!"
                             notif.category = "NO_MOTION_DATA_CATEGORY"
                             if let uuid = self.uuid {
-                                notif.userInfo = ["RideNotificationTripUUID" : uuid]
+                                notif.userInfo = ["uuid" : uuid]
                             }
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
