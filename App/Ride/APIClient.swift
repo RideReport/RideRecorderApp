@@ -13,22 +13,51 @@ import OAuthSwift
 import KeychainAccess
 import CZWeatherKit
 
-#if (arch(i386) || arch(x86_64)) && os(iOS)
-let serverAddress = "https://localhost:3000/api/v2/"
-    #else
-let serverAddress = "https://api.ride.report/api/v2/"
-#endif
-
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
 
+extension Request {
+    public static func SwiftyJSONResponseSerializer(
+        options options: NSJSONReadingOptions = .AllowFragments)
+        -> ResponseSerializer<JSON, NSError>
+    {
+        return ResponseSerializer { _, _, data, error in
+            guard error == nil else { return .Failure(error!) }
+            
+            guard let validData = data where validData.length > 0 else {
+                let failureReason = "JSON could not be serialized. Input data was nil or zero length."
+                let error = Error.errorWithCode(.JSONSerializationFailed, failureReason: failureReason)
+                return .Failure(error)
+            }
+            
+            let json:JSON = SwiftyJSON.JSON(data: validData)
+            if let jsonError = json.error {
+                return Result.Failure(jsonError)
+            }
+            
+            return Result.Success(json)
+        }
+    }
+    
+    public func responseSwiftyJSON(
+        options options: NSJSONReadingOptions = .AllowFragments,
+        completionHandler: Response<JSON, NSError> -> Void)
+        -> Self
+    {
+        return response(
+            responseSerializer: Request.SwiftyJSONResponseSerializer(options: options),
+            completionHandler: completionHandler
+        )
+    }
+}
+
 class AuthenticatedAPIRequest {
-    typealias APIResponseBlock = (NSHTTPURLResponse?, Result<JSON>) -> Void
+    typealias APIResponseBlock = Response<JSON, NSError> -> Void
 
     // a block that fires once at completion, unlike APIResponseBlocks which are appended
     var requestCompletetionBlock: ()->Void = {}
     
-    private var request: Request? = nil
+    var request: Request? = nil
     private var authToken: String?
     
     enum AuthenticatedAPIRequestErrorCode: Int {
@@ -37,36 +66,48 @@ class AuthenticatedAPIRequest {
         case ClientAborted
     }
     
-    class func unauthenticatedError() -> NSError {
-        return NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.Unauthenticated.rawValue, userInfo: nil)
+    #if (arch(i386) || arch(x86_64)) && os(iOS)
+    static var serverAddress = "https://api.ride.report/api/v2/"
+    #else
+    static var serverAddress = "https://api.ride.report/api/v2/"
+    #endif
+    
+    class func unauthenticatedResponse() -> Response<JSON, NSError> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.Unauthenticated.rawValue, userInfo: nil)
+        
+        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
     }
     
-    class func duplicateRequestError() -> NSError {
-        return NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.DuplicateRequest.rawValue, userInfo: nil)
+    class func duplicateRequestResponse() -> Response<JSON, NSError> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.DuplicateRequest.rawValue, userInfo: nil)
+        
+        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
     }
     
-    class func clientAbortedError() -> NSError {
-        return NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.ClientAborted.rawValue, userInfo: nil)
+    class func clientAbortedResponse() -> Response<JSON, NSError> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.ClientAborted.rawValue, userInfo: nil)
+        
+        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
     }
     
-    convenience init(requestError: NSError, completionHandler: APIResponseBlock = {(_,_) in }) {
+    convenience init(clientAbortedWithResponse response: Response<JSON, NSError>, completionHandler: APIResponseBlock = {(_) in }) {
         self.init()
 
-        completionHandler(nil, .Failure(nil, requestError))
+        completionHandler(response)
     }
     
-    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, idempotencyKey: String? = nil, completionHandler: APIResponseBlock) {
+    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = ParameterEncoding.JSON.gzipped, idempotencyKey: String? = nil, authenticated: Bool = true, completionHandler: APIResponseBlock) {
         self.init()
         
-        if (!client.authenticated) {
+        if (authenticated && !client.authenticated) {
             client.authenticateIfNeeded()
-            completionHandler(nil, .Failure(nil, AuthenticatedAPIRequest.unauthenticatedError()))
+            completionHandler(AuthenticatedAPIRequest.unauthenticatedResponse())
             self.requestCompletetionBlock()
             return
         }
         
         var headers = APIRequestBaseHeaders
-        if let token = Profile.profile().accessToken {
+        if let token = Profile.profile().accessToken where authenticated {
             self.authToken = token
             headers["Authorization"] =  "Bearer \(token)"
         }
@@ -74,7 +115,7 @@ class AuthenticatedAPIRequest {
             headers["Idempotence-Key"] = theIdempotencyKey
         }
         
-        self.request = client.manager.request(method, serverAddress + route, parameters: parameters, encoding: ParameterEncoding.JSON.gzipped, headers: headers)
+        self.request = client.manager.request(method, AuthenticatedAPIRequest.serverAddress + route, parameters: parameters, encoding: encoding, headers: headers)
         
         let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
             if (response?.statusCode == 401) {
@@ -95,27 +136,27 @@ class AuthenticatedAPIRequest {
         
         if (method == .DELETE) {
             // delete does not return JSON https://github.com/KnockSoftware/rideserver/issues/48
-            request!.validate().responseString(encoding: NSASCIIStringEncoding, completionHandler: { (request, response, result) in
-                switch result {
+            request!.validate().responseString(encoding: NSASCIIStringEncoding, completionHandler: { (response) in
+                let jsonResponse: Response<JSON, NSError> = Response(request: response.request, response: response.response, data: response.data, result: Result.Success(JSON("")))
+                switch response.result {
                 case .Success(_):
-                    completionHandler(response, .Success(JSON("")))
-                case .Failure(let data, let error):
-                    handleHTTPResonseErrors(response)
-                    completionHandler(response, .Failure(data, error))
+                    completionHandler(jsonResponse)
+                case .Failure(_):
+                    handleHTTPResonseErrors(response.response)
+                    completionHandler(jsonResponse)
                 }
                 
                 // requestCompletetionBlock should fire after all APIResponseBlocks
                 self.requestCompletetionBlock()
             })
         } else {
-            request!.validate().responseJSON { (request, response, result) in
-                switch result {
-                case .Success(let jsonData):
-                    let json = JSON(jsonData)
-                    completionHandler(response, .Success(json))
-                case .Failure(let data, let error):
-                    handleHTTPResonseErrors(response)
-                    completionHandler(response, .Failure(data, error))
+            request!.validate().responseSwiftyJSON { (response) in
+                switch response.result {
+                case .Success(_):
+                    completionHandler(response)
+                case .Failure(_):
+                    handleHTTPResonseErrors(response.response)
+                    completionHandler(response)
                 }
                 
                 // requestCompletetionBlock should fire after all APIResponseBlocks
@@ -124,21 +165,22 @@ class AuthenticatedAPIRequest {
         }
     }
     
-    func apiResponse(completionHandler: APIResponseBlock) {
+    func apiResponse(completionHandler: APIResponseBlock)->AuthenticatedAPIRequest {
         if (self.request == nil) {
-            completionHandler(nil, .Failure(nil, AuthenticatedAPIRequest.unauthenticatedError()))
-            return
+            completionHandler(AuthenticatedAPIRequest.unauthenticatedResponse())
+            return self
         }
         
-        self.request!.responseJSON { (request, response, result) in
-            switch result {
-            case .Success(let jsonData):
-                let json = JSON(jsonData)
-                completionHandler(response, .Success(json))
-            case .Failure(let data, let error):
-                completionHandler(response, .Failure(data, error))
+        self.request!.responseSwiftyJSON { (response) in
+            switch response.result {
+            case .Success(_):
+                completionHandler(response)
+            case .Failure(let error):
+                completionHandler(response)
             }
         }
+        
+        return self
     }
 }
 
@@ -257,8 +299,8 @@ class APIClient {
     //
     
     func getAllTrips()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (_, result) -> Void in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
+            switch response.result {
             case .Success(let json):
                 for tripJson in json.array! {
                     if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
@@ -289,8 +331,8 @@ class APIClient {
                     }
                 }
                 CoreDataManager.sharedManager.saveContext()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error retriving getting trip data: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error retriving getting trip data: %@", error))
             }
         })
     }
@@ -298,11 +340,11 @@ class APIClient {
     func getTrip(trip: Trip)->AuthenticatedAPIRequest {
         guard let uuid = trip.uuid else {
             // the server doesn't know about this trip yet
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (_, result) -> Void in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+            switch response.result {
             case .Success(let json):
                 trip.locations = NSOrderedSet() // just in case
                 for locationJson in json["locations"].array! {
@@ -330,8 +372,8 @@ class APIClient {
                 }
 
                 CoreDataManager.sharedManager.saveContext()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error))
             }
         })
     }
@@ -344,23 +386,23 @@ class APIClient {
                 CoreDataManager.sharedManager.saveContext()
             })
             
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + uuid, completionHandler: { (response, result) -> Void in
-            switch result {
-            case .Success(_), .Failure(_,_) where response?.statusCode == 404:
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+            switch response.result {
+            case .Success(_), .Failure(_) where response.response != nil && response.response!.statusCode == 404:
                 // it's possible the server already deleted the object, in which case it will send a 404.
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     trip.managedObjectContext?.deleteObject(trip)
                     CoreDataManager.sharedManager.saveContext()
                 })
-            case .Failure(_, let error):
+            case .Failure(let error):
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     let alert = UIAlertView(title:nil, message: "There was an error deleting that trip. Please try again later.", delegate: nil, cancelButtonTitle:"Darn")
                     alert.show()
                 })
-                DDLogWarn(String(format: "Error deleting trip data: %@", error as NSError))
+                DDLogWarn(String(format: "Error deleting trip data: %@", error))
             }
         })
         
@@ -371,15 +413,15 @@ class APIClient {
             (trip as! Trip).uuid!
         }
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "uploadTripUUIDS", parameters: ["UUIDS": uuids]) { (response, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "uploadTripUUIDS", parameters: ["UUIDS": uuids]) { (response) in
+            switch response.result {
             case .Success(_):
                 NSUserDefaults.standardUserDefaults().setBool(true, forKey: "HasRunTripUUIDMigrationUpload")
                 NSUserDefaults.standardUserDefaults().synchronize()
 
                 DDLogInfo("Uploaded trip UUIDs!")
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error uploading uuids out: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error uploading uuids out: %@", error))
             }
         }
     }
@@ -387,7 +429,7 @@ class APIClient {
     func syncUnsyncedTrips(syncInBackground: Bool = false) {
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
             if let trip = Trip.nextClosedUnsyncedTrips() {
-                self.syncTrip(trip).apiResponse({ (_, _) -> Void in
+                self.syncTrip(trip).apiResponse({ (_) -> Void in
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                         self.syncUnsyncedTrips(syncInBackground)
                     })
@@ -408,25 +450,25 @@ class APIClient {
             return self.syncTrip(trip)
         }
         
-        return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+        return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
     func syncTripSummary(trip: Trip)->AuthenticatedAPIRequest {
         guard (trip.isClosed.boolValue) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
             
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         guard let startingLocation = trip.locations.firstObject as? Location, endingLocation = trip.locations.lastObject as? Location else {
             DDLogWarn("No starting and/or ending location found when syncing trip info!")
 
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         guard self.tripRequests[trip] == nil else {
             // if an existing API request is in flight, simply skip this
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         let tripDict = [
@@ -449,9 +491,9 @@ class APIClient {
             idempotencyKey = nil
         }
         
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response, result) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response) in
             self.tripRequests[trip] = nil
-            switch result {
+            switch response.result {
             case .Success(let json):
                 if trip.uuid == nil {
                     if let uuid = json["uuid"].string {
@@ -467,8 +509,8 @@ class APIClient {
                 }
                     
                 CoreDataManager.sharedManager.saveContext()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error syncing trip: %@", error))
             }
         }
         
@@ -477,7 +519,7 @@ class APIClient {
     
     private func syncTrip(trip: Trip)->AuthenticatedAPIRequest {
         guard (!trip.isSynced.boolValue && trip.isClosed.boolValue) else {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         if let existingRequest = self.tripRequests[trip] {
@@ -516,9 +558,9 @@ class APIClient {
             tripDict["locations"] = locations
         }
         
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response, result) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response) in
             self.tripRequests[trip] = nil
-            switch result {
+            switch response.result {
             case .Success(let json):
                 if trip.uuid == nil {
                     if let uuid = json["uuid"].string {
@@ -534,8 +576,8 @@ class APIClient {
                 trip.isSynced = true
                 trip.locationsAreSynced = true
                 CoreDataManager.sharedManager.saveContext()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error syncing trip: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error syncing trip: %@", error))
             }
         }
         
@@ -549,7 +591,7 @@ class APIClient {
     
     func updateAccountStatus()-> AuthenticatedAPIRequest {
         guard self.hasRegisteredForRemoteNotifications else {
-            return AuthenticatedAPIRequest(requestError: AuthenticatedAPIRequest.clientAbortedError())
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         var parameters: [String: AnyObject] = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
@@ -566,8 +608,8 @@ class APIClient {
             }
         }
             
-        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: parameters) { (response, result) -> Void in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: parameters) { (response) -> Void in
+            switch response.result {
             case .Success(let json):
                 if let areaJson = json["area"].dictionary {
                     if let name = areaJson["name"]?.string, let count = areaJson["count_info"]?["count"].uInt, let countRatePerHour = areaJson["count_info"]?["per_hour"].uInt, let launched = areaJson["launched"]?.bool {
@@ -591,34 +633,34 @@ class APIClient {
                         self.accountVerificationStatus = .Unverified
                     }
                 }
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error retriving account status: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error retriving account status: %@", error))
             }
         }
     }
     
     func logout()-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response) in
+            switch response.result {
             case .Success(_):
                 self.reauthenticate()
                 DDLogInfo("Logged out!")
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error logging out: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error logging out: %@", error))
                 self.authenticateIfNeeded()
             }
         }
     }
     
     func sendVerificationTokenForEmail(email: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]) { (response, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]) { (response) in
+            switch response.result {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error sending verification email: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error sending verification email: %@", error))
                 
-                if let code = response?.statusCode where code == 400 {
+                if let httpResponse = response.response where httpResponse.statusCode == 400 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         let alert = UIAlertView(title:nil, message: "That doesn't look like a valid email address. Please double-check your typing and try again.", delegate: nil, cancelButtonTitle:"On it")
                         alert.show()
@@ -629,26 +671,26 @@ class APIClient {
     }
     
     func verifyToken(token: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]) { (_, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]) { (response) in
+            switch response.result {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error verifying email token: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error verifying email token: %@", error))
             }
         }
     }
     
     func verifyFacebook(token: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_facebook_login", parameters: ["token": token]) { (response, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_facebook_login", parameters: ["token": token]) { (response) in
+            switch response.result {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error verifying facebook token: %@", error as NSError))
-                if let code = response?.statusCode where code == 400 {
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error verifying facebook token: %@", error))
+                if let httpResponse = response.response where httpResponse.statusCode == 400 {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         let alert = UIAlertView(title:nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
                         alert.show()
@@ -659,12 +701,12 @@ class APIClient {
     }
     
     func testAuthID()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_info") { (response, result) in
-            switch result {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_info") { (response) in
+            switch response.result {
             case .Success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error retriving access token: %@", error))
             }
         }
     }
@@ -690,22 +732,20 @@ class APIClient {
         self.authenticateIfNeeded()
     }
     
-    func authenticateIfNeeded() {
+    func authenticateIfNeeded()->AuthenticatedAPIRequest {
         if (self.authenticated || self.isRequestingAuthentication) {
-            return
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         self.isRequestingAuthentication = true
         
         let parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
         
-        self.manager.request(.GET, serverAddress + "oauth_token", parameters: parameters, encoding: .URL, headers: APIRequestBaseHeaders).validate().responseJSON { (request, response, result) in
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_token", parameters: parameters, encoding: .URL, authenticated: false) { (response) in
             self.isRequestingAuthentication = false
-
-            switch result {
-            case .Success(let jsonData):
-                let json = JSON(jsonData)
-                
+            
+            switch response.result {
+            case .Success(let json):
                 if let accessToken = json["access_token"].string, expiresInString = json["expires_in"].string, expiresInInt = Int(expiresInString) {
                     let expiresIn = NSDate().secondsFrom(expiresInInt)
                     if (Profile.profile().accessToken == nil) {
@@ -717,12 +757,11 @@ class APIClient {
                         DDLogWarn("Got a new access token when one was already set!")
                     }
                 }
-            case .Failure(_, let error):
-                DDLogWarn(String(format: "Error retriving access token: %@", error as NSError))
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error retriving access token: %@", error))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
             }
-
         }
     }
 }

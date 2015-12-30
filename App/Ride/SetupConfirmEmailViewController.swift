@@ -88,7 +88,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func pollAccountStatus() {
-        APIClient.sharedClient.updateAccountStatus().apiResponse() { (response, result) in
+        APIClient.sharedClient.updateAccountStatus().apiResponse() { (response) in
             if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
                 self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
             }
@@ -120,12 +120,12 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func passcodeInputViewDidFinish(passcodeInputView: BKPasscodeInputView!) {
-        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).apiResponse() { (response, result) in
-            switch result {
+        APIClient.sharedClient.verifyToken(passcodeInputView.passcode).apiResponse() { (response) in
+            switch response.result {
             case .Success:
                 self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
             case .Failure:
-                if (response?.statusCode == 404) {
+                if let httpResponse = response.response where httpResponse.statusCode == 404 {
                     passcodeInputView.errorMessage = "That's not it."
                     passcodeInputView.passcodeField.shake() {
                         UIView.transitionWithView(passcodeInputView, duration: 0.3, options: [UIViewAnimationOptions.OverrideInheritedDuration, UIViewAnimationOptions.TransitionCrossDissolve], animations: { () -> Void in

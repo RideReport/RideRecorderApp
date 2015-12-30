@@ -99,7 +99,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
-    func startup(fromBackground: Bool) {
+    private func startup(fromBackground: Bool) {
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         if (fromBackground) {
@@ -206,17 +206,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             stoppedTrip.close() {
-               APIClient.sharedClient.syncTripSummary(stoppedTrip).apiResponse() { (response, result) -> Void in
-                switch result {
+               APIClient.sharedClient.syncTripSummary(stoppedTrip).apiResponse() { (response) -> Void in
+                switch response.result {
                 case .Success(_):
                     DDLogInfo("Trip summary was successfully sync'd.")
-                case .Failure(_, _):
+                case .Failure(_):
                     // if it fails, go ahead and send the notification locally
                     stoppedTrip.sendTripCompletionNotificationLocally()
                 }
                 
                 // now sync the rest of the trip
-                APIClient.sharedClient.saveAndSyncTripIfNeeded(stoppedTrip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                APIClient.sharedClient.saveAndSyncTripIfNeeded(stoppedTrip, syncInBackground: true).apiResponse({ (_) -> Void in
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         DDLogInfo("Ending background task.")
                         

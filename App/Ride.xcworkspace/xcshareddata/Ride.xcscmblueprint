@@ -4,10 +4,11 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "DD245E27E44024E470FBF9128E97F88E374703AA" : 0,
     "924C1C4700AD97D5AF0D9D08517061919DD2280B" : 0,
     "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : 0,
-    "67620B5EFA902936DF04070AF595B76AB0333747" : 0,
     "88660284676E3071B724F73E00548AD998AF7379" : 0,
+    "67620B5EFA902936DF04070AF595B76AB0333747" : 0,
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0,
     "ABBC29B0DBA23FF98210CC04F237C8AA532E10C1" : 0,
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : 0,
@@ -16,10 +17,11 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "00B5D283-9630-4CEF-89E2-AE6D716B7F77",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "DD245E27E44024E470FBF9128E97F88E374703AA" : "Ride\/App\/RideTests\/DVR\/",
     "924C1C4700AD97D5AF0D9D08517061919DD2280B" : "mapbox-gl-native\/styles\/",
     "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : "mapbox-gl-native\/platform\/ios\/vendor\/SMCalloutView\/",
-    "67620B5EFA902936DF04070AF595B76AB0333747" : "RideApp\/Alamofire",
     "88660284676E3071B724F73E00548AD998AF7379" : "Ride\/Submodules\/DMActivityInstagram\/",
+    "67620B5EFA902936DF04070AF595B76AB0333747" : "RideApp\/Alamofire",
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride",
     "ABBC29B0DBA23FF98210CC04F237C8AA532E10C1" : "Ride\/Submodules\/PNChart\/",
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : "mapbox-gl-native\/src\/mbgl\/util\/geojsonvt\/",
@@ -74,6 +76,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/nfarina\/calloutview.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D1BB63D501E0048981F00509C5A268D4AF5FEE4C"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/venmo\/DVR.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DD245E27E44024E470FBF9128E97F88E374703AA"
     }
   ]
 }

@@ -39,7 +39,7 @@ class MainViewController: UIViewController, RideSummaryViewDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 if (self.selectedTrip != nil) {
                     if (self.selectedTrip.locationsNotYetDownloaded) {
-                        APIClient.sharedClient.getTrip(self.selectedTrip).apiResponse({ (_, _) -> Void in
+                        APIClient.sharedClient.getTrip(self.selectedTrip).apiResponse({ (_) -> Void in
                             self.mapViewController.setSelectedTrip(self.selectedTrip)
                             self.reloadTripSelectedToolbar()
                         })

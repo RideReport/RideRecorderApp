@@ -69,12 +69,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.navigationItem.rightBarButtonItem?.enabled = false
         self.emailTextField.enabled = false
         
-        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response, result) -> Void in
+        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response) -> Void in
             self.facebookButton.enabled = true
             self.navigationItem.rightBarButtonItem?.enabled = true
             self.emailTextField.enabled = true
             
-            switch result {
+            switch response.result {
             case .Success(let json):
                 self.verifyEmailWithJson(json)
             case .Failure:
@@ -153,17 +153,17 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.emailTextField.enabled = false
 
             
-            APIClient.sharedClient.verifyFacebook(token).apiResponse() { (response, result) -> Void in
-                switch result {
+            APIClient.sharedClient.verifyFacebook(token).apiResponse() { (response) -> Void in
+                switch response.result {
                 case .Success(let json):
                     if let needsEmailVerification = json["needs_email_verification"].bool, let email = json["facebook"]["email"].string where needsEmailVerification {
-                        APIClient.sharedClient.sendVerificationTokenForEmail(email).apiResponse() { (response, result) -> Void in
+                        APIClient.sharedClient.sendVerificationTokenForEmail(email).apiResponse() { (response) -> Void in
                             
                             self.facebookButton.enabled = true
                             self.navigationItem.rightBarButtonItem?.enabled = true
                             self.emailTextField.enabled = true
                             
-                            switch result {
+                            switch response.result {
                             case .Success(let json):
                                 self.verifyEmailWithJson(json)
                             case .Failure:

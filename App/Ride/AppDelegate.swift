@@ -240,14 +240,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                     trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
                     self.postTripRatedThanksNotification(true)
 
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "BAD_RIDE_IDENTIFIER") {
                     trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
                     
                     self.postTripRatedThanksNotification(false)
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_, _) -> Void in
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "FLAG_IDENTIFIER") {
