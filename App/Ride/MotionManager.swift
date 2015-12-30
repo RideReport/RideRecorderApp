@@ -41,7 +41,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionActivityManager = CMMotionActivityManager()
     }
     
-    func startup() {
+    private func startup() {
         let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionManagerHasRequestedMotionAccess")
         if (!hasRequestedMotionAccess) {
             // grab an update for a second so we can have the permission dialog come up right away

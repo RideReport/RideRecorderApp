@@ -7,6 +7,3 @@
 [submodule "Submodules/DMActivityInstagram"]
 	path = Submodules/DMActivityInstagram
 	url = git@github.com:KnockSoftware/DMActivityInstagram.git
-[submodule "App/RideTests/DVR"]
-	path = App/RideTests/DVR
-	url = https://github.com/venmo/DVR.git

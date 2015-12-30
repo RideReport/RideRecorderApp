@@ -33,7 +33,7 @@ class CoreDataManager {
 
     }
     
-    func startup () {        
+    private func startup () {
         dispatch_async(dispatch_get_main_queue(), {
             // clean up open trips
             for aTrip in Trip.openTrips() {
@@ -64,7 +64,7 @@ class CoreDataManager {
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("Ride", withExtension: "momd")
+        let modelURL = NSBundle(forClass: self.dynamicType).URLForResource("Ride", withExtension: "momd")
         return NSManagedObjectModel(contentsOfURL: modelURL!)!
     }()
 

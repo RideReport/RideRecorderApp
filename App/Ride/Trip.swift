@@ -1030,9 +1030,12 @@ class Trip : NSManagedObject {
     
     private func shortestDistanceFromLineToPoint(lineStartPoint: CLLocationCoordinate2D, lineEndPoint: CLLocationCoordinate2D, point: CLLocationCoordinate2D)->CLLocationDegrees {
         // area of a triangle is given by a = .5 * |Ax(By-Cy) + Bx(Cy-Ay) + Cx(Ay-By)|
-        let area = 0.5 * abs(lineStartPoint.longitude * (lineEndPoint.latitude  - point.latitude)
-                            + lineEndPoint.longitude * (point.latitude - lineStartPoint.latitude)
-                            + point.longitude * (lineStartPoint.latitude - lineEndPoint.latitude))
+        let part1 = lineStartPoint.longitude * (lineEndPoint.latitude - point.latitude)
+        let part2 = lineEndPoint.longitude * (point.latitude - lineStartPoint.latitude)
+        let part3 = point.longitude * (lineStartPoint.latitude - lineEndPoint.latitude)
+        let area = 0.5 * abs(part1
+                            + part2
+                            + part3)
         
         // base of the triangle is the distance from our start to end points
         let base = sqrt(pow(lineStartPoint.longitude - lineEndPoint.longitude, 2) +
