@@ -7,3 +7,6 @@
 [submodule "Submodules/DMActivityInstagram"]
 	path = Submodules/DMActivityInstagram
 	url = git@github.com:KnockSoftware/DMActivityInstagram.git
+[submodule "App/RideTests/ride_response_json"]
+	path = App/RideTests/ride_response_json
+	url = git@github.com:KnockSoftware/ride_response_json.git

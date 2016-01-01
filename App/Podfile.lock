@@ -36,6 +36,21 @@ PODS:
   - KeychainAccess (2.0.0)
   - Mapbox-iOS-SDK (3.0.1)
   - OAuthSwift (0.4.4)
+  - OHHTTPStubs (4.7.0):
+    - OHHTTPStubs/Default (= 4.7.0)
+  - OHHTTPStubs/Core (4.7.0)
+  - OHHTTPStubs/Default (4.7.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (4.7.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (4.7.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (4.7.0)
+  - OHHTTPStubs/Swift (4.7.0):
+    - OHHTTPStubs/Core
   - PINCache (2.1)
   - PNChart (0.8.6):
     - UICountingLabel (~> 1.2.0)
@@ -57,6 +72,8 @@ DEPENDENCIES:
   - KeychainAccess
   - Mapbox-iOS-SDK
   - OAuthSwift
+  - OHHTTPStubs
+  - OHHTTPStubs/Swift
   - PNChart (from `../Submodules/PNChart`)
   - SwiftyJSON
   - UIActionSheet+Blocks
@@ -87,6 +104,7 @@ SPEC CHECKSUMS:
   KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
   Mapbox-iOS-SDK: 61e79f3dd8432617bd1a66b2d7273ab5ce923ca9
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
+  OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
   PINCache: 0581b0a7578fc0bbc6c7a8b70b0615388bea064c
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
