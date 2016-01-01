@@ -12,6 +12,7 @@ import EventKit
 
 class CoreDataManager {
     var isStartingUp : Bool = true
+    private var usesInMemoryStore: Bool
 
     struct Static {
         static var sharedManager : CoreDataManager?
@@ -22,15 +23,15 @@ class CoreDataManager {
         return Static.sharedManager!
     }
     
-    class func startup() {
+    class func startup(useInMemoryStore: Bool = false) {
         if (Static.sharedManager == nil) {
-            Static.sharedManager = CoreDataManager()
+            Static.sharedManager = CoreDataManager(useInMemoryStore: useInMemoryStore)
             Static.sharedManager?.startup()
         }
     }
 
-    init () {
-
+    init (useInMemoryStore: Bool = false) {
+        self.usesInMemoryStore = useInMemoryStore
     }
     
     private func startup () {
@@ -79,7 +80,12 @@ class CoreDataManager {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
-            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
+            if (self.usesInMemoryStore) {
+                // used for testing Core Data Stack
+                try coordinator!.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+            } else {
+                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
+            }
         } catch let error {
             coordinator = nil
             // Report any error we got.
