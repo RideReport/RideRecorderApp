@@ -223,6 +223,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            completionHandler(.NewData)
+        })
+        
+        if let uuid = userInfo["uuid"] as? String,
+            let trip = Trip.tripWithUUID(uuid) {
+            trip.loadSummaryFromAPNDictionary(userInfo)
+            CoreDataManager.sharedManager.saveContext()
+            trip.sendTripCompletionNotificationLocally()
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            completionHandler(.NewData)
+            
+            if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+            }
+        })
+    }
+    
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
         if let userInfo = notification.userInfo {
             self.handleNotificationAction(identifier, userInfo: userInfo, completionHandler: completionHandler)
