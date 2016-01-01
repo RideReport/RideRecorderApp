@@ -235,35 +235,16 @@ class APIClient {
         }
     }
     
-    func startup() {
-        let startupBlock = {
-            self.authenticateIfNeeded()
-            if (self.authenticated) {
-                if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.syncUnsyncedTrips()
-                    })
-                    let hasRunTripUUIDMigrationUpload = NSUserDefaults.standardUserDefaults().boolForKey("HasRunTripUUIDMigrationUpload")
-                    if (!hasRunTripUUIDMigrationUpload) {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.uploadTripUUIDs()
-                        })
-                    }
-                }
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                    // run after a second to avoid double-syncing.
-                    NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-                })
-            }
-        }
+    private func startup() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                startupBlock()
+                self.authenticateIfNeeded()
             }
         } else {
-            startupBlock()
+            self.authenticateIfNeeded()
         }
     }
     
@@ -272,10 +253,29 @@ class APIClient {
     }
     
     @objc func appDidBecomeActive() {
-        self.authenticateIfNeeded()
-        if (self.authenticated) {
-            self.updateAccountStatus()
-            self.syncUnsyncedTrips()
+        let tripSyncBlock = {
+            if (self.authenticated) {
+                let hasRunTripUUIDMigrationUpload = NSUserDefaults.standardUserDefaults().boolForKey("HasRunTripUUIDMigrationUpload")
+                if (!hasRunTripUUIDMigrationUpload) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.uploadTripUUIDs()
+                    })
+                }
+
+
+                
+                self.updateAccountStatus()
+                self.syncUnsyncedTrips()
+            }
+        }
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
+                tripSyncBlock()
+            }
+        } else {
+            tripSyncBlock()
         }
     }
     
