@@ -12,7 +12,6 @@ import CoreData
 import CoreLocation
 import CoreMotion
 import MapKit
-import CZWeatherKit
 
 class Trip : NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
@@ -68,7 +67,7 @@ class Trip : NSManagedObject {
             self.didChangeValueForKey("isClosed")
         }
     }
-    @NSManaged var uuid : String?
+    @NSManaged var uuid : String!
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
@@ -623,6 +622,7 @@ class Trip : NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = NSDate()
+        self.generateUUID()
     }
     
     var isShittyWeather : Bool {
@@ -718,6 +718,8 @@ class Trip : NSManagedObject {
                 return ""
             }
         }
+    func generateUUID() {
+        self.uuid = NSUUID().UUIDString
     }
     
     func activityTypeString()->String {
@@ -920,9 +922,8 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
-            if let uuid = self.uuid {
-                self.currentStateNotification?.userInfo = ["uuid" : uuid]
-            }
+            self.currentStateNotification?.userInfo = ["uuid" : self.uuid]
+
             UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
         }
     }
@@ -1144,9 +1145,7 @@ class Trip : NSManagedObject {
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
                             notif.category = "NO_MOTION_DATA_CATEGORY"
-                            if let uuid = self.uuid {
-                                notif.userInfo = ["uuid" : uuid]
-                            }
+                            notif.userInfo = ["uuid" : self.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {

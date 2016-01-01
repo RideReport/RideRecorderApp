@@ -175,7 +175,7 @@ class AuthenticatedAPIRequest {
             switch response.result {
             case .Success(_):
                 completionHandler(response)
-            case .Failure(let error):
+            case .Failure(_):
                 completionHandler(response)
             }
         }
@@ -228,9 +228,9 @@ class APIClient {
         return Static.sharedClient!
     }
     
-    class func startup() {
+    class func startup(useDefaultConfiguration: Bool = false) {
         if (Static.sharedClient == nil) {
-            Static.sharedClient = APIClient()
+            Static.sharedClient = APIClient(useDefaultConfiguration: useDefaultConfiguration)
             Static.sharedClient?.startup()
         }
     }
@@ -279,8 +279,13 @@ class APIClient {
         }
     }
     
-    init () {
-        let configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
+    init (useDefaultConfiguration: Bool = false) {
+        var configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
+
+        if useDefaultConfiguration {
+            // used for testing
+            configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        }
         configuration.timeoutIntervalForRequest = 10
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
             "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
@@ -446,7 +451,7 @@ class APIClient {
         }
         trip.saveAndMarkDirty()
         
-        if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+        if (!trip.isSynced.boolValue && (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active)) {
             return self.syncTrip(trip)
         }
         
@@ -483,26 +488,12 @@ class APIClient {
         var method = Alamofire.Method.POST
         var idempotencyKey: String? = trip.creationDate.JSONString()
         
-        if let uuid = trip.uuid {
-            routeURL = "trips/" + uuid
-            method = Alamofire.Method.PATCH
             
-            // idempotence only applies to POST requests.
-            idempotencyKey = nil
-        }
         
         self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response) in
             self.tripRequests[trip] = nil
             switch response.result {
             case .Success(let json):
-                if trip.uuid == nil {
-                    if let uuid = json["uuid"].string {
-                        trip.uuid = uuid
-                    } else {
-                        DDLogWarn("Did not get a UUID back from server!")
-                        return
-                    }
-                }
                 
                 if let summary = json["summary"].dictionary {
                     trip.loadSummaryFromJSON(summary)
@@ -542,13 +533,7 @@ class APIClient {
         var method = Alamofire.Method.POST
         var idempotencyKey: String? = trip.creationDate.JSONString()
 
-        if let uuid = trip.uuid {
-            routeURL = "trips/" + uuid
-            method = Alamofire.Method.PATCH
             
-            // idempotence only applies to POST requests.
-            idempotencyKey = nil
-        }
         
         if (!trip.locationsAreSynced.boolValue) {
             var locations : [AnyObject!] = []
@@ -562,14 +547,6 @@ class APIClient {
             self.tripRequests[trip] = nil
             switch response.result {
             case .Success(let json):
-                if trip.uuid == nil {
-                    if let uuid = json["uuid"].string {
-                        trip.uuid = uuid
-                    } else {
-                        DDLogWarn("Did not get a UUID back from server!")
-                        return
-                    }
-                }
                 if let summary = json["summary"].dictionary {
                     trip.loadSummaryFromJSON(summary)
                 }
@@ -578,6 +555,12 @@ class APIClient {
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):
                 DDLogWarn(String(format: "Error syncing trip: %@", error))
+
+                if let httpResponse = response.response where httpResponse.statusCode == 409 {
+                    // a trip with that UUID exists. retry.
+                    trip.generateUUID()
+                    self.saveAndSyncTripIfNeeded(trip)
+                }
             }
         }
         
