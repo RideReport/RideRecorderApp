@@ -71,7 +71,7 @@ class Trip : NSManagedObject {
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
-    @NSManaged var climacon : String!
+    @NSManaged var climacon : String?
     @NSManaged var temperature : NSNumber!
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
@@ -529,25 +529,12 @@ class Trip : NSManagedObject {
         return count
     }
     
-    private class func rainClimaconSet()->Set<String> {
-        var climaconSet: Set<String> = Set([])
-        for climaconRaw in [Climacon.Drizzle.rawValue, Climacon.DrizzleSun.rawValue, Climacon.DrizzleMoon.rawValue,
-            Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
-            Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
-            Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
-            Climacon.Umbrella.rawValue] {
-                climaconSet.insert(String(UnicodeScalar(Int(climaconRaw))))
-        }
-        
-        return climaconSet
-    }
-    
     class var numberOfWarmSunnyTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != \"\" AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != \"\" AND NOT(climacon == '☔️')", ActivityType.Cycling.rawValue)
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -563,7 +550,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon IN %@", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon == '☔️'", ActivityType.Cycling.rawValue)
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -579,7 +566,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 40 AND climacon != \"\" AND NOT(climacon IN %@)", ActivityType.Cycling.rawValue, rainClimaconSet())
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 40 AND climacon != \"\" AND NOT(climacon == '☔️')", ActivityType.Cycling.rawValue)
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -625,99 +612,6 @@ class Trip : NSManagedObject {
         self.generateUUID()
     }
     
-    var isShittyWeather : Bool {
-        get {
-            if (self.climacon == nil || (self.climacon!).characters.count == 0) {
-                return false
-            }
-            
-            if (self.temperature != nil && self.temperature.integerValue < 40) {
-                // BRrrrr
-                return true
-            }
-            
-            var climaconChar : Int8 = 0 // fml
-            for c in self.climacon!.unicodeScalars {
-                climaconChar = Int8(c.value)
-                break
-            }
-            
-            switch climaconChar {
-            case Climacon.Rain.rawValue, Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
-            Climacon.Umbrella.rawValue:
-                return true
-            case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
-            Climacon.Hail.rawValue, Climacon.HailSun.rawValue, Climacon.HailMoon.rawValue,
-            Climacon.Flurries.rawValue, Climacon.FlurriesSun.rawValue, Climacon.FlurriesMoon.rawValue,
-            Climacon.Snow.rawValue, Climacon.SnowSun.rawValue, Climacon.SnowMoon.rawValue,
-            Climacon.Snowflake.rawValue:
-                return true
-            case Climacon.Lightning.rawValue, Climacon.LightningSun.rawValue, Climacon.LightningMoon.rawValue:
-                return true
-            default:
-                return false
-            }
-        }
-    }
-    
-    var climoticon : String {
-        get {
-            if (self.climacon == nil || (self.climacon!).characters.count == 0) {
-                return ""
-            }
-            
-            var climaconChar : Int8 = 0 // fml
-            for c in self.climacon!.unicodeScalars {
-                climaconChar = Int8(c.value)
-                break
-            }
-            
-            switch climaconChar {
-            case Climacon.Cloud.rawValue, Climacon.CloudDown.rawValue, Climacon.CloudMoon.rawValue,
-                Climacon.Fog.rawValue, Climacon.FogMoon.rawValue,
-                Climacon.Haze.rawValue, Climacon.HazeMoon.rawValue:
-                return "☁️"
-            case Climacon.CloudSun.rawValue, Climacon.FogSun.rawValue, Climacon.HazeSun.rawValue:
-                return "⛅️"
-            case Climacon.Drizzle.rawValue, Climacon.DrizzleSun.rawValue, Climacon.DrizzleMoon.rawValue,
-                Climacon.Showers.rawValue, Climacon.ShowersSun.rawValue, Climacon.ShowersMoon.rawValue,
-                Climacon.Rain.rawValue, Climacon.RainSun.rawValue, Climacon.RainMoon.rawValue,
-                Climacon.Downpour.rawValue, Climacon.DownpourSun.rawValue, Climacon.DownpourMoon.rawValue,
-                Climacon.Umbrella.rawValue:
-                return "☔️"
-            case Climacon.Sun.rawValue, Climacon.Sunset.rawValue, Climacon.Sunrise.rawValue, Climacon.SunLow.rawValue, Climacon.SunLower.rawValue:
-                return "☀️"
-            case Climacon.MoonNew.rawValue:
-                return "🌑"
-            case Climacon.MoonWaxingCrescent.rawValue:
-                return "🌒"
-            case Climacon.MoonWaxingQuarter.rawValue:
-                return "🌓"
-            case Climacon.Moon.rawValue, Climacon.MoonWaxingGibbous.rawValue:
-                return "🌔"
-            case Climacon.MoonFull.rawValue:
-                return "🌕"
-            case Climacon.MoonWaningGibbous.rawValue:
-                return "🌖"
-            case Climacon.MoonWaningQuarter.rawValue:
-                return "🌗"
-            case Climacon.MoonWaningCrescent.rawValue:
-                return "🌘"
-            case Climacon.Sleet.rawValue, Climacon.SleetSun.rawValue, Climacon.SleetMoon.rawValue,
-                Climacon.Hail.rawValue, Climacon.HailSun.rawValue, Climacon.HailMoon.rawValue,
-                Climacon.Flurries.rawValue, Climacon.FlurriesSun.rawValue, Climacon.FlurriesMoon.rawValue,
-                Climacon.Snow.rawValue, Climacon.SnowSun.rawValue, Climacon.SnowMoon.rawValue,
-                Climacon.Snowflake.rawValue:
-                return "❄️"
-            case Climacon.Wind.rawValue, Climacon.WindCloud.rawValue, Climacon.WindCloudSun.rawValue, Climacon.WindCloudMoon.rawValue,
-                Climacon.Tornado.rawValue:
-                return "💨"
-            case Climacon.Lightning.rawValue, Climacon.LightningSun.rawValue, Climacon.LightningMoon.rawValue:
-                return "⚡️"
-            default:
-                return ""
-            }
-        }
     func generateUUID() {
         self.uuid = NSUUID().UUIDString
     }
@@ -845,12 +739,51 @@ class Trip : NSManagedObject {
         self.simplifiedLocations = nil
     }
     
-    func loadSummaryFromJSON(summary: [String: JSON]) {
+    func loadSummaryFromAPNDictionary(summary: [NSObject: AnyObject]) {
+        if let climacon = summary["weatherEmoji"] as? String {
+            self.climacon = climacon
+        }
+        
+        if let startPlaceName = summary["startPlaceName"] as? String {
+            self.startingPlacemarkName = startPlaceName
+        }
+        
+        if let endPlaceName = summary["endPlaceName"] as? String {
+            self.endingPlacemarkName = endPlaceName
+        }
+        
+        if let rewardEmoji = summary["rewardEmoji"] as? String,
+            rewardDescription = summary["rewardDescription"] as? String {
+                if (rewardDescription == "") {
+                    self.rewardDescription = nil
+                } else {
+                    self.rewardDescription = rewardDescription
+                }
+                
+                if (rewardEmoji == "") {
+                    self.rewardEmoji = nil
+                } else {
+                    self.rewardEmoji = rewardEmoji
+                }
+        }
+    }
+    
+    func loadSummaryFromJSON(summary: [String: JSON]) {        
         if let conditions = summary["weather"]?["conditions"],
-            climacon = conditions["icon"].string,
             temperature = conditions["temperature"].number {
             self.temperature = temperature
-            self.climacon = String(UnicodeScalar(UInt32(CZForecastioAPI.climaconForIconName(climacon).rawValue)))
+        }
+        
+        if let climacon = summary["weatherEmoji"]?.string {
+            self.climacon = climacon
+        }
+        
+        if let startPlaceName = summary["startPlaceName"]?.string {
+            self.startingPlacemarkName = startPlaceName
+        }
+        
+        if let endPlaceName = summary["endPlaceName"]?.string {
+            self.endingPlacemarkName = endPlaceName
         }
         
         if let rewardEmoji = summary["rewardEmoji"]?.string,
@@ -933,14 +866,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@.", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ %.1f miles.", self.climoticon, self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
         }
         
         if let rewardDescription = self.rewardDescription,
@@ -957,14 +890,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climoticon, self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
         }
         
         

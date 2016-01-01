@@ -382,9 +382,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         var rewardString = ""
         if let emoji = trip.rewardEmoji {
-            rewardString = " " + trip.rewardEmoji
+            rewardString = " " + emoji
         }
-        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles%@", trip.climoticon,  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles, rewardString)
+        
+        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles, rewardString)
         
         tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }

@@ -11,7 +11,6 @@ import SwiftyJSON
 import Alamofire
 import OAuthSwift
 import KeychainAccess
-import CZWeatherKit
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
@@ -262,6 +261,12 @@ class APIClient {
                     })
                 }
 
+                let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
+                if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.getAllTrips()
+                    })
+                }
 
                 
                 self.updateAccountStatus()
@@ -307,6 +312,9 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
             switch response.result {
             case .Success(let json):
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
+                NSUserDefaults.standardUserDefaults().synchronize()
+                
                 for tripJson in json.array! {
                     if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
                         var trip = Trip.tripWithUUID(uuid)
