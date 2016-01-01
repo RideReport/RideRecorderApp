@@ -424,7 +424,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip summary"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -454,7 +454,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
             })
         } else if (buttonIndex == 3) {
-            APIClient.sharedClient.syncTripSummary(trip)
+            APIClient.sharedClient.syncTrip(trip)
         }
     }
     

@@ -458,7 +458,7 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
-    func syncTripSummary(trip: Trip)->AuthenticatedAPIRequest {
+    func syncTrip(trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed.boolValue) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
             
@@ -466,84 +466,58 @@ class APIClient {
         }
         
         guard let startingLocation = trip.locations.firstObject as? Location, endingLocation = trip.locations.lastObject as? Location else {
-            DDLogWarn("No starting and/or ending location found when syncing trip info!")
-
-            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-        }
-        
-        guard self.tripRequests[trip] == nil else {
-            // if an existing API request is in flight, simply skip this
-            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-        }
-        
-        let tripDict = [
-            "activityType": trip.activityType,
-            "creationDate": trip.creationDate.JSONString(),
-            "startLocation": startingLocation.jsonDictionary(),
-            "endLocation": endingLocation.jsonDictionary(),
-            "length": trip.length
-        ]
-        
-        var routeURL = "trips"
-        var method = Alamofire.Method.POST
-        var idempotencyKey: String? = trip.creationDate.JSONString()
-        
+            DDLogWarn("No starting and/or ending location found when syncing trip!")
             
-        
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response) in
-            self.tripRequests[trip] = nil
-            switch response.result {
-            case .Success(let json):
-                
-                if let summary = json["summary"].dictionary {
-                    trip.loadSummaryFromJSON(summary)
-                }
-                    
-                CoreDataManager.sharedManager.saveContext()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error syncing trip: %@", error))
-            }
-        }
-        
-        return self.tripRequests[trip]!
-    }
-    
-    private func syncTrip(trip: Trip)->AuthenticatedAPIRequest {
-        guard (!trip.isSynced.boolValue && trip.isClosed.boolValue) else {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
         if let existingRequest = self.tripRequests[trip] {
-            // if an existing API request is in flight, wait to sync until after it completes
+            // if an existing API request is in flight and we have local changes, wait to sync until after it completes
             
-            existingRequest.requestCompletetionBlock = {
-                // we need to reset isSynced since the changes were made after the request went out.
-                trip.isSynced = false
-                self.syncTrip(trip)
+            if !trip.isSynced {
+                existingRequest.requestCompletetionBlock = {
+                    // we need to reset isSynced since the changes were made after the request went out.
+                    trip.isSynced = false
+                    self.syncTrip(trip)
+                }
+                return existingRequest
+            } else {
+                // if we dont have local changes, simply skip this
+                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
             }
-            return existingRequest
         }
         
+        let routeURL = "trips/" + trip.uuid
+        
+        var method = Alamofire.Method.PUT
         var tripDict = [
             "activityType": trip.activityType,
             "creationDate": trip.creationDate.JSONString(),
             "rating": trip.rating
         ]
-        var routeURL = "trips"
-        var method = Alamofire.Method.POST
-        var idempotencyKey: String? = trip.creationDate.JSONString()
 
+        if (!trip.locationsAreSynced.boolValue && !includeLocations) {
+            // initial synchronization of trip data - the server does not know about the locations yet
+            // so we provide them in order to get back summary information. record may or may not exist so we PUT.
             
-        
-        if (!trip.locationsAreSynced.boolValue) {
+            tripDict["length"] = trip.length
+            tripDict["startLocation"] = startingLocation.jsonDictionary()
+            tripDict["endLocation"] = endingLocation.jsonDictionary()
+        } else if (!trip.locationsAreSynced.boolValue) {
+            // upload location data has not been synced, do it now.
+            // record may or may not exist, so we PUT
+            
             var locations : [AnyObject!] = []
             for location in trip.locations.array {
                 locations.append((location as! Location).jsonDictionary())
             }
             tripDict["locations"] = locations
+        } else {
+            // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
+            method = Alamofire.Method.PATCH
         }
         
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict, idempotencyKey: idempotencyKey) { (response) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response) in
             self.tripRequests[trip] = nil
             switch response.result {
             case .Success(let json):
@@ -551,7 +525,9 @@ class APIClient {
                     trip.loadSummaryFromJSON(summary)
                 }
                 trip.isSynced = true
-                trip.locationsAreSynced = true
+                if includeLocations {
+                    trip.locationsAreSynced = true
+                }
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):
                 DDLogWarn(String(format: "Error syncing trip: %@", error))

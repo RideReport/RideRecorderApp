@@ -206,7 +206,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             })
             
             stoppedTrip.close() {
-               APIClient.sharedClient.syncTripSummary(stoppedTrip).apiResponse() { (response) -> Void in
+               APIClient.sharedClient.syncTrip(stoppedTrip).apiResponse() { (response) -> Void in
                 switch response.result {
                 case .Success(_):
                     DDLogInfo("Trip summary was successfully sync'd.")
