@@ -210,6 +210,7 @@ class APIClient {
     
     private var manager : Manager
     private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
+    private var didEncounterUnrecoverableErrorSyncronizingTrips = false
     private var isRequestingAuthentication = false
     
     struct Static {
@@ -440,11 +441,16 @@ class APIClient {
     }
     
     func syncUnsyncedTrips(syncInBackground: Bool = false) {
+        self.didEncounterUnrecoverableErrorSyncronizingTrips = false
+        self.syncNextUnsyncedTrip(syncInBackground)
+    }
+    
+    private func syncNextUnsyncedTrip(syncInBackground: Bool = false) {
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-            if let trip = Trip.nextClosedUnsyncedTrips() {
+            if let trip = Trip.nextClosedUnsyncedTrips() where !self.didEncounterUnrecoverableErrorSyncronizingTrips {
                 self.syncTrip(trip).apiResponse({ (_) -> Void in
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                        self.syncUnsyncedTrips(syncInBackground)
+                        self.syncNextUnsyncedTrip(syncInBackground)
                     })
                 })
             }
@@ -544,6 +550,8 @@ class APIClient {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
                     self.saveAndSyncTripIfNeeded(trip)
+                } else {
+                    self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }
             }
         }
