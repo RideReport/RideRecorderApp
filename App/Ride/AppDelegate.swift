@@ -228,7 +228,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             completionHandler(.NewData)
         })
         
-        if let uuid = userInfo["uuid"] as? String,
+        if let syncTrips = userInfo["syncTrips"] as? Bool where syncTrips {
+            if UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full {
+                // if the user is plugged in, go ahead and sync all unsynced trips.
+                APIClient.sharedClient.syncUnsyncedTrips(true)
+            }
+        } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
