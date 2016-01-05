@@ -230,25 +230,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             completionHandler(.NewData)
         })
         
+        let completionBlock = {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                completionHandler(.NewData)
+                
+                if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                }
+            })
+        }
+        
         if let syncTrips = userInfo["syncTrips"] as? Bool where syncTrips {
             if UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
-                APIClient.sharedClient.syncUnsyncedTrips(true)
+                APIClient.sharedClient.syncUnsyncedTrips(true, completionBlock: completionBlock)
             }
         } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally()
+            completionBlock()
         }
-        
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            completionHandler(.NewData)
-            
-            if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
-            }
-        })
     }
     
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {

@@ -441,24 +441,26 @@ class APIClient {
         }
     }
     
-    func syncUnsyncedTrips(syncInBackground: Bool = false) {
+    func syncUnsyncedTrips(syncInBackground: Bool = false, completionBlock: ()->Void = {}) {
         self.didEncounterUnrecoverableErrorSyncronizingTrips = false
-        self.syncNextUnsyncedTrip(syncInBackground)
+        self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
     }
     
-    private func syncNextUnsyncedTrip(syncInBackground: Bool = false) {
+    private func syncNextUnsyncedTrip(syncInBackground: Bool = false, completionBlock: ()->Void = {}) {
         if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
             if let trip = Trip.nextClosedUnsyncedTrips() where !self.didEncounterUnrecoverableErrorSyncronizingTrips {
                 self.syncTrip(trip).apiResponse({ (_) -> Void in
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                        self.syncNextUnsyncedTrip(syncInBackground)
+                        self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
                     })
                 })
+            } else {
+                completionBlock()
             }
         }
     }
     
-    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false)->AuthenticatedAPIRequest {
+    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false, includeLocations: Bool = true)->AuthenticatedAPIRequest {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -467,7 +469,7 @@ class APIClient {
         trip.saveAndMarkDirty()
         
         if (!trip.isSynced.boolValue && (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active)) {
-            return self.syncTrip(trip)
+            return self.syncTrip(trip, includeLocations: includeLocations)
         }
         
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
@@ -493,7 +495,7 @@ class APIClient {
                 existingRequest.requestCompletetionBlock = {
                     // we need to reset isSynced since the changes were made after the request went out.
                     trip.isSynced = false
-                    self.syncTrip(trip)
+                    self.syncTrip(trip, includeLocations: includeLocations)
                 }
                 return existingRequest
             } else {
@@ -550,7 +552,7 @@ class APIClient {
                 if let httpResponse = response.response where httpResponse.statusCode == 409 {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
-                    self.saveAndSyncTripIfNeeded(trip)
+                    self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }
