@@ -37,7 +37,7 @@ class Trip : NSManagedObject {
     }
     
     private var currentStateNotification : UILocalNotification? = nil
-    
+        
     @NSManaged var startingPlacemarkName : String!
     @NSManaged var endingPlacemarkName : String!
     @NSManaged var activityType : NSNumber
@@ -367,7 +367,10 @@ class Trip : NSManagedObject {
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == YES")
         let syncedPredicate = NSPredicate(format: "isSynced == NO")
-        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedPredicate])
+        let locationsAreSyncedPredicate = NSPredicate(format: "locationsAreSynced == NO")
+        let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [locationsAreSyncedPredicate, syncedPredicate])
+
+        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedCompoundPredicate])
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
