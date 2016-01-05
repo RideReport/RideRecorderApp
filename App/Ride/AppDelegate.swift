@@ -57,9 +57,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         // Start Managers. Note that order matters!
+        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         APIClient.startup()
-        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
 //        HealthKitManager.startup()
         
         if (hasSeenSetup) {
