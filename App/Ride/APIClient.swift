@@ -11,6 +11,7 @@ import SwiftyJSON
 import Alamofire
 import OAuthSwift
 import KeychainAccess
+import Mixpanel
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
@@ -595,6 +596,10 @@ class APIClient {
                     NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidGetArea", object: nil)
                 } else {
                     self.area = .Unknown
+                }
+                
+                if let mixPanelID = json["mixpanel_id"].string {
+                    Mixpanel.sharedInstance().identify(mixPanelID)
                 }
                 
                 if let account_verified = json["account_verified"].bool {

@@ -14,4 +14,5 @@
 #import "BKPasscodeInputView.h"
 #import "RCounter.h"
 #import "DMActivityInstagram.h"
+#import "Mixpanel/Mixpanel.h"
 #include <zlib.h>

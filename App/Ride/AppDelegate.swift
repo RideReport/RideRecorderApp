@@ -12,6 +12,7 @@ import Crashlytics
 import OAuthSwift
 import FBSDKCoreKit
 import ECSlidingViewController
+import Mixpanel
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
@@ -58,6 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         // Start Managers. Note that order matters!
         CoreDataManager.startup()
         APIClient.startup()
+        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
 //        HealthKitManager.startup()
         
         if (hasSeenSetup) {

@@ -54,6 +54,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Mixpanel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>OAuthSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -97,12 +102,12 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>00E747C3A96EBEA67A1356264313E8D3</key>
+		<key>016D982990393D4CF14C8AE7998AEC65</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>016D982990393D4CF14C8AE7998AEC65</key>
+		<key>1F62F3F58C2B32D4F60788868BB4E4B0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -112,7 +117,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3DE5546D480A758AC65E1BB6BE925647</key>
+		<key>38E19D5D8DE8C3B6AA6F0A8EEDDD7CCE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -152,6 +157,11 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>937179F5A3CEB33882C19B35C4F51F98</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>94A50FB884552F1E25589DD6EA641782</key>
 		<dict>
 			<key>primary</key>
@@ -162,17 +172,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AAB74A8CDD64B8FF304B5B59A6625902</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>C3AAC7026505AA67E5E48DC98F926D26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>D082FD9722F53B9C3A1229257D4008F7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D306E1A19F57F62CC2320ED0D34FE3F8</key>
 		<dict>
 			<key>primary</key>
 			<true/>

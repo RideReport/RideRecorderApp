@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Mixpanel
 
 class SetupFinishedViewController: SetupChildViewController {
     
@@ -17,12 +18,26 @@ class SetupFinishedViewController: SetupChildViewController {
         
         if let finishType = userInfo?["finishType"] as! String? {
             if (finishType == "InitialSetupSkippedAccount") {
+                Mixpanel.sharedInstance().track(
+                    "finishedSetup",
+                    properties: ["createdAccount": "false"]
+                )
+                
                 helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
             } else if (finishType == "InitialSetupCreatedAccount") {
+                Mixpanel.sharedInstance().track(
+                    "finishedSetup",
+                    properties: ["createdAccount": "false"]
+                )
+                
                 helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
             } else if (finishType == "CreateAccountSkippedAccount") {
                 helperTextLabel.markdownStringValue = "Cool. You can always create an account later if you'd like to."
             } else if (finishType == "CreatedAccountCreatedAccount") {
+                Mixpanel.sharedInstance().track(
+                    "createdAccount"
+                )
+                
                 helperTextLabel.markdownStringValue = "**You're all set**!"
             }
         } else {

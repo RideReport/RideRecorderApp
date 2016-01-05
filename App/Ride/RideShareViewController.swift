@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Mixpanel
 
 class RideShareViewController : UIViewController, MGLMapViewDelegate {
     var trip: Trip! {
@@ -98,8 +99,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         
         self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: [instagramActivity])
         self.activityViewController.excludedActivityTypes = excludedActivityTypes
-        self.activityViewController.completionWithItemsHandler = { (_, completed, _, _) -> Void in
+        self.activityViewController.completionWithItemsHandler = { (activityType, completed, _, _) -> Void in
             if completed {
+                Mixpanel.sharedInstance().track(
+                    "sharedTrip",
+                    properties: ["Type": activityType ?? "Unknown"]
+                )
                 self.dismissViewControllerAnimated(true, completion: nil)
             }
         }

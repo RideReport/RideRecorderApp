@@ -8,6 +8,7 @@
 
 import Foundation
 import ECSlidingViewController
+import Mixpanel
 
 class HamburgerNavController: UINavigationController {
     
@@ -104,6 +105,9 @@ class HamburgerViewController: UITableViewController {
             }
         } else if (indexPath.row == 0) {
             if (RouteManager.sharedManager.isPaused()) {
+                Mixpanel.sharedInstance().track(
+                    "resumedTracking"
+                )
                 RouteManager.sharedManager.resumeTracking()
                 self.updatePauseResumeText()
                 if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
@@ -113,12 +117,28 @@ class HamburgerViewController: UITableViewController {
                 let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
+                        Mixpanel.sharedInstance().track(
+                            "pausedTracking",
+                            properties: ["duration": "hour"]
+                        )
                         RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
                     } else if (buttonIndex == 2){
+                        Mixpanel.sharedInstance().track(
+                            "pausedTracking",
+                            properties: ["duration": "day"]
+                        )
                         RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
                     } else if (buttonIndex == 3) {
+                        Mixpanel.sharedInstance().track(
+                            "pausedTracking",
+                            properties: ["duration": "week"]
+                        )
                         RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
                     } else if (buttonIndex == 4) {
+                        Mixpanel.sharedInstance().track(
+                            "pausedTracking",
+                            properties: ["duration": "indefinite"]
+                        )
                         RouteManager.sharedManager.pauseTracking()
                     }
                     

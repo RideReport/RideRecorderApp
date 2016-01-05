@@ -18,6 +18,7 @@ pod 'Mapbox-iOS-SDK'
 pod 'PNChart',:path => '../Submodules/PNChart'
 pod 'OHHTTPStubs'
 pod 'OHHTTPStubs/Swift'
+pod 'Mixpanel'
 use_frameworks!
 
 post_install do |installer|
