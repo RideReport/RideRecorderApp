@@ -98,6 +98,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         
         self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: [instagramActivity])
         self.activityViewController.excludedActivityTypes = excludedActivityTypes
+        self.activityViewController.completionWithItemsHandler = { (_, completed, _, _) -> Void in
+            if completed {
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+        }
+        
         self.presentViewController(self.activityViewController, animated: true, completion: nil)
     }
     
