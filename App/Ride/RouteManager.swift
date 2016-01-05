@@ -189,6 +189,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.lastMovingLocation = nil
         
         if (stoppedTrip.locations.count <= 6) {
+            if (!UIDevice.currentDevice().wifiEnabled && !NSUserDefaults.standardUserDefaults().boolForKey("HasWarnedUserAboutWifi")) {
+                let notif = UILocalNotification()
+                notif.alertBody = "Just FYI, Ride Report works best if WiFi is enabled when you hop on your bike."
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "HasWarnedUserAboutWifi")
+                NSUserDefaults.standardUserDefaults().synchronize()
+            }
+            
             // if it doesn't more than 6 points, toss it.
             #if DEBUG2
                 let notif = UILocalNotification()
