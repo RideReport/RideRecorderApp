@@ -259,8 +259,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         // if the event is more recent than the one we already have
                         self.lastMovingLocation = location
                     }
-                    Location(location: location as CLLocation, trip: self.currentTrip!)
                 }
+                    
+                Location(location: location as CLLocation, trip: self.currentTrip!)
             }
             
             if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow)) {
@@ -426,12 +427,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
                     DDLogVerbose("Found enough motion in motion monitoring mode, triggering trip…")
                     self.startTripFromLocation(self.lastMotionMonitoringLocation!)
-                    
-                    for location in locations {
-                        if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-                            Location(location: location as CLLocation, trip: self.currentTrip!)
-                        }
-                    }
             } else {
                 DDLogVerbose("Found motion in motion monitoring mode, awaiting further reads…")
             }
