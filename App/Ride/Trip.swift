@@ -126,9 +126,15 @@ class Trip : NSManagedObject {
         }
     }
     
-    convenience init() {
+    convenience init(prototrip: Prototrip?) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        
+        if let thePrototrip = prototrip {
+            self.creationDate = thePrototrip.creationDate
+            self.batteryAtStart = thePrototrip.batteryAtStart
+            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+        }
     }
     
     class func tripCount() -> Int {
@@ -707,14 +713,14 @@ class Trip : NSManagedObject {
     private func calculateLength()-> Void {
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
-        for element in self.locations.array {
-            let location = (element as! Location).clLocation()
+        for location in self.accurateLocations() {
+            let cllocation = location.clLocation()
             if (lastLocation == nil) {
-                lastLocation = location
+                lastLocation = cllocation
                 continue
             }
-            length += lastLocation!.distanceFromLocation(location)
-            lastLocation = location
+            length += lastLocation!.distanceFromLocation(cllocation)
+            lastLocation = cllocation
         }
         
         self.length = NSNumber(double: length)
@@ -736,10 +742,14 @@ class Trip : NSManagedObject {
         }
     }
     
-    func reopen() {
+    func reopen(withPrototrip prototrip: Prototrip?) {
         self.isClosed = false
         self.locationsAreSynced = false
         self.simplifiedLocations = nil
+        
+        if let thePrototrip = prototrip {
+            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+        }
     }
     
     func loadSummaryFromAPNDictionary(summary: [NSObject: AnyObject]) {
@@ -922,13 +932,41 @@ class Trip : NSManagedObject {
         }
     }
     
+    func accurateLocations()->[Location] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Location")
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.sharedManager.acceptableLocationAccuracy)
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        if (results == nil) {
+            return []
+        }
+        
+        return results as! [Location]
+    }
+    
     func simplify(handler: ()->Void = {}) {
-        if (!self.isClosed || self.locations == nil || self.locations.count == 0) {
+        let accurateLocs = self.accurateLocations()
+        
+        if (self.simplifiedLocations != nil) {
+            for loc in self.simplifiedLocations {
+                (loc as! Location).simplifiedInTrip = nil
+            }
+        }
+        
+        if (!self.isClosed || accurateLocs.count == 0) {
             handler()
             return
         }
         
-        self.simplifyLocations(self.locations.array as! [Location], episilon: simplificationEpisilon)
+        self.simplifyLocations(accurateLocs, episilon: simplificationEpisilon)
         CoreDataManager.sharedManager.saveContext()
         handler()
     }

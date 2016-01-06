@@ -14,7 +14,8 @@ import MapKit
 class Activity : NSManagedObject {    
     @NSManaged var confidence : NSNumber
     @NSManaged var startDate : NSDate
-    @NSManaged var trip : Trip?    
+    @NSManaged var trip : Trip?
+    @NSManaged var prototrip : Prototrip?
     
     @NSManaged var automotive : Bool
     @NSManaged var cycling : Bool
@@ -24,10 +25,20 @@ class Activity : NSManagedObject {
     @NSManaged var unknown : Bool
 
     convenience init(activity: CMMotionActivity, trip: Trip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Activity", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        self.init(activity: activity)
         
         self.trip = trip
+    }
+    
+    convenience init(activity: CMMotionActivity, prototrip: Prototrip) {
+        self.init(activity: activity)
+        
+        self.prototrip = prototrip
+    }
+    
+    convenience init(activity: CMMotionActivity) {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("Activity", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.confidence = NSNumber(integer: activity.confidence.rawValue + 1)
         

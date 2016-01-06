@@ -22,15 +22,26 @@ class Location : NSManagedObject {
     @NSManaged var longitude : NSNumber?
     @NSManaged var speed : NSNumber?
     @NSManaged var trip : Trip?
+    @NSManaged var prototrip : Prototrip?
     @NSManaged var simplifiedInTrip : Trip?
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var date : NSDate?
     
     convenience init(location: CLLocation, trip: Trip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        self.init(location: location)
         
         self.trip = trip
+    }
+    
+    convenience init(location: CLLocation, prototrip: Prototrip) {
+        self.init(location: location)
+        
+        self.prototrip = prototrip
+    }
+    
+    convenience init(location: CLLocation) {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
         self.course = NSNumber(double: location.course)
         self.horizontalAccuracy = NSNumber(double: location.horizontalAccuracy)
@@ -41,6 +52,7 @@ class Location : NSManagedObject {
         self.verticalAccuracy = NSNumber(double: location.verticalAccuracy)
         self.date = location.timestamp
     }
+    
     
     convenience init(trip: Trip) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()

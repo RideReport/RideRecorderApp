@@ -20,6 +20,8 @@
 		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
 		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
+		842141901C3C8E19009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
+		842141911C3C90DC009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -187,6 +189,8 @@
 		8411B0731C20EC20002E8E80 /* instagram@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@2x.png"; sourceTree = "<group>"; };
 		8411B0751C20EC20002E8E80 /* instagram@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "instagram@3x.png"; sourceTree = "<group>"; };
 		841D87111BFD4E3000CE28CD /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
+		8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 34.xcdatamodel"; sourceTree = "<group>"; };
+		8421418F1C3C8E19009DA851 /* Prototrip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prototrip.swift; path = Ride/Prototrip.swift; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -479,6 +483,7 @@
 			children = (
 				84AEAF091AF2A30D00C04E7D /* Profile.swift */,
 				847A05661A01B2FE008F5371 /* Location.swift */,
+				8421418F1C3C8E19009DA851 /* Prototrip.swift */,
 				847A05641A01B2F1008F5371 /* Trip.swift */,
 				8429E5D71A5DCBA000EB3E94 /* Activity.swift */,
 				8429E5D91A5DCBFE00EB3E94 /* Incident.swift */,
@@ -944,6 +949,7 @@
 				842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */,
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
 				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
+				842141911C3C90DC009DA851 /* Prototrip.swift in Sources */,
 				842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */,
 				842FDCA91BD56EF70079AFCC /* Incident.swift in Sources */,
 			);
@@ -998,6 +1004,7 @@
 				84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
+				842141901C3C8E19009DA851 /* Prototrip.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,
 				84EA5BEE1A6F226400C71F53 /* SetupBatteryViewController.swift in Sources */,
 			);
@@ -1255,6 +1262,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */,
 				8492BCBC1C35E15B006BDDB8 /* Ride 33.xcdatamodel */,
 				84C9C5601C1CDB2100BD467E /* Ride 32.xcdatamodel */,
 				84C28E041BFFA3050075DD7E /* Ride 31.xcdatamodel */,
@@ -1289,7 +1297,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 8492BCBC1C35E15B006BDDB8 /* Ride 33.xcdatamodel */;
+			currentVersion = 8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

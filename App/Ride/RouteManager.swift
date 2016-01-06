@@ -33,6 +33,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let backupGeofenceIdentifier = "com.Knock.RideReport.backupGeofence"
     let geofenceSleepRegionRadius : CLLocationDistance = 80
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
+    var geofenceCenter: CLLocation?
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
@@ -51,7 +52,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
     
-    private var isInMotionMonitoringState : Bool = false
     private var motionMonitoringReadingsWithNonGPSMotion = 0
     private var motionMonitoringReadingsWithGPSMotion = 0
     private var motionMonitoringReadingsWithoutGPSMotionCount = 0
@@ -63,6 +63,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var locationManager : CLLocationManager!
     
+    private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
     
     struct Static {
@@ -144,21 +145,22 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
             self.currentTrip = mostRecentBikeTrip
-            self.currentTrip?.reopen()
+            self.currentTrip?.reopen(withPrototrip: self.currentPrototrip)
             self.currentTrip?.cancelTripStateNotification()
         } else {
-            self.currentTrip = Trip()
+            self.currentTrip = Trip(prototrip: self.currentPrototrip)
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+        }
+        if let prototrip = self.currentPrototrip {
+            prototrip.managedObjectContext?.deleteObject(prototrip)
+            
+            self.currentPrototrip = nil
         }
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
         self.lastActiveMonitoringLocation = fromLocation
         
-        // Include lastMovingLocation in the trip if it's accurate enough
-        if (self.lastMovingLocation!.horizontalAccuracy <= self.acceptableLocationAccuracy) {
-            Location(location: self.lastMovingLocation!, trip: self.currentTrip!)
-        }
         self.currentTrip?.saveAndMarkDirty()
         
         self.startLocationTrackingIfNeeded()
@@ -173,8 +175,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManager.distanceFilter = 20
             self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         }
-        
-        self.isInMotionMonitoringState = false
     }
     
     private func stopTrip() {
@@ -330,13 +330,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         self.locationManager.disallowDeferredLocationUpdates()
         
-        if (!self.isInMotionMonitoringState) {
+        if (self.currentPrototrip == nil) {
             self.motionMonitoringReadingsWithNonGPSMotion = 0
             self.motionMonitoringReadingsWithGPSMotion = 0
             self.motionMonitoringReadingsWithoutGPSFix = 0
             self.motionMonitoringReadingsWithoutGPSMotionCount = 0
-            self.isInMotionMonitoringState = true
+            self.currentPrototrip = Prototrip()
+            if let currentGeofenceCenter = self.geofenceCenter {
+                Location(location: currentGeofenceCenter, prototrip: self.currentPrototrip!)
+            }
+            CoreDataManager.sharedManager.saveContext()
         }
+        self.geofenceCenter = nil
         self.lastMotionMonitoringLocation = nil
     }
     
@@ -357,7 +362,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogInfo("Did not setup new geofence!")
         }
         
-        self.isInMotionMonitoringState = false
+        if let prototrip = self.currentPrototrip {
+            prototrip.managedObjectContext?.deleteObject(prototrip)
+            CoreDataManager.sharedManager.saveContext()
+            
+            self.currentPrototrip = nil
+        }
+        
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
@@ -369,6 +380,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         for location in locations {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
+            
+            Location(location: location, prototrip: self.currentPrototrip!)
+            CoreDataManager.sharedManager.saveContext()
+            
             if (location.speed >= self.minimumSpeedToStartMonitoring) {
                 DDLogVerbose("Found movement while in motion monitoring state")
                 if (location.horizontalAccuracy <= kCLLocationAccuracyBest) {
@@ -443,6 +458,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func setupGeofencesAroundCenter(center: CLLocation) {
         DDLogInfo("Setting up geofences!")
         
+        self.geofenceCenter = center
+        
         // first we put a geofence in the middle as a fallback (exit event)
         let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
         self.geofenceSleepRegions.append(region)
@@ -471,12 +488,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManager.stopMonitoringForRegion(region )
         }
         
+        self.geofenceCenter = nil
         self.geofenceSleepRegions = []
     }
     
     
     private func beginDeferringUpdatesIfAppropriate() {
-        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && !self.isInMotionMonitoringState && self.currentTrip != nil) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
             DDLogVerbose("Re-deferring updates")
             
             self.isDefferringLocationUpdates = true
@@ -652,7 +670,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return;
         }
         
-        if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
+        if (self.currentTrip == nil && self.currentPrototrip == nil) {
             DDLogVerbose("Got geofence enter, entering Motion Monitoring state.")
             self.startMotionMonitoring()
         } else {
@@ -666,7 +684,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return;
         }
         
-        if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
+        if (self.currentTrip == nil && self.currentPrototrip == nil) {
             DDLogVerbose("Got geofence exit, entering Motion Monitoring state.")
             self.startMotionMonitoring()
         } else {
@@ -689,12 +707,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (self.currentTrip != nil) {
             self.processActiveTrackingLocations(locations as [CLLocation]!)
-        } else if (self.isInMotionMonitoringState) {
+        } else if (self.currentPrototrip != nil) {
             self.processMotionMonitoringLocations(locations as [CLLocation]!)
         } else {
             // We are currently in background mode and got significant location change movement.
             
-            if (self.currentTrip == nil && !self.isInMotionMonitoringState) {
+            if (self.currentTrip == nil && self.currentPrototrip == nil) {
                 DDLogVerbose("Got significant location, entering Motion Monitoring state.")
                 self.startMotionMonitoring()
             } else {
