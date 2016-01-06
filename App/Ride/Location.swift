@@ -18,6 +18,7 @@ class Location : NSManagedObject {
     @NSManaged var course : NSNumber?
     @NSManaged var horizontalAccuracy : NSNumber?
     @NSManaged var isSmoothedLocation : Bool
+    @NSManaged var isGeofencedLocation : Bool
     @NSManaged var latitude : NSNumber?
     @NSManaged var longitude : NSNumber?
     @NSManaged var speed : NSNumber?
@@ -110,7 +111,8 @@ class Location : NSManagedObject {
             "horizontalAccuracy": self.horizontalAccuracy!,
             "speed": self.speed!,
             "longitude": self.longitude!,
-            "latitude": self.latitude!
+            "latitude": self.latitude!,
+            "isGeofencedLocation": self.isGeofencedLocation
         ]
         if let altitude = self.altitude, let verticalAccuracy = self.verticalAccuracy {
             locDict["altitude"] = altitude

@@ -337,7 +337,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.motionMonitoringReadingsWithoutGPSMotionCount = 0
             self.currentPrototrip = Prototrip()
             if let currentGeofenceCenter = self.geofenceCenter {
-                Location(location: currentGeofenceCenter, prototrip: self.currentPrototrip!)
+                let loc = Location(location: currentGeofenceCenter, prototrip: self.currentPrototrip!)
+                loc.isGeofencedLocation = true
             }
             CoreDataManager.sharedManager.saveContext()
         }

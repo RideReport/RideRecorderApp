@@ -191,6 +191,7 @@
 		841D87111BFD4E3000CE28CD /* Ride Report.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Ride Report.entitlements"; sourceTree = "<group>"; };
 		8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 34.xcdatamodel"; sourceTree = "<group>"; };
 		8421418F1C3C8E19009DA851 /* Prototrip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prototrip.swift; path = Ride/Prototrip.swift; sourceTree = "<group>"; };
+		842141921C3CA214009DA851 /* Ride 35.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 35.xcdatamodel"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1262,6 +1263,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				842141921C3CA214009DA851 /* Ride 35.xcdatamodel */,
 				8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */,
 				8492BCBC1C35E15B006BDDB8 /* Ride 33.xcdatamodel */,
 				84C9C5601C1CDB2100BD467E /* Ride 32.xcdatamodel */,
@@ -1297,7 +1299,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */;
+			currentVersion = 842141921C3CA214009DA851 /* Ride 35.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";
