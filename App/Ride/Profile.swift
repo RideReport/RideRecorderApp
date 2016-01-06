@@ -16,6 +16,7 @@ class Profile : NSManagedObject {
     @NSManaged var currentStreakLength : NSNumber!
     @NSManaged var longestStreakStartDate : NSDate!
     @NSManaged var longestStreakLength : NSNumber!
+    @NSManaged private(set) var lastGeofencedLocation : Location?
 
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -46,6 +47,18 @@ class Profile : NSManagedObject {
         }
         
         return Static.profile
+    }
+    
+    func setGeofencedLocation(location: CLLocation?) {
+        if let loc = self.lastGeofencedLocation {
+            self.lastGeofencedLocation = nil
+            loc.managedObjectContext?.deleteObject(loc)
+        }
+        
+        if let loc = location {
+            self.lastGeofencedLocation = Location(location: loc, geofencedLocationOfProfile: self)
+        }
+        CoreDataManager.sharedManager.saveContext()
     }
     
     var firstTripDate: NSDate? {

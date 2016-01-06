@@ -24,6 +24,7 @@ class Location : NSManagedObject {
     @NSManaged var speed : NSNumber?
     @NSManaged var trip : Trip?
     @NSManaged var prototrip : Prototrip?
+    @NSManaged var lastGeofencedLocationOfProfile : Profile?
     @NSManaged var simplifiedInTrip : Trip?
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var date : NSDate?
@@ -40,6 +41,31 @@ class Location : NSManagedObject {
         self.prototrip = prototrip
     }
     
+    convenience init(byCopyingLocation location: Location, prototrip: Prototrip) {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        
+        self.course = location.course
+        self.horizontalAccuracy = location.horizontalAccuracy
+        self.latitude = location.latitude
+        self.longitude = location.longitude
+        self.speed = location.speed
+        self.altitude = location.altitude
+        self.verticalAccuracy = location.verticalAccuracy
+        self.date = location.date
+        self.isGeofencedLocation = location.isGeofencedLocation
+        self.isSmoothedLocation = location.isSmoothedLocation
+        
+        self.prototrip = prototrip
+    }
+    
+    convenience init(location: CLLocation, geofencedLocationOfProfile profile: Profile) {
+        self.init(location: location)
+        
+        self.isGeofencedLocation = true
+        self.lastGeofencedLocationOfProfile = profile
+    }
+    
     convenience init(location: CLLocation) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
@@ -53,7 +79,6 @@ class Location : NSManagedObject {
         self.verticalAccuracy = NSNumber(double: location.verticalAccuracy)
         self.date = location.timestamp
     }
-    
     
     convenience init(trip: Trip) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()

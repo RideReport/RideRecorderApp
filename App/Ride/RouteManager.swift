@@ -33,7 +33,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let backupGeofenceIdentifier = "com.Knock.RideReport.backupGeofence"
     let geofenceSleepRegionRadius : CLLocationDistance = 80
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
-    var geofenceCenter: CLLocation?
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
@@ -337,13 +336,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.motionMonitoringReadingsWithoutGPSFix = 0
             self.motionMonitoringReadingsWithoutGPSMotionCount = 0
             self.currentPrototrip = Prototrip()
-            if let currentGeofenceCenter = self.geofenceCenter {
-                let loc = Location(location: currentGeofenceCenter, prototrip: self.currentPrototrip!)
-                loc.isGeofencedLocation = true
+            if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
+                let _ = Location(byCopyingLocation: currentGeofenceLocation, prototrip: self.currentPrototrip!)
             }
             CoreDataManager.sharedManager.saveContext()
         }
-        self.geofenceCenter = nil
+        Profile.profile().setGeofencedLocation(nil)
         self.lastMotionMonitoringLocation = nil
     }
     
@@ -383,7 +381,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         for location in locations {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
-            Location(location: location, prototrip: self.currentPrototrip!)
+            let _ = Location(location: location, prototrip: self.currentPrototrip!)
             CoreDataManager.sharedManager.saveContext()
             
             if (location.speed >= self.minimumSpeedToStartMonitoring) {
@@ -454,7 +452,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func setupGeofencesAroundCenter(center: CLLocation) {
         DDLogInfo("Setting up geofences!")
         
-        self.geofenceCenter = center
+        Profile.profile().setGeofencedLocation(center)
         
         // first we put a geofence in the middle as a fallback (exit event)
         let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
@@ -484,7 +482,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManager.stopMonitoringForRegion(region )
         }
         
-        self.geofenceCenter = nil
+        Profile.profile().setGeofencedLocation(nil)
         self.geofenceSleepRegions = []
     }
     
