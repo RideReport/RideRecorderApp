@@ -14,11 +14,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>CZWeatherKit.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>CocoaLumberjack.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -69,12 +64,12 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>PINCache.xcscheme</key>
+		<key>PNChart.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>PNChart.xcscheme</key>
+		<key>PNChart.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -107,22 +102,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1F62F3F58C2B32D4F60788868BB4E4B0</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>2DB59219DEF5D393F19F0753F2D9C161</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>38E19D5D8DE8C3B6AA6F0A8EEDDD7CCE</key>
+		<key>432ECC54282C84882B482CCB4CF227FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>432ECC54282C84882B482CCB4CF227FC</key>
+		<key>53D68032C66DBFB5FD9B172F8C8ADBC2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -142,12 +132,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6618B30786139FCD27E1CF439C61FF20</key>
+		<key>6C18C789438292FED01EB702705FC9AA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6C18C789438292FED01EB702705FC9AA</key>
+		<key>80536198E1CF272E9DA1BD1F90BBBED2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -157,17 +147,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>937179F5A3CEB33882C19B35C4F51F98</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>94A50FB884552F1E25589DD6EA641782</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>9B616DC0DEE9F1BD8E924286299E95F4</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -193,6 +173,11 @@
 			<true/>
 		</dict>
 		<key>F5ACF367AE3BD7A7F2AF2D430901DF7B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD89D2654465891F0746454F63921E18</key>
 		<dict>
 			<key>primary</key>
 			<true/>

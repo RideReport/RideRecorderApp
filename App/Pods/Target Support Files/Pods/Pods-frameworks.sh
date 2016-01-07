@@ -86,7 +86,6 @@ strip_invalid_archs() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/Bolts.framework"
-  install_framework "Pods/CZWeatherKit.framework"
   install_framework "Pods/CocoaLumberjack.framework"
   install_framework "Pods/ECSlidingViewController.framework"
   install_framework "Pods/FBSDKCoreKit.framework"
@@ -96,7 +95,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/Mixpanel.framework"
   install_framework "Pods/OAuthSwift.framework"
   install_framework "Pods/OHHTTPStubs.framework"
-  install_framework "Pods/PINCache.framework"
   install_framework "Pods/PNChart.framework"
   install_framework "Pods/SwiftyJSON.framework"
   install_framework "Pods/UIActionSheet_Blocks.framework"
@@ -105,7 +103,6 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Alamofire.framework"
   install_framework "Pods/Bolts.framework"
-  install_framework "Pods/CZWeatherKit.framework"
   install_framework "Pods/CocoaLumberjack.framework"
   install_framework "Pods/ECSlidingViewController.framework"
   install_framework "Pods/FBSDKCoreKit.framework"
@@ -115,7 +112,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/Mixpanel.framework"
   install_framework "Pods/OAuthSwift.framework"
   install_framework "Pods/OHHTTPStubs.framework"
-  install_framework "Pods/PINCache.framework"
   install_framework "Pods/PNChart.framework"
   install_framework "Pods/SwiftyJSON.framework"
   install_framework "Pods/UIActionSheet_Blocks.framework"

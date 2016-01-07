@@ -14,8 +14,6 @@ PODS:
   - CocoaLumberjack/Swift (2.0.1):
     - CocoaLumberjack/Extensions
   - Crashlytics (3.3.1)
-  - CZWeatherKit (2.2.0):
-    - PINCache (~> 2.0)
   - ECSlidingViewController (2.0.3)
   - Fabric (1.5.1):
     - Fabric/Base (= 1.5.1)
@@ -54,7 +52,6 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.7.0)
   - OHHTTPStubs/Swift (4.7.0):
     - OHHTTPStubs/Core
-  - PINCache (2.1)
   - PNChart (0.8.6):
     - UICountingLabel (~> 1.2.0)
   - SwiftyJSON (2.3.2)
@@ -66,7 +63,6 @@ DEPENDENCIES:
   - CocoaLumberjack/Swift (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`,
     branch `swift_2.0`)
   - Crashlytics
-  - CZWeatherKit
   - ECSlidingViewController (~> 2.0.3)
   - Fabric
   - FBSDKCoreKit
@@ -99,7 +95,6 @@ SPEC CHECKSUMS:
   Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
   CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
   Crashlytics: 0e61bdda9def51f1e99720f804eebe94865442b2
-  CZWeatherKit: d7707d997a2c7215741db9c3d4dcfba25a21f0ce
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
   Fabric: 03c3b3fe77e11a2bc31421b989a9c7adaa4779a5
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
@@ -110,7 +105,6 @@ SPEC CHECKSUMS:
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
-  PINCache: 0581b0a7578fc0bbc6c7a8b70b0615388bea064c
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358

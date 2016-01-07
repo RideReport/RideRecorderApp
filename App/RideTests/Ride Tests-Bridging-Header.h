@@ -15,7 +15,6 @@
 #import "RCounter.h"
 #import "DMActivityInstagram.h"
 #include <zlib.h>
-#include <CZWeatherKit/CZWeatherKit.h>
 
 @interface CZForecastioAPI ()
 
