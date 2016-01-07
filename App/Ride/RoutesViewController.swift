@@ -222,10 +222,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             modeShareLabel.frame = CGRectMake(margin*2 + chartWidth + (chartWidth - modeShareLabel.frame.width)/2, margin + 8 + chartWidth, modeShareLabel.frame.width, modeShareLabel.frame.height)
             self.headerView.addSubview(modeShareLabel)
 
-            
-            let ratingsData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfGoodTrips), color: ColorPallete.sharedPallete.goodGreen, description: "👍"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfBadTrips), color: ColorPallete.sharedPallete.badRed, description: "👎"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfUnratedTrips), color: ColorPallete.sharedPallete.unknownGrey)]
+            var ratingsData : [PNPieChartDataItem] = []
+            for countData in Trip.bikeTripCountsGroupedByProperty("rating") {
+                if let rating = countData["rating"] as? NSNumber,
+                    count = countData["count"]  as? NSNumber {
+                    if rating.shortValue == Trip.Rating.NotSet.rawValue {
+                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.unknownGrey))
+                    } else if rating.shortValue == Trip.Rating.Good.rawValue {
+                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.goodGreen, description: "👍"))
+                    } else if rating.shortValue == Trip.Rating.Bad.rawValue {
+                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.badRed, description: "👎"))
+                    }
+                }
+            }
             
             self.pieChartRatings = PNPieChart(frame: CGRectMake(margin*3 + 2*chartWidth, margin, chartWidth, chartWidth), items: ratingsData)
             self.pieChartRatings.showOnlyDescriptions = true
@@ -245,9 +254,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             ratingsLabel.frame = CGRectMake(margin*3 + chartWidth*2 + (chartWidth - ratingsLabel.frame.width)/2, margin + 8 + chartWidth, ratingsLabel.frame.width, ratingsLabel.frame.height)
             self.headerView.addSubview(ratingsLabel)
             
-            let weatherData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfWarmSunnyTrips), color: ColorPallete.sharedPallete.goodGreen, description: "☀️"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfRainyTrips), color: ColorPallete.sharedPallete.unknownGrey, description: "☔️"),
-                PNPieChartDataItem(value: CGFloat(Trip.numberOfColdTrips), color: ColorPallete.sharedPallete.transitBlue, description: "❄️")]
+            var weatherData : [PNPieChartDataItem] = []
+            for countData in Trip.bikeTripCountsGroupedByProperty("climacon") {
+                if let climacon = countData["climacon"] as? String,
+                    count = countData["count"]  as? NSNumber {
+                        if climacon == "☀️" {
+                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.goodGreen, description: "☀️"))
+                        } else if climacon == "☔️" {
+                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.unknownGrey, description: "☔️"))
+                        } else if climacon == "❄️" {
+                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.transitBlue, description: "❄️"))
+                        }
+                }
+            }
             
             self.pieChartWeather = PNPieChart(frame: CGRectMake(margin*4 + 3*chartWidth, margin, chartWidth, chartWidth), items: weatherData)
             self.pieChartWeather.showOnlyDescriptions = true

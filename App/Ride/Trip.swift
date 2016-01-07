@@ -72,7 +72,6 @@ class Trip : NSManagedObject {
     @NSManaged var length : NSNumber!
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
-    @NSManaged var temperature : NSNumber!
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
     var sectionIdentifier : String? {
@@ -490,20 +489,38 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class var numberOfUnratedTrips : Int {
+    class func bikeTripCountsGroupedByProperty(property: String) -> [[String: AnyObject]] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let  countExpression = NSExpressionDescription()
+        countExpression.name = "count"
+        countExpression.expression = NSExpression(forFunction: "count:", arguments: [NSExpression(forKeyPath: property)])
+        countExpression.expressionResultType = NSAttributeType.Integer32AttributeType
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.NotSet.rawValue)
-        
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        guard let attributeDescription = NSEntityDescription.entityForName("Trip", inManagedObjectContext: CoreDataManager.sharedManager.managedObjectContext!)!.attributesByName[property] else {
+            return []
         }
         
-        return count
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        
+        fetchedRequest.propertiesToFetch = [attributeDescription, countExpression]
+        fetchedRequest.propertiesToGroupBy = [attributeDescription]
+        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        
+        var error : NSError?
+        let results: [AnyObject]?
+
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error1 as NSError {
+            error = error1
+            results = nil
+        }
+        if (results == nil || error != nil) {
+            return []
+        }
+        
+        return results as! [[String: AnyObject]]
     }
     
     class var numberOfBadTrips : Int {
@@ -521,70 +538,7 @@ class Trip : NSManagedObject {
         
         return count
     }
-    
-    class var numberOfGoodTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Good.rawValue)
-        
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
-        }
-        
-        return count
-    }
-    
-    class var numberOfWarmSunnyTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature >= 45 AND climacon != \"\" AND NOT(climacon == '☔️')", ActivityType.Cycling.rawValue)
-        
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
-        }
-        
-        return count
-    }
-    
-    class var numberOfRainyTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND climacon == '☔️'", ActivityType.Cycling.rawValue)
-        
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
-        }
-        
-        return count
-    }
-    
-    class var numberOfColdTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND temperature < 40 AND climacon != \"\" AND NOT(climacon == '☔️')", ActivityType.Cycling.rawValue)
-        
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
-        }
-        
-        return count
-    }
+ 
     
     class var totalCycledMilesThisWeek : Float {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
@@ -781,12 +735,7 @@ class Trip : NSManagedObject {
         }
     }
     
-    func loadSummaryFromJSON(summary: [String: JSON]) {        
-        if let conditions = summary["weather"]?["conditions"],
-            temperature = conditions["temperature"].number {
-            self.temperature = temperature
-        }
-        
+    func loadSummaryFromJSON(summary: [String: JSON]) {
         if let climacon = summary["weatherEmoji"]?.string {
             self.climacon = climacon
         }
