@@ -125,6 +125,11 @@ class Trip : NSManagedObject {
         }
     }
     
+    convenience init() {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+    }
+    
     convenience init(prototrip: Prototrip?) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
@@ -905,7 +910,7 @@ class Trip : NSManagedObject {
         let accurateLocs = self.accurateLocations()
         
         if (self.simplifiedLocations != nil) {
-            for loc in self.simplifiedLocations {
+            for loc in self.simplifiedLocations.array {
                 (loc as! Location).simplifiedInTrip = nil
             }
         }
