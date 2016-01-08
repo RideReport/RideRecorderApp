@@ -8,6 +8,7 @@
 
 import Foundation
 import SystemConfiguration
+import CoreData
 
 class MainViewController: UIViewController, RideSummaryViewDelegate {
     @IBOutlet weak var routesContainerView: UIView!
@@ -192,6 +193,25 @@ class MainViewController: UIViewController, RideSummaryViewDelegate {
         
         if (RouteManager.sharedManager.currentTrip != nil) {
             self.selectedTrip = RouteManager.sharedManager.currentTrip
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: CoreDataManager.sharedManager.managedObjectContext, queue: nil) { (notification) -> Void in
+            guard self.selectedTrip != nil else {
+                return
+            }
+            
+            if let updatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? NSSet {
+                if updatedObjects.containsObject(self.selectedTrip) {
+                    let trip = self.selectedTrip
+                    self.selectedTrip = trip
+                }
+            }
+            
+            if let deletedObjects = notification.userInfo?[NSDeletedObjectsKey] as? NSSet {
+                if deletedObjects.containsObject(self.selectedTrip) {
+                    self.selectedTrip = nil
+                }
+            }
         }
     }
     
