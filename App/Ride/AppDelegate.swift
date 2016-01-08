@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         APIClient.startup()
+        SoftwareUpdateManager.startup()
 //        HealthKitManager.startup()
         
         if (hasSeenSetup) {
