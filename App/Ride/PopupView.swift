@@ -84,25 +84,28 @@ import Foundation
         path.lineWidth = strokeWidth
         path.stroke()
         
-        let arrowPoint = CGPointMake(arrowInset, arrowHeight + strokeWidth)
-        let arrowPath = UIBezierPath()
+        if arrowHeight > 0 && arrowBaseWidth > 0 {
+            let arrowPoint = CGPointMake(arrowInset, arrowHeight + strokeWidth)
+            let arrowPath = UIBezierPath()
+            
+            let halfArrowWidth = arrowBaseWidth / 2.0
+            let tipPt = CGPointMake(arrowPoint.x + halfArrowWidth, strokeWidth)
+            let endPt = CGPointMake(arrowPoint.x + arrowBaseWidth, arrowPoint.y)
+            
+            // Note: we always build the arrow path in a clockwise direction.
+            // Arrow points towards top. We're starting from the left.
+            
+            arrowPath.moveToPoint(arrowPoint)
+            arrowPath.addLineToPoint(tipPt)
+            arrowPath.addLineToPoint(endPt)
+            arrowPath.lineCapStyle = CGLineCap.Butt
+            
+            arrowPath.lineWidth = strokeWidth
+            arrowPath.stroke()
+            arrowPath.fillWithBlendMode(CGBlendMode.Clear, alpha:1.0)
+            arrowPath.fill()
+        }
         
-        let halfArrowWidth = arrowBaseWidth / 2.0
-        let tipPt = CGPointMake(arrowPoint.x + halfArrowWidth, strokeWidth)
-        let endPt = CGPointMake(arrowPoint.x + arrowBaseWidth, arrowPoint.y)
-        
-        // Note: we always build the arrow path in a clockwise direction.
-        // Arrow points towards top. We're starting from the left.
-        
-        arrowPath.moveToPoint(arrowPoint)
-        arrowPath.addLineToPoint(tipPt)
-        arrowPath.addLineToPoint(endPt)
-        arrowPath.lineCapStyle = CGLineCap.Butt
-        
-        arrowPath.lineWidth = strokeWidth
-        arrowPath.stroke()
-        arrowPath.fillWithBlendMode(CGBlendMode.Clear, alpha:1.0)
-        arrowPath.fill()
         path.fillWithBlendMode(CGBlendMode.Clear, alpha:1.0)
         path.fill()
     }

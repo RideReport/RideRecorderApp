@@ -45,6 +45,9 @@ extension UIView {
         
         CATransaction.begin()
         CATransaction.setCompletionBlock {
+            if self.layer.opacity == 1.0 {
+                self.hidden = false
+            }
             completionHandler()
         }
         
@@ -75,6 +78,9 @@ extension UIView {
         
         CATransaction.begin()
         CATransaction.setCompletionBlock {
+            if self.layer.opacity == 1.0 {
+                self.hidden = false
+            }
             completionHandler()
         }
         
@@ -95,7 +101,9 @@ extension UIView {
     func fadeOut(completionHandler: () -> Void = {}) -> Self {
         CATransaction.begin()
         CATransaction.setCompletionBlock {
-            self.hidden = true
+            if self.layer.opacity == 0.0 {
+                self.hidden = true
+            }
             completionHandler()
         }
         
