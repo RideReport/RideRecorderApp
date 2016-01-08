@@ -15,8 +15,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
-    @IBOutlet weak var headerLabel2: UILabel!
-    @IBOutlet weak var headerLabel3: UILabel!
     
     var pieChartModeShare: PNPieChart!
     var pieChartRatings: PNPieChart!
@@ -111,16 +109,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.title = "No Rides"
             self.headerView.hidden = false
         } else {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.locale = NSLocale.currentLocale()
-            dateFormatter.dateStyle = .ShortStyle
-            
             let numCharts = 4
             let margin: CGFloat = 16
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
             var headerFrame = self.headerView.frame;
-            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + self.headerLabel2.frame.size.height + 86
+            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
             self.headerView.frame = headerFrame
             self.tableView.tableHeaderView = self.headerView
             
@@ -142,21 +136,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
             }
             
-            self.headerLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
-
-            
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
                 let firstTrip = (self.fetchedResultsController.fetchedObjects?.last as! Trip)
                 let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count
-                
-                let formatter = NSNumberFormatter()
-                formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-                formatter.maximumFractionDigits = 0
-                
-                if let firstTripDate = Profile.profile().firstTripDate {
-                    self.headerLabel3.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, formatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
-                }
                 
                 let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
@@ -311,9 +294,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
-            self.tableView!.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
-            self.tableView!.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing
             DDLogVerbose("Move/update section. Shouldn't happen?")
@@ -324,50 +307,81 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         switch(type) {
             
         case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
             
         case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
             
         case .Update:
             let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
-            let cell = self.tableView!.cellForRowAtIndexPath(indexPath!)
+            let cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1))
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
             
         case .Move:
-            self.tableView!.deleteRowsAtIndexPaths([indexPath!],
+            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                 withRowAnimation: UITableViewRowAnimation.Fade)
-            self.tableView!.insertRowsAtIndexPaths([newIndexPath!],
+            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
                 withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections!.count
+        return self.fetchedResultsController.sections!.count + 1
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 0
+        }
+        
+        return 22
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 48
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let theSection = self.fetchedResultsController.sections![section] 
+        if section == 0 {
+            return "  Rewards"
+        }
+        
+        let theSection = self.fetchedResultsController.sections![section - 1]
         
         return "  ".stringByAppendingString(theSection.name)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section] 
+        if section == 0 {
+            return 1
+        }
+        
+        let sectionInfo = self.fetchedResultsController.sections![section - 1]
         
         return sectionInfo.numberOfObjects
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
-        let reuseID = "RoutesViewTableCell"
+        let tableCell : UITableViewCell!
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath) 
-        tableCell.layoutMargins = UIEdgeInsetsZero
+        if indexPath.section == 0 {
+            let reuseID = "RewardsViewTableCell"
+            
+            tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+            tableCell.layoutMargins = UIEdgeInsetsZero
+            
+            configureRewardsCell(tableCell)
+        }  else {
+            let reuseID = "RoutesViewTableCell"
+            
+            tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+            tableCell.layoutMargins = UIEdgeInsetsZero
 
-        configureCell(tableCell, trip: trip)
+            let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
+            configureCell(tableCell, trip: trip)
+        }
         
         return tableCell
     }
@@ -378,6 +392,27 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         headerView.opaque = false
         headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
         headerView.textLabel!.textColor = UIColor(white: 0.9, alpha: 1.0)
+    }
+    
+    func configureRewardsCell(tableCell: UITableViewCell) {
+        var rewardString = ""
+
+        for countData in Trip.bikeTripCountsGroupedByProperty("rewardEmoji") {
+            if let rewardEmoji = countData["rewardEmoji"] as? String,
+                count = countData["count"]  as? NSNumber {
+                  rewardString += count.stringValue + "x" + rewardEmoji + " "
+            }
+        }
+        
+        if let text1 = tableCell.viewWithTag(1) as? UILabel {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.2
+            
+            let attrString = NSMutableAttributedString(string: rewardString)
+            attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+
+            text1.attributedText = attrString
+        }
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
@@ -410,7 +445,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        self.mainViewController.selectedTrip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+        if (indexPath.section == 0) {
+            // handled via interface builder
+            return
+        }
+        
+        self.mainViewController.selectedTrip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
         
         self.pop()
     }
@@ -427,14 +467,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        if (indexPath.section == 0) {
+            return nil
+        }
+        
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             APIClient.sharedClient.deleteTrip(trip)
         }
         
     #if DEBUG
         let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "🐞 Tools") { (action, indexPath) -> Void in
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             self.tableView.setEditing(false, animated: true)
             
             var smoothButtonTitle = ""
@@ -479,13 +523,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (indexPath.section == 0) {
+            return
+        }
+        
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             APIClient.sharedClient.deleteTrip(trip)
         }
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        if (indexPath.section == 0) {
+            return false
+        }
         return true
     }
 }

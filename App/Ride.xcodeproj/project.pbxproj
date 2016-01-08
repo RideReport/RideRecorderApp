@@ -22,6 +22,9 @@
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
 		842141901C3C8E19009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842141911C3C90DC009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
+		842141951C3DD9D2009DA851 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842141941C3DD9D2009DA851 /* SpriteKit.framework */; };
+		8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421419A1C3DDB86009DA851 /* RewardsViewController.swift */; };
+		8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -193,6 +196,9 @@
 		8421418F1C3C8E19009DA851 /* Prototrip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Prototrip.swift; path = Ride/Prototrip.swift; sourceTree = "<group>"; };
 		842141921C3CA214009DA851 /* Ride 35.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 35.xcdatamodel"; sourceTree = "<group>"; };
 		842141931C3D9407009DA851 /* Ride 36.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 36.xcdatamodel"; sourceTree = "<group>"; };
+		842141941C3DD9D2009DA851 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
+		8421419A1C3DDB86009DA851 /* RewardsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RewardsViewController.swift; sourceTree = "<group>"; };
+		8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionTypeAdditions.swift; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -357,6 +363,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				842141951C3DD9D2009DA851 /* SpriteKit.framework in Frameworks */,
 				84CA65961B72DEFC00696587 /* libuv.a in Frameworks */,
 				84F137631B5DAE160023EC82 /* libz.dylib in Frameworks */,
 				84F137611B5DAE0C0023EC82 /* libsqlite3.dylib in Frameworks */,
@@ -383,6 +390,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				842141941C3DD9D2009DA851 /* SpriteKit.framework */,
 				8411B04F1C20EC20002E8E80 /* DMActivityInstagram */,
 				842FDCC51BD56FEB0079AFCC /* libz.tbd */,
 				842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */,
@@ -476,6 +484,7 @@
 				84033DA11A9813D200339171 /* RouteIncidentsViewController.swift */,
 				84AEAF031AF1AEC800C04E7D /* IncidentEditorViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
+				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -519,6 +528,7 @@
 				848777B61A6834C300B59B06 /* UIView+HBadditions.swift */,
 				84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */,
 				844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */,
+				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -968,6 +978,7 @@
 				847ED0911A40DA0D00CAA396 /* MainViewController.swift in Sources */,
 				84AEAF041AF1AEC800C04E7D /* IncidentEditorViewController.swift in Sources */,
 				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
+				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
@@ -1004,6 +1015,7 @@
 				84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */,
 				84033D991A8BD26900339171 /* MotionManager.swift in Sources */,
 				84033DA21A9813D200339171 /* RouteIncidentsViewController.swift in Sources */,
+				8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				842141901C3C8E19009DA851 /* Prototrip.swift in Sources */,
