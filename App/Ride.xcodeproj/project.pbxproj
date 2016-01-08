@@ -20,12 +20,12 @@
 		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
 		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
+		8411B09A1C20F3B7002E8E80 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */; };
 		842141901C3C8E19009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842141911C3C90DC009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842141951C3DD9D2009DA851 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842141941C3DD9D2009DA851 /* SpriteKit.framework */; };
 		8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421419A1C3DDB86009DA851 /* RewardsViewController.swift */; };
 		8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */; };
-		8411B09A1C20F3B7002E8E80 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
