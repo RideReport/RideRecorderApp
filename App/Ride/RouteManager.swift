@@ -133,9 +133,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogInfo("Starting Active Tracking")
         
         var firstLocationOfNewTrip = fromLocation
-        if let prototrip = self.currentPrototrip where prototrip.locations.count > 0 {
+        if let prototrip = self.currentPrototrip, firstLocation = prototrip.locations.firstObject as? Location {
             // if there is a prototrip, use the first location of that to determine whether or not to resume the trip
-            firstLocationOfNewTrip = prototrip.locations.firstObject
+            firstLocationOfNewTrip = firstLocation.clLocation()
         }
         
         // Resume the most recent trip if it was recent enough
