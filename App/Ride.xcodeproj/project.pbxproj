@@ -20,6 +20,7 @@
 		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
 		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
+		8411B09A1C20F3B7002E8E80 /* SoftwareUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */; };
 		842141901C3C8E19009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842141911C3C90DC009DA851 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		842141951C3DD9D2009DA851 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842141941C3DD9D2009DA851 /* SpriteKit.framework */; };
