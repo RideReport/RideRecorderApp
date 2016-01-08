@@ -54,25 +54,22 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
         self.lastUpdateCheck = NSDate()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
-            let manifestDictionary = NSDictionary(contentsOfURL: self.manifestUrl) as! [String:AnyObject]?
-            if (manifestDictionary != nil) {
-                let items = manifestDictionary?["items"] as! [AnyObject]?
-                let item = items?.last as! [String:AnyObject]?
-                
-                let version = item?["metadata"]?["bundle-version"] as! String
-                let currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
-                
-                if (currentVersion.compare(version, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending) {
-                    // update is available
-                    if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
-                        let notif = UILocalNotification()
-                        notif.alertBody = "An update to Ride Report is available! Open Ride Report to upgrade."
-                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                    }
-                    
-                    let alert = UIAlertView(title: "Ride Report Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
-                    alert.show()
+            if let manifestDictionary = NSDictionary(contentsOfURL: self.manifestUrl),
+                items = manifestDictionary["items"] as? [AnyObject],
+                item = items.last as? [String:AnyObject],
+                metadata = item["metadata"] as? [String:AnyObject],
+                version = metadata["bundle-version"] as? String,
+                currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String
+                where currentVersion.compare(version, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending {
+                // update is available
+                if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
+                    let notif = UILocalNotification()
+                    notif.alertBody = "An update to Ride Report is available! Open Ride Report to upgrade."
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 }
+                
+                let alert = UIAlertView(title: "Ride Report Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
+                alert.show()
             }
         })
     }
