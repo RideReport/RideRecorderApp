@@ -14,6 +14,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var spriteKitView: SKView!
     @IBOutlet weak var rewardsLabel1: UILabel!
     @IBOutlet weak var rewardsLabel2: UILabel!
+    @IBOutlet weak var rewardPopup: PopupView!
+
 
     private var scene: SKScene!
     
@@ -25,6 +27,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.rewardPopup.hidden = true
         self.title = "🏆 Trophy Room"
     }
     
@@ -68,27 +71,25 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.scene.physicsBody!.friction = 0.2
             self.scene.physicsWorld.gravity = CGVectorMake(0,-9.8)
             
-            var i = 0
-            
             var imageDictionary : [String: UIImage] = [:]
-            let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByProperty("rewardEmoji")
+            let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji", additionalAttributes: ["rewardDescription"])
             let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 26)!]
             
             let imageSize = CGSizeMake(30.0, 30.0)
             for countData in bikeTripEmojiCounts {
                 if let rewardEmoji = countData["rewardEmoji"] as? String {
-                    UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
-                    (rewardEmoji as NSString).drawAtPoint(CGPointMake(0,0), withAttributes:fontAttributes)
-                    
-                    let emojiImage = UIGraphicsGetImageFromCurrentImageContext()
-                    UIGraphicsEndImageContext()
-                    imageDictionary[String(i)] = emojiImage
-                    
-                    i++
+                    let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
+                    if (imageDictionary[unicodeString as! String] == nil) {
+                        UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
+                        (rewardEmoji as NSString).drawAtPoint(CGPointMake(0,0), withAttributes:fontAttributes)
+                        
+                        let emojiImage = UIGraphicsGetImageFromCurrentImageContext()
+                        UIGraphicsEndImageContext()
+                        
+                        imageDictionary[unicodeString as! String] = emojiImage
+                    }
                 }
             }
-            
-            i = 0
             
             let textureAtlas = SKTextureAtlas(dictionary: imageDictionary)
             textureAtlas.preloadWithCompletionHandler { () -> Void in
@@ -98,20 +99,22 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 
                 for countData in bikeTripEmojiCounts {
                     if let rewardEmoji = countData["rewardEmoji"] as? String,
-                        let count = countData["count"] as? NSNumber {
+                        rewardDescription = countData["rewardDescription"] as? String,
+                        count = countData["count"] as? NSNumber {
+                        let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
+                        let texture = textureAtlas.textureNamed(unicodeString as! String)
                             
                         let emojiSize = (rewardEmoji as NSString).sizeWithAttributes(fontAttributes)
                         let insetEmojiSize = CGSizeMake(emojiSize.width - 8, emojiSize.height - 8)
-                        let texture = textureAtlas.textureNamed(String(i))
                         texture.usesMipmaps = true
                         texture.filteringMode = SKTextureFilteringMode.Nearest
                         for _ in 0..<count.integerValue {
                             let emoji = SKSpriteNode(texture: texture, size: imageSize)
+                            emoji.name = rewardDescription
                             emoji.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
                             emoji.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40)
                             emojis.append(emoji)
                         }
-                        i++
                     }
                 }
                 
@@ -134,8 +137,15 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchPoint = point
             self.touchTime = touch.timestamp
             self.touchedSprite = tappedSprite
+            
+            if let name = tappedSprite.name {
+                self.rewardPopup.text = name
+                self.rewardPopup.sizeToFit()
+                self.rewardPopup.popIn()
+            }
         }
     }
+    
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if let touchedSprite = self.touchedSprite {
             let touch = touches.first!
@@ -148,9 +158,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchPoint = point
         }
     }
+    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.touchedSprite = nil
-        self.currentVelocity = nil
+        if self.touchedSprite != nil {
+            self.touchedSprite = nil
+            self.currentVelocity = nil
+            
+            self.rewardPopup.fadeOut()
+        }
     }
     
     func update(currentTime: NSTimeInterval, forScene scene: SKScene) {

@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -471,10 +472,10 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="RewardsViewTableCell" rowHeight="47" id="2tp-CS-JHO">
-                                        <rect key="frame" x="0.0" y="214" width="600" height="60"/>
+                                        <rect key="frame" x="0.0" y="214" width="600" height="47"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2tp-CS-JHO" id="QJE-rF-UkB">
-                                            <rect key="frame" x="0.0" y="0.0" width="567" height="59"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="46"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" tag="1" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-rS-WNM">
@@ -524,7 +525,7 @@ Trophy Roomm</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="RoutesViewTableCell" textLabel="vhJ-bT-UHK" detailTextLabel="ipq-pH-1iE" rowHeight="48" style="IBUITableViewCellStyleValue1" id="l1k-r6-gg4">
-                                        <rect key="frame" x="0.0" y="274" width="600" height="48"/>
+                                        <rect key="frame" x="0.0" y="261" width="600" height="48"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l1k-r6-gg4" id="32k-VV-ccO">
                                             <rect key="frame" x="0.0" y="0.0" width="567" height="47"/>
@@ -679,7 +680,49 @@ Trophy Roomm</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
+                                        <rect key="frame" x="155" y="547" width="291" height="45"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="ZP0-k8-iEQ"/>
+                                            <constraint firstAttribute="height" constant="45" id="kvk-uL-dhB"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                                <color key="value" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.85999999999999999" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.71999999999999997" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="arrowBaseWidth">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="arrowHeight">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="strokeWidth">
+                                                <real key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="arrowInset">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="text" value="Sweet ass trip!"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="ZP0-k8-iEQ"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=regular" misplaced="YES">
+                                            <rect key="frame" x="598" y="64" width="0.0" height="45"/>
+                                        </variation>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rewaddds" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="ZWu-G1-vNl">
@@ -734,6 +777,7 @@ Trophy Roomm</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="OXK-3C-Lwj" firstAttribute="centerX" secondItem="hJl-Yr-562" secondAttribute="centerX" id="0s2-A1-5Bo"/>
                             <constraint firstItem="szV-tl-aU6" firstAttribute="top" secondItem="EQh-VE-QS0" secondAttribute="bottom" constant="13" id="3vj-dx-vXR"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="height" secondItem="hJl-Yr-562" secondAttribute="height" id="53p-ot-vOd"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="centerY" secondItem="hJl-Yr-562" secondAttribute="centerY" id="5GF-xL-THA"/>
@@ -741,37 +785,41 @@ Trophy Roomm</string>
                             <constraint firstItem="szV-tl-aU6" firstAttribute="leading" secondItem="hJl-Yr-562" secondAttribute="leadingMargin" constant="-6" id="Bxu-H1-egb"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="width" secondItem="szV-tl-aU6" secondAttribute="width" id="E8p-Ss-rPk"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="leading" secondItem="hJl-Yr-562" secondAttribute="leadingMargin" constant="-6" id="EE7-Q5-cPr"/>
+                            <constraint firstItem="OXK-3C-Lwj" firstAttribute="width" secondItem="hJl-Yr-562" secondAttribute="width" id="LGA-Gd-zRK"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="top" secondItem="szV-tl-aU6" secondAttribute="bottom" constant="-98" id="NPw-ph-xsm"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="width" secondItem="hJl-Yr-562" secondAttribute="width" id="NU9-cZ-sVb"/>
                             <constraint firstItem="szV-tl-aU6" firstAttribute="width" secondItem="OXK-3C-Lwj" secondAttribute="width" constant="-28" id="UbY-IX-Rfk"/>
+                            <constraint firstItem="DQX-lR-nka" firstAttribute="centerX" secondItem="hJl-Yr-562" secondAttribute="centerX" id="Ubo-3g-bui"/>
+                            <constraint firstItem="t9b-xK-6VG" firstAttribute="top" secondItem="DQX-lR-nka" secondAttribute="bottom" constant="17" id="V0P-bX-MmM"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="top" secondItem="szV-tl-aU6" secondAttribute="bottom" constant="5" id="W4E-12-uTI"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="top" secondItem="szV-tl-aU6" secondAttribute="bottom" constant="6" id="WrY-73-SP0"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="centerX" secondItem="hJl-Yr-562" secondAttribute="centerX" id="Zu1-dh-vpO"/>
+                            <constraint firstItem="OXK-3C-Lwj" firstAttribute="height" secondItem="hJl-Yr-562" secondAttribute="height" id="l9Y-6u-jfE"/>
+                            <constraint firstItem="OXK-3C-Lwj" firstAttribute="centerY" secondItem="hJl-Yr-562" secondAttribute="centerY" id="r15-Es-Jsf"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="top" secondItem="szV-tl-aU6" secondAttribute="bottom" constant="5" id="wVC-Ke-FDX"/>
                             <constraint firstItem="ZWu-G1-vNl" firstAttribute="leading" secondItem="OXK-3C-Lwj" secondAttribute="leading" multiplier="14" constant="14" id="xgr-Fy-cmw"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="OXK-3C-Lwj"/>
                                 <exclude reference="ZWu-G1-vNl"/>
                                 <exclude reference="szV-tl-aU6"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="53p-ot-vOd"/>
-                                <exclude reference="5GF-xL-THA"/>
-                                <exclude reference="NPw-ph-xsm"/>
-                                <exclude reference="NU9-cZ-sVb"/>
-                                <exclude reference="Zu1-dh-vpO"/>
-                                <exclude reference="3vj-dx-vXR"/>
-                                <exclude reference="90t-Qo-Ic4"/>
-                                <exclude reference="Bxu-H1-egb"/>
-                                <exclude reference="UbY-IX-Rfk"/>
                                 <exclude reference="E8p-Ss-rPk"/>
                                 <exclude reference="EE7-Q5-cPr"/>
                                 <exclude reference="W4E-12-uTI"/>
                                 <exclude reference="WrY-73-SP0"/>
                                 <exclude reference="wVC-Ke-FDX"/>
                                 <exclude reference="xgr-Fy-cmw"/>
+                                <exclude reference="3vj-dx-vXR"/>
+                                <exclude reference="90t-Qo-Ic4"/>
+                                <exclude reference="Bxu-H1-egb"/>
+                                <exclude reference="UbY-IX-Rfk"/>
+                                <exclude reference="53p-ot-vOd"/>
+                                <exclude reference="5GF-xL-THA"/>
+                                <exclude reference="NPw-ph-xsm"/>
+                                <exclude reference="NU9-cZ-sVb"/>
+                                <exclude reference="Zu1-dh-vpO"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -781,27 +829,28 @@ Trophy Roomm</string>
                                 <include reference="szV-tl-aU6"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="53p-ot-vOd"/>
-                                <include reference="5GF-xL-THA"/>
-                                <exclude reference="NPw-ph-xsm"/>
-                                <include reference="NU9-cZ-sVb"/>
-                                <include reference="Zu1-dh-vpO"/>
-                                <include reference="3vj-dx-vXR"/>
-                                <exclude reference="90t-Qo-Ic4"/>
-                                <include reference="Bxu-H1-egb"/>
-                                <include reference="UbY-IX-Rfk"/>
                                 <include reference="E8p-Ss-rPk"/>
                                 <include reference="EE7-Q5-cPr"/>
                                 <exclude reference="W4E-12-uTI"/>
                                 <exclude reference="WrY-73-SP0"/>
                                 <include reference="wVC-Ke-FDX"/>
                                 <exclude reference="xgr-Fy-cmw"/>
+                                <include reference="3vj-dx-vXR"/>
+                                <exclude reference="90t-Qo-Ic4"/>
+                                <include reference="Bxu-H1-egb"/>
+                                <include reference="UbY-IX-Rfk"/>
+                                <include reference="53p-ot-vOd"/>
+                                <include reference="5GF-xL-THA"/>
+                                <exclude reference="NPw-ph-xsm"/>
+                                <include reference="NU9-cZ-sVb"/>
+                                <include reference="Zu1-dh-vpO"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="3aX-t8-ad2"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
+                        <outlet property="rewardPopup" destination="DQX-lR-nka" id="1KR-dA-iGy"/>
                         <outlet property="rewardsLabel1" destination="szV-tl-aU6" id="QUI-wV-LKA"/>
                         <outlet property="rewardsLabel2" destination="ZWu-G1-vNl" id="8UB-M2-90o"/>
                         <outlet property="spriteKitView" destination="OXK-3C-Lwj" id="Usc-Fg-GfZ"/>

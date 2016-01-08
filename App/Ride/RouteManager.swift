@@ -133,7 +133,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogInfo("Starting Active Tracking")
         
         var firstLocationOfNewTrip = fromLocation
-        if let prototrip = self.currentPrototrip, firstLocation = prototrip.locations.firstObject as? Location {
+        if let prototrip = self.currentPrototrip,
+            firstLocation = prototrip.locations.firstObject as? Location {
             // if there is a prototrip, use the first location of that to determine whether or not to resume the trip
             firstLocationOfNewTrip = firstLocation.clLocation()
         }
@@ -143,7 +144,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(firstLocationOfNewTrip.timestamp)) < self.routeResumeTimeout ||
             (mostRecentBikeTrip.lengthMiles >= self.longerRouteThresholdMiles && abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(firstLocationOfNewTrip.timestamp)) < self.longerRouteResumeTimeout) {
             DDLogInfo("Resuming ride")
-            #if DEBUG2
+            #if DEBUG
                 let notif = UILocalNotification()
                 notif.alertBody = "🐞 Resumed Ride Report!"
                 notif.category = "RIDE_COMPLETION_CATEGORY"

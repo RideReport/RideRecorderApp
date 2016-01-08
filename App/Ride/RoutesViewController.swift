@@ -206,7 +206,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.headerView.addSubview(modeShareLabel)
 
             var ratingsData : [PNPieChartDataItem] = []
-            for countData in Trip.bikeTripCountsGroupedByProperty("rating") {
+            for countData in Trip.bikeTripCountsGroupedByAttribute("rating") {
                 if let rating = countData["rating"] as? NSNumber,
                     count = countData["count"]  as? NSNumber {
                     if rating.shortValue == Trip.Rating.NotSet.rawValue {
@@ -238,7 +238,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.headerView.addSubview(ratingsLabel)
             
             var weatherData : [PNPieChartDataItem] = []
-            for countData in Trip.bikeTripCountsGroupedByProperty("climacon") {
+            for countData in Trip.bikeTripCountsGroupedByAttribute("climacon") {
                 if let climacon = countData["climacon"] as? String,
                     count = countData["count"]  as? NSNumber {
                         if climacon == "☀️" {
@@ -397,7 +397,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func configureRewardsCell(tableCell: UITableViewCell) {
         var rewardString = ""
 
-        for countData in Trip.bikeTripCountsGroupedByProperty("rewardEmoji") {
+        for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
             if let rewardEmoji = countData["rewardEmoji"] as? String,
                 count = countData["count"]  as? NSNumber {
                   rewardString += count.stringValue + "x" + rewardEmoji + " "

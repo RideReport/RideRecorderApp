@@ -494,21 +494,32 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class func bikeTripCountsGroupedByProperty(property: String) -> [[String: AnyObject]] {
+    class func bikeTripCountsGroupedByAttribute(attribute: String, additionalAttributes: [String]? = nil) -> [[String: AnyObject]] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let  countExpression = NSExpressionDescription()
         countExpression.name = "count"
-        countExpression.expression = NSExpression(forFunction: "count:", arguments: [NSExpression(forKeyPath: property)])
+        countExpression.expression = NSExpression(forFunction: "count:", arguments: [NSExpression(forKeyPath: attribute)])
         countExpression.expressionResultType = NSAttributeType.Integer32AttributeType
+        let entityDescription = NSEntityDescription.entityForName("Trip", inManagedObjectContext: CoreDataManager.sharedManager.managedObjectContext!)!
         
-        guard let attributeDescription = NSEntityDescription.entityForName("Trip", inManagedObjectContext: CoreDataManager.sharedManager.managedObjectContext!)!.attributesByName[property] else {
+        guard let attributeDescription = entityDescription.attributesByName[attribute] else {
             return []
         }
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        var propertiesToFetch = [attributeDescription, countExpression]
+        var propertiesToGroupBy = [attributeDescription]
+        if let otherAttributes = additionalAttributes {
+            for otherAttribute in otherAttributes {
+                if let attributeDesc = entityDescription.attributesByName[otherAttribute] {
+                    propertiesToFetch.append(attributeDesc)
+                    propertiesToGroupBy.append(attributeDesc)
+                }
+            }
+        }
         
-        fetchedRequest.propertiesToFetch = [attributeDescription, countExpression]
-        fetchedRequest.propertiesToGroupBy = [attributeDescription]
+        fetchedRequest.propertiesToFetch = propertiesToFetch
+        fetchedRequest.propertiesToGroupBy = propertiesToGroupBy
         fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         
