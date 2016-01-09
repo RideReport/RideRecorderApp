@@ -62,14 +62,17 @@ class SoftwareUpdateManager : NSObject, UIAlertViewDelegate {
                 currentVersion = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as? String
                 where currentVersion.compare(version, options: NSStringCompareOptions.NumericSearch) == NSComparisonResult.OrderedAscending {
                 // update is available
-                if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
-                    let notif = UILocalNotification()
-                    notif.alertBody = "An update to Ride Report is available! Open Ride Report to upgrade."
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                }
                 
-                let alert = UIAlertView(title: "Ride Report Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
-                alert.show()
+                dispatch_async(dispatch_get_main_queue()) { () -> Void in
+                    if (UIApplication.sharedApplication().applicationState != UIApplicationState.Active) {
+                        let notif = UILocalNotification()
+                        notif.alertBody = "An update to Ride Report is available! Open Ride Report to upgrade."
+                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    }
+                    
+                    let alert = UIAlertView(title: "Ride Report Update Available", message: "", delegate: self, cancelButtonTitle: nil, otherButtonTitles: "Update")
+                    alert.show()
+                }
             }
         })
     }
