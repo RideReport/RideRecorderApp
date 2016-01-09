@@ -591,6 +591,15 @@ class Trip : NSManagedObject {
         self.generateUUID()
     }
     
+    override func awakeFromFetch() {
+        super.awakeFromFetch()
+        
+        // should never happen, but some legacy clients may find themselves in this state
+        if (self.uuid == nil) {
+            self.generateUUID()
+        }
+    }
+    
     func generateUUID() {
         self.uuid = NSUUID().UUIDString
     }

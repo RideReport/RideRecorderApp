@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import SystemConfiguration
 import PNChart
 
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
@@ -15,38 +16,42 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
+    @IBOutlet weak var popupView: PopupView!
+
+    private var reachability : Reachability!
     
     var pieChartModeShare: PNPieChart!
     var pieChartRatings: PNPieChart!
     var pieChartDaysBiked: PNPieChart!
     var pieChartWeather: PNPieChart!
     
-    var mainViewController: MainViewController! = nil
-    
     
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
+    private var dateFormatter : NSDateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
+        
         self.navigationItem.hidesBackButton = true
         
+        self.popupView.hidden = true
+        
         self.headerView.backgroundColor = UIColor.clearColor()
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: UIBarButtonItemStyle.Plain, target: self, action: "pop")
-        
-        let blur = UIBlurEffect(style: UIBlurEffectStyle.Dark)
-        let effectView = UIVisualEffectView(effect: blur)
-        effectView.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height)
-        self.view.insertSubview(effectView, belowSubview: self.tableView)
         
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
+        
+        self.dateFormatter = NSDateFormatter()
+        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter.dateFormat = "MMM d"
         
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
@@ -84,13 +89,64 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.mainViewController.selectedTrip = nil
         self.refreshEmptyTableView()
+        self.refreshHelperPopupUI()
+        
+        self.reachability = Reachability.reachabilityForLocalWiFi()
+        self.reachability.startNotifier()
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
+            self.refreshHelperPopupUI()
+        }
         
         if (self.tableView.indexPathForSelectedRow != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow!, animated: animated)
         }
     }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+        self.reachability = nil
+    }
+    
+    
+    func refreshHelperPopupUI() {
+        if (RouteManager.sharedManager.isPaused()) {
+            if (self.popupView.hidden) {
+                self.popupView.popIn()
+            }
+            if (RouteManager.sharedManager.isPausedDueToUnauthorized()) {
+                self.popupView.text = "Ride Report needs permission to run"
+            } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
+                self.popupView.text = "Ride Report is paused until you charge your phone"
+            } else {
+                if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
+                    if (pausedUntilDate.isToday()) {
+                        self.popupView.text = "Ride Report is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate)
+                    } else if (pausedUntilDate.isTomorrow()) {
+                        self.popupView.text = "Ride Report is paused until tomorrow"
+                    } else if (pausedUntilDate.isThisWeek()) {
+                        self.popupView.text = "Ride Report is paused until " + pausedUntilDate.weekDay()
+                    } else {
+                        self.popupView.text = "Ride Report is paused until " + self.dateFormatter.stringFromDate(pausedUntilDate)
+                    }
+                } else {
+                    self.popupView.text = "Ride Report is paused"
+                }
+            }
+        } else {
+            if (!UIDevice.currentDevice().wifiEnabled) {
+                if (self.popupView.hidden) {
+                    self.popupView.popIn()
+                }
+                self.popupView.text = "Ride Report works best when Wi-Fi is on"
+            } else if (!self.popupView.hidden) {
+                self.popupView.fadeOut()
+            }
+        }
+    }
+
     
     private func refreshEmptyTableView() {
         if (self.fetchedResultsController != nil) {
@@ -106,7 +162,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshCharts() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.title = "No Rides"
+            self.title = "No Ride Yet!"
             self.headerView.hidden = false
         } else {
             let numCharts = 4
@@ -118,7 +174,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.headerView.frame = headerFrame
             self.tableView.tableHeaderView = self.headerView
             
-            self.title = String(format: "%i Rides ", Trip.numberOfCycledTrips)
+            self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
             
             Profile.profile().updateCurrentRideStreakLength()
 
@@ -271,10 +327,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             weatherLabel.frame = CGRectMake(margin*4 + chartWidth*3 + (chartWidth - weatherLabel.frame.width)/2, margin + 8 + chartWidth, weatherLabel.frame.width, weatherLabel.frame.height)
             self.headerView.addSubview(weatherLabel)
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
     
     func unloadFetchedResultsController() {
@@ -450,20 +502,23 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return
         }
         
-        self.mainViewController.selectedTrip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
-        
-        self.pop()
+        if let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as? Trip {
+            self.performSegueWithIdentifier("showTrip", sender: trip)
+        }
     }
     
-    func pop() {
-        let transition = CATransition()
-        transition.duration = 0.25
-        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionReveal
-        transition.subtype = kCATransitionFromTop
-        
-        self.mainViewController.navigationController?.view.layer.addAnimation(transition, forKey: kCATransition)
-        self.mainViewController.navigationController?.popToRootViewControllerAnimated(false)
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if (segue.identifier == "showTrip") {
+            if let tripVC = segue.destinationViewController as? TripViewController,
+                trip = sender as? Trip {
+                tripVC.selectedTrip = trip
+            }
+        }
+    }
+    
+    @IBAction func showDirections(sender: AnyObject) {
+        let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
+        self.presentViewController(directionsNavController, animated: true, completion: nil)
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {

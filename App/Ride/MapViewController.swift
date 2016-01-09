@@ -11,7 +11,7 @@ import CoreLocation
 import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
-    var mainViewController: MainViewController? = nil
+    var tripViewController: TripViewController? = nil
     
     @IBOutlet weak var mapView:  MGLMapView!
         
@@ -56,8 +56,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                if let mainVC = self.mainViewController {
-                    self.setSelectedTrip(mainVC.selectedTrip)
+                if let tripViewController = self.tripViewController {
+                    self.setSelectedTrip(tripViewController.selectedTrip)
                 }
 
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
@@ -71,8 +71,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 }
             }
         } else {
-            if let mainVC = self.mainViewController {
-                self.setSelectedTrip(mainVC.selectedTrip)
+            if let tripViewController = self.tripViewController {
+                self.setSelectedTrip(tripViewController.selectedTrip)
             }
         }
     }
@@ -106,13 +106,15 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let mainVC = self.mainViewController {
-            self.setSelectedTrip(mainVC.selectedTrip)
+        if let tripViewController = self.tripViewController {
+            self.setSelectedTrip(tripViewController.selectedTrip)
         }
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
-        self.mainViewController = parent as? MainViewController
+        if let tripViewController = parent as? TripViewController {
+            self.tripViewController = tripViewController
+        }
     }
     
     //
@@ -256,8 +258,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
         if (!self.hasCenteredMap && userLocation != nil) {
-            if let mainVC = self.mainViewController {
-                if (mainVC.selectedTrip == nil) {
+            if let tripViewController = self.tripViewController {
+                if (tripViewController.selectedTrip == nil) {
                     // don't recenter the map if the user has already selected a trip
                     
                     self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
@@ -283,7 +285,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
-        self.mainViewController!.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
+        if let tripViewController = self.tripViewController {
+            tripViewController.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
+        }
     }
     
     func mapView(mapView: MGLMapView, didSelectAnnotation annotation: MGLAnnotation) {
@@ -319,7 +323,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return UIColor.whiteColor()
         }
         
-        if let mainVC = self.mainViewController, trip = mainVC.selectedTrip {
+        if let tripViewController = self.tripViewController, trip = tripViewController.selectedTrip {
             if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen
