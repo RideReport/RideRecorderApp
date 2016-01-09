@@ -85,11 +85,7 @@ class HamburgerViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (APIClient.sharedClient.area) {
         case .Area(_,_, _, _):
-            if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) where mainViewController.mapInfoIsDismissed {
-                return 4
-            } else {
-                return 3
-            }
+            return 3
         default:
             return 3
         }
@@ -110,8 +106,8 @@ class HamburgerViewController: UITableViewController {
                 )
                 RouteManager.sharedManager.resumeTracking()
                 self.updatePauseResumeText()
-                if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
-                    mainViewController.refreshHelperPopupUI()
+                if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
+                    routesVC.refreshHelperPopupUI()
                 }
             } else {
                 let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
@@ -143,7 +139,7 @@ class HamburgerViewController: UITableViewController {
                     }
                     
                     self.updatePauseResumeText()
-                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
+                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
                         mainViewController.refreshHelperPopupUI()
                     }
                 }
@@ -151,11 +147,6 @@ class HamburgerViewController: UITableViewController {
             }
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        } else if (indexPath.row == 3) {
-            if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? MainViewController) {
-                mainViewController.showMapInfo(self)
-            }
-            self.slidingViewController().resetTopViewAnimated(true)
         }
     }
 }
