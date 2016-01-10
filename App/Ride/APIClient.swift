@@ -107,6 +107,12 @@ class AuthenticatedAPIRequest {
         }
         
         var headers = APIRequestBaseHeaders
+        
+        // for some reason configuring headers on the session fails.
+        for (key,value) in Manager.defaultHTTPHeaders {
+            headers[key] = value
+        }
+        
         if let token = Profile.profile().accessToken where authenticated {
             self.authToken = token
             headers["Authorization"] =  "Bearer \(token)"
