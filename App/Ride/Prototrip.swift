@@ -26,6 +26,17 @@ class Prototrip : NSManagedObject {
         self.creationDate = NSDate()
     }
     
+    func firstNonGeofencedLocation() -> Location? {
+        let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+        
+        for loc in self.locations.sortedArrayUsingDescriptors([sortDescriptor]) {
+            if let location = loc as? Location where !location.isGeofencedLocation {
+                return location
+            }
+        }
+        return nil
+    }
+    
     func moveActivitiesAndLocationsToTrip(trip: Trip) {
         for loc in self.locations {
             let location = loc as! Location
