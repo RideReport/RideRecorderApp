@@ -134,7 +134,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         var firstLocationOfNewTrip = fromLocation
         if let prototrip = self.currentPrototrip,
-            firstLocation = prototrip.locations.firstObject as? Location {
+            firstLocation = prototrip.firstNonGeofencedLocation() {
             // if there is a prototrip, use the first location of that to determine whether or not to resume the trip
             firstLocationOfNewTrip = firstLocation.clLocation()
         }
