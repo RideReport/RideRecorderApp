@@ -32,9 +32,6 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
             }
         }
         
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
-        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"

@@ -29,6 +29,8 @@
 		842141A51C406A84009DA851 /* map@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842141A21C406A84009DA851 /* map@3x.png */; };
 		842141A71C407CEE009DA851 /* TripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842141A61C407CEE009DA851 /* TripViewController.swift */; };
 		842141A81C407CEE009DA851 /* TripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842141A61C407CEE009DA851 /* TripViewController.swift */; };
+		842141CA1C4427A2009DA851 /* iphonewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842141C91C4427A2009DA851 /* iphonewhite@3x.png */; };
+		842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842141C91C4427A2009DA851 /* iphonewhite@3x.png */; };
 		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
@@ -126,13 +128,13 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
+		84D7AD571C4488C1001882EB /* IconTiny@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D7AD551C4488C1001882EB /* IconTiny@2x.png */; };
+		84D7AD581C4488C1001882EB /* IconTiny@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D7AD561C4488C1001882EB /* IconTiny@3x.png */; };
 		84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */; };
 		84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* SetupRatingViewController.swift */; };
 		84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */; };
 		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
-		84EA5BEE1A6F226400C71F53 /* SetupBatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* SetupBatteryViewController.swift */; };
-		84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */; };
-		84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */; };
+		84EA5BEE1A6F226400C71F53 /* SetupPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */; };
 		84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137521B5DADD30023EC82 /* CoreTelephony.framework */; };
 		84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137541B5DADD80023EC82 /* GLKit.framework */; };
 		84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137561B5DADDF0023EC82 /* ImageIO.framework */; };
@@ -204,6 +206,7 @@
 		842141A11C406A84009DA851 /* map@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "map@2x.png"; sourceTree = "<group>"; };
 		842141A21C406A84009DA851 /* map@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "map@3x.png"; sourceTree = "<group>"; };
 		842141A61C407CEE009DA851 /* TripViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripViewController.swift; sourceTree = "<group>"; };
+		842141C91C4427A2009DA851 /* iphonewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphonewhite@3x.png"; sourceTree = "<group>"; };
 		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -306,6 +309,8 @@
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		84D7AD551C4488C1001882EB /* IconTiny@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "IconTiny@2x.png"; path = "Images.xcassets/AppIcon.appiconset/IconTiny@2x.png"; sourceTree = "<group>"; };
+		84D7AD561C4488C1001882EB /* IconTiny@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "IconTiny@3x.png"; path = "Images.xcassets/AppIcon.appiconset/IconTiny@3x.png"; sourceTree = "<group>"; };
 		84DDB1EC1B0E66FF006B7196 /* Ride 23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 23.xcdatamodel"; sourceTree = "<group>"; };
 		84E395A51A76B5A80015B682 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RideSummaryView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -313,11 +318,9 @@
 		84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+HBAdditions.h"; sourceTree = "<group>"; };
 		84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+HBAdditions.m"; sourceTree = "<group>"; };
-		84EA5BED1A6F226400C71F53 /* SetupBatteryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupBatteryViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupPermissionsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EAFD561AA128180057282C /* Ride 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 15.xcdatamodel"; sourceTree = "<group>"; };
 		84EAFD571AA128960057282C /* Ride 16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 16.xcdatamodel"; sourceTree = "<group>"; };
-		84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconTiny@2x.png"; sourceTree = "<group>"; };
-		84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconTiny@3x.png"; sourceTree = "<group>"; };
 		84F137521B5DADD30023EC82 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		84F137541B5DADD80023EC82 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		84F137561B5DADDF0023EC82 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -438,7 +441,7 @@
 			isa = PBXGroup;
 			children = (
 				84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */,
-				84EA5BED1A6F226400C71F53 /* SetupBatteryViewController.swift */,
+				84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */,
 				84BD36FF1A706A0E0084B6AF /* SetupTermsViewController.swift */,
 				84EA5BDE1A6DE17F00C71F53 /* SetupRatingViewController.swift */,
 				8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */,
@@ -540,20 +543,21 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				84D7AD551C4488C1001882EB /* IconTiny@2x.png */,
+				84D7AD561C4488C1001882EB /* IconTiny@3x.png */,
 				8451037C1C20BAE600ABD323 /* Action@2x.png */,
 				8451037D1C20BAE600ABD323 /* Action@3x.png */,
 				845A04491C1F795000556CD9 /* pinGreen@2x.png */,
 				845A044A1C1F795000556CD9 /* pinGreen@3x.png */,
 				845A044B1C1F795000556CD9 /* pinRed@2x.png */,
 				845A044C1C1F795000556CD9 /* pinRed@3x.png */,
+				842141C91C4427A2009DA851 /* iphonewhite@3x.png */,
 				84091CDA1BD848C000264652 /* counter-numbers.png */,
 				84091CDB1BD848C000264652 /* counter-numbers@2x.png */,
 				84091CDC1BD848C000264652 /* counter-shadow.png */,
 				84091CDD1BD848C000264652 /* counter-shadow@2x.png */,
 				8451FA851B9E2F6E008ACDCD /* menu@2x.png */,
 				8451FA861B9E2F6E008ACDCD /* menu@3x.png */,
-				84EBF1441B97C0FF004CBD89 /* IconTiny@2x.png */,
-				84EBF1451B97C0FF004CBD89 /* IconTiny@3x.png */,
 				842599D41B90EC1D0038C3CA /* Icon@2x.png */,
 				849FB1F51B87F1250002306F /* ride.report.cer */,
 				84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */,
@@ -792,6 +796,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8492BCAD1C34A72E006BDDB8 /* new_trip_201.json in Resources */,
+				842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
 				8492BCB71C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
 				8492BCBB1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				8492BCAF1C34A72E006BDDB8 /* new_trip_409.json in Resources */,
@@ -806,7 +811,6 @@
 			files = (
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				845A044D1C1F795000556CD9 /* pinGreen@2x.png in Resources */,
-				84EBF1461B97C0FF004CBD89 /* IconTiny@2x.png in Resources */,
 				8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */,
 				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				842141A51C406A84009DA851 /* map@3x.png in Resources */,
@@ -817,7 +821,6 @@
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
-				84EBF1471B97C0FF004CBD89 /* IconTiny@3x.png in Resources */,
 				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				845A044F1C1F795000556CD9 /* pinRed@2x.png in Resources */,
@@ -825,11 +828,14 @@
 				8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */,
 				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
+				84D7AD571C4488C1001882EB /* IconTiny@2x.png in Resources */,
 				8492BCBA1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				84091CE01BD848C000264652 /* counter-shadow.png in Resources */,
+				842141CA1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
 				842141A41C406A84009DA851 /* map@2x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
 				8492BCB61C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
+				84D7AD581C4488C1001882EB /* IconTiny@3x.png in Resources */,
 				8492BCB81C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
 				84091CDE1BD848C000264652 /* counter-numbers.png in Resources */,
 				8492BCB41C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
@@ -1026,7 +1032,7 @@
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				842141901C3C8E19009DA851 /* Prototrip.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,
-				84EA5BEE1A6F226400C71F53 /* SetupBatteryViewController.swift in Sources */,
+				84EA5BEE1A6F226400C71F53 /* SetupPermissionsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

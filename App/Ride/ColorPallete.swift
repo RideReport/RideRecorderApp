@@ -24,32 +24,37 @@ class ColorPallete : NSObject {
     
     var autoBrown: UIColor {
         get {
-            return UIColor.brownColor()
+            return UIColor(red: 254/255, green: 191/255, blue: 51/255, alpha: 1.0)
         }
     }
     
     var transitBlue: UIColor {
         get {
-            return UIColor.blueColor()
+            return UIColor(red: 39/255, green: 87/255, blue: 195/255, alpha: 1.0)
+        }
+    }
+    
+    var darkGreen: UIColor {
+        get {
+            return UIColor(red: 78/255, green: 142/255, blue: 66/255, alpha: 1.0)
         }
     }
 
-    
     var goodGreen: UIColor {
         get {
-            return UIColor(red: 51/255, green: 204/255, blue: 51/255, alpha: 1.0)
+            return UIColor(red: 132/255, green: 187/255, blue: 53/255, alpha: 1.0)
         }
     }
     
     var badRed: UIColor {
         get {
-            return UIColor(red: 255/255, green: 0/255, blue: 0/255, alpha: 1.0)
+            return UIColor(red: 178/255, green: 51/255, blue: 108/255, alpha: 1.0)
         }
     }
     
     var unknownGrey: UIColor {
         get {
-            return UIColor(red: 164/255, green: 164/255, blue: 164/255, alpha: 1.0)
+            return UIColor(red: 215/255, green: 223/255, blue: 202/255, alpha: 1.0)
         }
     }
     

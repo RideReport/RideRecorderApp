@@ -33,10 +33,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
-        
+                
         self.navigationItem.hidesBackButton = true
         
         self.popupView.hidden = true
@@ -207,7 +204,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.headerView.addSubview(self.pieChartDaysBiked)
                 
                 let daysBikedLabel = UILabel()
-                daysBikedLabel.textColor = UIColor.whiteColor()
+                daysBikedLabel.textColor = self.headerLabel1.textColor
                 daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
                 daysBikedLabel.adjustsFontSizeToFitWidth = true
                 daysBikedLabel.minimumScaleFactor = 0.6
@@ -247,7 +244,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartModeShare)
             let modeShareLabel = UILabel()
-            modeShareLabel.textColor = UIColor.whiteColor()
+            modeShareLabel.textColor = self.headerLabel1.textColor
             modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
             modeShareLabel.adjustsFontSizeToFitWidth = true
             modeShareLabel.minimumScaleFactor = 0.6
@@ -281,7 +278,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartRatings)
             let ratingsLabel = UILabel()
-            ratingsLabel.textColor = UIColor.whiteColor()
+            ratingsLabel.textColor = self.headerLabel1.textColor
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
@@ -313,7 +310,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartWeather)
             let weatherLabel = UILabel()
-            weatherLabel.textColor = UIColor.whiteColor()
+            weatherLabel.textColor = self.headerLabel1.textColor
             weatherLabel.font = UIFont.boldSystemFontOfSize(14)
             weatherLabel.adjustsFontSizeToFitWidth = true
             weatherLabel.minimumScaleFactor = 0.6
@@ -440,26 +437,27 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.tintColor = UIColor(white: 0.2, alpha: 1.0)
+        headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
         headerView.opaque = false
         headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
-        headerView.textLabel!.textColor = UIColor(white: 0.9, alpha: 1.0)
+        headerView.textLabel!.textColor = self.headerLabel1.textColor
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
-        var rewardString = ""
-
-        for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
-            if let rewardEmoji = countData["rewardEmoji"] as? String,
-                count = countData["count"]  as? NSNumber {
-                  rewardString += count.stringValue + "x" + rewardEmoji + " "
-            }
-        }
-        
         if let text1 = tableCell.viewWithTag(1) as? UILabel {
+
+            var rewardString = ""
+            
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineHeightMultiple = 1.2
-            
+
+            for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
+                if let rewardEmoji = countData["rewardEmoji"] as? String,
+                    count = countData["count"]  as? NSNumber {
+                      rewardString += rewardEmoji + "×" + count.stringValue  + "\t"
+                }
+            }
+        
             let attrString = NSMutableAttributedString(string: rewardString)
             attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
 

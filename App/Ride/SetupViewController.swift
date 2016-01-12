@@ -27,8 +27,6 @@ class SetupViewController: UINavigationController {
         super.viewDidLoad()
         
         self.navigationBarHidden = true
-        self.navigationBar.tintColor = UIColor.whiteColor()
-        self.toolbar.barStyle = UIBarStyle.BlackTranslucent
     }
     
     func setupViewControllersForGettingStarted() {
@@ -79,7 +77,6 @@ class SetupViewController: UINavigationController {
     }
     
     private func setupVC(vc: SetupChildViewController) {
-        vc.view.backgroundColor = UIColor.clearColor()
         vc.parent = self
     }
     

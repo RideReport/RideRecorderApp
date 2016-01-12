@@ -207,7 +207,7 @@ import Foundation
         editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
         editButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
-        editButton.backgroundColor = ColorPallete.sharedPallete.notificationActionGrey
+        editButton.backgroundColor = ColorPallete.sharedPallete.unknownGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(editButton)
@@ -216,7 +216,7 @@ import Foundation
         destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         destructiveButton.titleLabel?.textAlignment = NSTextAlignment.Center
         destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
-        destructiveButton.backgroundColor = ColorPallete.sharedPallete.notificationDestructiveActionRed
+        destructiveButton.backgroundColor = ColorPallete.sharedPallete.badRed
         destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(destructiveButton)
@@ -225,7 +225,7 @@ import Foundation
         actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         actionButton.titleLabel?.textAlignment = NSTextAlignment.Center
         actionButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
-        actionButton.backgroundColor = ColorPallete.sharedPallete.notificationActionBlue
+        actionButton.backgroundColor = ColorPallete.sharedPallete.transitBlue
         actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(actionButton)

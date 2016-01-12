@@ -16,6 +16,8 @@ class SetupFinishedViewController: SetupChildViewController {
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo)
         
+        let _ = self.view.subviews // hack for a gross crash.
+        
         if let finishType = userInfo?["finishType"] as! String? {
             if (finishType == "InitialSetupSkippedAccount") {
                 Mixpanel.sharedInstance().track(
@@ -23,25 +25,25 @@ class SetupFinishedViewController: SetupChildViewController {
                     properties: ["createdAccount": "false"]
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+                self.helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
             } else if (finishType == "InitialSetupCreatedAccount") {
                 Mixpanel.sharedInstance().track(
                     "finishedSetup",
                     properties: ["createdAccount": "false"]
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+                self.helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
             } else if (finishType == "CreateAccountSkippedAccount") {
-                helperTextLabel.markdownStringValue = "Cool. You can always create an account later if you'd like to."
+                self.helperTextLabel.markdownStringValue = "Cool. You can always create an account later if you'd like to."
             } else if (finishType == "CreatedAccountCreatedAccount") {
                 Mixpanel.sharedInstance().track(
                     "createdAccount"
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**!"
+                self.helperTextLabel.markdownStringValue = "**You're all set**!"
             }
         } else {
-            helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+            self.helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
         }
     }
     

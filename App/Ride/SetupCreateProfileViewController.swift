@@ -40,8 +40,6 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.isCreatingProfileOutsideGettingStarted = false
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
         }
-        
-        self.reloadUI()
     }
     
     func reloadUI() {
@@ -94,6 +92,8 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.reloadUI()
         
         self.navigationController?.navigationBarHidden = false
         self.navigationItem.rightBarButtonItem?.enabled = false

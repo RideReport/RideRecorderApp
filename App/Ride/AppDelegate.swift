@@ -43,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
+        UINavigationBar.appearance().barTintColor = ColorPallete.sharedPallete.darkGreen
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
         
@@ -75,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             self.transitionToMainNavController()
         } else {
             // SetupRatingViewController calls registerNotifications
-            // SetupBatteryViewController calls startupDataGatheringManagers
+            // SetupPermissionsViewController calls startupDataGatheringManagers
             self.transitionToSetup()
         }
         
