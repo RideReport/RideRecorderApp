@@ -41,12 +41,12 @@ import Foundation
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: String = "Delete" {
+    @IBInspectable var desturctiveActionTitle: String = "Avoid\n👎" {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: String = "View" {
+    @IBInspectable var actionTitle: String = "Recommend\n👍" {
         didSet {
             reloadUI()
         }
@@ -99,7 +99,7 @@ import Foundation
         }
     }
     
-    let buttonWidth : CGFloat = 75.0
+    let buttonWidth : CGFloat = 78.0
     
     var delegate : RideSummaryViewDelegate? = nil
     
@@ -306,6 +306,17 @@ import Foundation
     }
     
     func reloadUI() {
+        if self.bounds.height < 100 {
+            self.appNameLabel.font = UIFont.systemFontOfSize(15)
+            self.bodyLabel.font = UIFont.systemFontOfSize(12)
+            self.dateLabel.font = UIFont.systemFontOfSize(11)
+            self.slideLabel.font = UIFont.systemFontOfSize(11)
+            
+            self.editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            self.actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            self.destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+        }
+        
         destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
         actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)
         editButton.setTitle(self.editTitle, forState: UIControlState.Normal)
@@ -315,7 +326,8 @@ import Foundation
         bodyLabel.text = self.body
         appIconView.image = self.appIcon
         
-        var insetX : CGFloat = 46
+        var insetLeft : CGFloat = 46
+        let insetRight : CGFloat = 4
         var insetY : CGFloat = 8
         
         var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
@@ -324,7 +336,7 @@ import Foundation
         
         switch self.style {
         case .AppStyle:
-            insetX = 8
+            insetLeft = 8
             insetY = 2
             appNameSize = CGSizeMake(0, appNameSize.height + 2)
             
@@ -346,7 +358,7 @@ import Foundation
             self.shareButton.hidden = true
             dateLabelOffset = 6
         case .ShareStyle:
-            insetX = 8
+            insetLeft = 8
             insetY = 2
             
             self.appNameLabel.hidden = false
@@ -360,12 +372,12 @@ import Foundation
         }
         
         let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - (1.5*insetX) - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - insetLeft - insetRight - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.TruncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
-        appNameLabel.frame = CGRectMake(insetX, insetY, appNameSize.width, appNameSize.height)
-        dateLabel.frame = CGRectMake(appNameSize.width + insetX + dateLabelOffset, insetY, dateLabelSize.width, appNameSize.height)
-        bodyLabel.frame = CGRectMake(insetX, insetY + appNameSize.height, bodySize.width, bodySize.height)
-        slideLabel.frame = CGRectMake(insetX, self.bounds.height - 28, self.bounds.width, 16)
+        appNameLabel.frame = CGRectMake(insetLeft, insetY, appNameSize.width, appNameSize.height)
+        dateLabel.frame = CGRectMake(appNameSize.width + insetLeft + dateLabelOffset, insetY, dateLabelSize.width, appNameSize.height)
+        bodyLabel.frame = CGRectMake(insetLeft, insetY + appNameSize.height, bodySize.width, bodySize.height)
+        slideLabel.frame = CGRectMake(insetLeft, bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, self.bounds.width, 16)
     }
     
     func showControls(animated: Bool = true) {

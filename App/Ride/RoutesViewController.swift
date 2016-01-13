@@ -14,6 +14,8 @@ import PNChart
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
+    @IBOutlet weak var emptyTableChick: UIView!
+    
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var popupView: PopupView!
@@ -49,6 +51,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "bobbleChick")
+        self.emptyTableChick.addGestureRecognizer(tapRecognizer)
+        self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
@@ -87,6 +93,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewWillAppear(animated)
         
         self.refreshEmptyTableView()
+        
         self.refreshHelperPopupUI()
         
         self.reachability = Reachability.reachabilityForLocalWiFi()
@@ -99,6 +106,29 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (self.tableView.indexPathForSelectedRow != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow!, animated: animated)
         }
+    }
+    
+    func bobbleChick() {
+        CATransaction.begin()
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+        shakeAnimation.values = [
+            NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
+        ]
+        shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
+        shakeAnimation.additive = true
+        shakeAnimation.duration = 0.6
+        
+        self.emptyTableChick.layer.addAnimation(shakeAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
     
     override func didReceiveMemoryWarning() {
@@ -148,8 +178,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshEmptyTableView() {
         if (self.fetchedResultsController != nil) {
             let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
+            let tableViewWasHidden = self.emptyTableView.hidden
+            
             self.emptyTableView.hidden = shouldHideEmptyTableView
             self.tableView.hidden = !shouldHideEmptyTableView
+            
+            if tableViewWasHidden && !shouldHideEmptyTableView {
+                self.bobbleChick()
+            }
         } else {
             self.emptyTableView.hidden = true
             self.tableView.hidden = true
@@ -159,7 +195,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshCharts() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.title = "No Ride Yet!"
+            self.title = "Ride Report"
             self.headerView.hidden = false
         } else {
             let numCharts = 4

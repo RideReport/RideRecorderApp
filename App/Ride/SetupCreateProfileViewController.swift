@@ -13,7 +13,6 @@ import FBSDKLoginKit
 class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var helperTextLabel : UILabel!
-    @IBOutlet weak var detailTextLabel : UILabel!
     @IBOutlet weak var emailTextField : UITextField!
     @IBOutlet weak var haveAccountButton: UIButton!
     @IBOutlet weak var facebookButton: FBSDKLoginButton!
@@ -48,12 +47,10 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         if (isInAlreadyHaveAccountState) {
             self.navigationItem.rightBarButtonItem?.title = "Log In"
             self.helperTextLabel.markdownStringValue = "Log in to your account to **load your ride data** onto this iPhone."
-            self.detailTextLabel.markdownStringValue = ""
             self.haveAccountButton.setTitle("Don't have an account?", forState: UIControlState.Normal)
         } else {
             self.navigationItem.rightBarButtonItem?.title = "Create"
-            self.helperTextLabel.markdownStringValue = "Create an account so you can **recover your ride data** if your phone is lost."
-            self.detailTextLabel.markdownStringValue = "Using Ride Report is anonymous. Creating a account is completely optional and you can do it later if you change your mind."
+            self.helperTextLabel.markdownStringValue = "Create a free account to **keep your rides backed up** incase your phone is lost or stolen."
             self.haveAccountButton.setTitle("Already have an account?", forState: UIControlState.Normal)
         }
     }

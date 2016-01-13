@@ -35,6 +35,8 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo)
         
+        let _ = self.view.subviews // hack for a gross crash.
+        
         self.timeOfInitialPresesntation = NSDate()
         
         if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {

@@ -61,11 +61,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.scene.scaleMode = SKSceneScaleMode.ResizeFill
             self.scene.delegate = self
             
-//            self.spriteKitView.showsFPS = true
-//            self.spriteKitView.showsDrawCount = true
-//            self.spriteKitView.showsNodeCount = true
-//            self.spriteKitView.showsQuadCount = true
-            
             let topSpace : CGFloat = 400.0
             
             self.scene.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height + topSpace))
