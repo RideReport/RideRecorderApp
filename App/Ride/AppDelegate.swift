@@ -254,6 +254,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally()
             completionBlock()
+        } else {
+            completionBlock()
         }
     }
     
