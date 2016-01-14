@@ -14,6 +14,8 @@ import PNChart
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
+    @IBOutlet weak var emptyTableChick: UIView!
+    
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var popupView: PopupView!
@@ -33,10 +35,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.toolbar.barStyle = UIBarStyle.BlackTranslucent
-        
+                
         self.navigationItem.hidesBackButton = true
         
         self.popupView.hidden = true
@@ -52,6 +51,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "bobbleChick")
+        self.emptyTableChick.addGestureRecognizer(tapRecognizer)
+        self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
@@ -79,7 +82,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         self.refreshEmptyTableView()
-        self.refreshCharts()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -90,6 +92,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewWillAppear(animated)
         
         self.refreshEmptyTableView()
+        
         self.refreshHelperPopupUI()
         
         self.reachability = Reachability.reachabilityForLocalWiFi()
@@ -102,6 +105,37 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (self.tableView.indexPathForSelectedRow != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow!, animated: animated)
         }
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+                self.refreshCharts()
+            }
+        } else {
+            self.refreshCharts()
+        }
+    }
+    
+    func bobbleChick() {
+        CATransaction.begin()
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+        shakeAnimation.values = [
+            NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
+        ]
+        shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
+        shakeAnimation.additive = true
+        shakeAnimation.duration = 0.6
+        
+        self.emptyTableChick.layer.addAnimation(shakeAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
     
     override func didReceiveMemoryWarning() {
@@ -151,8 +185,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshEmptyTableView() {
         if (self.fetchedResultsController != nil) {
             let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
+            let tableViewWasHidden = self.emptyTableView.hidden
+            
             self.emptyTableView.hidden = shouldHideEmptyTableView
             self.tableView.hidden = !shouldHideEmptyTableView
+            
+            if tableViewWasHidden && !shouldHideEmptyTableView {
+                self.bobbleChick()
+            }
         } else {
             self.emptyTableView.hidden = true
             self.tableView.hidden = true
@@ -162,7 +202,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshCharts() {
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
-            self.title = "No Ride Yet!"
+            self.title = "Ride Report"
             self.headerView.hidden = false
         } else {
             let numCharts = 4
@@ -207,7 +247,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.headerView.addSubview(self.pieChartDaysBiked)
                 
                 let daysBikedLabel = UILabel()
-                daysBikedLabel.textColor = UIColor.whiteColor()
+                daysBikedLabel.textColor = self.headerLabel1.textColor
                 daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
                 daysBikedLabel.adjustsFontSizeToFitWidth = true
                 daysBikedLabel.minimumScaleFactor = 0.6
@@ -247,7 +287,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartModeShare)
             let modeShareLabel = UILabel()
-            modeShareLabel.textColor = UIColor.whiteColor()
+            modeShareLabel.textColor = self.headerLabel1.textColor
             modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
             modeShareLabel.adjustsFontSizeToFitWidth = true
             modeShareLabel.minimumScaleFactor = 0.6
@@ -281,7 +321,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartRatings)
             let ratingsLabel = UILabel()
-            ratingsLabel.textColor = UIColor.whiteColor()
+            ratingsLabel.textColor = self.headerLabel1.textColor
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
@@ -313,7 +353,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartWeather)
             let weatherLabel = UILabel()
-            weatherLabel.textColor = UIColor.whiteColor()
+            weatherLabel.textColor = self.headerLabel1.textColor
             weatherLabel.font = UIFont.boldSystemFontOfSize(14)
             weatherLabel.adjustsFontSizeToFitWidth = true
             weatherLabel.minimumScaleFactor = 0.6
@@ -440,26 +480,53 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.tintColor = UIColor(white: 0.2, alpha: 1.0)
+        headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
         headerView.opaque = false
         headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
-        headerView.textLabel!.textColor = UIColor(white: 0.9, alpha: 1.0)
+        headerView.textLabel!.textColor = self.headerLabel1.textColor
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
-        var rewardString = ""
-
-        for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
-            if let rewardEmoji = countData["rewardEmoji"] as? String,
-                count = countData["count"]  as? NSNumber {
-                  rewardString += count.stringValue + "x" + rewardEmoji + " "
-            }
-        }
-        
         if let text1 = tableCell.viewWithTag(1) as? UILabel {
+
+            var rewardString = ""
+            
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineHeightMultiple = 1.2
             
+            let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let crossWidth = ("x" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let countWidth = ("99" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let columnSeperatorWidth : CGFloat = 10
+            let totalWidth = emojiWidth + crossWidth + countWidth + columnSeperatorWidth
+            
+            var tabStops : [NSTextTab] = []
+            var totalLineWidth : CGFloat = 0
+            var columnCount = 0
+            while totalLineWidth + totalWidth < text1.frame.size.width {
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
+                totalLineWidth += totalWidth
+                columnCount++
+                print(String(totalLineWidth))
+            }
+            
+            paragraphStyle.tabStops = tabStops
+            
+            var i = 0
+            for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
+                if let rewardEmoji = countData["rewardEmoji"] as? String,
+                    count = countData["count"]  as? NSNumber {
+                      rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
+                    i++
+                    if i>=columnCount {
+                        i = 0
+                        rewardString += "\n"
+                    }
+                }
+            }
+        
             let attrString = NSMutableAttributedString(string: rewardString)
             attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
 

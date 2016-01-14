@@ -57,13 +57,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         if (self.scene == nil) {
             self.scene = SKScene(size: self.view.bounds.size)
+            self.scene.backgroundColor = self.spriteKitView.backgroundColor!
             self.scene.scaleMode = SKSceneScaleMode.ResizeFill
             self.scene.delegate = self
-            
-//            self.spriteKitView.showsFPS = true
-//            self.spriteKitView.showsDrawCount = true
-//            self.spriteKitView.showsNodeCount = true
-//            self.spriteKitView.showsQuadCount = true
             
             let topSpace : CGFloat = 400.0
             
@@ -164,7 +160,11 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchedSprite = nil
             self.currentVelocity = nil
             
-            self.rewardPopup.fadeOut()
+            self.rewardPopup.delay(1) {
+                if self.touchedSprite == nil {
+                    self.rewardPopup.fadeOut()
+                }
+            }
         }
     }
     

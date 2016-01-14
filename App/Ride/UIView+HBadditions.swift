@@ -8,6 +8,13 @@
 
 import Foundation
 
+enum AnimationDirection {
+    case Left
+    case Right
+    case Up
+    case Down
+}
+
 extension UIView {
     
     func delay(delay: NSTimeInterval, completionHandler:() -> Void) -> Self {

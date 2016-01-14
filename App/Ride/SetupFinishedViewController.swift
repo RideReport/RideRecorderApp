@@ -16,6 +16,8 @@ class SetupFinishedViewController: SetupChildViewController {
     override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
         super.childViewControllerWillPresent(userInfo)
         
+        let _ = self.view.subviews // hack for a gross crash.
+        
         if let finishType = userInfo?["finishType"] as! String? {
             if (finishType == "InitialSetupSkippedAccount") {
                 Mixpanel.sharedInstance().track(
@@ -23,32 +25,32 @@ class SetupFinishedViewController: SetupChildViewController {
                     properties: ["createdAccount": "false"]
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+                self.helperTextLabel.markdownStringValue = "**You're all set**! You can create an account later if you change your mind."
             } else if (finishType == "InitialSetupCreatedAccount") {
                 Mixpanel.sharedInstance().track(
                     "finishedSetup",
-                    properties: ["createdAccount": "false"]
+                    properties: ["createdAccount": "true"]
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+                self.helperTextLabel.markdownStringValue = "**You're all set**!"
             } else if (finishType == "CreateAccountSkippedAccount") {
-                helperTextLabel.markdownStringValue = "Cool. You can always create an account later if you'd like to."
+                self.helperTextLabel.markdownStringValue = "Cool. You can create an account later if you change your mind."
             } else if (finishType == "CreatedAccountCreatedAccount") {
                 Mixpanel.sharedInstance().track(
                     "createdAccount"
                 )
                 
-                helperTextLabel.markdownStringValue = "**You're all set**!"
+                self.helperTextLabel.markdownStringValue = "**You're all set**!"
             }
         } else {
-            helperTextLabel.markdownStringValue = "**You're all set**! Go get on your bike and Ride Report will take care of the rest."
+            self.helperTextLabel.markdownStringValue = "**You're all set**!"
         }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(4 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
             AppDelegate.appDelegate().transitionToMainNavController()
             return
         }

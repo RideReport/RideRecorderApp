@@ -31,9 +31,6 @@ class HamburgerViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.Tapping, ECSlidingViewControllerAnchoredGesture.Panning]
-        
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        UINavigationBar.appearance().barStyle = UIBarStyle.BlackTranslucent
     }
     
     override func viewWillAppear(animated: Bool) {

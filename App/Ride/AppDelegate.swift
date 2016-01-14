@@ -43,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.addLogger(self.fileLogger)
         
+        UINavigationBar.appearance().barTintColor = ColorPallete.sharedPallete.darkGreen
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
         
@@ -76,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             self.transitionToMainNavController()
         } else {
             // SetupRatingViewController calls registerNotifications
-            // SetupBatteryViewController calls startupDataGatheringManagers
+            // SetupPermissionsViewController calls startupDataGatheringManagers
             self.transitionToSetup()
         }
         
@@ -86,14 +89,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func registerNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = "No Issues\n👍"
+        goodRideAction.title = "Recommend\n👍"
         goodRideAction.activationMode = UIUserNotificationActivationMode.Background
         goodRideAction.destructive = false
         goodRideAction.authenticationRequired = false
         
         let badRideAction = UIMutableUserNotificationAction()
         badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = "Stressful\n👎"
+        badRideAction.title = "Avoid\n👎"
         badRideAction.activationMode = UIUserNotificationActivationMode.Background
         badRideAction.destructive = true
         badRideAction.authenticationRequired = false
@@ -251,6 +254,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally()
+            completionBlock()
+        } else {
             completionBlock()
         }
     }
