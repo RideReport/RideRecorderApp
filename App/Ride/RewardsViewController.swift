@@ -160,7 +160,11 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchedSprite = nil
             self.currentVelocity = nil
             
-            self.rewardPopup.fadeOut()
+            self.rewardPopup.delay(1) {
+                if self.touchedSprite == nil {
+                    self.rewardPopup.fadeOut()
+                }
+            }
         }
     }
     
