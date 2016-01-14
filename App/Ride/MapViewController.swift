@@ -321,7 +321,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if (annotation == self.selectedTripBackingLine) {
-            return UIColor.whiteColor()
+            return UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
         }
         
         if let tripViewController = self.tripViewController, trip = tripViewController.selectedTrip {
