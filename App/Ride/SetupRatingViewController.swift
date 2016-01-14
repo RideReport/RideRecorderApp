@@ -34,12 +34,12 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     func didTapActionButton(view: RideSummaryView) {
         self.moveOutIphone()
 
-        helperTextLabel.animatedSetMarkdownStringValue("Nice! Your ratings help other riders find good routes – ** and help your city fix the bad ones**.")
+        helperTextLabel.animatedSetMarkdownStringValue("Nice! **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
     }
     
     func didTapDestructiveButton(view: RideSummaryView) {
         self.moveOutIphone()
-        helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. Your ratings help other riders find good routes – ** and help your city fix the bad ones**.")
+        helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
     }
     
     func moveOutIphone() {
