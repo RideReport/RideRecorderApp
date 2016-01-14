@@ -58,6 +58,12 @@ import Foundation
         }
     }
     
+    @IBInspectable var textColor: UIColor = UIColor.whiteColor() {
+        didSet {
+            reloadUI()
+        }
+    }
+    
     enum RideSummaryViewStyle : NSInteger {
         case LockScreenStyle = 1
         case AppStyle
@@ -157,33 +163,23 @@ import Foundation
         contentView.addSubview(appIconView)
         
         appNameLabel = UILabel()
-        appNameLabel.font = UIFont.boldSystemFontOfSize(18)
-        appNameLabel.textColor = UIColor.whiteColor()
         contentView.addSubview(appNameLabel)
         
         dateLabel = UILabel()
-        dateLabel.font = UIFont.systemFontOfSize(14)
-        dateLabel.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
         contentView.addSubview(dateLabel)
         
         bodyLabel = UILabel()
-        bodyLabel.font = UIFont.systemFontOfSize(16)
         bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         bodyLabel.numberOfLines = 2
-        bodyLabel.textColor = UIColor.whiteColor()
         contentView.addSubview(bodyLabel)
         
         self.lineViewTop = UIView()
-        self.lineViewTop.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
         contentView.addSubview(self.lineViewTop)
         
         self.lineViewBottom = UIView()
-        self.lineViewBottom.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.2)
         contentView.addSubview(self.lineViewBottom)
         
         slideLabel = UILabel()
-        slideLabel.font = UIFont.systemFontOfSize(14)
-        slideLabel.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
         slideLabel.text = "slide to rate"
         contentView.addSubview(slideLabel)
         
@@ -193,7 +189,6 @@ import Foundation
         
         let shareImage = UIImage(named: "Action.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         shareButton = UIButton(frame: CGRectMake(0,0,19,27))
-        shareButton.tintColor = UIColor.whiteColor()
         shareButton.setImage(shareImage, forState: UIControlState.Normal)
         shareButton.addTarget(self, action: "pressedShareButton", forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(shareButton)
@@ -206,7 +201,6 @@ import Foundation
         editButton = UIButton()
         editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        editButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         editButton.backgroundColor = ColorPallete.sharedPallete.unknownGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
@@ -215,7 +209,6 @@ import Foundation
         destructiveButton = UIButton()
         destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         destructiveButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         destructiveButton.backgroundColor = ColorPallete.sharedPallete.badRed
         destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
@@ -224,7 +217,6 @@ import Foundation
         actionButton = UIButton()
         actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         actionButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        actionButton.titleLabel?.font = UIFont.systemFontOfSize(16.0)
         actionButton.backgroundColor = ColorPallete.sharedPallete.transitBlue
         actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
@@ -306,7 +298,7 @@ import Foundation
     }
     
     func reloadUI() {
-        if self.bounds.height < 100 {
+        if self.style == .LockScreenStyle && self.bounds.height < 100 {
             self.appNameLabel.font = UIFont.systemFontOfSize(15)
             self.bodyLabel.font = UIFont.systemFontOfSize(12)
             self.dateLabel.font = UIFont.systemFontOfSize(11)
@@ -315,7 +307,24 @@ import Foundation
             self.editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
             self.actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
             self.destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+        } else {
+            appNameLabel.font = UIFont.boldSystemFontOfSize(18)
+            dateLabel.font = UIFont.systemFontOfSize(14)
+            bodyLabel.font = UIFont.systemFontOfSize(16)
+            slideLabel.font = UIFont.systemFontOfSize(14)
+            
+            editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
         }
+        
+        appNameLabel.textColor = self.textColor
+        dateLabel.textColor = self.textColor.colorWithAlphaComponent(0.4)
+        bodyLabel.textColor = self.textColor
+        self.lineViewTop.backgroundColor = self.textColor.colorWithAlphaComponent(0.2)
+        self.lineViewBottom.backgroundColor = self.textColor.colorWithAlphaComponent(0.2)
+        slideLabel.textColor = self.textColor.colorWithAlphaComponent(0.4)
+        shareButton.tintColor = self.textColor
         
         destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
         actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)

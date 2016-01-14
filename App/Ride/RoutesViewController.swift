@@ -82,7 +82,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         self.refreshEmptyTableView()
-        self.refreshCharts()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -105,6 +104,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         if (self.tableView.indexPathForSelectedRow != nil) {
             self.tableView.deselectRowAtIndexPath(self.tableView.indexPathForSelectedRow!, animated: animated)
+        }
+        
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+                self.refreshCharts()
+            }
+        } else {
+            self.refreshCharts()
         }
     }
     
@@ -486,11 +493,37 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineHeightMultiple = 1.2
-
+            
+            let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let crossWidth = ("x" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let countWidth = ("99" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
+            let columnSeperatorWidth : CGFloat = 10
+            let totalWidth = emojiWidth + crossWidth + countWidth + columnSeperatorWidth
+            
+            var tabStops : [NSTextTab] = []
+            var totalLineWidth : CGFloat = 0
+            var columnCount = 0
+            while totalLineWidth + totalWidth < text1.frame.size.width {
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
+                totalLineWidth += totalWidth
+                columnCount++
+                print(String(totalLineWidth))
+            }
+            
+            paragraphStyle.tabStops = tabStops
+            
+            var i = 0
             for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     count = countData["count"]  as? NSNumber {
-                      rewardString += rewardEmoji + "×" + count.stringValue  + "\t"
+                      rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
+                    i++
+                    if i>=columnCount {
+                        i = 0
+                        rewardString += "\n"
+                    }
                 }
             }
         

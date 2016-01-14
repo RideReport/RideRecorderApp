@@ -52,6 +52,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
         super.viewWillAppear(animated)
         
         self.reloadMapInfoToolBar()
+        self.counter.updateCounter(0, animate: false) // we're going to animate it instead.
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) { (notif) -> Void in
             self.reloadMapInfoToolBar()
@@ -59,6 +60,28 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
 
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // animate the counter up to its current value
+        if case .Area(_, let count, _, _) = APIClient.sharedClient.area {
+            if !self.counter.hidden {
+                var j = 0
+                for var i = 0; i < Int(count); i+=499 {
+                    let c = UInt(i)
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) {
+                        self.counter.updateCounter(c, animate: false)
+                    }
+                    j++
+                }
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) {
+                    self.counter.updateCounter(count, animate: false)
+                }
+            }
+        }
+    }
+
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
@@ -101,11 +124,11 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                 self.counterText.hidden = true
                 
                 self.mapInfoText.text = String(format: "Ride Report is not yet available in your area. Every ride you take get us closer to launching!")
-            case .Area(let name, let count, let countPerHour, let launched) where count < 1000 && !launched:
+            case .Area(let name, let count, _, let launched) where count < 1000 && !launched:
                 self.counter.hidden = true
                 self.counterText.hidden = true
                 
-                self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take get us closer to launching!", name)
+                self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take gets us closer to launching!", name)
             case .Area(let name, let count, let countPerHour, let launched):
                 self.counter.hidden = false
                 self.counterText.hidden = false
@@ -117,7 +140,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                 if (launched) {
                     self.mapInfoText.text = String(format: "Map shows average ratings from %@ riders. Better routes are green, stressful routes are red.", name)
                 }  else {
-                    self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take get us closer to launching!", name)
+                    self.mapInfoText.text = String(format: "Ride Report is not yet available in %@. Every ride you take gets us closer to launching!", name)
                 }
             }
         } else {

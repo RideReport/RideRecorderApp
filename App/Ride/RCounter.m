@@ -59,7 +59,7 @@
     tagCounterLeftToRight = tagCounterRightToLeft + 1 - self.numberOfDigits;
     
     // Load the background
-    [self setBackgroundColor:[[UIColor blackColor] colorWithAlphaComponent:0.2]];
+    [self setBackgroundColor:[UIColor clearColor]];
     
     // Load the counters
     if (self.counterCanvas) {
