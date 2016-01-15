@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+,platform :ios, '8.0'
 
 link_with 'Ride Report', 'Ride Report Tests'
 pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
