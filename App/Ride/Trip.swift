@@ -494,6 +494,22 @@ class Trip : NSManagedObject {
         return count
     }
     
+    class var numberOfRewardedTrips : Int {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        fetchedRequest.predicate = NSPredicate(format: "rewardEmoji != nil")
+        
+        var error : NSError?
+        let count = context.countForFetchRequest(fetchedRequest, error: &error)
+        if (count == NSNotFound || error != nil) {
+            return 0
+        }
+        
+        return count
+    }
+    
     class func bikeTripCountsGroupedByAttribute(attribute: String, additionalAttributes: [String]? = nil) -> [[String: AnyObject]] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let  countExpression = NSExpressionDescription()
@@ -536,7 +552,13 @@ class Trip : NSManagedObject {
             return []
         }
         
-        return results as! [[String: AnyObject]]
+        let dictResults = results as! [[String: AnyObject]]
+        
+        if (dictResults.count == 1 && (dictResults[0]["count"]! as? NSNumber)?.integerValue == 0) {
+            return []
+        }
+        
+        return dictResults
     }
     
     class var numberOfBadTrips : Int {
