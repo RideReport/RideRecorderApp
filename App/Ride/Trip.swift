@@ -1069,20 +1069,22 @@ class Trip : NSManagedObject {
         return loc
     }
     
-    var startDate : NSDate! {
-        if (self.locations == nil || self.locations.count == 0) {
-            return nil
+    var startDate : NSDate {
+        guard let loc = self.locations.firstObject as? Location,
+            date = loc.date else {
+            return self.creationDate
         }
         
-        return self.locations.firstObject?.date
+        return date
     }
     
-    var endDate : NSDate! {
-        if (self.locations == nil || self.locations.count == 0) {
-            return nil
+    var endDate : NSDate {
+        guard let loc = self.locations.firstObject as? Location,
+            date = loc.date else {
+            return self.creationDate
         }
         
-        return self.locations.lastObject?.date
+        return date
     }
     
     var averageSpeed : CLLocationSpeed {
