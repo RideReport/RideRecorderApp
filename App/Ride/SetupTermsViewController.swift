@@ -31,6 +31,22 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         helperTextLabel.markdownStringValue = "Collect trophies and stats with your daily errands and commutes. Just hop on your bike and Ride Report will take care of the rest."
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let _scene = self.scene {
+            _scene.paused = false
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let _scene = self.scene {
+            _scene.paused = true
+        }
+    }
+    
     override func viewWillLayoutSubviews()
     {
         super.viewWillLayoutSubviews()

@@ -14,11 +14,18 @@ import FBSDKCoreKit
 import ECSlidingViewController
 import Mixpanel
 
+enum PushNotificationRegistrationStatus {
+    case Unregistered
+    case Registered
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     var window: UIWindow?
     var fileLogger : DDFileLogger!
+    
+    var notificationRegistrationStatus : PushNotificationRegistrationStatus = .Unregistered
     
     class func appDelegate() -> AppDelegate! {
         let delegate = UIApplication.sharedApplication().delegate
@@ -59,34 +66,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        // Start Managers. Note that order matters!
+        // Start Managers. The order matters!
         Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         APIClient.startup()
         SoftwareUpdateManager.startup()
-//        HealthKitManager.startup()
         
+        // Start permission-needing managers
         if (hasSeenSetup) {
             // if they are new, we wait to start data gathering managers
             // this avoids immediately presenting the privacy permission dialogs.
-            registerNotifications()
+            self.startupNotifications()
+            self.startupMotionManager()
+            
             if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
                 DDLogInfo("Launched in background due to location update")
-                startupDataGatheringManagers(true)
+                self.startupRouteManager(true)
             } else {
-                startupDataGatheringManagers(false)
+                self.startupRouteManager(false)
             }
+
             self.transitionToMainNavController()
         } else {
-            // SetupRatingViewController calls registerNotifications
-            // SetupPermissionsViewController calls startupDataGatheringManagers
+            // SetupPermissionsViewController starts up the managers
             self.transitionToSetup()
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func registerNotifications() {
+    func startupNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
         goodRideAction.title = "Recommend\n👍"
@@ -144,10 +153,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         UIApplication.sharedApplication().registerForRemoteNotifications()
     }
     
-    func startupDataGatheringManagers(fromBackground: Bool) {
+    func startupRouteManager(fromBackground: Bool) {
         RouteManager.startup(fromBackground)
+    }
+    
+    func startupMotionManager() {
         MotionManager.startup()
     }
+    
+//    func startupHealthManager() {
+//        HealthKitManager.startup()
+//    }
     
     func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -210,6 +226,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        self.notificationRegistrationStatus = .Registered
+        
         APIClient.sharedClient.appDidReceiveNotificationDeviceToken(deviceToken)
     }
     

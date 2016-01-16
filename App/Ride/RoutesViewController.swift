@@ -203,21 +203,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let count = Trip.numberOfCycledTrips
         if (count == 0) {
             self.title = "Ride Report"
-            self.headerView.hidden = false
+            self.headerView.hidden = true
         } else {
             let numCharts = 4
             let margin: CGFloat = 16
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
-            var headerFrame = self.headerView.frame;
-            headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
-            self.headerView.frame = headerFrame
-            self.tableView.tableHeaderView = self.headerView
-            
             self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
             
             Profile.profile().updateCurrentRideStreakLength()
-
+            
             if Profile.profile().currentStreakLength.integerValue == 0 {
                 self.headerLabel1.text = "🐣  No rides today"
             } else {
@@ -230,6 +225,21 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 } else {
                     self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
                 }
+            }
+            
+            if count <= 10 {
+                // Don't show stats until they get to >=10 rides
+                var headerFrame = self.headerView.frame
+                headerFrame.size.height = self.headerLabel1.frame.size.height + 10
+                self.headerView.frame = headerFrame
+                self.tableView.tableHeaderView = self.headerView
+                
+                return
+            } else {
+                var headerFrame = self.headerView.frame
+                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
+                self.headerView.frame = headerFrame
+                self.tableView.tableHeaderView = self.headerView
             }
             
             if let sections = self.fetchedResultsController.sections {
@@ -380,6 +390,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.refreshEmptyTableView()
+        // reload the rewards section as needed
+        self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        
         self.tableView.endUpdates()
     }
     
@@ -400,7 +413,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
         case .Insert:
             self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-            
         case .Delete:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
             
@@ -447,7 +459,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            if Trip.numberOfRewardedTrips > 0 {
+                return 1
+            } else {
+                return 0
+            }
         }
         
         let sectionInfo = self.fetchedResultsController.sections![section - 1]
@@ -488,7 +504,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func configureRewardsCell(tableCell: UITableViewCell) {
         if let text1 = tableCell.viewWithTag(1) as? UILabel {
-
             var rewardString = ""
             
             let paragraphStyle = NSMutableParagraphStyle()
@@ -515,13 +530,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             paragraphStyle.tabStops = tabStops
             
             var i = 0
-            for countData in Trip.bikeTripCountsGroupedByAttribute("rewardEmoji") {
+            var lineCount = 0
+            let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
+            for countData in rewardsTripCounts {
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     count = countData["count"]  as? NSNumber {
                       rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
                     i++
                     if i>=columnCount {
                         i = 0
+                        lineCount++
                         rewardString += "\n"
                     }
                 }

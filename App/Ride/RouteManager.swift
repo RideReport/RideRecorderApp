@@ -68,6 +68,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedManager : RouteManager?
+        static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.NotDetermined
     }
     
     //
@@ -76,6 +77,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     class var sharedManager:RouteManager {
         return Static.sharedManager!
+    }
+    
+    class var authorizationStatus: CLAuthorizationStatus {
+        get {
+        return Static.authorizationStatus
+        }
+        
+        set {
+            Static.authorizationStatus = newValue
+        }
     }
     
     class func hasStarted()->Bool {
@@ -241,7 +252,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func processActiveTrackingLocations(locations: [CLLocation]!) {
+    private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
         
         for location in locations {
@@ -381,9 +392,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.stopUpdatingLocation()
     }
     
-    private func processMotionMonitoringLocations(locations: [CLLocation]!) {
+    private func processMotionMonitoringLocations(locations: [CLLocation]) {
         var foundSufficientMovement = false
         var foundGPSFix = false
+        
+        guard locations.count > 0 else {
+            return
+        }
         
         for location in locations {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
@@ -431,7 +446,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
                     DDLogVerbose("Found enough motion in motion monitoring mode, triggering trip…")
-                    self.startTripFromLocation(self.lastMotionMonitoringLocation!)
+                    self.startTripFromLocation(locations.first!)
             } else {
                 DDLogVerbose("Found motion in motion monitoring mode, awaiting further reads…")
             }
@@ -623,6 +638,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // tell the user they need to give us access to the zion mainframes
             DDLogVerbose("Not authorized for location access!")
         }
+        
+        RouteManager.authorizationStatus = status
+        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
     }
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {
@@ -707,9 +725,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.beginDeferringUpdatesIfAppropriate()
         
         if (self.currentTrip != nil) {
-            self.processActiveTrackingLocations(locations as [CLLocation]!)
+            self.processActiveTrackingLocations(locations)
         } else if (self.currentPrototrip != nil) {
-            self.processMotionMonitoringLocations(locations as [CLLocation]!)
+            self.processMotionMonitoringLocations(locations)
         } else {
             // We are currently in background mode and got significant location change movement.
             

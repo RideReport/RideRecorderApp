@@ -75,21 +75,20 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
             if (trip.locationsNotYetDownloaded) {
                 self.rideSummaryView.dateString = ""
                 self.rideSummaryView.body = "Downloading Trip Data…"
-            } else if (trip.startDate == nil || (trip.startDate.isToday() && !trip.isClosed)) {
+            } else if ((trip.startDate.isToday() && !trip.isClosed)) {
                 self.rideSummaryView.dateString = ""
                 self.rideSummaryView.body = "Trip in Progress…"
             } else {
-                if (trip.startDate != nil) {
-                    if (trip.startDate.isToday()) {
-                        dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
-                    } else if (trip.startDate.isYesterday()) {
-                        dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
-                    } else if (trip.startDate.isInLastWeek()) {
-                        dateTitle = trip.startDate.weekDay()
-                    } else {
-                        dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
-                    }
+                if (trip.startDate.isToday()) {
+                    dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
+                } else if (trip.startDate.isYesterday()) {
+                    dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
+                } else if (trip.startDate.isInLastWeek()) {
+                    dateTitle = trip.startDate.weekDay()
+                } else {
+                    dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
                 }
+                
                 self.rideSummaryView.dateString = dateTitle
                 self.rideSummaryView.body = trip.notificationString()!
                 self.rideSummaryView.hideControls(false)

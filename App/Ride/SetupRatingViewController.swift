@@ -24,7 +24,6 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     
     override func next(sender: AnyObject) {
         super.next(sender)
-        AppDelegate.appDelegate().registerNotifications()
     }
     
     func didOpenControls(view: RideSummaryView) {

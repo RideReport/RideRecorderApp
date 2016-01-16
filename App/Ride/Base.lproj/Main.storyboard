@@ -23,10 +23,10 @@
                         <subviews>
                             <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A0W-sZ-4F3" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="A0W-sZ-4F3" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="MWO-C6-p9w"/>
                             <constraint firstAttribute="centerY" secondItem="A0W-sZ-4F3" secondAttribute="centerY" id="bQK-ug-VYd"/>
@@ -108,23 +108,23 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="All Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iTX-71-UMx">
                                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Line 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Qu-7M-tPR">
                                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Line 2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VU2-g3-2S2">
                                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="0.70067349140000001" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstItem="iTX-71-UMx" firstAttribute="leading" secondItem="g7P-V4-E5V" secondAttribute="leading" constant="8" id="04N-7G-fdd"/>
                                             <constraint firstItem="VU2-g3-2S2" firstAttribute="width" secondItem="g7P-V4-E5V" secondAttribute="width" id="3ej-xQ-zdb"/>
@@ -192,13 +192,16 @@
                                                     <userDefinedRuntimeAttribute type="number" keyPath="interfaceStyle">
                                                         <integer key="value" value="3"/>
                                                     </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="color" keyPath="textColor">
+                                                        <color key="value" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
                                                     <rect key="frame" x="0.0" y="290" width="800" height="100"/>
                                                 </variation>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="0.70067349140000001" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="centerY" secondItem="kfe-xn-NjE" secondAttribute="centerY" id="1LA-1u-ALU"/>
                                             <constraint firstAttribute="height" constant="72" id="FWJ-Ud-12D"/>
@@ -278,7 +281,7 @@
                                 </variation>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="0.20000000000000001" green="0.43137254899999999" blue="0.14901960780000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="EAJ-hS-lAz" firstAttribute="height" secondItem="GEr-MR-08O" secondAttribute="width" id="ZP9-yT-nYC"/>
                             <constraint firstItem="EAJ-hS-lAz" firstAttribute="centerY" secondItem="GEr-MR-08O" secondAttribute="centerY" id="bb5-0y-6AL"/>
@@ -964,7 +967,7 @@
         <!--Setup Permissions View Controller-->
         <scene sceneID="l9V-b9-DzN">
             <objects>
-                <viewController storyboardIdentifier="setupBattery" id="JSN-k8-2Yb" customClass="SetupPermissionsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="setupPermissions" id="JSN-k8-2Yb" customClass="SetupPermissionsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="2Ho-Nv-QxS"/>
                         <viewControllerLayoutGuide type="bottom" id="olm-Uf-1wd"/>
@@ -973,86 +976,170 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Ride Report won't drain your battery. You canRide Report by tapping the arrow in the upper right." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
-                                <rect key="frame" x="43" y="183" width="514" height="71"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="42" y="264" width="316" height="71"/>
-                                </variation>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
-                                <rect key="frame" x="266" y="322" width="68" height="34"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vhn-3o-faj">
+                                <rect key="frame" x="264" y="512" width="73" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="73" id="GJL-lD-TRV"/>
-                                    <constraint firstAttribute="width" constant="68" id="bSu-OQ-Lue"/>
+                                    <constraint firstAttribute="width" constant="183" id="bSu-OQ-Lue"/>
                                     <constraint firstAttribute="height" constant="48" id="rQa-ZJ-X8i"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
-                                <state key="normal" title="Killer">
+                                <state key="normal" title="Let's Do This">
                                     <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="GJL-lD-TRV"/>
-                                        <exclude reference="bSu-OQ-Lue"/>
                                         <exclude reference="rQa-ZJ-X8i"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <include reference="bSu-OQ-Lue"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
-                                        <include reference="GJL-lD-TRV"/>
-                                        <exclude reference="bSu-OQ-Lue"/>
                                         <include reference="rQa-ZJ-X8i"/>
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="tappedButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="Yqc-FQ-jt1"/>
+                                    <action selector="tappedDoItButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="OKj-NW-lW7"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EeB-kr-sa8">
+                                <rect key="frame" x="180" y="434" width="240" height="78"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="9RY-PL-G1U"/>
+                                </constraints>
+                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="80" y="417" width="240" height="40.5"/>
+                                </variation>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Hey so, we need to ask your permission to do a few things while your phone is locked." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
+                                <rect key="frame" x="60" y="98" width="480" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="40" y="278" width="320" height="66"/>
+                                </variation>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your battery is important to us. We promise not to drain it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="Pyb-VH-Rta">
+                                <rect key="frame" x="60" y="98" width="480" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uzi-C3-YfN">
+                                <rect key="frame" x="264" y="512" width="73" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="PM2-gy-pEV"/>
+                                    <constraint firstAttribute="width" constant="139" id="QBI-58-wT6"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Whatever">
+                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="PM2-gy-pEV"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="PM2-gy-pEV"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="tappedDoneButton:" destination="JSN-k8-2Yb" eventType="touchUpInside" id="ryO-us-WRc"/>
+                                </connections>
+                            </button>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Send notications after your ride fooo bar bar" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="N4T-ad-MYY">
+                                <rect key="frame" x="80" y="196" width="480" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="3Fg-Qu-NLO" secondAttribute="width" multiplier="5:4" id="AHb-jO-KLs"/>
+                            <constraint firstItem="Uzi-C3-YfN" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="2Z1-oe-T1E"/>
+                            <constraint firstItem="Pyb-VH-Rta" firstAttribute="top" secondItem="Uzi-C3-YfN" secondAttribute="bottom" constant="8" id="8wP-PR-HB4"/>
+                            <constraint firstItem="3Fg-Qu-NLO" firstAttribute="width" secondItem="rpN-6i-TQ7" secondAttribute="width" multiplier="4:5" id="AHb-jO-KLs"/>
+                            <constraint firstItem="N4T-ad-MYY" firstAttribute="centerY" secondItem="rpN-6i-TQ7" secondAttribute="centerY" multiplier="1:3" id="BiQ-Nv-0fa"/>
                             <constraint firstAttribute="centerX" secondItem="Vhn-3o-faj" secondAttribute="centerX" id="BqY-qP-zeD"/>
+                            <constraint firstItem="3Fg-Qu-NLO" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="EBo-Fi-SSQ"/>
                             <constraint firstAttribute="centerY" secondItem="3Fg-Qu-NLO" secondAttribute="centerY" id="FLO-qP-ULV"/>
+                            <constraint firstItem="3Fg-Qu-NLO" firstAttribute="centerY" secondItem="rpN-6i-TQ7" secondAttribute="centerY" id="GzQ-kM-Q3B"/>
+                            <constraint firstItem="N4T-ad-MYY" firstAttribute="top" secondItem="2Ho-Nv-QxS" secondAttribute="bottom" constant="40" id="J7b-E6-wZq"/>
+                            <constraint firstItem="olm-Uf-1wd" firstAttribute="top" secondItem="Vhn-3o-faj" secondAttribute="bottom" constant="40" id="KMf-Jl-9Rb"/>
+                            <constraint firstItem="N4T-ad-MYY" firstAttribute="width" secondItem="rpN-6i-TQ7" secondAttribute="width" multiplier="4:5" id="PLq-Gs-hiZ"/>
+                            <constraint firstItem="EeB-kr-sa8" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="Rwl-ho-lTB"/>
+                            <constraint firstItem="olm-Uf-1wd" firstAttribute="top" secondItem="Pyb-VH-Rta" secondAttribute="bottom" constant="10" id="SCR-Zr-K2n"/>
                             <constraint firstAttribute="centerX" secondItem="3Fg-Qu-NLO" secondAttribute="centerX" id="WVR-Ui-Rv9"/>
+                            <constraint firstItem="Pyb-VH-Rta" firstAttribute="top" secondItem="Vhn-3o-faj" secondAttribute="bottom" constant="8" id="XBk-ZG-XZH"/>
+                            <constraint firstItem="Pyb-VH-Rta" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="h5z-w3-jen"/>
                             <constraint firstAttribute="centerY" secondItem="Vhn-3o-faj" secondAttribute="centerY" id="ibX-He-VNM"/>
                             <constraint firstItem="Vhn-3o-faj" firstAttribute="top" secondItem="3Fg-Qu-NLO" secondAttribute="bottom" constant="60" id="juy-Kk-Wl3"/>
                             <constraint firstItem="Vhn-3o-faj" firstAttribute="top" secondItem="3Fg-Qu-NLO" secondAttribute="bottom" constant="40" id="lJE-V0-uMv"/>
+                            <constraint firstItem="N4T-ad-MYY" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="nQb-Nj-cpP"/>
+                            <constraint firstItem="Pyb-VH-Rta" firstAttribute="width" secondItem="rpN-6i-TQ7" secondAttribute="width" multiplier="4:5" id="viK-gC-x2P"/>
+                            <constraint firstItem="Vhn-3o-faj" firstAttribute="top" secondItem="EeB-kr-sa8" secondAttribute="bottom" id="ycC-Vw-36R"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="Pyb-VH-Rta"/>
+                                <exclude reference="Uzi-C3-YfN"/>
+                            </mask>
                             <mask key="constraints">
+                                <exclude reference="8wP-PR-HB4"/>
+                                <exclude reference="XBk-ZG-XZH"/>
+                                <exclude reference="h5z-w3-jen"/>
+                                <exclude reference="viK-gC-x2P"/>
                                 <exclude reference="FLO-qP-ULV"/>
+                                <exclude reference="GzQ-kM-Q3B"/>
+                                <exclude reference="WVR-Ui-Rv9"/>
+                                <exclude reference="BiQ-Nv-0fa"/>
+                                <exclude reference="J7b-E6-wZq"/>
                                 <exclude reference="ibX-He-VNM"/>
                                 <exclude reference="juy-Kk-Wl3"/>
                                 <exclude reference="lJE-V0-uMv"/>
+                                <exclude reference="SCR-Zr-K2n"/>
+                                <exclude reference="2Z1-oe-T1E"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="Pyb-VH-Rta"/>
+                                <include reference="Uzi-C3-YfN"/>
+                            </mask>
                             <mask key="constraints">
-                                <include reference="FLO-qP-ULV"/>
+                                <include reference="8wP-PR-HB4"/>
+                                <include reference="XBk-ZG-XZH"/>
+                                <include reference="h5z-w3-jen"/>
+                                <include reference="viK-gC-x2P"/>
+                                <exclude reference="FLO-qP-ULV"/>
+                                <include reference="GzQ-kM-Q3B"/>
+                                <include reference="BiQ-Nv-0fa"/>
+                                <exclude reference="J7b-E6-wZq"/>
                                 <exclude reference="ibX-He-VNM"/>
-                                <include reference="juy-Kk-Wl3"/>
+                                <exclude reference="juy-Kk-Wl3"/>
                                 <exclude reference="lJE-V0-uMv"/>
+                                <exclude reference="ycC-Vw-36R"/>
+                                <exclude reference="KMf-Jl-9Rb"/>
+                                <include reference="SCR-Zr-K2n"/>
+                                <include reference="2Z1-oe-T1E"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="batteryLifeLabel" destination="Pyb-VH-Rta" id="Q0v-Hq-ryZ"/>
+                        <outlet property="doneButton" destination="Uzi-C3-YfN" id="bPR-5i-GVE"/>
                         <outlet property="helperTextLabel" destination="3Fg-Qu-NLO" id="z6n-XX-aPX"/>
                         <outlet property="nextButton" destination="Vhn-3o-faj" id="gY7-g3-9ZE"/>
+                        <outlet property="notificationDetailsLabel" destination="N4T-ad-MYY" id="xNo-qT-fMd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pca-mh-ubT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="886.5" y="2023.5"/>
+            <point key="canvasLocation" x="885" y="2023"/>
         </scene>
         <!--Setup Rating View Controller-->
         <scene sceneID="7nf-DU-971">
@@ -1093,9 +1180,6 @@
                                         <include reference="ggi-UI-PFD"/>
                                     </mask>
                                 </variation>
-                                <variation key="widthClass=compact" ambiguous="YES">
-                                    <rect key="frame" x="161" y="0.0" width="78" height="48"/>
-                                </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="4Sp-aO-Zul"/>
@@ -1120,7 +1204,7 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="appName" value="Ride Report"/>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="body" value="☀️ 🚲 1.7 miles from Downtown Portland to Hawthorne. 💜 5 day ride streak!"/>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="body" value="☀️ 🚲 1.7 miles from Downtown to Hawthorne. 💜 5 day ride streak!"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="interfaceStyle">
                                                 <integer key="value" value="1"/>
                                             </userDefinedRuntimeAttribute>
@@ -1188,13 +1272,13 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="60" y="131" width="480" height="39"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" ambiguous="YES">
-                                    <rect key="frame" x="40" y="0.0" width="320" height="39"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="40" y="125.5" width="320" height="44.5"/>
                                 </variation>
                             </label>
                         </subviews>
@@ -1231,11 +1315,11 @@
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
+                                <include reference="zaB-aK-ILx"/>
                                 <exclude reference="1Gr-1s-E8F"/>
                                 <include reference="YzU-Oh-5zR"/>
                                 <include reference="k4i-RJ-UGX"/>
                                 <include reference="ybR-Am-mXM"/>
-                                <include reference="zaB-aK-ILx"/>
                                 <include reference="9EQ-fJ-O4c"/>
                                 <include reference="1MP-1E-gMQ"/>
                                 <exclude reference="TO1-fx-lXm"/>
@@ -1253,7 +1337,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B5y-yY-RUS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="256.5" y="2023.5"/>
+            <point key="canvasLocation" x="256.5" y="2023"/>
         </scene>
         <!--Setup Finished View Controller-->
         <scene sceneID="VKZ-XD-iWn">
@@ -1309,7 +1393,7 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create account so you can get your rides back if your phone is lost or stolen." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wQe-d2-N04">
                                 <rect key="frame" x="23" y="28" width="555" height="67"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1445,7 +1529,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="67" id="zqU-QM-Gzw"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -1511,46 +1595,7 @@
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="28">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="56">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="84">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="112">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="140">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="168">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="196">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="224">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="252">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="280">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="308">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="336">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                         </attributes>
                                     </fragment>
                                     <fragment content="terms and conditions">
@@ -1558,46 +1603,7 @@
                                             <color key="NSColor" red="0.72156862745098038" green="0.14509803921568629" blue="0.40784313725490196" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
                                             <url key="NSLink" string="http://ride.report/terms"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="28">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="56">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="84">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="112">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="140">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="168">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="196">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="224">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="252">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="280">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="308">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="336">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                             <integer key="NSUnderline" value="1"/>
                                             <color key="NSUnderlineColor" red="0.59607843137254901" green="0.71764705882352942" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
                                         </attributes>
@@ -1606,46 +1612,7 @@
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
-                                                <tabStops>
-                                                    <textTab alignment="left" location="28">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="56">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="84">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="112">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="140">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="168">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="196">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="224">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="252">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="280">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="308">
-                                                        <options/>
-                                                    </textTab>
-                                                    <textTab alignment="left" location="336">
-                                                        <options/>
-                                                    </textTab>
-                                                </tabStops>
-                                            </paragraphStyle>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>
@@ -1690,9 +1657,6 @@
                                 </state>
                                 <variation key="heightClass=regular" misplaced="YES">
                                     <rect key="frame" x="273" y="689" width="54" height="27"/>
-                                </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="162" y="508" width="76" height="34"/>
                                 </variation>
                                 <connections>
                                     <action selector="next:" destination="326-On-509" eventType="touchUpInside" id="aBs-bL-X9d"/>
@@ -1764,8 +1728,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
