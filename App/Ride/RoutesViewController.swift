@@ -576,7 +576,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             rewardString = " " + emoji
         }
         
-        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles, rewardString)
+        var lengthString = String(format: "%.1f miles", trip.lengthMiles)
+        if (trip.lengthMiles < 0.2) {
+            // rounded to nearest 50
+            lengthString = String(format: "%.0f feet", round(Float(trip.lengthFeet)/50) * 50.0)
+        }
+        
+        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %@%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, lengthString, rewardString)
         
         tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }

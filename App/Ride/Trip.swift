@@ -817,6 +817,12 @@ class Trip : NSManagedObject {
         }
     }
     
+    var lengthFeet : Float {
+        get {
+            return (self.length.floatValue * 3.28084)
+        }
+    }
+    
     func closestLocationToCoordinate(coordinate: CLLocationCoordinate2D)->Location! {
         let targetLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
     
