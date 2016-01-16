@@ -50,7 +50,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.haveAccountButton.setTitle("Don't have an account?", forState: UIControlState.Normal)
         } else {
             self.navigationItem.rightBarButtonItem?.title = "Create"
-            self.helperTextLabel.markdownStringValue = "Create a free account to **keep your rides backed up** incase your phone is lost or stolen."
+            self.helperTextLabel.markdownStringValue = "Create a free account to **keep your rides backed up** in case your phone is lost or stolen."
             self.haveAccountButton.setTitle("Already have an account?", forState: UIControlState.Normal)
         }
     }

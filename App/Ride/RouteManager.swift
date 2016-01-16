@@ -68,6 +68,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedManager : RouteManager?
+        static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.NotDetermined
     }
     
     //
@@ -76,6 +77,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     class var sharedManager:RouteManager {
         return Static.sharedManager!
+    }
+    
+    class var authorizationStatus: CLAuthorizationStatus {
+        get {
+        return Static.authorizationStatus
+        }
+        
+        set {
+            Static.authorizationStatus = newValue
+        }
     }
     
     class func hasStarted()->Bool {
@@ -627,6 +638,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // tell the user they need to give us access to the zion mainframes
             DDLogVerbose("Not authorized for location access!")
         }
+        
+        RouteManager.authorizationStatus = status
+        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
     }
     
     func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {

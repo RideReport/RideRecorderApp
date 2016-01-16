@@ -33,8 +33,8 @@ class SetupViewController: UINavigationController {
         let setupTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupTerms") as! SetupChildViewController
         self.setupVC(setupTermsVC)
         
-        let setupBatteryVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupBattery") as! SetupChildViewController
-        self.setupVC(setupBatteryVC)
+        let setupPermissionVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupPermissions") as! SetupChildViewController
+        self.setupVC(setupPermissionVC)
         
         let setupRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupRating") as! SetupChildViewController
         self.setupVC(setupRatingVC)
@@ -49,9 +49,9 @@ class SetupViewController: UINavigationController {
         self.setupVC(setupFinished)
         
         if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupFinished]
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupPermissionVC, setupFinished]
         } else {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupBatteryVC, setupCreateProfile, setupConfirmEmail, setupFinished]
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupPermissionVC, setupCreateProfile, setupConfirmEmail, setupFinished]
         }
         
         self.myViewControllers.first!.childViewControllerWillPresent()

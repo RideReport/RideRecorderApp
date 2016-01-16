@@ -10,6 +10,12 @@ import Foundation
 import CoreLocation
 import CoreMotion
 
+enum MotionManagerAuthorizationStatus {
+    case NotDetermined
+    case Denied
+    case Authorized
+}
+
 class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager : CMMotionActivityManager!
     private var motionQueue : NSOperationQueue!
@@ -20,6 +26,17 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedManager : MotionManager?
+        static var authorizationStatus : MotionManagerAuthorizationStatus = .NotDetermined
+    }
+    
+    class var authorizationStatus: MotionManagerAuthorizationStatus {
+        get {
+            return Static.authorizationStatus
+        }
+        
+        set {
+            Static.authorizationStatus = newValue
+        }
     }
     
     
@@ -42,16 +59,26 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startup() {
-        let hasRequestedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionManagerHasRequestedMotionAccess")
-        if (!hasRequestedMotionAccess) {
-            // grab an update for a second so we can have the permission dialog come up right away
+        let hasBeenGrantedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionManagerHasRequestedMotionAccess")
+        if (!hasBeenGrantedMotionAccess) {
+            // run a query so we can have the permission dialog come up when we want it to
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.motionActivityManager.startActivityUpdatesToQueue(self.motionQueue, withHandler: { (activity) -> Void in
-                    self.motionActivityManager.stopActivityUpdates()
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MotionManagerHasRequestedMotionAccess")
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                })
+                self.motionActivityManager.queryActivityStartingFromDate(NSDate(timeIntervalSinceNow: -10), toDate: NSDate(), toQueue: self.motionQueue) { (actibity, error) -> Void in
+                    if let err = error where err.code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
+                        MotionManager.authorizationStatus = .Denied
+                        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
+                    } else {
+                        MotionManager.authorizationStatus = .Authorized
+                        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
+                        
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MotionManagerHasRequestedMotionAccess")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                    }
+                }
             })
+        } else {
+            MotionManager.authorizationStatus = .Authorized
+            NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)            
         }
     }
     
