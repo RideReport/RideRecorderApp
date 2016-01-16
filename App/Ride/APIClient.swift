@@ -262,13 +262,6 @@ class APIClient {
     @objc func appDidBecomeActive() {
         let tripSyncBlock = {
             if (self.authenticated) {
-                let hasRunTripUUIDMigrationUpload = NSUserDefaults.standardUserDefaults().boolForKey("HasRunTripUUIDMigrationUpload")
-                if (!hasRunTripUUIDMigrationUpload) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.uploadTripUUIDs()
-                    })
-                }
-
                 let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
                 if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -430,24 +423,6 @@ class APIClient {
             }
         })
         
-    }
-    
-    func uploadTripUUIDs()-> AuthenticatedAPIRequest {
-        let uuids = Trip.allTripsWithUUIDs().map { trip in
-            (trip as! Trip).uuid!
-        }
-        
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "uploadTripUUIDS", parameters: ["UUIDS": uuids]) { (response) in
-            switch response.result {
-            case .Success(_):
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "HasRunTripUUIDMigrationUpload")
-                NSUserDefaults.standardUserDefaults().synchronize()
-
-                DDLogInfo("Uploaded trip UUIDs!")
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error uploading uuids out: %@", error))
-            }
-        }
     }
     
     func syncUnsyncedTrips(syncInBackground: Bool = false, completionBlock: ()->Void = {}) {
