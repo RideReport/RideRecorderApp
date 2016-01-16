@@ -41,13 +41,14 @@ class SetupPermissionsViewController: SetupChildViewController {
     
     func nextPermission() {
         if self.currentPermissionsAsk == .AskForNotifications {
+            self.batteryLifeLabel.fadeOut()
+            self.helperTextLabel.fadeOut()
+            self.nextButton.fadeOut()
+            self.notificationDetailsLabel.popIn()
+            
             if (AppDelegate.appDelegate().notificationRegistrationStatus == .Unregistered) {
                 self.currentPermissionsAsk = .AskedForNotifications
                 self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
-                self.notificationDetailsLabel.popIn()
-                self.batteryLifeLabel.fadeOut()
-                self.helperTextLabel.fadeOut()
-                self.nextButton.fadeOut()
 
                 var didShowShowPermissionDialog = false
                 NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (_) -> Void in
