@@ -28,6 +28,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
     private var dateFormatter : NSDateFormatter!
     
+    private var tempBackgroundView : UIView?
+    
     private var annotationPopOverController : UIPopoverController? = nil
     
     override func viewDidLoad() {        
@@ -40,8 +42,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.logoView.hidden = true
         self.mapView.attributionButton.hidden = true
         self.mapView.rotateEnabled = false
-        self.mapView.layer.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0).CGColor
-        self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
         
         self.mapView.showsUserLocation = true
         self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
@@ -104,11 +104,35 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - UIViewController
     //
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if self.tempBackgroundView == nil {
+            self.tempBackgroundView = UIView(frame: self.view.bounds)
+            self.tempBackgroundView!.backgroundColor = self.view.backgroundColor
+            self.mapView.insertSubview(self.tempBackgroundView!, atIndex: 0)
+            self.mapView.bringSubviewToFront(self.tempBackgroundView!)
+        }
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         if let tripViewController = self.tripViewController {
             self.setSelectedTrip(tripViewController.selectedTrip)
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.view.delay(0.2) { () -> Void in
+            if let view = self.tempBackgroundView {
+                view.fadeOut({ () -> Void in
+                    view.removeFromSuperview()
+                    self.tempBackgroundView = nil                    
+                })
+            }
         }
     }
     
