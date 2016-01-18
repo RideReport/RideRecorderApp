@@ -19,6 +19,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var popupView: PopupView!
+    
+    private var dateOfLastTableRefresh: NSDate?
 
     private var reachability : Reachability!
     
@@ -86,11 +88,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.reloadData()
+        self.dateOfLastTableRefresh = NSDate()
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) in
+            self.reloadTableIfNeeded()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         self.refreshEmptyTableView()
         
         self.refreshHelperPopupUI()
@@ -179,6 +186,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.popupView.fadeOut()
             }
         }
+    }
+    
+    private func reloadTableIfNeeded() {
+        if let date = self.dateOfLastTableRefresh where date.isToday() {
+            // don't refresh if we've already done it today
+        } else {
+            // refresh to prevent section headers from getting out of date.
+            self.dateOfLastTableRefresh = NSDate()
+            self.tableView.reloadData()
+        }
+        
     }
 
     
