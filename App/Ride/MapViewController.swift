@@ -49,6 +49,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json")
         self.mapView.styleURL = styleURL
         
+        self.mapView.tintColor = ColorPallete.sharedPallete.transitBlue
+        
+        
         // set the size of the url cache for tile caching.
         let memoryCapacity = 1 * 1024 * 1024
         let diskCapacity = 40 * 1024 * 1024
