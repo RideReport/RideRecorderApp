@@ -117,7 +117,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 self.currentPermissionsAsk = .AskedForMotion
                 self.notificationDetailsLabel.text = "✅ Use your location during your ride"
                 self.notificationDetailsLabel.delay(0.5) {
-                    self.notificationDetailsLabel.text = "3️⃣ Use your motion acitivity during your ride"
+                    self.notificationDetailsLabel.text = "3️⃣ Use your motion activity during your ride"
                     self.notificationDetailsLabel.popIn()
                 }
                 
@@ -141,7 +141,7 @@ class SetupPermissionsViewController: SetupChildViewController {
             }
         } else if self.currentPermissionsAsk == .SayFinished {
             self.currentPermissionsAsk = .Finished
-            self.notificationDetailsLabel.text = "✅ Use your motion acitivity during your ride"
+            self.notificationDetailsLabel.text = "✅ Use your motion activity during your ride"
             self.notificationDetailsLabel.delay(0.5) {
                 self.notificationDetailsLabel.fadeOut()
             }
