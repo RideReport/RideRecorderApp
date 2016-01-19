@@ -19,6 +19,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var popupView: PopupView!
+    
+    private var dateOfLastTableRefresh: NSDate?
 
     private var reachability : Reachability!
     
@@ -86,11 +88,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.reloadData()
+        self.dateOfLastTableRefresh = NSDate()
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) in
+            self.reloadTableIfNeeded()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         self.refreshEmptyTableView()
         
         self.refreshHelperPopupUI()
@@ -180,18 +187,31 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
     }
+    
+    private func reloadTableIfNeeded() {
+        if let date = self.dateOfLastTableRefresh where date.isToday() {
+            // don't refresh if we've already done it today
+        } else {
+            // refresh to prevent section headers from getting out of date.
+            self.dateOfLastTableRefresh = NSDate()
+            self.tableView.reloadData()
+        }
+        
+    }
 
     
     private func refreshEmptyTableView() {
         if (self.fetchedResultsController != nil) {
             let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
-            let tableViewWasHidden = self.emptyTableView.hidden
+            let emptyTableViewWasHidden = self.emptyTableView.hidden
             
             self.emptyTableView.hidden = shouldHideEmptyTableView
             self.tableView.hidden = !shouldHideEmptyTableView
             
-            if tableViewWasHidden && !shouldHideEmptyTableView {
-                self.bobbleChick()
+            if emptyTableViewWasHidden && !shouldHideEmptyTableView {
+                self.emptyTableView.delay(0.5) {
+                    self.bobbleChick()
+                }
             }
         } else {
             self.emptyTableView.hidden = true
@@ -576,7 +596,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             rewardString = " " + emoji
         }
         
-        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %.1f miles%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, trip.lengthMiles, rewardString)
+        var lengthString = String(format: "%.1f miles", trip.lengthMiles)
+        if (trip.lengthMiles < 0.2) {
+            // rounded to nearest 50
+            lengthString = String(format: "%.0f feet", round(Float(trip.lengthFeet)/50) * 50.0)
+        }
+        
+        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %@%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, lengthString, rewardString)
         
         tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
     }
@@ -648,15 +674,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 trip.smoothIfNeeded({})
             }
         } else if (buttonIndex == 2) {
-            let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-            })
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                trip.sendTripCompletionNotificationLocally()
-                if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
-                }
-            })
+            trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 3) {
             APIClient.sharedClient.syncTrip(trip)
         }

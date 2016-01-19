@@ -817,6 +817,12 @@ class Trip : NSManagedObject {
         }
     }
     
+    var lengthFeet : Float {
+        get {
+            return (self.length.floatValue * 3.28084)
+        }
+    }
+    
     func closestLocationToCoordinate(coordinate: CLLocationCoordinate2D)->Location! {
         let targetLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
     
@@ -851,7 +857,7 @@ class Trip : NSManagedObject {
         UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
     }
     
-    func sendTripCompletionNotificationLocally() {
+    func sendTripCompletionNotificationLocally(forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
 
         self.cancelTripStateNotification()
@@ -865,8 +871,13 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
             self.currentStateNotification?.userInfo = ["uuid" : self.uuid]
-
-            UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+            
+            if let date = scheduleDate {
+                self.currentStateNotification?.fireDate = date
+                UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
+            } else {
+                UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+            }
         }
     }
     

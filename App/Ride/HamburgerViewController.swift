@@ -89,7 +89,7 @@ class HamburgerViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 2) {
+        if (indexPath.row == 1) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
@@ -107,7 +107,7 @@ class HamburgerViewController: UITableViewController {
                     routesVC.refreshHelperPopupUI()
                 }
             } else {
-                let actionSheet = UIActionSheet(title: nil, delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause Ride Report for an hour", "Pause Ride Report for the day", "Pause Ride Report for the week", "Turn off Ride Report for now")
+                let actionSheet = UIActionSheet(title: "How long would you like to pause Ride Report?", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause for an hour", "Pause for the rest of the day", "Pause for rest of the week", "Turn off Ride Report for now")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
                         Mixpanel.sharedInstance().track(

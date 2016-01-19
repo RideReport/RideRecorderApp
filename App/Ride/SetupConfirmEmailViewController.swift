@@ -22,7 +22,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         
         self.passcodeInputView.passcodeStyle = BKPasscodeInputViewNumericPasscodeStyle
         self.passcodeInputView.keyboardType = UIKeyboardType.NumberPad
-        self.passcodeInputView.keyboardAppearance = UIKeyboardAppearance.Dark
+        self.passcodeInputView.keyboardAppearance = UIKeyboardAppearance.Light
         self.passcodeInputView.delegate = self
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
