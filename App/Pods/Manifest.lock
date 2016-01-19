@@ -13,11 +13,10 @@ PODS:
     - CocoaLumberjack/Default
   - CocoaLumberjack/Swift (2.0.1):
     - CocoaLumberjack/Extensions
-  - Crashlytics (3.3.1)
+  - Crashlytics (3.6.0):
+    - Fabric (~> 1.6.3)
   - ECSlidingViewController (2.0.3)
-  - Fabric (1.5.1):
-    - Fabric/Base (= 1.5.1)
-  - Fabric/Base (1.5.1)
+  - Fabric (1.6.3)
   - FBSDKCoreKit (4.6.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.6.0)
@@ -94,9 +93,9 @@ SPEC CHECKSUMS:
   Alamofire: fbc829692f351fa1d8a31dd75fd7f7f56fea31fb
   Bolts: 805a4a87413e49d4a0c2b7d469084cbc46b09342
   CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
-  Crashlytics: 0e61bdda9def51f1e99720f804eebe94865442b2
+  Crashlytics: e4e8d02914f2608fbc7bf42b1a7af838b0db67a2
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
-  Fabric: 03c3b3fe77e11a2bc31421b989a9c7adaa4779a5
+  Fabric: cbe0ca6c9531bba17910052f6f105fcbc5fa7f67
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
