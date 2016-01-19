@@ -247,7 +247,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
             }
             
-            if count <= 10 {
+            if count < 10 {
                 // Don't show stats until they get to >=10 rides
                 var headerFrame = self.headerView.frame
                 headerFrame.size.height = self.headerLabel1.frame.size.height + 10
