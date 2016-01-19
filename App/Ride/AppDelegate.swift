@@ -180,8 +180,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func showMapAttribution() {
-        if let mapViewController = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? DirectionsViewController)?.mapViewController {
-            mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+        if let routesVC = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
+            routesVC.showMapInfo()
         }
     }
     

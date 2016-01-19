@@ -627,6 +627,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func showMapInfo() {
+        let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
+        self.presentViewController(directionsNavController, animated: true, completion: nil)
+        
+        if let directionsVC = directionsNavController.topViewController as? DirectionsViewController {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+                directionsVC.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+            }
+        }
+    }
+    
     @IBAction func showDirections(sender: AnyObject) {
         let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
         self.presentViewController(directionsNavController, animated: true, completion: nil)
