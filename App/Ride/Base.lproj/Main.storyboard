@@ -1383,6 +1383,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                                    <rect key="frame" x="25" y="161" width="350" height="43"/>
+                                </variation>
                             </label>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bc0-BS-lHY">
                                 <rect key="frame" x="136" y="224" width="328" height="151"/>
@@ -1475,6 +1478,7 @@
                         <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="NMY-2y-IYc" secondAttribute="centerX" id="3Uk-zL-8pb"/>
+                            <constraint firstItem="7eH-Vw-Tw4" firstAttribute="top" secondItem="wQe-d2-N04" secondAttribute="bottom" constant="40" id="9nF-TA-X2N"/>
                             <constraint firstItem="wQe-d2-N04" firstAttribute="top" secondItem="f4K-EL-rsY" secondAttribute="bottom" constant="60" id="E9F-lK-6wS"/>
                             <constraint firstAttribute="centerY" secondItem="Bc0-BS-lHY" secondAttribute="centerY" constant="0.5" id="LzJ-2m-XjK"/>
                             <constraint firstAttribute="centerX" secondItem="wQe-d2-N04" secondAttribute="centerX" id="MMD-ke-Dnj"/>
@@ -1487,7 +1491,14 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="9nF-TA-X2N"/>
                                 <exclude reference="ffy-To-v7E"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="constraints">
+                                <exclude reference="E9F-lK-6wS"/>
+                                <include reference="9nF-TA-X2N"/>
                             </mask>
                         </variation>
                     </view>
@@ -2082,7 +2093,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <variation key="widthClass=compact" misplaced="YES">
@@ -2333,7 +2344,7 @@
                                     <constraint firstAttribute="width" constant="600" id="iLh-vI-Wlv"/>
                                 </constraints>
                                 <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="64" width="400" height="536"/>
+                                    <rect key="frame" x="-100" y="64" width="400" height="536"/>
                                 </variation>
                                 <connections>
                                     <segue destination="W0e-45-zli" kind="embed" id="2fE-Yw-HAf"/>
