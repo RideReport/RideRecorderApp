@@ -265,7 +265,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
                 let firstTrip = (self.fetchedResultsController.fetchedObjects?.last as! Trip)
-                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count
+                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count + 1
                 
                 let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
