@@ -674,15 +674,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 trip.smoothIfNeeded({})
             }
         } else if (buttonIndex == 2) {
-            let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-            })
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(5 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-                trip.sendTripCompletionNotificationLocally()
-                if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
-                }
-            })
+            trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 3) {
             APIClient.sharedClient.syncTrip(trip)
         }
