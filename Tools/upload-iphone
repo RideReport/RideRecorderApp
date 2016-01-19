@@ -14,7 +14,7 @@ end
 
 #get current version number
 if (upload_build)
-  raise "No build present at!" unless File.exists?("Ride.ipa")
+  raise "No build present at!" unless File.exists?("Ride Report.ipa")
 end
 
 AWS::S3::DEFAULT_HOST.replace "s3-us-west-2.amazonaws.com"
@@ -38,7 +38,7 @@ def upload(path, dest_path, bucket, access)
 end
 
 if (upload_build)
-  upload("Ride.ipa", "Ride.ipa", "app-ride-report", "private")
+  upload("Ride Report.ipa", "Ride.ipa", "app-ride-report", "private")
 end
 
 url = AWS::S3::S3Object.url_for('Ride.ipa',
@@ -47,7 +47,7 @@ url = AWS::S3::S3Object.url_for('Ride.ipa',
                  :expires_in => 60 * 60 * 24 * 30)
 url = url.sub("s3-us-west-2.amazonaws.com/app-ride-report", "app.ride.report")
 puts url
-`cp Ride.ipa Ride.zip`
+`cp 'Ride Report.ipa' Ride.zip`
 `unzip Ride.zip -d Ride`
 current_version = `/usr/libexec/PlistBuddy -c "print CFBundleVersion" Ride/Payload/Ride\\ Report.app/Info.plist`.strip
 `rm -r Ride`
@@ -69,5 +69,5 @@ url = url.sub("s3-us-west-2.amazonaws.com/app-ride-report", "app.ride.report")
 puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
 
 if (upload_build)                 
-  `rm -r Ride.ipa`
+  `rm -r Ride\ Report.ipa`
 end
