@@ -203,13 +203,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     private func refreshEmptyTableView() {
         if (self.fetchedResultsController != nil) {
             let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
-            let tableViewWasHidden = self.emptyTableView.hidden
+            let emptyTableViewWasHidden = self.emptyTableView.hidden
             
             self.emptyTableView.hidden = shouldHideEmptyTableView
             self.tableView.hidden = !shouldHideEmptyTableView
             
-            if tableViewWasHidden && !shouldHideEmptyTableView {
-                self.bobbleChick()
+            if emptyTableViewWasHidden && !shouldHideEmptyTableView {
+                self.emptyTableView.delay(0.5) {
+                    self.bobbleChick()
+                }
             }
         } else {
             self.emptyTableView.hidden = true
