@@ -236,6 +236,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 switch response.result {
                 case .Success(_):
                     DDLogInfo("Trip summary was successfully sync'd.")
+                    stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
                 case .Failure(_):
                     // if it fails, go ahead and send the notification locally
                     stoppedTrip.sendTripCompletionNotificationLocally()
