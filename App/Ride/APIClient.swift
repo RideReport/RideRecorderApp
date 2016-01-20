@@ -466,7 +466,7 @@ class APIClient {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        guard let startingLocation = trip.locations.firstObject as? Location, endingLocation = trip.locations.lastObject as? Location else {
+        guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
             DDLogWarn("No starting and/or ending location found when syncing trip!")
             
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())

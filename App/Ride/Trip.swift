@@ -901,7 +901,6 @@ class Trip : NSManagedObject {
                 message += (" " + rewardEmoji + " " + rewardDescription)
         }
         
-        
         return message
     }
     
@@ -1079,6 +1078,36 @@ class Trip : NSManagedObject {
         let loc = self.locations.sortedArrayUsingDescriptors([sortDescriptor]).first as! Location
         return loc
     }
+    
+    func bestStartLocation() -> Location? {
+        guard self.locations != nil || self.locations.count > 0 else {
+            return nil
+        }
+        
+        for loc in self.locations {
+            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
+                return loc
+            }
+        }
+        
+        return self.locations.firstObject
+    }
+    
+    func bestEndLocation() -> Location? {
+        guard self.locations != nil || self.locations.count > 0 else {
+            return nil
+        }
+        
+        for loc in self.locations.reverse() {
+            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
+                return loc
+            }
+        }
+        
+        return self.locations.lastObject
+    }
+    
+    
     
     var startDate : NSDate {
         guard let loc = self.locations.firstObject as? Location,
