@@ -1085,12 +1085,12 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations {
-            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
-                return loc
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+                return location
             }
         }
         
-        return self.locations.firstObject
+        return self.locations.firstObject as? Location
     }
     
     func bestEndLocation() -> Location? {
@@ -1099,12 +1099,12 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations.reverse() {
-            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
-                return loc
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+                return location
             }
         }
         
-        return self.locations.lastObject
+        return self.locations.lastObject as? Location
     }
     
     
