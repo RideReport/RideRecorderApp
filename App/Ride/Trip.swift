@@ -1125,7 +1125,7 @@ class Trip : NSManagedObject {
     }
     
     var endDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
+        guard let loc = self.locations.lastObject as? Location,
             date = loc.date else {
             return self.creationDate
         }
