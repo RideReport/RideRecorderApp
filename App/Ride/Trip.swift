@@ -859,7 +859,11 @@ class Trip : NSManagedObject {
     
     func sendTripCompletionNotificationLocally(forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
-
+        
+        // clear any remote push notifications
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 1
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        
         self.cancelTripStateNotification()
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
