@@ -16,7 +16,7 @@ PODS:
   - Crashlytics (3.6.0):
     - Fabric (~> 1.6.3)
   - ECSlidingViewController (2.0.3)
-  - Fabric (1.6.3)
+  - Fabric (1.6.4)
   - FBSDKCoreKit (4.6.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.6.0)
@@ -95,7 +95,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
   Crashlytics: e4e8d02914f2608fbc7bf42b1a7af838b0db67a2
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
-  Fabric: cbe0ca6c9531bba17910052f6f105fcbc5fa7f67
+  Fabric: ed41fd62173c6bdea24ab02c9d7707161eabb750
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86

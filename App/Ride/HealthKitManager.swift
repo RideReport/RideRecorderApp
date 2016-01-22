@@ -191,7 +191,7 @@ class HealthKitManager {
             
             let distance = HKQuantity(unit: HKUnit.mileUnit(), doubleValue: Double(trip.lengthMiles))
 
-            let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.endDate.timeIntervalSinceDate(trip.startDate), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])
+            let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])
             
             // Save the workout before adding detailed samples.
             self.healthStore.saveObject(ride) { (success, error) -> Void in

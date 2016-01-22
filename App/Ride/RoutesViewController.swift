@@ -665,7 +665,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip", "Sync to HealthKit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -688,6 +688,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 3) {
             APIClient.sharedClient.syncTrip(trip)
+        } else if (buttonIndex == 4) {
+            HealthKitManager.sharedManager.logTrip(trip)
         }
     }
     

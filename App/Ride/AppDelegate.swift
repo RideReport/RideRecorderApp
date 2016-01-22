@@ -71,6 +71,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         CoreDataManager.startup()
         APIClient.startup()
         
+#if DEBUG
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthCareIsSetup")
+        NSUserDefaults.standardUserDefaults().synchronize()
+#endif
+
+        if (NSUserDefaults.standardUserDefaults().boolForKey("healthCareIsSetup")) {
+            self.startupHealthManager()
+        }
+        
         // Start permission-needing managers
         if (hasSeenSetup) {
             // if they are new, we wait to start data gathering managers
@@ -160,9 +169,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         MotionManager.startup()
     }
     
-//    func startupHealthManager() {
-//        HealthKitManager.startup()
-//    }
+    func startupHealthManager() {
+        HealthKitManager.startup()
+    }
     
     func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)

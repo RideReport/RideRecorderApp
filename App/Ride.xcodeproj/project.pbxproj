@@ -16,6 +16,9 @@
 		84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDB1BD848C000264652 /* counter-numbers@2x.png */; };
 		84091CE01BD848C000264652 /* counter-shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDC1BD848C000264652 /* counter-shadow.png */; };
 		84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84091CDD1BD848C000264652 /* counter-shadow@2x.png */; };
+		8409C4A61C518A8400999446 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8409C4A51C518A8400999446 /* HealthKit.framework */; };
+		8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
+		8409C4A91C518B2400999446 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
 		8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */ = {isa = PBXBuildFile; fileRef = 8411B0611C20EC20002E8E80 /* DMActivityInstagram.m */; };
 		8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0731C20EC20002E8E80 /* instagram@2x.png */; };
 		8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8411B0751C20EC20002E8E80 /* instagram@3x.png */; };
@@ -77,7 +80,6 @@
 		8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */; };
 		8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */; };
 		8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */; };
-		845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A01A3FC3D600452EEB /* Crashlytics.framework */; };
 		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
@@ -116,7 +118,6 @@
 		84C934941C24C4B5001AC3EB /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC01BD56FBC0079AFCC /* libc++.tbd */; };
 		84C934951C24C4BC001AC3EB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
 		84C934961C24C4C4001AC3EB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */; };
-		84CA64EB1B72BBF400696587 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84CA64EA1B72BBF400696587 /* Fabric.framework */; };
 		84D1555519D2733500316995 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555419D2733500316995 /* AppDelegate.swift */; };
 		84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
 		84D1555A19D2733500316995 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
@@ -186,6 +187,8 @@
 		84091CDB1BD848C000264652 /* counter-numbers@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-numbers@2x.png"; sourceTree = "<group>"; };
 		84091CDC1BD848C000264652 /* counter-shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow.png"; sourceTree = "<group>"; };
 		84091CDD1BD848C000264652 /* counter-shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "counter-shadow@2x.png"; sourceTree = "<group>"; };
+		8409C4A51C518A8400999446 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		8409C4A71C518B2400999446 /* HealthKitManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitManager.swift; sourceTree = "<group>"; };
 		840AE4011BF7DE61004E4997 /* Ride 30.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 30.xcdatamodel"; sourceTree = "<group>"; };
 		840F1AC91BC3204D00DBE7BD /* Ride 27.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 27.xcdatamodel"; sourceTree = "<group>"; };
 		8411B0601C20EC20002E8E80 /* DMActivityInstagram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMActivityInstagram.h; sourceTree = "<group>"; };
@@ -240,7 +243,6 @@
 		8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupCreateProfileViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupConfirmEmailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSDate+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBAnimatedGradientMaskButton.h; sourceTree = "<group>"; };
@@ -292,7 +294,6 @@
 		84C28E041BFFA3050075DD7E /* Ride 31.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 31.xcdatamodel"; sourceTree = "<group>"; };
 		84C29F6C1BDEDD070003A26B /* ClearButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClearButton.swift; sourceTree = "<group>"; };
 		84C9C5601C1CDB2100BD467E /* Ride 32.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 32.xcdatamodel"; sourceTree = "<group>"; };
-		84CA64EA1B72BBF400696587 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		84CA65951B72DEFC00696587 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = "../../mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib/libuv.a"; sourceTree = "<group>"; };
 		84D1554F19D2733500316995 /* Ride Report.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84D1555319D2733500316995 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -375,14 +376,13 @@
 				84F137591B5DADE60023EC82 /* MobileCoreServices.framework in Frameworks */,
 				84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */,
 				84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */,
+				8409C4A61C518A8400999446 /* HealthKit.framework in Frameworks */,
 				84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */,
 				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
 				84D1557819D2737D00316995 /* MapKit.framework in Frameworks */,
-				845330A11A3FC3D600452EEB /* Crashlytics.framework in Frameworks */,
 				595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */,
-				84CA64EB1B72BBF400696587 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +392,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8409C4A51C518A8400999446 /* HealthKit.framework */,
 				842141941C3DD9D2009DA851 /* SpriteKit.framework */,
 				8411B04F1C20EC20002E8E80 /* DMActivityInstagram */,
 				842FDCC51BD56FEB0079AFCC /* libz.tbd */,
@@ -411,9 +412,7 @@
 				84F137521B5DADD30023EC82 /* CoreTelephony.framework */,
 				84E395A51A76B5A80015B682 /* libPods.a */,
 				845330A21A40B01100452EEB /* MessageUI.framework */,
-				845330A01A3FC3D600452EEB /* Crashlytics.framework */,
 				2BEE9E09918B3E44BAE32A45 /* Pods.framework */,
-				84CA64EA1B72BBF400696587 /* Fabric.framework */,
 				51710707CF8C3B3D807E26CF /* Pods_Ride_Report_Tests.framework */,
 			);
 			name = Frameworks;
@@ -465,6 +464,7 @@
 		8445317719FEEB2A0096F26E /* Service Managers */ = {
 			isa = PBXGroup;
 			children = (
+				8409C4A71C518B2400999446 /* HealthKitManager.swift */,
 				8445317519FEEB210096F26E /* RouteManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
 				844497211A3A4EB40009F889 /* APIClient.swift */,
@@ -750,7 +750,7 @@
 								enabled = 1;
 							};
 							com.apple.HealthKit = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.HomeKit = {
 								enabled = 0;
@@ -958,6 +958,7 @@
 				842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */,
 				842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */,
 				842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */,
+				8409C4A91C518B2400999446 /* HealthKitManager.swift in Sources */,
 				842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */,
 				842141A81C407CEE009DA851 /* TripViewController.swift in Sources */,
 				842FDCA61BD56EF70079AFCC /* Location.swift in Sources */,
@@ -996,6 +997,7 @@
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,
 				842141A71C407CEE009DA851 /* TripViewController.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
+				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
 				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
@@ -1175,6 +1177,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
@@ -1214,6 +1217,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
