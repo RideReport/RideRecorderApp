@@ -1110,12 +1110,18 @@ class Trip : NSManagedObject {
     
     
     var startDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
-            date = loc.date else {
-            return self.creationDate
+        // don't use a geofenced location
+        for loc in self.locations {
+            if let location = loc as? Location where !location.isGeofencedLocation {
+                if let date = location.date {
+                    return date
+                } else {
+                    break
+                }
+            }
         }
         
-        return date
+        return self.creationDate
     }
     
     var endDate : NSDate {
