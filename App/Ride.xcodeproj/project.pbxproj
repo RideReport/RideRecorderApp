@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
+		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
 		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
 		634FDB33331DD15D821B2959 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
@@ -30,7 +32,6 @@
 		842141A81C407CEE009DA851 /* TripViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842141A61C407CEE009DA851 /* TripViewController.swift */; };
 		842141CA1C4427A2009DA851 /* iphonewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842141C91C4427A2009DA851 /* iphonewhite@3x.png */; };
 		842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842141C91C4427A2009DA851 /* iphonewhite@3x.png */; };
-		842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842599D41B90EC1D0038C3CA /* Icon@2x.png */; };
 		8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842FDCA21BD56E020079AFCC /* APIClientTests.swift */; };
@@ -126,8 +127,6 @@
 		84D1557819D2737D00316995 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557719D2737D00316995 /* MapKit.framework */; };
 		84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
-		84D7AD571C4488C1001882EB /* IconTiny@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D7AD551C4488C1001882EB /* IconTiny@2x.png */; };
-		84D7AD581C4488C1001882EB /* IconTiny@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84D7AD561C4488C1001882EB /* IconTiny@3x.png */; };
 		84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */; };
 		84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDE1A6DE17F00C71F53 /* SetupRatingViewController.swift */; };
 		84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */; };
@@ -173,6 +172,8 @@
 
 /* Begin PBXFileReference section */
 		2BEE9E09918B3E44BAE32A45 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
+		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
 		51710707CF8C3B3D807E26CF /* Pods_Ride_Report_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ride_Report_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79593058F9250D4F54FC5447 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -204,7 +205,6 @@
 		842141A21C406A84009DA851 /* map@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "map@3x.png"; sourceTree = "<group>"; };
 		842141A61C407CEE009DA851 /* TripViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripViewController.swift; sourceTree = "<group>"; };
 		842141C91C4427A2009DA851 /* iphonewhite@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphonewhite@3x.png"; sourceTree = "<group>"; };
-		842599D41B90EC1D0038C3CA /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "Images.xcassets/AppIcon.appiconset/Icon@2x.png"; sourceTree = "<group>"; };
 		84270BDD1A38ECA900AD6328 /* Ride 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 3.xcdatamodel"; sourceTree = "<group>"; };
 		8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Ride Report Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8429E5D71A5DCBA000EB3E94 /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Activity.swift; path = Ride/Activity.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -306,8 +306,6 @@
 		84D1557719D2737D00316995 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		84D1557919D2743900316995 /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CoreDataManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84D1557B19D274EB00316995 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
-		84D7AD551C4488C1001882EB /* IconTiny@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "IconTiny@2x.png"; path = "Images.xcassets/AppIcon.appiconset/IconTiny@2x.png"; sourceTree = "<group>"; };
-		84D7AD561C4488C1001882EB /* IconTiny@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "IconTiny@3x.png"; path = "Images.xcassets/AppIcon.appiconset/IconTiny@3x.png"; sourceTree = "<group>"; };
 		84DDB1EC1B0E66FF006B7196 /* Ride 23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 23.xcdatamodel"; sourceTree = "<group>"; };
 		84E395A51A76B5A80015B682 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RideSummaryView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -537,8 +535,8 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				84D7AD551C4488C1001882EB /* IconTiny@2x.png */,
-				84D7AD561C4488C1001882EB /* IconTiny@3x.png */,
+				3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */,
+				3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */,
 				8451037C1C20BAE600ABD323 /* Action@2x.png */,
 				8451037D1C20BAE600ABD323 /* Action@3x.png */,
 				845A04491C1F795000556CD9 /* pinGreen@2x.png */,
@@ -552,7 +550,6 @@
 				84091CDD1BD848C000264652 /* counter-shadow@2x.png */,
 				8451FA851B9E2F6E008ACDCD /* menu@2x.png */,
 				8451FA861B9E2F6E008ACDCD /* menu@3x.png */,
-				842599D41B90EC1D0038C3CA /* Icon@2x.png */,
 				849FB1F51B87F1250002306F /* ride.report.cer */,
 				84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */,
 				842141A11C406A84009DA851 /* map@2x.png */,
@@ -806,11 +803,11 @@
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				845A044D1C1F795000556CD9 /* pinGreen@2x.png in Resources */,
 				8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */,
-				842599D51B90EC1D0038C3CA /* Icon@2x.png in Resources */,
 				842141A51C406A84009DA851 /* map@3x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
 				845A044E1C1F795000556CD9 /* pinGreen@3x.png in Resources */,
+				3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
@@ -822,14 +819,13 @@
 				8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */,
 				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
-				84D7AD571C4488C1001882EB /* IconTiny@2x.png in Resources */,
 				8492BCBA1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				84091CE01BD848C000264652 /* counter-shadow.png in Resources */,
 				842141CA1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
 				842141A41C406A84009DA851 /* map@2x.png in Resources */,
+				3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
 				8492BCB61C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
-				84D7AD581C4488C1001882EB /* IconTiny@3x.png in Resources */,
 				8492BCB81C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
 				84091CDE1BD848C000264652 /* counter-numbers.png in Resources */,
 				8492BCB41C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
