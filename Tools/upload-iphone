@@ -69,5 +69,5 @@ url = url.sub("s3-us-west-2.amazonaws.com/app-ride-report", "app.ride.report")
 puts "itms-services://?action=download-manifest&url=#{CGI.escape(url)}"
 
 if (upload_build)                 
-  `rm -r Ride\ Report.ipa`
+  `rm -r 'Ride Report.ipa'`
 end
