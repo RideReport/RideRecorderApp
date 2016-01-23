@@ -466,7 +466,7 @@ class APIClient {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        guard let startingLocation = trip.locations.firstObject as? Location, endingLocation = trip.locations.lastObject as? Location else {
+        guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
             DDLogWarn("No starting and/or ending location found when syncing trip!")
             
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
@@ -537,6 +537,10 @@ class APIClient {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
                     self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
+                } else if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                    // server doesn't know about trip, reset locationsAreSynced
+                    trip.locationsAreSynced = false
+                    CoreDataManager.sharedManager.saveContext()
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }

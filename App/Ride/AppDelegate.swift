@@ -181,8 +181,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func showMapAttribution() {
-        if let mapViewController = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? DirectionsViewController)?.mapViewController {
-            mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+        if let routesVC = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
+            routesVC.showMapInfo()
         }
     }
     
@@ -263,12 +263,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
         
         if let syncTrips = userInfo["syncTrips"] as? Bool where syncTrips {
+            DDLogInfo("Received sync trips notification")
             if UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
                 APIClient.sharedClient.syncUnsyncedTrips(true, completionBlock: completionBlock)
             }
         } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
+                
+            DDLogInfo(String(format: "Received trip summary notification, uuid:", uuid))
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally()

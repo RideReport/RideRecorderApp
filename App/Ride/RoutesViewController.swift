@@ -247,7 +247,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
             }
             
-            if count <= 10 {
+            if count < 10 {
                 // Don't show stats until they get to >=10 rides
                 var headerFrame = self.headerView.frame
                 headerFrame.size.height = self.headerLabel1.frame.size.height + 10
@@ -265,7 +265,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
                 let firstTrip = (self.fetchedResultsController.fetchedObjects?.last as! Trip)
-                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count
+                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count + 1
                 
                 let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
                     PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
@@ -623,6 +623,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if let tripVC = segue.destinationViewController as? TripViewController,
                 trip = sender as? Trip {
                 tripVC.selectedTrip = trip
+            }
+        }
+    }
+    
+    func showMapInfo() {
+        let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
+        self.presentViewController(directionsNavController, animated: true, completion: nil)
+        
+        if let directionsVC = directionsNavController.topViewController as? DirectionsViewController {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+                directionsVC.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
             }
         }
     }

@@ -859,7 +859,11 @@ class Trip : NSManagedObject {
     
     func sendTripCompletionNotificationLocally(forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
-
+        
+        // clear any remote push notifications
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 1
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        
         self.cancelTripStateNotification()
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
@@ -900,7 +904,6 @@ class Trip : NSManagedObject {
             rewardEmoji = self.rewardEmoji {
                 message += (" " + rewardEmoji + " " + rewardDescription)
         }
-        
         
         return message
     }
@@ -1080,17 +1083,53 @@ class Trip : NSManagedObject {
         return loc
     }
     
-    var startDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
-            date = loc.date else {
-            return self.creationDate
+    func bestStartLocation() -> Location? {
+        guard self.locations != nil || self.locations.count > 0 else {
+            return nil
         }
         
-        return date
+        for loc in self.locations {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+                return location
+            }
+        }
+        
+        return self.locations.firstObject as? Location
+    }
+    
+    func bestEndLocation() -> Location? {
+        guard self.locations != nil || self.locations.count > 0 else {
+            return nil
+        }
+        
+        for loc in self.locations.reverse() {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+                return location
+            }
+        }
+        
+        return self.locations.lastObject as? Location
+    }
+    
+    
+    
+    var startDate : NSDate {
+        // don't use a geofenced location
+        for loc in self.locations {
+            if let location = loc as? Location where !location.isGeofencedLocation {
+                if let date = location.date {
+                    return date
+                } else {
+                    break
+                }
+            }
+        }
+        
+        return self.creationDate
     }
     
     var endDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
+        guard let loc = self.locations.lastObject as? Location,
             date = loc.date else {
             return self.creationDate
         }
