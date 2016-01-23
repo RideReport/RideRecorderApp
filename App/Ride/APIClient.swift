@@ -537,6 +537,10 @@ class APIClient {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
                     self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
+                } else if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                    // server doesn't know about trip, reset locationsAreSynced
+                    trip.locationsAreSynced = false
+                    CoreDataManager.sharedManager.saveContext()
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }
