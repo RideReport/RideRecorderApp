@@ -450,7 +450,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
                 self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
                     DDLogVerbose("Found enough motion in motion monitoring mode, triggering trip…")
-                    self.startTripFromLocation(locations.first!)
+                    self.startTripFromLocation(self.lastMotionMonitoringLocation!)
             } else {
                 DDLogVerbose("Found motion in motion monitoring mode, awaiting further reads…")
             }
