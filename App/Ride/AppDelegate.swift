@@ -270,7 +270,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
                 
-            DDLogInfo(String(format: "Received trip summary notification, uuid:", uuid))
+            DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally()
