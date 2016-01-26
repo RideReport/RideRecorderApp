@@ -273,11 +273,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             }
         } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
-                
+            
+            var clearRemoteMessage = false
+            if let aps = userInfo["aps"], let alert = aps["alert"] where alert != nil {
+                clearRemoteMessage = true
+            }
             DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
-            trip.sendTripCompletionNotificationLocally()
+            trip.sendTripCompletionNotificationLocally(clearRemoteMessage)
             completionBlock()
         } else {
             completionBlock()

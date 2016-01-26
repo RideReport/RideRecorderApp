@@ -840,31 +840,10 @@ class Trip : NSManagedObject {
         return closestLocation
     }
     
-    private func sendTripStartedNotificationImmediately() {
-        self.cancelTripStateNotification()
-        
-        var message = ""
-        
-        if (self.startingPlacemarkName != nil) {
-            message = String(format: "Started a trip in %@…", self.startingPlacemarkName)
-        } else {
-            message = "Started a trip…"
-        }
-        
-        self.currentStateNotification = UILocalNotification()
-        self.currentStateNotification?.alertBody = message
-        self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
-        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
-    }
-    
-    func sendTripCompletionNotificationLocally(forFutureDate scheduleDate: NSDate? = nil) {
+    func sendTripCompletionNotificationLocally(clearRemoteMessage: Bool = false, forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
         
-        // clear any remote push notifications
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 1
-        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-        
-        self.cancelTripStateNotification()
+        self.cancelTripStateNotification(clearRemoteMessage)
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             // don't show a notification for anything but bike trips.
@@ -880,7 +859,9 @@ class Trip : NSManagedObject {
                 self.currentStateNotification?.fireDate = date
                 UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
             } else {
-                UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+                // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
+                self.currentStateNotification?.fireDate = NSDate().secondsFrom(1)
+                UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
             }
         }
     }
@@ -935,7 +916,13 @@ class Trip : NSManagedObject {
         return false
     }
     
-    func cancelTripStateNotification() {
+    func cancelTripStateNotification(clearRemoteMessage: Bool = false) {
+        // clear any remote push notifications
+        if clearRemoteMessage {
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 1
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        }
+        
         if (self.currentStateNotification != nil) {
             UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil
