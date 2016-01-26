@@ -20,8 +20,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let routeResumeTimeout : NSTimeInterval = 240
     let longerRouteThresholdMiles : Float = 15.0
     let longerRouteResumeTimeout : NSTimeInterval = 900
-    let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
-    
 
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
@@ -69,11 +67,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         static var onceToken : dispatch_once_t = 0
         static var sharedManager : RouteManager?
         static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.NotDetermined
+        static let acceptableLocationAccuracy = kCLLocationAccuracyNearestTenMeters * 3
     }
     
     //
     // MARK: - Initializers
     //
+    
+    class var acceptableLocationAccuracy:CLLocationAccuracy {
+        return Static.acceptableLocationAccuracy
+    }
     
     class var sharedManager:RouteManager {
         return Static.sharedManager!
@@ -272,7 +275,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if (location.speed >= self.minimumSpeedToContinueMonitoring ||
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
-                if (location.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+                if (location.horizontalAccuracy <= RouteManager.acceptableLocationAccuracy) {
                     if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
                         // if the event is more recent than the one we already have
                         self.lastMovingLocation = location
@@ -437,7 +440,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.lastMotionMonitoringLocation = locations.first
         
-        if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= self.acceptableLocationAccuracy) {
+        if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= RouteManager.acceptableLocationAccuracy) {
             self.isGettingInitialLocationForGeofence = false
             if (!self.didStartFromBackground) {
                 DDLogVerbose("Got intial location for geofence. Stopping!")

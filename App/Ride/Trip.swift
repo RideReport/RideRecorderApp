@@ -945,7 +945,7 @@ class Trip : NSManagedObject {
     func accurateLocations()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.sharedManager.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -1089,7 +1089,7 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1103,7 +1103,7 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations.reverse() {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1142,7 +1142,7 @@ class Trip : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as! Location
-            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
+            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy) {
                 count++
                 sumSpeed += (location as Location).speed!.doubleValue
             }
