@@ -233,18 +233,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             Profile.profile().updateCurrentRideStreakLength()
             
-            if Profile.profile().currentStreakLength.integerValue == 0 {
-                self.headerLabel1.text = "🐣  No rides today"
-            } else {
+            if let currentStreakLength = Profile.profile().currentStreakLength where currentStreakLength.integerValue > 0 {
                 if (Trip.bikeTripsToday() == nil) {
                     if (NSDate().isBeforeNoon()) {
-                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", Profile.profile().currentStreakLength.integerValue)
+                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
                     } else {
-                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", Profile.profile().currentStreakLength.integerValue)
+                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                     }
                 } else {
-                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
                 }
+            } else {
+                self.headerLabel1.text = "🐣  No rides today"
             }
             
             if count < 10 {

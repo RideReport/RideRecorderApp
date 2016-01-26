@@ -49,8 +49,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.rewardsLabel1.hidden = true
         }
         
-        if Profile.profile().longestStreakLength.integerValue > 0 {
-            self.rewardsLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
+        if let longestStreak = Profile.profile().longestStreakLength, longestStreakDate = Profile.profile().longestStreakStartDate {
+            self.rewardsLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak, dateFormatter.stringFromDate(longestStreakDate))
         } else {
             self.rewardsLabel2.hidden = true
         }

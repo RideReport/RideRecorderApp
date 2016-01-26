@@ -69,8 +69,15 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
 
         if let firstTripDate = Profile.profile().firstTripDate {
             self.statsFirstLineLabel.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, formatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
+        } else {
+            self.statsFirstLineLabel.text = ""
         }
-        self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
+        
+        if let longestStreak = Profile.profile().longestStreakLength, longestStreakLengthDate = Profile.profile().longestStreakStartDate {
+            self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak.integerValue, dateFormatter.stringFromDate(longestStreakLengthDate))
+        } else {
+            self.statsSecondLineLabel.text = ""
+        }
     }
     
     
