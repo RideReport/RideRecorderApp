@@ -66,29 +66,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        // Start Managers. The order matters!
-        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
-        CoreDataManager.startup()
-        APIClient.startup()
-        
-        // Start permission-needing managers
-        if (hasSeenSetup) {
-            // if they are new, we wait to start data gathering managers
-            // this avoids immediately presenting the privacy permission dialogs.
-            self.startupNotifications()
-            self.startupMotionManager()
+        dispatch_async(dispatch_get_main_queue()) {
+            // start managers after returing
             
-            if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
-                DDLogInfo("Launched in background due to location update")
-                self.startupRouteManager(true)
-            } else {
-                self.startupRouteManager(false)
-            }
+            // Start Managers. The order matters!
+            Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
+            CoreDataManager.startup()
+            APIClient.startup()
+            
+            // Start permission-needing managers
+            if (hasSeenSetup) {
+                // if they are new, we wait to start data gathering managers
+                // this avoids immediately presenting the privacy permission dialogs.
+                self.startupNotifications()
+                self.startupMotionManager()
+                
+                if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
+                    DDLogInfo("Launched in background due to location update")
+                    self.startupRouteManager(true)
+                } else {
+                    self.startupRouteManager(false)
+                }
 
-            self.transitionToMainNavController()
-        } else {
-            // SetupPermissionsViewController starts up the managers
-            self.transitionToSetup()
+                self.transitionToMainNavController()
+            } else {
+                // SetupPermissionsViewController starts up the managers
+                self.transitionToSetup()
+            }
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
