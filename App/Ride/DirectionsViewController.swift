@@ -72,7 +72,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) {
                         self.counter.updateCounter(c, animate: false)
                     }
-                    j++
+                    j += 1
                 }
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) {

@@ -997,7 +997,7 @@ class Trip : NSManagedObject {
                     indexOfMaximumDistance = counter
                     maximumDistance = distance
                 }
-                counter++
+                counter += 1
             }
         } else {
             // trivial case: two points are more than episilon distance away.
@@ -1143,7 +1143,7 @@ class Trip : NSManagedObject {
         for loc in self.locations.array {
             let location = loc as! Location
             if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy) {
-                count++
+                count += 1
                 sumSpeed += (location as Location).speed!.doubleValue
             }
         }

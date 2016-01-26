@@ -545,7 +545,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
                 totalLineWidth += totalWidth
-                columnCount++
+                columnCount += 1
                 print(String(totalLineWidth))
             }
             
@@ -558,10 +558,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     count = countData["count"]  as? NSNumber {
                       rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
-                    i++
+                    i += 1
                     if i>=columnCount {
                         i = 0
-                        lineCount++
+                        lineCount += 1
                         rewardString += "\n"
                     }
                 }

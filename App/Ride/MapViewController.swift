@@ -209,7 +209,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             let coord = location.coordinate()
             
             coordinates.append(coord)
-            count++
+            count += 1
         }
         
         self.selectedTripLine = MGLPolyline(coordinates: &coordinates, count: count)
@@ -240,7 +240,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             } else if (point.latitude > maxLat) {
                 maxLat = point.latitude
             }
-            i++
+            i += 1
         }
         
         let padFactorX : Double = 0.1

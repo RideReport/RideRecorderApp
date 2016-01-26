@@ -178,7 +178,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
             let coord = location.coordinate()
             
             coordinates.append(coord)
-            count++
+            count += 1
         }
         
         self.tripLine = MGLPolyline(coordinates: &coordinates, count: count)
@@ -209,7 +209,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
             } else if (point.latitude > maxLat) {
                 maxLat = point.latitude
             }
-            i++
+            i += 1
         }
         
         let padFactorX : Double = 0.1
