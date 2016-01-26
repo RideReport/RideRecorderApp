@@ -220,8 +220,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         let sizeLat = (maxLat - minLat)
         
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
-        dispatch_async(dispatch_get_main_queue(), {
-            self.mapView.setVisibleCoordinateBounds(bounds, animated: false)
+        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: false)
         })
     }
 

@@ -27,19 +27,23 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     
     var selectedTrip : Trip! {
         didSet {
-            dispatch_async(dispatch_get_main_queue(), {
-                if (self.selectedTrip != nil) {
-                    if (self.selectedTrip.locationsNotYetDownloaded) {
-                        APIClient.sharedClient.getTrip(self.selectedTrip).apiResponse({ (_) -> Void in
-                            self.mapViewController.setSelectedTrip(self.selectedTrip)
-                            self.reloadTripSelectedToolbar()
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                if (strongSelf.selectedTrip != nil) {
+                    if (strongSelf.selectedTrip.locationsNotYetDownloaded) {
+                        APIClient.sharedClient.getTrip(strongSelf.selectedTrip).apiResponse({ (_) -> Void in
+                            strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                            strongSelf.reloadTripSelectedToolbar()
                         })
                     } else {
-                        self.mapViewController.setSelectedTrip(self.selectedTrip)
+                        strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
                     }
                 }
-                self.mapViewController.setSelectedTrip(self.selectedTrip)
-                self.reloadTripSelectedToolbar()
+                strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                strongSelf.reloadTripSelectedToolbar()
             })
         }
     }

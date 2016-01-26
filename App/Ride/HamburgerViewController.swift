@@ -40,8 +40,12 @@ class HamburgerViewController: UITableViewController {
         self.tableView.reloadData()
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-            self.updateAccountStatusText()
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                strongSelf.updateAccountStatusText()
             })
         }
         

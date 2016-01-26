@@ -1161,24 +1161,28 @@ class Trip : NSManagedObject {
             handler()
         } else {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
                     if (activities == nil || activities!.count == 0) {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
                             notif.category = "NO_MOTION_DATA_CATEGORY"
-                            notif.userInfo = ["uuid" : self.uuid]
+                            notif.userInfo = ["uuid" : strongSelf.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {
                         for activity in activities! {
-                            Activity(activity: activity , trip: self)
+                            Activity(activity: activity , trip: strongSelf)
                         }
                     }
                     
                     CoreDataManager.sharedManager.saveContext()
                     
-                    self.runActivityClassification()
+                    strongSelf.runActivityClassification()
                     handler()
                 })
             }

@@ -122,8 +122,12 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 var nodeCount = 0
                 let shuffledEmojis = emojis.shuffle()
                 for emoji in shuffledEmojis  {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                            self.scene.addChild(emoji)
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        
+                        strongSelf.scene.addChild(emoji)
                     }
                     nodeCount += 1
                 }

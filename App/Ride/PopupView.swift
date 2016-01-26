@@ -68,8 +68,12 @@ import Foundation
     }
     
     override func didMoveToSuperview() {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-            self.reloadView()
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.reloadView()
         }
     }
     
