@@ -49,6 +49,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
+        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
+        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
