@@ -275,7 +275,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             let trip = Trip.tripWithUUID(uuid) {
             
             var clearRemoteMessage = false
-            if let aps = userInfo["aps"], let alert = aps["alert"] where alert != nil {
+            if let aps = userInfo["aps"], _ = aps["alert"] {
                 clearRemoteMessage = true
             }
             DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
