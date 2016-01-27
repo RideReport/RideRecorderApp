@@ -150,7 +150,7 @@ class HealthKitManager {
                 for loc in trip.locations {
                     let location = loc as! Location
                     
-                    if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
+                    if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy) {
                         if (lastLoc != nil && lastLoc.date!.compare(location.date!) != NSComparisonResult.OrderedDescending) {
                             let calPerKgMin : Double = {
                                 switch (location.speed!.doubleValue) {
