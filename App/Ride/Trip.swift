@@ -74,6 +74,15 @@ class Trip : NSManagedObject {
     @NSManaged var climacon : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
+    class func reloadSectionIdentifiers() {
+        
+        for trip in self.allTrips() {
+            trip.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+        }
+        
+        CoreDataManager.sharedManager.saveContext()
+    }
+    
     var sectionIdentifier : String? {
         get {
             self.willAccessValueForKey("sectionIdentifier")
@@ -840,27 +849,10 @@ class Trip : NSManagedObject {
         return closestLocation
     }
     
-    private func sendTripStartedNotificationImmediately() {
-        self.cancelTripStateNotification()
-        
-        var message = ""
-        
-        if (self.startingPlacemarkName != nil) {
-            message = String(format: "Started a trip in %@…", self.startingPlacemarkName)
-        } else {
-            message = "Started a trip…"
-        }
-        
-        self.currentStateNotification = UILocalNotification()
-        self.currentStateNotification?.alertBody = message
-        self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
-        UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
-    }
-    
-    func sendTripCompletionNotificationLocally(forFutureDate scheduleDate: NSDate? = nil) {
+    func sendTripCompletionNotificationLocally(clearRemoteMessage: Bool = false, forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
-
-        self.cancelTripStateNotification()
+        
+        self.cancelTripStateNotification(clearRemoteMessage)
         
         if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             // don't show a notification for anything but bike trips.
@@ -876,7 +868,9 @@ class Trip : NSManagedObject {
                 self.currentStateNotification?.fireDate = date
                 UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
             } else {
-                UIApplication.sharedApplication().presentLocalNotificationNow(self.currentStateNotification!)
+                // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
+                self.currentStateNotification?.fireDate = NSDate().secondsFrom(1)
+                UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
             }
         }
     }
@@ -931,7 +925,13 @@ class Trip : NSManagedObject {
         return false
     }
     
-    func cancelTripStateNotification() {
+    func cancelTripStateNotification(clearRemoteMessage: Bool = false) {
+        // clear any remote push notifications
+        if clearRemoteMessage {
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 1
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        }
+        
         if (self.currentStateNotification != nil) {
             UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil
@@ -941,7 +941,7 @@ class Trip : NSManagedObject {
     func accurateLocations()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.sharedManager.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -993,7 +993,7 @@ class Trip : NSManagedObject {
                     indexOfMaximumDistance = counter
                     maximumDistance = distance
                 }
-                counter++
+                counter += 1
             }
         } else {
             // trivial case: two points are more than episilon distance away.
@@ -1085,12 +1085,12 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations {
-            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
-                return loc
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
+                return location
             }
         }
         
-        return self.locations.firstObject
+        return self.locations.firstObject as? Location
     }
     
     func bestEndLocation() -> Location? {
@@ -1099,27 +1099,33 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations.reverse() {
-            if (loc.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
-                return loc
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
+                return location
             }
         }
         
-        return self.locations.lastObject
+        return self.locations.lastObject as? Location
     }
     
     
     
     var startDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
-            date = loc.date else {
-            return self.creationDate
+        // don't use a geofenced location
+        for loc in self.locations {
+            if let location = loc as? Location where !location.isGeofencedLocation {
+                if let date = location.date {
+                    return date
+                } else {
+                    break
+                }
+            }
         }
         
-        return date
+        return self.creationDate
     }
     
     var endDate : NSDate {
-        guard let loc = self.locations.firstObject as? Location,
+        guard let loc = self.locations.lastObject as? Location,
             date = loc.date else {
             return self.creationDate
         }
@@ -1132,8 +1138,8 @@ class Trip : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as! Location
-            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
-                count++
+            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy) {
+                count += 1
                 sumSpeed += (location as Location).speed!.doubleValue
             }
         }
@@ -1151,24 +1157,28 @@ class Trip : NSManagedObject {
             handler()
         } else {
             MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
-                dispatch_async(dispatch_get_main_queue(), {
+                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
                     if (activities == nil || activities!.count == 0) {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
                             notif.category = "NO_MOTION_DATA_CATEGORY"
-                            notif.userInfo = ["uuid" : self.uuid]
+                            notif.userInfo = ["uuid" : strongSelf.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
                     } else {
                         for activity in activities! {
-                            Activity(activity: activity , trip: self)
+                            Activity(activity: activity , trip: strongSelf)
                         }
                     }
                     
                     CoreDataManager.sharedManager.saveContext()
                     
-                    self.runActivityClassification()
+                    strongSelf.runActivityClassification()
                     handler()
                 })
             }

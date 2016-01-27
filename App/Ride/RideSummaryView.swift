@@ -394,8 +394,12 @@ import Foundation
             return
         }
         
-        dispatch_async(dispatch_get_main_queue(), {
-            self.scrollView.setContentOffset(CGPointMake(self.totalButtonWidth, 0), animated: animated)
+        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.scrollView.setContentOffset(CGPointMake(strongSelf.totalButtonWidth, 0), animated: animated)
         })
         self.isShowingControls = true
         delegate?.didOpenControls?(self)
@@ -427,9 +431,13 @@ import Foundation
         } else {
             targetContentOffset.memory = CGPointZero;
             
-            dispatch_async(dispatch_get_main_queue(), {
-                if (self.style == .AppStyle && self.showsShareButon) {
-                    self.shareButton.fadeIn()
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                if (strongSelf.style == .AppStyle && strongSelf.showsShareButon) {
+                    strongSelf.shareButton.fadeIn()
                 }
                 
                 scrollView.setContentOffset(CGPointZero, animated: true)

@@ -60,9 +60,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                         // they tapped a button and we are active again. advance!
                         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
                         self.currentPermissionsAsk = .AskForLocations
-                        dispatch_async(dispatch_get_main_queue()) {
+                        dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                            guard let strongSelf = self else {
+                                return
+                            }
+                            
                             // make sure its on the main thread
-                            self.nextPermission()
+                            strongSelf.nextPermission()
                         }
                     }
                 }
@@ -99,9 +103,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                         NSNotificationCenter.defaultCenter().removeObserver(self, name: "appDidChangeManagerAuthorizationStatus", object: nil)
                         if RouteManager.authorizationStatus != .NotDetermined {
                             self.currentPermissionsAsk = .AskForMotion
-                            dispatch_async(dispatch_get_main_queue()) {
+                            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                                guard let strongSelf = self else {
+                                    return
+                                }
+                                
                                 // make sure its on the main thread
-                                self.nextPermission()
+                                strongSelf.nextPermission()
                             }
                         }
                     }
@@ -127,9 +135,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                         NSNotificationCenter.defaultCenter().removeObserver(self, name: "appDidChangeManagerAuthorizationStatus", object: nil)
                         if MotionManager.authorizationStatus != .NotDetermined {
                             self.currentPermissionsAsk = .SayFinished
-                            dispatch_async(dispatch_get_main_queue()) {
+                            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                                guard let strongSelf = self else {
+                                    return
+                                }
+                                
                                 // make sure its on the main thread
-                                self.nextPermission()
+                                strongSelf.nextPermission()
                             }
                         }
                     }

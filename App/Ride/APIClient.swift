@@ -125,15 +125,19 @@ class AuthenticatedAPIRequest {
         
         let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
             if (response?.statusCode == 401) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    if (self.authToken == Profile.profile().accessToken) {
+                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+
+                    if (strongSelf.authToken == Profile.profile().accessToken) {
                         // make sure the token that generated the 401 is still current
                         // since it is possible we've already reauthenciated
                         client.reauthenticate()
                     }
                 })
             } else if (response?.statusCode == 500) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                dispatch_async(dispatch_get_main_queue(), {
                     let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
                     alert.show()
                 })
@@ -537,6 +541,10 @@ class APIClient {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
                     self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
+                } else if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                    // server doesn't know about trip, reset locationsAreSynced
+                    trip.locationsAreSynced = false
+                    CoreDataManager.sharedManager.saveContext()
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }

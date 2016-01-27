@@ -40,8 +40,12 @@ class HamburgerViewController: UITableViewController {
         self.tableView.reloadData()
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-            dispatch_async(dispatch_get_main_queue(), {
-            self.updateAccountStatusText()
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                strongSelf.updateAccountStatusText()
             })
         }
         
@@ -107,7 +111,7 @@ class HamburgerViewController: UITableViewController {
                     routesVC.refreshHelperPopupUI()
                 }
             } else {
-                let actionSheet = UIActionSheet(title: "How long would you like to pause Ride Report?", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause for an hour", "Pause for the rest of the day", "Pause for rest of the week", "Turn off Ride Report for now")
+                let actionSheet = UIActionSheet(title: "How Long Would You Like to Pause Ride Report?", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause For an Hour", "Pause Until Tomorrow", "Pause Until Next Week", "Pause For Now")
                 actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
                     if (buttonIndex == 1) {
                         Mixpanel.sharedInstance().track(

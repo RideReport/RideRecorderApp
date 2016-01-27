@@ -42,6 +42,12 @@ class HelpViewController: UITableViewController, MFMailComposeViewControllerDele
     }
     
     func sendLogFile() {
+        guard MFMailComposeViewController.canSendMail() else {
+            let alert = UIAlertView(title:"No email account", message: "Whoops, it looks like you don't have an email account configured on this iPhone", delegate: nil, cancelButtonTitle:"Ima Fix It")
+            alert.show()
+            return
+        }
+        
         let fileInfos = AppDelegate.appDelegate().fileLogger.logFileManager.sortedLogFileInfos()
         if (fileInfos == nil || fileInfos.count == 0) {
             return

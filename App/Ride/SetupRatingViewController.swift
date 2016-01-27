@@ -18,7 +18,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     
     override func viewDidLoad() {
         self.pushSimulationView.delegate = self
-        self.pushSimulationView.appIcon = UIImage(named: "IconTiny")
+        self.pushSimulationView.appIcon = UIImage(named: "AppIcon40x40")
         helperTextLabel.markdownStringValue = "You can help others find good routes by rating your trips, right from your lock screen. **Slide left to rate your ride.**"
     }
     
