@@ -49,8 +49,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.rewardsLabel1.hidden = true
         }
         
-        if Profile.profile().longestStreakLength.integerValue > 0 {
-            self.rewardsLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
+        if let longestStreak = Profile.profile().longestStreakLength, longestStreakDate = Profile.profile().longestStreakStartDate {
+            self.rewardsLabel2.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak, dateFormatter.stringFromDate(longestStreakDate))
         } else {
             self.rewardsLabel2.hidden = true
         }
@@ -122,10 +122,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 var nodeCount = 0
                 let shuffledEmojis = emojis.shuffle()
                 for emoji in shuffledEmojis  {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
-                            self.scene.addChild(emoji)
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        
+                        strongSelf.scene.addChild(emoji)
                     }
-                    nodeCount++
+                    nodeCount += 1
                 }
             }
         }

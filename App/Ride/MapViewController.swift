@@ -180,10 +180,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
-            dispatch_async(dispatch_get_main_queue(), {
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
                 trip.simplify() {
                     if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                        self.setSelectedTrip(trip)
+                        strongSelf.setSelectedTrip(trip)
                     }
                 }
             })
@@ -209,7 +213,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             let coord = location.coordinate()
             
             coordinates.append(coord)
-            count++
+            count += 1
         }
         
         self.selectedTripLine = MGLPolyline(coordinates: &coordinates, count: count)
@@ -240,7 +244,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             } else if (point.latitude > maxLat) {
                 maxLat = point.latitude
             }
-            i++
+            i += 1
         }
         
         let padFactorX : Double = 0.1
@@ -251,8 +255,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let sizeLat = (maxLat - minLat)
         
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX))) // extra padding on the top so that it isn't under the notification bar.
-        dispatch_async(dispatch_get_main_queue(), {
-            self.mapView.setVisibleCoordinateBounds(bounds, animated: true)
+        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: true)
         })
     }
     

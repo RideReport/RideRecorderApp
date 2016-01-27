@@ -49,6 +49,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
+        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
+        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -233,18 +235,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             Profile.profile().updateCurrentRideStreakLength()
             
-            if Profile.profile().currentStreakLength.integerValue == 0 {
-                self.headerLabel1.text = "🐣  No rides today"
-            } else {
+            if let currentStreakLength = Profile.profile().currentStreakLength where currentStreakLength.integerValue > 0 {
                 if (Trip.bikeTripsToday() == nil) {
                     if (NSDate().isBeforeNoon()) {
-                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", Profile.profile().currentStreakLength.integerValue)
+                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
                     } else {
-                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", Profile.profile().currentStreakLength.integerValue)
+                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                     }
                 } else {
-                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, Profile.profile().currentStreakLength.integerValue)
+                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
                 }
+            } else {
+                self.headerLabel1.text = "🐣  No rides today"
             }
             
             if count < 10 {
@@ -543,7 +545,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
                 totalLineWidth += totalWidth
-                columnCount++
+                columnCount += 1
                 print(String(totalLineWidth))
             }
             
@@ -556,10 +558,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     count = countData["count"]  as? NSNumber {
                       rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
-                    i++
+                    i += 1
                     if i>=columnCount {
                         i = 0
-                        lineCount++
+                        lineCount += 1
                         rewardString += "\n"
                     }
                 }

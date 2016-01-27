@@ -69,8 +69,15 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
 
         if let firstTripDate = Profile.profile().firstTripDate {
             self.statsFirstLineLabel.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, formatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
+        } else {
+            self.statsFirstLineLabel.text = ""
         }
-        self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, Profile.profile().longestStreakLength.integerValue, dateFormatter.stringFromDate(Profile.profile().longestStreakStartDate))
+        
+        if let longestStreak = Profile.profile().longestStreakLength, longestStreakLengthDate = Profile.profile().longestStreakStartDate {
+            self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak.integerValue, dateFormatter.stringFromDate(longestStreakLengthDate))
+        } else {
+            self.statsSecondLineLabel.text = ""
+        }
     }
     
     
@@ -171,7 +178,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
             let coord = location.coordinate()
             
             coordinates.append(coord)
-            count++
+            count += 1
         }
         
         self.tripLine = MGLPolyline(coordinates: &coordinates, count: count)
@@ -202,7 +209,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
             } else if (point.latitude > maxLat) {
                 maxLat = point.latitude
             }
-            i++
+            i += 1
         }
         
         let padFactorX : Double = 0.1
@@ -213,8 +220,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         let sizeLat = (maxLat - minLat)
         
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
-        dispatch_async(dispatch_get_main_queue(), {
-            self.mapView.setVisibleCoordinateBounds(bounds, animated: false)
+        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: false)
         })
     }
 

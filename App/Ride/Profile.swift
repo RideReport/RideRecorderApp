@@ -12,10 +12,10 @@ import CoreData
 class Profile : NSManagedObject {
     @NSManaged var accessToken : String?
     @NSManaged var accessTokenExpiresIn : NSDate?
-    @NSManaged var currentStreakStartDate : NSDate!
-    @NSManaged var currentStreakLength : NSNumber!
-    @NSManaged var longestStreakStartDate : NSDate!
-    @NSManaged var longestStreakLength : NSNumber!
+    @NSManaged var currentStreakStartDate : NSDate?
+    @NSManaged var currentStreakLength : NSNumber?
+    @NSManaged var longestStreakStartDate : NSDate?
+    @NSManaged var longestStreakLength : NSNumber?
     @NSManaged private(set) var lastGeofencedLocation : Location?
 
     struct Static {
@@ -121,11 +121,19 @@ class Profile : NSManagedObject {
     }
     
     var currentStreakJewel: String {
-        return self.jewelForLength(self.currentStreakLength.integerValue)
+        guard let streakLength = self.currentStreakLength else {
+            return ""
+        }
+        
+        return self.jewelForLength(streakLength.integerValue)
     }
     
     var longestStreakJewel: String {
-        return self.jewelForLength(self.longestStreakLength.integerValue)
+        guard let streakLength = self.longestStreakLength else {
+            return ""
+        }
+        
+        return self.jewelForLength(streakLength.integerValue)
     }
     
     private func jewelForLength(length: Int)->String {
@@ -161,7 +169,7 @@ class Profile : NSManagedObject {
                 let tripDate = (trip as! Trip).creationDate
                 if (tripDate.isEqualToDay(thisStreakStartDate)) {
                     thisStreakStartDate = thisStreakStartDate.daysFrom(-1)
-                    thisStreakLength++
+                    thisStreakLength += 1
                 } else if (tripDate.compare(thisStreakStartDate) == NSComparisonResult.OrderedDescending) {
                     // if the tripDate is after the thisStreakStartDate, keep going
                 } else {
@@ -184,7 +192,7 @@ class Profile : NSManagedObject {
             CoreDataManager.sharedManager.saveContext()
         }
         
-        if (self.currentStreakLength == nil || self.currentStreakStartDate == nil) {
+        guard let currentStreakLength = self.currentStreakLength, currentStreakDate = self.currentStreakStartDate else {
             // if it isn't currently set, calculate the current streak. this should only happen
             // if the user is upgrading from a version that didnt store it
             var count = 0
@@ -193,7 +201,7 @@ class Profile : NSManagedObject {
                 let tripDate = (trip as! Trip).creationDate
                 if (tripDate.isEqualToDay(currentDate)) {
                     currentDate = currentDate.daysFrom(-1)
-                    count++
+                    count += 1
                 } else if (tripDate.compare(currentDate) == NSComparisonResult.OrderedDescending) {
                     // if the tripDate is after the currentDate, keep going
                 } else if (currentDate.isEqualToDay(NSDate())) {
@@ -202,20 +210,24 @@ class Profile : NSManagedObject {
                     // even though today doesn't count
                     if (tripDate.isEqualToDay(currentDate.daysFrom(-1))) {
                         currentDate = currentDate.daysFrom(-1)
-                        count++
+                        count += 1
                     }
                 } else {
                     break
                 }
             }
             self.currentStreakLength = NSNumber(integer: count)
-        } else if (self.currentStreakStartDate.daysFrom(self.currentStreakLength.integerValue).isToday()) {
+            CoreDataManager.sharedManager.saveContext()
+            return
+        }
+        
+        if (currentStreakDate.daysFrom(currentStreakLength.integerValue).isToday()) {
             // if the streak counts up to today, the count is current
-        } else if (self.currentStreakStartDate.daysFrom(self.currentStreakLength.integerValue + 1).isToday()) {
+        } else if (currentStreakDate.daysFrom(currentStreakLength.integerValue + 1).isToday()) {
             // if the streak counts up to yesterday, see if we have a ride today
             if (Trip.bikeTripsToday() != nil) {
-                self.currentStreakLength = NSNumber(int: self.currentStreakLength.integerValue + 1)
-                if (self.currentStreakLength.integerValue > self.longestStreakLength.integerValue) {
+                self.currentStreakLength = NSNumber(int: currentStreakLength.integerValue + 1)
+                if (self.longestStreakLength == nil || currentStreakLength.integerValue > self.longestStreakLength!.integerValue) {
                     // if this is our new longest streak, update it
                     self.longestStreakLength = self.currentStreakLength
                     self.longestStreakStartDate = self.currentStreakStartDate
@@ -224,7 +236,7 @@ class Profile : NSManagedObject {
         } else {
             if (Trip.bikeTripsToday() != nil) {
                 // the last streak expired but it is time to start a new one
-                self.currentStreakLength = NSNumber(int: self.currentStreakLength.integerValue + 1)
+                self.currentStreakLength = NSNumber(int: currentStreakLength.integerValue + 1)
                 self.currentStreakStartDate = NSDate()
             } else {
                 // no streak
