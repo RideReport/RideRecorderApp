@@ -196,6 +196,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             // refresh to prevent section headers from getting out of date.
             self.dateOfLastTableRefresh = NSDate()
+            Trip.reloadSectionIdentifiers()
             self.tableView.reloadData()
         }
         

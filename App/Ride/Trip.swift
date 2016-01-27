@@ -74,6 +74,15 @@ class Trip : NSManagedObject {
     @NSManaged var climacon : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
+    class func reloadSectionIdentifiers() {
+        
+        for trip in self.allTrips() {
+            trip.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+        }
+        
+        CoreDataManager.sharedManager.saveContext()
+    }
+    
     var sectionIdentifier : String? {
         get {
             self.willAccessValueForKey("sectionIdentifier")
