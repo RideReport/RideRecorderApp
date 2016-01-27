@@ -541,7 +541,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             var tabStops : [NSTextTab] = []
             var totalLineWidth : CGFloat = 0
             var columnCount = 0
-            while totalLineWidth + totalWidth < text1.frame.size.width {
+            while totalLineWidth + totalWidth < (self.view.frame.size.width - 10) {
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
