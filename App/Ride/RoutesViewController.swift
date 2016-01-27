@@ -235,7 +235,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             Profile.profile().updateCurrentRideStreakLength()
             
-            if let currentStreakLength = Profile.profile().currentStreakLength where currentStreakLength.integerValue > 0 {
+            if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
                 if (Trip.bikeTripsToday() == nil) {
                     if (NSDate().isBeforeNoon()) {
                         self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
