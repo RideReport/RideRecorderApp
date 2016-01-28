@@ -253,14 +253,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if count < 10 {
                 // Don't show stats until they get to >=10 rides
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = self.headerLabel1.frame.size.height + 10
+                headerFrame.size.height = self.headerLabel1.frame.size.height + 2
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
                 
                 return
             } else {
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
+                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 42
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
             }
