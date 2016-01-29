@@ -235,22 +235,21 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             stoppedTrip.close() {
-               APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
-                switch response.result {
-                case .Success(_):
-                    DDLogInfo("Trip summary was successfully sync'd.")
-                    stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
-                case .Failure(_):
-                    // if it fails, go ahead and send the notification locally
-                    stoppedTrip.sendTripCompletionNotificationLocally()
-                }
+                stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
+                APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
+                    switch response.result {
+                    case .Success(_):
+                        DDLogInfo("Trip summary was successfully sync'd.")
+                    case .Failure(_):
+                        DDLogInfo("Trip summary failed to sync.")
+                    }
 
-                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                    DDLogInfo("Ending background task.")
-                    
-                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                    self.backgroundTaskID = UIBackgroundTaskInvalid
-                }
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending background task.")
+                        
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
+                    }
                }
             }
         }

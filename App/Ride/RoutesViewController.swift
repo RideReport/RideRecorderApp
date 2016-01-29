@@ -196,6 +196,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             // refresh to prevent section headers from getting out of date.
             self.dateOfLastTableRefresh = NSDate()
+            Trip.reloadSectionIdentifiers()
             self.tableView.reloadData()
         }
         
@@ -235,7 +236,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             Profile.profile().updateCurrentRideStreakLength()
             
-            if let currentStreakLength = Profile.profile().currentStreakLength where currentStreakLength.integerValue > 0 {
+            if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
                 if (Trip.bikeTripsToday() == nil) {
                     if (NSDate().isBeforeNoon()) {
                         self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
@@ -252,14 +253,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if count < 10 {
                 // Don't show stats until they get to >=10 rides
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = self.headerLabel1.frame.size.height + 10
+                headerFrame.size.height = self.headerLabel1.frame.size.height + 2
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
                 
                 return
             } else {
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
+                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 42
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
             }
@@ -540,7 +541,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             var tabStops : [NSTextTab] = []
             var totalLineWidth : CGFloat = 0
             var columnCount = 0
-            while totalLineWidth + totalWidth < text1.frame.size.width {
+            while totalLineWidth + totalWidth < (self.view.frame.size.width - 10) {
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
