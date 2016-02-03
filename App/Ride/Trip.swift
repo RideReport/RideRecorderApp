@@ -997,6 +997,8 @@ class Trip : NSManagedObject {
             }
         } else {
             // trivial case: two points are more than episilon distance away.
+            startLoc!.simplifiedInTrip = self
+            endLoc!.simplifiedInTrip = self
             return
         }
         
