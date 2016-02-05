@@ -36,7 +36,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
     let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 60
 
-    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 8
+    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 12
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
     let maximumMotionMonitoringReadingsCountWithoutGPSFix = 12 // Give extra time for a GPS fix.
     let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 5
