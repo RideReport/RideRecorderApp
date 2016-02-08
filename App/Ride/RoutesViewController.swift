@@ -42,8 +42,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.popupView.hidden = true
         
-        self.headerView.backgroundColor = UIColor.clearColor()
-        
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
         self.timeFormatter = NSDateFormatter()
