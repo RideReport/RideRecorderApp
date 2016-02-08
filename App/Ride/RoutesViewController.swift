@@ -244,7 +244,21 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                     }
                 } else {
-                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    if currentStreakLength == 1 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "🐣  You rode yesterday"
+                        } else {
+                            self.headerLabel1.text = "🐣  You rode today"
+                        }
+                    } else if currentStreakLength == 2 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "💗  Ride today to start a ride streak!"
+                        } else {
+                            self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
+                        }
+                    } else {
+                        self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    }
                 }
             } else {
                 self.headerLabel1.text = "🐣  No rides today"
