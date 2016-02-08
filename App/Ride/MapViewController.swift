@@ -29,6 +29,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     private var dateFormatter : NSDateFormatter!
     
     private var tempBackgroundView : UIView?
+    private var hasInsertedTempBackgroundView = false
     
     private var annotationPopOverController : UIPopoverController? = nil
     
@@ -111,7 +112,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if self.tempBackgroundView == nil {
+        if !hasInsertedTempBackgroundView {
+            self.hasInsertedTempBackgroundView = true
             self.tempBackgroundView = UIView(frame: self.view.bounds)
             self.tempBackgroundView!.backgroundColor = self.view.backgroundColor
             self.mapView.insertSubview(self.tempBackgroundView!, atIndex: 0)
