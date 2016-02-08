@@ -60,14 +60,21 @@ class HamburgerViewController: UITableViewController {
     }
     
     func updateAccountStatusText() {
-        var accountCellTitle = ""
         switch APIClient.sharedClient.accountVerificationStatus {
-        case .Unknown: accountCellTitle = "Updating Account Status…"
-        case .Unverified: accountCellTitle = "Create Account"
-        case .Verified: accountCellTitle = "Log Out"
+        case .Unknown:
+            self.accountTableViewCell.userInteractionEnabled = false
+            self.accountTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
+            self.accountTableViewCell.textLabel?.text = "Updating…"
+        case .Unverified:
+            self.accountTableViewCell.userInteractionEnabled = true
+            self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.accountTableViewCell.textLabel?.text = "Create Account"
+        case .Verified:
+            self.accountTableViewCell.userInteractionEnabled = true
+            self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.accountTableViewCell.textLabel?.text = "Log Out"
         }
         
-        self.accountTableViewCell.textLabel?.text = accountCellTitle
     }
     
     func updatePauseResumeText() {
