@@ -13,7 +13,8 @@ pod 'OAuthSwift'
 pod 'FBSDKCoreKit'
 pod 'FBSDKLoginKit'
 pod 'FBSDKShareKit'
-pod 'Mapbox-iOS-SDK', :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/master/ios/Mapbox-iOS-SDK.podspec'
+#pod 'Mapbox-iOS-SDK'
+pod 'Mapbox-iOS-SDK',  :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.1.0-pre.4/ios/Mapbox-iOS-SDK.podspec'
 pod 'PNChart',:path => '../Submodules/PNChart'
 pod 'OHHTTPStubs'
 pod 'OHHTTPStubs/Swift'
@@ -27,4 +28,3 @@ post_install do |installer|
         end
     end
 end
-
