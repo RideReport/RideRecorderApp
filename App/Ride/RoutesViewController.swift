@@ -370,7 +370,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
-            ratingsLabel.text = "Ratings"
+            ratingsLabel.numberOfLines = 2
+            ratingsLabel.textAlignment = NSTextAlignment.Center
+            ratingsLabel.text = "Ride\nRatings"
             ratingsLabel.sizeToFit()
             if ratingsLabel.frame.width > chartWidth {
                 ratingsLabel.frame = CGRectMake(ratingsLabel.frame.origin.x, ratingsLabel.frame.origin.y, chartWidth, ratingsLabel.frame.size.height)
