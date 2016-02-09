@@ -491,12 +491,6 @@ class APIClient {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
-            DDLogWarn("No starting and/or ending location found when syncing trip!")
-            
-            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-        }
-        
         if let existingRequest = self.tripRequests[trip] {
             // if an existing API request is in flight and we have local changes, wait to sync until after it completes
             
@@ -525,6 +519,13 @@ class APIClient {
         if (!trip.locationsAreSynced.boolValue && !includeLocations) {
             // initial synchronization of trip data - the server does not know about the locations yet
             // so we provide them in order to get back summary information. record may or may not exist so we PUT.
+            guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
+                DDLogWarn("No starting and/or ending location found when syncing trip locations!")
+                trip.locationsAreSynced = false
+                CoreDataManager.sharedManager.saveContext()
+
+                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+            }
             
             tripDict["length"] = trip.length
             tripDict["startLocation"] = startingLocation.jsonDictionary()
