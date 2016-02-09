@@ -263,41 +263,28 @@ class APIClient {
         }
     }
     
+    
+    init (useDefaultConfiguration: Bool = false) {
+        var configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
+        
+        if useDefaultConfiguration {
+            // used for testing
+            configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        }
+        configuration.timeoutIntervalForRequest = 10
+        let serverTrustPolicies : [String: ServerTrustPolicy] = [
+            "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
+        ]
+        self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
+    }
+    
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    private func syncStatusAndTripsInForeground() {
-        if (self.authenticated) {
-            // do account status even in the background
-            self.updateAccountStatus()
-
-            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-                let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
-                if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.getAllTrips()
-                    })
-                }
-                
-                self.syncUnsyncedTrips()
-                
-                let hasRunMotionProcessingBugMigration = NSUserDefaults.standardUserDefaults().boolForKey("hasRunMotionProcessingBugMigration")
-                if (!hasRunMotionProcessingBugMigration) {
-                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMotionProcessingBugMigration")
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                    
-                    for t in Trip.unclassifiedTrips() {
-                        let trip = t as! Trip
-                        trip.clasifyActivityType() {
-                            trip.saveAndMarkDirty()
-                        }
-                    }
-                }
-            }
-        }
-
-    }
+    //
+    // MARK: - Setup
+    //
     
     @objc func appDidBecomeActive() {
         if (CoreDataManager.sharedManager.isStartingUp) {
@@ -310,25 +297,71 @@ class APIClient {
         }
     }
     
-    init (useDefaultConfiguration: Bool = false) {
-        var configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
-
-        if useDefaultConfiguration {
-            // used for testing
-            configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        }
-        configuration.timeoutIntervalForRequest = 10
-        let serverTrustPolicies : [String: ServerTrustPolicy] = [
-            "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
-        ]
-        self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
-    }
-    
     func appDidReceiveNotificationDeviceToken(token: NSData?) {
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
         self.updateAccountStatus()
     }
+    
+    private func syncStatusAndTripsInForeground() {
+        if (self.authenticated) {
+            // do account status even in the background
+            self.updateAccountStatus()
+
+            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+                self.runMigrations()
+                
+                self.syncUnsyncedTrips()
+            }
+        }
+
+    }
+    
+    //
+    // MARK: - Migrations
+    //
+    
+    private func runMigrations() {
+        let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
+        if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.getAllTrips().apiResponse() { (response) in
+                    if case .Success = response.result {
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                    }
+                }
+            })
+        }
+        
+        self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
+            for t in Trip.unclassifiedTrips() {
+                let trip = t as! Trip
+                trip.clasifyActivityType() {
+                    trip.saveAndMarkDirty()
+                }
+            }
+        }
+        
+        self.runDataMigration(dataMigrationName: "hasRunSummarySyncedPropertyAdditionMigration") {
+            for t in Trip.unweatheredTrips() {
+                let trip = t as! Trip
+                trip.summaryIsSynced = false
+                trip.saveAndMarkDirty()
+            }
+        }
+    }
+    
+    private func runDataMigration(dataMigrationName name: String, handler: ()->Void) {
+        let migrationHasHappened = NSUserDefaults.standardUserDefaults().boolForKey(name)
+        if (!migrationHasHappened) {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: name)
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+            handler()
+        }
+    }
+    
     
     //
     // MARK: - Trip Synchronization
@@ -338,9 +371,6 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
-                NSUserDefaults.standardUserDefaults().synchronize()
-                
                 for tripJson in json.array! {
                     if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
                         var trip = Trip.tripWithUUID(uuid)
