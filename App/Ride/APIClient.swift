@@ -252,10 +252,14 @@ class APIClient {
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                self.authenticateIfNeeded()
+                self.authenticateIfNeeded().apiResponse() { (_) -> Void in
+                    self.syncStatusAndTripsInForeground()
+                }
             }
         } else {
-            self.authenticateIfNeeded()
+            self.authenticateIfNeeded().apiResponse() { (_) -> Void in
+                self.syncStatusAndTripsInForeground()
+            }
         }
     }
     
@@ -263,25 +267,26 @@ class APIClient {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    @objc func appDidBecomeActive() {
-        let tripSyncBlock = {
-            if (self.authenticated) {
+    private func syncStatusAndTripsInForeground() {
+        if (self.authenticated) {
+            // do account status even in the background
+            self.updateAccountStatus()
+
+            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
                 let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
                 if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.getAllTrips()
                     })
                 }
-
                 
-                self.updateAccountStatus()
                 self.syncUnsyncedTrips()
                 
                 let hasRunMotionProcessingBugMigration = NSUserDefaults.standardUserDefaults().boolForKey("hasRunMotionProcessingBugMigration")
                 if (!hasRunMotionProcessingBugMigration) {
                     NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMotionProcessingBugMigration")
                     NSUserDefaults.standardUserDefaults().synchronize()
-
+                    
                     for t in Trip.unclassifiedTrips() {
                         let trip = t as! Trip
                         trip.clasifyActivityType() {
@@ -291,14 +296,17 @@ class APIClient {
                 }
             }
         }
-        
+
+    }
+    
+    @objc func appDidBecomeActive() {
         if (CoreDataManager.sharedManager.isStartingUp) {
             NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
                 NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                tripSyncBlock()
+                self.syncStatusAndTripsInForeground()
             }
         } else {
-            tripSyncBlock()
+            self.syncStatusAndTripsInForeground()
         }
     }
     
