@@ -1103,7 +1103,7 @@ class Trip : NSManagedObject {
     }
     
     func bestStartLocation() -> Location? {
-        guard self.locations != nil || self.locations.count > 0 else {
+        guard self.locations != nil && self.locations.count > 0 else {
             return nil
         }
         
@@ -1117,7 +1117,7 @@ class Trip : NSManagedObject {
     }
     
     func bestEndLocation() -> Location? {
-        guard self.locations != nil || self.locations.count > 0 else {
+        guard self.locations != nil && self.locations.count > 0 else {
             return nil
         }
         
