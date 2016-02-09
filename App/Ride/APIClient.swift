@@ -276,6 +276,19 @@ class APIClient {
                 
                 self.updateAccountStatus()
                 self.syncUnsyncedTrips()
+                
+                let hasRunMotionProcessingBugMigration = NSUserDefaults.standardUserDefaults().boolForKey("hasRunMotionProcessingBugMigration")
+                if (!hasRunMotionProcessingBugMigration) {
+                    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunMotionProcessingBugMigration")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+
+                    for t in Trip.unclassifiedTrips() {
+                        let trip = t as! Trip
+                        trip.clasifyActivityType() {
+                            trip.saveAndMarkDirty()
+                        }
+                    }
+                }
             }
         }
         

@@ -381,6 +381,27 @@ class Trip : NSManagedObject {
         return results!
     }
     
+    class func unclassifiedTrips() -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let closedPredicate = NSPredicate(format: "activityType == %i", ActivityType.Unknown.rawValue)
+        fetchedRequest.predicate = closedPredicate
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return []
+        }
+        
+        return results!
+    }
+    
     class func nextClosedUnsyncedTrips() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")

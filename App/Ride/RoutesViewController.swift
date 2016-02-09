@@ -692,7 +692,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            trip.clasifyActivityType({})
+            trip.clasifyActivityType({
+                trip.saveAndMarkDirty()
+            })
         } else if (buttonIndex == 1) {
             if (trip.hasSmoothed) {
                 trip.undoSmoothWithCompletionHandler({})
