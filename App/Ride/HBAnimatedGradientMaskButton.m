@@ -39,11 +39,12 @@ static float animationTimeCurveWithGrey(float progress) {
         self.secondaryColor = [UIColor colorWithRed:116.0/255.0 green:207.0/255.0 blue:230.0/255.0 alpha:1.0];
         self.neutralColor = [UIColor clearColor];
         
+        __weak HBAnimatedGradientMaskButton *weakSelf = self;
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillResignActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [self stopAnimating];
+            [weakSelf stopAnimating];
         }];
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            [self animate];
+            [weakSelf animate];
         }];
     }
     return self;

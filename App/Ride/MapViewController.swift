@@ -11,8 +11,7 @@ import CoreLocation
 import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
-    var tripViewController: TripViewController? = nil
-    
+    weak var tripViewController: TripViewController? = nil
     @IBOutlet weak var mapView:  MGLMapView!
         
     private var tripsAreLoaded = false
@@ -33,7 +32,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     private var annotationPopOverController : UIPopoverController? = nil
     
-    override func viewDidLoad() {        
+    override func viewDidLoad() {
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd"
@@ -61,19 +60,25 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         NSURLCache.setSharedURLCache(urlCache)
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                if let tripViewController = self.tripViewController {
-                    self.setSelectedTrip(tripViewController.selectedTrip)
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                if let tripViewController = strongSelf.tripViewController {
+                    strongSelf.setSelectedTrip(tripViewController.selectedTrip)
                 }
 
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
-                    self.runCreateAccountOfferIfNeeded()
+                    strongSelf.runCreateAccountOfferIfNeeded()
                 }
             }
-            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidChange", object: nil)
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "APIClientAccountStatusDidChange", object: nil)
                 if !CoreDataManager.sharedManager.isStartingUp {
-                    self.runCreateAccountOfferIfNeeded()
+                    strongSelf.runCreateAccountOfferIfNeeded()
                 }
             }
         } else {

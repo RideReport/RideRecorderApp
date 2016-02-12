@@ -22,8 +22,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
-    var mapViewController: MapViewController! = nil
-    var routesViewController: RoutesViewController! = nil
+    weak var mapViewController: MapViewController! = nil
     
     var selectedTrip : Trip! {
         didSet {
@@ -129,27 +128,34 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) { (notif) -> Void in
-            self.reloadTripSelectedToolbar()
+        NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.reloadTripSelectedToolbar()
         }
     }
     
     override func viewDidAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: CoreDataManager.sharedManager.managedObjectContext, queue: nil) { (notification) -> Void in
-            guard self.selectedTrip != nil else {
+        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: CoreDataManager.sharedManager.managedObjectContext, queue: nil) {[weak self] (notification) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            guard strongSelf.selectedTrip != nil else {
                 return
             }
             
             if let updatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? NSSet {
-                if updatedObjects.containsObject(self.selectedTrip) {
-                    let trip = self.selectedTrip
-                    self.selectedTrip = trip
+                if updatedObjects.containsObject(strongSelf.selectedTrip) {
+                    let trip = strongSelf.selectedTrip
+                    strongSelf.selectedTrip = trip
                 }
             }
             
             if let deletedObjects = notification.userInfo?[NSDeletedObjectsKey] as? NSSet {
-                if deletedObjects.containsObject(self.selectedTrip) {
-                    self.selectedTrip = nil
+                if deletedObjects.containsObject(strongSelf.selectedTrip) {
+                    strongSelf.selectedTrip = nil
                 }
             }
         }

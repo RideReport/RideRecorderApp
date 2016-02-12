@@ -250,10 +250,13 @@ class APIClient {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                self.authenticateIfNeeded().apiResponse() { (_) -> Void in
-                    self.syncStatusAndTripsInForeground()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                strongSelf.authenticateIfNeeded().apiResponse() { (_) -> Void in
+                    strongSelf.syncStatusAndTripsInForeground()
                 }
             }
         } else {
@@ -288,9 +291,12 @@ class APIClient {
     
     @objc func appDidBecomeActive() {
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                self.syncStatusAndTripsInForeground()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                strongSelf.syncStatusAndTripsInForeground()
             }
         } else {
             self.syncStatusAndTripsInForeground()

@@ -29,7 +29,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var pieChartDaysBiked: PNPieChart!
     var pieChartWeather: PNPieChart!
     
-    
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
@@ -59,8 +58,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.coreDataDidLoad()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.coreDataDidLoad()
             }
         } else {
             self.coreDataDidLoad()
@@ -90,8 +92,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
         self.dateOfLastTableRefresh = NSDate()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) in
-            self.reloadTableIfNeeded()
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) {[weak self] (_) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.reloadTableIfNeeded()
         }
     }
     
@@ -105,8 +110,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
-            self.refreshHelperPopupUI()
+        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.refreshHelperPopupUI()
         }
         
         if (self.tableView.indexPathForSelectedRow != nil) {
@@ -114,8 +122,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.refreshCharts()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.refreshCharts()
             }
         } else {
             self.refreshCharts()
@@ -648,9 +659,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
         self.presentViewController(directionsNavController, animated: true, completion: nil)
         
-        if let directionsVC = directionsNavController.topViewController as? DirectionsViewController {
+        weak var directionsVC = directionsNavController.topViewController as? DirectionsViewController
+        if directionsVC != nil  {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-                directionsVC.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+                directionsVC?.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
             }
         }
     }
