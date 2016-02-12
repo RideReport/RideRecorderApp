@@ -29,7 +29,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var pieChartDaysBiked: PNPieChart!
     var pieChartWeather: PNPieChart!
     
-    
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
@@ -41,8 +40,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationItem.hidesBackButton = true
         
         self.popupView.hidden = true
-        
-        self.headerView.backgroundColor = UIColor.clearColor()
         
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
@@ -61,8 +58,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.coreDataDidLoad()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.coreDataDidLoad()
             }
         } else {
             self.coreDataDidLoad()
@@ -92,8 +92,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
         self.dateOfLastTableRefresh = NSDate()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) in
-            self.reloadTableIfNeeded()
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) {[weak self] (_) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.reloadTableIfNeeded()
         }
     }
     
@@ -107,8 +110,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
-            self.refreshHelperPopupUI()
+        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.refreshHelperPopupUI()
         }
         
         if (self.tableView.indexPathForSelectedRow != nil) {
@@ -116,8 +122,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.refreshCharts()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.refreshCharts()
             }
         } else {
             self.refreshCharts()
@@ -244,7 +253,21 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                     }
                 } else {
-                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    if currentStreakLength == 1 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "🐣  You rode yesterday"
+                        } else {
+                            self.headerLabel1.text = "🐣  You rode today"
+                        }
+                    } else if currentStreakLength == 2 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "💗  Ride today to start a ride streak!"
+                        } else {
+                            self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
+                        }
+                    } else {
+                        self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    }
                 }
             } else {
                 self.headerLabel1.text = "🐣  No rides today"
@@ -358,7 +381,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
-            ratingsLabel.text = "Ratings"
+            ratingsLabel.numberOfLines = 2
+            ratingsLabel.textAlignment = NSTextAlignment.Center
+            ratingsLabel.text = "Ride\nRatings"
             ratingsLabel.sizeToFit()
             if ratingsLabel.frame.width > chartWidth {
                 ratingsLabel.frame = CGRectMake(ratingsLabel.frame.origin.x, ratingsLabel.frame.origin.y, chartWidth, ratingsLabel.frame.size.height)
@@ -634,9 +659,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
         self.presentViewController(directionsNavController, animated: true, completion: nil)
         
-        if let directionsVC = directionsNavController.topViewController as? DirectionsViewController {
+        weak var directionsVC = directionsNavController.topViewController as? DirectionsViewController
+        if directionsVC != nil  {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-                directionsVC.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+                directionsVC?.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
             }
         }
     }
@@ -668,7 +694,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip", "Simplify"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -680,7 +706,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            trip.clasifyActivityType({})
+            trip.clasifyActivityType({
+                trip.saveAndMarkDirty()
+            })
         } else if (buttonIndex == 1) {
             if (trip.hasSmoothed) {
                 trip.undoSmoothWithCompletionHandler({})
@@ -691,6 +719,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 3) {
             APIClient.sharedClient.syncTrip(trip)
+        } else if (buttonIndex == 4) {
+            trip.simplify()
         }
     }
     

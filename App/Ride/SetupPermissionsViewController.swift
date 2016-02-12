@@ -51,15 +51,19 @@ class SetupPermissionsViewController: SetupChildViewController {
                 self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
 
                 var didShowShowPermissionDialog = false
-                NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) { (_) -> Void in
+                NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) {[weak self] (_) -> Void in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
                     // this is the only way to know whether or not they've been asked for permission or not – wait for the dialog to make our app resign active =/
                     didShowShowPermissionDialog = true
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
+                    NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: UIApplicationWillResignActiveNotification, object: nil)
                     
                     NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) -> Void in
                         // they tapped a button and we are active again. advance!
-                        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidBecomeActiveNotification, object: nil)
-                        self.currentPermissionsAsk = .AskForLocations
+                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: UIApplicationDidBecomeActiveNotification, object: nil)
+                        strongSelf.currentPermissionsAsk = .AskForLocations
                         dispatch_async(dispatch_get_main_queue()) { [weak self] in
                             guard let strongSelf = self else {
                                 return
@@ -99,10 +103,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 self.helperTextLabel.delay(1.5) {
-                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) { (_) -> Void in
-                        NSNotificationCenter.defaultCenter().removeObserver(self, name: "appDidChangeManagerAuthorizationStatus", object: nil)
+                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) {[weak self] (_) -> Void in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "appDidChangeManagerAuthorizationStatus", object: nil)
                         if RouteManager.authorizationStatus != .NotDetermined {
-                            self.currentPermissionsAsk = .AskForMotion
+                            strongSelf.currentPermissionsAsk = .AskForMotion
                             dispatch_async(dispatch_get_main_queue()) { [weak self] in
                                 guard let strongSelf = self else {
                                     return
@@ -131,10 +138,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                 
                 self.helperTextLabel.delay(1.5) {
                     AppDelegate.appDelegate().startupMotionManager()
-                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) { (_) -> Void in
-                        NSNotificationCenter.defaultCenter().removeObserver(self, name: "appDidChangeManagerAuthorizationStatus", object: nil)
+                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) {[weak self] (_) -> Void in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "appDidChangeManagerAuthorizationStatus", object: nil)
                         if MotionManager.authorizationStatus != .NotDetermined {
-                            self.currentPermissionsAsk = .SayFinished
+                            strongSelf.currentPermissionsAsk = .SayFinished
                             dispatch_async(dispatch_get_main_queue()) { [weak self] in
                                 guard let strongSelf = self else {
                                     return

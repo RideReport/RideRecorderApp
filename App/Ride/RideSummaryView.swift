@@ -107,7 +107,7 @@ import Foundation
     
     let buttonWidth : CGFloat = 78.0
     
-    var delegate : RideSummaryViewDelegate? = nil
+    weak var delegate : RideSummaryViewDelegate? = nil
     
     var isShowingControls = false
     

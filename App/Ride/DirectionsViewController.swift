@@ -21,7 +21,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
     private var dateFormatter : NSDateFormatter!
     private var counterTimer : NSTimer?
     
-    var mapViewController: MapViewController! = nil
+    weak var mapViewController: MapViewController! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,8 +54,11 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
         self.reloadMapInfoToolBar()
         self.counter.updateCounter(0, animate: false) // we're going to animate it instead.
 
-        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) { (notif) -> Void in
-            self.reloadMapInfoToolBar()
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.reloadMapInfoToolBar()
         }
 
     }
@@ -69,7 +72,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                 var j = 0
                 for var i = 0; i < Int(count); i+=499 {
                     let c = UInt(i)
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) { [weak self] in
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
                         guard let strongSelf = self else {
                             return
                         }
@@ -79,7 +82,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                     j += 1
                 }
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))),      dispatch_get_main_queue()) { [weak self] in
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
                     guard let strongSelf = self else {
                         return
                     }

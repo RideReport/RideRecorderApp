@@ -175,6 +175,7 @@
 		2BEE9E09918B3E44BAE32A45 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
+		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		51710707CF8C3B3D807E26CF /* Pods_Ride_Report_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ride_Report_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79593058F9250D4F54FC5447 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -1284,6 +1285,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */,
 				842141931C3D9407009DA851 /* Ride 36.xcdatamodel */,
 				842141921C3CA214009DA851 /* Ride 35.xcdatamodel */,
 				8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */,
@@ -1321,7 +1323,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 842141931C3D9407009DA851 /* Ride 36.xcdatamodel */;
+			currentVersion = 3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

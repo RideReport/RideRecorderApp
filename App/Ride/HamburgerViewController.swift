@@ -39,7 +39,7 @@ class HamburgerViewController: UITableViewController {
         self.updatePauseResumeText()
         self.tableView.reloadData()
 
-        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
                 guard let strongSelf = self else {
                     return
@@ -49,8 +49,11 @@ class HamburgerViewController: UITableViewController {
             })
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) { (notif) -> Void in
-            self.tableView.reloadData()
+        NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidGetArea", object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.tableView.reloadData()
         }
     }
     
@@ -60,14 +63,21 @@ class HamburgerViewController: UITableViewController {
     }
     
     func updateAccountStatusText() {
-        var accountCellTitle = ""
         switch APIClient.sharedClient.accountVerificationStatus {
-        case .Unknown: accountCellTitle = "Updating Account Status…"
-        case .Unverified: accountCellTitle = "Create Account"
-        case .Verified: accountCellTitle = "Log Out"
+        case .Unknown:
+            self.accountTableViewCell.userInteractionEnabled = false
+            self.accountTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
+            self.accountTableViewCell.textLabel?.text = "Updating…"
+        case .Unverified:
+            self.accountTableViewCell.userInteractionEnabled = true
+            self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.accountTableViewCell.textLabel?.text = "Create Account"
+        case .Verified:
+            self.accountTableViewCell.userInteractionEnabled = true
+            self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.accountTableViewCell.textLabel?.text = "Log Out"
         }
         
-        self.accountTableViewCell.textLabel?.text = accountCellTitle
     }
     
     func updatePauseResumeText() {
