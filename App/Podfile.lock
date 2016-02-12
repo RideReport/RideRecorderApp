@@ -31,7 +31,7 @@ PODS:
   - FBSDKShareKit (4.6.0):
     - FBSDKCoreKit
   - KeychainAccess (2.0.0)
-  - Mapbox-iOS-SDK (3.1.0-pre.4-symbols)
+  - Mapbox-iOS-SDK (3.1.0)
   - Mixpanel (2.9.1):
     - Mixpanel/Mixpanel (= 2.9.1)
   - Mixpanel/Mixpanel (2.9.1)
@@ -68,7 +68,7 @@ DEPENDENCIES:
   - FBSDKLoginKit
   - FBSDKShareKit
   - KeychainAccess
-  - Mapbox-iOS-SDK (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.1.0-pre.4/ios/Mapbox-iOS-SDK.podspec`)
+  - Mapbox-iOS-SDK
   - Mixpanel
   - OAuthSwift
   - OHHTTPStubs
@@ -81,8 +81,6 @@ EXTERNAL SOURCES:
   CocoaLumberjack:
     :branch: swift_2.0
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
-  Mapbox-iOS-SDK:
-    :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.1.0-pre.4/ios/Mapbox-iOS-SDK.podspec
   PNChart:
     :path: ../Submodules/PNChart
 
@@ -102,7 +100,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
   KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
-  Mapbox-iOS-SDK: 1aa38ac8d740e25c6300823388a7b2cbfe71cba2
+  Mapbox-iOS-SDK: e8b6480b94015c3c701f123171c5b8975645af8f
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
