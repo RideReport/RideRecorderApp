@@ -32,7 +32,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
                 }
                 
                 if (strongSelf.selectedTrip != nil) {
-                    if (strongSelf.selectedTrip.locationsNotYetDownloaded) {
+                    if (strongSelf.selectedTrip.locationsNotYetDownloaded || !strongSelf.selectedTrip.summaryIsSynced) {
                         APIClient.sharedClient.getTrip(strongSelf.selectedTrip).apiResponse({ (_) -> Void in
                             strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
                             strongSelf.reloadTripSelectedToolbar()
