@@ -438,10 +438,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.refreshEmptyTableView()
+        self.tableView.endUpdates()
+        
         // reload the rewards section as needed
         self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
-        
-        self.tableView.endUpdates()
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -459,18 +459,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch(type) {
             
-        case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-            
         case .Update:
             let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
             let cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1))
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
-            
+        case .Insert:
+            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+        case .Delete:
+            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                 withRowAnimation: UITableViewRowAnimation.Fade)
