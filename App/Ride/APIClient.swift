@@ -390,6 +390,7 @@ class APIClient {
                         trip.isClosed = true
                         trip.isSynced = true
                         trip.locationsAreSynced = true
+                        trip.summaryIsSynced = true
                         
                         if let activityType = tripJson["activityType"].number,
                                 rating = tripJson["rating"].number,
