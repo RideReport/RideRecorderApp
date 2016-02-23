@@ -33,6 +33,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
+    private var rewardSectionNeedsReload : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -441,14 +442,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.endUpdates()
         
         // reload the rewards section as needed
-        self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        if rewardSectionNeedsReload {
+            rewardSectionNeedsReload = false
+            self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
+            rewardSectionNeedsReload = true
             self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
+            rewardSectionNeedsReload = true
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing
