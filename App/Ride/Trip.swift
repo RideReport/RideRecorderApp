@@ -430,8 +430,7 @@ class Trip : NSManagedObject {
         let closedPredicate = NSPredicate(format: "isClosed == YES")
         let syncedPredicate = NSPredicate(format: "isSynced == NO")
         let locationsAreSyncedPredicate = NSPredicate(format: "locationsAreSynced == NO")
-        let summarySyncedPredicate = NSPredicate(format: "summaryIsSynced == NO")
-        let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [locationsAreSyncedPredicate, syncedPredicate, summarySyncedPredicate])
+        let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [locationsAreSyncedPredicate, syncedPredicate])
 
         fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedCompoundPredicate])
         fetchedRequest.fetchLimit = 1
