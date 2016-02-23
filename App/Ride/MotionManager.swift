@@ -18,6 +18,7 @@ enum MotionManagerAuthorizationStatus {
 
 class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager : CMMotionActivityManager!
+    private var motionManager : CMMotionManager!
     private var motionQueue : NSOperationQueue!
     private var motionCheckStartDate : NSDate!
     let motionStartTimeoutInterval : NSTimeInterval = 30
@@ -56,6 +57,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
+        self.motionManager = CMMotionManager()
     }
     
     private func startup() {
@@ -80,6 +82,14 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             MotionManager.authorizationStatus = .Authorized
             NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)            
         }
+    }
+    
+    func startDeviceMotionUpdates(withHandler handler: CMDeviceMotionHandler!) {
+        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue, withHandler: handler)
+    }
+    
+    func stopDeviceMotionUpdates() {
+        self.motionManager.stopDeviceMotionUpdates()
     }
     
     func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {

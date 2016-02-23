@@ -60,6 +60,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var locationManager : CLLocationManager!
     
+    var isTrackingDeviceMotionUpdates : Bool = false
+    
     private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
     
@@ -393,6 +395,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
+        
+        if (self.isTrackingDeviceMotionUpdates) {
+            self.isTrackingDeviceMotionUpdates = false
+            MotionManager.sharedManager.stopDeviceMotionUpdates()
+        }
     }
     
     private func processMotionMonitoringLocations(locations: [CLLocation]) {
@@ -625,6 +632,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (self.locationManager.respondsToSelector("allowsBackgroundLocationUpdates")) {
                 self.locationManager.setValue(true, forKey: "allowsBackgroundLocationUpdates")
             }
+        }
+        
+        if (!self.isTrackingDeviceMotionUpdates) {
+            self.isTrackingDeviceMotionUpdates = true
+            MotionManager.sharedManager.startDeviceMotionUpdates(withHandler: { (motion, error) -> Void in
+                //
+            })
         }
     }
 
