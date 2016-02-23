@@ -58,6 +58,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
+        self.motionManager.deviceMotionUpdateInterval = 50/1000
     }
     
     private func startup() {

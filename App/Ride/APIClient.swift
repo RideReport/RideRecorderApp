@@ -583,6 +583,20 @@ class APIClient {
                 locations.append((location as! Location).jsonDictionary())
             }
             tripDict["locations"] = locations
+            
+            var accelerometerData : [AnyObject] = []
+            for dm in trip.deviceMotions {
+                accelerometerData.append((dm as! DeviceMotion).jsonDictionary())
+            }
+            let accelerometerRouteURL = "/trips/" + trip.uuid + "/ios_accelerometer_data"
+            AuthenticatedAPIRequest(client: self, method: .PUT, route: accelerometerRouteURL, parameters: ["data" : accelerometerData]) { (response) in
+                switch response.result {
+                case .Success(let json):
+                    DDLogWarn("Yep")
+                case .Failure(let error):
+                    DDLogWarn("Nope!")
+                }
+            }
         } else {
             // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
             method = Alamofire.Method.PATCH

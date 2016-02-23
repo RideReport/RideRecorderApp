@@ -636,8 +636,22 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (!self.isTrackingDeviceMotionUpdates) {
             self.isTrackingDeviceMotionUpdates = true
-            MotionManager.sharedManager.startDeviceMotionUpdates(withHandler: { (motion, error) -> Void in
-                //
+            MotionManager.sharedManager.startDeviceMotionUpdates(withHandler: {(motion, error) -> Void in
+                guard let deviceMotion = motion else {
+                    return
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
+                    if let trip = strongSelf.currentTrip {
+                        _ = DeviceMotion(deviceMotion: deviceMotion, trip: trip)
+                    } else if let prototrip = strongSelf.currentPrototrip {
+                        _ = DeviceMotion(deviceMotion: deviceMotion, prototrip: prototrip)
+                    }
+                })
             })
         }
     }
