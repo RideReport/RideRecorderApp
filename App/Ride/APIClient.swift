@@ -450,8 +450,7 @@ class APIClient {
                     }
                     trip.locationsNotYetDownloaded = false
                 } else {
-                    DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found!")
-                    trip.locationsNotYetDownloaded = true
+                    DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                 }
                 
                 if let summary = json["summary"].dictionary {
