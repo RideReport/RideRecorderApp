@@ -95,16 +95,20 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.navigationController?.navigationBarHidden = false
         self.navigationItem.rightBarButtonItem?.enabled = false
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: nil) { (notif) -> Void in
+        NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+
             let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
             let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
             
-            if (emailPredicate.evaluateWithObject(self.emailTextField.text)) {
-                self.navigationItem.rightBarButtonItem?.enabled = true
-                self.emailTextField.returnKeyType = UIReturnKeyType.Done
+            if (emailPredicate.evaluateWithObject(strongSelf.emailTextField.text)) {
+                strongSelf.navigationItem.rightBarButtonItem?.enabled = true
+                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
             } else {
-                self.navigationItem.rightBarButtonItem?.enabled = false
-                self.emailTextField.returnKeyType = UIReturnKeyType.Done
+                strongSelf.navigationItem.rightBarButtonItem?.enabled = false
+                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
             }
         }
     }

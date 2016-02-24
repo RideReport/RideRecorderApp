@@ -49,6 +49,7 @@ class Trip : NSManagedObject {
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
     @NSManaged var locationsAreSynced : Bool
+    @NSManaged var summaryIsSynced : Bool
     @NSManaged var locationsNotYetDownloaded : Bool
     @NSManaged var rewardDescription : String!
     @NSManaged var rewardEmoji : String!
@@ -365,6 +366,48 @@ class Trip : NSManagedObject {
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == NO")
         fetchedRequest.predicate = closedPredicate
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return []
+        }
+        
+        return results!
+    }
+    
+    class func unclassifiedTrips() -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let predicate = NSPredicate(format: "activityType == %i", ActivityType.Unknown.rawValue)
+        fetchedRequest.predicate = predicate
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return []
+        }
+        
+        return results!
+    }
+    
+    class func unweatheredTrips() -> [AnyObject] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let predicate = NSPredicate(format: "climacon == nil OR climacon == ''")
+        fetchedRequest.predicate = predicate
         
         let results: [AnyObject]?
         do {
@@ -792,6 +835,10 @@ class Trip : NSManagedObject {
     }
     
     func loadSummaryFromJSON(summary: [String: JSON]) {
+        if let ready = summary["ready"]?.boolValue {
+            self.summaryIsSynced = ready
+        }
+        
         if let climacon = summary["weatherEmoji"]?.string {
             self.climacon = climacon
         }
@@ -997,6 +1044,8 @@ class Trip : NSManagedObject {
             }
         } else {
             // trivial case: two points are more than episilon distance away.
+            startLoc!.simplifiedInTrip = self
+            endLoc!.simplifiedInTrip = self
             return
         }
         
@@ -1080,7 +1129,7 @@ class Trip : NSManagedObject {
     }
     
     func bestStartLocation() -> Location? {
-        guard self.locations != nil || self.locations.count > 0 else {
+        guard self.locations != nil && self.locations.count > 0 else {
             return nil
         }
         
@@ -1094,7 +1143,7 @@ class Trip : NSManagedObject {
     }
     
     func bestEndLocation() -> Location? {
-        guard self.locations != nil || self.locations.count > 0 else {
+        guard self.locations != nil && self.locations.count > 0 else {
             return nil
         }
         

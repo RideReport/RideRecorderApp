@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
 		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
@@ -173,8 +174,10 @@
 
 /* Begin PBXFileReference section */
 		2BEE9E09918B3E44BAE32A45 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
+		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		51710707CF8C3B3D807E26CF /* Pods_Ride_Report_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ride_Report_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79593058F9250D4F54FC5447 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -528,6 +531,7 @@
 				84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */,
 				844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */,
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
+				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1007,6 +1011,7 @@
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
+				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
@@ -1199,6 +1204,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
@@ -1239,6 +1245,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
@@ -1282,6 +1289,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */,
 				842141931C3D9407009DA851 /* Ride 36.xcdatamodel */,
 				842141921C3CA214009DA851 /* Ride 35.xcdatamodel */,
 				8421418E1C3C8BC6009DA851 /* Ride 34.xcdatamodel */,
@@ -1319,7 +1327,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 842141931C3D9407009DA851 /* Ride 36.xcdatamodel */;
+			currentVersion = 3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

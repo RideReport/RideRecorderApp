@@ -36,7 +36,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
     let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 60
 
-    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 8
+    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 12
     let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
     let maximumMotionMonitoringReadingsCountWithoutGPSFix = 12 // Give extra time for a GPS fix.
     let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 5
@@ -235,22 +235,24 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             stoppedTrip.close() {
-               APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
-                switch response.result {
-                case .Success(_):
-                    DDLogInfo("Trip summary was successfully sync'd.")
-                    stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
-                case .Failure(_):
-                    // if it fails, go ahead and send the notification locally
-                    stoppedTrip.sendTripCompletionNotificationLocally()
+                stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
+                if (HealthKitManager.authorizationStatus == .Authorized) {
+                    HealthKitManager.sharedManager.saveTrip(stoppedTrip)
                 }
+                APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
+                    switch response.result {
+                    case .Success(_):
+                        DDLogInfo("Trip summary was successfully sync'd.")
+                    case .Failure(_):
+                        DDLogInfo("Trip summary failed to sync.")
+                    }
 
-                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                    DDLogInfo("Ending background task.")
-                    
-                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                    self.backgroundTaskID = UIBackgroundTaskInvalid
-                }
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending background task.")
+                        
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
+                    }
                }
             }
         }

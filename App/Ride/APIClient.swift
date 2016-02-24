@@ -247,51 +247,32 @@ class APIClient {
     }
     
     private func startup() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
-        
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                self.authenticateIfNeeded()
-            }
-        } else {
-            self.authenticateIfNeeded()
-        }
-    }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-    @objc func appDidBecomeActive() {
-        let tripSyncBlock = {
-            if (self.authenticated) {
-                let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
-                if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.getAllTrips()
-                    })
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
                 }
-
-                
-                self.updateAccountStatus()
-                self.syncUnsyncedTrips()
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                strongSelf.authenticateIfNeeded().apiResponse() { (_) -> Void in
+                    strongSelf.syncStatusAndTripsInForeground()
+                }
+            }
+        } else {
+            self.authenticateIfNeeded().apiResponse() { (_) -> Void in
+                self.syncStatusAndTripsInForeground()
             }
         }
         
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "CoreDataManagerDidStartup", object: nil)
-                tripSyncBlock()
-            }
-        } else {
-            tripSyncBlock()
-        }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            // avoid a bug that could have this called twice on app launch
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        })
     }
+    
     
     init (useDefaultConfiguration: Bool = false) {
         var configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
-
+        
         if useDefaultConfiguration {
             // used for testing
             configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -303,11 +284,93 @@ class APIClient {
         self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    //
+    // MARK: - Setup
+    //
+    
+    @objc func appDidBecomeActive() {
+        if (CoreDataManager.sharedManager.isStartingUp) {
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                strongSelf.syncStatusAndTripsInForeground()
+            }
+        } else {
+            self.syncStatusAndTripsInForeground()
+        }
+    }
+    
     func appDidReceiveNotificationDeviceToken(token: NSData?) {
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
         self.updateAccountStatus()
     }
+    
+    private func syncStatusAndTripsInForeground() {
+        if (self.authenticated) {
+            // do account status even in the background
+            self.updateAccountStatus()
+
+            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+                self.runMigrations()
+                
+                self.syncUnsyncedTrips()
+            }
+        }
+
+    }
+    
+    //
+    // MARK: - Migrations
+    //
+    
+    private func runMigrations() {
+        let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
+        if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.getAllTrips().apiResponse() { (response) in
+                    if case .Success = response.result {
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                    }
+                }
+            })
+        }
+        
+        self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
+            for t in Trip.unclassifiedTrips() {
+                let trip = t as! Trip
+                trip.clasifyActivityType() {
+                    trip.saveAndMarkDirty()
+                }
+            }
+        }
+        
+        self.runDataMigration(dataMigrationName: "hasRunSummarySyncedPropertyAdditionMigration") {
+            for t in Trip.unweatheredTrips() {
+                let trip = t as! Trip
+                trip.summaryIsSynced = false
+                trip.saveAndMarkDirty()
+            }
+        }
+    }
+    
+    private func runDataMigration(dataMigrationName name: String, handler: ()->Void) {
+        let migrationHasHappened = NSUserDefaults.standardUserDefaults().boolForKey(name)
+        if (!migrationHasHappened) {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: name)
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+            handler()
+        }
+    }
+    
     
     //
     // MARK: - Trip Synchronization
@@ -317,9 +380,6 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
-                NSUserDefaults.standardUserDefaults().synchronize()
-                
                 for tripJson in json.array! {
                     if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
                         var trip = Trip.tripWithUUID(uuid)
@@ -333,6 +393,7 @@ class APIClient {
                         trip.isClosed = true
                         trip.isSynced = true
                         trip.locationsAreSynced = true
+                        trip.summaryIsSynced = true
                         
                         if let activityType = tripJson["activityType"].number,
                                 rating = tripJson["rating"].number,
@@ -365,28 +426,32 @@ class APIClient {
             switch response.result {
             case .Success(let json):
                 trip.locations = NSOrderedSet() // just in case
-                for locationJson in json["locations"].array! {
-                    if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
-                            latitude = locationJson["latitude"].number,
-                            longitude = locationJson["longitude"].number,
-                            course = locationJson["course"].number,
-                            speed = locationJson["speed"].number,
-                            horizontalAccuracy = locationJson["horizontalAccuracy"].number {
-                        let loc = Location(trip: trip)
-                        loc.date = date
-                        loc.latitude = latitude
-                        loc.longitude = longitude
-                        loc.course = course
-                        loc.speed = speed
-                        loc.horizontalAccuracy = horizontalAccuracy
-                        if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
-                            loc.isGeofencedLocation = isGeofencedLocation
+                if let locations = json["locations"].array {
+                    for locationJson in locations {
+                        if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
+                                latitude = locationJson["latitude"].number,
+                                longitude = locationJson["longitude"].number,
+                                course = locationJson["course"].number,
+                                speed = locationJson["speed"].number,
+                                horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                            let loc = Location(trip: trip)
+                            loc.date = date
+                            loc.latitude = latitude
+                            loc.longitude = longitude
+                            loc.course = course
+                            loc.speed = speed
+                            loc.horizontalAccuracy = horizontalAccuracy
+                            if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
+                                loc.isGeofencedLocation = isGeofencedLocation
+                            }
+                        } else {
+                            DDLogWarn("Error parsing location dictionary when fetched trip data!")
                         }
-                    } else {
-                        DDLogWarn("Error parsing location dictionary when fetched trip data!")
                     }
+                    trip.locationsNotYetDownloaded = false
+                } else {
+                    DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                 }
-                trip.locationsNotYetDownloaded = false
                 
                 if let summary = json["summary"].dictionary {
                     trip.loadSummaryFromJSON(summary)
@@ -470,12 +535,6 @@ class APIClient {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
-            DDLogWarn("No starting and/or ending location found when syncing trip!")
-            
-            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-        }
-        
         if let existingRequest = self.tripRequests[trip] {
             // if an existing API request is in flight and we have local changes, wait to sync until after it completes
             
@@ -504,6 +563,13 @@ class APIClient {
         if (!trip.locationsAreSynced.boolValue && !includeLocations) {
             // initial synchronization of trip data - the server does not know about the locations yet
             // so we provide them in order to get back summary information. record may or may not exist so we PUT.
+            guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
+                DDLogWarn("No starting and/or ending location found when syncing trip locations!")
+                trip.locationsAreSynced = false
+                CoreDataManager.sharedManager.saveContext()
+
+                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+            }
             
             tripDict["length"] = trip.length
             tripDict["startLocation"] = startingLocation.jsonDictionary()

@@ -11,8 +11,7 @@ import CoreLocation
 import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
-    var tripViewController: TripViewController? = nil
-    
+    weak var tripViewController: TripViewController? = nil
     @IBOutlet weak var mapView:  MGLMapView!
         
     private var tripsAreLoaded = false
@@ -29,10 +28,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     private var dateFormatter : NSDateFormatter!
     
     private var tempBackgroundView : UIView?
+    private var hasInsertedTempBackgroundView = false
     
     private var annotationPopOverController : UIPopoverController? = nil
     
-    override func viewDidLoad() {        
+    override func viewDidLoad() {
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MM/dd"
@@ -42,6 +42,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.logoView.hidden = true
         self.mapView.attributionButton.hidden = true
         self.mapView.rotateEnabled = false
+        self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
         
         self.mapView.showsUserLocation = true
         self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
@@ -59,19 +60,25 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         NSURLCache.setSharedURLCache(urlCache)
         
         if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                if let tripViewController = self.tripViewController {
-                    self.setSelectedTrip(tripViewController.selectedTrip)
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                if let tripViewController = strongSelf.tripViewController {
+                    strongSelf.setSelectedTrip(tripViewController.selectedTrip)
                 }
 
                 if APIClient.sharedClient.accountVerificationStatus != .Unknown {
-                    self.runCreateAccountOfferIfNeeded()
+                    strongSelf.runCreateAccountOfferIfNeeded()
                 }
             }
-            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: "APIClientAccountStatusDidChange", object: nil)
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "APIClientAccountStatusDidChange", object: nil)
                 if !CoreDataManager.sharedManager.isStartingUp {
-                    self.runCreateAccountOfferIfNeeded()
+                    strongSelf.runCreateAccountOfferIfNeeded()
                 }
             }
         } else {
@@ -110,7 +117,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if self.tempBackgroundView == nil {
+        if !hasInsertedTempBackgroundView {
+            self.hasInsertedTempBackgroundView = true
             self.tempBackgroundView = UIView(frame: self.view.bounds)
             self.tempBackgroundView!.backgroundColor = self.view.backgroundColor
             self.mapView.insertSubview(self.tempBackgroundView!, atIndex: 0)

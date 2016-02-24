@@ -18,6 +18,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
 
 
     private var scene: SKScene!
+    var imageDictionary : [String: UIImage] = [:]
     
     var touchPoint: CGPoint = CGPoint()
     var touchTime: NSTimeInterval = 0
@@ -72,7 +73,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.scene.physicsBody!.friction = 0.2
             self.scene.physicsWorld.gravity = CGVectorMake(0,-9.8)
             
-            var imageDictionary : [String: UIImage] = [:]
             let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji", additionalAttributes: ["rewardDescription"])
             let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 26)!]
             

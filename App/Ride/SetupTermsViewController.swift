@@ -15,6 +15,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
     @IBOutlet weak var termsTextView : UITextView!
     @IBOutlet weak var spriteKitView: SKView!
     private var scene: SKScene!
+    private var imageDictionary : [String: UIImage] = [:] // storing this works around a crash on iOS 8.4 devices
     
     var nodesToMoveBack : [SKSpriteNode] = []
     
@@ -74,12 +75,15 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
             self.scene.physicsWorld.contactDelegate = self
 
             
-            var imageDictionary : [String: UIImage] = [:]
             let emojis = "👍 👎 🙌 🌂 🍄 🌤 🌧 ⛄️ 💧 🚴 🚲 🚀 🌈 🌠 🎉 ❤️ 💙 💜 💚 💛 📢 🎖 🏅 🏆 🎗 💫 🍁 🎩 👻 👒".componentsSeparatedByString(" ")
             let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 36)!]
             
             let imageSize = CGSizeMake(40.0, 40.0)
             for emoji in emojis {
+                if emoji.containsUnsupportEmoji() {
+                    continue
+                }
+                
                 let unicodeString = NSString(data: emoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                 if (imageDictionary[unicodeString as! String] == nil) {
                     UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
@@ -100,6 +104,11 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                 var emojisSprites : [SKSpriteNode] = []
                 
                 for emoji in emojis {
+                    if emoji.containsUnsupportEmoji() {
+                        continue
+                    }
+
+                    
                     let unicodeString = NSString(data: emoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                     let texture = textureAtlas.textureNamed(unicodeString as! String)
                     

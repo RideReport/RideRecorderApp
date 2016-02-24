@@ -29,11 +29,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var pieChartDaysBiked: PNPieChart!
     var pieChartWeather: PNPieChart!
     
-    
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
+    private var rewardSectionNeedsReload : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,8 +41,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.navigationItem.hidesBackButton = true
         
         self.popupView.hidden = true
-        
-        self.headerView.backgroundColor = UIColor.clearColor()
         
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
@@ -61,8 +59,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.coreDataDidLoad()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.coreDataDidLoad()
             }
         } else {
             self.coreDataDidLoad()
@@ -92,8 +93,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.reloadData()
         self.dateOfLastTableRefresh = NSDate()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) in
-            self.reloadTableIfNeeded()
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) {[weak self] (_) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.reloadTableIfNeeded()
         }
     }
     
@@ -107,8 +111,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
         
-        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) { (notif) -> Void in
-            self.refreshHelperPopupUI()
+        NSNotificationCenter.defaultCenter().addObserverForName(kReachabilityChangedNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.refreshHelperPopupUI()
         }
         
         if (self.tableView.indexPathForSelectedRow != nil) {
@@ -116,8 +123,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) { (notification : NSNotification) -> Void in
-                self.refreshCharts()
+            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.refreshCharts()
             }
         } else {
             self.refreshCharts()
@@ -244,7 +254,21 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                         self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                     }
                 } else {
-                    self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    if currentStreakLength == 1 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "🐣  You rode yesterday"
+                        } else {
+                            self.headerLabel1.text = "🐣  You rode today"
+                        }
+                    } else if currentStreakLength == 2 {
+                        if (Trip.bikeTripsToday() == nil) {
+                            self.headerLabel1.text = "💗  Ride today to start a ride streak!"
+                        } else {
+                            self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
+                        }
+                    } else {
+                        self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    }
                 }
             } else {
                 self.headerLabel1.text = "🐣  No rides today"
@@ -253,14 +277,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if count < 10 {
                 // Don't show stats until they get to >=10 rides
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = self.headerLabel1.frame.size.height + 10
+                headerFrame.size.height = self.headerLabel1.frame.size.height + 2
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
                 
                 return
             } else {
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 50
+                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 42
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
             }
@@ -358,7 +382,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
-            ratingsLabel.text = "Ratings"
+            ratingsLabel.numberOfLines = 2
+            ratingsLabel.textAlignment = NSTextAlignment.Center
+            ratingsLabel.text = "Ride\nRatings"
             ratingsLabel.sizeToFit()
             if ratingsLabel.frame.width > chartWidth {
                 ratingsLabel.frame = CGRectMake(ratingsLabel.frame.origin.x, ratingsLabel.frame.origin.y, chartWidth, ratingsLabel.frame.size.height)
@@ -413,17 +439,22 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.refreshEmptyTableView()
-        // reload the rewards section as needed
-        self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
-        
         self.tableView.endUpdates()
+        
+        // reload the rewards section as needed
+        if rewardSectionNeedsReload {
+            rewardSectionNeedsReload = false
+            self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
+            rewardSectionNeedsReload = true
             self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
+            rewardSectionNeedsReload = true
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing
@@ -434,18 +465,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch(type) {
             
-        case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-            
         case .Update:
             let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
             let cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1))
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
-            
+        case .Insert:
+            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+        case .Delete:
+            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                 withRowAnimation: UITableViewRowAnimation.Fade)
@@ -541,7 +570,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             var tabStops : [NSTextTab] = []
             var totalLineWidth : CGFloat = 0
             var columnCount = 0
-            while totalLineWidth + totalWidth < text1.frame.size.width {
+            while totalLineWidth + totalWidth < (self.view.frame.size.width - 10) {
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
@@ -634,9 +663,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let directionsNavController = self.storyboard!.instantiateViewControllerWithIdentifier("DirectionsNavViewController") as! UINavigationController
         self.presentViewController(directionsNavController, animated: true, completion: nil)
         
-        if let directionsVC = directionsNavController.topViewController as? DirectionsViewController {
+        weak var directionsVC = directionsNavController.topViewController as? DirectionsViewController
+        if directionsVC != nil  {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
-                directionsVC.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
+                directionsVC?.mapViewController.mapView.attributionButton.sendActionsForControlEvents(UIControlEvents.TouchUpInside)
             }
         }
     }
@@ -680,7 +710,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            trip.clasifyActivityType({})
+            trip.clasifyActivityType({
+                trip.saveAndMarkDirty()
+            })
         } else if (buttonIndex == 1) {
             if (trip.hasSmoothed) {
                 trip.undoSmoothWithCompletionHandler({})
@@ -692,7 +724,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         } else if (buttonIndex == 3) {
             APIClient.sharedClient.syncTrip(trip)
         } else if (buttonIndex == 4) {
-            HealthKitManager.sharedManager.logTrip(trip)
+            HealthKitManager.sharedManager.saveTrip(trip)
         }
     }
     

@@ -52,9 +52,13 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         
             // make sure the keyboard does not animate in initially.
             UIView.setAnimationsEnabled(false)
-            NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardDidShowNotification, object: nil, queue: nil) { (notif) -> Void in
-                NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardDidShowNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserverForName(UIKeyboardDidShowNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
                 UIView.setAnimationsEnabled(true)
+
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: UIKeyboardDidShowNotification, object: nil)
             }
             self.passcodeInputView.becomeFirstResponder()
         } else {
