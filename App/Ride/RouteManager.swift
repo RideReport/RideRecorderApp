@@ -282,9 +282,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         self.lastMovingLocation = location
                     }
                 }
-                    
-                Location(location: location as CLLocation, trip: self.currentTrip!)
             }
+            
+            Location(location: location as CLLocation, trip: self.currentTrip!)
             
             if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow)) {
                 // if the event is more recent than the one we already have
