@@ -346,7 +346,7 @@ class APIClient {
         self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
             for t in Trip.unclassifiedTrips() {
                 let trip = t as! Trip
-                trip.clasifyActivityType() {
+                trip.legacyClasifyActivityType() {
                     trip.saveAndMarkDirty()
                 }
             }
@@ -588,8 +588,8 @@ class APIClient {
             tripDict["locations"] = locations
             
             var accelerometerData : [AnyObject] = []
-            for dm in trip.deviceMotions {
-                accelerometerData.append((dm as! DeviceMotion).jsonDictionary())
+            for sample in trip.deviceMotionsSamples {
+                accelerometerData.append((sample as! DeviceMotionsSample).jsonDictionary())
             }
             let accelerometerRouteURL = "/trips/" + trip.uuid + "/ios_accelerometer_data"
             AuthenticatedAPIRequest(client: self, method: .PUT, route: accelerometerRouteURL, parameters: ["data" : accelerometerData]) { (response) in

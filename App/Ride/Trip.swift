@@ -23,6 +23,7 @@ class Trip : NSManagedObject {
         case Automotive
         case Walking
         case Transit
+        case Stationary
     }
     
     enum Rating : Int16 {
@@ -44,7 +45,7 @@ class Trip : NSManagedObject {
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
-    @NSManaged var deviceMotions : NSOrderedSet!
+    @NSManaged var deviceMotionsSamples : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
@@ -318,10 +319,9 @@ class Trip : NSManagedObject {
         return results! as? [Trip]
     }
     
-    class func mostRecentBikeTrip() -> Trip? {
+    class func mostRecentTrip() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
         
@@ -789,11 +789,9 @@ class Trip : NSManagedObject {
         self.calculateLength()
         self.isClosed = true
         
-        self.clasifyActivityType { () -> Void in
-            NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
-            self.saveAndMarkDirty()
-            handler()
-        }
+        NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+        self.saveAndMarkDirty()
+        handler()
     }
     
     func reopen(withPrototrip prototrip: Prototrip?) {
@@ -1201,7 +1199,7 @@ class Trip : NSManagedObject {
         return sumSpeed/Double(count)
     }
     
-    func clasifyActivityType(handler: ()->Void) {
+    func legacyClasifyActivityType(handler: ()->Void) {
         if (self.activities != nil && self.activities.count > 0) {
             self.runActivityClassification()
             handler()
@@ -1216,7 +1214,6 @@ class Trip : NSManagedObject {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
-                            notif.category = "NO_MOTION_DATA_CATEGORY"
                             notif.userInfo = ["uuid" : strongSelf.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
@@ -1235,7 +1232,7 @@ class Trip : NSManagedObject {
         }
     }
     
-    func runActivityClassification() {
+    private func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
             

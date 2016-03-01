@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 class Prototrip : NSManagedObject {
-
+    @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
-    @NSManaged var deviceMotions : NSSet!
+    @NSManaged var deviceMotionsSamples : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var creationDate : NSDate!
     
@@ -51,10 +51,10 @@ class Prototrip : NSManagedObject {
             activity.prototrip = nil
         }
         
-        for dm in self.deviceMotions {
-            let deviceMotion = dm as! DeviceMotion
-            deviceMotion.trip = trip
-            deviceMotion.prototrip = nil
+        for dms in self.deviceMotionsSamples {
+            let sample = dms as! DeviceMotionsSample
+            sample.trip = trip
+            sample.prototrip = nil
         }
     }
 }

@@ -12,8 +12,7 @@ import CoreMotion
 import MapKit
 
 class DeviceMotion : NSManagedObject {
-    @NSManaged var trip : Trip?
-    @NSManaged var prototrip : Prototrip?
+    @NSManaged var deviceMotionsSample : DeviceMotionsSample?
     
     @NSManaged var date : NSDate
     @NSManaged var gravityX : NSNumber
@@ -22,19 +21,6 @@ class DeviceMotion : NSManagedObject {
     @NSManaged var userAccelerationX : NSNumber
     @NSManaged var userAccelerationY : NSNumber
     @NSManaged var userAccelerationZ : NSNumber
-    
-    convenience init(deviceMotion: CMDeviceMotion, referenceBootDate: NSDate) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("DeviceMotion", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
-        
-        self.date =  NSDate(timeInterval: deviceMotion.timestamp, sinceDate: referenceBootDate)
-        self.gravityX = deviceMotion.gravity.x
-        self.gravityY = deviceMotion.gravity.y
-        self.gravityZ = deviceMotion.gravity.z
-        self.userAccelerationX = deviceMotion.userAcceleration.x
-        self.userAccelerationY = deviceMotion.userAcceleration.y
-        self.userAccelerationZ = deviceMotion.userAcceleration.z
-    }
     
     func jsonDictionary() -> [String: AnyObject] {
         return [

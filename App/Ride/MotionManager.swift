@@ -24,8 +24,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionStartTimeoutInterval: NSTimeInterval = 30
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     
-    private var referenceBootDate: NSDate?
-
+    private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -61,7 +60,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.deviceMotionUpdateInterval = 50/1000
+        self.motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
     }
     
     private func startup() {
@@ -88,27 +87,21 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func startDeviceMotionUpdates(withHandler handler: (DeviceMotion) -> Void!) {
+    func queryCurrentActivityType(forDeviceMotionSample sample:DeviceMotionsSample, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
         self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard let deviceMotion = motion else {
                 return
             }
             
-            if self.referenceBootDate == nil {
-                self.referenceBootDate = NSDate(timeIntervalSinceNow: -deviceMotion.timestamp)
-            }
-            
-            let refDate = self.referenceBootDate!
-            
             dispatch_async(dispatch_get_main_queue()) {
-                handler(DeviceMotion(deviceMotion: deviceMotion, referenceBootDate: refDate))
+                sample.addDeviceMotion(deviceMotion)
+                if sample.deviceMotions.count > Int(1/self.deviceMotionUpdateInterval) {
+                    self.motionManager.stopDeviceMotionUpdates()
+                    // run classification
+                    handler(activityType: .Cycling, confidence: 1.0)
+                }
             }
         }
-    }
-    
-    func stopDeviceMotionUpdates() {
-        self.motionManager.stopDeviceMotionUpdates()
-        self.referenceBootDate = nil
     }
     
     func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {

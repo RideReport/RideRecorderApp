@@ -14,12 +14,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
-    var minimumSpeedToStartMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
     
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
-    let routeResumeTimeout : NSTimeInterval = 240
-    let longerRouteThresholdMiles : Float = 15.0
-    let longerRouteResumeTimeout : NSTimeInterval = 900
 
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
@@ -35,11 +31,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
     let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 60
-
-    let minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip = 12
-    let minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip = 2
-    let maximumMotionMonitoringReadingsCountWithoutGPSFix = 12 // Give extra time for a GPS fix.
-    let maximumMotionMonitoringReadingsCountWithoutGPSMovement = 5
     
     let minimumBatteryForTracking : Float = 0.2
     
@@ -49,18 +40,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
     
-    private var motionMonitoringReadingsWithNonGPSMotion = 0
-    private var motionMonitoringReadingsWithGPSMotion = 0
-    private var motionMonitoringReadingsWithoutGPSMotionCount = 0
-    private var motionMonitoringReadingsWithoutGPSFix = 0
-    
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
     
     private var locationManager : CLLocationManager!
     
-    var isTrackingDeviceMotionUpdates : Bool = false
+    var lastActivityTypeQueryDate : NSDate?
+    let timeIntervalBetweenActivityTypeQueries : NSTimeInterval = 60
     
     private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
@@ -135,7 +122,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     // If we see sufficient motion of the right kind, we keep tracking. Otherwise, we end the trip.
     //
     
-    private func startTripFromLocation(fromLocation: CLLocation) {
+    private func tripQualifiesForResumptions(trip: Trip, fromLocation: CLLocation)->Bool {
+        var timeoutInterval: NSTimeInterval = 0
+        switch Trip.ActivityType(rawValue: trip.activityType.shortValue)! {
+        case .Cycling where trip.lengthMiles >= 15:
+            timeoutInterval = 900
+        default:
+            timeoutInterval = 240
+        }
+        
+        return abs(trip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < timeoutInterval
+    }
+    
+    private func startTripFromLocation(fromLocation: CLLocation, ofActivityType activityType:Trip.ActivityType) {
         if (self.currentTrip != nil) {
             return
         }
@@ -156,9 +155,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         // Resume the most recent trip if it was recent enough
-        if let mostRecentBikeTrip = Trip.mostRecentBikeTrip() where
-            abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(firstLocationOfNewTrip.timestamp)) < self.routeResumeTimeout ||
-            (mostRecentBikeTrip.lengthMiles >= self.longerRouteThresholdMiles && abs(mostRecentBikeTrip.endDate.timeIntervalSinceDate(firstLocationOfNewTrip.timestamp)) < self.longerRouteResumeTimeout) {
+        if let mostRecentTrip = Trip.mostRecentTrip() where mostRecentTrip.activityType.shortValue == activityType.rawValue && self.tripQualifiesForResumptions(mostRecentTrip, fromLocation: firstLocationOfNewTrip)  {
             DDLogInfo("Resuming ride")
             #if DEBUG
                 let notif = UILocalNotification()
@@ -166,11 +163,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 notif.category = "RIDE_COMPLETION_CATEGORY"
                 UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             #endif
-            self.currentTrip = mostRecentBikeTrip
+            self.currentTrip = mostRecentTrip
             self.currentTrip?.reopen(withPrototrip: self.currentPrototrip)
             self.currentTrip?.cancelTripStateNotification()
         } else {
             self.currentTrip = Trip(prototrip: self.currentPrototrip)
+            self.currentTrip?.activityType = NSNumber(short: activityType.rawValue)
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         }
         if let prototrip = self.currentPrototrip {
@@ -354,16 +352,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManager.disallowDeferredLocationUpdates()
         
         if (self.currentPrototrip == nil) {
-            self.motionMonitoringReadingsWithNonGPSMotion = 0
-            self.motionMonitoringReadingsWithGPSMotion = 0
-            self.motionMonitoringReadingsWithoutGPSFix = 0
-            self.motionMonitoringReadingsWithoutGPSMotionCount = 0
             self.currentPrototrip = Prototrip()
             if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
                 let _ = Location(byCopyingLocation: currentGeofenceLocation, prototrip: self.currentPrototrip!)
             }
             CoreDataManager.sharedManager.saveContext()
         }
+        
         Profile.profile().setGeofencedLocation(nil)
         self.lastMotionMonitoringLocation = nil
     }
@@ -392,20 +387,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentPrototrip = nil
         }
         
+        self.lastActivityTypeQueryDate = nil
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
-        
-        if (self.isTrackingDeviceMotionUpdates) {
-            self.isTrackingDeviceMotionUpdates = false
-            MotionManager.sharedManager.stopDeviceMotionUpdates()
-        }
     }
     
     private func processMotionMonitoringLocations(locations: [CLLocation]) {
-        var foundSufficientMovement = false
-        var foundGPSFix = false
-        
         guard locations.count > 0 else {
             return
         }
@@ -414,36 +402,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
             let _ = Location(location: location, prototrip: self.currentPrototrip!)
-            CoreDataManager.sharedManager.saveContext()
-            
-            if (location.speed >= self.minimumSpeedToStartMonitoring) {
-                DDLogVerbose("Found movement while in motion monitoring state")
-                if (location.horizontalAccuracy <= kCLLocationAccuracyBest) {
-                    self.motionMonitoringReadingsWithoutGPSMotionCount = 0
-                    self.motionMonitoringReadingsWithGPSMotion += 1
-                } else {
-                    self.motionMonitoringReadingsWithNonGPSMotion += 1
-                }
-                foundSufficientMovement = true
-            } else if (location.speed >= 0 && location.horizontalAccuracy <= kCLLocationAccuracyBest) {
-                // we have a GPS fix but insufficient speeds
-                foundGPSFix = true
-            } else if (location.speed < 0 && self.lastMotionMonitoringLocation != nil) {
-                // Some times locations given will not have a speed (or a negative speed).
-                // Hence, we also calculate a 'manual' speed from the current location to the last one
-                
-                let speed = self.lastMotionMonitoringLocation!.calculatedSpeedFromLocation(location)
-                DDLogVerbose(String(format: "Manually found speed: %f", speed))
-                
-                if (speed >= self.minimumSpeedToStartMonitoring && speed < 12.0) {
-                    // We ignore really large speeds that may be the result of location inaccuracy
-                    DDLogVerbose("Found movement while in motion monitoring state via manual speed!")
-                    self.motionMonitoringReadingsWithNonGPSMotion += 1
-                    foundSufficientMovement = true
-                }
-            }
         }
-        
+        CoreDataManager.sharedManager.saveContext()
         self.lastMotionMonitoringLocation = locations.first
         
         if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= RouteManager.acceptableLocationAccuracy) {
@@ -451,28 +411,42 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (!self.didStartFromBackground) {
                 DDLogVerbose("Got intial location for geofence. Stopping!")
                 self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+                return
             }
-        } else if (foundSufficientMovement) {
-            if(self.motionMonitoringReadingsWithNonGPSMotion >= self.minimumMotionMonitoringReadingsCountWithManualMovementToTriggerTrip ||
-                self.motionMonitoringReadingsWithGPSMotion >= self.minimumMotionMonitoringReadingsCountWithGPSMovementToTriggerTrip) {
-                    DDLogVerbose("Found enough motion in motion monitoring mode, triggering trip…")
-                    self.startTripFromLocation(locations.first!)
-            } else {
-                DDLogVerbose("Found motion in motion monitoring mode, awaiting further reads…")
-            }
-        } else {
-            DDLogVerbose("Did NOT find movement while in motion monitoring state")
-            
-            if (foundGPSFix) {
-              self.motionMonitoringReadingsWithoutGPSMotionCount += 1
-            } else {
-              self.motionMonitoringReadingsWithoutGPSFix += 1
-            }
-            
-            if (self.motionMonitoringReadingsWithoutGPSFix > self.maximumMotionMonitoringReadingsCountWithoutGPSFix ||
-                self.motionMonitoringReadingsWithoutGPSMotionCount > self.maximumMotionMonitoringReadingsCountWithoutGPSMovement) {
-                DDLogVerbose("Max motion monitoring readings exceeded, stopping!")
-                self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+        }
+
+        if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActivityTypeQueries ) {
+            self.lastActivityTypeQueryDate = NSDate()
+        
+            MotionManager.sharedManager.queryCurrentActivityType(forDeviceMotionSample: DeviceMotionsSample(prototrip: self.currentPrototrip!)) {[weak self] (activityType, confidence) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                switch activityType {
+                case .Automotive where confidence > 0.8:
+                    DDLogVerbose("Starting automotive trip.")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Automotive)
+                case .Cycling where confidence > 0.8:
+                    DDLogVerbose("Starting cycling trip.")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Cycling)
+                case .Running where confidence < 0.8:
+                    DDLogVerbose("Starting running trip.")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Running)
+                case .Transit where confidence > 0.8:
+                    DDLogVerbose("Starting transit trip.")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Transit)
+                case .Walking, .Stationary where confidence > 0.8 :
+                    DDLogVerbose("Walking or stationary, stopping monitor…")
+
+                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                case .Unknown, .Automotive, .Cycling, .Running, .Transit, .Stationary, .Walking:
+                    DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
+                }
             }
         }
     }
@@ -631,21 +605,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.locationManager.startUpdatingLocation()
             if (self.locationManager.respondsToSelector("allowsBackgroundLocationUpdates")) {
                 self.locationManager.setValue(true, forKey: "allowsBackgroundLocationUpdates")
-            }
-        }
-        
-        if (!self.isTrackingDeviceMotionUpdates) {
-            self.isTrackingDeviceMotionUpdates = true
-            MotionManager.sharedManager.startDeviceMotionUpdates() {[weak self] (deviceMotion) -> Void in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                
-                    if let trip = strongSelf.currentTrip {
-                        deviceMotion.trip = trip
-                    } else if let prototrip = strongSelf.currentPrototrip {
-                        deviceMotion.prototrip = prototrip
-                    }
             }
         }
     }
