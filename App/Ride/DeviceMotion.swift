@@ -23,26 +23,11 @@ class DeviceMotion : NSManagedObject {
     @NSManaged var userAccelerationY : NSNumber
     @NSManaged var userAccelerationZ : NSNumber
     
-    // aproximates the number of seconds from referrence date to device restart time. There will be error from the time it takes to execute the statement
-    static let timeIntervalFromReferenceDateToRestart = NSDate.timeIntervalSinceReferenceDate() - NSProcessInfo().systemUptime
-
-    convenience init(deviceMotion: CMDeviceMotion, trip: Trip) {
-        self.init(deviceMotion: deviceMotion)
-        
-        self.trip = trip
-    }
-    
-    convenience init(deviceMotion: CMDeviceMotion, prototrip: Prototrip) {
-        self.init(deviceMotion: deviceMotion)
-        
-        self.prototrip = prototrip
-    }
-    
-    convenience init(deviceMotion: CMDeviceMotion) {
+    convenience init(deviceMotion: CMDeviceMotion, referenceBootDate: NSDate) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entityForName("DeviceMotion", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         
-        self.date =  NSDate(timeIntervalSinceReferenceDate: DeviceMotion.timeIntervalFromReferenceDateToRestart + deviceMotion.timestamp)
+        self.date =  NSDate(timeInterval: deviceMotion.timestamp, sinceDate: referenceBootDate)
         self.gravityX = deviceMotion.gravity.x
         self.gravityY = deviceMotion.gravity.y
         self.gravityZ = deviceMotion.gravity.z

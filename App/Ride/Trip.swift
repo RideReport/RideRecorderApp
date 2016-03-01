@@ -44,7 +44,7 @@ class Trip : NSManagedObject {
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
-    @NSManaged var deviceMotions : NSSet!
+    @NSManaged var deviceMotions : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool

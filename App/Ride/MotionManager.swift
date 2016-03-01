@@ -17,12 +17,15 @@ enum MotionManagerAuthorizationStatus {
 }
 
 class MotionManager : NSObject, CLLocationManagerDelegate {
-    private var motionActivityManager : CMMotionActivityManager!
-    private var motionManager : CMMotionManager!
-    private var motionQueue : NSOperationQueue!
-    private var motionCheckStartDate : NSDate!
-    let motionStartTimeoutInterval : NSTimeInterval = 30
-    let motionContinueTimeoutInterval : NSTimeInterval = 60
+    private var motionActivityManager: CMMotionActivityManager!
+    private var motionManager: CMMotionManager!
+    private var motionQueue: NSOperationQueue!
+    private var motionCheckStartDate: NSDate!
+    let motionStartTimeoutInterval: NSTimeInterval = 30
+    let motionContinueTimeoutInterval: NSTimeInterval = 60
+    
+    private var referenceBootDate: NSDate?
+
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -85,12 +88,27 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func startDeviceMotionUpdates(withHandler handler: CMDeviceMotionHandler!) {
-        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue, withHandler: handler)
+    func startDeviceMotionUpdates(withHandler handler: (DeviceMotion) -> Void!) {
+        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard let deviceMotion = motion else {
+                return
+            }
+            
+            if self.referenceBootDate == nil {
+                self.referenceBootDate = NSDate(timeIntervalSinceNow: -deviceMotion.timestamp)
+            }
+            
+            let refDate = self.referenceBootDate!
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                handler(DeviceMotion(deviceMotion: deviceMotion, referenceBootDate: refDate))
+            }
+        }
     }
     
     func stopDeviceMotionUpdates() {
         self.motionManager.stopDeviceMotionUpdates()
+        self.referenceBootDate = nil
     }
     
     func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
