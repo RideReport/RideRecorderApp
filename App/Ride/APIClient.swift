@@ -425,32 +425,35 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                trip.locations = NSOrderedSet() // just in case
-                if let locations = json["locations"].array {
-                    for locationJson in locations {
-                        if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
-                                latitude = locationJson["latitude"].number,
-                                longitude = locationJson["longitude"].number,
-                                course = locationJson["course"].number,
-                                speed = locationJson["speed"].number,
-                                horizontalAccuracy = locationJson["horizontalAccuracy"].number {
-                            let loc = Location(trip: trip)
-                            loc.date = date
-                            loc.latitude = latitude
-                            loc.longitude = longitude
-                            loc.course = course
-                            loc.speed = speed
-                            loc.horizontalAccuracy = horizontalAccuracy
-                            if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
-                                loc.isGeofencedLocation = isGeofencedLocation
+                if trip.locationsNotYetDownloaded {
+                    trip.locations = NSOrderedSet() // just in case
+                    if let locations = json["locations"].array {
+                        for locationJson in locations {
+                            if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
+                                    latitude = locationJson["latitude"].number,
+                                    longitude = locationJson["longitude"].number,
+                                    course = locationJson["course"].number,
+                                    speed = locationJson["speed"].number,
+                                    horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                                let loc = Location(trip: trip)
+                                loc.date = date
+                                loc.latitude = latitude
+                                loc.longitude = longitude
+                                loc.course = course
+                                loc.speed = speed
+                                loc.horizontalAccuracy = horizontalAccuracy
+                                if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
+                                    loc.isGeofencedLocation = isGeofencedLocation
+                                }
+                            } else {
+                                DDLogWarn("Error parsing location dictionary when fetched trip data!")
                             }
-                        } else {
-                            DDLogWarn("Error parsing location dictionary when fetched trip data!")
                         }
+                    } else {
+                        DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                     }
+                    
                     trip.locationsNotYetDownloaded = false
-                } else {
-                    DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                 }
                 
                 if let summary = json["summary"].dictionary {
