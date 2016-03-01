@@ -51,6 +51,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.7.0)
   - OHHTTPStubs/Swift (4.7.0):
     - OHHTTPStubs/Core
+  - OpenCV (3.0.0)
   - PNChart (0.8.6):
     - UICountingLabel (~> 1.2.0)
   - SwiftyJSON (2.3.2)
@@ -73,6 +74,7 @@ DEPENDENCIES:
   - OAuthSwift
   - OHHTTPStubs
   - OHHTTPStubs/Swift
+  - OpenCV
   - PNChart (from `../Submodules/PNChart`)
   - SwiftyJSON
   - UIActionSheet+Blocks
@@ -104,6 +106,7 @@ SPEC CHECKSUMS:
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
+  OpenCV: be07c02f0d8f125f1d40d261e66a66cb66ece3b3
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
