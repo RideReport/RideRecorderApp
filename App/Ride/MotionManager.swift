@@ -23,8 +23,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionCheckStartDate: NSDate!
     let motionStartTimeoutInterval: NSTimeInterval = 30
     let motionContinueTimeoutInterval: NSTimeInterval = 60
-    
+    private var backgroundTaskID = UIBackgroundTaskInvalid
+
     private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
+    private var isMonitoringMotion: Bool = false
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -88,6 +90,13 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     func queryCurrentActivityType(forDeviceMotionSample sample:DeviceMotionsSample, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
+        self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            handler(activityType: .Unknown, confidence: 1.0)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        })
+
+        self.isMonitoringMotion = true
+            
         self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard let deviceMotion = motion else {
                 return
@@ -95,10 +104,17 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             
             dispatch_async(dispatch_get_main_queue()) {
                 sample.addDeviceMotion(deviceMotion)
-                if sample.deviceMotions.count > Int(1/self.deviceMotionUpdateInterval) {
+                if sample.deviceMotions.count >= Int(1/self.deviceMotionUpdateInterval) {
+                    self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    handler(activityType: .Cycling, confidence: 1.0)
+                    let sampleClass = RandomForestManager.sharedInstance().classifyDeviceMotionSample(sample)
+                    
+                    handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
+                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        self.backgroundTaskID = UIBackgroundTaskInvalid
+                    }
                 }
             }
         }

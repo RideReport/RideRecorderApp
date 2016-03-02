@@ -8,9 +8,10 @@
 
 #include "RandomForestManager.h"
 #import "NSObject+HBAdditions.h"
-#import <CoreMotion/CoreMotion.h>
+#import <CoreData/CoreData.h>
 #import <UIKit/UIKit.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
 
 #import <CocoaLumberjack/CocoaLumberjack.h>
@@ -20,32 +21,39 @@ static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
 static const DDLogLevel ddLogLevel = DDLogLevelWarning;
 #endif
 
+@class Prototrip;
+@class Trip;
+
+@interface DeviceMotionsSample : NSManagedObject
+@property (nonatomic, strong) NSOrderedSet * _Null_unspecified deviceMotions;
+@property (nonatomic, strong) Prototrip * _Nullable prototrip;
+@property (nonatomic, strong) Trip * _Nullable trip;
+@end
+
+@interface DeviceMotion : NSManagedObject
+@property (nonatomic, strong) DeviceMotionsSample * _Nullable deviceMotionsSample;
+@property (nonatomic, strong) NSDate * _Nonnull date;
+@property (nonatomic, strong) NSNumber * _Nonnull gravityX;
+@property (nonatomic, strong) NSNumber * _Nonnull gravityY;
+@property (nonatomic, strong) NSNumber * _Nonnull gravityZ;
+@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationX;
+@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationY;
+@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationZ;
+@end
+
 using namespace cv;
 using namespace std;
 
 static RandomForestManager *instance = nil;
-static const NSTimeInterval updateInterval = 0.005;
-static const NSUInteger windowSize = 40;
 
 @interface RandomForestManager ()
 
-@property (nonatomic, retain) CMMotionManager *motionManager;
-@property (nonatomic, assign) UIBackgroundTaskIdentifier backgroundScanTaskID;
-@property (nonatomic, retain) NSOperationQueue *motionQueue;
 @property (nonatomic, copy) void(^foundFeatureBlock)();
-@property (nonatomic, assign) BOOL isTraining;
-@property (nonatomic, assign) BOOL isPredicting;
 
 @end
 
 @implementation RandomForestManager
 
-int currentTrainingIndex = 0;
-int currentPredictionIndex = 0;
-int classCount = 1;
-cv::Mat trainingReadings;
-cv::Mat predictionReadings;
-cv::Mat trainingLabels;
 Ptr<cv::ml::RTrees> model;
 
 +(RandomForestManager *)sharedInstance;
@@ -64,146 +72,146 @@ Ptr<cv::ml::RTrees> model;
         return nil;
     }
     
-    predictionReadings = Mat::zeros(windowSize, 3, CV_32F);
-    trainingReadings = Mat::zeros(windowSize*3, 3, CV_32F); // support up to three classes
-    cv::Mat trainingLabels  = Mat::zeros(windowSize*3, 1, CV_32F);
-
-    _motionQueue = [[NSOperationQueue alloc] init];
-    _motionManager = [[CMMotionManager alloc] init];
-    self.backgroundScanTaskID = UIBackgroundTaskInvalid;
+    NSString *path = [[NSBundle bundleForClass:[RandomForestManager class]] pathForResource:@"forest.cv" ofType:nil];
+    const char * cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
+    model = cv::ml::RTrees::load<cv::ml::RTrees>(cpath);
     
     return self;
 }
 
-- (void)train;
-{
-    self.isTraining = true;
-    [self startMonitoringWithSuccessBlock:nil];
-}
 
-- (void)predict;
+- (int)classifyDeviceMotionSample:(DeviceMotionsSample *)sample;
 {
-    self.isPredicting = true;
-    [self startMonitoringWithSuccessBlock:nil];
-}
+    cv::Mat mags = Mat::zeros((int)sample.deviceMotions.count, 1, CV_32F);
 
-- (void)startMonitoringWithSuccessBlock:(void (^)())block;
-{
-    if ([self.motionManager isDeviceMotionActive] == YES) {
-        [self stopMonitoringTask];
-        DDLogInfo(@"Restarted Motion tracking.");
-    } else {
-        DDLogInfo(@"Start Motion tracking.");
+    int i = 0;
+    for (DeviceMotion *reading in sample.deviceMotions) {
+        float sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue* + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue;
+        mags.at<float>(i,0) = sqrtf(sum);
+        i++;
     }
+ 
     
-    self.backgroundScanTaskID = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-                                 dispatch_async(dispatch_get_main_queue(), ^{
-        DDLogInfo(@"Motion tracking task expired.");
-        [self stopMonitoring];
-    });
-                                 }];
-    // Check whether the accelerometer is available
-    if ([self.motionManager isDeviceMotionAvailable] == YES) {
-        // Assign the update interval to the motion manager
-        [self.motionManager setDeviceMotionUpdateInterval:updateInterval];
-        [self.motionManager startDeviceMotionUpdatesToQueue:self.motionQueue withHandler:^(CMDeviceMotion *motion, NSError *error) {
-         [self processMotion:motion];
-         }];
-        self.foundFeatureBlock = block;
-    }
+    cv::Mat readings = Mat::zeros(1, 6, CV_32F);
+
+    cv::Scalar mean,stddev;
+    meanStdDev(mags,mean,stddev);
+    
+    readings.at<float>(0,0) = [self max:mags];
+    readings.at<float>(0,1) = (float)mean.val[0];
+    readings.at<float>(0,2) = (float)[self maxMean:mags windowSize:5];
+    readings.at<float>(0,3) = (float)stddev.val[0];
+    readings.at<float>(0,4) = (float)[self skewness:mags];
+    readings.at<float>(0,5) = (float)[self kurtosis:mags];
+    
+    return (int)model->predict(readings, noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
 }
 
-- (BOOL)isMonitoring;
+- (float)max:(cv::Mat)mat;
 {
-    return [self.motionManager isDeviceMotionActive];
-}
-
-- (void)stopMonitoringTask;
-{
-    DDLogInfo(@"FOOOO.");
-    
-    if ([self.motionManager isDeviceMotionActive] == YES) {
-        DDLogInfo(@"Stop Motion tracking.");
-        
-        if (self.backgroundScanTaskID != UIBackgroundTaskInvalid) {
-            [[UIApplication sharedApplication] endBackgroundTask:self.backgroundScanTaskID];
-            self.backgroundScanTaskID = UIBackgroundTaskInvalid;
+    float max = 0;
+    for (int i=0;i<mat.rows;i++)
+    {
+        float elem = mat.at<float>(i,0);
+        if (elem > max) {
+            max = elem;
         }
-        
-        [self.motionManager stopDeviceMotionUpdates];
     }
-}
-
-- (void)stopMonitoring;
-{
-    [self stopMonitoringTask];
     
-    // make this asynchronous to avoid a deadlock with processMotion:
-    [self performBlock:^{
-     @synchronized(self) {
-     self.foundFeatureBlock = nil;
-     }
-     } afterDelay:0.0];
+    return max;
 }
 
-- (void)dealloc;
+- (double)maxMean:(cv::Mat)mat windowSize:(int)windowSize;
 {
-    [self stopMonitoring];
-    self.motionManager = nil;
-    self.motionQueue = nil;
-}
-
-- (void)processMotion:(CMDeviceMotion *)motion;
-{
-    CMAcceleration acceleration = [motion userAcceleration];
-    
-    if (self.isTraining) {
-        trainingReadings.at<double>(currentTrainingIndex,0) = acceleration.x;
-        trainingReadings.at<double>(currentTrainingIndex,1) = acceleration.y;
-        trainingReadings.at<double>(currentTrainingIndex,2) = acceleration.z;
-        
-        currentTrainingIndex++;
-        
-        if (currentTrainingIndex < classCount*windowSize) {
-            return;
-        }
-        
-        self.isTraining = false;
-        [self stopMonitoring];
-
-        trainingLabels.rowRange(classCount*windowSize, (classCount + 1)*windowSize).setTo(Scalar::all(classCount));
-        
-        cv::Mat sampleIdx = Mat::zeros(1, windowSize, CV_8U);
-        Mat trainSamples = sampleIdx.colRange(0, (classCount + 1)*windowSize);
-        trainSamples.setTo(Scalar::all(1));
-
-        Ptr<cv::ml::TrainData> trainingData = cv::ml::TrainData::create(trainingReadings, cv::ml::SampleTypes::ROW_SAMPLE, trainingLabels, noArray(), sampleIdx, noArray(), noArray());
-        
-        model = cv::ml::RTrees::create();
-        model->setMaxDepth(10);
-        model->setMinSampleCount(10);
-        model->setRegressionAccuracy(0);
-        model->setUseSurrogates(false);
-        model->setMaxCategories(3);
-        model->setCalculateVarImportance(true);
-        model->setActiveVarCount(3);
-        model->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER + cv::TermCriteria::EPS, 100, 0.00f));
-        
-        model->train(trainingData);
-        classCount++;
-    } else if (self.isPredicting) {
-        predictionReadings.at<double>(currentPredictionIndex,0) = acceleration.x;
-        predictionReadings.at<double>(currentPredictionIndex,1) = acceleration.y;
-        predictionReadings.at<double>(currentPredictionIndex,2) = acceleration.z;
-        
-        currentPredictionIndex++;
-        
-        if (currentPredictionIndex < windowSize) {
-            return;
-        }
-        
-        model->predict(predictionReadings);
+    if (windowSize>mat.rows) {
+        return 0;
     }
+    
+    cv::Mat rollingMeans = Mat::zeros(mat.rows - windowSize, 1, CV_32F);
+    
+    for (int i=0;i<=(mat.rows - windowSize);i++)
+    {
+        float sum = 0;
+        for (int j=0;j<windowSize;j++) {
+            sum += mat.at<float>(i+j,0);
+        }
+        rollingMeans.at<float>(i,0) = sum/windowSize;
+    }
+    
+    double min, max;
+    cv::minMaxLoc(rollingMeans, &min, &max);
+    
+    return max;
+}
+
+- (double)skewness:(cv::Mat)mat;
+{
+    cv:Scalar skewness,mean,stddev;
+    skewness.val[0]=0;
+    skewness.val[1]=0;
+    skewness.val[2]=0;
+    meanStdDev(mat,mean,stddev,cv::Mat());
+    int sum0, sum1, sum2;
+    float den0=0,den1=0,den2=0;
+    int N=mat.rows*mat.cols;
+    
+    for (int i=0;i<mat.rows;i++)
+    {
+        for (int j=0;j<mat.cols;j++)
+        {
+            sum0=mat.ptr<uchar>(i)[3*j]-mean.val[0];
+            sum1=mat.ptr<uchar>(i)[3*j+1]-mean.val[1];
+            sum2=mat.ptr<uchar>(i)[3*j+2]-mean.val[2];
+            
+            skewness.val[0]+=sum0*sum0*sum0;
+            skewness.val[1]+=sum1*sum1*sum1;
+            skewness.val[2]+=sum2*sum2*sum2;
+            den0+=sum0*sum0;
+            den1+=sum1*sum1;
+            den2+=sum2*sum2;
+        }
+    }
+    
+    skewness.val[0]=skewness.val[0]*sqrt(N)/(den0*sqrt(den0));
+    skewness.val[1]=skewness.val[1]*sqrt(N)/(den1*sqrt(den1));
+    skewness.val[2]=skewness.val[2]*sqrt(N)/(den2*sqrt(den2));
+    
+    return skewness.val[0];
+}
+
+- (double)kurtosis:(cv::Mat)mat;
+{
+    cv:Scalar kurt,mean,stddev;
+    kurt.val[0]=0;
+    kurt.val[1]=0;
+    kurt.val[2]=0;
+    meanStdDev(mat,mean,stddev,cv::Mat());
+    int sum0, sum1, sum2;
+    int N=mat.rows*mat.cols;
+    float den0=0,den1=0,den2=0;
+    
+    for (int i=0;i<mat.rows;i++)
+    {
+        for (int j=0;j<mat.cols;j++)
+        {
+            sum0=mat.ptr<uchar>(i)[3*j]-mean.val[0];
+            sum1=mat.ptr<uchar>(i)[3*j+1]-mean.val[1];
+            sum2=mat.ptr<uchar>(i)[3*j+2]-mean.val[2];
+            
+            kurt.val[0]+=sum0*sum0*sum0*sum0;
+            kurt.val[1]+=sum1*sum1*sum1*sum1;
+            kurt.val[2]+=sum2*sum2*sum2*sum2;
+            den0+=sum0*sum0;
+            den1+=sum1*sum1;
+            den2+=sum2*sum2;
+        }
+    }
+    
+    kurt.val[0]= (kurt.val[0]*N*(N+1)*(N-1)/(den0*den0*(N-2)*(N-3)))-(3*(N-1)*(N-1)/((N-2)*(N-3)));
+    kurt.val[1]= (kurt.val[1]*N/(den1*den1))-3;
+    kurt.val[2]= (kurt.val[2]*N/(den2*den2))-3;
+    
+    return kurt.val[0];
 }
 
 @end

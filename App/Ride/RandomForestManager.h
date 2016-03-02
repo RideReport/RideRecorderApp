@@ -8,8 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class DeviceMotionsSample;
+
 @interface RandomForestManager : NSObject
 
 +(RandomForestManager *)sharedInstance;
+- (int)classifyDeviceMotionSample:(DeviceMotionsSample *)sample;
 
 @end

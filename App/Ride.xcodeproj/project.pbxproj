@@ -10,6 +10,7 @@
 		3D02B5F21C7D083400F9A64B /* DeviceMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */; };
 		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
 		3D9471C81C861A7D00CF5D90 /* DeviceMotionsSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */; };
+		3D9471CA1C866C4200CF5D90 /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D9471C91C866C4200CF5D90 /* forest.cv */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
 		595218C68891CD65D1B1A619 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEE9E09918B3E44BAE32A45 /* Pods.framework */; };
@@ -184,6 +185,7 @@
 		3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeviceMotion.swift; path = Ride/DeviceMotion.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeviceMotionsSample.swift; path = Ride/DeviceMotionsSample.swift; sourceTree = "<group>"; };
+		3D9471C91C866C4200CF5D90 /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
@@ -481,6 +483,7 @@
 		8445317719FEEB2A0096F26E /* Service Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3D9471C91C866C4200CF5D90 /* forest.cv */,
 				84C28E0A1C1255B70075DD7E /* RandomForestManager.h */,
 				84C28E091C1255B70075DD7E /* RandomForestManager.mm */,
 				8411B0991C20F3B7002E8E80 /* SoftwareUpdateManager.swift */,
@@ -835,6 +838,7 @@
 				845A044E1C1F795000556CD9 /* pinGreen@3x.png in Resources */,
 				3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
+				3D9471CA1C866C4200CF5D90 /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
