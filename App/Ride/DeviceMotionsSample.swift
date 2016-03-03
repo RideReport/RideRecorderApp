@@ -19,17 +19,20 @@ class DeviceMotionsSample : NSManagedObject {
     private var referenceBootDate: NSDate!
 
     convenience init(prototrip: Prototrip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("DeviceMotionsSample", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        self.init()
         
         self.prototrip = prototrip
     }
     
     convenience init(trip: Trip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("DeviceMotionsSample", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        self.init()
         
         self.trip = trip
+    }
+    
+    convenience init() {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entityForName("DeviceMotionsSample", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
     }
     
     func addDeviceMotion(deviceMotion: CMDeviceMotion) {

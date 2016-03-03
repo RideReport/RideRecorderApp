@@ -7,31 +7,16 @@
 //
 
 #include "RandomForestManager.h"
-#import "NSObject+HBAdditions.h"
-#import <CoreData/CoreData.h>
-#import <UIKit/UIKit.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
 
-#import <CocoaLumberjack/CocoaLumberjack.h>
-#if DEBUG
-static const DDLogLevel ddLogLevel = DDLogLevelVerbose;
-#else
-static const DDLogLevel ddLogLevel = DDLogLevelWarning;
-#endif
-
-@class Prototrip;
-@class Trip;
-
-@interface DeviceMotionsSample : NSManagedObject
+@protocol DeviceMotionsSample
 @property (nonatomic, strong) NSOrderedSet * _Null_unspecified deviceMotions;
-@property (nonatomic, strong) Prototrip * _Nullable prototrip;
-@property (nonatomic, strong) Trip * _Nullable trip;
 @end
 
-@interface DeviceMotion : NSManagedObject
-@property (nonatomic, strong) DeviceMotionsSample * _Nullable deviceMotionsSample;
+@protocol DeviceMotion
+@property (nonatomic, strong) id <DeviceMotionsSample> _Nullable deviceMotionsSample;
 @property (nonatomic, strong) NSDate * _Nonnull date;
 @property (nonatomic, strong) NSNumber * _Nonnull gravityX;
 @property (nonatomic, strong) NSNumber * _Nonnull gravityY;
@@ -80,12 +65,12 @@ Ptr<cv::ml::RTrees> model;
 }
 
 
-- (int)classifyDeviceMotionSample:(DeviceMotionsSample *)sample;
+- (int)classifyDeviceMotionSample:(id <DeviceMotionsSample>)sample;
 {
     cv::Mat mags = Mat::zeros((int)sample.deviceMotions.count, 1, CV_32F);
 
     int i = 0;
-    for (DeviceMotion *reading in sample.deviceMotions) {
+    for (id<DeviceMotion> reading in sample.deviceMotions) {
         float sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue* + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue;
         mags.at<float>(i,0) = sqrtf(sum);
         i++;

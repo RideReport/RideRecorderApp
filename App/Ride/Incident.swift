@@ -8,8 +8,9 @@
 
 import Foundation
 import CoreData
+import CoreLocation
 
-class Incident : NSManagedObject, MGLAnnotation {
+class Incident : NSManagedObject {
     enum IncidentType : Int {
         case Unknown = 0
         case RoadHazard

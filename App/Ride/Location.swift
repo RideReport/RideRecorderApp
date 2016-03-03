@@ -35,6 +35,10 @@ class Location : NSManagedObject {
         self.trip = trip
     }
     
+    class var acceptableLocationAccuracy:CLLocationAccuracy {
+        return kCLLocationAccuracyNearestTenMeters * 3
+    }
+    
     convenience init(location: CLLocation, prototrip: Prototrip) {
         self.init(location: location)
         

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CoreLocation
 
 class Profile : NSManagedObject {
     @NSManaged var accessToken : String?

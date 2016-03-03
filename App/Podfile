@@ -1,25 +1,35 @@
 platform :ios, '8.0'
-
-link_with 'Ride Report', 'Ride Report Tests'
-pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
-pod 'ECSlidingViewController', '~> 2.0.3'
-pod 'UIActionSheet+Blocks'
-pod 'Fabric'
-pod 'Crashlytics'
-pod 'KeychainAccess'
-pod 'SwiftyJSON'
-pod 'Alamofire', '~> 3.0'
-pod 'OAuthSwift'
-pod 'FBSDKCoreKit'
-pod 'FBSDKLoginKit'
-pod 'OpenCV'
-pod 'FBSDKShareKit'
-pod 'Mapbox-iOS-SDK'
-pod 'PNChart',:path => '../Submodules/PNChart'
-pod 'OHHTTPStubs'
-pod 'OHHTTPStubs/Swift'
-pod 'Mixpanel'
 use_frameworks!
+
+target 'Ride Report' do
+    target 'Ride Report Tests' do
+        pod 'ECSlidingViewController', '~> 2.0.3'
+        pod 'UIActionSheet+Blocks'
+        pod 'Fabric'
+        pod 'Crashlytics'
+        pod 'KeychainAccess'
+        pod 'Alamofire', '~> 3.0'
+        pod 'OAuthSwift'
+        pod 'FBSDKCoreKit'
+        pod 'FBSDKLoginKit'
+        pod 'FBSDKShareKit'
+        pod 'Mapbox-iOS-SDK'
+        pod 'PNChart',:path => '../Submodules/PNChart'
+        pod 'OHHTTPStubs'
+        pod 'OHHTTPStubs/Swift'
+        pod 'Mixpanel'
+    end
+end
+
+target 'Ride Report' do
+target 'Ride Report Tests' do
+target 'Motion' do
+    pod 'SwiftyJSON'
+    pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'OpenCV'
+end
+end
+end
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
