@@ -25,7 +25,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
-    private let sampleWindowSize: Int = 128
+    let sampleWindowSize: Int = 128
     private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
     private var isMonitoringMotion: Bool = false
     
@@ -64,6 +64,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
         self.motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
+        
+        RandomForestManager.startup(Int32(self.sampleWindowSize))
     }
     
     private func startup() {
@@ -90,6 +92,20 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    private func magnitudeVector(fromSample sample:DeviceMotionsSample)->UnsafeMutablePointer<Float> {
+        let mags = UnsafeMutablePointer<Float>.alloc(sample.deviceMotions.count)
+        
+        var i = 0
+        for elem in sample.deviceMotions {
+            let reading = elem as! DeviceMotion
+            let sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue
+            mags[i] = sqrtf(sum)
+            i += 1
+        }
+        
+        return mags
+    }
+    
     func queryCurrentActivityType(forDeviceMotionSample sample:DeviceMotionsSample, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
         self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             handler(activityType: .Unknown, confidence: 1.0)
@@ -109,7 +125,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                     self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    let sampleClass = RandomForestManager.sharedInstance(Float(self.sampleWindowSize)).classifyDeviceMotionSample(sample)
+                    let sampleClass = RandomForestManager.sharedInstance().classifyMagnitudeVector(self.magnitudeVector(fromSample: sample))
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

@@ -12,21 +12,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
 
-@protocol DeviceMotionsSample
-@property (nonatomic, strong) NSOrderedSet * _Null_unspecified deviceMotions;
-@end
-
-@protocol DeviceMotion
-@property (nonatomic, strong) id <DeviceMotionsSample> _Nullable deviceMotionsSample;
-@property (nonatomic, strong) NSDate * _Nonnull date;
-@property (nonatomic, strong) NSNumber * _Nonnull gravityX;
-@property (nonatomic, strong) NSNumber * _Nonnull gravityY;
-@property (nonatomic, strong) NSNumber * _Nonnull gravityZ;
-@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationX;
-@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationY;
-@property (nonatomic, strong) NSNumber * _Nonnull userAccelerationZ;
-@end
-
 using namespace cv;
 using namespace std;
 
@@ -43,22 +28,26 @@ static RandomForestManager *instance = nil;
 FFTSetup fftWeights;
 Ptr<cv::ml::RTrees> model;
 int sampleSize;
+float debugData[];
 
-+(RandomForestManager *)sharedInstance:(float)sampleSize;
++(RandomForestManager *)sharedInstance;
 {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[self alloc] init];
-    });
-    
     return instance;
 }
 
-- (id)init:(float)sampleSize;
++(void)startup:(int)sampleSize;
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] initWithSampleSize:sampleSize];
+    });
+}
+
+- (id)initWithSampleSize:(int)sampleSize;
 {
     assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
     
-    sampleSize = sampleSize;
+    sampleSize = (float)sampleSize;
     
     if (!(self = [super init])) {
         return nil;
@@ -69,22 +58,15 @@ int sampleSize;
     NSString *path = [[NSBundle bundleForClass:[RandomForestManager class]] pathForResource:@"forest.cv" ofType:nil];
     const char * cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
     model = cv::ml::RTrees::load<cv::ml::RTrees>(cpath);
+    debugData = new float[sampleSize];
     
     return self;
 }
 
-
-- (int)classifyDeviceMotionSample:(id <DeviceMotionsSample>)sample;
+- (int)classifyMagnitudeVector:(float *)magnitudeVector;
 {
-    cv::Mat mags = Mat::zeros((int)sample.deviceMotions.count, 1, CV_32F);
-
-    int i = 0;
-    for (id<DeviceMotion> reading in sample.deviceMotions) {
-        float sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue* + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue;
-        mags.at<float>(i,0) = sqrtf(sum);
-        i++;
-    }
- 
+    memcpy(debugData, magnitudeVector, sizeof(debugData));
+    cv::Mat mags = Mat((int)sampleSize, 1, CV_32F, &magnitudeVector);
     
     cv::Mat readings = Mat::zeros(1, 6, CV_32F);
 
@@ -99,6 +81,11 @@ int sampleSize;
     readings.at<float>(0,5) = (float)[self kurtosis:mags];
     
     return (int)model->predict(readings, noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
+}
+
+- (float *)debugData;
+{
+    return debugData;
 }
 
 - (float *)fft:(float *)input;

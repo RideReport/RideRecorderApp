@@ -12,7 +12,9 @@
 
 @interface RandomForestManager : NSObject
 
-+(RandomForestManager *)sharedInstance:(float)sampleSize;
-- (int)classifyDeviceMotionSample:(DeviceMotionsSample *)sample;
++(RandomForestManager *)sharedInstance;
++ (void)startup:(int)sampleSize;
+- (int)classifyMagnitudeVector:(float *)magnitudeVector;
+- (float *)debugData;
 
 @end
