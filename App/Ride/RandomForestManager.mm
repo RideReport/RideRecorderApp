@@ -103,14 +103,19 @@ int sampleSize;
 
 - (float *)fft:(float *)input;
 {
+    // apply a hamming window to the input
+    float *hammingWindow = new float[sampleSize];
+    vDSP_hamm_window(hammingWindow, sampleSize, 0);
+    vDSP_vmul(input, 1, hammingWindow, 1, input, 1, sampleSize);
+    
+    // pack the input samples in preparation for FFT
     DSPSplitComplex splitComplex;
     splitComplex.realp = new float[sampleSize/2];
     splitComplex.imagp = new float[sampleSize/2];
-    
     vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, sampleSize/2);
 
+    // run the FFT and get the magnitude components (vDSP_zvmags returns squared components)
     vDSP_fft_zrip(fftWeights, &splitComplex, 1, log2f(sampleSize), FFT_FORWARD);
-    
     float *magnitudes = new float[sampleSize/2];
     vDSP_zvmags(&splitComplex, 1, magnitudes, 1, sampleSize);
 
