@@ -25,6 +25,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
+    private let sampleWindowSize: Int = 128
     private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
     private var isMonitoringMotion: Bool = false
     
@@ -104,11 +105,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             
             dispatch_async(dispatch_get_main_queue()) {
                 sample.addDeviceMotion(deviceMotion)
-                if sample.deviceMotions.count >= Int(1/self.deviceMotionUpdateInterval) {
+                if sample.deviceMotions.count >= self.sampleWindowSize {
                     self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    let sampleClass = RandomForestManager.sharedInstance().classifyDeviceMotionSample(sample)
+                    let sampleClass = RandomForestManager.sharedInstance(Float(self.sampleWindowSize)).classifyDeviceMotionSample(sample)
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

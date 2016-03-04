@@ -7,6 +7,7 @@
 //
 
 #include "RandomForestManager.h"
+#include <Accelerate/Accelerate.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
@@ -39,9 +40,11 @@ static RandomForestManager *instance = nil;
 
 @implementation RandomForestManager
 
+FFTSetup fftWeights;
 Ptr<cv::ml::RTrees> model;
+int sampleSize;
 
-+(RandomForestManager *)sharedInstance;
++(RandomForestManager *)sharedInstance:(float)sampleSize;
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -51,11 +54,17 @@ Ptr<cv::ml::RTrees> model;
     return instance;
 }
 
-- (id)init;
+- (id)init:(float)sampleSize;
 {
+    assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
+    
+    sampleSize = sampleSize;
+    
     if (!(self = [super init])) {
         return nil;
     }
+    
+    fftWeights = vDSP_create_fftsetup(vDSP_Length(log2f(sampleSize)), FFT_RADIX2);
     
     NSString *path = [[NSBundle bundleForClass:[RandomForestManager class]] pathForResource:@"forest.cv" ofType:nil];
     const char * cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
@@ -90,6 +99,22 @@ Ptr<cv::ml::RTrees> model;
     readings.at<float>(0,5) = (float)[self kurtosis:mags];
     
     return (int)model->predict(readings, noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
+}
+
+- (float *)fft:(float *)input;
+{
+    DSPSplitComplex splitComplex;
+    splitComplex.realp = new float[sampleSize/2];
+    splitComplex.imagp = new float[sampleSize/2];
+    
+    vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, sampleSize/2);
+
+    vDSP_fft_zrip(fftWeights, &splitComplex, 1, log2f(sampleSize), FFT_FORWARD);
+    
+    float *magnitudes = new float[sampleSize/2];
+    vDSP_zvmags(&splitComplex, 1, magnitudes, 1, sampleSize);
+
+    return magnitudes;
 }
 
 - (float)max:(cv::Mat)mat;
