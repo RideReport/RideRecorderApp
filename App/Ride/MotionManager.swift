@@ -29,6 +29,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
     private var isMonitoringMotion: Bool = false
     
+    private var randomForestManager: RandomForestManager!
+    
     struct Static {
         static var onceToken : dispatch_once_t = 0
         static var sharedManager : MotionManager?
@@ -65,7 +67,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionManager = CMMotionManager()
         self.motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
         
-        RandomForestManager.startup(Int32(self.sampleWindowSize))
+        randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
     }
     
     private func startup() {
@@ -92,15 +94,13 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func magnitudeVector(fromSample sample:DeviceMotionsSample)->UnsafeMutablePointer<Float> {
-        let mags = UnsafeMutablePointer<Float>.alloc(sample.deviceMotions.count)
+    private func magnitudeVector(fromSample sample:DeviceMotionsSample)->[Float] {
+        var mags: [Float] = []
         
-        var i = 0
         for elem in sample.deviceMotions {
             let reading = elem as! DeviceMotion
             let sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue
-            mags[i] = sqrtf(sum)
-            i += 1
+            mags.append(sqrtf(sum))
         }
         
         return mags
@@ -125,7 +125,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                     self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    let sampleClass = RandomForestManager.sharedInstance().classifyMagnitudeVector(self.magnitudeVector(fromSample: sample))
+                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(self.magnitudeVector(fromSample: sample))
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

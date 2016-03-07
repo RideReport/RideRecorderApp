@@ -1,5 +1,5 @@
 //
-//  RandomForestManager.cpp
+//  RandomForestManager
 //  Ride
 //
 //  Created by William Henderson on 12/4/15.
@@ -7,109 +7,82 @@
 //
 
 #include "RandomForestManager.h"
-#include <Accelerate/Accelerate.h>
+#include<stdio.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
 
-using namespace cv;
-using namespace std;
+// Private Functions
+void fft(float * input, int inputSize, float *output, FFTSetup weightsSetup);
+float max(cv::Mat mat);
+double maxMean(cv::Mat mat, int windowSize);
+double skewness(cv::Mat mat);
+double kurtosis(cv::Mat mat);
 
-static RandomForestManager *instance = nil;
+struct RandomForestManager {
+    int sampleSize;
+    FFTSetup fftWeights;
+    cv::Ptr<cv::ml::RTrees> model;
+};
 
-@interface RandomForestManager ()
-
-@property (nonatomic, copy) void(^foundFeatureBlock)();
-
-@end
-
-@implementation RandomForestManager
-
-FFTSetup fftWeights;
-Ptr<cv::ml::RTrees> model;
-int sampleSize;
-float debugData[];
-
-+(RandomForestManager *)sharedInstance;
+RandomForestManager *createRandomForestManager(int sampleSize, char* pathToModelFile)
 {
-    return instance;
-}
+    struct RandomForestManager *r;
+    r = (struct RandomForestManager*) malloc(sizeof(struct RandomForestManager));
+    r->sampleSize = sampleSize;
 
-+(void)startup:(int)sampleSize;
-{
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[self alloc] initWithSampleSize:sampleSize];
-    });
-}
-
-- (id)initWithSampleSize:(int)sampleSize;
-{
     assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
-    
-    sampleSize = (float)sampleSize;
-    
-    if (!(self = [super init])) {
-        return nil;
-    }
-    
-    fftWeights = vDSP_create_fftsetup(vDSP_Length(log2f(sampleSize)), FFT_RADIX2);
-    
-    NSString *path = [[NSBundle bundleForClass:[RandomForestManager class]] pathForResource:@"forest.cv" ofType:nil];
-    const char * cpath = [path cStringUsingEncoding:NSUTF8StringEncoding];
-    model = cv::ml::RTrees::load<cv::ml::RTrees>(cpath);
-    debugData = new float[sampleSize];
-    
-    return self;
+
+    r->fftWeights = vDSP_create_fftsetup(vDSP_Length(log2f(sampleSize)), FFT_RADIX2);
+
+    r->model = cv::ml::RTrees::load<cv::ml::RTrees>(pathToModelFile);
+
+    return r;
 }
 
-- (int)classifyMagnitudeVector:(float *)magnitudeVector;
+void deleteRandomForestManager(RandomForestManager *r)
 {
-    memcpy(debugData, magnitudeVector, sizeof(debugData));
-    cv::Mat mags = Mat((int)sampleSize, 1, CV_32F, &magnitudeVector);
+    free(r);
+}
+
+int randomForesetClassifyMagnitudeVector(struct RandomForestManager *randomForestManager, float *magnitudeVector)
+{
+    cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, &magnitudeVector);
     
-    cv::Mat readings = Mat::zeros(1, 6, CV_32F);
+    cv::Mat readings = cv::Mat::zeros(1, 6, CV_32F);
 
     cv::Scalar mean,stddev;
     meanStdDev(mags,mean,stddev);
     
-    readings.at<float>(0,0) = [self max:mags];
+    readings.at<float>(0,0) = max(mags);
     readings.at<float>(0,1) = (float)mean.val[0];
-    readings.at<float>(0,2) = (float)[self maxMean:mags windowSize:5];
+    readings.at<float>(0,2) = maxMean(mags, 5);
     readings.at<float>(0,3) = (float)stddev.val[0];
-    readings.at<float>(0,4) = (float)[self skewness:mags];
-    readings.at<float>(0,5) = (float)[self kurtosis:mags];
+    readings.at<float>(0,4) = (float)skewness(mags);
+    readings.at<float>(0,5) = (float)kurtosis(mags);
     
-    return (int)model->predict(readings, noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
+    return (int)randomForestManager->model->predict(readings, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
 }
 
-- (float *)debugData;
-{
-    return debugData;
-}
-
-- (float *)fft:(float *)input;
+void fft(float * input, int inputSize, float *output, FFTSetup weightsSetup)
 {
     // apply a hamming window to the input
-    float *hammingWindow = new float[sampleSize];
-    vDSP_hamm_window(hammingWindow, sampleSize, 0);
-    vDSP_vmul(input, 1, hammingWindow, 1, input, 1, sampleSize);
+    float *hammingWindow = new float[inputSize];
+    vDSP_hamm_window(hammingWindow, inputSize, 0);
+    vDSP_vmul(input, 1, hammingWindow, 1, input, 1, inputSize);
     
     // pack the input samples in preparation for FFT
     DSPSplitComplex splitComplex;
-    splitComplex.realp = new float[sampleSize/2];
-    splitComplex.imagp = new float[sampleSize/2];
-    vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, sampleSize/2);
+    splitComplex.realp = new float[inputSize/2];
+    splitComplex.imagp = new float[inputSize/2];
+    vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, inputSize/2);
 
     // run the FFT and get the magnitude components (vDSP_zvmags returns squared components)
-    vDSP_fft_zrip(fftWeights, &splitComplex, 1, log2f(sampleSize), FFT_FORWARD);
-    float *magnitudes = new float[sampleSize/2];
-    vDSP_zvmags(&splitComplex, 1, magnitudes, 1, sampleSize);
-
-    return magnitudes;
+    vDSP_fft_zrip(weightsSetup, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
+    vDSP_zvmags(&splitComplex, 1, output, 1, inputSize);
 }
 
-- (float)max:(cv::Mat)mat;
+float max(cv::Mat mat)
 {
     float max = 0;
     for (int i=0;i<mat.rows;i++)
@@ -123,13 +96,13 @@ float debugData[];
     return max;
 }
 
-- (double)maxMean:(cv::Mat)mat windowSize:(int)windowSize;
+double maxMean(cv::Mat mat, int windowSize)
 {
     if (windowSize>mat.rows) {
         return 0;
     }
     
-    cv::Mat rollingMeans = Mat::zeros(mat.rows - windowSize, 1, CV_32F);
+    cv::Mat rollingMeans = cv::Mat::zeros(mat.rows - windowSize, 1, CV_32F);
     
     for (int i=0;i<=(mat.rows - windowSize);i++)
     {
@@ -146,9 +119,9 @@ float debugData[];
     return max;
 }
 
-- (double)skewness:(cv::Mat)mat;
+double skewness(cv::Mat mat)
 {
-    cv:Scalar skewness,mean,stddev;
+    cv::Scalar skewness,mean,stddev;
     skewness.val[0]=0;
     skewness.val[1]=0;
     skewness.val[2]=0;
@@ -181,9 +154,9 @@ float debugData[];
     return skewness.val[0];
 }
 
-- (double)kurtosis:(cv::Mat)mat;
+double kurtosis(cv::Mat mat)
 {
-    cv:Scalar kurt,mean,stddev;
+    cv::Scalar kurt,mean,stddev;
     kurt.val[0]=0;
     kurt.val[1]=0;
     kurt.val[2]=0;
@@ -215,5 +188,3 @@ float debugData[];
     
     return kurt.val[0];
 }
-
-@end

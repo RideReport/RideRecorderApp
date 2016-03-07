@@ -31,7 +31,7 @@ PODS:
   - FBSDKShareKit (4.6.0):
     - FBSDKCoreKit
   - KeychainAccess (2.0.0)
-  - Mapbox-iOS-SDK (3.1.0)
+  - Mapbox-iOS-SDK (3.1.2)
   - Mixpanel (2.9.1):
     - Mixpanel/Mixpanel (= 2.9.1)
   - Mixpanel/Mixpanel (2.9.1)
@@ -54,6 +54,7 @@ PODS:
   - OpenCV (3.0.0)
   - PNChart (0.8.6):
     - UICountingLabel (~> 1.2.0)
+  - SwiftChart (0.2.1)
   - SwiftyJSON (2.3.2)
   - UIActionSheet+Blocks (0.9)
   - UICountingLabel (1.2.0)
@@ -76,6 +77,7 @@ DEPENDENCIES:
   - OHHTTPStubs/Swift
   - OpenCV
   - PNChart (from `../Submodules/PNChart`)
+  - SwiftChart
   - SwiftyJSON
   - UIActionSheet+Blocks
 
@@ -102,12 +104,13 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
   KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
-  Mapbox-iOS-SDK: e8b6480b94015c3c701f123171c5b8975645af8f
+  Mapbox-iOS-SDK: 0a910c2cce1aa8cff5b9ec2a990e7a32332a776a
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
   OpenCV: be07c02f0d8f125f1d40d261e66a66cb66ece3b3
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
+  SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
   UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
   UICountingLabel: 1db4e7d023e1762171eb226d6dff47a7a84f27aa

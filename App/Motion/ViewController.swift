@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import SwiftChart
 
 class ViewController: UIViewController {
     
@@ -16,10 +17,10 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
+    @IBOutlet weak var lineChart: Chart!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,7 +44,8 @@ class ViewController: UIViewController {
     }
     
     private func runQuery() {
-        MotionManager.sharedManager.queryCurrentActivityType(forDeviceMotionSample: DeviceMotionsSample()) {[weak self] (activityType, confidence) -> Void in
+        let sample = DeviceMotionsSample()
+        MotionManager.sharedManager.queryCurrentActivityType(forDeviceMotionSample: sample) {[weak self] (activityType, confidence) -> Void in
             guard let strongSelf = self else {
             return
             }
@@ -72,6 +74,11 @@ class ViewController: UIViewController {
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
             strongSelf.synth.speakUtterance(utterance)
+            
+//            let series = ChartSeries(debugData)
+//            series.color = ChartColors.greenColor()
+//            strongSelf.lineChart.removeSeries()
+//            strongSelf.lineChart.addSeries(series)
             
             if strongSelf.keepGoing {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
