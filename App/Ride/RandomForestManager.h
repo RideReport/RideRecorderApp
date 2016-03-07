@@ -6,7 +6,6 @@
 //  Copyright © 2015 Knock Softwae, Inc. All rights reserved.
 //
 
-#include <Accelerate/Accelerate.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

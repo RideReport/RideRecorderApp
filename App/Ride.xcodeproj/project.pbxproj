@@ -115,6 +115,9 @@
 		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
 		845369DF1C8907440083F695 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845369DE1C8907440083F695 /* Accelerate.framework */; };
 		845369E01C8907490083F695 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845369DE1C8907440083F695 /* Accelerate.framework */; };
+		845369E31C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
+		845369E41C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
+		845369E51C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
 		845A044D1C1F795000556CD9 /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A04491C1F795000556CD9 /* pinGreen@2x.png */; };
@@ -300,6 +303,8 @@
 		845330A01A3FC3D600452EEB /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		845369DE1C8907440083F695 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		845369E11C8E3B980083F695 /* FFTManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFTManager.cpp; path = Ride/FFTManager.cpp; sourceTree = "<group>"; };
+		845369E21C8E3B980083F695 /* FFTManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFTManager.h; path = Ride/FFTManager.h; sourceTree = "<group>"; };
 		8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSDate+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBAnimatedGradientMaskButton.h; sourceTree = "<group>"; };
 		8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBAnimatedGradientMaskButton.m; sourceTree = "<group>"; };
@@ -512,6 +517,8 @@
 			isa = PBXGroup;
 			children = (
 				3D49510F1C8E092300E216AA /* forest.cv */,
+				845369E11C8E3B980083F695 /* FFTManager.cpp */,
+				845369E21C8E3B980083F695 /* FFTManager.h */,
 				3D20FDCB1C8E26DF008317CE /* RandomForestManager.h */,
 				3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */,
 				3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */,
@@ -1148,6 +1155,7 @@
 				3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
+				845369E51C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* NSDate+HBAdditions.swift in Sources */,
 				3D2705EF1C8785E000A96DE0 /* DeviceMotion.swift in Sources */,
@@ -1176,6 +1184,7 @@
 				842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */,
 				842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */,
 				842141A81C407CEE009DA851 /* TripViewController.swift in Sources */,
+				845369E41C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				842FDCA61BD56EF70079AFCC /* Location.swift in Sources */,
 				842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */,
 				842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */,
@@ -1211,6 +1220,7 @@
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
+				845369E31C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				84C28E101C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
