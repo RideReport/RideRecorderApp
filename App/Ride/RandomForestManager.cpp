@@ -22,19 +22,17 @@ double kurtosis(cv::Mat mat);
 struct RandomForestManager {
     int sampleSize;
     FFTSetup fftWeights;
-    cv::Ptr<cv::ml::RTrees> model;
+    cv::Ptr<cv::ml::RTrees> model = cv::Ptr<cv::ml::RTrees>();
 };
 
 RandomForestManager *createRandomForestManager(int sampleSize, char* pathToModelFile)
 {
+    assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
+    
     struct RandomForestManager *r;
     r = (struct RandomForestManager*) malloc(sizeof(struct RandomForestManager));
     r->sampleSize = sampleSize;
-
-    assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
-
     r->fftWeights = vDSP_create_fftsetup(vDSP_Length(log2f(sampleSize)), FFT_RADIX2);
-
     r->model = cv::ml::RTrees::load<cv::ml::RTrees>(pathToModelFile);
 
     return r;
