@@ -25,7 +25,7 @@ FFTManager *createFFTManager(int sampleSize)
     return f;
 }
 
-void fft(float * input, int inputSize, float *output, FFTSetup weightsSetup)
+void fft(float * input, int inputSize, float *output, FFTManager *manager)
 {
     // apply a hamming window to the input
     float *hammingWindow = new float[inputSize];
@@ -39,7 +39,7 @@ void fft(float * input, int inputSize, float *output, FFTSetup weightsSetup)
     vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, inputSize/2);
     
     // run the FFT and get the magnitude components (vDSP_zvmags returns squared components)
-    vDSP_fft_zrip(weightsSetup, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
+    vDSP_fft_zrip(manager->fftWeights, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
     vDSP_zvmags(&splitComplex, 1, output, 1, inputSize);
 }
 
@@ -47,11 +47,11 @@ float dominantPower(float *input, int inputSize)
 {
     float dominantFrequency = 0;
     for (int i=0; i<inputSize/2; i+=2) {
-        float curFreq = MagnitudeSquared(outputBuffer[i], outputBuffer[i+1]);
-        if (curFreq > dominantFrequency) {
-            dominantFrequency = curFreq;
+        float value = input[i];
+        if (value > dominantFrequency) {
+            dominantFrequency = value;
         }
     }
     
-    return indexOfDominantFrequency;
+    return dominantFrequency;
 }

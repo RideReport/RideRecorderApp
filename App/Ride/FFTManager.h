@@ -6,17 +6,13 @@
 //  Copyright © 2016 Knock Softwae, Inc. All rights reserved.
 //
 
-#ifndef FFTManager_h
-#define FFTManager_h
-
-#include <stdio.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
     typedef struct FFTManager FFTManager;
     FFTManager *createFFTManager(int sampleSize);
-    void fft(float * input, int inputSize, float *output);
+    void fft(float * input, int inputSize, float *output, FFTManager *manager);
+    float dominantPower(float *input, int inputSize);
 #ifdef __cplusplus
 }
 #endif
-#endif /* FFTManager_h */

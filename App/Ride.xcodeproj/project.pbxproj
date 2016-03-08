@@ -517,8 +517,8 @@
 			isa = PBXGroup;
 			children = (
 				3D49510F1C8E092300E216AA /* forest.cv */,
-				845369E11C8E3B980083F695 /* FFTManager.cpp */,
 				845369E21C8E3B980083F695 /* FFTManager.h */,
+				845369E11C8E3B980083F695 /* FFTManager.cpp */,
 				3D20FDCB1C8E26DF008317CE /* RandomForestManager.h */,
 				3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */,
 				3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */,
