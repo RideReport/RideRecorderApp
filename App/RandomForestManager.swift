@@ -22,8 +22,8 @@ class RandomForestManager {
         deleteRandomForestManager(_ptr)
     }
     
-    func classifyMagnitudeVector(magnitudeVector: [Float])->Int
+    func classifyMagnitudeVector(magnitudeVector: UnsafeMutablePointer<Float>)->Int
     {
-        return Int(randomForesetClassifyMagnitudeVector(_ptr, UnsafeMutablePointer(magnitudeVector)))
+        return Int(randomForesetClassifyMagnitudeVector(_ptr, magnitudeVector))
     }
 }

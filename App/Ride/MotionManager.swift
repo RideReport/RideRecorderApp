@@ -67,7 +67,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionManager = CMMotionManager()
         self.motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
         
-        randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
+        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
     }
     
     private func startup() {
@@ -125,7 +125,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                     self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(self.magnitudeVector(fromSample: sample))
+                    var magVector = self.magnitudeVector(fromSample: sample)
+                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(&magVector)
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

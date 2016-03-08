@@ -12,7 +12,7 @@ extern "C" {
     typedef struct RandomForestManager RandomForestManager;
     RandomForestManager *createRandomForestManager(int sampleSize, const char* pathToModelFile);
     void deleteRandomForestManager(RandomForestManager *r);
-    int randomForesetClassifyMagnitudeVector(struct RandomForestManager *randomForestManager, float *magnitudeVector);
+    int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector);
 #ifdef __cplusplus
 }
 #endif

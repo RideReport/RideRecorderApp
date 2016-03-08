@@ -29,16 +29,12 @@ RandomForestManager *createRandomForestManager(int sampleSize, const char* pathT
 {
     assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
     
-    RandomForestManager *rptr = (struct RandomForestManager*) malloc(sizeof(struct RandomForestManager));
-    RandomForestManager r = {
-        .sampleSize = sampleSize,
-        .fftManager = createFFTManager(sampleSize),
-        .model = cv::ml::RTrees::load<cv::ml::RTrees>(pathToModelFile)
-    };
-    
-    rptr = &r;
+    RandomForestManager *r = new RandomForestManager;
+    r->sampleSize = sampleSize;
+    r->fftManager = createFFTManager(sampleSize);
+    r->model = cv::ml::RTrees::load<cv::ml::RTrees>(pathToModelFile);
 
-    return rptr;
+    return r;
 }
 
 void deleteRandomForestManager(RandomForestManager *r)
@@ -48,7 +44,7 @@ void deleteRandomForestManager(RandomForestManager *r)
     free(r);
 }
 
-int randomForesetClassifyMagnitudeVector(struct RandomForestManager *randomForestManager, float *magnitudeVector)
+int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)
 {
     cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, &magnitudeVector);
     

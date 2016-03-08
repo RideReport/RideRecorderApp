@@ -33,10 +33,8 @@ void fft(float * input, int inputSize, float *output, FFTManager *manager)
     vDSP_vmul(input, 1, hammingWindow, 1, input, 1, inputSize);
     
     // pack the input samples in preparation for FFT
-    DSPSplitComplex splitComplex;
-    splitComplex.realp = new float[inputSize/2];
-    splitComplex.imagp = new float[inputSize/2];
-    vDSP_ctoz((DSPComplex*)input, 2, &splitComplex, 1, inputSize/2);
+    float *zeroArray = new float[inputSize/2];
+    DSPSplitComplex splitComplex = {.realp = input, .imagp =  zeroArray};
     
     // run the FFT and get the magnitude components (vDSP_zvmags returns squared components)
     vDSP_fft_zrip(manager->fftWeights, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
