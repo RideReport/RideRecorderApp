@@ -26,7 +26,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
     let sampleWindowSize: Int = 128
-    private let deviceMotionUpdateInterval: NSTimeInterval = 50/1000
+    private let updateInterval: NSTimeInterval = 50/1000
     private var isMonitoringMotion: Bool = false
     
     private var randomForestManager: RandomForestManager!
@@ -65,7 +65,9 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.deviceMotionUpdateInterval = self.deviceMotionUpdateInterval
+        self.motionManager.deviceMotionUpdateInterval = self.updateInterval
+        self.motionManager.accelerometerUpdateInterval = self.updateInterval
+        self.motionManager.gyroUpdateInterval = self.updateInterval
         
         self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
     }
@@ -94,19 +96,69 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func magnitudeVector(fromSample sample:DeviceMotionsSample)->[Float] {
+    private func magnitudeVector(forSensorDataCollection sensorDataCollection:SensorDataCollection)->[Float] {
         var mags: [Float] = []
         
-        for elem in sample.deviceMotions {
-            let reading = elem as! DeviceMotion
-            let sum = reading.userAccelerationX.floatValue*reading.userAccelerationX.floatValue + reading.userAccelerationY.floatValue*reading.userAccelerationY.floatValue + reading.userAccelerationZ.floatValue*reading.userAccelerationZ.floatValue
+        for elem in sensorDataCollection.deviceMotionAccelerations {
+            let reading = elem as! DeviceMotionAcceleration
+            let sum = reading.x.floatValue*reading.x.floatValue + reading.y.floatValue*reading.y.floatValue + reading.z.floatValue*reading.z.floatValue
             mags.append(sqrtf(sum))
         }
         
         return mags
     }
     
-    func queryCurrentActivityType(forDeviceMotionSample sample:DeviceMotionsSample, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
+    func stopGatheringSensorData() {
+        self.isMonitoringMotion = false
+        self.motionManager.stopDeviceMotionUpdates()
+        self.motionManager.stopAccelerometerUpdates()
+        self.motionManager.stopGyroUpdates()
+        
+        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        }
+    }
+    
+    func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection) {
+        self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        })
+        
+        self.isMonitoringMotion = true
+        
+        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard let deviceMotion = motion else {
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                sensorDataCollection.addDeviceMotion(deviceMotion)
+            }
+        }
+        
+        self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (data, error) in
+            guard let accelerometerData = data else {
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                sensorDataCollection.addAccelerometerData(accelerometerData)
+            }
+        }
+        
+        self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (data, error) in
+            guard let gyroData = data else {
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                sensorDataCollection.addGyroscopeData(gyroData)
+            }
+        }
+    }
+    
+    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
         self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             handler(activityType: .Unknown, confidence: 1.0)
             self.backgroundTaskID = UIBackgroundTaskInvalid
@@ -120,12 +172,12 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
             
             dispatch_async(dispatch_get_main_queue()) {
-                sample.addDeviceMotion(deviceMotion)
-                if sample.deviceMotions.count >= self.sampleWindowSize {
+                sensorDataCollection.addDeviceMotion(deviceMotion)
+                if sensorDataCollection.deviceMotionAccelerations.count >= self.sampleWindowSize {
                     self.isMonitoringMotion = false
                     self.motionManager.stopDeviceMotionUpdates()
                     // run classification
-                    var magVector = self.magnitudeVector(fromSample: sample)
+                    var magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
                     let sampleClass = self.randomForestManager.classifyMagnitudeVector(&magVector)
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)

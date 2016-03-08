@@ -6,5 +6,7 @@
 //  Copyright © 2016 Knock Softwae, Inc. All rights reserved.
 //
 
+#include <zlib.h>
+#import "UIDevice+HBAdditions.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import "RandomForestManager.h"

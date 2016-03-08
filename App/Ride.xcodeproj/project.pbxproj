@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		298BE4AE69FDA0783625F182 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0E122EDDBB5D8C24ABC57A /* Pods_Ride_Report.framework */; };
-		3D02B5F21C7D083400F9A64B /* DeviceMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */; };
+		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
 		3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */; };
 		3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DD1C8785D400A96DE0 /* ViewController.swift */; };
 		3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2705DF1C8785D400A96DE0 /* Main.storyboard */; };
@@ -18,8 +18,8 @@
 		3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
 		3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
 		3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
-		3D2705EF1C8785E000A96DE0 /* DeviceMotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */; };
-		3D2705F01C8785E000A96DE0 /* DeviceMotionsSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */; };
+		3D2705EF1C8785E000A96DE0 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
+		3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D2705F11C8785E000A96DE0 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* Activity.swift */; };
 		3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
 		3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
@@ -40,9 +40,19 @@
 		3D4951141C8E1F1B00E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
 		3D4951151C8E1FA300E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
 		3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
-		3D9471C81C861A7D00CF5D90 /* DeviceMotionsSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */; };
+		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
+		3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
+		3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
+		3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */; };
+		3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B901BEAAA4D0004C1BF /* NSData+GZIP.swift */; };
+		3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
+		3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445317519FEEB210096F26E /* RouteManager.swift */; };
+		3DA1EFE01C8F879E002B12DB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
+		3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
+		3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */; };
+		3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DA1EFE41C8F94EB002B12DB /* silence.mp3 */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -215,7 +225,7 @@
 		14565CEE38B68B4030BC8322 /* Pods-Motion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Motion.release.xcconfig"; path = "Pods/Target Support Files/Pods-Motion/Pods-Motion.release.xcconfig"; sourceTree = "<group>"; };
 		1DCC29387F1F6DAB50132B6B /* Pods-Ride Report.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report/Pods-Ride Report.debug.xcconfig"; sourceTree = "<group>"; };
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
-		3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeviceMotion.swift; path = Ride/DeviceMotion.swift; sourceTree = "<group>"; };
+		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D20FDCB1C8E26DF008317CE /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RandomForestManager.h; path = Ride/RandomForestManager.h; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -231,9 +241,12 @@
 		3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RandomForestManager.cpp; path = Ride/RandomForestManager.cpp; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = forest.cv; path = Ride/forest.cv; sourceTree = "<group>"; };
 		3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
-		3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DeviceMotionsSample.swift; path = Ride/DeviceMotionsSample.swift; sourceTree = "<group>"; };
+		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
+		3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 39.xcdatamodel"; sourceTree = "<group>"; };
+		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		4FAC5C188295BB7C11FE9D25 /* Pods_Motion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Motion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -409,6 +422,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
+				3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */,
 				845369E01C8907490083F695 /* Accelerate.framework in Frameworks */,
 				3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */,
 				3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */,
@@ -470,6 +485,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */,
 				845369DE1C8907440083F695 /* Accelerate.framework */,
 				3D2705FB1C8787A900A96DE0 /* CoreData.framework */,
 				3D2705F91C8787A500A96DE0 /* AVFoundation.framework */,
@@ -502,6 +518,7 @@
 		3D2705DA1C8785D400A96DE0 /* Motion */ = {
 			isa = PBXGroup;
 			children = (
+				3DA1EFE41C8F94EB002B12DB /* silence.mp3 */,
 				3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */,
 				3D2705FF1C878B6C00A96DE0 /* Motion-Bridging-Header.h */,
 				3D2705DD1C8785D400A96DE0 /* ViewController.swift */,
@@ -617,8 +634,8 @@
 				847A05661A01B2FE008F5371 /* Location.swift */,
 				8421418F1C3C8E19009DA851 /* Prototrip.swift */,
 				847A05641A01B2F1008F5371 /* Trip.swift */,
-				3D02B5F11C7D083400F9A64B /* DeviceMotion.swift */,
-				3D9471C71C861A7D00CF5D90 /* DeviceMotionsSample.swift */,
+				3D02B5F11C7D083400F9A64B /* SensorData.swift */,
+				3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */,
 				8429E5D71A5DCBA000EB3E94 /* Activity.swift */,
 				8429E5D91A5DCBFE00EB3E94 /* Incident.swift */,
 				84D1555619D2733500316995 /* Ride.xcdatamodeld */,
@@ -931,6 +948,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */,
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
@@ -1152,20 +1170,27 @@
 				3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */,
 				3D2705F81C8785F200A96DE0 /* MotionManager.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
+				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
 				3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
 				845369E51C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
+				3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */,
+				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* NSDate+HBAdditions.swift in Sources */,
-				3D2705EF1C8785E000A96DE0 /* DeviceMotion.swift in Sources */,
+				3D2705EF1C8785E000A96DE0 /* SensorData.swift in Sources */,
+				3DA1EFE01C8F879E002B12DB /* UIDevice+HBAdditions.m in Sources */,
 				3D2705F11C8785E000A96DE0 /* Activity.swift in Sources */,
+				3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
+				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
 				3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */,
-				3D2705F01C8785E000A96DE0 /* DeviceMotionsSample.swift in Sources */,
+				3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */,
 				3D49510E1C8E091D00E216AA /* RandomForestManager.cpp in Sources */,
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
+				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1208,7 +1233,7 @@
 				8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */,
 				8429E5D81A5DCBA000EB3E94 /* Activity.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
-				3D02B5F21C7D083400F9A64B /* DeviceMotion.swift in Sources */,
+				3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* DirectionsViewController.swift in Sources */,
 				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
@@ -1236,7 +1261,7 @@
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
-				3D9471C81C861A7D00CF5D90 /* DeviceMotionsSample.swift in Sources */,
+				3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
@@ -1583,6 +1608,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */,
 				3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */,
 				3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */,
 				842141931C3D9407009DA851 /* Ride 36.xcdatamodel */,
@@ -1622,7 +1648,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */;
+			currentVersion = 3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

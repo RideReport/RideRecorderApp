@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         CoreDataManager.startup()
         MotionManager.startup()
+        APIClient.startup()
 
         return true
     }

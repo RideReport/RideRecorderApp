@@ -13,7 +13,7 @@ class Prototrip : NSManagedObject {
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
-    @NSManaged var deviceMotionsSamples : NSOrderedSet!
+    @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var creationDate : NSDate!
     
@@ -51,10 +51,10 @@ class Prototrip : NSManagedObject {
             activity.prototrip = nil
         }
         
-        for dms in self.deviceMotionsSamples {
-            let sample = dms as! DeviceMotionsSample
-            sample.trip = trip
-            sample.prototrip = nil
+        for c in self.sensorDataCollections {
+            let collection = c as! SensorDataCollection
+            collection.trip = trip
+            collection.prototrip = nil
         }
     }
 }

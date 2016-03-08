@@ -328,13 +328,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 // if they have at least a 2/3 mode share by bike, show all time
                 modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
                     PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue)]
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTrips), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "All Time\nMode Use"
             } else {
                 // otherwise show last 30 days to make it more actionable
                 modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "Mode Use\nThis Month"
             }
             

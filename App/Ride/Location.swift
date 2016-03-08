@@ -26,6 +26,7 @@ class Location : NSManagedObject {
     @NSManaged var prototrip : Prototrip?
     @NSManaged var lastGeofencedLocationOfProfile : Profile?
     @NSManaged var simplifiedInTrip : Trip?
+    @NSManaged var sensorDataCollection : SensorDataCollection?
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var date : NSDate?
     

@@ -23,6 +23,9 @@ target 'Ride Report' do
 end
 
 target 'Motion' do
+    pod 'Mixpanel'
+    pod 'Alamofire', '~> 3.0'
+    pod 'OAuthSwift'
     pod 'SwiftChart'
     pod 'SwiftyJSON'
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'

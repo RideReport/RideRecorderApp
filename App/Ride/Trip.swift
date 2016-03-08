@@ -22,7 +22,8 @@ class Trip : NSManagedObject {
         case Cycling
         case Automotive
         case Walking
-        case Transit
+        case Bus
+        case Rail
         case Stationary
     }
     
@@ -45,7 +46,7 @@ class Trip : NSManagedObject {
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
-    @NSManaged var deviceMotionsSamples : NSOrderedSet!
+    @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
@@ -483,12 +484,12 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class var numberOfTransitTrips : Int {
+    class var numberOfBusTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Transit.rawValue)
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Bus.rawValue)
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -531,12 +532,12 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class var numberOfTransitTripsLast30Days : Int {
+    class var numberOfBusTripsLast30Days : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Transit.rawValue, NSDate().daysFrom(-30))
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Bus.rawValue, NSDate().daysFrom(-30))
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -689,10 +690,12 @@ class Trip : NSManagedObject {
             tripTypeString = "🏃"
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
-            tripTypeString = "🚋"
-        } else {
+        } else if (self.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
             tripTypeString = ""
+        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
+            tripTypeString = "🚌"
+        } else {
+            tripTypeString = "🚈"
         }
 
         return tripTypeString

@@ -10,7 +10,6 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import OAuthSwift
-import KeychainAccess
 import Mixpanel
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
@@ -531,6 +530,18 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
+    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection) {
+        let accelerometerRouteURL = "/ios_accelerometer_data"
+        AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters: ["data" : sensorDataCollection.jsonDictionary()], authenticated: false) { (response) in
+            switch response.result {
+            case .Success(let json):
+                DDLogWarn("Yep")
+            case .Failure(let error):
+                DDLogWarn("Nope!")
+            }
+        }
+    }
+    
     func syncTrip(trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed.boolValue) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
@@ -586,20 +597,6 @@ class APIClient {
                 locations.append((location as! Location).jsonDictionary())
             }
             tripDict["locations"] = locations
-            
-            var accelerometerData : [AnyObject] = []
-            for sample in trip.deviceMotionsSamples {
-                accelerometerData.append((sample as! DeviceMotionsSample).jsonDictionary())
-            }
-            let accelerometerRouteURL = "/trips/" + trip.uuid + "/ios_accelerometer_data"
-            AuthenticatedAPIRequest(client: self, method: .PUT, route: accelerometerRouteURL, parameters: ["data" : accelerometerData]) { (response) in
-                switch response.result {
-                case .Success(let json):
-                    DDLogWarn("Yep")
-                case .Failure(let error):
-                    DDLogWarn("Nope!")
-                }
-            }
         } else {
             // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
             method = Alamofire.Method.PATCH

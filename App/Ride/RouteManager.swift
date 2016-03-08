@@ -413,7 +413,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActivityTypeQueries ) {
             self.lastActivityTypeQueryDate = NSDate()
         
-            MotionManager.sharedManager.queryCurrentActivityType(forDeviceMotionSample: DeviceMotionsSample(prototrip: self.currentPrototrip!)) {[weak self] (activityType, confidence) -> Void in
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(prototrip: self.currentPrototrip!)) {[weak self] (activityType, confidence) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -431,15 +431,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting running trip.")
                     
                     strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Running)
-                case .Transit where confidence > 0.8:
+                case .Bus where confidence > 0.8:
                     DDLogVerbose("Starting transit trip.")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Transit)
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Bus)
+                case .Rail where confidence > 0.8:
+                    DDLogVerbose("Starting transit trip.")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Rail)
                 case .Walking, .Stationary where confidence > 0.8 :
                     DDLogVerbose("Walking or stationary, stopping monitor…")
 
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
-                case .Unknown, .Automotive, .Cycling, .Running, .Transit, .Stationary, .Walking:
+                case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking:
                     DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
                 }
             }
