@@ -25,7 +25,7 @@ struct RandomForestManager {
     cv::Ptr<cv::ml::RTrees> model;
 };
 
-RandomForestManager *createRandomForestManager(int sampleSize, char* pathToModelFile)
+RandomForestManager *createRandomForestManager(int sampleSize, const char* pathToModelFile)
 {
     assert(fmod(log2(sampleSize), 1.0) == 0.0); // sampleSize must be a power of 2
     
