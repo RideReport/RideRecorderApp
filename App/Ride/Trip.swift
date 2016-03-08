@@ -433,6 +433,7 @@ class Trip : NSManagedObject {
         let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [locationsAreSyncedPredicate, syncedPredicate])
 
         fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedCompoundPredicate])
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
