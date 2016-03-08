@@ -42,3 +42,16 @@ void fft(float * input, int inputSize, float *output, FFTSetup weightsSetup)
     vDSP_fft_zrip(weightsSetup, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
     vDSP_zvmags(&splitComplex, 1, output, 1, inputSize);
 }
+
+float dominantPower(float *input, int inputSize)
+{
+    float dominantFrequency = 0;
+    for (int i=0; i<inputSize/2; i+=2) {
+        float curFreq = MagnitudeSquared(outputBuffer[i], outputBuffer[i+1]);
+        if (curFreq > dominantFrequency) {
+            dominantFrequency = curFreq;
+        }
+    }
+    
+    return indexOfDominantFrequency;
+}

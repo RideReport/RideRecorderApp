@@ -49,7 +49,7 @@ int randomForesetClassifyMagnitudeVector(struct RandomForestManager *randomFores
 {
     cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, &magnitudeVector);
     
-    cv::Mat readings = cv::Mat::zeros(1, 6, CV_32F);
+    cv::Mat readings = cv::Mat::zeros(1, 7, CV_32F);
 
     cv::Scalar mean,stddev;
     meanStdDev(mags,mean,stddev);
@@ -60,6 +60,7 @@ int randomForesetClassifyMagnitudeVector(struct RandomForestManager *randomFores
     readings.at<float>(0,3) = (float)stddev.val[0];
     readings.at<float>(0,4) = (float)skewness(mags);
     readings.at<float>(0,5) = (float)kurtosis(mags);
+    readings.at<float>(0,6) = //max power of the fft;
     
     return (int)randomForestManager->model->predict(readings, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
 }
