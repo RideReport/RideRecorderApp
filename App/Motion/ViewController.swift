@@ -14,7 +14,7 @@ import MediaPlayer
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     
-    private var keepGoing: Bool = false
+    private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var sensorDataCollection : SensorDataCollection!
     
@@ -179,9 +179,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @IBAction func startStop(sender: AnyObject) {
-        self.keepGoing = !self.keepGoing
+        self.isRecording = !self.isRecording
         
-        if (self.keepGoing) {
+        if (self.isRecording) {
             MotionManager.sharedManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection)
             self.locationManager.startUpdatingLocation()
             self.startStopButton.setTitle("Finish", forState: UIControlState.Normal)
@@ -189,7 +189,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         } else {
             CoreDataManager.sharedManager.saveContext()
             self.sensorDataCollectionForUpload = self.sensorDataCollection
-            self.updateCollectionUI()
             
             MotionManager.sharedManager.stopGatheringSensorData()
             self.locationManager.stopUpdatingLocation()
@@ -197,6 +196,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
             self.cancelButton.hidden = true
         }
+        
+        self.updateCollectionUI()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -247,14 +248,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 //            strongSelf.lineChart.removeSeries()
 //            strongSelf.lineChart.addSeries(series)
             
-            if strongSelf.keepGoing {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    strongSelf.runQuery()
-                }
-            }
         }
     }
 }
