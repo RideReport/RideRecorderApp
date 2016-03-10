@@ -82,16 +82,16 @@ class SensorDataCollection : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let dma = DeviceMotionAcceleration.init(entity: NSEntityDescription.entityForName("DeviceMotionAcceleration", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         setDate(forSensorData: dma, fromLogItem: deviceMotion)
-        dma.x = deviceMotion.gravity.x
-        dma.y = deviceMotion.gravity.y
-        dma.z = deviceMotion.gravity.z
+        dma.x = deviceMotion.userAcceleration.x
+        dma.y = deviceMotion.userAcceleration.y
+        dma.z = deviceMotion.userAcceleration.z
         dma.sensorDataCollection = self
         
         let dmr = DeviceMotionRotationRate.init(entity: NSEntityDescription.entityForName("DeviceMotionRotationRate", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
         setDate(forSensorData: dmr, fromLogItem: deviceMotion)
-        dmr.x = deviceMotion.gravity.x
-        dmr.y = deviceMotion.gravity.y
-        dmr.z = deviceMotion.gravity.z
+        dmr.x = deviceMotion.rotationRate.x
+        dmr.y = deviceMotion.rotationRate.y
+        dmr.z = deviceMotion.rotationRate.z
         dmr.sensorDataCollection = self
     }
     
@@ -106,6 +106,7 @@ class SensorDataCollection : NSManagedObject {
     
     func jsonDictionary() -> [String: AnyObject] {
         var dict:[String: AnyObject] = [:]
+        dict["reportedActivityType"] = self.actualActivityType
         dict["accelerometerAccelerations"] = jsonArray(forSensorDataSet: self.accelerometerAccelerations)
         dict["deviceMotionAccelerations"] = jsonArray(forSensorDataSet: self.deviceMotionAccelerations)
         dict["deviceMotionRotationRates"] = jsonArray(forSensorDataSet: self.deviceMotionRotationRates)
