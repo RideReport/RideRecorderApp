@@ -43,6 +43,8 @@ void fft(float * input, int inputSize, float *output, FFTManager *manager)
 
 float dominantPower(float *input, int inputSize)
 {
+    return 0.0f;
+    
     float dominantFrequency = 0;
     for (int i=0; i<inputSize/2; i+=2) {
         float value = input[i];
