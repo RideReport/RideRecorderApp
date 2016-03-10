@@ -233,6 +233,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
+            
+            let utterance = AVSpeechUtterance(string: "Recording")
+            utterance.rate = 0.6
+            self.synth.speakUtterance(utterance)
         } else {
             // tapped pause
             self.isRecording = false
@@ -241,6 +245,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             MotionManager.sharedManager.stopGatheringSensorData()
             self.locationManager.stopUpdatingLocation()
             self.player.pause()
+            
+            let utterance = AVSpeechUtterance(string: "Paused")
+            utterance.rate = 0.6
+            self.synth.speakUtterance(utterance)
         }
         
         self.updateUI()
