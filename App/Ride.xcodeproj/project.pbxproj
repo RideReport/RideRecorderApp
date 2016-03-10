@@ -40,6 +40,8 @@
 		3D4951141C8E1F1B00E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
 		3D4951151C8E1FA300E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
 		3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
+		3D6882451C910B0400CEEF20 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D6882441C910B0400CEEF20 /* opencv2.framework */; };
+		3D6882461C910B0400CEEF20 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D6882441C910B0400CEEF20 /* opencv2.framework */; };
 		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
@@ -241,6 +243,7 @@
 		3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RandomForestManager.cpp; path = Ride/RandomForestManager.cpp; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = forest.cv; path = Ride/forest.cv; sourceTree = "<group>"; };
 		3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
+		3D6882441C910B0400CEEF20 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
@@ -423,6 +426,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
+				3D6882461C910B0400CEEF20 /* opencv2.framework in Frameworks */,
 				3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */,
 				845369E01C8907490083F695 /* Accelerate.framework in Frameworks */,
 				3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */,
@@ -464,6 +468,7 @@
 				84F137611B5DAE0C0023EC82 /* libsqlite3.dylib in Frameworks */,
 				84F1375F1B5DAE040023EC82 /* libc++.dylib in Frameworks */,
 				84F1375D1B5DADF60023EC82 /* SystemConfiguration.framework in Frameworks */,
+				3D6882451C910B0400CEEF20 /* opencv2.framework in Frameworks */,
 				84F1375B1B5DADEF0023EC82 /* QuartzCore.framework in Frameworks */,
 				84F137591B5DADE60023EC82 /* MobileCoreServices.framework in Frameworks */,
 				84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */,
@@ -485,6 +490,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D6882441C910B0400CEEF20 /* opencv2.framework */,
 				3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */,
 				845369DE1C8907440083F695 /* Accelerate.framework */,
 				3D2705FB1C8787A900A96DE0 /* CoreData.framework */,
@@ -893,6 +899,7 @@
 				TargetAttributes = {
 					3D2705D81C8785D400A96DE0 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 9NRH28TN93;
 					};
 					8429E5CA1A5DC58500EB3E94 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1342,15 +1349,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/OpenCV",
+					"$(PROJECT_DIR)",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = Motion/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Knock.Motion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1364,12 +1377,18 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/OpenCV",
+					"$(PROJECT_DIR)",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = Motion/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = Knock.Motion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1496,6 +1515,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/OpenCV",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1536,6 +1556,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/OpenCV",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
