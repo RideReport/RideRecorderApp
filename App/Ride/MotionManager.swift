@@ -25,7 +25,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
-    let sampleWindowSize: Int = 128
+    let sampleWindowSize: Int = 32
     private let updateInterval: NSTimeInterval = 50/1000
     private var isMonitoringMotion: Bool = false
     
