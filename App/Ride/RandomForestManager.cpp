@@ -46,7 +46,7 @@ void deleteRandomForestManager(RandomForestManager *r)
 
 int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)
 {
-    cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, &magnitudeVector);
+    cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, magnitudeVector);
     
     cv::Mat readings = cv::Mat::zeros(1, 7, CV_32F);
 
