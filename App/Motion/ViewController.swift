@@ -16,8 +16,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
-    private var sensorDataCollection : SensorDataCollection!
-    
+    private var sensorDataCollection : SensorDataCollection?
     private var sensorDataCollectionForUpload : SensorDataCollection?
     
     private var locationManager : CLLocationManager!
@@ -25,10 +24,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var lineChart: Chart!
     
-    @IBOutlet weak var currentDataSetView: UIView!
+    @IBOutlet weak var uploadView: UIView!
     @IBOutlet weak var carButton: UIButton!
     @IBOutlet weak var walkButton: UIButton!
     @IBOutlet weak var bikeButton: UIButton!
@@ -47,19 +47,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        self.sensorDataCollection = SensorDataCollection()
-        
         let url = NSBundle.mainBundle().URLForResource("silence", withExtension: ".mp3")
         try! self.player = AVAudioPlayer(contentsOfURL: url!)
         self.player.numberOfLoops = -1
+        
+        // hack to take control of remote
         self.player.play()
+        self.player.pause()
         
         try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try! AVAudioSession.sharedInstance().setActive(true)
         
         
         MPRemoteCommandCenter.sharedCommandCenter().togglePlayPauseCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
-            self.startStop(self)
+            self.tappedStartPause(self)
             
             return MPRemoteCommandHandlerStatus.Success
         }
@@ -70,41 +71,41 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             return MPRemoteCommandHandlerStatus.Success
         }
         
-        self.updateCollectionUI()
+        self.updateUI()
     }
     
     @IBAction func tappedCarButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             collection.actualActivityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            updateCollectionUI()
+            updateUI()
         }
     }
     
     @IBAction func tappedWalkButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             collection.actualActivityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-            updateCollectionUI()
+            updateUI()
         }
     }
     
     @IBAction func tappedBusButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             collection.actualActivityType = NSNumber(short: Trip.ActivityType.Bus.rawValue)
-            updateCollectionUI()
+            updateUI()
         }
     }
     
     @IBAction func tappedBikeButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             collection.actualActivityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            updateCollectionUI()
+            updateUI()
         }
     }
     
     @IBAction func tappedTrainButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             collection.actualActivityType = NSNumber(short: Trip.ActivityType.Rail.rawValue)
-            updateCollectionUI()
+            updateUI()
         }
     }
     
@@ -113,46 +114,77 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             CoreDataManager.sharedManager.saveContext()
             APIClient.sharedClient.uploadSensorDataCollection(collection)
             self.sensorDataCollectionForUpload = nil
-            self.updateCollectionUI()
+           self.sensorDataCollection = nil
+            self.updateUI()
         }
     }
     
-    func updateCollectionUI() {
-        if let collection = self.sensorDataCollectionForUpload {
-            self.currentDataSetView.hidden = false
-            self.startStopButton.hidden = true
-            self.activityLabel.hidden = true
-            
-            guard let activityType = collection.actualActivityType else {
-                self.uploadButton.enabled = false
-                return
-            }
-            
-            self.uploadButton.enabled = true
-            self.carButton.backgroundColor = UIColor.clearColor()
-            self.walkButton.backgroundColor = UIColor.clearColor()
-            self.busButton.backgroundColor = UIColor.clearColor()
-            self.bikeButton.backgroundColor = UIColor.clearColor()
-            self.railButton.backgroundColor = UIColor.clearColor()
-            
-            switch Trip.ActivityType(rawValue: activityType.shortValue)! {
-            case .Automotive:
-                self.carButton.backgroundColor = UIColor.greenColor()
-            case .Walking:
-                self.walkButton.backgroundColor = UIColor.greenColor()
-            case .Bus:
-                self.busButton.backgroundColor = UIColor.greenColor()
-            case .Cycling:
-                self.bikeButton.backgroundColor = UIColor.greenColor()
-            case .Rail:
-                self.railButton.backgroundColor = UIColor.greenColor()
-            default: break
-            }
-            
-        } else {
-            self.startStopButton.hidden = false
+    func updateUI() {
+        if (self.isRecording) {
+
+            self.startStopButton.setTitle("Pause", forState: UIControlState.Normal)
+            self.uploadView.hidden = true
             self.activityLabel.hidden = false
-            self.currentDataSetView.hidden = true
+            self.startStopButton.hidden = false
+            self.cancelButton.hidden = false
+            self.finishButton.hidden = false
+            self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+        } else {
+            if let collection = self.sensorDataCollectionForUpload {
+                // prep for upload
+                self.uploadView.hidden = false
+                self.startStopButton.hidden = true
+                self.activityLabel.hidden = true
+                self.cancelButton.hidden = false
+                self.finishButton.hidden = true
+                self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
+                
+                guard let activityType = collection.actualActivityType else {
+                    self.uploadButton.enabled = false
+                    return
+                }
+                
+                self.uploadButton.enabled = true
+                self.carButton.backgroundColor = UIColor.clearColor()
+                self.walkButton.backgroundColor = UIColor.clearColor()
+                self.busButton.backgroundColor = UIColor.clearColor()
+                self.bikeButton.backgroundColor = UIColor.clearColor()
+                self.railButton.backgroundColor = UIColor.clearColor()
+                
+                switch Trip.ActivityType(rawValue: activityType.shortValue)! {
+                case .Automotive:
+                    self.carButton.backgroundColor = UIColor.greenColor()
+                case .Walking:
+                    self.walkButton.backgroundColor = UIColor.greenColor()
+                case .Bus:
+                    self.busButton.backgroundColor = UIColor.greenColor()
+                case .Cycling:
+                    self.bikeButton.backgroundColor = UIColor.greenColor()
+                case .Rail:
+                    self.railButton.backgroundColor = UIColor.greenColor()
+                default: break
+                }
+                
+            } else if (self.sensorDataCollection != nil){
+                // paused
+                self.uploadView.hidden = true
+                self.activityLabel.hidden = false
+                self.startStopButton.hidden = false
+                self.cancelButton.hidden = false
+                self.finishButton.hidden = false
+                
+                self.startStopButton.setTitle("Resume", forState: UIControlState.Normal)
+                self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+            } else {
+                // init state
+                self.uploadView.hidden = true
+                self.activityLabel.hidden = false
+                self.startStopButton.hidden = false
+                self.cancelButton.hidden = true
+                self.finishButton.hidden = true
+                
+                self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
+            }
         }
     }
     
@@ -165,44 +197,63 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         super.viewDidAppear(animated)
     }
     
-    @IBAction func tappedCancel(sender: AnyObject) {
-        MotionManager.sharedManager.stopGatheringSensorData()
-        self.locationManager.stopUpdatingLocation()
+    @IBAction func tappedFinish(sender: AnyObject) {
+        if (self.isRecording) {
+            // stop recording first
+            self.tappedStartPause(self)
+        }
         
-        CoreDataManager.sharedManager.saveContext()
-        self.sensorDataCollectionForUpload = nil
-        self.sensorDataCollection = SensorDataCollection()
-        self.updateCollectionUI()
+        self.sensorDataCollectionForUpload = self.sensorDataCollection
+        self.sensorDataCollection = nil
         
-        self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
-        self.cancelButton.hidden = true
+        self.updateUI()
     }
     
-    @IBAction func startStop(sender: AnyObject) {
-        self.isRecording = !self.isRecording
-        
+    @IBAction func tappedCancelDelete(sender: AnyObject) {
         if (self.isRecording) {
-            MotionManager.sharedManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection)
+            // stop recording first
+            self.tappedStartPause(self)
+        }
+        
+        self.sensorDataCollectionForUpload = nil
+        self.sensorDataCollection = nil
+        
+        self.updateUI()
+    }
+    
+    @IBAction func tappedStartPause(sender: AnyObject) {
+        if (!self.isRecording) {
+            // tapped start or resume
+            self.isRecording = true
+            if self.sensorDataCollection == nil {
+                self.sensorDataCollection = SensorDataCollection()
+            }
+            
+            MotionManager.sharedManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
-            self.startStopButton.setTitle("Finish", forState: UIControlState.Normal)
-            self.cancelButton.hidden = false
+
+            self.player.play()
         } else {
+            // tapped pause
+            self.isRecording = false
             CoreDataManager.sharedManager.saveContext()
-            self.sensorDataCollectionForUpload = self.sensorDataCollection
             
             MotionManager.sharedManager.stopGatheringSensorData()
             self.locationManager.stopUpdatingLocation()
-            self.sensorDataCollection = SensorDataCollection()
-            self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
-            self.cancelButton.hidden = true
+            self.player.pause()
         }
         
-        self.updateCollectionUI()
+        self.updateUI()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if self.sensorDataCollection == nil {
+            // could happen since didUpdateLocations sometimes keeps getting called for a bit after stopUpdatingLocation is called
+            return
+        }
+        
         for loc in locations {
-            self.sensorDataCollection.addLocation(loc)
+            self.sensorDataCollection!.addLocation(loc)
         }
         
         CoreDataManager.sharedManager.saveContext()

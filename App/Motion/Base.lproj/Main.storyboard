@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -22,7 +21,7 @@
                                 <rect key="frame" x="283" y="550" width="34" height="30"/>
                                 <state key="normal" title="Start"/>
                                 <connections>
-                                    <action selector="startStop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yhQ-9U-BmV"/>
+                                    <action selector="tappedStartPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="59D-Wb-kld"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GHU-lf-Tpf" customClass="Chart" customModule="SwiftChart">
@@ -35,6 +34,34 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="82A-GJ-9qe">
+                                <rect key="frame" x="283" y="550" width="34" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="Yge-84-8cW"/>
+                                    <constraint firstAttribute="width" constant="48" id="euq-gi-CFA"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="48" id="ygp-fZ-nm5"/>
+                                </constraints>
+                                <state key="normal" title="Finish">
+                                    <color key="titleColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Yge-84-8cW"/>
+                                        <exclude reference="euq-gi-CFA"/>
+                                        <exclude reference="ygp-fZ-nm5"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="Yge-84-8cW"/>
+                                        <exclude reference="euq-gi-CFA"/>
+                                        <exclude reference="ygp-fZ-nm5"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="tappedFinish:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eQD-ZY-Czr"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W8N-3W-MDK">
                                 <rect key="frame" x="0.0" y="64" width="600" height="72"/>
                                 <subviews>
@@ -46,9 +73,6 @@
                                         </state>
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="211" y="-5" width="48" height="70"/>
-                                        </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="105.5" y="59.5" width="42" height="63"/>
                                         </variation>
                                         <connections>
                                             <action selector="tappedWalkButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="tCW-U0-mgt"/>
@@ -63,9 +87,6 @@
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="341" y="-5" width="48" height="70"/>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="179" y="59.5" width="42" height="63"/>
-                                        </variation>
                                         <connections>
                                             <action selector="tappedBusButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JpE-Xd-PbH"/>
                                         </connections>
@@ -79,9 +100,6 @@
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="470" y="-7" width="48" height="70"/>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="252.5" y="57.5" width="42" height="63"/>
-                                        </variation>
                                         <connections>
                                             <action selector="tappedBikeButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lec-oJ-h8c"/>
                                         </connections>
@@ -92,14 +110,11 @@
                                         <state key="normal" title="🚈">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="326.5" y="61.5" width="42" height="63"/>
-                                        </variation>
                                         <connections>
                                             <action selector="tappedTrainButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4k3-NI-qUW"/>
                                         </connections>
                                     </button>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pOP-be-kef">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pOP-be-kef">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -108,22 +123,22 @@
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
-                                                <exclude reference="ywH-pX-bxH"/>
                                                 <exclude reference="i7V-YT-TtQ"/>
+                                                <exclude reference="ywH-pX-bxH"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="0.0" y="15" width="82" height="30"/>
                                             <mask key="constraints">
-                                                <include reference="ywH-pX-bxH"/>
                                                 <exclude reference="i7V-YT-TtQ"/>
+                                                <include reference="ywH-pX-bxH"/>
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
                                             <rect key="frame" x="0.0" y="-9" width="0.0" height="0.0"/>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e4J-wV-Fj0">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e4J-wV-Fj0">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -156,11 +171,8 @@
                                                 <include reference="KRB-rU-CV1"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="147.5" y="76" width="31.5" height="30"/>
-                                        </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3on-Gs-6je">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3on-Gs-6je">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -192,11 +204,8 @@
                                                 <include reference="ZDU-Vs-KBH"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="294.5" y="76" width="32" height="30"/>
-                                        </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ELj-rt-k34">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELj-rt-k34">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -226,9 +235,6 @@
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="82" y="-5" width="48" height="70"/>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="31.5" y="59.5" width="42" height="63"/>
-                                        </variation>
                                         <connections>
                                             <action selector="tappedCarButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NO8-fT-spO"/>
                                         </connections>
@@ -239,15 +245,14 @@
                                             <constraint firstAttribute="width" constant="199" id="VaE-y9-r44"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="VaE-y9-r44"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="95" y="21" width="199" height="21"/>
+                                        <variation key="widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="VaE-y9-r44"/>
                                             </mask>
@@ -264,8 +269,7 @@
                                                 <exclude reference="cHb-DN-Dhg"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="169" y="135" width="50" height="30"/>
+                                        <variation key="widthClass=compact">
                                             <mask key="constraints">
                                                 <include reference="cHb-DN-Dhg"/>
                                             </mask>
@@ -346,17 +350,15 @@
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="Rhm-Rx-6nA"/>
+                                        <exclude reference="Dq9-yZ-UaF"/>
+                                        <exclude reference="n0g-Jp-chx"/>
+                                        <exclude reference="zTJ-G2-euW"/>
+                                        <exclude reference="B6d-fN-ZzK"/>
                                         <exclude reference="7Ne-TN-Gvn"/>
                                         <exclude reference="THl-HM-tNj"/>
                                         <exclude reference="Vde-UW-u3y"/>
                                         <exclude reference="rTP-uV-usi"/>
                                         <exclude reference="yuf-fu-8ui"/>
-                                        <exclude reference="B6d-fN-ZzK"/>
-                                        <exclude reference="GDy-Dz-FQm"/>
-                                        <exclude reference="jTq-4D-S5w"/>
-                                        <exclude reference="Dq9-yZ-UaF"/>
-                                        <exclude reference="n0g-Jp-chx"/>
-                                        <exclude reference="zTJ-G2-euW"/>
                                         <exclude reference="DlF-RD-UOb"/>
                                         <exclude reference="Mk1-yH-JL7"/>
                                         <exclude reference="SE9-n4-16G"/>
@@ -367,6 +369,8 @@
                                         <exclude reference="vJ1-zU-f9d"/>
                                         <exclude reference="wPV-Qp-EPM"/>
                                         <exclude reference="xEs-Xj-Krj"/>
+                                        <exclude reference="GDy-Dz-FQm"/>
+                                        <exclude reference="jTq-4D-S5w"/>
                                         <exclude reference="FSf-cN-53K"/>
                                         <exclude reference="Q6a-ho-pQg"/>
                                         <exclude reference="Qsm-H0-AYw"/>
@@ -431,18 +435,16 @@
                                     <mask key="constraints">
                                         <include reference="Rhm-Rx-6nA"/>
                                         <exclude reference="n4M-Zh-INB"/>
+                                        <include reference="Dq9-yZ-UaF"/>
+                                        <exclude reference="n0g-Jp-chx"/>
+                                        <include reference="zTJ-G2-euW"/>
+                                        <include reference="B6d-fN-ZzK"/>
                                         <exclude reference="7Ne-TN-Gvn"/>
                                         <include reference="THl-HM-tNj"/>
                                         <include reference="Vde-UW-u3y"/>
                                         <exclude reference="iX2-QA-Ua4"/>
                                         <include reference="rTP-uV-usi"/>
                                         <include reference="yuf-fu-8ui"/>
-                                        <include reference="B6d-fN-ZzK"/>
-                                        <include reference="GDy-Dz-FQm"/>
-                                        <include reference="jTq-4D-S5w"/>
-                                        <include reference="Dq9-yZ-UaF"/>
-                                        <exclude reference="n0g-Jp-chx"/>
-                                        <include reference="zTJ-G2-euW"/>
                                         <include reference="DlF-RD-UOb"/>
                                         <include reference="Mk1-yH-JL7"/>
                                         <include reference="SE9-n4-16G"/>
@@ -453,6 +455,8 @@
                                         <include reference="vJ1-zU-f9d"/>
                                         <include reference="wPV-Qp-EPM"/>
                                         <exclude reference="xEs-Xj-Krj"/>
+                                        <include reference="GDy-Dz-FQm"/>
+                                        <include reference="jTq-4D-S5w"/>
                                         <include reference="FSf-cN-53K"/>
                                         <include reference="Q6a-ho-pQg"/>
                                         <exclude reference="Qsm-H0-AYw"/>
@@ -462,7 +466,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L92-uR-mv9">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L92-uR-mv9">
                                 <rect key="frame" x="283" y="550" width="34" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="uFK-O9-ax5"/>
@@ -481,7 +485,7 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <action selector="tappedCancel:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wyx-4o-EuU"/>
+                                    <action selector="tappedCancelDelete:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bkz-Vu-3Ll"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -497,6 +501,8 @@
                             <constraint firstItem="soQ-1S-b5k" firstAttribute="top" secondItem="T3F-xJ-ySO" secondAttribute="bottom" constant="22" id="RRE-rp-rMv"/>
                             <constraint firstItem="T3F-xJ-ySO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="c4c-By-qEe"/>
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cvL-Wz-ifg"/>
+                            <constraint firstItem="82A-GJ-9qe" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ggS-IZ-ohS"/>
+                            <constraint firstItem="82A-GJ-9qe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kH4-G6-l7X"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pZ6-EA-CCg"/>
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="sZe-cP-CkP"/>
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="xhs-ex-eKs"/>
@@ -504,6 +510,7 @@
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
+                                <exclude reference="82A-GJ-9qe"/>
                                 <exclude reference="W8N-3W-MDK"/>
                                 <exclude reference="L92-uR-mv9"/>
                             </mask>
@@ -511,6 +518,8 @@
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
+                                <exclude reference="ggS-IZ-ohS"/>
+                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="c4c-By-qEe"/>
                                 <exclude reference="yBf-Vb-5Gc"/>
                                 <exclude reference="HCp-qr-cM9"/>
@@ -518,6 +527,7 @@
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
+                                <include reference="82A-GJ-9qe"/>
                                 <include reference="W8N-3W-MDK"/>
                                 <include reference="L92-uR-mv9"/>
                             </mask>
@@ -525,6 +535,8 @@
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
+                                <include reference="ggS-IZ-ohS"/>
+                                <include reference="kH4-G6-l7X"/>
                                 <include reference="yBf-Vb-5Gc"/>
                                 <include reference="HCp-qr-cM9"/>
                             </mask>
@@ -536,11 +548,12 @@
                         <outlet property="busButton" destination="old-BL-OqP" id="6Oi-B9-qGA"/>
                         <outlet property="cancelButton" destination="L92-uR-mv9" id="mnu-Ci-kIh"/>
                         <outlet property="carButton" destination="yog-m3-ffS" id="ely-Ky-a80"/>
-                        <outlet property="currentDataSetView" destination="W8N-3W-MDK" id="ndu-zQ-IMo"/>
+                        <outlet property="finishButton" destination="82A-GJ-9qe" id="0rd-e8-5Co"/>
                         <outlet property="lineChart" destination="GHU-lf-Tpf" id="HaM-ev-YSv"/>
                         <outlet property="railButton" destination="jNf-nU-y1S" id="P85-7s-dPW"/>
                         <outlet property="startStopButton" destination="soQ-1S-b5k" id="YuX-dY-23C"/>
                         <outlet property="uploadButton" destination="6AZ-2Q-TYT" id="Auq-L0-ux1"/>
+                        <outlet property="uploadView" destination="W8N-3W-MDK" id="4BT-C5-G28"/>
                         <outlet property="walkButton" destination="i5O-XM-I5b" id="JsG-Uq-2TL"/>
                     </connections>
                 </viewController>
