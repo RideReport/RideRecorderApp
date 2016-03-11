@@ -109,6 +109,19 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         return mags
     }
     
+    private func locationSpeedVector(forSensorDataCollection sensorDataCollection:SensorDataCollection)->[Float] {
+        var speeds: [Float] = []
+        
+        for l in sensorDataCollection.locations {
+            let location = l as! Location
+            if let speed = location.speed?.floatValue {
+                speeds.append(speed)
+            }
+        }
+        
+        return speeds
+    }
+    
     func stopGatheringSensorData() {
         self.isGatheringMotionData = false
         self.stopMotionUpdatesAsNeeded()
@@ -183,12 +196,14 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             
             dispatch_async(dispatch_get_main_queue()) {
                 sensorDataCollection.addDeviceMotion(deviceMotion)
-                if sensorDataCollection.deviceMotionAccelerations.count >= self.sampleWindowSize {
+                if sensorDataCollection.deviceMotionAccelerations.count >= self.sampleWindowSize &&
+                sensorDataCollection.locations.count >= 1 {
                     self.isQueryingMotionData = false
                     self.stopMotionUpdatesAsNeeded()
                     // run classification
                     var magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
-                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(&magVector)
+                    var speedVector = self.locationSpeedVector(forSensorDataCollection: sensorDataCollection)
+                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(magVector, speedVector: speedVector)
                     
                     handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

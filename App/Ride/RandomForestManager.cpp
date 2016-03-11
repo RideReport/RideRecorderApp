@@ -40,32 +40,40 @@ RandomForestManager *createRandomForestManager(int sampleSize, const char* pathT
 void deleteRandomForestManager(RandomForestManager *r)
 {
     free(r->fftManager);
-    free(r->model);
+    delete(r->model);
     free(r);
 }
 
-int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)
-{
+void prepFeatureVector(RandomForestManager *randomForestManager, float* features, float* magnitudeVector, float *speedVector, int speedVectorCount) {
     cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, magnitudeVector);
-    
-    cv::Mat readings = cv::Mat::zeros(1, 7, CV_32F);
+    cv::Mat speeds = cv::Mat(speedVectorCount, 1, CV_32F, speedVector);
 
-    cv::Scalar mean,stddev;
-    meanStdDev(mags,mean,stddev);
+    cv::Scalar meanMag,stddevMag;
+    meanStdDev(mags,meanMag,stddevMag);
+
+    cv::Scalar meanSpeed,stddevSpeed;
+    meanStdDev(mags,meanSpeed,stddevSpeed);
     
     float *fftOutput = new float[randomForestManager->sampleSize];
     fft(magnitudeVector, randomForestManager->sampleSize, fftOutput, randomForestManager->fftManager);
     float maxPower = dominantPower(fftOutput, randomForestManager->sampleSize);
     
-    readings.at<float>(0,0) = max(mags);
-    readings.at<float>(0,1) = (float)mean.val[0];
-    readings.at<float>(0,2) = maxMean(mags, 5);
-    readings.at<float>(0,3) = (float)stddev.val[0];
-    readings.at<float>(0,4) = (float)skewness(mags);
-    readings.at<float>(0,5) = (float)kurtosis(mags);
-    readings.at<float>(0,6) = maxPower;
+    features[0] = max(mags);
+    features[1] = (float)meanMag.val[0];
+    features[2] = maxMean(mags, 5);
+    features[3] = (float)stddevMag.val[0];
+    features[4] = (float)skewness(mags);
+    features[5] = (float)kurtosis(mags);
+    features[6] = maxPower;
+    features[7] = (float)meanSpeed.val[0];
+}
+
+int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector, float *speedVector, int speedVectorCount)
+{
+    cv::Mat features = cv::Mat::zeros(1, RANDOM_FOREST_VECTOR_SIZE, CV_32F);
+    prepFeatureVector(randomForestManager, features.ptr<float>(), magnitudeVector, speedVector, speedVectorCount);
     
-    return (int)randomForestManager->model->predict(readings, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
+    return (int)randomForestManager->model->predict(features, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
 }
 
 float max(cv::Mat mat)

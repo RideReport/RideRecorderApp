@@ -51,7 +51,11 @@ class SensorDataCollection : NSManagedObject {
         sensorData.date =  NSDate(timeInterval: logItem.timestamp, sinceDate: self.referenceBootDate)
     }
     
-    func addLocation(location: CLLocation) {
+    func addLocationIfSufficientlyAccurate(location: CLLocation) {
+        guard location.horizontalAccuracy <= kCLLocationAccuracyNearestTenMeters && location.speed > 0 else {
+            return
+        }
+        
         let loc = Location(location: location)
         loc.sensorDataCollection = self
     }

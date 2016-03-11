@@ -281,7 +281,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         }
         
         for loc in locations {
-            self.sensorDataCollection!.addLocation(loc)
+            self.sensorDataCollection!.addLocationIfSufficientlyAccurate(loc)
         }
         
         CoreDataManager.sharedManager.saveContext()
