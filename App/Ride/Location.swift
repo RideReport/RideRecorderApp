@@ -26,6 +26,7 @@ class Location : NSManagedObject {
     @NSManaged var prototrip : Prototrip?
     @NSManaged var lastGeofencedLocationOfProfile : Profile?
     @NSManaged var simplifiedInTrip : Trip?
+    @NSManaged var sensorDataCollection : SensorDataCollection?
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var date : NSDate?
     
@@ -33,6 +34,10 @@ class Location : NSManagedObject {
         self.init(location: location)
         
         self.trip = trip
+    }
+    
+    class var acceptableLocationAccuracy:CLLocationAccuracy {
+        return kCLLocationAccuracyNearestTenMeters * 3
     }
     
     convenience init(location: CLLocation, prototrip: Prototrip) {

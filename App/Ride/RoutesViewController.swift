@@ -328,13 +328,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 // if they have at least a 2/3 mode share by bike, show all time
                 modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
                     PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTrips), color: ColorPallete.sharedPallete.transitBlue)]
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTrips), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "All Time\nMode Use"
             } else {
                 // otherwise show last 30 days to make it more actionable
                 modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfTransitTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "Mode Use\nThis Month"
             }
             
@@ -702,7 +702,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: ["Query Core Motion Acitivities", smoothButtonTitle, "Simulate Ride End", "Sync trip", "Simplify"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: [smoothButtonTitle, "Simulate Ride End", "Sync trip", "Simplify"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -714,20 +714,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            trip.clasifyActivityType({
-                trip.saveAndMarkDirty()
-            })
-        } else if (buttonIndex == 1) {
             if (trip.hasSmoothed) {
                 trip.undoSmoothWithCompletionHandler({})
             } else {
                 trip.smoothIfNeeded({})
             }
-        } else if (buttonIndex == 2) {
+        } else if (buttonIndex == 1) {
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
-        } else if (buttonIndex == 3) {
+        } else if (buttonIndex == 2) {
             APIClient.sharedClient.syncTrip(trip)
-        } else if (buttonIndex == 4) {
+        } else if (buttonIndex == 3) {
             trip.simplify()
         }
     }

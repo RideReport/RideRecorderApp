@@ -331,7 +331,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zSk-Jr-uBt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3707" y="451"/>
+            <point key="canvasLocation" x="3801" y="451"/>
         </scene>
         <!--10 Rides-->
         <scene sceneID="Lkr-Jd-b0l">
@@ -2230,7 +2230,7 @@
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact" misplaced="YES">
-                                            <rect key="frame" x="67.5" y="70" width="135" height="70"/>
+                                            <rect key="frame" x="68" y="70" width="135" height="70"/>
                                             <mask key="constraints">
                                                 <exclude reference="F5U-vv-gpC"/>
                                                 <include reference="boB-N0-ZLe"/>
@@ -2650,8 +2650,7 @@
             <objects>
                 <navigationController storyboardIdentifier="RideShareNavViewController" automaticallyAdjustsScrollViewInsets="NO" id="Bnt-ox-mTU" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cgk-4v-LE7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="cgk-4v-LE7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

@@ -13,6 +13,7 @@
 #import "Reachability.h"
 #import "BKPasscodeInputView.h"
 #import "RCounter.h"
+#import "RandomForestManager.h"
 #import "DMActivityInstagram.h"
 #import "Mixpanel/Mixpanel.h"
 #include <zlib.h>
