@@ -119,14 +119,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 metadata["notes"] = notes
             }
             
-            metadata["identifier"] = UIDevice.currentDevice().identifierForVendor
+            if let identifier = UIDevice.currentDevice().identifierForVendor {
+                metadata["identifier"] = identifier.UUIDString
+            }
             
             CoreDataManager.sharedManager.saveContext()
             APIClient.sharedClient.uploadSensorDataCollection(collection, withMetaData: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
             self.sensorDataCollection = nil
-            self.notesTextField.resignFirstResponder()  
+            self.notesTextField.resignFirstResponder()
             self.updateUI()
         }
     }

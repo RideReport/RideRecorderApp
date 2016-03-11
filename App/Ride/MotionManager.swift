@@ -177,6 +177,9 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             guard let deviceMotion = motion else {
                 return
             }
+            guard self.isQueryingMotionData else {
+                return
+            }
             
             dispatch_async(dispatch_get_main_queue()) {
                 sensorDataCollection.addDeviceMotion(deviceMotion)
