@@ -56,6 +56,7 @@ class Trip : NSManagedObject {
     @NSManaged var locationsNotYetDownloaded : Bool
     @NSManaged var rewardDescription : String!
     @NSManaged var rewardEmoji : String!
+    @NSManaged var healthKitUuid : String!
     
     var isClosed : Bool {
         get {

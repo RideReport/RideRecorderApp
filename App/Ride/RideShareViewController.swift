@@ -280,7 +280,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
                 return ColorPallete.sharedPallete.transitBlue
             }
             

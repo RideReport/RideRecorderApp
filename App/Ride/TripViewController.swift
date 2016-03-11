@@ -186,7 +186,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func transitButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Transit.rawValue)
+        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Bus.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()

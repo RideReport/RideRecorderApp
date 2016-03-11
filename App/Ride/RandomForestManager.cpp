@@ -65,7 +65,7 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     features[4] = (float)skewness(mags);
     features[5] = (float)kurtosis(mags);
     features[6] = maxPower;
-    features[7] = (float)meanSpeed.val[0];
+//    features[7] = (float)meanSpeed.val[0];
 }
 
 int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector, float *speedVector, int speedVectorCount)
