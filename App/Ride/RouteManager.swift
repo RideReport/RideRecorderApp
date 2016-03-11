@@ -39,6 +39,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
+    private var dateOfStoppingLastLocationManagerUpdates : NSDate?
     
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
@@ -386,6 +387,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
+        self.dateOfStoppingLastLocationManagerUpdates = NSDate()
     }
     
     private func processMotionMonitoringLocations(locations: [CLLocation]) {
@@ -711,8 +713,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.processActiveTrackingLocations(locations)
         } else if (self.currentPrototrip != nil) {
             self.processMotionMonitoringLocations(locations)
-        } else {
-            // We are currently in background mode and got significant location change movement.
+        } else if (self.dateOfStoppingLastLocationManagerUpdates == nil || abs(self.dateOfStoppingLastLocationManagerUpdates!.timeIntervalSinceNow) > 2){
+            // sometimes calling stopUpdatingLocation will continue to delvier a few locations. thus, keep track of dateOfStoppingLastLocationManagerUpdates to avoid
+            // consider getting these updates as significiation location changes.
             
             if (self.currentTrip == nil && self.currentPrototrip == nil) {
                 DDLogVerbose("Got significant location, entering Motion Monitoring state.")
