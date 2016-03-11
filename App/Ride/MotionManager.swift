@@ -27,7 +27,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
 
     let sampleWindowSize: Int = 32
     private let updateInterval: NSTimeInterval = 50/1000
-    private var isMonitoringMotion: Bool = false
+    private var isGatheringMotionData: Bool = false
+    private var isQueryingMotionData: Bool = false
     
     private var randomForestManager: RandomForestManager!
     
@@ -109,10 +110,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     func stopGatheringSensorData() {
-        self.isMonitoringMotion = false
-        self.motionManager.stopDeviceMotionUpdates()
-        self.motionManager.stopAccelerometerUpdates()
-        self.motionManager.stopGyroUpdates()
+        self.isGatheringMotionData = false
+        self.stopMotionUpdatesAsNeeded()
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
@@ -125,7 +124,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             self.backgroundTaskID = UIBackgroundTaskInvalid
         })
         
-        self.isMonitoringMotion = true
+        self.isGatheringMotionData = true
         
         self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard let deviceMotion = motion else {
@@ -158,13 +157,21 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    private func stopMotionUpdatesAsNeeded() {
+        if (!self.isQueryingMotionData && !self.isGatheringMotionData) {
+            self.motionManager.stopDeviceMotionUpdates()
+            self.motionManager.stopAccelerometerUpdates()
+            self.motionManager.stopGyroUpdates()
+        }
+    }
+    
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
         self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             handler(activityType: .Unknown, confidence: 1.0)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         })
 
-        self.isMonitoringMotion = true
+        self.isQueryingMotionData = true
             
         self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard let deviceMotion = motion else {
@@ -174,8 +181,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             dispatch_async(dispatch_get_main_queue()) {
                 sensorDataCollection.addDeviceMotion(deviceMotion)
                 if sensorDataCollection.deviceMotionAccelerations.count >= self.sampleWindowSize {
-                    self.isMonitoringMotion = false
-                    self.motionManager.stopDeviceMotionUpdates()
+                    self.isQueryingMotionData = false
+                    self.stopMotionUpdatesAsNeeded()
                     // run classification
                     var magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
                     let sampleClass = self.randomForestManager.classifyMagnitudeVector(&magVector)

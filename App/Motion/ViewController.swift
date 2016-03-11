@@ -12,7 +12,7 @@ import SwiftChart
 import CoreLocation
 import MediaPlayer
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     
     private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
@@ -51,6 +51,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let url = NSBundle.mainBundle().URLForResource("silence", withExtension: ".mp3")
         try! self.player = AVAudioPlayer(contentsOfURL: url!)
         self.player.numberOfLoops = -1
+        
+        self.notesTextField.delegate = self
         
         // hack to take control of remote
         self.player.play()
@@ -112,12 +114,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBAction func tappedUploadButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
+            var metadata: [String: AnyObject] = [:]
+            if let notes = self.notesTextField.text where notes.characters.count > 0 {
+                metadata["notes"] = notes
+            }
+            
+            metadata["identifier"] = UIDevice.currentDevice().identifierForVendor
             
             CoreDataManager.sharedManager.saveContext()
-            APIClient.sharedClient.uploadSensorDataCollection(collection, withNotes: self.notesTextField.text ?? "")
+            APIClient.sharedClient.uploadSensorDataCollection(collection, withMetaData: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
-           self.sensorDataCollection = nil
+            self.sensorDataCollection = nil
+            self.notesTextField.resignFirstResponder()  
             self.updateUI()
         }
     }
@@ -142,7 +151,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 self.finishButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
-                guard let activityType = collection.actualActivityType else {
+                guard let activityType = collection.actualActivityType where activityType.shortValue != Trip.ActivityType.Unknown.rawValue else {
                     self.uploadButton.enabled = false
                     return
                 }
@@ -228,18 +237,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         if (!self.isRecording) {
             // tapped start or resume
             self.isRecording = true
+            var utterance = AVSpeechUtterance(string: "Resumed")
+
             if self.sensorDataCollection == nil {
                 self.sensorDataCollection = SensorDataCollection()
+                utterance = AVSpeechUtterance(string: "Started")
             }
+            utterance.rate = 0.6
+            self.synth.speakUtterance(utterance)
+
             
             MotionManager.sharedManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
-            
-            let utterance = AVSpeechUtterance(string: "Recording")
-            utterance.rate = 0.6
-            self.synth.speakUtterance(utterance)
         } else {
             // tapped pause
             self.isRecording = false
@@ -255,6 +266,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }
         
         self.updateUI()
+    }
+    
+    @IBAction func tappedPredict(sender: AnyObject) {
+        self.runQuery()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -311,6 +326,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 //            strongSelf.lineChart.addSeries(series)
             
         }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
 
