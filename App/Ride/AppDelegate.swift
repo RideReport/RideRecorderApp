@@ -142,22 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Minimal)
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
         
-        var notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
-        
-    #if DEBUG
-        let retryMotionAction = UIMutableUserNotificationAction()
-        retryMotionAction.identifier = "RETRY_IDENTIFIER"
-        retryMotionAction.title = "retry"
-        retryMotionAction.activationMode = UIUserNotificationActivationMode.Background
-        retryMotionAction.destructive = false
-        retryMotionAction.authenticationRequired = false
-            
-        let noMotionCategory = UIMutableUserNotificationCategory()
-        noMotionCategory.identifier = "NO_MOTION_DATA_CATEGORY"
-        noMotionCategory.setActions([retryMotionAction], forContext: UIUserNotificationActionContext.Default)
-        
-        notificationCategories.insert(noMotionCategory)
-    #endif
+        let notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
         
         let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
         let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)
@@ -328,10 +313,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                     Incident(location: trip.mostRecentLocation()!, trip: trip)
                     CoreDataManager.sharedManager.saveContext()
                     completionHandler()
-                } else if (identifier == "RETRY_IDENTIFIER") {
-                    trip.clasifyActivityType() {
-                        completionHandler()
-                    }
                 }
         }
         

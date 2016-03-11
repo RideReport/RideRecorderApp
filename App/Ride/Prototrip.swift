@@ -10,9 +10,10 @@ import Foundation
 import CoreData
 
 class Prototrip : NSManagedObject {
-
+    @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
+    @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var creationDate : NSDate!
     
@@ -48,6 +49,12 @@ class Prototrip : NSManagedObject {
             let activity = act as! Activity
             activity.trip = trip
             activity.prototrip = nil
+        }
+        
+        for c in self.sensorDataCollections {
+            let collection = c as! SensorDataCollection
+            collection.trip = trip
+            collection.prototrip = nil
         }
     }
 }

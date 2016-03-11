@@ -22,7 +22,9 @@ class Trip : NSManagedObject {
         case Cycling
         case Automotive
         case Walking
-        case Transit
+        case Bus
+        case Rail
+        case Stationary
     }
     
     enum Rating : Int16 {
@@ -44,6 +46,7 @@ class Trip : NSManagedObject {
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
     @NSManaged var activities : NSSet!
+    @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
@@ -317,10 +320,9 @@ class Trip : NSManagedObject {
         return results! as? [Trip]
     }
     
-    class func mostRecentBikeTrip() -> Trip? {
+    class func mostRecentTrip() -> Trip? {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
         
@@ -483,12 +485,12 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class var numberOfTransitTrips : Int {
+    class var numberOfBusTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Transit.rawValue)
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Bus.rawValue)
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -531,12 +533,12 @@ class Trip : NSManagedObject {
         return count
     }
     
-    class var numberOfTransitTripsLast30Days : Int {
+    class var numberOfBusTripsLast30Days : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Transit.rawValue, NSDate().daysFrom(-30))
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Bus.rawValue, NSDate().daysFrom(-30))
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -689,10 +691,12 @@ class Trip : NSManagedObject {
             tripTypeString = "🏃"
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
-            tripTypeString = "🚋"
-        } else {
+        } else if (self.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
             tripTypeString = ""
+        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
+            tripTypeString = "🚌"
+        } else {
+            tripTypeString = "🚈"
         }
 
         return tripTypeString
@@ -789,11 +793,9 @@ class Trip : NSManagedObject {
         self.calculateLength()
         self.isClosed = true
         
-        self.clasifyActivityType { () -> Void in
-            NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
-            self.saveAndMarkDirty()
-            handler()
-        }
+        NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+        self.saveAndMarkDirty()
+        handler()
     }
     
     func reopen(withPrototrip prototrip: Prototrip?) {
@@ -989,7 +991,7 @@ class Trip : NSManagedObject {
     func accurateLocations()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, RouteManager.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, Location.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -1135,7 +1137,7 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1149,7 +1151,7 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations.reverse() {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy {
+            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1188,7 +1190,7 @@ class Trip : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as! Location
-            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.acceptableLocationAccuracy) {
+            if (location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
                 count += 1
                 sumSpeed += (location as Location).speed!.doubleValue
             }
@@ -1201,7 +1203,7 @@ class Trip : NSManagedObject {
         return sumSpeed/Double(count)
     }
     
-    func clasifyActivityType(handler: ()->Void) {
+    func legacyClasifyActivityType(handler: ()->Void) {
         if (self.activities != nil && self.activities.count > 0) {
             self.runActivityClassification()
             handler()
@@ -1216,7 +1218,6 @@ class Trip : NSManagedObject {
                         #if DEBUG
                             let notif = UILocalNotification()
                             notif.alertBody = "🐞 Got no motion activities!!"
-                            notif.category = "NO_MOTION_DATA_CATEGORY"
                             notif.userInfo = ["uuid" : strongSelf.uuid]
                             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                         #endif
@@ -1235,7 +1236,7 @@ class Trip : NSManagedObject {
         }
     }
     
-    func runActivityClassification() {
+    private func runActivityClassification() {
         if (self.activities == nil || self.activities.count == 0) {
             // if no data is available, fall back on speed alone
             

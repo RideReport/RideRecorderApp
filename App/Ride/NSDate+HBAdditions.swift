@@ -39,12 +39,25 @@ extension NSDate {
         }
     }
     
+    class var jsonMillisecondDateFormatter: NSDateFormatter {
+        get {
+        let jsonMillisecondDateFormatter = NSDateFormatter()
+        jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZZZ"
+        
+        return jsonMillisecondDateFormatter
+        }
+    }
+    
     class func dateFromJSONString(string: String)->NSDate? {
         return NSDate.jsonDateFormatter.dateFromString(string)
     }
     
     func JSONString() -> String {
         return NSDate.jsonDateFormatter.stringFromDate(self)
+    }
+    
+    func MillisecondJSONString() -> String {
+        return NSDate.jsonMillisecondDateFormatter.stringFromDate(self)
     }
     
     func isBeforeNoon()->Bool {

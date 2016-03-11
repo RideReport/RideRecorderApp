@@ -10,7 +10,6 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import OAuthSwift
-import KeychainAccess
 import Mixpanel
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
@@ -342,7 +341,7 @@ class APIClient {
         self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
             for t in Trip.unclassifiedTrips() {
                 let trip = t as! Trip
-                trip.clasifyActivityType() {
+                trip.legacyClasifyActivityType() {
                     trip.saveAndMarkDirty()
                 }
             }
@@ -421,32 +420,35 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                trip.locations = NSOrderedSet() // just in case
-                if let locations = json["locations"].array {
-                    for locationJson in locations {
-                        if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
-                                latitude = locationJson["latitude"].number,
-                                longitude = locationJson["longitude"].number,
-                                course = locationJson["course"].number,
-                                speed = locationJson["speed"].number,
-                                horizontalAccuracy = locationJson["horizontalAccuracy"].number {
-                            let loc = Location(trip: trip)
-                            loc.date = date
-                            loc.latitude = latitude
-                            loc.longitude = longitude
-                            loc.course = course
-                            loc.speed = speed
-                            loc.horizontalAccuracy = horizontalAccuracy
-                            if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
-                                loc.isGeofencedLocation = isGeofencedLocation
+                if trip.locationsNotYetDownloaded {
+                    trip.locations = NSOrderedSet() // just in case
+                    if let locations = json["locations"].array {
+                        for locationJson in locations {
+                            if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
+                                    latitude = locationJson["latitude"].number,
+                                    longitude = locationJson["longitude"].number,
+                                    course = locationJson["course"].number,
+                                    speed = locationJson["speed"].number,
+                                    horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                                let loc = Location(trip: trip)
+                                loc.date = date
+                                loc.latitude = latitude
+                                loc.longitude = longitude
+                                loc.course = course
+                                loc.speed = speed
+                                loc.horizontalAccuracy = horizontalAccuracy
+                                if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
+                                    loc.isGeofencedLocation = isGeofencedLocation
+                                }
+                            } else {
+                                DDLogWarn("Error parsing location dictionary when fetched trip data!")
                             }
-                        } else {
-                            DDLogWarn("Error parsing location dictionary when fetched trip data!")
                         }
+                    } else {
+                        DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                     }
+                    
                     trip.locationsNotYetDownloaded = false
-                } else {
-                    DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                 }
                 
                 if let summary = json["summary"].dictionary {
@@ -522,6 +524,21 @@ class APIClient {
         }
         
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+    }
+    
+    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetaData metadataDict:[String: AnyObject] = [:]) {
+        let accelerometerRouteURL = "/ios_accelerometer_data"
+        var params = metadataDict
+        params["data"] = sensorDataCollection.jsonDictionary()
+
+        AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+            switch response.result {
+            case .Success(let json):
+                DDLogWarn("Yep")
+            case .Failure(let error):
+                DDLogWarn("Nope!")
+            }
+        }
     }
     
     func syncTrip(trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
