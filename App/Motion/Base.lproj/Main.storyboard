@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -512,9 +513,6 @@
                                 <state key="normal" title="Predict">
                                     <color key="titleColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="550" width="61" height="30"/>
-                                </variation>
                                 <connections>
                                     <action selector="tappedPredict:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Bd-pX-Lii"/>
                                 </connections>
@@ -552,13 +550,13 @@
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
-                                <exclude reference="ggS-IZ-ohS"/>
-                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="c4c-By-qEe"/>
-                                <exclude reference="V4G-ZI-r3o"/>
                                 <exclude reference="GaN-8z-wN7"/>
                                 <exclude reference="yBf-Vb-5Gc"/>
+                                <exclude reference="ggS-IZ-ohS"/>
+                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="HCp-qr-cM9"/>
+                                <exclude reference="V4G-ZI-r3o"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -572,12 +570,12 @@
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
-                                <include reference="ggS-IZ-ohS"/>
-                                <include reference="kH4-G6-l7X"/>
-                                <include reference="V4G-ZI-r3o"/>
                                 <include reference="GaN-8z-wN7"/>
                                 <include reference="yBf-Vb-5Gc"/>
+                                <include reference="ggS-IZ-ohS"/>
+                                <include reference="kH4-G6-l7X"/>
                                 <include reference="HCp-qr-cM9"/>
+                                <include reference="V4G-ZI-r3o"/>
                             </mask>
                         </variation>
                     </view>
