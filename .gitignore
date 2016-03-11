@@ -5,6 +5,7 @@
 ## Build generated
 build/
 DerivedData
+opencv2.framework
 
 ## Various settings
 *.pbxuser
