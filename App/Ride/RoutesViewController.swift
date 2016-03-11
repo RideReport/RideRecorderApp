@@ -451,13 +451,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
-            rewardSectionNeedsReload = true
             self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
-            rewardSectionNeedsReload = true
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing
+
             DDLogVerbose("Move/update section. Shouldn't happen?")
         }
     }
@@ -471,10 +470,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
+            
         case .Insert:
             self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+            rewardSectionNeedsReload = true
         case .Delete:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+            rewardSectionNeedsReload = true
         case .Move:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                 withRowAnimation: UITableViewRowAnimation.Fade)
@@ -587,12 +589,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             for countData in rewardsTripCounts {
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     count = countData["count"]  as? NSNumber {
-                      rewardString += rewardEmoji + "×\t" + count.stringValue  + "\t"
+                      rewardString += rewardEmoji + "×\t" + count.stringValue
                     i += 1
                     if i>=columnCount {
                         i = 0
                         lineCount += 1
                         rewardString += "\n"
+                    } else {
+                        rewardString += "\t"
                     }
                 }
             }
