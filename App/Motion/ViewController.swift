@@ -29,6 +29,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var lineChart: Chart!
     
     @IBOutlet weak var uploadView: UIView!
+    @IBOutlet weak var notesTextField: UITextField!
     @IBOutlet weak var carButton: UIButton!
     @IBOutlet weak var walkButton: UIButton!
     @IBOutlet weak var bikeButton: UIButton!
@@ -111,8 +112,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBAction func tappedUploadButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
+            
             CoreDataManager.sharedManager.saveContext()
-            APIClient.sharedClient.uploadSensorDataCollection(collection)
+            APIClient.sharedClient.uploadSensorDataCollection(collection, withNotes: self.notesTextField.text ?? "")
+            self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
            self.sensorDataCollection = nil
             self.updateUI()

@@ -530,9 +530,13 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
-    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection) {
+    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withNotes notes:String) {
         let accelerometerRouteURL = "/ios_accelerometer_data"
-        AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters: ["data" : sensorDataCollection.jsonDictionary()], authenticated: false) { (response) in
+        var params: [String: AnyObject] = ["data" : sensorDataCollection.jsonDictionary()]
+        if notes.characters.count > 0 {
+            params["notes"] = notes
+        }
+        AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
             switch response.result {
             case .Success(let json):
                 DDLogWarn("Yep")
