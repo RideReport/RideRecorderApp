@@ -451,8 +451,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
+            rewardSectionNeedsReload = true
             self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Delete:
+            rewardSectionNeedsReload = true
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         case .Move, .Update:
             // do nothing

@@ -124,12 +124,8 @@ class AuthenticatedAPIRequest {
         
         let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
             if (response?.statusCode == 401) {
-                dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-
-                    if (strongSelf.authToken == Profile.profile().accessToken) {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if (self.authToken == Profile.profile().accessToken) {
                         // make sure the token that generated the 401 is still current
                         // since it is possible we've already reauthenciated
                         client.reauthenticate()
