@@ -23,6 +23,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     private var player: AVAudioPlayer!
 
     @IBOutlet weak var startStopButton: UIButton!
+    @IBOutlet weak var predictButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
@@ -143,6 +144,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.cancelButton.hidden = false
             self.finishButton.hidden = false
             self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+            self.predictButton.hidden = false
         } else {
             if let collection = self.sensorDataCollectionForUpload {
                 // prep for upload
@@ -151,6 +153,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.activityLabel.hidden = true
                 self.cancelButton.hidden = false
                 self.finishButton.hidden = true
+                self.predictButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
                 guard let activityType = collection.actualActivityType where activityType.shortValue != Trip.ActivityType.Unknown.rawValue else {
@@ -186,6 +189,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = false
                 self.finishButton.hidden = false
+                self.predictButton.hidden = true
                 
                 self.startStopButton.setTitle("Resume", forState: UIControlState.Normal)
                 self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
@@ -196,6 +200,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = true
                 self.finishButton.hidden = true
+                self.predictButton.hidden = true
                 
                 self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
             }
@@ -288,9 +293,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     }
     
     private func runQuery() {
-        let sensorDataCollection = SensorDataCollection()
-
-        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: sensorDataCollection) {[weak self] (activityType, confidence) -> Void in
+        if self.sensorDataCollection == nil {
+            return
+        }
+        
+        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollection!) {[weak self] (activityType, confidence) -> Void in
             guard let strongSelf = self else {
             return
             }
@@ -321,6 +328,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
             strongSelf.synth.speakUtterance(utterance)
+
             
 //            let series = ChartSeries(debugData)
 //            series.color = ChartColors.greenColor()

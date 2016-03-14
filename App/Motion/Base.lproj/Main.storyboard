@@ -588,6 +588,7 @@
                         <outlet property="finishButton" destination="82A-GJ-9qe" id="0rd-e8-5Co"/>
                         <outlet property="lineChart" destination="GHU-lf-Tpf" id="HaM-ev-YSv"/>
                         <outlet property="notesTextField" destination="6Er-uq-zkl" id="MJj-Uh-s7p"/>
+                        <outlet property="predictButton" destination="oGh-Ut-bFc" id="3a6-rY-v04"/>
                         <outlet property="railButton" destination="jNf-nU-y1S" id="P85-7s-dPW"/>
                         <outlet property="startStopButton" destination="soQ-1S-b5k" id="YuX-dY-23C"/>
                         <outlet property="uploadButton" destination="6AZ-2Q-TYT" id="Auq-L0-ux1"/>
