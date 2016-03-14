@@ -6,7 +6,7 @@
 //  Copyright © 2015 Knock Softwae, Inc. All rights reserved.
 //
 
-#define RANDOM_FOREST_VECTOR_SIZE (8)
+#define RANDOM_FOREST_VECTOR_SIZE (7)
 #ifdef __cplusplus
 extern "C" {
 #endif

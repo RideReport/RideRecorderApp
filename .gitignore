@@ -7,6 +7,8 @@ build/
 DerivedData
 opencv2.framework
 
+opencv2.framework
+
 ## Various settings
 *.pbxuser
 !default.pbxuser

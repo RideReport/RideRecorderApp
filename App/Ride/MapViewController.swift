@@ -273,8 +273,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func addIncidentToMap(incident: Incident) {
-        self.mapView.addAnnotation(incident)
-        self.mapView.selectAnnotation(incident, animated: true)
+//        self.mapView.addAnnotation(incident)
+//        self.mapView.selectAnnotation(incident, animated: true)
     }
 
     //
@@ -376,7 +376,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Transit.rawValue) {
+            } else if (trip.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
                 return ColorPallete.sharedPallete.transitBlue
             }
             

@@ -19,6 +19,7 @@ target 'Ride Report' do
     pod 'Mixpanel'
     pod 'SwiftyJSON'
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'OpenCV'
 end
 
 target 'Motion' do
@@ -28,6 +29,7 @@ target 'Motion' do
     pod 'SwiftChart'
     pod 'SwiftyJSON'
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'OpenCV'
 end
 
 post_install do |installer|

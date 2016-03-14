@@ -9,6 +9,13 @@
 import Foundation
 import HealthKit
 
+enum HealthKitManagerAuthorizationStatus {
+    case NotDetermined
+    case Denied
+    case Authorized
+}
+
+
 class HealthKitManager {
     let healthStore = HKHealthStore()
     
@@ -20,6 +27,17 @@ class HealthKitManager {
     
     struct Static {
         static var sharedManager : HealthKitManager?
+        static var authorizationStatus : HealthKitManagerAuthorizationStatus = .NotDetermined
+    }
+    
+    class var authorizationStatus: HealthKitManagerAuthorizationStatus {
+        get {
+            return Static.authorizationStatus
+        }
+        
+        set {
+            Static.authorizationStatus = newValue
+        }
     }
 
     
@@ -47,12 +65,15 @@ class HealthKitManager {
                                             HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass)!,
                                             HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)!]
         let writeTypes : Set<HKSampleType> = [HKQuantityType.workoutType(),
-        HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!]
+        HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!,
+        HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!]
         
         healthStore.requestAuthorizationToShareTypes(writeTypes, readTypes: readTypes) { (success, error) -> Void in
             if !success || error != nil {
                 DDLogWarn("Error accesing health kit data!: \(error! as NSError), \((error! as NSError).userInfo)")
+                HealthKitManager.authorizationStatus = .Denied
             } else {
+                HealthKitManager.authorizationStatus = .Authorized
                 self.getWeight()
                 self.getGender()
                 self.getAge()
@@ -107,10 +128,27 @@ class HealthKitManager {
         self.healthStore.executeQuery(query)
     }
     
-    func logTrip(trip:Trip) {
+    func deleteWorkoutAndSamplesForTrip(trip:Trip) {
+//        let heartRateType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)
+//        let uuid = ""
+//        // get the workout based on uuid
+//        let predicate = HKQuery.predicateForObjectWithUUID(uuid)
+//        // then delete all samples created by the app associated with the workout
+//        
+//        self.healthStore.executeQuery(query)
+    }
+    
+    func saveTrip(trip:Trip) {
         guard #available(iOS 9.0, *) else {
             return
         }
+        
+        guard !trip.locationsNotYetDownloaded else {
+            return
+        }
+        
+        // delete any thing trip data that may have already been saved for this trip
+        self.deleteWorkoutAndSamplesForTrip(trip)
         
         // first, we calculate our total burn plus burn samples
         var totalBurn :HKQuantity! = nil
@@ -150,7 +188,7 @@ class HealthKitManager {
                 for loc in trip.locations {
                     let location = loc as! Location
                     
-                    if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= RouteManager.sharedManager.acceptableLocationAccuracy) {
+                    if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
                         if (lastLoc != nil && lastLoc.date!.compare(location.date!) != NSComparisonResult.OrderedDescending) {
                             let calPerKgMin : Double = {
                                 switch (location.speed!.doubleValue) {
@@ -190,8 +228,9 @@ class HealthKitManager {
             }
             
             let distance = HKQuantity(unit: HKUnit.mileUnit(), doubleValue: Double(trip.lengthMiles))
-
-            let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.endDate.timeIntervalSinceDate(trip.startDate), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])
+            let cyclingDistanceSample = HKQuantitySample(type: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, quantity: distance, startDate: trip.startDate, endDate: trip.endDate)
+            
+            let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])
             
             // Save the workout before adding detailed samples.
             self.healthStore.saveObject(ride) { (success, error) -> Void in
@@ -199,15 +238,18 @@ class HealthKitManager {
                     // log error
                     // callback
                 } else {
-                    self.healthStore.addSamples(burnSamples, toWorkout: ride, completion: { (_, _) -> Void in
-                        if let heartRateSamples = samples where heartRateSamples.count > 0 {
-                            self.healthStore.addSamples(heartRateSamples, toWorkout: ride, completion: { (_, _) -> Void in
+                    self.healthStore.addSamples([cyclingDistanceSample], toWorkout: ride) { (_, _) in
+                        
+                        self.healthStore.addSamples(burnSamples, toWorkout: ride) { (_, _) -> Void in
+                            if let heartRateSamples = samples where heartRateSamples.count > 0 {
+                                self.healthStore.addSamples(heartRateSamples, toWorkout: ride) { (_, _) -> Void in
+                                    // callback
+                                }
+                            } else {
                                 // callback
-                            })
-                        } else {
-                            // callback
+                            }
                         }
-                    })
+                    }
                 }
             }
         }

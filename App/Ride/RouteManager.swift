@@ -232,6 +232,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             stoppedTrip.close() {
                 stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
+                if (HealthKitManager.authorizationStatus == .Authorized) {
+                    HealthKitManager.sharedManager.saveTrip(stoppedTrip)
+                }
                 APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
                     switch response.result {
                     case .Success(_):

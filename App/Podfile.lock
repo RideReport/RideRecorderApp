@@ -16,7 +16,7 @@ PODS:
   - Crashlytics (3.6.0):
     - Fabric (~> 1.6.3)
   - ECSlidingViewController (2.0.3)
-  - Fabric (1.6.3)
+  - Fabric (1.6.4)
   - FBSDKCoreKit (4.6.0):
     - Bolts (~> 1.1)
     - FBSDKCoreKit/arc (= 4.6.0)
@@ -51,6 +51,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (4.7.0)
   - OHHTTPStubs/Swift (4.7.0):
     - OHHTTPStubs/Core
+  - OpenCV (3.0.0)
   - PNChart (0.8.6):
     - UICountingLabel (~> 1.2.0)
   - SwiftChart (0.2.1)
@@ -74,6 +75,7 @@ DEPENDENCIES:
   - OAuthSwift
   - OHHTTPStubs
   - OHHTTPStubs/Swift
+  - OpenCV
   - PNChart (from `../Submodules/PNChart`)
   - SwiftChart
   - SwiftyJSON
@@ -97,7 +99,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
   Crashlytics: e4e8d02914f2608fbc7bf42b1a7af838b0db67a2
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
-  Fabric: cbe0ca6c9531bba17910052f6f105fcbc5fa7f67
+  Fabric: ed41fd62173c6bdea24ab02c9d7707161eabb750
   FBSDKCoreKit: 9954492d90c5fd65ae831395697a1660360d61f1
   FBSDKLoginKit: 3d07febbfa884b9878cacba54f705bb41f07d4b6
   FBSDKShareKit: f474f1123791e215d0299b98b3ee92ddd9187d86
@@ -106,6 +108,7 @@ SPEC CHECKSUMS:
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
+  OpenCV: be07c02f0d8f125f1d40d261e66a66cb66ece3b3
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
