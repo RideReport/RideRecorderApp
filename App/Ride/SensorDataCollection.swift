@@ -52,7 +52,7 @@ class SensorDataCollection : NSManagedObject {
     }
     
     func addLocationIfSufficientlyAccurate(location: CLLocation) {
-        guard location.horizontalAccuracy <= kCLLocationAccuracyNearestTenMeters && location.speed > 0 else {
+        guard location.horizontalAccuracy <= kCLLocationAccuracyNearestTenMeters && location.speed >= 0 else {
             return
         }
         
