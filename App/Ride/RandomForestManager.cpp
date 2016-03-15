@@ -13,6 +13,8 @@
 #include <opencv2/core.hpp>
 #include <opencv2/ml.hpp>
 
+using namespace cv;
+
 // Private Functions
 float max(cv::Mat mat);
 double maxMean(cv::Mat mat, int windowSize);
@@ -74,6 +76,33 @@ int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManage
     prepFeatureVector(randomForestManager, features.ptr<float>(), magnitudeVector, speedVector, speedVectorCount);
     
     return (int)randomForestManager->model->predict(features, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
+}
+
+void randomForestClassificationConfidences(RandomForestManager *randomForestManager, float *magnitudeVector, float *speedVector, int speedVectorCount, float *confidences, int n_classes) {
+    cv::Mat features = cv::Mat::zeros(1, RANDOM_FOREST_VECTOR_SIZE, CV_32F);
+
+    prepFeatureVector(randomForestManager, features.ptr<float>(), magnitudeVector, speedVector, speedVectorCount);
+
+    cv::Mat results;
+
+    randomForestManager->model->predictProb(features, results, cv::ml::DTrees::PREDICT_CONFIDENCE);
+
+    for (int i = 0; i < n_classes; ++i) {
+        confidences[i] = results.at<float>(i);
+    }
+}
+
+int randomForestGetClassLabels(RandomForestManager *randomForestManager, int *labels, int n_classes) {
+    Mat labelsMat = randomForestManager->model->getClassLabels();
+    for (int i = 0; i < n_classes && i < labelsMat.rows; ++i) {
+        labels[i] = labelsMat.at<int>(i);
+    }
+    return labelsMat.rows;
+}
+
+int randomForestGetClassCount(RandomForestManager *randomForestManager) {
+    Mat labelsMat = randomForestManager->model->getClassLabels();
+    return labelsMat.rows;
 }
 
 float max(cv::Mat mat)
