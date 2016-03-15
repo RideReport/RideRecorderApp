@@ -13,6 +13,7 @@ extern "C" {
     FFTManager *createFFTManager(int sampleSize);
     void fft(float * input, int inputSize, float *output, FFTManager *manager);
     float dominantPower(float *input, int inputSize);
+    void deleteFFTManager(FFTManager *fftManager);
 #ifdef __cplusplus
 }
 #endif

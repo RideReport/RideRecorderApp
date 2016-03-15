@@ -39,7 +39,7 @@ RandomForestManager *createRandomForestManager(int sampleSize, const char* pathT
 
 void deleteRandomForestManager(RandomForestManager *r)
 {
-    free(r->fftManager);
+    deleteFFTManager(r->fftManager);
     delete(r->model);
     free(r);
 }

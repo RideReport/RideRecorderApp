@@ -33,20 +33,27 @@ void fft(float * input, int inputSize, float *output, FFTManager *manager)
     vDSP_vmul(input, 1, hammingWindow, 1, input, 1, inputSize);
     
     // pack the input samples in preparation for FFT
-    float *zeroArray = new float[inputSize/2];
+    float *zeroArray = new float[inputSize]();
     DSPSplitComplex splitComplex = {.realp = input, .imagp =  zeroArray};
     
     // run the FFT and get the magnitude components (vDSP_zvmags returns squared components)
-    vDSP_fft_zrip(manager->fftWeights, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
+    vDSP_fft_zip(manager->fftWeights, &splitComplex, 1, log2f(inputSize), FFT_FORWARD);
     vDSP_zvmags(&splitComplex, 1, output, 1, inputSize);
+    
+    free(zeroArray);
+    free(hammingWindow);
+}
+
+void deleteFFTManager(FFTManager *fftManager)
+{
+    vDSP_destroy_fftsetup(fftManager->fftWeights);
+    free(fftManager);
 }
 
 float dominantPower(float *input, int inputSize)
 {
-    return 0.0f;
-    
     float dominantFrequency = 0;
-    for (int i=0; i<inputSize/2; i+=1) {
+    for (int i=1; i<=inputSize/2; i+=1) {
         float value = input[i];
         if (value > dominantFrequency) {
             dominantFrequency = value;
