@@ -25,7 +25,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
-    let sampleWindowSize: Int = 32
+    let sampleWindowSize: Int = 64
     private let updateInterval: NSTimeInterval = 50/1000
     private var isGatheringMotionData: Bool = false
     private var isQueryingMotionData: Bool = false
@@ -100,26 +100,13 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     private func magnitudeVector(forSensorDataCollection sensorDataCollection:SensorDataCollection)->[Float] {
         var mags: [Float] = []
         
-        for elem in sensorDataCollection.deviceMotionAccelerations {
-            let reading = elem as! DeviceMotionAcceleration
+        for elem in sensorDataCollection.accelerometerAccelerations {
+            let reading = elem as! AccelerometerAcceleration
             let sum = reading.x.floatValue*reading.x.floatValue + reading.y.floatValue*reading.y.floatValue + reading.z.floatValue*reading.z.floatValue
             mags.append(sqrtf(sum))
         }
         
         return mags
-    }
-    
-    private func locationSpeedVector(forSensorDataCollection sensorDataCollection:SensorDataCollection)->[Float] {
-        var speeds: [Float] = []
-        
-        for l in sensorDataCollection.locations {
-            let location = l as! Location
-            if let speed = location.speed?.floatValue {
-                speeds.append(speed)
-            }
-        }
-        
-        return speeds
     }
     
     func stopGatheringSensorData() {
@@ -178,7 +165,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Double) -> Void!) {
+    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Float) -> Void!) {
         self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             handler(activityType: .Unknown, confidence: 1.0)
             self.backgroundTaskID = UIBackgroundTaskInvalid
@@ -186,8 +173,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
 
         self.isQueryingMotionData = true
             
-        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
-            guard let deviceMotion = motion else {
+        self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard let accelerometerAcceleration = motion else {
                 return
             }
             guard self.isQueryingMotionData else {
@@ -195,17 +182,15 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
             
             dispatch_async(dispatch_get_main_queue()) {
-                sensorDataCollection.addDeviceMotion(deviceMotion)
-                if sensorDataCollection.deviceMotionAccelerations.count >= self.sampleWindowSize &&
-                sensorDataCollection.locations.count >= 1 {
+                sensorDataCollection.addAccelerometerData(accelerometerAcceleration)
+                if sensorDataCollection.accelerometerAccelerations.count >= self.sampleWindowSize {
                     self.isQueryingMotionData = false
                     self.stopMotionUpdatesAsNeeded()
                     // run classification
-                    var magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
-                    var speedVector = self.locationSpeedVector(forSensorDataCollection: sensorDataCollection)
-                    let sampleClass = self.randomForestManager.classifyMagnitudeVector(magVector, speedVector: speedVector)
+                    let magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
+                    let (sampleClass, confidence) = self.randomForestManager.classifyMagnitudeVector(magVector)
                     
-                    handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: 1.0)
+                    handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: confidence)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid

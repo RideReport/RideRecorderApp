@@ -25,6 +25,8 @@ class Trip : NSManagedObject {
         case Bus
         case Rail
         case Stationary
+        
+        static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
     }
     
     enum Rating : Int16 {
