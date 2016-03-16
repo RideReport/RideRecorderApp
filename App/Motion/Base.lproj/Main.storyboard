@@ -136,9 +136,6 @@
                                                 <include reference="ywH-pX-bxH"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="85" width="0.0" height="0.0"/>
-                                        </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e4J-wV-Fj0">
                                         <rect key="frame" x="0.0" y="-64" width="0.0" height="0.0"/>
@@ -156,9 +153,6 @@
                                             <mask key="constraints">
                                                 <include reference="hEU-3u-LH0"/>
                                             </mask>
-                                        </variation>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="85" width="0.0" height="0.0"/>
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sAF-Xd-Nsu">
@@ -191,9 +185,6 @@
                                                 <include reference="aOW-zF-nwF"/>
                                             </mask>
                                         </variation>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="85" width="0.0" height="0.0"/>
-                                        </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BtO-xM-RhE">
                                         <rect key="frame" x="259" y="21" width="82" height="30"/>
@@ -223,9 +214,6 @@
                                             <mask key="constraints">
                                                 <include reference="SsR-g6-yub"/>
                                             </mask>
-                                        </variation>
-                                        <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
-                                            <rect key="frame" x="0.0" y="85" width="0.0" height="0.0"/>
                                         </variation>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yog-m3-ffS">

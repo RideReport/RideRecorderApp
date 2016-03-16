@@ -17,6 +17,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var sensorDataCollection : SensorDataCollection?
+    private var sensorDataCollectionForQuery : SensorDataCollection?
     private var sensorDataCollectionForUpload : SensorDataCollection?
     
     private var locationManager : CLLocationManager!
@@ -144,7 +145,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.cancelButton.hidden = false
             self.finishButton.hidden = false
             self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
-            self.predictButton.hidden = false
         } else {
             if let collection = self.sensorDataCollectionForUpload {
                 // prep for upload
@@ -153,7 +153,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.activityLabel.hidden = true
                 self.cancelButton.hidden = false
                 self.finishButton.hidden = true
-                self.predictButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
                 guard let activityType = collection.actualActivityType where activityType.shortValue != Trip.ActivityType.Unknown.rawValue else {
@@ -189,7 +188,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = false
                 self.finishButton.hidden = false
-                self.predictButton.hidden = true
                 
                 self.startStopButton.setTitle("Resume", forState: UIControlState.Normal)
                 self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
@@ -200,7 +198,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = true
                 self.finishButton.hidden = true
-                self.predictButton.hidden = true
                 
                 self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
             }
@@ -264,7 +261,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             CoreDataManager.sharedManager.saveContext()
             
             MotionManager.sharedManager.stopGatheringSensorData()
-            self.locationManager.stopUpdatingLocation()
+            if (self.sensorDataCollectionForQuery == nil) {
+                self.locationManager.stopUpdatingLocation()
+            }
             self.player.pause()
             
             let utterance = AVSpeechUtterance(string: "Paused")
@@ -280,26 +279,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if self.sensorDataCollection == nil {
-            // could happen since didUpdateLocations sometimes keeps getting called for a bit after stopUpdatingLocation is called
-            return
+        if let collection = self.sensorDataCollection {
+            for loc in locations {
+                collection.addLocationIfSufficientlyAccurate(loc)
+            }
         }
-        
-        for loc in locations {
-            self.sensorDataCollection!.addLocationIfSufficientlyAccurate(loc)
+        if let collection = self.sensorDataCollectionForQuery {
+            for loc in locations {
+                collection.addLocationIfSufficientlyAccurate(loc)
+            }
         }
         
         CoreDataManager.sharedManager.saveContext()
     }
     
     private func runQuery() {
-        if self.sensorDataCollection == nil {
-            return
-        }
+        self.sensorDataCollectionForQuery = SensorDataCollection()
+        self.locationManager.startUpdatingLocation()
         
-        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollection!) {[weak self] (activityType, confidence) -> Void in
+        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (activityType, confidence) -> Void in
             guard let strongSelf = self else {
             return
+            }
+            
+            strongSelf.sensorDataCollectionForQuery = nil
+            if (!strongSelf.isRecording) {
+                strongSelf.locationManager.stopUpdatingLocation()
             }
             
             var activityString = ""
@@ -323,12 +328,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             activityString = "Unknown"
             }
             
+            activityString = activityString + " " + String(confidence)
+            
             strongSelf.activityLabel.text = activityString
             
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
             strongSelf.synth.speakUtterance(utterance)
-
             
 //            let series = ChartSeries(debugData)
 //            series.color = ChartColors.greenColor()
