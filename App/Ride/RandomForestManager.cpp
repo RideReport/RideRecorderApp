@@ -10,7 +10,7 @@
 #ifdef __APPLE__
 #include "FFTManager.h"
 #else
-#include "FFTManager1.h"
+#include "FFTManager_fftw.h"
 #endif
 #include<stdio.h>
 #include <opencv2/core/core.hpp>
@@ -32,11 +32,7 @@ double kurtosis(cv::Mat mat);
 
 struct RandomForestManager {
     int sampleSize;
-#ifdef __APPLE__
-	FFTManager *fftManager;
-#else
-    FFTManager1 *fftManager1;
-#endif
+    FFTManager *fftManager;
 
     cv::Ptr<cv::ml::RTrees> model;
 };
@@ -47,11 +43,8 @@ RandomForestManager *createRandomForestManager(int sampleSize, const char* pathT
 
     RandomForestManager *r = new RandomForestManager;
     r->sampleSize = sampleSize;
-#ifdef __APPLE__
     r->fftManager = createFFTManager(sampleSize);
-#else
-    r->fftManager1 = createFFTManager1(sampleSize);
-#endif
+
     r->model = cv::ml::RTrees::load<cv::ml::RTrees>(pathToModelFile);
 
     return r;
@@ -59,7 +52,8 @@ RandomForestManager *createRandomForestManager(int sampleSize, const char* pathT
 
 void deleteRandomForestManager(RandomForestManager *r)
 {
-    deleteFFTManager1(r->fftManager1);
+    deleteFFTManager(r->fftManager);
+
     delete(r->model);
     free(r);
 }
@@ -69,9 +63,12 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
 
     cv::Scalar meanMag,stddevMag;
     meanStdDev(mags,meanMag,stddevMag);
+    
+    float *fftOutput = new float[randomForestManager->sampleSize];
 
-    float maxPower = dominantPowerOfFFT(randomForestManager, magnitudeVector, randomForestManager->sampleSize, FFT_TYPE_NUMBER);
-
+    fft(randomForestManager->fftManager, magnitudeVector, randomForestManager->sampleSize, fftOutput);
+    float maxPower = dominantPower(fftOutput, randomForestManager->sampleSize);
+    
     features[0] = max(mags);
     features[1] = (float)meanMag.val[0];
     features[2] = maxMean(mags, 5);
@@ -79,25 +76,6 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     features[4] = (float)skewness(mags);
     features[5] = (float)kurtosis(mags);
     features[6] = maxPower;
-}
-
-float dominantPowerOfFFT(RandomForestManager *randomForestManager, float * magnitudeVector, int inputSize, int managerType)
-{
-	float *fftOutput = new float[randomForestManager->sampleSize];
-
-#ifdef __APPLE__
-    if (managerType == 0) {
-		fft(magnitudeVector, inputSize, fftOutput, randomForestManager->fftManager);
-	    return dominantPower(fftOutput, inputSize);
-	}
-#else
-	if (managerType == 1) {
-		fft1(magnitudeVector, inputSize, fftOutput, randomForestManager->fftManager1);
-	    return dominantPower1(fftOutput, inputSize);
-	}
-#endif
-
-    return 0.0f;
 }
 
 int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)

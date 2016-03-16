@@ -25,7 +25,13 @@ FFTManager *createFFTManager(int sampleSize)
     return f;
 }
 
-void fft(float * input, int inputSize, float *output, FFTManager *manager)
+void deleteFFTManager(FFTManager *fftManager)
+{
+    vDSP_destroy_fftsetup(fftManager->fftWeights);
+    free(fftManager);
+}
+
+void fft(FFTManager *manager, float * input, int inputSize, float *output)
 {
     // apply a hamming window to the input
     float *hammingWindow = new float[inputSize];
@@ -42,12 +48,6 @@ void fft(float * input, int inputSize, float *output, FFTManager *manager)
     
     free(zeroArray);
     free(hammingWindow);
-}
-
-void deleteFFTManager(FFTManager *fftManager)
-{
-    vDSP_destroy_fftsetup(fftManager->fftWeights);
-    free(fftManager);
 }
 
 float dominantPower(float *input, int inputSize)

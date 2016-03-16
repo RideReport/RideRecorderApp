@@ -11,9 +11,10 @@ extern "C" {
 #endif
     typedef struct FFTManager FFTManager;
     FFTManager *createFFTManager(int sampleSize);
-    void fft(float * input, int inputSize, float *output, FFTManager *manager);
-    float dominantPower(float *input, int inputSize);
     void deleteFFTManager(FFTManager *fftManager);
+    
+    void fft(FFTManager *manager, float * input, int inputSize, float *output);
+    float dominantPower(float *input, int inputSize);
 #ifdef __cplusplus
 }
 #endif
