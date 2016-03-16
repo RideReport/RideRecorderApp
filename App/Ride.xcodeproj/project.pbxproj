@@ -42,6 +42,10 @@
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
+		3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
+		3D9021C11C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
+		3D9021C21C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
+		3D9021C31C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
 		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
@@ -246,6 +250,7 @@
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		3D9021C01C9A0A9400FDF21D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
@@ -428,6 +433,7 @@
 			files = (
 				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
 				3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */,
+				3D9021C31C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
 				845369E01C8907490083F695 /* Accelerate.framework in Frameworks */,
 				3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */,
 				3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */,
@@ -443,6 +449,7 @@
 				84C934961C24C4C4001AC3EB /* libsqlite3.tbd in Frameworks */,
 				84C934951C24C4BC001AC3EB /* libz.tbd in Frameworks */,
 				84C934941C24C4B5001AC3EB /* libc++.tbd in Frameworks */,
+				3D9021C21C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
 				842FDCC41BD56FD90079AFCC /* libuv.a in Frameworks */,
 				842FDCBD1BD56FB00079AFCC /* MapKit.framework in Frameworks */,
 				842FDCBC1BD56FAC0079AFCC /* CoreMotion.framework in Frameworks */,
@@ -476,6 +483,7 @@
 				84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */,
 				8409C4A61C518A8400999446 /* HealthKit.framework in Frameworks */,
 				84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */,
+				3D9021C11C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
 				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
@@ -490,6 +498,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D9021C01C9A0A9400FDF21D /* opencv2.framework */,
 				3D818A151C938C0B00B64403 /* CoreMedia.framework */,
 				3D818A131C938BED00B64403 /* AssetsLibrary.framework */,
 				8409C4A51C518A8400999446 /* HealthKit.framework */,
@@ -1192,6 +1201,7 @@
 				3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
+				3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */,
 				3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */,
 				3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */,
 				3D49510E1C8E091D00E216AA /* RandomForestManager.cpp in Sources */,
@@ -1401,6 +1411,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -1419,6 +1433,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = RideTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
