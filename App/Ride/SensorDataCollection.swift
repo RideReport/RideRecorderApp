@@ -52,6 +52,10 @@ class SensorDataCollection : NSManagedObject {
     }
     
     var averageSpeed : CLLocationSpeed {
+        guard self.locations != nil && self.locations.count > 0 else {
+            return -1.0
+        }
+        
         var sumSpeed : Double = 0.0
         var count = 0
         for loc in self.locations.array {
@@ -70,7 +74,7 @@ class SensorDataCollection : NSManagedObject {
     }
     
     func addLocationIfSufficientlyAccurate(location: CLLocation) {
-        guard location.horizontalAccuracy <= kCLLocationAccuracyNearestTenMeters && location.speed >= 0 else {
+        guard location.horizontalAccuracy <= Location.acceptableLocationAccuracy && location.speed >= 0 else {
             return
         }
         
