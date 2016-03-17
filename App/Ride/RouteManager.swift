@@ -466,9 +466,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     return
                 }
                 
-                strongSelf.currentSensorDataCollection = nil
-                
                 let averageSpeed = strongSelf.currentSensorDataCollection!.averageSpeed
+                strongSelf.currentSensorDataCollection = nil
                 
                 #if DEBUG
                     var activityString = ""
