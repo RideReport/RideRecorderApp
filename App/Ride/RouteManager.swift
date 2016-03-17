@@ -47,7 +47,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var locationManager : CLLocationManager!
     
-    var lastActivityTypeQueryDate : NSDate?
+    var lastActiveTrackingActivityTypeQueryDate : NSDate?
+    let timeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 60
+    
+    var lastMotionMonitoringActivityTypeQueryDate : NSDate?
     let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
     var numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
     let maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange = 6 // ~60 seconds
@@ -206,6 +209,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
+        self.lastMotionMonitoringActivityTypeQueryDate = nil
         
         if (stoppedTrip.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
@@ -259,6 +263,44 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
+        
+        if (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries) {
+            self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
+            
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) {[weak self] (activityType, confidence) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                #if DEBUG
+                    var activityString = ""
+                    switch activityType {
+                    case .Automotive:
+                        activityString = "🚗"
+                    case .Cycling:
+                        activityString = "🚲"
+                    case .Running:
+                        activityString = "🏃"
+                    case .Bus:
+                        activityString = "🚌"
+                    case .Rail:
+                        activityString = "🚌"
+                    case .Walking:
+                        activityString = "🚶"
+                    case .Stationary:
+                        activityString = "Stationary"
+                    case .Unknown:
+                        activityString = "Unknown"
+                    }
+                    
+                    let notif = UILocalNotification()
+                    notif.alertBody = activityString + "confidence: " + String(confidence)
+                    notif.category = "RIDE_COMPLETION_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                #endif
+            }
+        }
+
         
         for location in locations {
             DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
@@ -390,7 +432,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentPrototrip = nil
         }
         
-        self.lastActivityTypeQueryDate = nil
+        self.lastMotionMonitoringActivityTypeQueryDate = nil
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
@@ -413,8 +455,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
 
-        if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) {
-            self.lastActivityTypeQueryDate = NSDate()
+        if (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) {
+            self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
             
             self.currentSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
