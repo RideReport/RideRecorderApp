@@ -190,7 +190,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                     let magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
                     let (sampleClass, confidence) = self.randomForestManager.classifyMagnitudeVector(magVector)
                     
-                    handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: confidence)
+                    let activityType = Trip.ActivityType(rawValue: Int16(sampleClass))!
+                    sensorDataCollection.predictedActivityType = NSNumber(short: activityType.rawValue)
+                    CoreDataManager.sharedManager.saveContext()
+                    
+                    handler(activityType: activityType, confidence: confidence)
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid
