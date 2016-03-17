@@ -423,6 +423,33 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     return
                 }
                 
+                #if DEBUG
+                    var activityString = ""
+                    switch activityType {
+                        case .Automotive:
+                        activityString = "🚗"
+                        case .Cycling:
+                        activityString = "🚲"
+                        case .Running:
+                        activityString = "🏃"
+                        case .Bus:
+                        activityString = "🚌"
+                        case .Rail:
+                        activityString = "🚌"
+                        case .Walking:
+                        activityString = "🚶"
+                        case .Stationary:
+                        activityString = "Stationary"
+                        case .Unknown:
+                        activityString = "Unknown"
+                    }
+
+                    let notif = UILocalNotification()
+                    notif.alertBody = activityString + "confidence: " + String(confidence)
+                    notif.category = "RIDE_COMPLETION_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                #endif
+                
                 switch activityType {
                 case .Automotive where confidence > 0.8:
                     DDLogVerbose("Starting automotive trip.")
