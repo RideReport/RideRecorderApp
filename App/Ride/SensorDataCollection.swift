@@ -51,6 +51,24 @@ class SensorDataCollection : NSManagedObject {
         sensorData.date =  NSDate(timeInterval: logItem.timestamp, sinceDate: self.referenceBootDate)
     }
     
+    var averageSpeed : CLLocationSpeed {
+        var sumSpeed : Double = 0.0
+        var count = 0
+        for loc in self.locations.array {
+            let location = loc as! Location
+            if (location.speed!.doubleValue >= 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                count += 1
+                sumSpeed += (location as Location).speed!.doubleValue
+            }
+        }
+        
+        if (count == 0) {
+            return 0
+        }
+        
+        return sumSpeed/Double(count)
+    }
+    
     func addLocationIfSufficientlyAccurate(location: CLLocation) {
         guard location.horizontalAccuracy <= kCLLocationAccuracyNearestTenMeters && location.speed >= 0 else {
             return

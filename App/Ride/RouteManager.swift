@@ -448,7 +448,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     }
 
                     let notif = UILocalNotification()
-                    notif.alertBody = activityString + "confidence: " + String(confidence)
+                    notif.alertBody = activityString + "confidence: " + String(confidence) + " speed: " + self?.currentPrototrip.averageSpeed
                     notif.category = "RIDE_COMPLETION_CATEGORY"
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
