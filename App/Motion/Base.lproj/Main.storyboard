@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -496,15 +495,15 @@
                                     <action selector="tappedCancelDelete:" destination="BYZ-38-t0r" eventType="touchUpInside" id="bkz-Vu-3Ll"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oGh-Ut-bFc">
-                                <rect key="frame" x="283" y="550" width="34" height="30"/>
-                                <state key="normal" title="Predict">
-                                    <color key="titleColor" red="0.50196081400000003" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oQ8-Y6-xXc">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="549" width="51" height="31"/>
+                                </variation>
                                 <connections>
-                                    <action selector="tappedPredict:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4Bd-pX-Lii"/>
+                                    <action selector="toggledPredictSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="PVB-21-dgt"/>
                                 </connections>
-                            </button>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -513,11 +512,11 @@
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BIs-vG-Mx8"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="D8h-0L-Rse"/>
                             <constraint firstItem="soQ-1S-b5k" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Dy3-qd-Bkp"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oGh-Ut-bFc" secondAttribute="bottom" constant="20" id="GaN-8z-wN7"/>
                             <constraint firstItem="L92-uR-mv9" firstAttribute="leading" secondItem="soQ-1S-b5k" secondAttribute="trailing" constant="48" id="HCp-qr-cM9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="soQ-1S-b5k" secondAttribute="bottom" constant="20" id="Hg3-eX-0K0"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="oQ8-Y6-xXc" secondAttribute="leading" id="N2k-RK-k3g"/>
                             <constraint firstItem="soQ-1S-b5k" firstAttribute="top" secondItem="T3F-xJ-ySO" secondAttribute="bottom" constant="22" id="RRE-rp-rMv"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="oGh-Ut-bFc" secondAttribute="leading" id="V4G-ZI-r3o"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oQ8-Y6-xXc" secondAttribute="bottom" constant="19" id="bUj-Y8-dF9"/>
                             <constraint firstItem="T3F-xJ-ySO" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="c4c-By-qEe"/>
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cvL-Wz-ifg"/>
                             <constraint firstItem="82A-GJ-9qe" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ggS-IZ-ohS"/>
@@ -532,19 +531,19 @@
                                 <exclude reference="82A-GJ-9qe"/>
                                 <exclude reference="W8N-3W-MDK"/>
                                 <exclude reference="L92-uR-mv9"/>
-                                <exclude reference="oGh-Ut-bFc"/>
+                                <exclude reference="oQ8-Y6-xXc"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
-                                <exclude reference="c4c-By-qEe"/>
-                                <exclude reference="GaN-8z-wN7"/>
-                                <exclude reference="yBf-Vb-5Gc"/>
                                 <exclude reference="ggS-IZ-ohS"/>
                                 <exclude reference="kH4-G6-l7X"/>
+                                <exclude reference="c4c-By-qEe"/>
+                                <exclude reference="N2k-RK-k3g"/>
+                                <exclude reference="bUj-Y8-dF9"/>
+                                <exclude reference="yBf-Vb-5Gc"/>
                                 <exclude reference="HCp-qr-cM9"/>
-                                <exclude reference="V4G-ZI-r3o"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -552,18 +551,18 @@
                                 <include reference="82A-GJ-9qe"/>
                                 <include reference="W8N-3W-MDK"/>
                                 <include reference="L92-uR-mv9"/>
-                                <include reference="oGh-Ut-bFc"/>
+                                <include reference="oQ8-Y6-xXc"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
-                                <include reference="GaN-8z-wN7"/>
-                                <include reference="yBf-Vb-5Gc"/>
                                 <include reference="ggS-IZ-ohS"/>
                                 <include reference="kH4-G6-l7X"/>
+                                <include reference="N2k-RK-k3g"/>
+                                <include reference="bUj-Y8-dF9"/>
+                                <include reference="yBf-Vb-5Gc"/>
                                 <include reference="HCp-qr-cM9"/>
-                                <include reference="V4G-ZI-r3o"/>
                             </mask>
                         </variation>
                     </view>
@@ -576,7 +575,7 @@
                         <outlet property="finishButton" destination="82A-GJ-9qe" id="0rd-e8-5Co"/>
                         <outlet property="lineChart" destination="GHU-lf-Tpf" id="HaM-ev-YSv"/>
                         <outlet property="notesTextField" destination="6Er-uq-zkl" id="MJj-Uh-s7p"/>
-                        <outlet property="predictButton" destination="oGh-Ut-bFc" id="3a6-rY-v04"/>
+                        <outlet property="predictSwitch" destination="oQ8-Y6-xXc" id="bgG-M1-Zhy"/>
                         <outlet property="railButton" destination="jNf-nU-y1S" id="P85-7s-dPW"/>
                         <outlet property="startStopButton" destination="soQ-1S-b5k" id="YuX-dY-23C"/>
                         <outlet property="uploadButton" destination="6AZ-2Q-TYT" id="Auq-L0-ux1"/>

@@ -13,7 +13,8 @@ import CoreLocation
 import MediaPlayer
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
-    
+    private var backgroundTaskID = UIBackgroundTaskInvalid
+
     private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var sensorDataCollection : SensorDataCollection?
@@ -24,7 +25,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     private var player: AVAudioPlayer!
 
     @IBOutlet weak var startStopButton: UIButton!
-    @IBOutlet weak var predictButton: UIButton!
+    @IBOutlet weak var predictSwitch: UISwitch!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
@@ -41,6 +42,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.predictSwitch.on = false
         
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.Fitness
@@ -71,7 +74,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         }
         
         MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
-            self.runQuery()
+            self.predictSwitch.on = !self.predictSwitch.on
+
+            var utteranceString = ""
+            if self.predictSwitch.on {
+                utteranceString = "Prediction enabled"
+            } else {
+                utteranceString = "Prediction disabled"
+            }
+            let utterance = AVSpeechUtterance(string: utteranceString)
+            utterance.rate = 0.6
+            self.synth.speakUtterance(utterance)
+            
+            self.runPredictionIfEnabled()
             
             return MPRemoteCommandHandlerStatus.Success
         }
@@ -274,8 +289,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func tappedPredict(sender: AnyObject) {
-        self.runQuery()
+    @IBAction func toggledPredictSwitch(sender: AnyObject) {
+        self.runPredictionIfEnabled()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -293,9 +308,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         CoreDataManager.sharedManager.saveContext()
     }
     
-    private func runQuery() {
+    func runPredictionIfEnabled() {
+        if (!self.predictSwitch.on) {
+            return
+        }
+        
         self.sensorDataCollectionForQuery = SensorDataCollection()
         self.locationManager.startUpdatingLocation()
+        
+        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        }
         
         MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (activityType, confidence) -> Void in
             guard let strongSelf = self else {
@@ -335,6 +359,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
             strongSelf.synth.speakUtterance(utterance)
+            
+            let notif = UILocalNotification()
+            notif.alertBody = activityString
+            notif.category = "generalCategory"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            
+            if (strongSelf.predictSwitch.on) {
+                strongSelf.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                    strongSelf.backgroundTaskID = UIBackgroundTaskInvalid
+                })
+                
+                strongSelf.performSelector(Selector("runPredictionIfEnabled"), withObject: nil, afterDelay: 5.0)
+            }
             
 //            let series = ChartSeries(debugData)
 //            series.color = ChartColors.greenColor()
