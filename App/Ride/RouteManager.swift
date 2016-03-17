@@ -54,6 +54,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
+    private var currentSensorDataCollection : SensorDataCollection?
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -401,12 +402,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        for location in locations {
-            DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-            
-            let _ = Location(location: location, prototrip: self.currentPrototrip!)
-        }
-        CoreDataManager.sharedManager.saveContext()
         self.lastMotionMonitoringLocation = locations.first
         
         if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
@@ -421,12 +416,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) {
             self.lastActivityTypeQueryDate = NSDate()
             
+            self.currentSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
             MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentSensorDataCollection!) {[weak self] (activityType, confidence) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
+                
+                strongSelf.currentSensorDataCollection = nil
                 
                 #if DEBUG
                     var activityString = ""
@@ -491,6 +489,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
             }
         }
+        
+        for location in locations {
+            DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
+            
+            let loc = Location(location: location, prototrip: self.currentPrototrip!)
+            if let collection = self.currentSensorDataCollection {
+                loc.sensorDataCollection = collection
+            }
+        }
+        CoreDataManager.sharedManager.saveContext()
     }
     
     //
