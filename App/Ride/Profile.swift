@@ -211,7 +211,6 @@ class Profile : NSManagedObject {
                     // even though today doesn't count
                     if (tripDate.isEqualToDay(currentDate.daysFrom(-1))) {
                         currentDate = currentDate.daysFrom(-1)
-                        count += 1
                     }
                 } else {
                     break

@@ -247,24 +247,24 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             Profile.profile().updateCurrentRideStreakLength()
             
             if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
-                if (Trip.bikeTripsToday() == nil) {
-                    if (NSDate().isBeforeNoon()) {
-                        self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
+                if currentStreakLength == 1 {
+                    if (Trip.bikeTripsToday() == nil) {
+                        self.headerLabel1.text = "🐣  You rode yesterday"
                     } else {
-                        self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
+                        self.headerLabel1.text = "🐣  You rode today"
+                    }
+                } else if currentStreakLength == 2 {
+                    if (Trip.bikeTripsToday() == nil) {
+                        self.headerLabel1.text = "💗  Ride today to start a ride streak!"
+                    } else {
+                        self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
                     }
                 } else {
-                    if currentStreakLength == 1 {
-                        if (Trip.bikeTripsToday() == nil) {
-                            self.headerLabel1.text = "🐣  You rode yesterday"
+                    if (Trip.bikeTripsToday() == nil) {
+                        if (NSDate().isBeforeNoon()) {
+                            self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
                         } else {
-                            self.headerLabel1.text = "🐣  You rode today"
-                        }
-                    } else if currentStreakLength == 2 {
-                        if (Trip.bikeTripsToday() == nil) {
-                            self.headerLabel1.text = "💗  Ride today to start a ride streak!"
-                        } else {
-                            self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
+                            self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
                         }
                     } else {
                         self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
