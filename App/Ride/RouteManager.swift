@@ -426,6 +426,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 strongSelf.currentSensorDataCollection = nil
                 
+                let averageSpeed = strongSelf.currentSensorDataCollection!.averageSpeed
+                
                 #if DEBUG
                     var activityString = ""
                     switch activityType {
@@ -448,18 +450,27 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     }
 
                     let notif = UILocalNotification()
-                    notif.alertBody = activityString + "confidence: " + String(confidence) + " speed: " + self?.currentPrototrip.averageSpeed
+                    notif.alertBody = activityString + "confidence: " + String(confidence) + " speed: " + String(averageSpeed)
                     notif.category = "RIDE_COMPLETION_CATEGORY"
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
                 
                 switch activityType {
                 case .Automotive where confidence > 0.8:
-                    DDLogVerbose("Starting automotive trip.")
+                    DDLogVerbose("Starting automotive trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Automotive)
+
+                case .Automotive where confidence > 0.5 && averageSpeed >= 6:
+                    DDLogVerbose("Starting automotive trip, low confidence matching speed")
                     
                     strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Automotive)
                 case .Cycling where confidence > 0.8:
-                    DDLogVerbose("Starting cycling trip.")
+                    DDLogVerbose("Starting cycling trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Cycling)
+                case .Cycling where confidence > 0.5 && averageSpeed >= 3 && averageSpeed < 8:
+                    DDLogVerbose("Starting cycling trip, low confidence matching speed")
                     
                     strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Cycling)
                 case .Running where confidence < 0.8:
@@ -474,15 +485,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting transit trip.")
                     
                     strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Rail)
-                case .Walking, .Stationary where confidence > 0.8 :
-                    DDLogVerbose("Walking or stationary, stopping monitor…")
-
+                case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location
+                    DDLogVerbose("Walking or stationary, high confifence and no speed. stopping monitor…")
+                    
+                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                case .Walking, .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 3:
+                    DDLogVerbose("Walking or stationary, low confifence and matching speed. stopping monitor…")
+                    
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
                 case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking:
                     if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
                         DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
                         strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
-                        
                     } else {
                         DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
                     }
