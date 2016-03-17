@@ -48,7 +48,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var locationManager : CLLocationManager!
     
     var lastActivityTypeQueryDate : NSDate?
-    let timeIntervalBetweenActivityTypeQueries : NSTimeInterval = 60
+    let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
+    var numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
+    let maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange = 6 // ~60 seconds
     
     private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
@@ -337,6 +339,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.startLocationTrackingIfNeeded()
+        self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
         #if DEBUG2
             let notif = UILocalNotification()
@@ -415,10 +418,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
 
-        if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActivityTypeQueries ) {
+        if (self.lastActivityTypeQueryDate == nil || abs(self.lastActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) {
             self.lastActivityTypeQueryDate = NSDate()
+            
+            self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(prototrip: self.currentPrototrip!)) {[weak self] (activityType, confidence) -> Void in
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentSensorDataCollection!) {[weak self] (activityType, confidence) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -476,7 +481,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
 
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
                 case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking:
-                    DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
+                    if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
+                        DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
+                        strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                        
+                    } else {
+                        DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
+                    }
                 }
             }
         }
