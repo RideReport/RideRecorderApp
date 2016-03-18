@@ -2505,6 +2505,25 @@
                                             <segue destination="XqV-JY-yTY" kind="show" id="ap9-q9-Dcd"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="OPK-ty-OCP" style="IBUITableViewCellStyleDefault" id="ahq-e4-6z7">
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ahq-e4-6z7" id="RCx-vN-7lo">
+                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Sync with HealthKit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OPK-ty-OCP">
+                                                    <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="IUS-op-4II" style="IBUITableViewCellStyleDefault" id="WmV-PX-PGY">
                                         <rect key="frame" x="0.0" y="231" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -2534,6 +2553,7 @@
                     <navigationItem key="navigationItem" title="Ride Report" id="tT2-Fl-8cR"/>
                     <connections>
                         <outlet property="accountTableViewCell" destination="nWe-Xk-x3y" id="UL1-oF-Y0u"/>
+                        <outlet property="healthKitTableViewCell" destination="ahq-e4-6z7" id="0dC-xc-tUK"/>
                         <outlet property="mapStatsTableViewCell" destination="WmV-PX-PGY" id="fXi-z3-hSr"/>
                         <outlet property="pauseResueTableViewCell" destination="OkS-MW-BCC" id="jU3-WF-51S"/>
                     </connections>

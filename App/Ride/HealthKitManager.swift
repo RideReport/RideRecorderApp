@@ -52,6 +52,11 @@ class HealthKitManager {
         }
     }
     
+    class func shutdown() {
+        Static.sharedManager = nil
+        Static.authorizationStatus = .NotDetermined
+    }
+    
     func startup() {
         self.requestAuthorization()
     }
@@ -128,14 +133,38 @@ class HealthKitManager {
         self.healthStore.executeQuery(query)
     }
     
-    func deleteWorkoutAndSamplesForTrip(trip:Trip) {
-//        let heartRateType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)
-//        let uuid = ""
-//        // get the workout based on uuid
-//        let predicate = HKQuery.predicateForObjectWithUUID(uuid)
-//        // then delete all samples created by the app associated with the workout
-//        
-//        self.healthStore.executeQuery(query)
+    func deleteWorkoutAndSamplesForWorkoutUUID(uuidString: String, handler: ()->Void) {
+        guard let uuid = NSUUID(UUIDString: uuidString) else {
+            handler()
+            return
+        }
+        
+        let workoutPredicate = HKQuery.predicateForObjectWithUUID(uuid)
+        self.healthStore.executeQuery(HKSampleQuery(sampleType: HKQuantityType.workoutType(), predicate: workoutPredicate, limit: 1, sortDescriptors: nil) { (query, results, error) in
+            guard let workout = results?.first as? HKWorkout else {
+                handler()
+                return
+            }
+            
+            let samplesPredicate = HKQuery.predicateForObjectsFromWorkout(workout)
+            if #available(iOS 9.0, *) {
+                self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!, predicate: samplesPredicate) { (_, _, _) in
+                    // for all deletions, we make a best attempt and proceed with the handler regardless of the result
+                    self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, predicate: samplesPredicate) { (_, _, _) in
+                        // delete the workout last, after all associated objects are deleted.
+                        self.healthStore.deleteObject(workout, withCompletion: { (b, e) in
+                            handler()
+                        })
+                    }
+                }
+            } else {
+                // Fallback for iOS 8
+                handler()
+                self.healthStore.deleteObject(workout, withCompletion: { (_, _) in
+                    handler()
+                })
+            }
+        })
     }
     
     func saveTrip(trip:Trip) {
@@ -148,7 +177,16 @@ class HealthKitManager {
         }
         
         // delete any thing trip data that may have already been saved for this trip
-        self.deleteWorkoutAndSamplesForTrip(trip)
+        if let uuid = trip.healthKitUuid {
+            self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
+                dispatch_async(dispatch_get_main_queue()) {
+                    trip.healthKitUuid = nil
+                    CoreDataManager.sharedManager.saveContext()
+                    self.saveTrip(trip)
+                }
+            }
+            return
+        }
         
         // first, we calculate our total burn plus burn samples
         var totalBurn :HKQuantity! = nil
@@ -238,6 +276,11 @@ class HealthKitManager {
                     // log error
                     // callback
                 } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        trip.healthKitUuid = ride.UUID.UUIDString
+                        CoreDataManager.sharedManager.saveContext()
+                    }
+                    
                     self.healthStore.addSamples([cyclingDistanceSample], toWorkout: ride) { (_, _) in
                         
                         self.healthStore.addSamples(burnSamples, toWorkout: ride) { (_, _) -> Void in

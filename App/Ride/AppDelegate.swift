@@ -74,12 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             CoreDataManager.startup()
             APIClient.startup()
             
-            #if DEBUG
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthCareIsSetup")
-                NSUserDefaults.standardUserDefaults().synchronize()
-            #endif
-            
-            if (NSUserDefaults.standardUserDefaults().boolForKey("healthCareIsSetup")) {
+            if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
                 self.startupHealthManager()
             }
             

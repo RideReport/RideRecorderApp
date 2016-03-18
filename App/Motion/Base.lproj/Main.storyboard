@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -497,9 +498,6 @@
                             </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oQ8-Y6-xXc">
                                 <rect key="frame" x="-25" y="-15" width="51" height="31"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="549" width="51" height="31"/>
-                                </variation>
                                 <connections>
                                     <action selector="toggledPredictSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="PVB-21-dgt"/>
                                 </connections>
@@ -534,15 +532,15 @@
                                 <exclude reference="oQ8-Y6-xXc"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="N2k-RK-k3g"/>
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
-                                <exclude reference="ggS-IZ-ohS"/>
-                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="c4c-By-qEe"/>
-                                <exclude reference="N2k-RK-k3g"/>
                                 <exclude reference="bUj-Y8-dF9"/>
                                 <exclude reference="yBf-Vb-5Gc"/>
+                                <exclude reference="ggS-IZ-ohS"/>
+                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="HCp-qr-cM9"/>
                             </mask>
                         </variation>
@@ -554,14 +552,14 @@
                                 <include reference="oQ8-Y6-xXc"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="N2k-RK-k3g"/>
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
-                                <include reference="ggS-IZ-ohS"/>
-                                <include reference="kH4-G6-l7X"/>
-                                <include reference="N2k-RK-k3g"/>
                                 <include reference="bUj-Y8-dF9"/>
                                 <include reference="yBf-Vb-5Gc"/>
+                                <include reference="ggS-IZ-ohS"/>
+                                <include reference="kH4-G6-l7X"/>
                                 <include reference="HCp-qr-cM9"/>
                             </mask>
                         </variation>
