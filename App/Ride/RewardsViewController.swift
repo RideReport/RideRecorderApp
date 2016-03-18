@@ -125,7 +125,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                             emoji.physicsBody!.density = 0.1
                             emoji.physicsBody!.linearDamping = 0.0
                             emoji.physicsBody!.angularDamping = 0.0
-                            emoji.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40)
                             emojis.append(emoji)
                         }
                     }
@@ -134,14 +133,19 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 var nodeCount = 0
                 let shuffledEmojis = emojis.shuffle()
                 for emoji in shuffledEmojis  {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                        guard let strongSelf = self else {
-                            return
-                        }
-                        
-                        strongSelf.scene.addChild(emoji)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        emoji.hidden = true
+                        emoji.physicsBody?.dynamic = false
+                        self.scene.addChild(emoji)
+                        emoji.runAction(SKAction.sequence([
+                            SKAction.waitForDuration(Double(nodeCount) * 0.01),
+                            SKAction.moveTo(CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40), duration: 0.001),
+                            SKAction.runBlock({ 
+                                emoji.physicsBody!.dynamic = true
+                            }),
+                            SKAction.unhide()]))
+                        nodeCount += 1
                     }
-                    nodeCount += 1
                 }
             }
         }
