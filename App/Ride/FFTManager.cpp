@@ -50,6 +50,28 @@ void fft(FFTManager *manager, float * input, int inputSize, float *output)
     free(hammingWindow);
 }
 
+float autocorrelation(float *input, int inputSize)
+{
+    int lenSignal = 2 * inputSize - 1;
+    float *signal = new float[lenSignal];
+    
+    for (int i = 0; i < inputSize; i++) {
+        if (i < inputSize) {
+            signal[i] = input[i];
+        } else {
+            signal[i] = 0;
+        }
+    }
+    
+    float *result = new float[inputSize];
+    vDSP_conv(signal, 1, &input[inputSize - 1], -1, result, 1, inputSize, inputSize);
+    
+    free(signal);
+    free(result);
+    
+    return 0.0;
+}
+
 float dominantPower(float *input, int inputSize)
 {
     float dominantFrequency = 0;
