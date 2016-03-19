@@ -165,7 +165,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchedSprite = tappedSprite
             self.touchedSprite!.physicsBody!.density = 1.0 // make it heavy so it can knock other emoji around easily
             if #available(iOS 9.0, *) {
-                self.touchedSprite?.runAction(SKAction.sequence([SKAction.scaleTo(4.0, duration: 0.2), SKAction.applyForce(CGVectorMake(0.0, 50.0), duration: 0.2)]))
+                self.touchedSprite?.runAction(SKAction.scaleTo(4.0, duration: 0.2))
             } else {
                 // Fallback on earlier versions
             }
