@@ -210,7 +210,9 @@ class Profile : NSManagedObject {
                     // they could still take a trip today so the streak is still valid
                     // even though today doesn't count
                     if (tripDate.isEqualToDay(currentDate.daysFrom(-1))) {
-                        currentDate = currentDate.daysFrom(-1)
+                        // we have a ride yesterday, skip to the day before
+                        currentDate = currentDate.daysFrom(-2)
+                        count += 1
                     }
                 } else {
                     break
