@@ -209,7 +209,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
-        self.lastMotionMonitoringActivityTypeQueryDate = nil
+        self.lastActiveTrackingActivityTypeQueryDate = nil
         
         if (stoppedTrip.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
@@ -264,8 +264,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
         
-        if (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries) {
-            self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
+        if (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries) {
+            self.lastActiveTrackingActivityTypeQueryDate = NSDate()
             
             MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) {[weak self] (activityType, confidence) -> Void in
                 guard let strongSelf = self else {
