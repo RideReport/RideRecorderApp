@@ -58,17 +58,41 @@ void deleteRandomForestManager(RandomForestManager *r)
     free(r);
 }
 
+/**
+ * Compute area under the curve for an evenly spaced vector `y` of length `length`
+ *
+ * We assume unit steps on the X-axis. Multiply the return value by a scaling
+ * factor to convert to real-world measurements.
+ */
+float trapezoidArea(float *y, int length)
+{
+    float area = 0.0;
+    if (length >= 1) {
+        for (int i = 1; i < length; ++i) {
+            area += y[i] - y[i-1] / 2.;
+        }
+    }
+    return area;
+}
+
 void prepFeatureVector(RandomForestManager *randomForestManager, float* features, float* magnitudeVector) {
     cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, magnitudeVector);
 
     cv::Scalar meanMag,stddevMag;
     meanStdDev(mags,meanMag,stddevMag);
-    
+
     float *fftOutput = new float[randomForestManager->sampleSize];
 
     fft(randomForestManager->fftManager, magnitudeVector, randomForestManager->sampleSize, fftOutput);
     float maxPower = dominantPower(fftOutput, randomForestManager->sampleSize);
-    
+
+    float *spectrum = fftOutput + 1; // skip DC (zero frequency) component
+    int spectrumLength = randomForestManager->sampleSize / 2;
+    float fftIntegral = trapezoidArea(spectrum, spectrumLength);
+    // These numbers are hard-coded for a 64-element input array
+    float fftIntegralAbove8hz = trapezoidArea(spectrum + 26, spectrumLength - 26);
+    float fftIntegralBelow2_5hz = trapezoidArea(spectrum, 8);
+
     features[0] = max(mags);
     features[1] = (float)meanMag.val[0];
     features[2] = maxMean(mags, 5);
@@ -76,6 +100,9 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     features[4] = (float)skewness(mags);
     features[5] = (float)kurtosis(mags);
     features[6] = maxPower;
+    features[7] = fftIntegral;
+    features[8] = fftIntegralAbove8hz;
+    features[8] = fftIntegralBelow2_5hz;
 }
 
 int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)
