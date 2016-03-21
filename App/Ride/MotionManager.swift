@@ -178,6 +178,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 return
             }
             guard self.isQueryingMotionData else {
+                self.stopMotionUpdatesAsNeeded()
                 return
             }
             
