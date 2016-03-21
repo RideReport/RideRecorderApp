@@ -338,15 +338,6 @@ class APIClient {
             })
         }
         
-        self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
-            for t in Trip.unclassifiedTrips() {
-                let trip = t as! Trip
-                trip.legacyClasifyActivityType() {
-                    trip.saveAndMarkDirty()
-                }
-            }
-        }
-        
         self.runDataMigration(dataMigrationName: "hasRunSummarySyncedPropertyAdditionMigration") {
             for t in Trip.unweatheredTrips() {
                 let trip = t as! Trip

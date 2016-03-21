@@ -203,8 +203,4 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
         }
     }
-    
-    func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
-        self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
-    }
 }
