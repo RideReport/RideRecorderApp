@@ -225,6 +225,9 @@ class HealthKitManager {
                 var totalBurnDouble : Double = 0
                 for loc in trip.locations {
                     let location = loc as! Location
+                    if location.isGeofencedLocation {
+                        continue
+                    }
                     
                     if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
                         if (lastLoc != nil && lastLoc.date!.compare(location.date!) != NSComparisonResult.OrderedDescending) {
