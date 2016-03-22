@@ -13,6 +13,7 @@
 #include "FFTManager_fftw.h"
 #endif
 #include<stdio.h>
+#include <algorithm>
 #include <opencv2/core/core.hpp>
 #include <opencv2/ml/ml.hpp>
 
@@ -75,6 +76,16 @@ float trapezoidArea(float *y, int length)
     return area;
 }
 
+float percentile(float *input, int length, float percentile)
+{
+    std::vector<float> sortedInput(length);
+    
+    // using default comparison (operator <):
+    std::partial_sort_copy (input, input+length, sortedInput.begin(), sortedInput.end());
+
+    return sortedInput[cvFloor(length*percentile)-1];
+}
+
 void prepFeatureVector(RandomForestManager *randomForestManager, float* features, float* magnitudeVector) {
     cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, magnitudeVector);
 
@@ -85,6 +96,7 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
 
     fft(randomForestManager->fftManager, magnitudeVector, randomForestManager->sampleSize, fftOutput);
     float maxPower = dominantPower(fftOutput, randomForestManager->sampleSize);
+    float fftAutocorrelation = autocorrelation(fftOutput, randomForestManager->sampleSize);
 
     float *spectrum = fftOutput + 1; // skip DC (zero frequency) component
     int spectrumLength = randomForestManager->sampleSize / 2;
@@ -103,6 +115,11 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     features[7] = fftIntegral;
     features[8] = fftIntegralAbove8hz;
     features[8] = fftIntegralBelow2_5hz;
+    features[8] = fftAutocorrelation;
+    features[9] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.25);
+    features[10] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.5);
+    features[11] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.75);
+    features[12] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.9);
 }
 
 int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)

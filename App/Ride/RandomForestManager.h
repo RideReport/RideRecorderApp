@@ -6,7 +6,7 @@
 //  Copyright © 2015 Knock Softwae, Inc. All rights reserved.
 //
 
-#define RANDOM_FOREST_VECTOR_SIZE (10)
+#define RANDOM_FOREST_VECTOR_SIZE (13)
 #define RANDOM_FOREST_SAMPLING_RATE_HZ 20f
 #ifdef __cplusplus
 extern "C" {
@@ -15,6 +15,7 @@ extern "C" {
     RandomForestManager *createRandomForestManager(int sampleSize, const char* pathToModelFile);
     void deleteRandomForestManager(RandomForestManager *r);
     float dominantPowerOfFFT(RandomForestManager *randomForestManager, float * input, int inputSize, int managerType);
+    float percentile(float *input, int length, float percentile)
     void prepFeatureVector(RandomForestManager *randomForestManager, float *features, float *magnitudes);
     void randomForestClassificationConfidences(RandomForestManager *randomForestManager, float *magnitudeVector, float *confidences, int classCount);
     int randomForestGetClassCount(RandomForestManager *randomForestManager);
