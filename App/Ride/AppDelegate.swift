@@ -57,12 +57,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
         
         var hasSeenSetup = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")
-        if (!hasSeenSetup && NSUserDefaults.standardUserDefaults().boolForKey("hasSeenGettingStartedv2")) {
-            // in case they saw an old version, make sure they dont see it again.
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
-            NSUserDefaults.standardUserDefaults().synchronize()
-            hasSeenSetup = true
-        }
         
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
