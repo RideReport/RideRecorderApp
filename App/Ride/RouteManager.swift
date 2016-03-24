@@ -284,7 +284,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     case .Bus:
                         activityString = "🚌"
                     case .Rail:
-                        activityString = "🚌"
+                        activityString = "🚈"
                     case .Walking:
                         activityString = "🚶"
                     case .Stationary:
