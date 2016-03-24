@@ -81,22 +81,23 @@ float percentile(float *input, int length, float percentile)
     std::vector<float> sortedInput(length);
     
     // using default comparison (operator <):
-    std::partial_sort_copy (input, input+length, sortedInput.begin(), sortedInput.end());
+    std::partial_sort_copy(input, input+length, sortedInput.begin(), sortedInput.end());
 
     return sortedInput[cvFloor(length*percentile)-1];
 }
 
-void prepFeatureVector(RandomForestManager *randomForestManager, float* features, float* magnitudeVector) {
-    cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, magnitudeVector);
+void prepFeatureVector(RandomForestManager *randomForestManager, float* features, float* accelerometerVector, float* gyroscopeVector) {
+    cv::Mat mags = cv::Mat(randomForestManager->sampleSize, 1, CV_32F, accelerometerVector);
 
     cv::Scalar meanMag,stddevMag;
     meanStdDev(mags,meanMag,stddevMag);
 
     float *fftOutput = new float[randomForestManager->sampleSize];
 
-    fft(randomForestManager->fftManager, magnitudeVector, randomForestManager->sampleSize, fftOutput);
+    fft(randomForestManager->fftManager, accelerometerVector, randomForestManager->sampleSize, fftOutput);
     float maxPower = dominantPower(fftOutput, randomForestManager->sampleSize);
-    float fftAutocorrelation = autocorrelation(fftOutput, randomForestManager->sampleSize);
+//    float fftAutocorrelation = autocorrelation(fftOutput, randomForestManager->sampleSize);
+    float fftAutocorrelation = 0.0;
 
     float *spectrum = fftOutput + 1; // skip DC (zero frequency) component
     int spectrumLength = randomForestManager->sampleSize / 2;
@@ -104,6 +105,14 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     // These numbers are hard-coded for a 64-element input array
     float fftIntegralAbove8hz = trapezoidArea(spectrum + 26, spectrumLength - 26);
     float fftIntegralBelow2_5hz = trapezoidArea(spectrum, 8);
+    
+    float *fftOutput2 = new float[randomForestManager->sampleSize];
+    fft(randomForestManager->fftManager, gyroscopeVector, randomForestManager->sampleSize, fftOutput2);
+    float maxPower2 = dominantPower(fftOutput2, randomForestManager->sampleSize);
+    float *spectrum2 = fftOutput2 + 1; // skip DC (zero frequency) component
+    float fftIntegral2 = trapezoidArea(spectrum2, spectrumLength);
+    float fftIntegralAbove8hz2 = trapezoidArea(spectrum2 + 26, spectrumLength - 26);
+    float fftIntegralBelow2to3_5Hz = trapezoidArea(spectrum2 + 7, 5);
 
     features[0] = max(mags);
     features[1] = (float)meanMag.val[0];
@@ -114,26 +123,34 @@ void prepFeatureVector(RandomForestManager *randomForestManager, float* features
     features[6] = maxPower;
     features[7] = fftIntegral;
     features[8] = fftIntegralAbove8hz;
-    features[8] = fftIntegralBelow2_5hz;
-    features[8] = fftAutocorrelation;
-    features[9] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.25);
-    features[10] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.5);
-    features[11] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.75);
-    features[12] = percentile(magnitudeVector, randomForestManager->sampleSize, 0.9);
+    features[9] = fftIntegralBelow2_5hz;
+    features[10] = fftAutocorrelation;
+    features[11] = percentile(accelerometerVector, randomForestManager->sampleSize, 0.25);
+    features[12] = percentile(accelerometerVector, randomForestManager->sampleSize, 0.5);
+    features[13] = percentile(accelerometerVector, randomForestManager->sampleSize, 0.75);
+    features[14] = percentile(accelerometerVector, randomForestManager->sampleSize, 0.9);
+    features[15] = maxPower2;
+    features[16] = fftIntegral2;
+    features[17] = fftIntegralAbove8hz2;
+    features[18] = fftIntegralBelow2to3_5Hz;
+    features[19] = percentile(gyroscopeVector, randomForestManager->sampleSize, 0.25);
+    features[20] = percentile(gyroscopeVector, randomForestManager->sampleSize, 0.5);
+    features[21] = percentile(gyroscopeVector, randomForestManager->sampleSize, 0.75);
+    features[22] = percentile(gyroscopeVector, randomForestManager->sampleSize, 0.9);
 }
 
-int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float *magnitudeVector)
+int randomForesetClassifyMagnitudeVector(RandomForestManager *randomForestManager, float* accelerometerVector, float* gyroscopeVector)
 {
     cv::Mat features = cv::Mat::zeros(1, RANDOM_FOREST_VECTOR_SIZE, CV_32F);
-    prepFeatureVector(randomForestManager, features.ptr<float>(), magnitudeVector);
+    prepFeatureVector(randomForestManager, features.ptr<float>(), accelerometerVector, gyroscopeVector);
 
     return (int)randomForestManager->model->predict(features, cv::noArray(), cv::ml::DTrees::PREDICT_MAX_VOTE);
 }
 
-void randomForestClassificationConfidences(RandomForestManager *randomForestManager, float *magnitudeVector, float *confidences, int n_classes) {
+void randomForestClassificationConfidences(RandomForestManager *randomForestManager, float* accelerometerVector, float* gyroscopeVector, float *confidences, int n_classes) {
     cv::Mat features = cv::Mat::zeros(1, RANDOM_FOREST_VECTOR_SIZE, CV_32F);
 
-    prepFeatureVector(randomForestManager, features.ptr<float>(), magnitudeVector);
+    prepFeatureVector(randomForestManager, features.ptr<float>(), accelerometerVector, gyroscopeVector);
 
     cv::Mat results;
 

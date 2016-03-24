@@ -15,7 +15,7 @@ extern "C" {
     
     void fft(FFTManager *manager, float * input, int inputSize, float *output);
     float dominantPower(float *input, int inputSize);
-    float autocorrelation(float *input, int inputSize);
+    void autocorrelation(float *input, int inputSize, float *output);
 #ifdef __cplusplus
 }
 #endif
