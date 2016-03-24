@@ -695,11 +695,11 @@ class Trip : NSManagedObject {
         } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
             tripTypeString = "🚲"
         } else if (self.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
-            tripTypeString = ""
-        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
             tripTypeString = "🚌"
-        } else {
+        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
             tripTypeString = "🚈"
+        } else {
+            tripTypeString = ""
         }
 
         return tripTypeString
