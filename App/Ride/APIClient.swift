@@ -518,11 +518,25 @@ class APIClient {
     }
     
     func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetaData metadataDict:[String: AnyObject] = [:]) {
-        let accelerometerRouteURL = "/ios_accelerometer_data"
+        let accelerometerRouteURL = "ios_accelerometer_data"
         var params = metadataDict
         params["data"] = sensorDataCollection.jsonDictionary()
 
         AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+            switch response.result {
+            case .Success(let json):
+                DDLogWarn("Yep")
+            case .Failure(let error):
+                DDLogWarn("Nope!")
+            }
+        }
+    }
+    
+    func predictMode(sensorDataCollection: SensorDataCollection)->AuthenticatedAPIRequest {
+        let accelerometerRouteURL = "predict_mode"
+        var params = ["data": sensorDataCollection.jsonDictionary()]
+        
+        return AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
             switch response.result {
             case .Success(let json):
                 DDLogWarn("Yep")
