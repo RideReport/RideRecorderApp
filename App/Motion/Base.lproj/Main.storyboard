@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10115" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -502,6 +502,25 @@
                                     <action selector="toggledPredictSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="PVB-21-dgt"/>
                                 </connections>
                             </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Awz-9D-uge">
+                                <rect key="frame" x="291" y="480" width="18" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="xVp-ob-VmE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="xVp-ob-VmE"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="xVp-ob-VmE"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -510,6 +529,7 @@
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BIs-vG-Mx8"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="D8h-0L-Rse"/>
                             <constraint firstItem="soQ-1S-b5k" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Dy3-qd-Bkp"/>
+                            <constraint firstItem="Awz-9D-uge" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="EVE-vi-GPU"/>
                             <constraint firstItem="L92-uR-mv9" firstAttribute="leading" secondItem="soQ-1S-b5k" secondAttribute="trailing" constant="48" id="HCp-qr-cM9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="soQ-1S-b5k" secondAttribute="bottom" constant="20" id="Hg3-eX-0K0"/>
                             <constraint firstAttribute="leadingMargin" secondItem="oQ8-Y6-xXc" secondAttribute="leading" id="N2k-RK-k3g"/>
@@ -523,6 +543,7 @@
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="sZe-cP-CkP"/>
                             <constraint firstItem="GHU-lf-Tpf" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="xhs-ex-eKs"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="L92-uR-mv9" secondAttribute="bottom" constant="20" id="yBf-Vb-5Gc"/>
+                            <constraint firstItem="T3F-xJ-ySO" firstAttribute="top" secondItem="Awz-9D-uge" secondAttribute="bottom" constant="7" id="zzC-hg-79I"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -530,17 +551,20 @@
                                 <exclude reference="W8N-3W-MDK"/>
                                 <exclude reference="L92-uR-mv9"/>
                                 <exclude reference="oQ8-Y6-xXc"/>
+                                <exclude reference="Awz-9D-uge"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="N2k-RK-k3g"/>
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
-                                <exclude reference="c4c-By-qEe"/>
-                                <exclude reference="bUj-Y8-dF9"/>
-                                <exclude reference="yBf-Vb-5Gc"/>
                                 <exclude reference="ggS-IZ-ohS"/>
                                 <exclude reference="kH4-G6-l7X"/>
+                                <exclude reference="EVE-vi-GPU"/>
+                                <exclude reference="c4c-By-qEe"/>
+                                <exclude reference="zzC-hg-79I"/>
+                                <exclude reference="N2k-RK-k3g"/>
+                                <exclude reference="bUj-Y8-dF9"/>
+                                <exclude reference="yBf-Vb-5Gc"/>
                                 <exclude reference="HCp-qr-cM9"/>
                             </mask>
                         </variation>
@@ -550,22 +574,26 @@
                                 <include reference="W8N-3W-MDK"/>
                                 <include reference="L92-uR-mv9"/>
                                 <include reference="oQ8-Y6-xXc"/>
+                                <include reference="Awz-9D-uge"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="N2k-RK-k3g"/>
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
-                                <include reference="bUj-Y8-dF9"/>
-                                <include reference="yBf-Vb-5Gc"/>
                                 <include reference="ggS-IZ-ohS"/>
                                 <include reference="kH4-G6-l7X"/>
+                                <include reference="EVE-vi-GPU"/>
+                                <include reference="zzC-hg-79I"/>
+                                <include reference="N2k-RK-k3g"/>
+                                <include reference="bUj-Y8-dF9"/>
+                                <include reference="yBf-Vb-5Gc"/>
                                 <include reference="HCp-qr-cM9"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
                         <outlet property="activityLabel" destination="T3F-xJ-ySO" id="JHC-Ys-yjj"/>
+                        <outlet property="activityLabel2" destination="Awz-9D-uge" id="6OI-At-e2s"/>
                         <outlet property="bikeButton" destination="HIV-Ur-gJY" id="0ka-kW-dd0"/>
                         <outlet property="busButton" destination="old-BL-OqP" id="6Oi-B9-qGA"/>
                         <outlet property="cancelButton" destination="L92-uR-mv9" id="mnu-Ci-kIh"/>

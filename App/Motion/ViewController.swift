@@ -11,6 +11,7 @@ import AVFoundation
 import SwiftChart
 import CoreLocation
 import MediaPlayer
+import SwiftyJSON
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     private var backgroundTaskID = UIBackgroundTaskInvalid
@@ -29,6 +30,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
+    @IBOutlet weak var activityLabel2: UILabel!
     @IBOutlet weak var lineChart: Chart!
     
     @IBOutlet weak var uploadView: UIView!
@@ -326,6 +328,57 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             return
             }
             
+            if let sensorData = strongSelf.sensorDataCollectionForQuery {
+                APIClient.sharedClient.predictMode(sensorData).apiResponse() { (response) in
+                    switch response.result {
+                    case .Success(let json):
+                        var highestClass = 0
+                        var highestConfifence: Float = 0
+                        for (classString, subjson):(String, JSON) in json {
+                            if let confidence = subjson.float, classNum = Int(classString) {
+                                if confidence > highestConfifence {
+                                    highestConfifence = confidence
+                                    highestClass = classNum
+                                }
+                            }
+                        }
+                        
+                        var activityString = ""
+                        let activityType = Trip.ActivityType(rawValue: Int16(highestClass))!
+                        
+                        switch activityType {
+                        case .Automotive:
+                            activityString = "Driving"
+                        case .Cycling:
+                            activityString = "Biking"
+                        case .Running:
+                            activityString = "Running"
+                        case .Bus:
+                            activityString = "Bus"
+                        case .Rail:
+                            activityString = "Train"
+                        case .Walking:
+                            activityString = "Walking"
+                        case .Stationary:
+                            activityString = "Stationary"
+                        case .Unknown:
+                            activityString = "Unknown"
+                        }
+                        
+                        activityString = activityString + " " + String(highestConfifence)
+                        
+                        strongSelf.activityLabel2.text = activityString
+                        
+                        let utterance = AVSpeechUtterance(string: activityString)
+                        utterance.rate = 0.6
+                        utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+                        strongSelf.synth.speakUtterance(utterance)
+                    case .Failure(let error):
+                        DDLogWarn("Nope!")
+                    }
+                }
+            }
+            
             strongSelf.sensorDataCollectionForQuery = nil
             if (!strongSelf.isRecording) {
                 strongSelf.locationManager.stopUpdatingLocation()
@@ -370,7 +423,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                     strongSelf.backgroundTaskID = UIBackgroundTaskInvalid
                 })
                 
-                strongSelf.performSelector(Selector("runPredictionIfEnabled"), withObject: nil, afterDelay: 5.0)
+                strongSelf.performSelector(Selector("runPredictionIfEnabled"), withObject: nil, afterDelay: 2.0)
             }
             
 //            let series = ChartSeries(debugData)
