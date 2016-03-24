@@ -70,7 +70,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionManager.accelerometerUpdateInterval = self.updateInterval
         self.motionManager.gyroUpdateInterval = self.updateInterval
         
-        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
+        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize, samplingFrequency: Int(1/updateInterval))
     }
     
     private func startup() {

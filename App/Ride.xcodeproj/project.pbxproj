@@ -29,23 +29,26 @@
 		3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D1557B19D274EB00316995 /* CoreMotion.framework */; };
 		3D2705FE1C878ABE00A96DE0 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8445317919FEEC8C0096F26E /* CoreLocation.framework */; };
+		3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */; };
+		3D2AB3871CA4A75C00582A5D /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */; };
+		3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */; };
+		3D2AB3891CA4A75C00582A5D /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */; };
+		3D2AB38A1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */; };
+		3D2AB38B1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */; };
+		3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */; };
+		3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */; };
+		3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */; };
+		3D2AB3901CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
+		3D2AB3911CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
+		3D2AB3921CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
 		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
-		3D49510C1C8E091D00E216AA /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */; };
-		3D49510D1C8E091D00E216AA /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */; };
-		3D49510E1C8E091D00E216AA /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */; };
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
-		3D4951141C8E1F1B00E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
-		3D4951151C8E1FA300E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
-		3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */; };
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
 		3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
-		3D9021C11C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
-		3D9021C21C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
-		3D9021C31C9A0A9400FDF21D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D9021C01C9A0A9400FDF21D /* opencv2.framework */; };
 		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
@@ -132,9 +135,6 @@
 		845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845330A21A40B01100452EEB /* MessageUI.framework */; };
 		845369DF1C8907440083F695 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845369DE1C8907440083F695 /* Accelerate.framework */; };
 		845369E01C8907490083F695 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845369DE1C8907440083F695 /* Accelerate.framework */; };
-		845369E31C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
-		845369E41C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
-		845369E51C8E3B980083F695 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 845369E11C8E3B980083F695 /* FFTManager.cpp */; };
 		8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
 		8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */; };
 		845A044D1C1F795000556CD9 /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A04491C1F795000556CD9 /* pinGreen@2x.png */; };
@@ -232,7 +232,6 @@
 		1DCC29387F1F6DAB50132B6B /* Pods-Ride Report.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report/Pods-Ride Report.debug.xcconfig"; sourceTree = "<group>"; };
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
-		3D20FDCB1C8E26DF008317CE /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RandomForestManager.h; path = Ride/RandomForestManager.h; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D2705DD1C8785D400A96DE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -243,14 +242,17 @@
 		3D2705F91C8787A500A96DE0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		3D2705FB1C8787A900A96DE0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		3D2705FF1C878B6C00A96DE0 /* Motion-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Motion-Bridging-Header.h"; sourceTree = "<group>"; };
+		3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FFTManager.cpp; sourceTree = "<group>"; };
+		3D2AB3821CA4A75C00582A5D /* FFTManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFTManager.h; sourceTree = "<group>"; };
+		3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RandomForestManager.cpp; sourceTree = "<group>"; };
+		3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomForestManager.h; sourceTree = "<group>"; };
+		3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
+		3D2AB38F1CA4A76400582A5D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Frameworks/opencv2.framework; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
-		3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RandomForestManager.cpp; path = Ride/RandomForestManager.cpp; sourceTree = "<group>"; };
-		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = forest.cv; path = Ride/forest.cv; sourceTree = "<group>"; };
-		3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
+		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		3D9021C01C9A0A9400FDF21D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = opencv2.framework; sourceTree = "<group>"; };
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
@@ -326,8 +328,6 @@
 		8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupConfirmEmailViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		845330A21A40B01100452EEB /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		845369DE1C8907440083F695 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		845369E11C8E3B980083F695 /* FFTManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFTManager.cpp; path = Ride/FFTManager.cpp; sourceTree = "<group>"; };
-		845369E21C8E3B980083F695 /* FFTManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFTManager.h; path = Ride/FFTManager.h; sourceTree = "<group>"; };
 		8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "NSDate+HBAdditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8453BD5A1A425C5500FE2645 /* HBAnimatedGradientMaskButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HBAnimatedGradientMaskButton.h; sourceTree = "<group>"; };
 		8453BD5B1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HBAnimatedGradientMaskButton.m; sourceTree = "<group>"; };
@@ -433,7 +433,7 @@
 			files = (
 				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
 				3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */,
-				3D9021C31C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
+				3D2AB3921CA4A76400582A5D /* opencv2.framework in Frameworks */,
 				845369E01C8907490083F695 /* Accelerate.framework in Frameworks */,
 				3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */,
 				3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */,
@@ -449,13 +449,13 @@
 				84C934961C24C4C4001AC3EB /* libsqlite3.tbd in Frameworks */,
 				84C934951C24C4BC001AC3EB /* libz.tbd in Frameworks */,
 				84C934941C24C4B5001AC3EB /* libc++.tbd in Frameworks */,
-				3D9021C21C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
 				842FDCC41BD56FD90079AFCC /* libuv.a in Frameworks */,
 				842FDCBD1BD56FB00079AFCC /* MapKit.framework in Frameworks */,
 				842FDCBC1BD56FAC0079AFCC /* CoreMotion.framework in Frameworks */,
 				842FDCBB1BD56FA70079AFCC /* CoreLocation.framework in Frameworks */,
 				842FDCBA1BD56FA30079AFCC /* MessageUI.framework in Frameworks */,
 				842FDCB91BD56F9F0079AFCC /* CoreTelephony.framework in Frameworks */,
+				3D2AB3911CA4A76400582A5D /* opencv2.framework in Frameworks */,
 				842FDCB81BD56F9B0079AFCC /* GLKit.framework in Frameworks */,
 				842FDCB71BD56F960079AFCC /* ImageIO.framework in Frameworks */,
 				842FDCB61BD56F920079AFCC /* MobileCoreServices.framework in Frameworks */,
@@ -478,12 +478,12 @@
 				84F1375F1B5DAE040023EC82 /* libc++.dylib in Frameworks */,
 				84F1375D1B5DADF60023EC82 /* SystemConfiguration.framework in Frameworks */,
 				84F1375B1B5DADEF0023EC82 /* QuartzCore.framework in Frameworks */,
+				3D2AB3901CA4A76400582A5D /* opencv2.framework in Frameworks */,
 				84F137591B5DADE60023EC82 /* MobileCoreServices.framework in Frameworks */,
 				84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */,
 				84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */,
 				8409C4A61C518A8400999446 /* HealthKit.framework in Frameworks */,
 				84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */,
-				3D9021C11C9A0A9400FDF21D /* opencv2.framework in Frameworks */,
 				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
@@ -498,7 +498,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D9021C01C9A0A9400FDF21D /* opencv2.framework */,
+				3D2AB38F1CA4A76400582A5D /* opencv2.framework */,
 				3D818A151C938C0B00B64403 /* CoreMedia.framework */,
 				3D818A131C938BED00B64403 /* AssetsLibrary.framework */,
 				8409C4A51C518A8400999446 /* HealthKit.framework */,
@@ -545,19 +545,18 @@
 			path = Motion;
 			sourceTree = "<group>";
 		};
-		3D2706011C87908A00A96DE0 /* MotionClassifier */ = {
+		3D2AB3801CA4A75C00582A5D /* ActivityPredictor */ = {
 			isa = PBXGroup;
 			children = (
-				3D49510F1C8E092300E216AA /* forest.cv */,
-				845369E21C8E3B980083F695 /* FFTManager.h */,
-				845369E11C8E3B980083F695 /* FFTManager.cpp */,
-				3D20FDCB1C8E26DF008317CE /* RandomForestManager.h */,
-				3D49510A1C8E091D00E216AA /* RandomForestManager.cpp */,
-				3D4951131C8E1F1B00E216AA /* RandomForestManager.swift */,
+				3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */,
+				3D2AB3821CA4A75C00582A5D /* FFTManager.h */,
+				3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */,
+				3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */,
+				3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */,
 			);
-			name = MotionClassifier;
-			path = ..;
-			sourceTree = "<group>";
+			name = ActivityPredictor;
+			path = Frameworks/ActivityPredictor;
+			sourceTree = SOURCE_ROOT;
 		};
 		5A1465564B4DF111CE34A71E /* Pods */ = {
 			isa = PBXGroup;
@@ -694,6 +693,7 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3D49510F1C8E092300E216AA /* forest.cv */,
 				3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */,
 				3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */,
 				8451037C1C20BAE600ABD323 /* Action@2x.png */,
@@ -779,7 +779,7 @@
 		84D1555119D2733500316995 /* Ride */ = {
 			isa = PBXGroup;
 			children = (
-				3D2706011C87908A00A96DE0 /* MotionClassifier */,
+				3D2AB3801CA4A75C00582A5D /* ActivityPredictor */,
 				8453BD541A424FEE00FE2645 /* Categories */,
 				843C1C821A36704B0005CE1D /* Views */,
 				84D1555419D2733500316995 /* AppDelegate.swift */,
@@ -1187,10 +1187,8 @@
 				3D2705F81C8785F200A96DE0 /* MotionManager.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
 				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
-				3D4951161C8E1FA400E216AA /* RandomForestManager.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
-				845369E51C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */,
 				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
@@ -1199,12 +1197,14 @@
 				3DA1EFE01C8F879E002B12DB /* UIDevice+HBAdditions.m in Sources */,
 				3D2705F11C8785E000A96DE0 /* Activity.swift in Sources */,
 				3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */,
+				3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */,
+				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
+				3D2AB38B1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
 				3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */,
 				3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */,
 				3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */,
-				3D49510E1C8E091D00E216AA /* RandomForestManager.cpp in Sources */,
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
 				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
@@ -1220,23 +1220,23 @@
 				842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */,
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
+				3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */,
 				842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */,
 				842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */,
 				842FDCA81BD56EF70079AFCC /* Activity.swift in Sources */,
 				8409C4A91C518B2400999446 /* HealthKitManager.swift in Sources */,
+				3D2AB3871CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				842FDCA51BD56EF70079AFCC /* Profile.swift in Sources */,
 				842141A81C407CEE009DA851 /* TripViewController.swift in Sources */,
-				845369E41C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				842FDCA61BD56EF70079AFCC /* Location.swift in Sources */,
 				842FDCAE1BD56F070079AFCC /* CoreDataManager.swift in Sources */,
 				842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */,
 				842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */,
-				3D49510D1C8E091D00E216AA /* RandomForestManager.cpp in Sources */,
+				3D2AB38A1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				844B0B921BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */,
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
-				3D4951151C8E1FA300E216AA /* RandomForestManager.swift in Sources */,
 				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
 				842141911C3C90DC009DA851 /* Prototrip.swift in Sources */,
 				842FDCC81BD5800A0079AFCC /* UIView+HBadditions.swift in Sources */,
@@ -1255,15 +1255,13 @@
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* DirectionsViewController.swift in Sources */,
 				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
-				3D49510C1C8E091D00E216AA /* RandomForestManager.cpp in Sources */,
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
-				3D4951141C8E1F1B00E216AA /* RandomForestManager.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
+				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
-				845369E31C8E3B980083F695 /* FFTManager.cpp in Sources */,
 				84C28E101C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
 				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
@@ -1273,6 +1271,7 @@
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
+				3D2AB3891CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
 				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
@@ -1301,6 +1300,7 @@
 				84033D991A8BD26900339171 /* MotionManager.swift in Sources */,
 				8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
+				3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				842141901C3C8E19009DA851 /* Prototrip.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,
@@ -1367,6 +1367,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/OpenCV",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1396,6 +1397,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/OpenCV",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = Motion/Info.plist;
@@ -1414,6 +1416,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1436,6 +1439,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = RideTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
@@ -1536,6 +1540,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/OpenCV",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -1578,6 +1583,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Pods/OpenCV",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",

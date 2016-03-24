@@ -10,3 +10,6 @@
 [submodule "App/RideTests/ride_response_json"]
 	path = App/RideTests/ride_response_json
 	url = git@github.com:KnockSoftware/ride_response_json.git
+[submodule "App/Frameworks/ActivityPredictor"]
+	path = App/Frameworks/ActivityPredictor
+	url = git@github.com:quicklywilliam/ActivityPredictor.git
