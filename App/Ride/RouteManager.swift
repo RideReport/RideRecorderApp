@@ -455,7 +455,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
 
-        if (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) {
+        if (self.currentSensorDataCollection == nil &&
+            (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries)) {
             self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
             
             self.currentSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
@@ -496,6 +497,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
                 
+                DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))
+                
                 switch activityType {
                 case .Automotive where confidence > 0.8:
                     DDLogVerbose("Starting automotive trip, high confidence")
@@ -526,7 +529,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting transit trip.")
                     
                     strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Rail)
-                case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location
+                case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking or stationary, high confifence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
