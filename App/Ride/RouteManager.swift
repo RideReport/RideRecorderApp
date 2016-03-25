@@ -170,7 +170,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentTrip?.cancelTripStateNotification()
         } else {
             self.currentTrip = Trip(prototrip: self.currentPrototrip)
-            self.currentTrip?.activityType = NSNumber(short: activityType.rawValue)
             self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
         }
         if let prototrip = self.currentPrototrip {
@@ -466,7 +465,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     return
                 }
                 
-                let averageSpeed = strongSelf.currentSensorDataCollection!.averageSpeed
+                let averageSpeed = sensorDataCollection.averageSpeed
                 strongSelf.currentSensorDataCollection = nil
                 
                 guard let prediction = sensorDataCollection.topActivityTypePrediction else {

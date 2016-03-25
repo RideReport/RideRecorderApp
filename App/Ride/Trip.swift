@@ -787,12 +787,64 @@ class Trip : NSManagedObject {
         self.length = NSNumber(double: length)
     }
     
+    func calculateAggregatePredictedActivityType() {
+        // something for airplanes needs to go right here.
+        
+        var activityClassTopConfidenceVotes : [ActivityType: Float] = [:]
+        for collection in self.sensorDataCollections {
+            if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
+                var voteValue = topPrediction.confidence.floatValue
+                let averageSpeed = collection.averageSpeed
+                
+                if averageSpeed < 0 {
+                    // negative speed means location data wasn't good. count these votes for half
+                    voteValue = voteValue/2
+                } else {
+                    // otherwise, we give zero or partial vote power depending on if the prediction had a reasonable speed
+                    switch topPrediction.activityType {
+                    case .Automotive, .Cycling, .Rail, .Bus where averageSpeed < 1:
+                        voteValue = 0
+                    case .Automotive where averageSpeed < 4.5:
+                        voteValue = voteValue/3
+                    case .Bus, .Rail where averageSpeed < 4:
+                        voteValue = voteValue/3
+                    case .Cycling where averageSpeed < 3:
+                        voteValue = voteValue/3
+                    case .Running where averageSpeed < 2.2:
+                        voteValue = 0
+                    case .Walking where averageSpeed > 3:
+                        voteValue = 0
+                    case .Stationary where averageSpeed > 1:
+                        voteValue = 0
+                    default:
+                        break
+                    }
+                }
+                
+                let currentVote = activityClassTopConfidenceVotes[topPrediction.activityType] ?? 0
+                activityClassTopConfidenceVotes[topPrediction.activityType] = currentVote + voteValue
+            }
+        }
+        
+        var topActivityType = ActivityType.Unknown
+        var topVote: Float = 0
+        for (activityType, vote) in activityClassTopConfidenceVotes {
+            if vote > topVote {
+                topActivityType = activityType
+                topVote = vote
+            }
+        }
+        
+        self.activityType = topActivityType
+    }
+    
     func close(handler: ()->Void = {}) {
         if (self.isClosed == true) {
             handler()
             return
         }
         
+        self.calculateAggregatePredictedActivityType()
         self.calculateLength()
         self.isClosed = true
         
