@@ -826,9 +826,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if (self.currentTrip == nil && self.currentPrototrip == nil) {
                 DDLogVerbose("Got significant location, entering Motion Monitoring state.")
-                if (!self.isGettingInitialLocationForGeofence) {
-                    self.startMotionMonitoring()
-                }
+                self.startMotionMonitoring()
             } else {
                 DDLogVerbose("Got significant location but already in Motion Monitoring or active tracking state.")
             }
