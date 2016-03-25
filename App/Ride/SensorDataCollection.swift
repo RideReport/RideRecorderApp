@@ -67,7 +67,7 @@ class SensorDataCollection : NSManagedObject {
         }
         
         if (count == 0) {
-            return 0
+            return -1.0
         }
         
         return sumSpeed/Double(count)
