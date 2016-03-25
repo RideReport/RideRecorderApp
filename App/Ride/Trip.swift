@@ -22,8 +22,37 @@ import MapKit
     case Bus
     case Rail
     case Stationary
+    case Aviation
     
     static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
+    
+    var emoji: String {
+        get {
+            var tripTypeString = ""
+            switch self {
+            case .Unknown:
+                tripTypeString = "❓"
+            case .Running:
+                tripTypeString = "🏃"
+            case .Cycling:
+                tripTypeString = "🚲"
+            case .Automotive:
+                tripTypeString = "🚗"
+            case .Walking:
+                tripTypeString = "🚶"
+            case .Bus:
+                tripTypeString = "🚌"
+            case .Rail:
+                tripTypeString = "🚈"
+            case .Stationary:
+                tripTypeString = "💤"
+            case .Aviation:
+                tripTypeString = "✈️"
+            }
+            
+            return tripTypeString
+        }
+    }
 }
 
 class Trip : NSManagedObject {
@@ -683,28 +712,6 @@ class Trip : NSManagedObject {
         self.uuid = NSUUID().UUIDString
     }
     
-    func activityTypeString()->String {
-        var tripTypeString = ""
-        switch self.activityType {
-        case .Automotive:
-            tripTypeString = "🚗"
-        case .Walking:
-            tripTypeString = "🚶"
-        case .Running:
-            tripTypeString = "🏃"
-        case .Cycling:
-            tripTypeString = "🚲"
-        case .Bus:
-            tripTypeString = "🚌"
-        case .Rail:
-            tripTypeString = "🚈"
-        default:
-            tripTypeString = ""
-        }
-
-        return tripTypeString
-    }
-    
     func batteryLifeUsed() -> Int16 {
         if (self.batteryAtStart == nil || self.batteryAtEnd == nil || self.batteryAtStart.shortValue == 0 || self.batteryAtEnd.shortValue == 0) {
             return 0
@@ -985,14 +992,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }
         
         if let rewardDescription = self.rewardDescription,
@@ -1008,14 +1015,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }
         
         

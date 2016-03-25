@@ -364,6 +364,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             activityString = "Walking"
             case .Stationary:
             activityString = "Stationary"
+            case .Aviation:
+            activityString = "Flying"
             case .Unknown:
             activityString = "Unknown"
             }

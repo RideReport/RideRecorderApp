@@ -269,29 +269,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) { (sensorDataCollection) -> Void in
                 #if DEBUG
                     if let prediction = sensorDataCollection.topActivityTypePrediction {
-                        var activityString = ""
-
-                        switch prediction.activityType {
-                        case .Automotive:
-                            activityString = "🚗"
-                        case .Cycling:
-                            activityString = "🚲"
-                        case .Running:
-                            activityString = "🏃"
-                        case .Bus:
-                            activityString = "🚌"
-                        case .Rail:
-                            activityString = "🚈"
-                        case .Walking:
-                            activityString = "🚶"
-                        case .Stationary:
-                            activityString = "Stationary"
-                        case .Unknown:
-                            activityString = "Unknown"
-                        }
-                        
                         let notif = UILocalNotification()
-                        notif.alertBody = activityString + "confidence: " + String(prediction.confidence.floatValue)
+                        notif.alertBody = prediction.activityType.emoji + "confidence: " + String(prediction.confidence.floatValue)
                         notif.category = "RIDE_COMPLETION_CATEGORY"
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
@@ -478,28 +457,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 let confidence = prediction.confidence.floatValue
             
                 #if DEBUG
-                    var activityString = ""
-                    switch activityType {
-                        case .Automotive:
-                        activityString = "🚗"
-                        case .Cycling:
-                        activityString = "🚲"
-                        case .Running:
-                        activityString = "🏃"
-                        case .Bus:
-                        activityString = "🚌"
-                        case .Rail:
-                        activityString = "🚌"
-                        case .Walking:
-                        activityString = "🚶"
-                        case .Stationary:
-                        activityString = "Stationary"
-                        case .Unknown:
-                        activityString = "Unknown"
-                    }
-
                     let notif = UILocalNotification()
-                    notif.alertBody = activityString + "confidence: " + String(confidence) + " speed: " + String(averageSpeed)
+                    notif.alertBody = activityType.emoji + "confidence: " + String(confidence) + " speed: " + String(averageSpeed)
                     notif.category = "RIDE_COMPLETION_CATEGORY"
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
@@ -544,7 +503,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Walking or stationary, low confifence and matching speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
-                case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking:
+                case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking, .Aviation:
                     if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
                         DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
                         strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)

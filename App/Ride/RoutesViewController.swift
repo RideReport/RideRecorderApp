@@ -326,14 +326,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             if (numCycledTripsAllTime/numCarTripsAllTime >= 2) {
                 // if they have at least a 2/3 mode share by bike, show all time
-                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
+                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTrips), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "All Time\nMode Use"
             } else {
                 // otherwise show last 30 days to make it more actionable
-                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "Mode Use\nThis Month"
             }
