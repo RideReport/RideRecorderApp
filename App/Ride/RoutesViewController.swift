@@ -610,7 +610,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
         var ratingString = "  "
-        if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
+        if (trip.activityType != .Cycling) {
             // for non-bike trips, show activity type instead of a rating
             ratingString = trip.activityTypeString()
         } else if (trip.incidents != nil && trip.incidents.count > 0) {

@@ -75,7 +75,7 @@ class Profile : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", Trip.ActivityType.Cycling.rawValue)
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         
         let sumDescription = NSExpressionDescription()
         sumDescription.name = "sumOfLengths"

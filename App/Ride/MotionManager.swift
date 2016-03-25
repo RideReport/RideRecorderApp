@@ -150,6 +150,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             self.motionManager.stopDeviceMotionUpdates()
             self.motionManager.stopAccelerometerUpdates()
             self.motionManager.stopGyroUpdates()
+            
+            if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                self.backgroundTaskID = UIBackgroundTaskInvalid
+            }
         }
     }
     
@@ -167,9 +172,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         return mags
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Float) -> Void!) {
+    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
         self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-            handler(activityType: .Unknown, confidence: 1.0)
+            sensorDataCollection.addUnknownTypePrediction()
+            handler(sensorDataCollection: sensorDataCollection)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         })
 
@@ -184,13 +190,12 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 // run classification
                 let accelVector = self.magnitudeVector(forSensorData: sensorDataCollection.accelerometerAccelerations)
                 let gyroVector = self.magnitudeVector(forSensorData: sensorDataCollection.gyroscopeRotationRates)
-                let (sampleClass, confidence) = self.randomForestManager.classifyMagnitudeVector(accelVector, gyroVector: gyroVector)
+                let classConfidences = self.randomForestManager.classifyMagnitudeVector(accelVector, gyroVector: gyroVector)
                 
-                let activityType = Trip.ActivityType(rawValue: Int16(sampleClass))!
-                sensorDataCollection.predictedActivityType = NSNumber(short: activityType.rawValue)
+                sensorDataCollection.addActivityTypePredictions(forClassConfidences: classConfidences)
                 CoreDataManager.sharedManager.saveContext()
                 
-                handler(activityType: activityType, confidence: confidence)
+                handler(sensorDataCollection: sensorDataCollection)
                 if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                     UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                     self.backgroundTaskID = UIBackgroundTaskInvalid

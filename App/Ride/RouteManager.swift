@@ -126,7 +126,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private func tripQualifiesForResumptions(trip: Trip, fromLocation: CLLocation)->Bool {
         var timeoutInterval: NSTimeInterval = 0
-        switch Trip.ActivityType(rawValue: trip.activityType.shortValue)! {
+        switch trip.activityType {
         case .Cycling where trip.lengthMiles >= 15:
             timeoutInterval = 900
         default:
@@ -136,7 +136,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         return abs(trip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < timeoutInterval
     }
     
-    private func startTripFromLocation(fromLocation: CLLocation, ofActivityType activityType:Trip.ActivityType) {
+    private func startTripFromLocation(fromLocation: CLLocation, predictedActivityType activityType:ActivityType) {
         if (self.currentTrip != nil) {
             return
         }
@@ -157,7 +157,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         // Resume the most recent trip if it was recent enough
-        if let mostRecentTrip = Trip.mostRecentTrip() where mostRecentTrip.activityType.shortValue == activityType.rawValue && self.tripQualifiesForResumptions(mostRecentTrip, fromLocation: firstLocationOfNewTrip)  {
+        if let mostRecentTrip = Trip.mostRecentTrip() where mostRecentTrip.activityType == activityType && self.tripQualifiesForResumptions(mostRecentTrip, fromLocation: firstLocationOfNewTrip)  {
             DDLogInfo("Resuming ride")
             #if DEBUG
                 let notif = UILocalNotification()
@@ -267,36 +267,35 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries) {
             self.lastActiveTrackingActivityTypeQueryDate = NSDate()
             
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) {[weak self] (activityType, confidence) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) { (sensorDataCollection) -> Void in
                 #if DEBUG
-                    var activityString = ""
-                    switch activityType {
-                    case .Automotive:
-                        activityString = "🚗"
-                    case .Cycling:
-                        activityString = "🚲"
-                    case .Running:
-                        activityString = "🏃"
-                    case .Bus:
-                        activityString = "🚌"
-                    case .Rail:
-                        activityString = "🚈"
-                    case .Walking:
-                        activityString = "🚶"
-                    case .Stationary:
-                        activityString = "Stationary"
-                    case .Unknown:
-                        activityString = "Unknown"
+                    if let prediction = sensorDataCollection.topActivityTypePrediction {
+                        var activityString = ""
+
+                        switch prediction.activityType {
+                        case .Automotive:
+                            activityString = "🚗"
+                        case .Cycling:
+                            activityString = "🚲"
+                        case .Running:
+                            activityString = "🏃"
+                        case .Bus:
+                            activityString = "🚌"
+                        case .Rail:
+                            activityString = "🚈"
+                        case .Walking:
+                            activityString = "🚶"
+                        case .Stationary:
+                            activityString = "Stationary"
+                        case .Unknown:
+                            activityString = "Unknown"
+                        }
+                        
+                        let notif = UILocalNotification()
+                        notif.alertBody = activityString + "confidence: " + String(prediction.confidence.floatValue)
+                        notif.category = "RIDE_COMPLETION_CATEGORY"
+                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
-                    
-                    let notif = UILocalNotification()
-                    notif.alertBody = activityString + "confidence: " + String(confidence)
-                    notif.category = "RIDE_COMPLETION_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 #endif
             }
         }
@@ -462,7 +461,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentSensorDataCollection!) {[weak self] (activityType, confidence) -> Void in
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -470,6 +469,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 let averageSpeed = strongSelf.currentSensorDataCollection!.averageSpeed
                 strongSelf.currentSensorDataCollection = nil
                 
+                guard let prediction = sensorDataCollection.topActivityTypePrediction else {
+                    // this should not ever happen.
+                    DDLogVerbose("No activity type prediction found, continuing to monitor…")
+                    return
+                }
+                
+                let activityType = prediction.activityType
+                let confidence = prediction.confidence.floatValue
+            
                 #if DEBUG
                     var activityString = ""
                     switch activityType {
@@ -503,32 +511,32 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 case .Automotive where confidence > 0.8:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Automotive)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
 
                 case .Automotive where confidence > 0.5 && averageSpeed >= 6:
                     DDLogVerbose("Starting automotive trip, low confidence matching speed")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Automotive)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
                 case .Cycling where confidence > 0.8:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Cycling)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
                 case .Cycling where confidence > 0.5 && averageSpeed >= 3 && averageSpeed < 8:
                     DDLogVerbose("Starting cycling trip, low confidence matching speed")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Cycling)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
                 case .Running where confidence < 0.8:
                     DDLogVerbose("Starting running trip.")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Running)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Running)
                 case .Bus where confidence > 0.8:
                     DDLogVerbose("Starting transit trip.")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Bus)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
                 case .Rail where confidence > 0.8:
                     DDLogVerbose("Starting transit trip.")
                     
-                    strongSelf.startTripFromLocation(locations.first!, ofActivityType: .Rail)
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
                 case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking or stationary, high confifence and no speed. stopping monitor…")
                     

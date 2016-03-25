@@ -13,21 +13,21 @@ import CoreLocation
 import CoreMotion
 import MapKit
 
+@objc enum ActivityType : Int16 {
+    case Unknown = 0
+    case Running
+    case Cycling
+    case Automotive
+    case Walking
+    case Bus
+    case Rail
+    case Stationary
+    
+    static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
+}
+
 class Trip : NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
-    
-    enum ActivityType : Int16 {
-        case Unknown = 0
-        case Running
-        case Cycling
-        case Automotive
-        case Walking
-        case Bus
-        case Rail
-        case Stationary
-        
-        static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
-    }
     
     enum Rating : Int16 {
         case NotSet = 0
@@ -44,10 +44,9 @@ class Trip : NSManagedObject {
         
     @NSManaged var startingPlacemarkName : String!
     @NSManaged var endingPlacemarkName : String!
-    @NSManaged var activityType : NSNumber
+    @NSManaged var activityType : ActivityType
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
-    @NSManaged var activities : NSSet!
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
@@ -153,7 +152,7 @@ class Trip : NSManagedObject {
         if let thePrototrip = prototrip {
             self.creationDate = thePrototrip.creationDate
             self.batteryAtStart = thePrototrip.batteryAtStart
-            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+            thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
     }
     
@@ -686,19 +685,20 @@ class Trip : NSManagedObject {
     
     func activityTypeString()->String {
         var tripTypeString = ""
-        if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
+        switch self.activityType {
+        case .Automotive:
             tripTypeString = "🚗"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
+        case .Walking:
             tripTypeString = "🚶"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
+        case .Running:
             tripTypeString = "🏃"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+        case .Cycling:
             tripTypeString = "🚲"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
+        case .Bus:
             tripTypeString = "🚌"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
+        case .Rail:
             tripTypeString = "🚈"
-        } else {
+        default:
             tripTypeString = ""
         }
 
@@ -807,7 +807,7 @@ class Trip : NSManagedObject {
         self.simplifiedLocations = nil
         
         if let thePrototrip = prototrip {
-            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+            thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
     }
     
@@ -907,7 +907,7 @@ class Trip : NSManagedObject {
         
         self.cancelTripStateNotification(clearRemoteMessage)
         
-        if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+        if (self.activityType == .Cycling) {
             // don't show a notification for anything but bike trips.
             self.currentStateNotification = UILocalNotification()
             self.currentStateNotification?.alertBody = self.notificationString()

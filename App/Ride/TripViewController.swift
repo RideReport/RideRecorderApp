@@ -96,7 +96,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
                 self.rideSummaryView.body = trip.notificationString()!
                 self.rideSummaryView.hideControls(false)
                 
-                if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+                if (trip.activityType == .Cycling) {
                     if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
                         self.rideSummaryView.delay(0.1, completionHandler: {
                             self.rideSummaryView.showControls()
@@ -186,7 +186,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func transitButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Bus.rawValue)
+        self.selectedTrip.activityType = .Bus
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
@@ -194,7 +194,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func bikeButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+        self.selectedTrip.activityType = .Cycling
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
@@ -202,7 +202,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func carButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+        self.selectedTrip.activityType = .Automotive
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
@@ -210,7 +210,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func walkButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+        self.selectedTrip.activityType = .Walking
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()
@@ -218,7 +218,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
     }
     
     @IBAction func runButton(sender: AnyObject) {
-        self.selectedTrip.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
+        self.selectedTrip.activityType = .Running
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.refreshSelectrTrip()

@@ -381,12 +381,12 @@ class APIClient {
                         trip.locationsAreSynced = true
                         trip.summaryIsSynced = true
                         
-                        if let activityType = tripJson["activityType"].number,
+                        if let activityTypeNumber = tripJson["activityType"].number,
                                 rating = tripJson["rating"].number,
-                                length = tripJson["length"].number {
+                                length = tripJson["length"].number,
+                                activityType = ActivityType(rawValue: activityTypeNumber.shortValue) {
                             trip.activityType = activityType
                             trip.rating = rating
-
                             trip.length = length
                         }
                         
@@ -532,20 +532,6 @@ class APIClient {
         }
     }
     
-    func predictMode(sensorDataCollection: SensorDataCollection)->AuthenticatedAPIRequest {
-        let accelerometerRouteURL = "predict_mode"
-        var params = ["data": sensorDataCollection.jsonDictionary()]
-        
-        return AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
-            switch response.result {
-            case .Success(let json):
-                DDLogWarn("Yep")
-            case .Failure(let error):
-                DDLogWarn("Nope!")
-            }
-        }
-    }
-    
     func syncTrip(trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed.boolValue) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
@@ -573,7 +559,7 @@ class APIClient {
         
         var method = Alamofire.Method.PUT
         var tripDict = [
-            "activityType": trip.activityType,
+            "activityType": NSNumber(short: trip.activityType.rawValue),
             "creationDate": trip.creationDate.JSONString(),
             "rating": trip.rating
         ]

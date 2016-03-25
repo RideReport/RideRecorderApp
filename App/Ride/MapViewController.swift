@@ -368,7 +368,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         if let tripViewController = self.tripViewController, trip = tripViewController.selectedTrip {
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            if (trip.activityType == .Cycling) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen
                 } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
@@ -376,7 +376,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
+            } else if (trip.activityType == .Bus) {
                 return ColorPallete.sharedPallete.transitBlue
             }
             

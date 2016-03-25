@@ -11,20 +11,41 @@ import CoreData
 import CoreMotion
 import MapKit
 
-class SensorDataCollection : NSManagedObject {
-    @NSManaged var predictedActivityType : NSNumber?
-    @NSManaged var actualActivityType : NSNumber?
-    
+class SensorDataCollection : NSManagedObject {    
     @NSManaged var accelerometerAccelerations : NSOrderedSet!
     @NSManaged var deviceMotionAccelerations : NSOrderedSet!
     @NSManaged var deviceMotionRotationRates : NSOrderedSet!
     @NSManaged var gyroscopeRotationRates : NSOrderedSet!
+    @NSManaged var activityTypePredictions : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     
     @NSManaged var prototrip : Prototrip?
     @NSManaged var trip : Trip?
 
     private var referenceBootDate: NSDate!
+    
+    private var _topActivityTypePrediction: ActivityTypePrediction? // memoized computer property
+    var topActivityTypePrediction: ActivityTypePrediction? {
+        get {
+            if let prediction = self._topActivityTypePrediction {
+                return prediction
+            }
+            
+            var highScore: Float = 0
+            var topActivityTypePrediction : ActivityTypePrediction?
+            
+            for p in self.activityTypePredictions {
+                let prediction = p as! ActivityTypePrediction
+                if prediction.confidence.floatValue > highScore {
+                    topActivityTypePrediction = prediction
+                    highScore = prediction.confidence.floatValue
+                }
+            }
+            self._topActivityTypePrediction = topActivityTypePrediction
+            
+            return topActivityTypePrediction
+        }
+    }
 
     convenience init(prototrip: Prototrip) {
         self.init()
@@ -121,6 +142,19 @@ class SensorDataCollection : NSManagedObject {
         dmr.sensorDataCollection = self
     }
     
+    func addUnknownTypePrediction() {
+        _ = ActivityTypePrediction(activityType: .Unknown, confidence: 1.0, sensorDataCollection: self)
+        self._topActivityTypePrediction = nil
+    }
+    
+    func addActivityTypePredictions(forClassConfidences classConfidences:[Int: Float]) {
+        for (classInt, confidence) in classConfidences {
+            _ = ActivityTypePrediction(activityType: ActivityType(rawValue: Int16(classInt))!, confidence: confidence, sensorDataCollection: self)
+        }
+        
+        self._topActivityTypePrediction = nil
+    }
+    
     private func jsonArray(forSensorDataSet sensorDataSet:NSOrderedSet)->[AnyObject] {
         var array : [AnyObject] = []
         for s in sensorDataSet {
@@ -132,7 +166,6 @@ class SensorDataCollection : NSManagedObject {
     
     func jsonDictionary() -> [String: AnyObject] {
         var dict:[String: AnyObject] = [:]
-        dict["reportedActivityType"] = self.actualActivityType
         dict["accelerometerAccelerations"] = jsonArray(forSensorDataSet: self.accelerometerAccelerations)
         dict["deviceMotionAccelerations"] = jsonArray(forSensorDataSet: self.deviceMotionAccelerations)
         dict["deviceMotionRotationRates"] = jsonArray(forSensorDataSet: self.deviceMotionRotationRates)

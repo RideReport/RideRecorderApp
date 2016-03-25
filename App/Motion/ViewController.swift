@@ -22,6 +22,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     private var sensorDataCollectionForQuery : SensorDataCollection?
     private var sensorDataCollectionForUpload : SensorDataCollection?
     
+    private var selectedActivityType: ActivityType = .Unknown
+    
     private var locationManager : CLLocationManager!
     private var player: AVAudioPlayer!
 
@@ -98,35 +100,35 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     @IBAction func tappedCarButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+            self.selectedActivityType = .Automotive
             updateUI()
         }
     }
     
     @IBAction func tappedWalkButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+            self.selectedActivityType = .Walking
             updateUI()
         }
     }
     
     @IBAction func tappedBusButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Bus.rawValue)
+            self.selectedActivityType = .Bus
             updateUI()
         }
     }
     
     @IBAction func tappedBikeButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            self.selectedActivityType = .Cycling
             updateUI()
         }
     }
     
     @IBAction func tappedTrainButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Rail.rawValue)
+            self.selectedActivityType = .Rail
             updateUI()
         }
     }
@@ -142,7 +144,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 metadata["identifier"] = identifier.UUIDString
             }
             
+            metadata["reportedActivityType"] = NSNumber(short: self.selectedActivityType.rawValue)
+            
             CoreDataManager.sharedManager.saveContext()
+
             APIClient.sharedClient.uploadSensorDataCollection(collection, withMetaData: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
@@ -172,7 +177,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.finishButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
-                guard let activityType = collection.actualActivityType where activityType.shortValue != Trip.ActivityType.Unknown.rawValue else {
+                guard self.selectedActivityType != .Unknown else {
                     self.uploadButton.enabled = false
                     return
                 }
@@ -184,7 +189,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.bikeButton.backgroundColor = UIColor.clearColor()
                 self.railButton.backgroundColor = UIColor.clearColor()
                 
-                switch Trip.ActivityType(rawValue: activityType.shortValue)! {
+                switch self.selectedActivityType {
                 case .Automotive:
                     self.carButton.backgroundColor = UIColor.greenColor()
                 case .Walking:
@@ -323,61 +328,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
         
-        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (activityType, confidence) -> Void in
+        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
             guard let strongSelf = self else {
             return
             }
             
-            if let sensorData = strongSelf.sensorDataCollectionForQuery {
-                APIClient.sharedClient.predictMode(sensorData).apiResponse() { (response) in
-                    switch response.result {
-                    case .Success(let json):
-                        var highestClass = 0
-                        var highestConfifence: Float = 0
-                        for (classString, subjson):(String, JSON) in json {
-                            if let confidence = subjson.float, classNum = Int(classString) {
-                                if confidence > highestConfifence {
-                                    highestConfifence = confidence
-                                    highestClass = classNum
-                                }
-                            }
-                        }
-                        
-                        var activityString = ""
-                        let activityType = Trip.ActivityType(rawValue: Int16(highestClass))!
-                        
-                        switch activityType {
-                        case .Automotive:
-                            activityString = "Driving"
-                        case .Cycling:
-                            activityString = "Biking"
-                        case .Running:
-                            activityString = "Running"
-                        case .Bus:
-                            activityString = "Bus"
-                        case .Rail:
-                            activityString = "Train"
-                        case .Walking:
-                            activityString = "Walking"
-                        case .Stationary:
-                            activityString = "Stationary"
-                        case .Unknown:
-                            activityString = "Unknown"
-                        }
-                        
-                        activityString = activityString + " " + String(highestConfifence)
-                        
-                        strongSelf.activityLabel2.text = activityString
-                        
-                        let utterance = AVSpeechUtterance(string: activityString)
-                        utterance.rate = 0.6
-                        utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
-                        strongSelf.synth.speakUtterance(utterance)
-                    case .Failure(let error):
-                        DDLogWarn("Nope!")
-                    }
-                }
+            guard let prediction = sensorDataCollection.topActivityTypePrediction else {
+                // this should not ever happen.
+                DDLogVerbose("No activity type prediction found, continuing to monitor…")
+                return
             }
+            
+            let activityType = prediction.activityType
+            let confidence = prediction.confidence.floatValue
             
             strongSelf.sensorDataCollectionForQuery = nil
             if (!strongSelf.isRecording) {
