@@ -409,7 +409,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func stopMotionMonitoring(finalLocation: CLLocation?) {
-        DDLogInfo("Stopping active monitoring")
+        DDLogInfo("Stopping motion monitoring")
         
         self.disableAllGeofences()
         
