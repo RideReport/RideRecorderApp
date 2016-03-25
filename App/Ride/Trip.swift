@@ -813,7 +813,7 @@ class Trip : NSManagedObject {
                         voteValue = 0
                     case .Automotive where averageSpeed < 4.5:
                         voteValue = voteValue/3
-                    case .Bus, .Rail where averageSpeed < 4:
+                    case .Bus, .Rail where averageSpeed < 3.6:
                         voteValue = voteValue/3
                     case .Cycling where averageSpeed < 3:
                         voteValue = voteValue/3
