@@ -609,18 +609,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
-        var ratingString = "  "
-        if (trip.activityType != .Cycling) {
-            // for non-bike trips, show activity type instead of a rating
-            ratingString = trip.activityType.emoji
-        } else if (trip.incidents != nil && trip.incidents.count > 0) {
-            ratingString = "🚩"
-        } else if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-            ratingString = "👍"
-        } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-            ratingString = "👎"
-        }
-        
         var dateTitle = ""
         if (trip.creationDate != nil) {
             dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
@@ -640,7 +628,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         tableCell.textLabel!.text = String(format: "%@ %@ %@ for %@%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, lengthString, rewardString)
         
-        tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
+        tableCell.detailTextLabel!.text = String(format: "%@", trip.activityType.emoji)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
