@@ -104,7 +104,7 @@ class Trip : NSManagedObject {
     }
     @NSManaged var uuid : String!
     @NSManaged var creationDate : NSDate!
-    @NSManaged var length : NSNumber!
+    @NSManaged var length : NSNumber?
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
@@ -934,13 +934,21 @@ class Trip : NSManagedObject {
     
     var lengthMiles : Float {
         get {
-            return (self.length.floatValue * 0.000621371)
+            guard let length = self.length else {
+                return 0.0
+            }
+            
+            return (length.floatValue * 0.000621371)
         }
     }
     
     var lengthFeet : Float {
         get {
-            return (self.length.floatValue * 3.28084)
+            guard let length = self.length else {
+                return 0.0
+            }
+            
+            return (length.floatValue * 3.28084)
         }
     }
     
