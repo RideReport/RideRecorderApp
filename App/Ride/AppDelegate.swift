@@ -246,6 +246,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            DDLogInfo("Received remote notification background task expired!")
             completionHandler(.NewData)
         })
         
@@ -343,6 +344,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             
         let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            DDLogInfo("Post trip notification background task expired!")
             UIApplication.sharedApplication().cancelLocalNotification(notif)
         })
 

@@ -217,9 +217,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             stoppedTrip.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
             DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
             
-            self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
-                DDLogInfo("Background task expired!")
-            })
+            if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+                self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                    DDLogInfo("Route Manager Background task expired!")
+                })
+            }
             
             if (!UIDevice.currentDevice().wifiEnabled && !NSUserDefaults.standardUserDefaults().boolForKey("HasWarnedUserAboutWifi")) {
                 let notif = UILocalNotification()
