@@ -64,6 +64,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.scene.backgroundColor = self.spriteKitView.backgroundColor!
             self.scene.scaleMode = SKSceneScaleMode.ResizeFill
             self.scene.delegate = self
+            
+            self.spriteKitView.ignoresSiblingOrder = true
 
 #if DEBUG
             self.spriteKitView.showsDrawCount = true
@@ -73,7 +75,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             let topSpace : CGFloat = 400.0
             
             self.scene.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height + topSpace))
-            self.scene.physicsBody!.friction = 0.2
+            self.scene.physicsBody!.friction = 0.8
+            self.scene.physicsBody!.restitution = 0.0
             self.scene.physicsWorld.gravity = CGVectorMake(0,-9.8)
             
             let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji", additionalAttributes: ["rewardDescription"])
@@ -116,7 +119,12 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                             let emoji = SKSpriteNode(texture: texture, size: imageSize)
                             emoji.name = rewardDescription
                             emoji.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
-                            emoji.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40)
+                            emoji.physicsBody!.usesPreciseCollisionDetection = false
+                            emoji.physicsBody!.restitution = 0.6
+                            emoji.physicsBody!.friction = 1.0
+                            emoji.physicsBody!.density = 0.005
+                            emoji.physicsBody!.linearDamping = 0.0
+                            emoji.physicsBody!.angularDamping = 0.0
                             emojis.append(emoji)
                         }
                     }
@@ -125,14 +133,24 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 var nodeCount = 0
                 let shuffledEmojis = emojis.shuffle()
                 for emoji in shuffledEmojis  {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.01 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+                    emoji.hidden = true
+                    emoji.physicsBody?.dynamic = false
+
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
                         guard let strongSelf = self else {
                             return
                         }
                         
                         strongSelf.scene.addChild(emoji)
+                        emoji.runAction(SKAction.sequence([
+                            SKAction.waitForDuration(Double(nodeCount) * 0.01),
+                            SKAction.moveTo(CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(strongSelf.view.frame.size.width - 40.0))), strongSelf.view.frame.size.height + topSpace - 40), duration: 0.001),
+                            SKAction.runBlock({ 
+                                emoji.physicsBody!.dynamic = true
+                            }),
+                            SKAction.unhide()]))
+                        nodeCount += 1
                     }
-                    nodeCount += 1
                 }
             }
         }
@@ -145,6 +163,12 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchPoint = point
             self.touchTime = touch.timestamp
             self.touchedSprite = tappedSprite
+            self.touchedSprite!.physicsBody!.density = 1.0 // make it heavy so it can knock other emoji around easily
+            if #available(iOS 9.0, *) {
+                self.touchedSprite?.runAction(SKAction.scaleTo(4.0, duration: 0.2))
+            } else {
+                // Fallback on earlier versions
+            }
             
             if let name = tappedSprite.name {
                 self.rewardPopup.text = name
@@ -169,6 +193,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if self.touchedSprite != nil {
+            self.touchedSprite!.physicsBody!.density = 0.005
+            self.touchedSprite?.runAction(SKAction.scaleTo(1.0, duration: 0.2))
+            
             self.touchedSprite = nil
             self.currentVelocity = nil
             

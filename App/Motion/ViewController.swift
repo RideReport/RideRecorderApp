@@ -11,23 +11,28 @@ import AVFoundation
 import SwiftChart
 import CoreLocation
 import MediaPlayer
+import SwiftyJSON
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
-    
+    private var backgroundTaskID = UIBackgroundTaskInvalid
+
     private var isRecording: Bool = false
     private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
     private var sensorDataCollection : SensorDataCollection?
     private var sensorDataCollectionForQuery : SensorDataCollection?
     private var sensorDataCollectionForUpload : SensorDataCollection?
     
+    private var selectedActivityType: ActivityType = .Unknown
+    
     private var locationManager : CLLocationManager!
     private var player: AVAudioPlayer!
 
     @IBOutlet weak var startStopButton: UIButton!
-    @IBOutlet weak var predictButton: UIButton!
+    @IBOutlet weak var predictSwitch: UISwitch!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
+    @IBOutlet weak var activityLabel2: UILabel!
     @IBOutlet weak var lineChart: Chart!
     
     @IBOutlet weak var uploadView: UIView!
@@ -41,6 +46,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.predictSwitch.on = false
         
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.Fitness
@@ -71,7 +78,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         }
         
         MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
-            self.runQuery()
+            self.predictSwitch.on = !self.predictSwitch.on
+
+            var utteranceString = ""
+            if self.predictSwitch.on {
+                utteranceString = "Prediction enabled"
+            } else {
+                utteranceString = "Prediction disabled"
+            }
+            let utterance = AVSpeechUtterance(string: utteranceString)
+            utterance.rate = 0.6
+            self.synth.speakUtterance(utterance)
+            
+            self.runPredictionIfEnabled()
             
             return MPRemoteCommandHandlerStatus.Success
         }
@@ -81,35 +100,35 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     @IBAction func tappedCarButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
+            self.selectedActivityType = .Automotive
             updateUI()
         }
     }
     
     @IBAction func tappedWalkButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
+            self.selectedActivityType = .Walking
             updateUI()
         }
     }
     
     @IBAction func tappedBusButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Bus.rawValue)
+            self.selectedActivityType = .Bus
             updateUI()
         }
     }
     
     @IBAction func tappedBikeButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+            self.selectedActivityType = .Cycling
             updateUI()
         }
     }
     
     @IBAction func tappedTrainButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            collection.actualActivityType = NSNumber(short: Trip.ActivityType.Rail.rawValue)
+            self.selectedActivityType = .Rail
             updateUI()
         }
     }
@@ -125,7 +144,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 metadata["identifier"] = identifier.UUIDString
             }
             
+            metadata["reportedActivityType"] = NSNumber(short: self.selectedActivityType.rawValue)
+            
             CoreDataManager.sharedManager.saveContext()
+
             APIClient.sharedClient.uploadSensorDataCollection(collection, withMetaData: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
@@ -155,7 +177,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.finishButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
-                guard let activityType = collection.actualActivityType where activityType.shortValue != Trip.ActivityType.Unknown.rawValue else {
+                guard self.selectedActivityType != .Unknown else {
                     self.uploadButton.enabled = false
                     return
                 }
@@ -167,7 +189,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.bikeButton.backgroundColor = UIColor.clearColor()
                 self.railButton.backgroundColor = UIColor.clearColor()
                 
-                switch Trip.ActivityType(rawValue: activityType.shortValue)! {
+                switch self.selectedActivityType {
                 case .Automotive:
                     self.carButton.backgroundColor = UIColor.greenColor()
                 case .Walking:
@@ -274,8 +296,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func tappedPredict(sender: AnyObject) {
-        self.runQuery()
+    @IBAction func toggledPredictSwitch(sender: AnyObject) {
+        self.runPredictionIfEnabled()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -293,14 +315,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         CoreDataManager.sharedManager.saveContext()
     }
     
-    private func runQuery() {
+    func runPredictionIfEnabled() {
+        if (!self.predictSwitch.on) {
+            return
+        }
+        
         self.sensorDataCollectionForQuery = SensorDataCollection()
         self.locationManager.startUpdatingLocation()
         
-        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (activityType, confidence) -> Void in
+        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        }
+        
+        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
             guard let strongSelf = self else {
             return
             }
+            
+            guard let prediction = sensorDataCollection.topActivityTypePrediction else {
+                // this should not ever happen.
+                DDLogVerbose("No activity type prediction found, continuing to monitor…")
+                return
+            }
+            
+            let activityType = prediction.activityType
+            let confidence = prediction.confidence.floatValue
             
             strongSelf.sensorDataCollectionForQuery = nil
             if (!strongSelf.isRecording) {
@@ -324,6 +364,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             activityString = "Walking"
             case .Stationary:
             activityString = "Stationary"
+            case .Aviation:
+            activityString = "Flying"
             case .Unknown:
             activityString = "Unknown"
             }
@@ -335,6 +377,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
             strongSelf.synth.speakUtterance(utterance)
+            
+            let notif = UILocalNotification()
+            notif.alertBody = activityString
+            notif.category = "generalCategory"
+            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            
+            if (strongSelf.predictSwitch.on) {
+                strongSelf.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                    strongSelf.backgroundTaskID = UIBackgroundTaskInvalid
+                })
+                
+                strongSelf.performSelector(Selector("runPredictionIfEnabled"), withObject: nil, afterDelay: 2.0)
+            }
             
 //            let series = ChartSeries(debugData)
 //            series.color = ChartColors.greenColor()

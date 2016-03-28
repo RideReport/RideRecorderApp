@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+    <entity name="AccelerometerAcceleration" representedClassName=".AccelerometerAcceleration" parentEntity="SensorData" syncable="YES">
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="accelerometerAccelerations" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="ActivityTypePrediction" representedClassName=".ActivityTypePrediction" syncable="YES">
+        <attribute name="activityType" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="confidence" optional="YES" attributeType="Float" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SensorDataCollection" inverseName="activityTypePredictions" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="DeviceMotionAcceleration" representedClassName=".DeviceMotionAcceleration" parentEntity="SensorData" syncable="YES">
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="deviceMotionAccelerations" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="DeviceMotionRotationRate" representedClassName=".DeviceMotionRotationRate" parentEntity="SensorData" syncable="YES">
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="deviceMotionRotationRates" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="GyroscopeRotationRate" representedClassName=".GyroscopeRotationRate" parentEntity="SensorData" syncable="YES">
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="gyroscopeRotationRates" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="Incident" representedClassName=".Incident" syncable="YES">
+        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" attributeType="Date" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
+        <relationship name="location" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="incidents" inverseEntity="Location" syncable="YES"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="incidents" inverseEntity="Trip" syncable="YES"/>
+    </entity>
+    <entity name="Location" representedClassName=".Location" syncable="YES">
+        <attribute name="altitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="isGeofencedLocation" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isSmoothedLocation" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="verticalAccuracy" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <relationship name="incidents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Incident" inverseName="location" inverseEntity="Incident" syncable="YES"/>
+        <relationship name="lastGeofencedLocationOfProfile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="lastGeofencedLocation" inverseEntity="Profile" syncable="YES"/>
+        <relationship name="prototrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prototrip" inverseName="locations" inverseEntity="Prototrip" syncable="YES"/>
+        <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="locations" inverseEntity="SensorDataCollection" syncable="YES"/>
+        <relationship name="simplifiedInTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="simplifiedLocations" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip" syncable="YES"/>
+    </entity>
+    <entity name="Profile" representedClassName=".Profile" syncable="YES">
+        <attribute name="accessToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="accessTokenExpiresIn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="currentStreakLength" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="currentStreakStartDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="longestStreakLength" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="longestStreakStartDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="lastGeofencedLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="lastGeofencedLocationOfProfile" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <entity name="Prototrip" representedClassName=".Prototrip" syncable="YES">
+        <attribute name="activityType" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="batteryAtStart" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Location" inverseName="prototrip" inverseEntity="Location" syncable="YES"/>
+        <relationship name="sensorDataCollections" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="SensorDataCollection" inverseName="prototrip" inverseEntity="SensorDataCollection" syncable="YES"/>
+    </entity>
+    <entity name="SensorData" representedClassName=".SensorData" isAbstract="YES" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="x" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="y" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="z" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <entity name="SensorDataCollection" representedClassName=".SensorDataCollection" syncable="YES">
+        <attribute name="actualActivityType" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="accelerometerAccelerations" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="AccelerometerAcceleration" inverseName="sensorDataCollection" inverseEntity="AccelerometerAcceleration" syncable="YES"/>
+        <relationship name="activityTypePredictions" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ActivityTypePrediction" inverseName="sensorDataCollection" inverseEntity="ActivityTypePrediction" syncable="YES"/>
+        <relationship name="deviceMotionAccelerations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="DeviceMotionAcceleration" inverseName="sensorDataCollection" inverseEntity="DeviceMotionAcceleration" syncable="YES"/>
+        <relationship name="deviceMotionRotationRates" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="DeviceMotionRotationRate" inverseName="sensorDataCollection" inverseEntity="DeviceMotionRotationRate" syncable="YES"/>
+        <relationship name="gyroscopeRotationRates" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="GyroscopeRotationRate" inverseName="sensorDataCollection" inverseEntity="GyroscopeRotationRate" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="sensorDataCollection" inverseEntity="Location" syncable="YES"/>
+        <relationship name="prototrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prototrip" inverseName="sensorDataCollections" inverseEntity="Prototrip" syncable="YES"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Trip" inverseName="sensorDataCollections" inverseEntity="Trip" syncable="YES"/>
+    </entity>
+    <entity name="Trip" representedClassName=".Trip" syncable="YES">
+        <attribute name="activityType" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="batteryAtEnd" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="batteryAtStart" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="climacon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
+        <attribute name="endingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hasSmoothed" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="healthKitUuid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isClosed" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
+        <attribute name="length" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="locationsAreSynced" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="locationsNotYetDownloaded" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="rewardDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rewardEmoji" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sectionIdentifier" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="summaryIsSynced" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="temperature" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="incidents" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Incident" inverseName="trip" inverseEntity="Incident" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
+        <relationship name="sensorDataCollections" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="SensorDataCollection" inverseName="trip" inverseEntity="SensorDataCollection" syncable="YES"/>
+        <relationship name="simplifiedLocations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="simplifiedInTrip" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AccelerometerAcceleration" positionX="-18" positionY="171" width="128" height="60"/>
+        <element name="ActivityTypePrediction" positionX="-36" positionY="144" width="128" height="90"/>
+        <element name="DeviceMotionAcceleration" positionX="-45" positionY="144" width="128" height="60"/>
+        <element name="DeviceMotionRotationRate" positionX="-36" positionY="153" width="128" height="60"/>
+        <element name="GyroscopeRotationRate" positionX="-27" positionY="162" width="128" height="60"/>
+        <element name="Incident" positionX="-45" positionY="72" width="128" height="135"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="285"/>
+        <element name="Profile" positionX="-45" positionY="144" width="128" height="165"/>
+        <element name="Prototrip" positionX="-54" positionY="135" width="128" height="120"/>
+        <element name="SensorData" positionX="-45" positionY="144" width="128" height="105"/>
+        <element name="SensorDataCollection" positionX="-54" positionY="135" width="128" height="180"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="420"/>
+    </elements>
+</model>

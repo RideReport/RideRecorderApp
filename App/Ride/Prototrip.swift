@@ -12,7 +12,6 @@ import CoreData
 class Prototrip : NSManagedObject {
     @NSManaged var activityType : NSNumber
     @NSManaged var batteryAtStart : NSNumber!
-    @NSManaged var activities : NSSet!
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var creationDate : NSDate!
@@ -38,17 +37,11 @@ class Prototrip : NSManagedObject {
         return nil
     }
     
-    func moveActivitiesAndLocationsToTrip(trip: Trip) {
+    func moveSensorDataAndLocationsToTrip(trip: Trip) {
         for loc in self.locations {
             let location = loc as! Location
             location.trip = trip
             location.prototrip = nil
-        }
-        
-        for act in self.activities {
-            let activity = act as! Activity
-            activity.trip = trip
-            activity.prototrip = nil
         }
         
         for c in self.sensorDataCollections {

@@ -326,14 +326,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
             if (numCycledTripsAllTime/numCarTripsAllTime >= 2) {
                 // if they have at least a 2/3 mode share by bike, show all time
-                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
+                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTrips), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "All Time\nMode Use"
             } else {
                 // otherwise show last 30 days to make it more actionable
-                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: "🚲"),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: "🚗"),
+                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
+                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
                     PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
                 modeShareLabelTitle = "Mode Use\nThis Month"
             }
@@ -572,7 +572,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             var tabStops : [NSTextTab] = []
             var totalLineWidth : CGFloat = 0
             var columnCount = 0
-            while totalLineWidth + totalWidth < (self.view.frame.size.width - 10) {
+            while totalLineWidth + totalWidth < (self.view.frame.size.width - 12) {
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
@@ -609,18 +609,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
-        var ratingString = "  "
-        if (trip.activityType.shortValue != Trip.ActivityType.Cycling.rawValue) {
-            // for non-bike trips, show activity type instead of a rating
-            ratingString = trip.activityTypeString()
-        } else if (trip.incidents != nil && trip.incidents.count > 0) {
-            ratingString = "🚩"
-        } else if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-            ratingString = "👍"
-        } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-            ratingString = "👎"
-        }
-        
         var dateTitle = ""
         if (trip.creationDate != nil) {
             dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
@@ -640,7 +628,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         tableCell.textLabel!.text = String(format: "%@ %@ %@ for %@%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, lengthString, rewardString)
         
-        tableCell.detailTextLabel!.text = String(format: "%@", ratingString)
+        tableCell.detailTextLabel!.text = String(format: "%@", trip.activityType.emoji)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

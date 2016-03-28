@@ -25,6 +25,7 @@ class HamburgerNavController: UINavigationController {
 
 class HamburgerViewController: UITableViewController {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
+    @IBOutlet weak var healthKitTableViewCell: UITableViewCell!
     @IBOutlet weak var mapStatsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
     
@@ -37,6 +38,7 @@ class HamburgerViewController: UITableViewController {
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
         self.updatePauseResumeText()
+        self.updateHealthKitText()
         self.tableView.reloadData()
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
@@ -60,6 +62,22 @@ class HamburgerViewController: UITableViewController {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func updateHealthKitText() {
+        guard #available(iOS 9.0, *) else {
+            self.healthKitTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
+            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.None
+            return
+        }
+        
+        if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+            self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        } else {
+            self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.None
+        }
     }
     
     func updateAccountStatusText() {
@@ -96,14 +114,28 @@ class HamburgerViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (APIClient.sharedClient.area) {
         case .Area(_,_, _, _):
-            return 3
+            return 4
         default:
-            return 3
+            return 4
         }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 1) {
+        if (indexPath.row == 3) {
+            let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
+            NSUserDefaults.standardUserDefaults().setBool(!priorHealthKitState, forKey: "healthKitIsSetup")
+            NSUserDefaults.standardUserDefaults().synchronize()
+            self.updateHealthKitText()
+            
+            if (priorHealthKitState) {
+                // it was enabled
+                HealthKitManager.shutdown()
+            } else {
+                HealthKitManager.startup()
+            }
+            
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        } else if (indexPath.row == 1) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){

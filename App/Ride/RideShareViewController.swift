@@ -272,7 +272,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         }
         
         if let trip = self.trip {
-            if (trip.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+            if (trip.activityType == .Cycling) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen
                 } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
@@ -280,7 +280,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
-            } else if (trip.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
+            } else if (trip.activityType == .Bus || trip.activityType == .Rail) {
                 return ColorPallete.sharedPallete.transitBlue
             }
             

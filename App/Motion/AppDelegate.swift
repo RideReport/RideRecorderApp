@@ -20,8 +20,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CoreDataManager.startup()
         MotionManager.startup()
         APIClient.startup()
+        
+        startupNotifications()
 
         return true
+    }
+    
+    
+    func startupNotifications() {
+        let generalCategory = UIMutableUserNotificationCategory()
+        generalCategory.identifier = "generalCategory"
+        
+        let notificationCategories : Set<UIUserNotificationCategory> = Set([generalCategory])
+        
+        let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
+        let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
     }
 
     func applicationWillResignActive(application: UIApplication) {

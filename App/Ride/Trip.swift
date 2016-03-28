@@ -13,21 +13,50 @@ import CoreLocation
 import CoreMotion
 import MapKit
 
+@objc enum ActivityType : Int16 {
+    case Unknown = 0
+    case Running
+    case Cycling
+    case Automotive
+    case Walking
+    case Bus
+    case Rail
+    case Stationary
+    case Aviation
+    
+    static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
+    
+    var emoji: String {
+        get {
+            var tripTypeString = ""
+            switch self {
+            case .Unknown:
+                tripTypeString = "❓"
+            case .Running:
+                tripTypeString = "🏃"
+            case .Cycling:
+                tripTypeString = "🚲"
+            case .Automotive:
+                tripTypeString = "🚗"
+            case .Walking:
+                tripTypeString = "🚶"
+            case .Bus:
+                tripTypeString = "🚌"
+            case .Rail:
+                tripTypeString = "🚈"
+            case .Stationary:
+                tripTypeString = "💤"
+            case .Aviation:
+                tripTypeString = "✈️"
+            }
+            
+            return tripTypeString
+        }
+    }
+}
+
 class Trip : NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
-    
-    enum ActivityType : Int16 {
-        case Unknown = 0
-        case Running
-        case Cycling
-        case Automotive
-        case Walking
-        case Bus
-        case Rail
-        case Stationary
-        
-        static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
-    }
     
     enum Rating : Int16 {
         case NotSet = 0
@@ -44,10 +73,9 @@ class Trip : NSManagedObject {
         
     @NSManaged var startingPlacemarkName : String!
     @NSManaged var endingPlacemarkName : String!
-    @NSManaged var activityType : NSNumber
+    @NSManaged var activityType : ActivityType
     @NSManaged var batteryAtEnd : NSNumber!
     @NSManaged var batteryAtStart : NSNumber!
-    @NSManaged var activities : NSSet!
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
@@ -76,7 +104,7 @@ class Trip : NSManagedObject {
     }
     @NSManaged var uuid : String!
     @NSManaged var creationDate : NSDate!
-    @NSManaged var length : NSNumber!
+    @NSManaged var length : NSNumber?
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
@@ -153,7 +181,7 @@ class Trip : NSManagedObject {
         if let thePrototrip = prototrip {
             self.creationDate = thePrototrip.creationDate
             self.batteryAtStart = thePrototrip.batteryAtStart
-            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+            thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
     }
     
@@ -684,27 +712,6 @@ class Trip : NSManagedObject {
         self.uuid = NSUUID().UUIDString
     }
     
-    func activityTypeString()->String {
-        var tripTypeString = ""
-        if (self.activityType.shortValue == Trip.ActivityType.Automotive.rawValue) {
-            tripTypeString = "🚗"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Walking.rawValue) {
-            tripTypeString = "🚶"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Running.rawValue) {
-            tripTypeString = "🏃"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
-            tripTypeString = "🚲"
-        } else if (self.activityType.shortValue == Trip.ActivityType.Bus.rawValue) {
-            tripTypeString = ""
-        } else if (self.activityType.shortValue == Trip.ActivityType.Rail.rawValue) {
-            tripTypeString = "🚌"
-        } else {
-            tripTypeString = "🚈"
-        }
-
-        return tripTypeString
-    }
-    
     func batteryLifeUsed() -> Int16 {
         if (self.batteryAtStart == nil || self.batteryAtEnd == nil || self.batteryAtStart.shortValue == 0 || self.batteryAtEnd.shortValue == 0) {
             return 0
@@ -787,12 +794,64 @@ class Trip : NSManagedObject {
         self.length = NSNumber(double: length)
     }
     
+    func calculateAggregatePredictedActivityType() {
+        // something for airplanes needs to go right here.
+        
+        var activityClassTopConfidenceVotes : [ActivityType: Float] = [:]
+        for collection in self.sensorDataCollections {
+            if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
+                var voteValue = topPrediction.confidence.floatValue
+                let averageSpeed = collection.averageSpeed
+                
+                if averageSpeed < 0 {
+                    // negative speed means location data wasn't good. count these votes for half
+                    voteValue = voteValue/2
+                } else {
+                    // otherwise, we give zero or partial vote power depending on if the prediction had a reasonable speed
+                    switch topPrediction.activityType {
+                    case .Automotive, .Cycling, .Rail, .Bus where averageSpeed < 1:
+                        voteValue = 0
+                    case .Automotive where averageSpeed < 4.5:
+                        voteValue = voteValue/3
+                    case .Bus, .Rail where averageSpeed < 3.6:
+                        voteValue = voteValue/3
+                    case .Cycling where averageSpeed < 3:
+                        voteValue = voteValue/3
+                    case .Running where averageSpeed < 2.2:
+                        voteValue = 0
+                    case .Walking where averageSpeed > 3:
+                        voteValue = 0
+                    case .Stationary where averageSpeed > 1:
+                        voteValue = 0
+                    default:
+                        break
+                    }
+                }
+                
+                let currentVote = activityClassTopConfidenceVotes[topPrediction.activityType] ?? 0
+                activityClassTopConfidenceVotes[topPrediction.activityType] = currentVote + voteValue
+            }
+        }
+        
+        var topActivityType = ActivityType.Unknown
+        var topVote: Float = 0
+        for (activityType, vote) in activityClassTopConfidenceVotes {
+            if vote > topVote {
+                topActivityType = activityType
+                topVote = vote
+            }
+        }
+        
+        self.activityType = topActivityType
+    }
+    
     func close(handler: ()->Void = {}) {
         if (self.isClosed == true) {
             handler()
             return
         }
         
+        self.calculateAggregatePredictedActivityType()
         self.calculateLength()
         self.isClosed = true
         
@@ -807,7 +866,7 @@ class Trip : NSManagedObject {
         self.simplifiedLocations = nil
         
         if let thePrototrip = prototrip {
-            thePrototrip.moveActivitiesAndLocationsToTrip(self)
+            thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
     }
     
@@ -875,13 +934,21 @@ class Trip : NSManagedObject {
     
     var lengthMiles : Float {
         get {
-            return (self.length.floatValue * 0.000621371)
+            guard let length = self.length else {
+                return 0.0
+            }
+            
+            return (length.floatValue * 0.000621371)
         }
     }
     
     var lengthFeet : Float {
         get {
-            return (self.length.floatValue * 3.28084)
+            guard let length = self.length else {
+                return 0.0
+            }
+            
+            return (length.floatValue * 3.28084)
         }
     }
     
@@ -907,7 +974,7 @@ class Trip : NSManagedObject {
         
         self.cancelTripStateNotification(clearRemoteMessage)
         
-        if (self.activityType.shortValue == Trip.ActivityType.Cycling.rawValue) {
+        if (self.activityType == .Cycling) {
             // don't show a notification for anything but bike trips.
             self.currentStateNotification = UILocalNotification()
             self.currentStateNotification?.alertBody = self.notificationString()
@@ -933,14 +1000,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }
         
         if let rewardDescription = self.rewardDescription,
@@ -956,14 +1023,14 @@ class Trip : NSManagedObject {
         
         if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
             }
         } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles, self.startingPlacemarkName)
+            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityTypeString(), self.lengthMiles)
+            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }
         
         
@@ -1205,117 +1272,4 @@ class Trip : NSManagedObject {
         
         return sumSpeed/Double(count)
     }
-    
-    func legacyClasifyActivityType(handler: ()->Void) {
-        if (self.activities != nil && self.activities.count > 0) {
-            self.runActivityClassification()
-            handler()
-        } else {
-            MotionManager.sharedManager.queryMotionActivity(self.startDate, toDate: self.endDate) { (activities, error) in
-                dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    
-                    if (activities == nil || activities!.count == 0) {
-                        #if DEBUG
-                            let notif = UILocalNotification()
-                            notif.alertBody = "🐞 Got no motion activities!!"
-                            notif.userInfo = ["uuid" : strongSelf.uuid]
-                            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                        #endif
-                    } else {
-                        for activity in activities! {
-                            Activity(activity: activity , trip: strongSelf)
-                        }
-                    }
-                    
-                    CoreDataManager.sharedManager.saveContext()
-                    
-                    strongSelf.runActivityClassification()
-                    handler()
-                })
-            }
-        }
-    }
-    
-    private func runActivityClassification() {
-        if (self.activities == nil || self.activities.count == 0) {
-            // if no data is available, fall back on speed alone
-            
-            DDLogInfo(String(format: "No activites! Found speed: %f", self.averageSpeed))
-            if (self.averageSpeed >= 8) {
-                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            } else if (self.averageSpeed >= 3) {
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            } else {
-                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-            }
-            
-            return
-        }
-        
-        var walkScore = 0
-        var runScore = 0
-        var autoScore = 0
-        var cycleScore = 0
-        for activity in self.activities.allObjects {
-            let theActivity = (activity as! Activity)
-            if (theActivity.walking) {
-                walkScore += theActivity.confidence.integerValue
-            }
-            if (theActivity.running) {
-                runScore += theActivity.confidence.integerValue
-            }
-            if (theActivity.automotive) {
-                autoScore += theActivity.confidence.integerValue
-            }
-            if (theActivity.cycling) {
-                cycleScore += theActivity.confidence.integerValue
-            }
-        }
-        
-        var scores = [walkScore, runScore, autoScore, cycleScore]
-        DDLogInfo(String(format: "Activities scores: %@, speed: %f", scores, self.averageSpeed))
-        
-        scores.sortInPlace{$1 < $0}
-        if scores[0] == 0 {
-            // if no one scored, possibly because there was no activity data available, fall back on speeds.
-            DDLogInfo(String(format: "No activites scored! Found speed: %f", self.averageSpeed))
-            if (self.averageSpeed >= 8) {
-                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            } else if (self.averageSpeed >= 3) {
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            } else {
-                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-            }
-        } else if scores[0] == cycleScore {
-            if (self.averageSpeed >= 8.5) {
-                // Core Motion misidentifies auto trips as cycling
-                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            } else {
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            }
-        } else if scores[0] == walkScore {
-            if (self.averageSpeed >= 3) {
-                // Core Motion misidentifies cycling as walking, particularly when your phone is in your pocket during the ride
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            } else {
-                self.activityType = NSNumber(short: Trip.ActivityType.Walking.rawValue)
-            }
-        } else if scores[0] == autoScore {
-            if (((Double(walkScore + cycleScore + runScore)/Double(autoScore)) > 0.5 && self.averageSpeed < 8.5) ||
-                self.averageSpeed < 5.5) {
-                // Core Motion misidentifies cycling as automotive
-                // if it isn't a decisive victory, also look at speed
-                self.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
-            } else {
-                self.activityType = NSNumber(short: Trip.ActivityType.Automotive.rawValue)
-            }
-        } else if scores[0] == runScore {
-            self.activityType = NSNumber(short: Trip.ActivityType.Running.rawValue)
-        }
-        
-    }
-
 }

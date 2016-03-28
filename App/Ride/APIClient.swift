@@ -338,15 +338,6 @@ class APIClient {
             })
         }
         
-        self.runDataMigration(dataMigrationName: "hasRunMotionProcessingBugMigration") {
-            for t in Trip.unclassifiedTrips() {
-                let trip = t as! Trip
-                trip.legacyClasifyActivityType() {
-                    trip.saveAndMarkDirty()
-                }
-            }
-        }
-        
         self.runDataMigration(dataMigrationName: "hasRunSummarySyncedPropertyAdditionMigration") {
             for t in Trip.unweatheredTrips() {
                 let trip = t as! Trip
@@ -390,12 +381,12 @@ class APIClient {
                         trip.locationsAreSynced = true
                         trip.summaryIsSynced = true
                         
-                        if let activityType = tripJson["activityType"].number,
+                        if let activityTypeNumber = tripJson["activityType"].number,
                                 rating = tripJson["rating"].number,
-                                length = tripJson["length"].number {
+                                length = tripJson["length"].number,
+                                activityType = ActivityType(rawValue: activityTypeNumber.shortValue) {
                             trip.activityType = activityType
                             trip.rating = rating
-
                             trip.length = length
                         }
                         
@@ -527,7 +518,7 @@ class APIClient {
     }
     
     func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetaData metadataDict:[String: AnyObject] = [:]) {
-        let accelerometerRouteURL = "/ios_accelerometer_data"
+        let accelerometerRouteURL = "ios_accelerometer_data"
         var params = metadataDict
         params["data"] = sensorDataCollection.jsonDictionary()
 
@@ -568,7 +559,7 @@ class APIClient {
         
         var method = Alamofire.Method.PUT
         var tripDict = [
-            "activityType": trip.activityType,
+            "activityType": NSNumber(short: trip.activityType.rawValue),
             "creationDate": trip.creationDate.JSONString(),
             "rating": trip.rating
         ]

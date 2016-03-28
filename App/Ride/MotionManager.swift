@@ -70,7 +70,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionManager.accelerometerUpdateInterval = self.updateInterval
         self.motionManager.gyroUpdateInterval = self.updateInterval
         
-        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize)
+        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize, samplingFrequency: Int(1/updateInterval))
     }
     
     private func startup() {
@@ -95,18 +95,6 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             MotionManager.authorizationStatus = .Authorized
             NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)            
         }
-    }
-    
-    private func magnitudeVector(forSensorDataCollection sensorDataCollection:SensorDataCollection)->[Float] {
-        var mags: [Float] = []
-        
-        for elem in sensorDataCollection.accelerometerAccelerations {
-            let reading = elem as! AccelerometerAcceleration
-            let sum = reading.x.floatValue*reading.x.floatValue + reading.y.floatValue*reading.y.floatValue + reading.z.floatValue*reading.z.floatValue
-            mags.append(sqrtf(sum))
-        }
-        
-        return mags
     }
     
     func stopGatheringSensorData() {
@@ -165,53 +153,96 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             self.motionManager.stopDeviceMotionUpdates()
             self.motionManager.stopAccelerometerUpdates()
             self.motionManager.stopGyroUpdates()
+            
+            if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                self.backgroundTaskID = UIBackgroundTaskInvalid
+            }
         }
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (activityType: Trip.ActivityType, confidence: Float) -> Void!) {
-        if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+    
+    private func magnitudeVector(forSensorData sensorData:NSOrderedSet)->[Float] {
+        var mags: [Float] = []
+        
+        for elem in sensorData {
+            let reading = elem as! SensorData
+            let sum = reading.x.floatValue*reading.x.floatValue + reading.y.floatValue*reading.y.floatValue + reading.z.floatValue*reading.z.floatValue
+            mags.append(sqrtf(sum))
+            if mags.count >= self.sampleWindowSize { break } // it is possible we over-colleted some of the sensor data
+        }
+        
+        return mags
+    }
+    
+    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
+    if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
-                handler(activityType: .Unknown, confidence: 1.0)
+    	        sensorDataCollection.addUnknownTypePrediction()
+	            handler(sensorDataCollection: sensorDataCollection)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
             // this shouldn't happen
             DDLogInfo("Could not query activity type, background task already in process!")
-            handler(activityType: .Unknown, confidence: 1.0)
+            sensorDataCollection.addUnknownTypePrediction()
+            handler(sensorDataCollection: sensorDataCollection)
             return
         }
 
         self.isQueryingMotionData = true
+        
+        let completionBlock = {
+            if sensorDataCollection.accelerometerAccelerations.count >= self.sampleWindowSize &&
+                sensorDataCollection.gyroscopeRotationRates.count >= self.sampleWindowSize
+            {
+                self.isQueryingMotionData = false
+                self.stopMotionUpdatesAsNeeded()
+                // run classification
+                let accelVector = self.magnitudeVector(forSensorData: sensorDataCollection.accelerometerAccelerations)
+                let gyroVector = self.magnitudeVector(forSensorData: sensorDataCollection.gyroscopeRotationRates)
+                let classConfidences = self.randomForestManager.classifyMagnitudeVector(accelVector, gyroVector: gyroVector)
+                
+                sensorDataCollection.addActivityTypePredictions(forClassConfidences: classConfidences)
+                CoreDataManager.sharedManager.saveContext()
+                
+                handler(sensorDataCollection: sensorDataCollection)
+                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                    self.backgroundTaskID = UIBackgroundTaskInvalid
+                }
+            }
+        }
             
         self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard let accelerometerAcceleration = motion else {
                 return
             }
             guard self.isQueryingMotionData else {
+                self.stopMotionUpdatesAsNeeded()
                 return
             }
             
             dispatch_async(dispatch_get_main_queue()) {
                 sensorDataCollection.addAccelerometerData(accelerometerAcceleration)
-                if sensorDataCollection.accelerometerAccelerations.count >= self.sampleWindowSize {
-                    self.isQueryingMotionData = false
-                    self.stopMotionUpdatesAsNeeded()
-                    // run classification
-                    let magVector = self.magnitudeVector(forSensorDataCollection: sensorDataCollection)
-                    let (sampleClass, confidence) = self.randomForestManager.classifyMagnitudeVector(magVector)
-                    
-                    handler(activityType: Trip.ActivityType(rawValue: Int16(sampleClass))!, confidence: confidence)
-                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                        self.backgroundTaskID = UIBackgroundTaskInvalid
-                    }
-                }
+                completionBlock()
             }
         }
-    }
-    
-    func queryMotionActivity(starting: NSDate!, toDate: NSDate!, withHandler handler: CMMotionActivityQueryHandler!) {
-        self.motionActivityManager.queryActivityStartingFromDate(starting, toDate: toDate, toQueue: self.motionQueue, withHandler: handler)
+        
+        self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard let gyroscopeData = motion else {
+                return
+            }
+            guard self.isQueryingMotionData else {
+                self.stopMotionUpdatesAsNeeded()
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                sensorDataCollection.addGyroscopeData(gyroscopeData)
+                completionBlock()
+            }
+        }
     }
 }
