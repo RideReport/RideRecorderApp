@@ -523,7 +523,28 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
-    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetaData metadataDict:[String: AnyObject] = [:]) {
+    func uploadSensorData(trip: Trip, withMetadata metadataDict:[String: AnyObject] = [:]) {
+        let routeURL = "trips/" + trip.uuid + "/sensor_data"
+        
+        var sensorDataJsonArray : [[String: AnyObject]] = []
+        for sensorDataCollection in trip.sensorDataCollections {
+            sensorDataJsonArray.append((sensorDataCollection as! SensorDataCollection).jsonDictionary())
+        }
+        
+        var params = metadataDict
+        params["data"] = sensorDataJsonArray
+        
+        _ = AuthenticatedAPIRequest(client: self, method: .POST, route: routeURL, parameters:params , authenticated: true) { (response) in
+            switch response.result {
+            case .Success(_):
+                DDLogWarn("Yep")
+            case .Failure(_):
+                DDLogWarn("Nope!")
+            }
+        }
+    }
+    
+    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: AnyObject] = [:]) {
         let accelerometerRouteURL = "ios_accelerometer_data"
         var params = metadataDict
         params["data"] = sensorDataCollection.jsonDictionary()

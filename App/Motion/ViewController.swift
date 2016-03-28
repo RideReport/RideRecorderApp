@@ -148,7 +148,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             
             CoreDataManager.sharedManager.saveContext()
 
-            APIClient.sharedClient.uploadSensorDataCollection(collection, withMetaData: metadata)
+            APIClient.sharedClient.uploadSensorDataCollection(collection, withMetadata: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
             self.sensorDataCollection = nil

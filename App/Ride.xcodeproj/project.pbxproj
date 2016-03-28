@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		298BE4AE69FDA0783625F182 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0E122EDDBB5D8C24ABC57A /* Pods_Ride_Report.framework */; };
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
+		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
+		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
+		3D21CF551CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */; };
 		3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DD1C8785D400A96DE0 /* ViewController.swift */; };
 		3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2705DF1C8785D400A96DE0 /* Main.storyboard */; };
@@ -233,6 +236,7 @@
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
+		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D2705DD1C8785D400A96DE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -631,6 +635,7 @@
 				842599D61B90F3540038C3CA /* Setup */,
 				842141A61C407CEE009DA851 /* TripViewController.swift */,
 				847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */,
+				3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */,
 				840042621C1B774700368A82 /* RideShareViewController.swift */,
 				8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */,
 				8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */,
@@ -1209,6 +1214,7 @@
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
 				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
+				3D21CF551CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1218,6 +1224,7 @@
 			files = (
 				842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */,
 				84C28E111C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
+				3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 				842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */,
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
@@ -1294,6 +1301,7 @@
 				844B0B941BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
 				84091CD91BD848A400264652 /* RCounter.m in Sources */,
 				84BD37001A706A0E0084B6AF /* SetupTermsViewController.swift in Sources */,
+				3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				840042631C1B774700368A82 /* RideShareViewController.swift in Sources */,
 				8453BD5C1A425C5500FE2645 /* HBAnimatedGradientMaskButton.m in Sources */,

@@ -690,7 +690,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 smoothButtonTitle = "Smooth"
             }
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: nil, destructiveButtonTitle: nil, otherButtonTitles: [smoothButtonTitle, "Simulate Ride End", "Sync trip", "Simplify", "Sync to Health Kit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Sync", "Upload Sensor Data", "Sync to Health Kit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -702,18 +702,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            if (trip.hasSmoothed) {
-                trip.undoSmoothWithCompletionHandler({})
-            } else {
-                trip.smoothIfNeeded({})
-            }
-        } else if (buttonIndex == 1) {
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
-        } else if (buttonIndex == 2) {
+        } else if (buttonIndex == 1) {
             APIClient.sharedClient.syncTrip(trip)
+        } else if (buttonIndex == 2) {
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
+            if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
+                reportModeClassificationViewController.trip = trip
+            }
+            self.presentViewController(reportModeClassificationNavigationViewController, animated: true, completion: nil)
+
         } else if (buttonIndex == 3) {
-           trip.simplify()
-        } else if (buttonIndex == 4) {
             HealthKitManager.sharedManager.saveTrip(trip)
         }
     }
