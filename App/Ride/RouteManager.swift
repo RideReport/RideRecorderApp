@@ -160,10 +160,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if let mostRecentTrip = Trip.mostRecentTrip() where mostRecentTrip.activityType == activityType && self.tripQualifiesForResumptions(mostRecentTrip, fromLocation: firstLocationOfNewTrip)  {
             DDLogInfo("Resuming ride")
             #if DEBUG
-                let notif = UILocalNotification()
-                notif.alertBody = "🐞 Resumed Ride Report!"
-                notif.category = "RIDE_COMPLETION_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Resumed Ride Report!"
+                    notif.category = "DEBUG_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                }
             #endif
             self.currentTrip = mostRecentTrip
             self.currentTrip?.reopen(withPrototrip: self.currentPrototrip)
@@ -212,11 +214,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (stoppedTrip.locations.count <= 6) {
             // if it doesn't more than 6 points, toss it.
-            #if DEBUG2
-                let notif = UILocalNotification()
-                notif.alertBody = "Canceled Trip"
-                notif.category = "RIDE_COMPLETION_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            #if DEBUG
+                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Canceled Trip"
+                    notif.category = "DEBUG_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                }
             #endif
             stoppedTrip.cancel()
         } else {
@@ -270,10 +274,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) { (sensorDataCollection) -> Void in
                 #if DEBUG
-                    if let prediction = sensorDataCollection.topActivityTypePrediction {
+                    if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
                         let notif = UILocalNotification()
-                        notif.alertBody = prediction.activityType.emoji + "confidence: " + String(prediction.confidence.floatValue)
-                        notif.category = "RIDE_COMPLETION_CATEGORY"
+                        notif.alertBody = "🐞 prediction: " + prediction.activityType.emoji + " confidence: " + String(prediction.confidence.floatValue)
+                        notif.category = "DEBUG_CATEGORY"
                         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                     }
                 #endif
@@ -347,10 +351,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let pausedUntilDate = self.pausedUntilDate()
             if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
                 #if DEBUG
-                    let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Automatically unpausing Ride Report!"
-                    notif.category = "RIDE_COMPLETION_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                        let notif = UILocalNotification()
+                        notif.alertBody = "🐞 Automatically unpausing Ride Report!"
+                        notif.category = "DEBUG_CATEGORY"
+                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    }
                 #endif
                 DDLogInfo("Auto-resuming tracking!")
                 self.resumeTracking()
@@ -363,11 +369,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.startLocationTrackingIfNeeded()
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
-        #if DEBUG2
-            let notif = UILocalNotification()
-            notif.alertBody = "🐞 Entered Motion Monitoring state!"
-            notif.category = "RIDE_COMPLETION_CATEGORY"
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        #if DEBUG
+            if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                let notif = UILocalNotification()
+                notif.alertBody = "🐞 Entered Motion Monitoring state!"
+                notif.category = "DEBUG_CATEGORY"
+                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            }
         #endif
         DDLogInfo("Entering Motion Monitoring state")
         
@@ -393,11 +401,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.disableAllGeofences()
         
         if (finalLocation != nil) {
-            #if DEBUG2
-                let notif = UILocalNotification()
-                notif.alertBody = "🐞 Geofenced!"
-                notif.category = "RIDE_COMPLETION_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            #if DEBUG
+                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Geofenced!"
+                    notif.category = "DEBUG_CATEGORY"
+                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                }
             #endif
             self.setupGeofencesAroundCenter(finalLocation!)
         } else {
@@ -459,10 +469,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 let confidence = prediction.confidence.floatValue
             
                 #if DEBUG
-                    let notif = UILocalNotification()
-                    notif.alertBody = activityType.emoji + "confidence: " + String(confidence) + " speed: " + String(averageSpeed)
-                    notif.category = "RIDE_COMPLETION_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                        let notif = UILocalNotification()
+                        notif.alertBody = "🐞 prediction: " + activityType.emoji + " confidence: " + String(confidence) + " speed: " + String(averageSpeed)
+                        notif.category = "DEBUG_CATEGORY"
+                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    }
                 #endif
                 
                 DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))

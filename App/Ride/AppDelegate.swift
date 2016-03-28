@@ -119,6 +119,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
         
+        #if DEBUG
+            let debugCategory = UIMutableUserNotificationCategory()
+            debugCategory.identifier = "DEBUG_CATEGORY"
+        #endif
+        
         let resumeAction = UIMutableUserNotificationAction()
         resumeAction.identifier = "RESUME_IDENTIFIER"
         resumeAction.title = "Resume"
@@ -131,7 +136,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Minimal)
         appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
         
-        let notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
+        var notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
+        #if DEBUG
+            notificationCategories.insert(debugCategory)
+        #endif
         
         let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
         let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)

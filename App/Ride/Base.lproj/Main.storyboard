@@ -2726,15 +2726,15 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="IUS-op-4II" style="IBUITableViewCellStyleDefault" id="WmV-PX-PGY">
-                                        <rect key="frame" x="0.0" y="275" width="600" height="44"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" textLabel="va9-iG-hcI" style="IBUITableViewCellStyleDefault" id="bAn-hZ-oy6">
+                                        <rect key="frame" x="0.0" y="231" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WmV-PX-PGY" id="sxn-x5-ijt">
-                                            <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bAn-hZ-oy6" id="h6a-x9-kQX">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Show Map Info" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="IUS-op-4II">
-                                                    <rect key="frame" x="15" y="0.0" width="550" height="43.5"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="🐞 Crazy Person Mode" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="va9-iG-hcI">
+                                                    <rect key="frame" x="15" y="0.0" width="570" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2743,6 +2743,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -2755,8 +2756,8 @@
                     <navigationItem key="navigationItem" title="Ride Report" id="tT2-Fl-8cR"/>
                     <connections>
                         <outlet property="accountTableViewCell" destination="nWe-Xk-x3y" id="UL1-oF-Y0u"/>
+                        <outlet property="debugCrazyPersonTableViewCell" destination="bAn-hZ-oy6" id="asl-1c-r9d"/>
                         <outlet property="healthKitTableViewCell" destination="ahq-e4-6z7" id="0dC-xc-tUK"/>
-                        <outlet property="mapStatsTableViewCell" destination="WmV-PX-PGY" id="fXi-z3-hSr"/>
                         <outlet property="pauseResueTableViewCell" destination="OkS-MW-BCC" id="jU3-WF-51S"/>
                     </connections>
                 </tableViewController>

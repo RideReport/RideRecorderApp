@@ -26,8 +26,8 @@ class HamburgerNavController: UINavigationController {
 class HamburgerViewController: UITableViewController {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
     @IBOutlet weak var healthKitTableViewCell: UITableViewCell!
-    @IBOutlet weak var mapStatsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
+    @IBOutlet weak var debugCrazyPersonTableViewCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,16 +112,35 @@ class HamburgerViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (APIClient.sharedClient.area) {
-        case .Area(_,_, _, _):
+        #if DEBUG
+            return 5
+        #else
             return 4
-        default:
-            return 4
-        }
+        #endif
     }
     
+    #if DEBUG
+    func updateDebugCrazyPersonModeCellText() {
+        if (NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode")) {
+            self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.debugCrazyPersonTableViewCell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        } else {
+            self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.debugCrazyPersonTableViewCell.accessoryType = UITableViewCellAccessoryType.None
+        }
+    }
+    #endif
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 3) {
+        if (indexPath.row == 4) {
+            #if DEBUG
+                let debugVerbosityMode = NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode")
+                NSUserDefaults.standardUserDefaults().setBool(!debugVerbosityMode, forKey: "DebugVerbosityMode")
+                NSUserDefaults.standardUserDefaults().synchronize()
+                self.updateDebugCrazyPersonModeCellText()
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            #endif
+        } else if (indexPath.row == 3) {
             let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
             NSUserDefaults.standardUserDefaults().setBool(!priorHealthKitState, forKey: "healthKitIsSetup")
             NSUserDefaults.standardUserDefaults().synchronize()
