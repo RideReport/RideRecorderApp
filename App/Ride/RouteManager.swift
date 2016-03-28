@@ -468,41 +468,36 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))
                 
                 switch activityType {
-                case .Automotive where confidence > 0.8:
+                case .Automotive where confidence > 0.8 && averageSpeed >= 4:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
-
-                case .Automotive where confidence > 0.5 && averageSpeed >= 6:
-                    DDLogVerbose("Starting automotive trip, low confidence matching speed")
-                    
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
-                case .Cycling where confidence > 0.8:
+                case .Cycling where confidence > 0.8 && averageSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
                 case .Cycling where confidence > 0.5 && averageSpeed >= 3 && averageSpeed < 8:
-                    DDLogVerbose("Starting cycling trip, low confidence matching speed")
+                    DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
-                case .Running where confidence < 0.8:
-                    DDLogVerbose("Starting running trip.")
+                case .Running where confidence < 0.8 && averageSpeed >= 2 && averageSpeed < 6.5:
+                    DDLogVerbose("Starting running trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Running)
-                case .Bus where confidence > 0.8:
-                    DDLogVerbose("Starting transit trip.")
+                case .Bus where confidence > 0.8 && averageSpeed >= 3:
+                    DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
-                case .Rail where confidence > 0.8:
-                    DDLogVerbose("Starting transit trip.")
+                case .Rail where confidence > 0.8 && averageSpeed >= 3:
+                    DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
                 case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
-                    DDLogVerbose("Walking or stationary, high confifence and no speed. stopping monitor…")
+                    DDLogVerbose("Walking or stationary, high confidence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
-                case .Walking, .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 3:
-                    DDLogVerbose("Walking or stationary, low confifence and matching speed. stopping monitor…")
+                case .Walking, .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                    DDLogVerbose("Walking or stationary, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
                 case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking, .Aviation:
