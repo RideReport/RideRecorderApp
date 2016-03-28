@@ -21,7 +21,13 @@ extension Request {
         -> ResponseSerializer<JSON, NSError>
     {
         return ResponseSerializer { _, _, data, error in
-            guard error == nil else { return .Failure(error!) }
+            if let theError = error {
+                if let validData = data, jsonDict = SwiftyJSON.JSON(data: validData).dictionaryObject {
+                    return .Failure(NSError(domain: theError.domain, code: theError.code, userInfo: jsonDict))
+                } else {
+                    return .Failure(theError)
+                }
+            }
             
             guard let validData = data where validData.length > 0 else {
                 let failureReason = "JSON could not be serialized. Input data was nil or zero length."
@@ -522,11 +528,11 @@ class APIClient {
         var params = metadataDict
         params["data"] = sensorDataCollection.jsonDictionary()
 
-        AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+        _ = AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
             switch response.result {
-            case .Success(let json):
+            case .Success(_):
                 DDLogWarn("Yep")
-            case .Failure(let error):
+            case .Failure(_):
                 DDLogWarn("Nope!")
             }
         }
