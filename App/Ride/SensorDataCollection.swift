@@ -177,6 +177,12 @@ class SensorDataCollection : NSManagedObject {
         }
         dict["locations"] = locsArray
         
+        var predictionsArray : [AnyObject] = []
+        for s in self.activityTypePredictions {
+            predictionsArray.append((s as! ActivityTypePrediction).jsonDictionary())
+        }
+        dict["activityTypePredictions"] = predictionsArray
+        
         return dict
     }
 }

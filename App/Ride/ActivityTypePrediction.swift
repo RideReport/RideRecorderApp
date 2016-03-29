@@ -22,4 +22,11 @@ class ActivityTypePrediction : NSManagedObject {
         self.confidence = NSNumber(float: confidence)
         self.sensorDataCollection = sensorDataCollection
     }
+    
+    func jsonDictionary() -> [String: AnyObject] {
+        return [
+            "confidence": self.confidence,
+            "activityType": NSNumber(short: self.activityType.rawValue)
+        ]
+    }
 }
