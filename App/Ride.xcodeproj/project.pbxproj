@@ -11,7 +11,6 @@
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
-		3D21CF551CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */; };
 		3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DD1C8785D400A96DE0 /* ViewController.swift */; };
 		3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2705DF1C8785D400A96DE0 /* Main.storyboard */; };
@@ -1214,7 +1213,6 @@
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
 				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
-				3D21CF551CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,7 +14,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var spriteKitView: SKView!
     @IBOutlet weak var rewardsLabel1: UILabel!
     @IBOutlet weak var rewardsLabel2: UILabel!
-    @IBOutlet weak var rewardsLabel3: UILabel!
     @IBOutlet weak var rewardPopup: PopupView!
 
 
@@ -44,9 +43,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         let numberFormatter = NSNumberFormatter()
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         numberFormatter.maximumFractionDigits = 0
-        
-//        self.rewardsLabel3.text = "💖  83,265 calories burned"
-        self.rewardsLabel3.hidden = true
         
         if let firstTripDate = Profile.profile().firstTripDate {
             self.rewardsLabel1.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, numberFormatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
