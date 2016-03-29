@@ -609,6 +609,7 @@ class Trip : NSManagedObject {
         }
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         var propertiesToFetch = [attributeDescription, countExpression]
         var propertiesToGroupBy = [attributeDescription]
         if let otherAttributes = additionalAttributes {

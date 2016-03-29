@@ -45,7 +45,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
         numberFormatter.maximumFractionDigits = 0
         
-        self.rewardsLabel3.text = "💖  83,265 calories burned"
+//        self.rewardsLabel3.text = "💖  83,265 calories burned"
+        self.rewardsLabel3.hidden = true
         
         if let firstTripDate = Profile.profile().firstTripDate {
             self.rewardsLabel1.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, numberFormatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
@@ -130,26 +131,59 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     }
                 }
                 
+                guard let lastEmoji = emojis.last else {
+                    return
+                }
+                
                 var nodeCount = 0
+                
+                emojis.removeLast()
                 let shuffledEmojis = emojis.shuffle()
-                for emoji in shuffledEmojis  {
-                    emoji.hidden = true
-                    emoji.physicsBody?.dynamic = false
+                dispatch_async(dispatch_get_main_queue()) {
+                    for emoji in shuffledEmojis  {
+                        emoji.hidden = true
+                        emoji.physicsBody?.dynamic = false
 
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                        guard let strongSelf = self else {
-                            return
-                        }
-                        
-                        strongSelf.scene.addChild(emoji)
+                        self.scene.addChild(emoji)
                         emoji.runAction(SKAction.sequence([
                             SKAction.waitForDuration(Double(nodeCount) * 0.01),
-                            SKAction.moveTo(CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(strongSelf.view.frame.size.width - 40.0))), strongSelf.view.frame.size.height + topSpace - 40), duration: 0.001),
-                            SKAction.runBlock({ 
+                            SKAction.moveTo(CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40), duration: 0.001),
+                            SKAction.runBlock({
                                 emoji.physicsBody!.dynamic = true
                             }),
                             SKAction.unhide()]))
                         nodeCount += 1
+                    }
+                    lastEmoji.physicsBody!.density = 1.0 // make it heavy so it can knock other emoji around easily
+                    lastEmoji.hidden = true
+                    lastEmoji.physicsBody?.dynamic = false
+                    
+                    self.scene.addChild(lastEmoji)
+                    let additionalDelayForLastEmoji: NSTimeInterval = 1.6
+                    let timeBeforeDescalingLastEmoji: NSTimeInterval = 3.5
+                    lastEmoji.runAction(SKAction.sequence([
+                        SKAction.waitForDuration(Double(nodeCount) * 0.01),
+                        SKAction.scaleTo(4.0, duration: 0.0),
+                        SKAction.waitForDuration(additionalDelayForLastEmoji),
+                        SKAction.moveTo(CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + topSpace - 40), duration: 0.001),
+                        SKAction.runBlock({
+                            lastEmoji.physicsBody!.dynamic = true
+                        }),
+                        SKAction.unhide()]))
+                    
+                    
+                    if let name = lastEmoji.name {
+                        self.rewardPopup.delay(Double(nodeCount) * 0.01 + additionalDelayForLastEmoji) {
+                            self.rewardPopup.text = name
+                            self.rewardPopup.sizeToFit()
+                            self.rewardPopup.popIn()
+                            self.rewardPopup.delay(timeBeforeDescalingLastEmoji) {
+                                lastEmoji.runAction(SKAction.scaleTo(1.0, duration: 0.2))
+                                if self.touchedSprite == nil {
+                                    self.rewardPopup.fadeOut()
+                                }
+                            }
+                        }
                     }
                 }
             }
