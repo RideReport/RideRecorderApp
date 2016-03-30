@@ -477,7 +477,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     }
                 #endif
                 
-                DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))
+                DDLogVerbose(String(format: "Prediction: %i confidence: %f speed: %f", activityType.rawValue, confidence, averageSpeed))
                 
                 switch activityType {
                 case .Automotive where confidence > 0.8 && averageSpeed >= 4:
