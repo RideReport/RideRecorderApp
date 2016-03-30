@@ -695,7 +695,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
         if (buttonIndex == 0) {
-            trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
+            trip.simplify()
         } else if (buttonIndex == 1) {
             APIClient.sharedClient.syncTrip(trip)
         } else if (buttonIndex == 2) {

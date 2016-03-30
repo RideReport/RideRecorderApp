@@ -782,7 +782,7 @@ class Trip : NSManagedObject {
     private func calculateLength()-> Void {
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
-        for location in self.accurateLocations() {
+        for location in self.usableLocationsForSimplification() {
             let cllocation = location.clLocation()
             if (lastLocation == nil) {
                 lastLocation = cllocation
@@ -1071,10 +1071,10 @@ class Trip : NSManagedObject {
         }
     }
     
-    func accurateLocations()->[Location] {
+    private func usableLocationsForSimplification()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND horizontalAccuracy <= %f", self, Location.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR isGeofencedLocation == YES)", self, Location.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -1092,7 +1092,7 @@ class Trip : NSManagedObject {
     }
     
     func simplify(handler: ()->Void = {}) {
-        let accurateLocs = self.accurateLocations()
+        let accurateLocs = self.usableLocationsForSimplification()
         
         if (self.simplifiedLocations != nil) {
             for loc in self.simplifiedLocations.array {
