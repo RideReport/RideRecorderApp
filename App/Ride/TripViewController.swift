@@ -9,13 +9,14 @@
 import Foundation
 import CoreData
 
-class TripViewController: UIViewController, RideSummaryViewDelegate {
+class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertViewDelegate {
     @IBOutlet weak var selectedTripView: UIView!
     @IBOutlet weak var editModeView: UIView!
     weak var rideSummaryView: RideSummaryView!
     @IBOutlet weak var ridesHistoryButton: UIButton!
     @IBOutlet weak var closeRideButton: UIButton!
     @IBOutlet weak var selectedRideToolBar: UIView!
+    @IBOutlet weak var modeSelectorView: ModeSelectorView!
     
     var mapInfoIsDismissed : Bool = false
     
@@ -185,44 +186,31 @@ class TripViewController: UIViewController, RideSummaryViewDelegate {
         CATransaction.commit()
     }
     
-    @IBAction func transitButton(sender: AnyObject) {
-        self.selectedTrip.activityType = .Bus
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+  
+    @IBAction func selectedNewMode(sender: AnyObject) {
+        let mode = self.modeSelectorView.selectedMode
+        if mode != self.selectedTrip.activityType {
+            self.selectedTrip.activityType = self.modeSelectorView.selectedMode
+            APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+            
+            self.refreshSelectrTrip()
+            
+            let alert = UIAlertView(title: "Ride Report was confused 😬", message: "Would you like to report this misclassification so that Ride Report can get better in the future?", delegate: self, cancelButtonTitle: "Nah", otherButtonTitles: "Sure")
+            alert.show()
+        }
         
-        self.refreshSelectrTrip()
         self.transitionToTripView()
     }
     
-    @IBAction func bikeButton(sender: AnyObject) {
-        self.selectedTrip.activityType = .Cycling
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-        self.transitionToTripView()
-    }
-    
-    @IBAction func carButton(sender: AnyObject) {
-        self.selectedTrip.activityType = .Automotive
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-        self.transitionToTripView()
-    }
-    
-    @IBAction func walkButton(sender: AnyObject) {
-        self.selectedTrip.activityType = .Walking
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-        self.transitionToTripView()
-    }
-    
-    @IBAction func runButton(sender: AnyObject) {
-        self.selectedTrip.activityType = .Running
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-        self.transitionToTripView()
+    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+        if (buttonIndex == 1) {
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
+            if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
+                reportModeClassificationViewController.trip = self.selectedTrip
+            }
+            self.presentViewController(reportModeClassificationNavigationViewController, animated: true, completion: nil)
+        }
     }
     
     @IBAction func showRides(sender: AnyObject) {

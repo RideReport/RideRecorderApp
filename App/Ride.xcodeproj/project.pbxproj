@@ -43,6 +43,8 @@
 		3D2AB3901CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
 		3D2AB3911CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
 		3D2AB3921CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
+		3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
+		3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
 		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
@@ -252,6 +254,7 @@
 		3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomForestManager.h; sourceTree = "<group>"; };
 		3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
 		3D2AB38F1CA4A76400582A5D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Frameworks/opencv2.framework; sourceTree = "<group>"; };
+		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
@@ -612,6 +615,7 @@
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
 				84091CD71BD848A400264652 /* RCounter.h */,
 				84091CD81BD848A400264652 /* RCounter.m */,
+				3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1204,6 +1208,7 @@
 				3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */,
 				3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
+				3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				3D2AB38B1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
@@ -1306,6 +1311,7 @@
 				84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */,
 				84033D991A8BD26900339171 /* MotionManager.swift in Sources */,
 				8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */,
+				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
