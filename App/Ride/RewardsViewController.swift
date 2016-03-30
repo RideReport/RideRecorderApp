@@ -129,15 +129,13 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                         emoji.physicsBody!.angularDamping = 0.0
                         emoji.physicsBody!.dynamic = false
                         
-                        if (j == (bikeTripEmojiCounts.count - 1)) && (i == (count.integerValue - 1)) {
-                            // the very last reward is going to be treated specially
-                            lastEmojiReceived = emoji
-                        } else {
-                            emojis.append(emoji)
-                        }
+                        emojis.append(emoji)
                     }
                 }
             }
+            
+            lastEmojiReceived = emojis.last
+            emojis.removeLast()
             
             dispatch_async(dispatch_get_main_queue()) {
                 var nodeCount = 0
