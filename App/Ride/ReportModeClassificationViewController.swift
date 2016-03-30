@@ -142,6 +142,10 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             count += 1
         }
         
+        guard coordinates.count > 0 else {
+            return
+        }
+        
         self.tripLine = MGLPolyline(coordinates: &coordinates, count: count)
         self.tripBackingLine = MGLPolyline(coordinates: &coordinates, count: count)
         

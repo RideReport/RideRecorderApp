@@ -224,6 +224,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             count += 1
         }
         
+        guard coordinates.count > 0 else {
+            return
+        }
+        
         self.selectedTripLine = MGLPolyline(coordinates: &coordinates, count: count)
         self.selectedTripBackingLine = MGLPolyline(coordinates: &coordinates, count: count)
 
