@@ -843,6 +843,17 @@ class Trip : NSManagedObject {
             }
         }
         
+        if topVote == 0 {
+            // if no one voted, fall back on speeds
+            if (averageSpeed >= 8) {
+                topActivityType = .Automotive
+            } else if (averageSpeed >= 3) {
+                topActivityType = .Cycling
+            } else {
+                topActivityType = .Walking
+            }
+        }
+        
         self.activityType = topActivityType
     }
     
