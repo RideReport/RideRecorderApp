@@ -844,6 +844,7 @@ class Trip : NSManagedObject {
         }
         
         if topVote == 0 {
+            DDLogInfo("No sensor collections voted! Falling back on speed…")
             // if no one voted, fall back on speeds
             if (averageSpeed >= 8) {
                 topActivityType = .Automotive
