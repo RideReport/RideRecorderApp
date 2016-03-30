@@ -194,6 +194,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.isQueryingMotionData = true
         
         let completionBlock = {
+            guard self.isQueryingMotionData else {
+                // avoid possible race condition where completion block could be called multiple times
+                return
+            }
+            
             if sensorDataCollection.accelerometerAccelerations.count >= self.sampleWindowSize &&
                 sensorDataCollection.gyroscopeRotationRates.count >= self.sampleWindowSize
             {
