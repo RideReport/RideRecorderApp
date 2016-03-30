@@ -34,6 +34,12 @@ class ColorPallete : NSObject {
         }
     }
     
+    var darkGrey: UIColor {
+        get {
+            return UIColor(red: 67/255, green: 67/255, blue: 67/255, alpha: 1.0)
+        }
+    }
+    
     var darkGreen: UIColor {
         get {
             return UIColor(red: 78/255, green: 142/255, blue: 66/255, alpha: 1.0)

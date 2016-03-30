@@ -17,7 +17,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var emptyTableChick: UIView!
     
     @IBOutlet weak var headerView: UIView!
-    @IBOutlet weak var headerLabel1: UILabel!
     @IBOutlet weak var popupView: PopupView!
     
     private var dateOfLastTableRefresh: NSDate?
@@ -234,6 +233,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     private func refreshCharts() {
         let count = Trip.numberOfCycledTrips
+        
         if (count == 0) {
             self.title = "Ride Report"
             self.headerView.hidden = true
@@ -242,52 +242,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let margin: CGFloat = 16
             let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
             
-            self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
-            
-            Profile.profile().updateCurrentRideStreakLength()
-            
-            if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
-                if currentStreakLength == 1 {
-                    if (Trip.bikeTripsToday() == nil) {
-                        self.headerLabel1.text = "🐣  You rode yesterday"
-                    } else {
-                        self.headerLabel1.text = "🐣  You rode today"
-                    }
-                } else if currentStreakLength == 2 {
-                    if (Trip.bikeTripsToday() == nil) {
-                        self.headerLabel1.text = "💗  Ride today to start a ride streak!"
-                    } else {
-                        self.headerLabel1.text = "💗  Ride tomorrow to start a ride streak"
-                    }
-                } else {
-                    if (Trip.bikeTripsToday() == nil) {
-                        if (NSDate().isBeforeNoon()) {
-                            self.headerLabel1.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
-                        } else {
-                            self.headerLabel1.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
-                        }
-                    } else {
-                        self.headerLabel1.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
-                    }
-                }
-            } else {
-                self.headerLabel1.text = "🐣  No rides today"
-            }
-            
             if count < 10 {
                 // Don't show stats until they get to >=10 rides
-                var headerFrame = self.headerView.frame
-                headerFrame.size.height = self.headerLabel1.frame.size.height + 2
-                self.headerView.frame = headerFrame
-                self.tableView.tableHeaderView = self.headerView
+                self.headerView.hidden = true
                 
                 return
             } else {
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + self.headerLabel1.frame.size.height + 42
+                headerFrame.size.height = chartWidth + margin + 42
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
             }
+            
+            self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
             
             if let sections = self.fetchedResultsController.sections {
                 let bikedDays = sections.count
@@ -304,7 +271,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 self.headerView.addSubview(self.pieChartDaysBiked)
                 
                 let daysBikedLabel = UILabel()
-                daysBikedLabel.textColor = self.headerLabel1.textColor
+                daysBikedLabel.textColor = ColorPallete.sharedPallete.darkGrey
                 daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
                 daysBikedLabel.adjustsFontSizeToFitWidth = true
                 daysBikedLabel.minimumScaleFactor = 0.6
@@ -344,7 +311,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartModeShare)
             let modeShareLabel = UILabel()
-            modeShareLabel.textColor = self.headerLabel1.textColor
+            modeShareLabel.textColor = ColorPallete.sharedPallete.darkGrey
             modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
             modeShareLabel.adjustsFontSizeToFitWidth = true
             modeShareLabel.minimumScaleFactor = 0.6
@@ -378,7 +345,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartRatings)
             let ratingsLabel = UILabel()
-            ratingsLabel.textColor = self.headerLabel1.textColor
+            ratingsLabel.textColor = ColorPallete.sharedPallete.darkGrey
             ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
             ratingsLabel.adjustsFontSizeToFitWidth = true
             ratingsLabel.minimumScaleFactor = 0.6
@@ -412,7 +379,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
             self.headerView.addSubview(self.pieChartWeather)
             let weatherLabel = UILabel()
-            weatherLabel.textColor = self.headerLabel1.textColor
+            weatherLabel.textColor = ColorPallete.sharedPallete.darkGrey
             weatherLabel.font = UIFont.boldSystemFontOfSize(14)
             weatherLabel.adjustsFontSizeToFitWidth = true
             weatherLabel.minimumScaleFactor = 0.6
@@ -498,7 +465,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 48
+        if indexPath.section == 0 {
+            return 76
+        } else {
+            return 48
+        }
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -553,7 +524,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
         headerView.opaque = false
         headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
-        headerView.textLabel!.textColor = self.headerLabel1.textColor
+        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
@@ -605,6 +576,37 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
 
             text1.attributedText = attrString
+        }
+        if let text2 = tableCell.viewWithTag(2) as? UILabel {
+            Profile.profile().updateCurrentRideStreakLength()
+            
+            if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
+                if currentStreakLength == 1 {
+                    if (Trip.bikeTripsToday() == nil) {
+                        text2.text = "🐣  You rode yesterday"
+                    } else {
+                        text2.text = "🐣  You rode today"
+                    }
+                } else if currentStreakLength == 2 {
+                    if (Trip.bikeTripsToday() == nil) {
+                        text2.text = "💗  Ride today to start a ride streak!"
+                    } else {
+                        text2.text = "💗  Ride tomorrow to start a ride streak"
+                    }
+                } else {
+                    if (Trip.bikeTripsToday() == nil) {
+                        if (NSDate().isBeforeNoon()) {
+                            text2.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
+                        } else {
+                            text2.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
+                        }
+                    } else {
+                        text2.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                    }
+                }
+            } else {
+                text2.text = "🐣  No rides today"
+            }
         }
     }
     
