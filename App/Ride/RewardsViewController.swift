@@ -207,6 +207,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchTime = touch.timestamp
             self.touchedSprite = tappedSprite
             self.touchedSprite!.physicsBody!.density = 100.0 // make it heavy so it can knock other emoji around easily
+            self.currentVelocity = CGVector(dx: 0, dy: 0)
             if #available(iOS 9.0, *) {
                 self.touchedSprite?.runAction(SKAction.scaleTo(4.0, duration: 0.2))
             } else {
