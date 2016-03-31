@@ -154,6 +154,7 @@
                                     <constraint firstItem="6Er-uq-zkl" firstAttribute="leading" secondItem="W8N-3W-MDK" secondAttribute="leading" constant="8" id="AFw-fm-znc"/>
                                     <constraint firstItem="jXH-E2-Jox" firstAttribute="centerX" secondItem="W8N-3W-MDK" secondAttribute="centerX" id="B6d-fN-ZzK"/>
                                     <constraint firstItem="AK0-6K-g9V" firstAttribute="centerY" secondItem="W8N-3W-MDK" secondAttribute="centerY" multiplier="2:3" id="Dgi-rq-ydc"/>
+                                    <constraint firstItem="AK0-6K-g9V" firstAttribute="top" secondItem="6Er-uq-zkl" secondAttribute="bottom" constant="17" id="IUY-rR-g52"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="179" id="Rhm-Rx-6nA"/>
                                     <constraint firstAttribute="height" constant="362" id="dAv-yP-Yl2"/>
                                     <constraint firstItem="AK0-6K-g9V" firstAttribute="centerX" secondItem="W8N-3W-MDK" secondAttribute="centerX" id="dtZ-U8-jbb"/>
@@ -161,6 +162,7 @@
                                     <constraint firstAttribute="height" constant="72" id="n4M-Zh-INB"/>
                                     <constraint firstItem="6AZ-2Q-TYT" firstAttribute="top" secondItem="AK0-6K-g9V" secondAttribute="bottom" constant="15" id="nx4-Ij-sSb"/>
                                     <constraint firstItem="AK0-6K-g9V" firstAttribute="width" secondItem="W8N-3W-MDK" secondAttribute="width" id="qum-Zi-Qjl"/>
+                                    <constraint firstItem="6Er-uq-zkl" firstAttribute="centerX" secondItem="W8N-3W-MDK" secondAttribute="centerX" id="uMl-ml-Mhc"/>
                                     <constraint firstAttribute="trailing" secondItem="6Er-uq-zkl" secondAttribute="trailing" constant="8" id="utf-GT-ADG"/>
                                     <constraint firstItem="6AZ-2Q-TYT" firstAttribute="centerX" secondItem="W8N-3W-MDK" secondAttribute="centerX" id="zTJ-G2-euW"/>
                                 </constraints>
@@ -174,13 +176,15 @@
                                     <mask key="constraints">
                                         <exclude reference="Rhm-Rx-6nA"/>
                                         <exclude reference="dAv-yP-Yl2"/>
+                                        <exclude reference="AFw-fm-znc"/>
+                                        <exclude reference="uMl-ml-Mhc"/>
+                                        <exclude reference="utf-GT-ADG"/>
                                         <exclude reference="Dgi-rq-ydc"/>
+                                        <exclude reference="IUY-rR-g52"/>
                                         <exclude reference="dtZ-U8-jbb"/>
                                         <exclude reference="qum-Zi-Qjl"/>
                                         <exclude reference="6eU-8o-28j"/>
                                         <exclude reference="B6d-fN-ZzK"/>
-                                        <exclude reference="AFw-fm-znc"/>
-                                        <exclude reference="utf-GT-ADG"/>
                                         <exclude reference="n0g-Jp-chx"/>
                                         <exclude reference="nx4-Ij-sSb"/>
                                         <exclude reference="zTJ-G2-euW"/>
@@ -197,13 +201,15 @@
                                         <exclude reference="Rhm-Rx-6nA"/>
                                         <include reference="dAv-yP-Yl2"/>
                                         <exclude reference="n4M-Zh-INB"/>
+                                        <include reference="AFw-fm-znc"/>
+                                        <include reference="uMl-ml-Mhc"/>
+                                        <include reference="utf-GT-ADG"/>
                                         <include reference="Dgi-rq-ydc"/>
+                                        <include reference="IUY-rR-g52"/>
                                         <include reference="dtZ-U8-jbb"/>
                                         <include reference="qum-Zi-Qjl"/>
                                         <include reference="6eU-8o-28j"/>
                                         <include reference="B6d-fN-ZzK"/>
-                                        <include reference="AFw-fm-znc"/>
-                                        <include reference="utf-GT-ADG"/>
                                         <exclude reference="n0g-Jp-chx"/>
                                         <include reference="nx4-Ij-sSb"/>
                                         <include reference="zTJ-G2-euW"/>
