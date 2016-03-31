@@ -264,7 +264,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 return
             } else {
                 var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + 42
+                headerFrame.size.height = chartWidth + margin + 46
                 self.headerView.frame = headerFrame
                 self.tableView.tableHeaderView = self.headerView
             }
@@ -481,7 +481,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if indexPath.section == 0 {
-            return 76
+            return 75
         } else {
             return 48
         }
@@ -489,7 +489,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "  Rewards"
+            return "  Trophies"
         }
         
         let theSection = self.fetchedResultsController.sections![section - 1]
@@ -536,10 +536,18 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
-        headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
-        headerView.opaque = false
-        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
-        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
+        
+        if section == 0 {
+            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
+            headerView.opaque = false
+            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
+            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
+        } else {
+            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
+            headerView.opaque = false
+            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
+            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
+        }
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
@@ -664,12 +672,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0))
         ]
-        growAnimation.keyTimes = [0, 0.08, 0.34, 0.42, 0.68, 0.76, 1]
+        growAnimation.keyTimes = [0, 0.12, 0.50, 0.62, 1]
         growAnimation.additive = true
-        growAnimation.duration = 1.8
+        growAnimation.duration = 1.2
         
         view.layer.addAnimation(growAnimation, forKey:"transform")
         

@@ -233,7 +233,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     
     func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if (annotation == self.tripBackingLine) {
-            return UIColor.whiteColor()
+            return ColorPallete.sharedPallete.almostWhite
         }
         
         if let trip = self.trip {

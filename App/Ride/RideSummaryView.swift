@@ -58,7 +58,7 @@ import Foundation
         }
     }
     
-    @IBInspectable var textColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var textColor: UIColor = ColorPallete.sharedPallete.almostWhite {
         didSet {
             reloadUI()
         }

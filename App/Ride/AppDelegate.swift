@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         DDLog.addLogger(self.fileLogger)
         
         UINavigationBar.appearance().barTintColor = ColorPallete.sharedPallete.darkGreen
-        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().tintColor = ColorPallete.sharedPallete.almostWhite
         
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))

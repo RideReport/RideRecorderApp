@@ -88,7 +88,7 @@
                         <viewControllerLayoutGuide type="bottom" id="qTC-46-Kyi"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GEr-MR-08O">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EAJ-hS-lAz">
@@ -557,7 +557,7 @@
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="Lfj-vn-Z6q">
                                     <rect key="frame" x="0.0" y="64" width="600" height="128"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="36" id="UKa-S7-QGO"/>
                                     </constraints>
@@ -582,7 +582,7 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z9i-qL-b7T" userLabel="Selected Background View">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                                    <color key="backgroundColor" red="0.86666673419999996" green="0.87450987099999999" blue="0.86666673419999996" alpha="1" colorSpace="deviceRGB"/>
+                                                    <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="❤️" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="agB-Ve-SbT">
                                                     <rect key="frame" x="0.0" y="0.0" width="38" height="18"/>
@@ -665,19 +665,19 @@
                                                     <exclude reference="18N-5Z-IiJ"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <exclude reference="E0d-zn-1TD"/>
-                                                    <exclude reference="HvK-Ec-IfZ"/>
-                                                    <exclude reference="lS4-wA-ntC"/>
-                                                    <exclude reference="oVO-0r-P0p"/>
-                                                    <exclude reference="MtZ-N4-H6m"/>
-                                                    <exclude reference="PAL-rx-miU"/>
-                                                    <exclude reference="E8N-61-cCk"/>
-                                                    <exclude reference="NFd-lO-7Xb"/>
-                                                    <exclude reference="mwg-H2-GxB"/>
                                                     <exclude reference="CC0-UZ-LbM"/>
                                                     <exclude reference="Mfe-Pi-ijQ"/>
                                                     <exclude reference="Xez-VV-Jhr"/>
                                                     <exclude reference="eyR-W2-P4h"/>
+                                                    <exclude reference="MtZ-N4-H6m"/>
+                                                    <exclude reference="PAL-rx-miU"/>
+                                                    <exclude reference="E0d-zn-1TD"/>
+                                                    <exclude reference="HvK-Ec-IfZ"/>
+                                                    <exclude reference="lS4-wA-ntC"/>
+                                                    <exclude reference="oVO-0r-P0p"/>
+                                                    <exclude reference="E8N-61-cCk"/>
+                                                    <exclude reference="NFd-lO-7Xb"/>
+                                                    <exclude reference="mwg-H2-GxB"/>
                                                 </mask>
                                             </variation>
                                             <variation key="heightClass=regular">
@@ -698,6 +698,10 @@
                                                     <include reference="Ucs-rS-WNM"/>
                                                 </mask>
                                                 <mask key="constraints">
+                                                    <exclude reference="CC0-UZ-LbM"/>
+                                                    <include reference="Mfe-Pi-ijQ"/>
+                                                    <include reference="Xez-VV-Jhr"/>
+                                                    <include reference="eyR-W2-P4h"/>
                                                     <include reference="MtZ-N4-H6m"/>
                                                     <include reference="PAL-rx-miU"/>
                                                     <include reference="E8N-61-cCk"/>
@@ -707,14 +711,10 @@
                                                     <exclude reference="mwg-H2-GxB"/>
                                                     <exclude reference="oK2-Ve-qMQ"/>
                                                     <include reference="yIO-J6-X1u"/>
-                                                    <exclude reference="CC0-UZ-LbM"/>
-                                                    <include reference="Mfe-Pi-ijQ"/>
-                                                    <include reference="Xez-VV-Jhr"/>
-                                                    <include reference="eyR-W2-P4h"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="0.0" colorSpace="calibratedRGB"/>
                                         <inset key="separatorInset" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
                                         <connections>
                                             <outlet property="selectedBackgroundView" destination="z9i-qL-b7T" id="99a-xL-OVe"/>
@@ -730,7 +730,7 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gQq-ai-LUp" userLabel="Selected Background View">
                                                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                                    <color key="backgroundColor" red="0.86666673419999996" green="0.87450987099999999" blue="0.86666673419999996" alpha="1" colorSpace="deviceRGB"/>
+                                                    <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="⛅️ 9:00AM for 3.0 miles" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="vhJ-bT-UHK">
                                                     <rect key="frame" x="15" y="17" width="167" height="18"/>
@@ -1082,10 +1082,10 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="155" y="547" width="291" height="45"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1468,10 +1468,10 @@
                                     <action selector="next:" destination="cUY-e3-8Xh" eventType="touchUpInside" id="YDm-hl-P3n"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YsA-fO-x9S">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YsA-fO-x9S">
                                 <rect key="frame" x="-38" y="200" width="676" height="1292"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="103" y="259" width="470" height="80"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1501,7 +1501,7 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="iphonewhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="n3k-ze-oND">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphonewhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="n3k-ze-oND">
                                         <rect key="frame" x="0.0" y="0.0" width="676" height="1292"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="n3k-ze-oND" secondAttribute="height" multiplier="338:647" id="c10-6R-VgY"/>
@@ -1548,7 +1548,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
                                 <rect key="frame" x="60" y="131" width="480" height="39"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -2033,14 +2033,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
                                 <rect key="frame" x="0.0" y="64" width="600" height="72"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7b-NM-dBN" customClass="ModeSelectorView" customModule="Ride_Report" customModuleProvider="target">
@@ -2200,7 +2200,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ufy-in-gpd">
                                 <rect key="frame" x="0.0" y="64" width="600" height="120"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rides Logged in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-ci-OtU">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rides Logged in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-ci-OtU">
                                         <rect key="frame" x="143" y="50" width="449" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="6Sa-Wa-B0s"/>
@@ -2216,7 +2216,7 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <view autoresizesSubviews="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MF5-jO-gGh" customClass="RCounter">
+                                    <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MF5-jO-gGh" customClass="RCounter">
                                         <rect key="frame" x="1" y="50" width="135" height="70"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.73999999999999999" colorSpace="calibratedRGB"/>
                                         <constraints>
