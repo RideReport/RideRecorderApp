@@ -657,18 +657,19 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let growAnimation = CAKeyframeAnimation(keyPath: "transform")
         
-        let growScale: CGFloat = 1.4
+        let growScale: CGFloat = 1.6
         growAnimation.values = [
-            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0))
         ]
-        growAnimation.keyTimes = [0, 0.08, 0.4, 0.48, 0.8, 1]
+        growAnimation.keyTimes = [0, 0.08, 0.34, 0.42, 0.68, 0.76, 1]
         growAnimation.additive = true
-        growAnimation.duration = 1.5
+        growAnimation.duration = 1.8
         
         view.layer.addAnimation(growAnimation, forKey:"transform")
         
