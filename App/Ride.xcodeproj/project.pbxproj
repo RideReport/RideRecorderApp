@@ -11,6 +11,7 @@
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
+		3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */; };
 		3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DD1C8785D400A96DE0 /* ViewController.swift */; };
 		3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2705DF1C8785D400A96DE0 /* Main.storyboard */; };
@@ -1210,6 +1211,7 @@
 				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				3D2AB38B1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
+				3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
 				3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */,

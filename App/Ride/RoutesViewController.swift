@@ -28,6 +28,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     var pieChartDaysBiked: PNPieChart!
     var pieChartWeather: PNPieChart!
     
+    private var hasShownStreakAnimation = false
+    
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
     private var timeFormatter : NSDateFormatter!
@@ -98,6 +100,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             }
             strongSelf.reloadTableIfNeeded()
         }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: nil) {[weak self] (_) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.hasShownStreakAnimation = false
+            strongSelf.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -106,6 +116,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.refreshEmptyTableView()
         
         self.refreshHelperPopupUI()
+        
         
         self.reachability = Reachability.reachabilityForLocalWiFi()
         self.reachability.startNotifier()
@@ -134,6 +145,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func bobbleChick() {
+        bobbleView(self.emptyTableChick)
+    }
+    
+    func bobbleView(view: UIView) {
         CATransaction.begin()
         
         let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
@@ -151,7 +166,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         shakeAnimation.additive = true
         shakeAnimation.duration = 0.6
         
-        self.emptyTableChick.layer.addAnimation(shakeAnimation, forKey:"transform")
+        view.layer.addAnimation(shakeAnimation, forKey:"transform")
         
         CATransaction.commit()
     }
@@ -577,37 +592,87 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
             text1.attributedText = attrString
         }
-        if let text2 = tableCell.viewWithTag(2) as? UILabel {
+        if let streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
+        let streakJewelLabel = tableCell.viewWithTag(3) as? UILabel{
             Profile.profile().updateCurrentRideStreakLength()
+            
+            let animationDelay: NSTimeInterval = 0.6
             
             if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
                 if currentStreakLength == 1 {
                     if (Trip.bikeTripsToday() == nil) {
-                        text2.text = "🐣  You rode yesterday"
+                        streakTextLabel.text = "You rode yesterday"
+                        streakJewelLabel.text = "🐣"
                     } else {
-                        text2.text = "🐣  You rode today"
+                        streakTextLabel.text = "You rode today"
+                        streakJewelLabel.text = "🐣"
+                    }
+                    if (!self.hasShownStreakAnimation) {
+                        self.hasShownStreakAnimation = true
+                        streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
                     }
                 } else if currentStreakLength == 2 {
                     if (Trip.bikeTripsToday() == nil) {
-                        text2.text = "💗  Ride today to start a ride streak!"
+                        streakTextLabel.text = "Ride today to start a ride streak!"
+                        streakJewelLabel.text = "💗"
                     } else {
-                        text2.text = "💗  Ride tomorrow to start a ride streak"
+                        streakTextLabel.text = "Ride tomorrow to start a ride streak"
+                        streakJewelLabel.text = "💗"
+                    }
+                    if (!self.hasShownStreakAnimation) {
+                        self.hasShownStreakAnimation = true
+                        streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
                     }
                 } else {
                     if (Trip.bikeTripsToday() == nil) {
                         if (NSDate().isBeforeNoon()) {
-                            text2.text = String(format: "💗  Keep your %i day streak rolling", currentStreakLength)
+                            streakTextLabel.text = String(format: "Keep your %i day streak rolling", currentStreakLength)
+                            streakJewelLabel.text = "💗"
                         } else {
-                            text2.text = String(format: "💔  Don't end your %i day streak!", currentStreakLength)
+                            streakTextLabel.text = String(format: "Don't end your %i day streak!", currentStreakLength)
+                            streakJewelLabel.text = "💔"
                         }
                     } else {
-                        text2.text = String(format: "%@  %i day ride streak", Profile.profile().currentStreakJewel, currentStreakLength)
+                        streakTextLabel.text = String(format: "%i day ride streak", currentStreakLength)
+                        streakJewelLabel.text = Profile.profile().currentStreakJewel
+                    }
+                    if (!self.hasShownStreakAnimation) {
+                        self.hasShownStreakAnimation = true
+                        streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
                     }
                 }
             } else {
-                text2.text = "🐣  No rides today"
+                streakTextLabel.text = "No rides today"
+                streakJewelLabel.text = "🐣"
+                if (!self.hasShownStreakAnimation) {
+                    self.hasShownStreakAnimation = true
+                    streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
+                }
             }
         }
+    }
+    
+    func beatHeart(view: UIView) {
+        CATransaction.begin()
+        
+        let growAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        let growScale: CGFloat = 1.4
+        growAnimation.values = [
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+        ]
+        growAnimation.keyTimes = [0, 0.08, 0.4, 0.48, 0.8, 1]
+        growAnimation.additive = true
+        growAnimation.duration = 1.5
+        
+        view.layer.addAnimation(growAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
