@@ -22,8 +22,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     private var sensorDataCollectionForQuery : SensorDataCollection?
     private var sensorDataCollectionForUpload : SensorDataCollection?
     
-    private var selectedActivityType: ActivityType = .Unknown
-    
     private var locationManager : CLLocationManager!
     private var player: AVAudioPlayer!
 
@@ -37,11 +35,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     @IBOutlet weak var uploadView: UIView!
     @IBOutlet weak var notesTextField: UITextField!
-    @IBOutlet weak var carButton: UIButton!
-    @IBOutlet weak var walkButton: UIButton!
-    @IBOutlet weak var bikeButton: UIButton!
-    @IBOutlet weak var busButton: UIButton!
-    @IBOutlet weak var railButton: UIButton!
+    @IBOutlet weak var modeSelectorView: ModeSelectorView!
     @IBOutlet weak var uploadButton: UIButton!
     
     override func viewDidLoad() {
@@ -98,37 +92,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func tappedCarButton(sender: AnyObject) {
+    @IBAction func switchedModeSelectorView(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            self.selectedActivityType = .Automotive
-            updateUI()
-        }
-    }
-    
-    @IBAction func tappedWalkButton(sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            self.selectedActivityType = .Walking
-            updateUI()
-        }
-    }
-    
-    @IBAction func tappedBusButton(sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            self.selectedActivityType = .Bus
-            updateUI()
-        }
-    }
-    
-    @IBAction func tappedBikeButton(sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            self.selectedActivityType = .Cycling
-            updateUI()
-        }
-    }
-    
-    @IBAction func tappedTrainButton(sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            self.selectedActivityType = .Rail
             updateUI()
         }
     }
@@ -144,7 +109,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 metadata["identifier"] = identifier.UUIDString
             }
             
-            metadata["reportedActivityType"] = NSNumber(short: self.selectedActivityType.rawValue)
+            metadata["reportedActivityType"] = NSNumber(short: self.modeSelectorView.selectedMode.rawValue)
             
             CoreDataManager.sharedManager.saveContext()
 
@@ -162,6 +127,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
 
             self.startStopButton.setTitle("Pause", forState: UIControlState.Normal)
             self.uploadView.hidden = true
+            self.modeSelectorView.selectedSegmentIndex = -1
             self.activityLabel.hidden = false
             self.startStopButton.hidden = false
             self.cancelButton.hidden = false
@@ -177,35 +143,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 self.finishButton.hidden = true
                 self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
                 
-                guard self.selectedActivityType != .Unknown else {
+                guard self.modeSelectorView.selectedMode != .Unknown else {
                     self.uploadButton.enabled = false
                     return
                 }
                 
                 self.uploadButton.enabled = true
-                self.carButton.backgroundColor = UIColor.clearColor()
-                self.walkButton.backgroundColor = UIColor.clearColor()
-                self.busButton.backgroundColor = UIColor.clearColor()
-                self.bikeButton.backgroundColor = UIColor.clearColor()
-                self.railButton.backgroundColor = UIColor.clearColor()
-                
-                switch self.selectedActivityType {
-                case .Automotive:
-                    self.carButton.backgroundColor = UIColor.greenColor()
-                case .Walking:
-                    self.walkButton.backgroundColor = UIColor.greenColor()
-                case .Bus:
-                    self.busButton.backgroundColor = UIColor.greenColor()
-                case .Cycling:
-                    self.bikeButton.backgroundColor = UIColor.greenColor()
-                case .Rail:
-                    self.railButton.backgroundColor = UIColor.greenColor()
-                default: break
-                }
-                
             } else if (self.sensorDataCollection != nil){
                 // paused
                 self.uploadView.hidden = true
+                self.modeSelectorView.selectedSegmentIndex = -1
                 self.activityLabel.hidden = false
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = false
@@ -216,6 +163,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             } else {
                 // init state
                 self.uploadView.hidden = true
+                self.modeSelectorView.selectedSegmentIndex = -1
                 self.activityLabel.hidden = false
                 self.startStopButton.hidden = false
                 self.cancelButton.hidden = true

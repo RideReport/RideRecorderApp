@@ -35,18 +35,24 @@ import Foundation
             return .Unknown
         }
     }
+    
+    @IBInspectable var fontSize: CGFloat = 50.0 {
+        didSet {
+            reloadUI()
+        }
+    }
 
     @IBInspectable var showsRunning: Bool {
         get {
             return (shownModes.indexOf(.Running) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Running) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Running)
-            } else {
-                if let index = shownModes.indexOf(.Running) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -56,12 +62,12 @@ import Foundation
             return (shownModes.indexOf(.Cycling) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Cycling) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Cycling)
-            } else {
-                if let index = shownModes.indexOf(.Cycling) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -71,12 +77,12 @@ import Foundation
             return (shownModes.indexOf(.Automotive) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Automotive) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Automotive)
-            } else {
-                if let index = shownModes.indexOf(.Automotive) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -86,12 +92,12 @@ import Foundation
             return (shownModes.indexOf(.Walking) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Walking) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Walking)
-            } else {
-                if let index = shownModes.indexOf(.Walking) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -101,12 +107,12 @@ import Foundation
             return (shownModes.indexOf(.Bus) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Bus) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Bus)
-            } else {
-                if let index = shownModes.indexOf(.Bus) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -116,12 +122,12 @@ import Foundation
             return (shownModes.indexOf(.Rail) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Rail) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Rail)
-            } else {
-                if let index = shownModes.indexOf(.Rail) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -131,12 +137,12 @@ import Foundation
             return (shownModes.indexOf(.Stationary) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Stationary) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Stationary)
-            } else {
-                if let index = shownModes.indexOf(.Stationary) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -146,12 +152,12 @@ import Foundation
             return (shownModes.indexOf(.Aviation) != nil)
         }
         set {
+            if let index = shownModes.indexOf(.Aviation) {
+                self.shownModes.removeAtIndex(index)
+            }
+            
             if newValue {
                 self.shownModes.append(.Aviation)
-            } else {
-                if let index = shownModes.indexOf(.Aviation) {
-                    self.shownModes.removeAtIndex(index)
-                }
             }
         }
     }
@@ -173,8 +179,8 @@ import Foundation
         self.setBackgroundImage(imageWithColor(ColorPallete.sharedPallete.unknownGrey), forState: .Selected, barMetrics: .Default)
         self.setDividerImage(imageWithColor(UIColor.clearColor()), forLeftSegmentState: .Normal, rightSegmentState: .Normal, barMetrics: .Default)
         
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(50.0)], forState: .Normal)
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(50.0), NSForegroundColorAttributeName:UIColor.blackColor()], forState: .Selected)
+        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize)], forState: .Normal)
+        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize), NSForegroundColorAttributeName:UIColor.blackColor()], forState: .Selected)
         
         reloadUI()
     }
