@@ -392,19 +392,19 @@ import Foundation
     }
     
     func showControls(animated: Bool = true) {
-        if (self.isShowingControls) {
-            return
-        }
-        
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
             guard let strongSelf = self else {
                 return
             }
+            if (strongSelf.isShowingControls) {
+                return
+            }
+            
+            strongSelf.isShowingControls = true
             
             strongSelf.scrollView.setContentOffset(CGPointMake(strongSelf.totalButtonWidth, 0), animated: animated)
+            strongSelf.delegate?.didOpenControls?(strongSelf)
         })
-        self.isShowingControls = true
-        delegate?.didOpenControls?(self)
     }
     
     func hideControls(animated: Bool = true) {
