@@ -57,7 +57,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var currentPrototrip : Prototrip?
     internal private(set) var currentTrip : Trip?
-    private var currentSensorDataCollection : SensorDataCollection?
+    private var currentMotionMonitoringSensorDataCollection : SensorDataCollection?
+    private var currentActiveMonitoringSensorDataCollection : SensorDataCollection?
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -269,10 +270,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
         
-        if (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries) {
+        if (self.currentActiveMonitoringSensorDataCollection == nil &&
+            (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries)) {
             self.lastActiveTrackingActivityTypeQueryDate = NSDate()
+            self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
             
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: SensorDataCollection(trip: self.currentTrip!)) { (sensorDataCollection) -> Void in
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
+                self.currentActiveMonitoringSensorDataCollection = nil
                 #if DEBUG
                     if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
                         let notif = UILocalNotification()
@@ -283,7 +287,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 #endif
             }
         }
-
         
         for location in locations {
             DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
@@ -309,7 +312,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
             }
             
-            Location(location: location as CLLocation, trip: self.currentTrip!)
+            let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
+            if let collection = self.currentActiveMonitoringSensorDataCollection {
+                loc.sensorDataCollection = collection
+            }
             
             if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow)) {
                 // if the event is more recent than the one we already have
@@ -444,20 +450,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
 
-        if (self.currentSensorDataCollection == nil &&
+        if (self.currentMotionMonitoringSensorDataCollection == nil &&
             (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries)) {
             self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
             
-            self.currentSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
+            self.currentMotionMonitoringSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
+            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
                 
                 let averageSpeed = sensorDataCollection.averageSpeed
-                strongSelf.currentSensorDataCollection = nil
+                strongSelf.currentMotionMonitoringSensorDataCollection = nil
                 
                 guard let prediction = sensorDataCollection.topActivityTypePrediction else {
                     // this should not ever happen.
@@ -527,7 +533,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
             let loc = Location(location: location, prototrip: self.currentPrototrip!)
-            if let collection = self.currentSensorDataCollection {
+            if let collection = self.currentMotionMonitoringSensorDataCollection {
                 loc.sensorDataCollection = collection
             }
         }
