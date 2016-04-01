@@ -97,6 +97,8 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 self.rideSummaryView.body = trip.notificationString()!
                 self.rideSummaryView.hideControls(false)
                 
+                self.rideSummaryView.editTitle = "Not a\n" + trip.activityType.noun + "?"
+                
                 if (trip.activityType == .Cycling) {
                     if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
                         self.rideSummaryView.delay(0.1, completionHandler: {

@@ -1082,10 +1082,10 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="155" y="547" width="291" height="45"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -2044,18 +2044,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
                                 <rect key="frame" x="0.0" y="64" width="600" height="72"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7b-NM-dBN" customClass="ModeSelectorView" customModule="Ride_Report" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="tintColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
@@ -2067,23 +2067,11 @@
                                 <color key="tintColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="z7b-NM-dBN" firstAttribute="centerY" secondItem="Xsz-Tc-4Se" secondAttribute="centerY" id="FBO-4s-RUV"/>
+                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="centerX" secondItem="Xsz-Tc-4Se" secondAttribute="centerX" id="FdC-v9-TNz"/>
                                     <constraint firstAttribute="height" constant="72" id="IcI-Z5-pNo"/>
-                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="height" secondItem="Xsz-Tc-4Se" secondAttribute="height" id="UOd-6J-GRD"/>
-                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="width" secondItem="Xsz-Tc-4Se" secondAttribute="width" id="eX5-GC-45d"/>
-                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="centerX" secondItem="Xsz-Tc-4Se" secondAttribute="centerX" id="kOg-Tu-4I3"/>
+                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="height" secondItem="Xsz-Tc-4Se" secondAttribute="height" id="L7R-CR-qtv"/>
+                                    <constraint firstItem="z7b-NM-dBN" firstAttribute="width" secondItem="Xsz-Tc-4Se" secondAttribute="width" id="hFf-w1-qcK"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="subviews">
-                                        <exclude reference="z7b-NM-dBN"/>
-                                    </mask>
-                                    <mask key="constraints">
-                                        <exclude reference="IcI-Z5-pNo"/>
-                                        <exclude reference="FBO-4s-RUV"/>
-                                        <exclude reference="UOd-6J-GRD"/>
-                                        <exclude reference="eX5-GC-45d"/>
-                                        <exclude reference="kOg-Tu-4I3"/>
-                                    </mask>
-                                </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="subviews">
                                         <include reference="z7b-NM-dBN"/>
@@ -2091,9 +2079,6 @@
                                     <mask key="constraints">
                                         <include reference="IcI-Z5-pNo"/>
                                         <include reference="FBO-4s-RUV"/>
-                                        <include reference="UOd-6J-GRD"/>
-                                        <include reference="eX5-GC-45d"/>
-                                        <include reference="kOg-Tu-4I3"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -2194,7 +2179,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXG-zy-OqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1687.5" y="451"/>
+            <point key="canvasLocation" x="1687" y="451"/>
         </scene>
         <!--Stress Map-->
         <scene sceneID="4tC-aS-a2H">

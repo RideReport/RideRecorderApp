@@ -53,6 +53,34 @@ import MapKit
             return tripTypeString
         }
     }
+    
+    var noun: String {
+        get {
+            var tripTypeString = ""
+            switch self {
+            case .Unknown:
+                tripTypeString = "Unknown"
+            case .Running:
+                tripTypeString = "Run"
+            case .Cycling:
+                tripTypeString = "Bike Ride"
+            case .Automotive:
+                tripTypeString = "Drive"
+            case .Walking:
+                tripTypeString = "Walk"
+            case .Bus:
+                tripTypeString = "Bus Ride"
+            case .Rail:
+                tripTypeString = "Train Ride"
+            case .Stationary:
+                tripTypeString = "Sitting"
+            case .Aviation:
+                tripTypeString = "Flight"
+            }
+            
+            return tripTypeString
+        }
+    }
 }
 
 class Trip : NSManagedObject {

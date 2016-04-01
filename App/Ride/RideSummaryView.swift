@@ -52,7 +52,7 @@ import Foundation
         }
     }
     
-    @IBInspectable var editTitle: String = "Edit" {
+    @IBInspectable var editTitle: String = "Change\nMode" {
         didSet {
             reloadUI()
         }
@@ -203,7 +203,7 @@ import Foundation
         editButton = UIButton()
         editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        editButton.backgroundColor = ColorPallete.sharedPallete.unknownGrey
+        editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(editButton)
