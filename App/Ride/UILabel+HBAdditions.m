@@ -130,13 +130,13 @@ static NSTimeInterval fadeDuration = 0.3;
         [working addAttribute:NSFontAttributeName value:font range:(NSRange){0, working.length}];
     }
     
-    [working addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:255.0f green:255.0f blue:255.0f alpha:0.65f] range:(NSRange){0, working.length}];
+    [working addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:67.0/255 green:67.0/255 blue:67.0/255 alpha:1.0] range:(NSRange){0, working.length}];
     
     // patterns
     id boldParser = @{
                       @"regex":@"(\\*{2})(.+?)(\\*{2})",
                       @"replace":@[@"", @1, @""],
-                      @"attributes":@[@{ }, @{ NSFontAttributeName:bold, NSForegroundColorAttributeName:[UIColor whiteColor]}, @{ }]
+                      @"attributes":@[@{ }, @{ NSFontAttributeName:bold, NSForegroundColorAttributeName:[UIColor colorWithRed:67.0/255 green:67.0/255 blue:67.0/255 alpha:1.0]}, @{ }]
                       };
     
     id italicParser = @{

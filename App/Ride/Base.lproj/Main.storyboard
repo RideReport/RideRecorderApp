@@ -1276,7 +1276,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <state key="normal" title="Let's Do This">
-                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1296,13 +1296,13 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Hey so, we need to ask your permission to do a few things while your phone is locked." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="3Fg-Qu-NLO">
                                 <rect key="frame" x="60" y="98" width="480" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your battery is important to us. We promise not to drain it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="8" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="Pyb-VH-Rta">
                                 <rect key="frame" x="60" y="98" width="480" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uzi-C3-YfN">
@@ -1313,7 +1313,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <state key="normal" title="Whatever">
-                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1333,11 +1333,11 @@
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Send notications after your ride fooo bar bar" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="N4T-ad-MYY">
                                 <rect key="frame" x="80" y="196" width="480" height="20"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="Uzi-C3-YfN" firstAttribute="centerX" secondItem="rpN-6i-TQ7" secondAttribute="centerX" id="2Z1-oe-T1E"/>
                             <constraint firstItem="Pyb-VH-Rta" firstAttribute="top" secondItem="Uzi-C3-YfN" secondAttribute="bottom" constant="8" id="8wP-PR-HB4"/>
@@ -1405,6 +1405,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="batteryLifeLabel" destination="Pyb-VH-Rta" id="Q0v-Hq-ryZ"/>
                         <outlet property="doneButton" destination="Uzi-C3-YfN" id="bPR-5i-GVE"/>
@@ -1439,7 +1440,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <state key="normal" title="Got it">
-                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="default">
@@ -1468,11 +1469,15 @@
                                     <action selector="next:" destination="cUY-e3-8Xh" eventType="touchUpInside" id="YDm-hl-P3n"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YsA-fO-x9S">
-                                <rect key="frame" x="-38" y="200" width="676" height="1292"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YsA-fO-x9S">
+                                <rect key="frame" x="-37.5" y="200" width="675" height="1292"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
-                                        <rect key="frame" x="103" y="259" width="470" height="80"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q2F-X1-4cA">
+                                        <rect key="frame" x="96.5" y="92.5" width="482" height="1107"/>
+                                        <color key="backgroundColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jcU-RA-OvC" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                        <rect key="frame" x="102.5" y="259" width="470" height="80"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="BER-kM-m2S"/>
@@ -1501,8 +1506,8 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="iphonewhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="n3k-ze-oND">
-                                        <rect key="frame" x="0.0" y="0.0" width="676" height="1292"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphonewhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="n3k-ze-oND">
+                                        <rect key="frame" x="0.0" y="0.0" width="675" height="1292"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="n3k-ze-oND" secondAttribute="height" multiplier="338:647" id="c10-6R-VgY"/>
                                         </constraints>
@@ -1525,12 +1530,16 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="q2F-X1-4cA" firstAttribute="height" secondItem="YsA-fO-x9S" secondAttribute="height" multiplier="6:7" id="19O-gL-0W1"/>
                                     <constraint firstItem="jcU-RA-OvC" firstAttribute="top" secondItem="YsA-fO-x9S" secondAttribute="centerY" multiplier="2:5" id="9dV-ia-dP1"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="width" id="D5Y-eZ-ST6"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="centerX" secondItem="YsA-fO-x9S" secondAttribute="centerX" id="I7h-UM-1hD"/>
+                                    <constraint firstItem="q2F-X1-4cA" firstAttribute="centerX" secondItem="YsA-fO-x9S" secondAttribute="centerX" id="VHk-8J-plX"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="centerY" secondItem="YsA-fO-x9S" secondAttribute="centerY" id="Zim-Ve-m5a"/>
+                                    <constraint firstItem="q2F-X1-4cA" firstAttribute="centerY" secondItem="YsA-fO-x9S" secondAttribute="centerY" id="e7u-cf-uYg"/>
                                     <constraint firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="height" multiplier="338:647" id="mA6-sA-SH0"/>
                                     <constraint firstItem="jcU-RA-OvC" firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="width" multiplier="39:56" id="qJQ-iv-jfa"/>
+                                    <constraint firstItem="q2F-X1-4cA" firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="width" multiplier="5:7" id="qUd-Uo-te9"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="height" secondItem="YsA-fO-x9S" secondAttribute="height" id="zfy-wH-lDN"/>
                                 </constraints>
                                 <variation key="heightClass=regular-widthClass=compact">
@@ -1548,14 +1557,14 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
-                                <rect key="frame" x="60" y="131" width="480" height="39"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report reports right to your lock screen. Just slide left to rate the route." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bHA-2Y-YLz">
+                                <rect key="frame" x="60" y="127" width="480" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="YsA-fO-x9S" firstAttribute="top" secondItem="bHA-2Y-YLz" secondAttribute="bottom" constant="30" id="1Gr-1s-E8F"/>
                             <constraint firstItem="jcU-RA-OvC" firstAttribute="centerX" secondItem="Jxg-5T-yqK" secondAttribute="centerX" id="1MP-1E-gMQ"/>
@@ -1600,6 +1609,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="helperTextLabel" destination="bHA-2Y-YLz" id="a9h-Ai-XuC"/>
                         <outlet property="iPhoneContainerView" destination="YsA-fO-x9S" id="DBu-Qu-JoQ"/>
@@ -1610,7 +1620,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B5y-yY-RUS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="256.5" y="2023"/>
+            <point key="canvasLocation" x="256" y="2023"/>
         </scene>
         <!--Setup Finished View Controller-->
         <scene sceneID="VKZ-XD-iWn">
@@ -1627,11 +1637,11 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're set! Go get on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
                                 <rect key="frame" x="60" y="279" width="480" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="wjC-A5-4oV" secondAttribute="centerY" id="LY8-0T-Shd"/>
                             <constraint firstItem="wjC-A5-4oV" firstAttribute="width" secondItem="Rqf-Ww-wUo" secondAttribute="width" multiplier="4:5" id="Wrf-G5-6FF"/>
@@ -1667,7 +1677,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Create account so you can get your rides back if your phone is lost or stolen." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wQe-d2-N04">
                                 <rect key="frame" x="23" y="28" width="555" height="67"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bc0-BS-lHY">
@@ -1700,7 +1710,7 @@
                                             <constraint firstAttribute="height" constant="28" id="rPe-bV-IbP"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -1750,7 +1760,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <state key="normal" title="Already have an account?">
-                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -1758,7 +1768,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="NMY-2y-IYc" secondAttribute="centerX" id="3Uk-zL-8pb"/>
                             <constraint firstItem="7eH-Vw-Tw4" firstAttribute="top" secondItem="wQe-d2-N04" secondAttribute="bottom" constant="40" id="9nF-TA-X2N"/>
@@ -1819,7 +1829,7 @@
                                         <integer key="value" value="4"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="dotColor">
-                                        <color key="value" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="messageColor">
                                         <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -1837,11 +1847,11 @@
                                     <constraint firstAttribute="height" constant="67" id="zqU-QM-Gzw"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="o3j-Gr-fam" secondAttribute="centerX" id="1Ka-mU-zim"/>
                             <constraint firstItem="i3V-Vp-9Tj" firstAttribute="top" secondItem="TAv-HU-0oo" secondAttribute="bottom" constant="98" id="BxT-vd-tZM"/>
@@ -1885,7 +1895,7 @@
                                 </constraints>
                                 <string key="text">Collect trophies for every mile you bike, for mutli-day steaks, for every ride in the rain. Just hop on your bike and Ride Report will take care of the rest.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8qs-Gs-CEz">
@@ -1897,14 +1907,14 @@
                                 <attributedString key="attributedText">
                                     <fragment content="By tapping Sweet, you're agreeing to our ">
                                         <attributes>
-                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="NSColor" red="0.2627450980392157" green="0.2627450980392157" blue="0.2627450980392157" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                         </attributes>
                                     </fragment>
                                     <fragment content="terms and conditions">
                                         <attributes>
-                                            <color key="NSColor" red="0.72156862745098038" green="0.14509803921568629" blue="0.40784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="NSColor" red="0.35686274509803922" green="0.56862745098039214" blue="0.31764705882352939" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
                                             <url key="NSLink" string="http://ride.report/terms"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
@@ -1914,7 +1924,7 @@
                                     </fragment>
                                     <fragment content=". We use anonymous, aggregate data to help improve biking, but we’ll never share your personal data.">
                                         <attributes>
-                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="NSColor" red="0.2627450980392157" green="0.2627450980392157" blue="0.2627450980392157" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="12" name="HelveticaNeue"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
                                         </attributes>
@@ -1940,7 +1950,7 @@
                                 <rect key="frame" x="168" y="242" width="264" height="29"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <color key="textColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="heightClass=regular" misplaced="YES">
                                     <rect key="frame" x="135" y="342" width="330" height="29"/>
@@ -1953,7 +1963,7 @@
                                 <rect key="frame" x="255" y="499" width="90" height="48"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <state key="normal" title="Sweet">
-                                    <color key="titleColor" red="0.72156862749999995" green="0.1450980392" blue="0.40784313729999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <variation key="heightClass=regular" misplaced="YES">
@@ -1964,7 +1974,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="8qs-Gs-CEz" secondAttribute="trailing" constant="3" id="2dD-au-2u1"/>
                             <constraint firstItem="mTI-Gc-S80" firstAttribute="centerX" secondItem="7cW-Zb-E0S" secondAttribute="centerX" id="DNl-Kf-PbP"/>
@@ -2011,6 +2021,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="helperTextLabel" destination="UL8-8P-mSA" id="9mB-Gn-ulI"/>
                         <outlet property="spriteKitView" destination="mTI-Gc-S80" id="QfI-0e-dEC"/>
@@ -2033,14 +2044,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
+                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GsO-Yw-fHd">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <segue destination="BYZ-38-t0r" kind="embed" identifier="mapViewControllerEmbed" id="cCW-Xa-QSN"/>
                                 </connections>
                             </containerView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xsz-Tc-4Se">
                                 <rect key="frame" x="0.0" y="64" width="600" height="72"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z7b-NM-dBN" customClass="ModeSelectorView" customModule="Ride_Report" customModuleProvider="target">
