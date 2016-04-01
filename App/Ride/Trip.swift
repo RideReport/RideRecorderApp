@@ -99,11 +99,11 @@ class Trip : NSManagedObject {
     
     private var currentStateNotification : UILocalNotification? = nil
         
-    @NSManaged var startingPlacemarkName : String!
-    @NSManaged var endingPlacemarkName : String!
+    @NSManaged var startingPlacemarkName : String?
+    @NSManaged var endingPlacemarkName : String?
     @NSManaged var activityType : ActivityType
-    @NSManaged var batteryAtEnd : NSNumber!
-    @NSManaged var batteryAtStart : NSNumber!
+    @NSManaged var batteryAtEnd : NSNumber?
+    @NSManaged var batteryAtStart : NSNumber?
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
@@ -112,9 +112,9 @@ class Trip : NSManagedObject {
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var summaryIsSynced : Bool
     @NSManaged var locationsNotYetDownloaded : Bool
-    @NSManaged var rewardDescription : String!
-    @NSManaged var rewardEmoji : String!
-    @NSManaged var healthKitUuid : String!
+    @NSManaged var rewardDescription : String?
+    @NSManaged var rewardEmoji : String?
+    @NSManaged var healthKitUuid : String?
     
     var isClosed : Bool {
         get {
@@ -742,15 +742,21 @@ class Trip : NSManagedObject {
     }
     
     func batteryLifeUsed() -> Int16 {
-        if (self.batteryAtStart == nil || self.batteryAtEnd == nil || self.batteryAtStart.shortValue == 0 || self.batteryAtEnd.shortValue == 0) {
+        guard let batteryAtStart = self.batteryAtStart, let  batteryAtEnd = self.batteryAtEnd else {
             return 0
         }
-        if (self.batteryAtStart.shortValue < self.batteryAtEnd.shortValue) {
+        
+        if (batteryAtStart.shortValue == 0 || batteryAtEnd.shortValue == 0) {
+            return 0
+        }
+        
+        
+        if (batteryAtStart.shortValue < batteryAtEnd.shortValue) {
             DDLogVerbose("Negative battery life used?")
             return 0
         }
         
-        return (self.batteryAtStart.shortValue - self.batteryAtEnd.shortValue)
+        return (batteryAtStart.shortValue - batteryAtEnd.shortValue)
     }
     
     func duration() -> NSTimeInterval {
@@ -1039,14 +1045,14 @@ class Trip : NSManagedObject {
     func notificationString()->String? {
         var message = ""
         
-        if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
+        if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName, endingPlacemarkName)
             }
-        } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
+        } else if let startingPlacemarkName = self.startingPlacemarkName {
+            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
         } else {
             message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }
@@ -1062,14 +1068,14 @@ class Trip : NSManagedObject {
     func shareString()->String {
         var message = ""
         
-        if (self.startingPlacemarkName != nil && self.endingPlacemarkName != nil) {
+        if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName, self.endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName, endingPlacemarkName)
             }
-        } else if (self.startingPlacemarkName != nil) {
-            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, self.startingPlacemarkName)
+        } else if let startingPlacemarkName = self.startingPlacemarkName {
+            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
         } else {
             message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
         }

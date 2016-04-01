@@ -11,10 +11,10 @@ import CoreData
 
 class Prototrip : NSManagedObject {
     @NSManaged var activityType : NSNumber
-    @NSManaged var batteryAtStart : NSNumber!
+    @NSManaged var batteryAtStart : NSNumber?
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
-    @NSManaged var creationDate : NSDate!
+    @NSManaged var creationDate : NSDate?
     
     convenience init() {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
