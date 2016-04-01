@@ -36,7 +36,7 @@ import Foundation
         }
     }
     
-    @IBInspectable var fontSize: CGFloat = 50.0 {
+    @IBInspectable var fontSize: CGFloat = 40.0 {
         didSet {
             reloadUI()
         }

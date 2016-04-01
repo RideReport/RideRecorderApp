@@ -169,7 +169,9 @@ import Foundation
         contentView.addSubview(dateLabel)
         
         bodyLabel = UILabel()
-        bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        bodyLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        bodyLabel.minimumScaleFactor = 0.6
+        bodyLabel.adjustsFontSizeToFitWidth = true
         bodyLabel.numberOfLines = 2
         contentView.addSubview(bodyLabel)
         

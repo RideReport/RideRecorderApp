@@ -179,15 +179,15 @@
                                         <exclude reference="AFw-fm-znc"/>
                                         <exclude reference="uMl-ml-Mhc"/>
                                         <exclude reference="utf-GT-ADG"/>
+                                        <exclude reference="n0g-Jp-chx"/>
+                                        <exclude reference="nx4-Ij-sSb"/>
+                                        <exclude reference="zTJ-G2-euW"/>
+                                        <exclude reference="6eU-8o-28j"/>
+                                        <exclude reference="B6d-fN-ZzK"/>
                                         <exclude reference="Dgi-rq-ydc"/>
                                         <exclude reference="IUY-rR-g52"/>
                                         <exclude reference="dtZ-U8-jbb"/>
                                         <exclude reference="qum-Zi-Qjl"/>
-                                        <exclude reference="6eU-8o-28j"/>
-                                        <exclude reference="B6d-fN-ZzK"/>
-                                        <exclude reference="n0g-Jp-chx"/>
-                                        <exclude reference="nx4-Ij-sSb"/>
-                                        <exclude reference="zTJ-G2-euW"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
@@ -204,15 +204,15 @@
                                         <include reference="AFw-fm-znc"/>
                                         <include reference="uMl-ml-Mhc"/>
                                         <include reference="utf-GT-ADG"/>
+                                        <exclude reference="n0g-Jp-chx"/>
+                                        <include reference="nx4-Ij-sSb"/>
+                                        <include reference="zTJ-G2-euW"/>
+                                        <include reference="6eU-8o-28j"/>
+                                        <include reference="B6d-fN-ZzK"/>
                                         <include reference="Dgi-rq-ydc"/>
                                         <include reference="IUY-rR-g52"/>
                                         <include reference="dtZ-U8-jbb"/>
                                         <include reference="qum-Zi-Qjl"/>
-                                        <include reference="6eU-8o-28j"/>
-                                        <include reference="B6d-fN-ZzK"/>
-                                        <exclude reference="n0g-Jp-chx"/>
-                                        <include reference="nx4-Ij-sSb"/>
-                                        <include reference="zTJ-G2-euW"/>
                                     </mask>
                                 </variation>
                             </view>
