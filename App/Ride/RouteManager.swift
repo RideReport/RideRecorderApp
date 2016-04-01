@@ -13,7 +13,7 @@ import CoreMotion
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
-    var minimumSpeedToContinueMonitoring : CLLocationSpeed = 3.0 // ~6.7mph
+    var minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
     
     let locationTrackingDeferralTimeout : NSTimeInterval = 120
 
