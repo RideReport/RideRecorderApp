@@ -64,7 +64,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try! AVAudioSession.sharedInstance().setActive(true)
         
-        
         MPRemoteCommandCenter.sharedCommandCenter().togglePlayPauseCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
             self.tappedStartPause(self)
             
