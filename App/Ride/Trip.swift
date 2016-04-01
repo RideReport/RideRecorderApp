@@ -801,7 +801,7 @@ class Trip : NSManagedObject {
         var activityClassTopConfidenceVotes : [ActivityType: Float] = [:]
         for collection in self.sensorDataCollections {
             if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
-                var voteValue = topPrediction.confidence.floatValue
+                var voteValue = powf(topPrediction.confidence.floatValue, 1.5) // make the difference bigger
                 let averageSpeed = collection.averageSpeed
                 
                 if averageSpeed < 0 {
