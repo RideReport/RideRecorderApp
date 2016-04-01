@@ -36,14 +36,14 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                     if (strongSelf.selectedTrip.locationsNotYetDownloaded || !strongSelf.selectedTrip.summaryIsSynced) {
                         APIClient.sharedClient.getTrip(strongSelf.selectedTrip).apiResponse({ (_) -> Void in
                             strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
-                            strongSelf.reloadTripSelectedToolbar()
+                            strongSelf.reloadTripSelectedToolbar(oldValue != strongSelf.selectedTrip)
                         })
                     } else {
                         strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
                     }
                 }
                 strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
-                strongSelf.reloadTripSelectedToolbar()
+                strongSelf.reloadTripSelectedToolbar(oldValue != strongSelf.selectedTrip)
             })
         }
     }
@@ -71,7 +71,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
         self.rideSummaryView.showsEditButton = true
     }
     
-    func reloadTripSelectedToolbar() {
+    func reloadTripSelectedToolbar(tripChanged: Bool) {
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             var dateTitle = ""
@@ -95,7 +95,9 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 
                 self.rideSummaryView.dateString = dateTitle
                 self.rideSummaryView.body = trip.notificationString()!
-                self.rideSummaryView.hideControls(false)
+                if (tripChanged) {
+                    self.rideSummaryView.hideControls(false)
+                }
                 
                 self.rideSummaryView.editTitle = "Not a\n" + trip.activityType.noun + "?"
                 
@@ -135,7 +137,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
             guard let strongSelf = self else {
                 return
             }
-            strongSelf.reloadTripSelectedToolbar()
+            strongSelf.reloadTripSelectedToolbar(false)
         }
     }
     
@@ -221,7 +223,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     
     func refreshSelectrTrip() {
         self.mapViewController.setSelectedTrip(self.selectedTrip)
-        self.reloadTripSelectedToolbar()
+        self.reloadTripSelectedToolbar(false)
     }
 
     //
