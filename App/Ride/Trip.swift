@@ -844,11 +844,13 @@ class Trip : NSManagedObject {
                 } else {
                     // otherwise, we give zero or partial vote power depending on if the prediction had a reasonable speed
                     switch topPrediction.activityType {
-                    case .Automotive, .Cycling, .Rail, .Bus where averageSpeed < 1:
+                    case .Automotive where averageSpeed < 1, .Cycling where averageSpeed < 1, .Rail where averageSpeed < 1, .Bus where averageSpeed < 1:
                         voteValue = 0
                     case .Automotive where averageSpeed < 4.5:
                         voteValue = voteValue/3
-                    case .Bus, .Rail where averageSpeed < 3.6:
+                    case .Bus where averageSpeed < 3.6:
+                        voteValue = voteValue/3
+                    case .Rail where averageSpeed < 3.6:
                         voteValue = voteValue/3
                     case .Cycling where averageSpeed < 3:
                         voteValue = voteValue/3

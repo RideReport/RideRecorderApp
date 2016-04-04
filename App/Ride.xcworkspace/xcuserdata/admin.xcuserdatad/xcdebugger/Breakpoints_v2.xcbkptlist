@@ -20,61 +20,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Ride/Trip.swift"
-            timestampString = "474516018.633477"
+            timestampString = "481488900.18875"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "805"
-            endingLineNumber = "805"
-            landmarkName = "reopen(withPrototrip:)"
+            startingLineNumber = "834"
+            endingLineNumber = "834"
+            landmarkName = "calculateAggregatePredictedActivityType()"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Ride/Profile.swift"
-            timestampString = "479934729.94787"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
-            landmarkName = "updateCurrentRideStreakLength()"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.Profile.updateCurrentRideStreakLength () -&gt; ()"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/Profile.swift"
-                  timestampString = "479934748.389465"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "196"
-                  endingLineNumber = "196"
-                  offsetFromSymbolStart = "1812">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Ride_Report.Profile.updateCurrentRideStreakLength () -&gt; ()"
-                  moduleName = "Ride Report"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/admin/Developer/Ride/App/Ride/Profile.swift"
-                  timestampString = "479934748.389737"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "196"
-                  endingLineNumber = "196"
-                  offsetFromSymbolStart = "1856">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

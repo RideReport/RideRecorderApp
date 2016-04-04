@@ -510,12 +510,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
-                case .Walking, .Stationary where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
-                    DDLogVerbose("Walking or stationary, high confidence and no speed. stopping monitor…")
+                case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
+                    DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
-                case .Walking, .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
-                    DDLogVerbose("Walking or stationary, low confidence and matching speed-range. stopping monitor…")
+                case .Stationary where confidence > 0.9 && averageSpeed < 0:
+                    DDLogVerbose("Stationary, high confidence and no speed. stopping monitor…")
+                    
+                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                case .Walking where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                    DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
+                    
+                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                    DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
                 case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking, .Aviation:
