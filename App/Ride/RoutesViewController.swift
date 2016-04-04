@@ -757,7 +757,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             self.tableView.setEditing(false, animated: true)
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Sync", "Upload Sensor Data", "Sync to Health Kit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Re-Classify", "Upload Sensor Data", "Sync to Health Kit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }
@@ -771,7 +771,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (buttonIndex == 0) {
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 1) {
-            APIClient.sharedClient.syncTrip(trip)
+            trip.calculateAggregatePredictedActivityType()
         } else if (buttonIndex == 2) {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
