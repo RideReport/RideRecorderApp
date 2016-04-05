@@ -25,12 +25,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
-    let sampleWindowSize: Int = 64
-    private let updateInterval: NSTimeInterval = 50/1000
+    static let sampleWindowSize: Int = 64
+    static let updateInterval: NSTimeInterval = 50/1000
+
     private var isGatheringMotionData: Bool = false
     private var isQueryingMotionData: Bool = false
-    
-    private var randomForestManager: RandomForestManager!
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -66,11 +65,9 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.deviceMotionUpdateInterval = self.updateInterval
-        self.motionManager.accelerometerUpdateInterval = self.updateInterval
-        self.motionManager.gyroUpdateInterval = self.updateInterval
-        
-        self.randomForestManager = RandomForestManager(sampleSize: self.sampleWindowSize, samplingFrequency: Int(1/updateInterval))
+        self.motionManager.deviceMotionUpdateInterval = MotionManager.updateInterval
+        self.motionManager.accelerometerUpdateInterval = MotionManager.updateInterval
+        self.motionManager.gyroUpdateInterval = MotionManager.updateInterval
     }
     
     private func startup() {
@@ -161,20 +158,6 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    
-    private func magnitudeVector(forSensorData sensorData:NSOrderedSet)->[Float] {
-        var mags: [Float] = []
-        
-        for elem in sensorData {
-            let reading = elem as! SensorData
-            let sum = reading.x.floatValue*reading.x.floatValue + reading.y.floatValue*reading.y.floatValue + reading.z.floatValue*reading.z.floatValue
-            mags.append(sqrtf(sum))
-            if mags.count >= self.sampleWindowSize { break } // it is possible we over-colleted some of the sensor data
-        }
-        
-        return mags
-    }
-    
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
     if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
@@ -199,18 +182,13 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 return
             }
             
-            if sensorDataCollection.accelerometerAccelerations.count >= self.sampleWindowSize &&
-                sensorDataCollection.gyroscopeRotationRates.count >= self.sampleWindowSize
+            if sensorDataCollection.accelerometerAccelerations.count >= MotionManager.sampleWindowSize &&
+                sensorDataCollection.gyroscopeRotationRates.count >= MotionManager.sampleWindowSize
             {
                 self.isQueryingMotionData = false
                 self.stopMotionUpdatesAsNeeded()
                 // run classification
-                let accelVector = self.magnitudeVector(forSensorData: sensorDataCollection.accelerometerAccelerations)
-                let gyroVector = self.magnitudeVector(forSensorData: sensorDataCollection.gyroscopeRotationRates)
-                let classConfidences = self.randomForestManager.classifyMagnitudeVector(accelVector, gyroVector: gyroVector)
-                
-                sensorDataCollection.addActivityTypePredictions(forClassConfidences: classConfidences)
-                CoreDataManager.sharedManager.saveContext()
+                RandomForestManager.sharedForest.classify(sensorDataCollection)
                 
                 handler(sensorDataCollection: sensorDataCollection)
                 if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

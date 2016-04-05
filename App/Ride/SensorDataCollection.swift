@@ -147,7 +147,9 @@ class SensorDataCollection : NSManagedObject {
         self._topActivityTypePrediction = nil
     }
     
-    func addActivityTypePredictions(forClassConfidences classConfidences:[Int: Float]) {
+    func setActivityTypePredictions(forClassConfidences classConfidences:[Int: Float]) {
+        self.activityTypePredictions = NSOrderedSet()
+
         for (classInt, confidence) in classConfidences {
             _ = ActivityTypePrediction(activityType: ActivityType(rawValue: Int16(classInt))!, confidence: confidence, sensorDataCollection: self)
         }

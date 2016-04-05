@@ -771,6 +771,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         if (buttonIndex == 0) {
             trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
         } else if (buttonIndex == 1) {
+            for sensorCollection in trip.sensorDataCollections {
+                RandomForestManager.sharedForest.classify(sensorCollection as! SensorDataCollection)
+            }
             trip.calculateAggregatePredictedActivityType()
         } else if (buttonIndex == 2) {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
