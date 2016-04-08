@@ -832,6 +832,13 @@ class Trip : NSManagedObject {
     func calculateAggregatePredictedActivityType() {
         // something for airplanes needs to go right here.
         
+        if self.aggregateRoughtSpeed > 75.0 {
+            // special case for air travel. just look at the speed.
+            self.activityType = .Aviation
+
+            return
+        }
+        
         var activityClassTopConfidenceVotes : [ActivityType: Float] = [:]
         for collection in self.sensorDataCollections {
             if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
@@ -1302,6 +1309,18 @@ class Trip : NSManagedObject {
         }
         
         return date
+    }
+    
+    var aggregateRoughtSpeed: CLLocationSpeed {
+        guard let startLoc = self.locations.firstObject as? Location, endLoc = self.locations.lastObject as? Location,
+        startDate = startLoc.date, endDate = endLoc.date else {
+            return 0.0
+        }
+        
+        let distance = startLoc.clLocation().distanceFromLocation(endLoc.clLocation())
+        let time = endDate.timeIntervalSinceDate(startDate)
+        
+        return distance/time
     }
     
     var averageSpeed : CLLocationSpeed {
