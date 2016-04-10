@@ -331,6 +331,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             UIApplication.sharedApplication().presentLocalNotificationNow(notif)
             
             if (strongSelf.predictSwitch.on) {
+                DDLogInfo("Beginning run prediction Background task!")
                 strongSelf.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                     strongSelf.backgroundTaskID = UIBackgroundTaskInvalid
                 })

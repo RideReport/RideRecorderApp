@@ -243,6 +243,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        DDLogInfo("Beginning remote notification background task!")
         let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             DDLogInfo("Received remote notification background task expired!")
             completionHandler(.NewData)
@@ -340,7 +341,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let notif = UILocalNotification()
         notif.alertBody = emoji1 + thanksPhrase + emoji2
         UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-            
+        
+        DDLogInfo("Beginning post trip rating background task!")
         let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
             DDLogInfo("Post trip notification background task expired!")
             UIApplication.sharedApplication().cancelLocalNotification(notif)

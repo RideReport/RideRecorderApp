@@ -229,6 +229,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
             
             if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+                DDLogInfo("Beginning Route Manager Stop Trip Background task!")
                 self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                     DDLogInfo("Route Manager Background task expired!")
                 })

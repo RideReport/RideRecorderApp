@@ -106,6 +106,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     
     func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection) {
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+            DDLogInfo("Beginning GatherSensorData background task!")
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 DDLogInfo("GatherSensorData Background task expired!")
                 self.backgroundTaskID = UIBackgroundTaskInvalid
@@ -160,6 +161,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
     if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+            DDLogInfo("Beginning Query Activity Type background task!")
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
     	        sensorDataCollection.addUnknownTypePrediction()
