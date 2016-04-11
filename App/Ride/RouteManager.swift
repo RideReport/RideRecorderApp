@@ -658,7 +658,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.disableAllGeofences()
     }
     
-    private func pauseTrackingDueToLowBatteryLife() {
+    private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
         if (self.locationManagerIsUpdating) {
             // if we are currently updating, send the user a push and stop.
             let notif = UILocalNotification()
@@ -667,7 +667,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             DDLogInfo("Paused Tracking due to battery life")
             
-            self.stopMotionMonitoring(nil)
+            self.stopMotionMonitoringAndSetupGeofences(aroundLocation: location)
         }
     }
     
@@ -799,7 +799,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         // skip this check
 #else
         if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
-            self.pauseTrackingDueToLowBatteryLife()
+            self.pauseTrackingDueToLowBatteryLife(withLastLocation: locations.first)
             return
         }
 #endif
