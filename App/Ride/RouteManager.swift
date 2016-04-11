@@ -374,6 +374,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.startLocationTrackingIfNeeded()
+        self.locationManager.stopMonitoringSignificantLocationChanges()
         self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
@@ -419,6 +420,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else {
             DDLogInfo("Did not setup new geofence!")
         }
+        
+        self.locationManager.startMonitoringSignificantLocationChanges()
         
         if let prototrip = self.currentPrototrip {
             prototrip.managedObjectContext?.deleteObject(prototrip)
@@ -687,8 +690,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startTrackingMachine() {
-        self.locationManager.startMonitoringSignificantLocationChanges()
-        
         if (!self.locationManagerIsUpdating) {
             // if we are not already getting location updates, get a single update for our geofence.
             self.isGettingInitialLocationForGeofence = true
