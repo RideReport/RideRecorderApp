@@ -207,7 +207,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         
-        self.stopMotionMonitoring(self.lastActiveMonitoringLocation)
+        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastActiveMonitoringLocation)
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
@@ -374,6 +374,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.startLocationTrackingIfNeeded()
+        self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
         #if DEBUG
@@ -402,12 +403,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.lastMotionMonitoringLocation = nil
     }
     
-    private func stopMotionMonitoring(finalLocation: CLLocation?) {
+    private func stopMotionMonitoringAndSetupGeofences(aroundLocation location: CLLocation?) {
         DDLogInfo("Stopping motion monitoring")
-        
-        self.disableAllGeofences()
-        
-        if (finalLocation != nil) {
+                
+        if let loc = location {
             #if DEBUG
                 if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
                     let notif = UILocalNotification()
@@ -416,7 +415,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 }
             #endif
-            self.setupGeofencesAroundCenter(finalLocation!)
+            self.setupGeofencesAroundCenter(loc)
         } else {
             DDLogInfo("Did not setup new geofence!")
         }
@@ -446,7 +445,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.isGettingInitialLocationForGeofence = false
             if (!self.didStartFromBackground) {
                 DDLogVerbose("Got intial location for geofence. Stopping!")
-                self.stopMotionMonitoring(self.lastMotionMonitoringLocation)
+                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation)
                 return
             }
         }
@@ -514,23 +513,23 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
                     
-                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
                 case .Stationary where confidence > 0.9 && averageSpeed < 0:
                     DDLogVerbose("Stationary, high confidence and no speed. stopping monitor…")
                     
-                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
                 case .Walking where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
                     DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
                     
-                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
                 case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
                     DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
                     
-                    strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
                 case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking, .Aviation:
                     if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
                         DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
-                        strongSelf.stopMotionMonitoring(strongSelf.lastMotionMonitoringLocation)
+                        strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
                     } else {
                         DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
                     }
