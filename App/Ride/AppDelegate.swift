@@ -254,6 +254,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 completionHandler(.NewData)
                 
                 if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                    DDLogInfo("Ending remote notification background task!")
+
                     UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
                 }
             })
@@ -353,6 +355,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             UIApplication.sharedApplication().cancelLocalNotification(notif)
             
             if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                DDLogInfo("Ending post trip rating background task!")
+
                 UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
             }
         })

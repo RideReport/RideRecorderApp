@@ -258,7 +258,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     }
 
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                        DDLogInfo("Ending background task.")
+                        DDLogInfo("Ending Route Manager Stop Trip Background task!")
                         
                         UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid

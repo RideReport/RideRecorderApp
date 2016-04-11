@@ -271,6 +271,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.locationManager.startUpdatingLocation()
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending run prediction Background task!")
+            
             UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }

@@ -99,6 +99,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.stopMotionUpdatesAsNeeded()
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending GatherSensorData background task!")
+            
             UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
@@ -153,6 +155,8 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             self.motionManager.stopGyroUpdates()
             
             if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                DDLogInfo("Ending background task with Stop Motion Updates!")
+                
                 UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             }
@@ -194,6 +198,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 
                 handler(sensorDataCollection: sensorDataCollection)
                 if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                    DDLogInfo("Ending Query Activity Type background task!")
                     UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
                     self.backgroundTaskID = UIBackgroundTaskInvalid
                 }
