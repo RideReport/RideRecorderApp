@@ -164,7 +164,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
-    if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+        if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning Query Activity Type background task!")
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
@@ -185,6 +185,12 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         let completionBlock = {
             guard self.isQueryingMotionData else {
                 // avoid possible race condition where completion block could be called multiple times
+                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                    DDLogInfo("Ending Query Activity Type background task though isQueryingMotionData was false!")
+                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                    self.backgroundTaskID = UIBackgroundTaskInvalid
+                }
+                
                 return
             }
             
