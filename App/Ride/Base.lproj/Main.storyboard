@@ -2539,7 +2539,7 @@
             </objects>
             <point key="canvasLocation" x="466" y="-845"/>
         </scene>
-        <!--Sync with Health App-->
+        <!--Health Kit Setup View Controller-->
         <scene sceneID="xFi-C6-jQm">
             <objects>
                 <viewController storyboardIdentifier="HealthKitSetupViewController" id="SXf-PS-yM0" customClass="HealthKitSetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
@@ -2550,7 +2550,7 @@
                     <view key="view" contentMode="scaleToFill" id="rWI-VC-AAC">
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report ❤️ Health App" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="I7k-p2-FvW">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Sync with Health App" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="I7k-p2-FvW">
                                 <rect key="frame" x="168" y="242" width="264" height="29"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
@@ -2563,7 +2563,7 @@
                                     <rect key="frame" x="60" y="331" width="281" height="29"/>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="To make better calculations, Ride Report will ask for permission to read gender, weight and heart rate data." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="kh1-ft-ElB">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report will ask for gender, weight and heart rate data to calculate energy burned." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="kh1-ft-ElB">
                                 <rect key="frame" x="60" y="279" width="480" height="63"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="63" id="AgH-Y8-lUt"/>
@@ -2614,6 +2614,38 @@
                                     <action selector="next:" destination="326-On-509" eventType="touchUpInside" id="KEE-5q-2hF"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="❤️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="IcI-Yk-A7s">
+                                <rect key="frame" x="168" y="242" width="264" height="29"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="97" id="1gL-Aw-SWM"/>
+                                    <constraint firstAttribute="width" constant="96" id="RrX-Kt-pZ3"/>
+                                    <constraint firstAttribute="height" constant="74" id="veQ-eo-qn7"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="70"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="1gL-Aw-SWM"/>
+                                        <exclude reference="RrX-Kt-pZ3"/>
+                                        <exclude reference="veQ-eo-qn7"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="135" y="342" width="330" height="29"/>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="1gL-Aw-SWM"/>
+                                        <include reference="RrX-Kt-pZ3"/>
+                                        <include reference="veQ-eo-qn7"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="60" y="331" width="281" height="29"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -2634,8 +2666,10 @@
                             <constraint firstItem="Y5r-bc-kIk" firstAttribute="top" secondItem="I7k-p2-FvW" secondAttribute="bottom" constant="13" id="hz1-ZP-wDr"/>
                             <constraint firstItem="puj-T1-Dy7" firstAttribute="centerX" secondItem="rWI-VC-AAC" secondAttribute="centerX" id="m92-nh-5Kz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="kh1-ft-ElB" secondAttribute="trailing" id="orX-r0-Wr0"/>
+                            <constraint firstItem="I7k-p2-FvW" firstAttribute="top" secondItem="IcI-Yk-A7s" secondAttribute="bottom" constant="8" id="uPN-Te-O5K"/>
                             <constraint firstItem="fHr-qR-O7M" firstAttribute="top" secondItem="I7k-p2-FvW" secondAttribute="bottom" constant="32" id="uk7-QD-JyK"/>
                             <constraint firstAttribute="leadingMargin" secondItem="kh1-ft-ElB" secondAttribute="leading" id="wqQ-MS-cft"/>
+                            <constraint firstItem="IcI-Yk-A7s" firstAttribute="centerX" secondItem="rWI-VC-AAC" secondAttribute="centerX" id="xEr-Za-eJf"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
@@ -2644,12 +2678,15 @@
                                 <exclude reference="puj-T1-Dy7"/>
                                 <exclude reference="Y5r-bc-kIk"/>
                                 <exclude reference="fHr-qR-O7M"/>
+                                <exclude reference="IcI-Yk-A7s"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="xEr-Za-eJf"/>
                                 <exclude reference="3wC-dV-JFU"/>
                                 <exclude reference="6lf-SD-DbD"/>
                                 <exclude reference="QXL-25-4zQ"/>
                                 <exclude reference="RA5-Am-CKf"/>
+                                <exclude reference="uPN-Te-O5K"/>
                                 <exclude reference="12g-C1-eqG"/>
                                 <exclude reference="6in-Tv-XrR"/>
                                 <exclude reference="AMF-ef-Pvz"/>
@@ -2674,12 +2711,15 @@
                                 <include reference="puj-T1-Dy7"/>
                                 <include reference="Y5r-bc-kIk"/>
                                 <include reference="fHr-qR-O7M"/>
+                                <include reference="IcI-Yk-A7s"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="xEr-Za-eJf"/>
                                 <exclude reference="3wC-dV-JFU"/>
                                 <include reference="6lf-SD-DbD"/>
                                 <include reference="QXL-25-4zQ"/>
                                 <include reference="RA5-Am-CKf"/>
+                                <include reference="uPN-Te-O5K"/>
                                 <include reference="12g-C1-eqG"/>
                                 <include reference="6in-Tv-XrR"/>
                                 <include reference="AMF-ef-Pvz"/>
@@ -2698,7 +2738,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Sync with Health App" id="TJR-0C-npn">
+                    <navigationItem key="navigationItem" id="TJR-0C-npn">
                         <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="o9V-IT-2UO">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -2716,6 +2756,7 @@
                         <outlet property="detailLabel" destination="Y5r-bc-kIk" id="6Qq-9s-aR9"/>
                         <outlet property="disclaimerLabel" destination="kh1-ft-ElB" id="N2A-Mr-0r5"/>
                         <outlet property="doneButton" destination="fHr-qR-O7M" id="ESJ-hu-Q8n"/>
+                        <outlet property="heartLabel" destination="IcI-Yk-A7s" id="ec8-LW-HPz"/>
                         <outlet property="progressView" destination="puj-T1-Dy7" id="TYP-Ml-XMH"/>
                         <outlet property="titleLabel" destination="I7k-p2-FvW" id="2BI-Xc-qAj"/>
                     </connections>

@@ -15,6 +15,7 @@ class HealthKitSetupViewController : UIViewController {
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var disclaimerLabel: UILabel!
     
+    @IBOutlet weak var heartLabel: UILabel!
     @IBOutlet weak var doneButton: UIButton!
 
     var tripsRemainingToSync: [Trip]?
@@ -26,6 +27,12 @@ class HealthKitSetupViewController : UIViewController {
         
         self.progressView.hidden = true
         self.doneButton.hidden = true
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.beatHeart()
     }
 
     @IBAction func sync(sender: AnyObject) {
@@ -73,6 +80,28 @@ class HealthKitSetupViewController : UIViewController {
     
     @IBAction func done(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func beatHeart() {
+        CATransaction.begin()
+        
+        let growAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        let growScale: CGFloat = 1.2
+        growAnimation.values = [
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
+            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
+        ]
+        growAnimation.keyTimes = [0, 0.12, 0.50, 0.62, 1]
+        growAnimation.additive = true
+        growAnimation.duration = 1.2
+        
+        self.heartLabel.layer.addAnimation(growAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
 
     private func syncNextUnsyncedTrip() {
