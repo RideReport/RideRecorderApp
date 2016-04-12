@@ -496,7 +496,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
-                case .Cycling where confidence > 0.5 && averageSpeed >= 3 && averageSpeed < 8:
+                case .Cycling where confidence > 0.4 && averageSpeed >= 3 && averageSpeed < 8:
                     DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
