@@ -757,7 +757,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             self.tableView.setEditing(false, animated: true)
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Re-Classify", "Upload Sensor Data", "Sync to Health Kit"], tapBlock: { (actionSheet, tappedIndex) -> Void in
+            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Re-Classify", "Upload Sensor Data", "Sync to Health App"], tapBlock: { (actionSheet, tappedIndex) -> Void in
                 self.tappedButtonIndex(tappedIndex, trip: trip)
             })
         }

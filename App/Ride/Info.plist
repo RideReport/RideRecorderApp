@@ -79,6 +79,10 @@
 	<true/>
 	<key>MGLMapboxAccessToken</key>
 	<string>pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>$(PRODUCT_NAME) can use your gender, weight and heart rate data from the Health App to make energy burned calculations more accurate.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>$(PRODUCT_NAME) can save workouts, energy burned and cycling distance to the Health App.</string>
 	<key>MGLMapboxAccountType</key>
 	<integer>1</integer>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>

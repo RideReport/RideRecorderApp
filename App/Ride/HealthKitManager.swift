@@ -167,12 +167,9 @@ class HealthKitManager {
         })
     }
     
-    func saveTrip(trip:Trip) {
+    func saveTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
         guard #available(iOS 9.0, *) else {
-            return
-        }
-        
-        guard !trip.locationsNotYetDownloaded else {
+            handler(success: false)
             return
         }
         
@@ -185,6 +182,7 @@ class HealthKitManager {
                     self.saveTrip(trip)
                 }
             }
+            handler(success: false)
             return
         }
         
@@ -277,22 +275,22 @@ class HealthKitManager {
             self.healthStore.saveObject(ride) { (success, error) -> Void in
                 if !success {
                     // log error
-                    // callback
+                    handler(success: false)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         trip.healthKitUuid = ride.UUID.UUIDString
                         CoreDataManager.sharedManager.saveContext()
                     }
                     
-                    self.healthStore.addSamples([cyclingDistanceSample], toWorkout: ride) { (_, _) in
+                    self.healthStore.addSamples([cyclingDistanceSample], toWorkout: ride) { (success, _) in
                         
                         self.healthStore.addSamples(burnSamples, toWorkout: ride) { (_, _) -> Void in
                             if let heartRateSamples = samples where heartRateSamples.count > 0 {
                                 self.healthStore.addSamples(heartRateSamples, toWorkout: ride) { (_, _) -> Void in
-                                    // callback
+                                    handler(success: true)
                                 }
                             } else {
-                                // callback
+                                handler(success: true)
                             }
                         }
                     }

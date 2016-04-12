@@ -142,15 +142,18 @@ class HamburgerViewController: UITableViewController {
             #endif
         } else if (indexPath.row == 3) {
             let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
-            NSUserDefaults.standardUserDefaults().setBool(!priorHealthKitState, forKey: "healthKitIsSetup")
-            NSUserDefaults.standardUserDefaults().synchronize()
-            self.updateHealthKitText()
             
             if (priorHealthKitState) {
                 // it was enabled
                 HealthKitManager.shutdown()
+                NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
+                NSUserDefaults.standardUserDefaults().synchronize()
+                self.updateHealthKitText()
             } else {
-                HealthKitManager.startup()
+                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                let healthKitNavVC = storyBoard.instantiateViewControllerWithIdentifier("HealthKitSetupNavController") as! UINavigationController
+                
+                self.presentViewController(healthKitNavVC, animated: true, completion: nil)
             }
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)

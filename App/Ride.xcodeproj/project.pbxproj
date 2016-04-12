@@ -50,6 +50,7 @@
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
+		3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */; };
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
@@ -258,6 +259,7 @@
 		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
+		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -647,6 +649,7 @@
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
+				3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1272,6 +1275,7 @@
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
+				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
