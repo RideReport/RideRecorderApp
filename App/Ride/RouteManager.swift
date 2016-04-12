@@ -375,7 +375,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.startLocationTrackingIfNeeded()
         self.locationManager.stopMonitoringSignificantLocationChanges()
-        self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
         #if DEBUG
@@ -400,7 +399,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             CoreDataManager.sharedManager.saveContext()
         }
         
-        Profile.profile().setGeofencedLocation(nil)
+        self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
         self.lastMotionMonitoringLocation = nil
     }
     
