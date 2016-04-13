@@ -2563,7 +2563,7 @@
                                     <rect key="frame" x="60" y="331" width="281" height="29"/>
                                 </variation>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report will ask for gender, weight and heart rate data to calculate energy burned." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="kh1-ft-ElB">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report will ask for gender, birth date and other data to help calculate energy burned." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="kh1-ft-ElB">
                                 <rect key="frame" x="60" y="279" width="480" height="63"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="63" id="AgH-Y8-lUt"/>

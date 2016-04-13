@@ -67,6 +67,7 @@ class HealthKitManager {
         }
         
         let readTypes : Set<HKObjectType> = [HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierBiologicalSex)!,
+                                             HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierDateOfBirth)!,
                                             HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass)!,
                                             HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)!]
         let writeTypes : Set<HKSampleType> = [HKQuantityType.workoutType(),
