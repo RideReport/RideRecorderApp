@@ -2590,7 +2590,7 @@
                                 <color key="progressTintColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="trackTintColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                             </progressView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report can automatically log your bike rides including active energy burned and cycling distance to the Health App." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Y5r-bc-kIk">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Ride Report can automatically sync your ride data including active energy burned and cycling distance to the Health App." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Y5r-bc-kIk">
                                 <rect key="frame" x="60" y="279" width="480" height="63"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="63" id="2hE-bj-C4W"/>
