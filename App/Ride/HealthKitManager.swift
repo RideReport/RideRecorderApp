@@ -45,10 +45,10 @@ class HealthKitManager {
         return Static.sharedManager!
     }
     
-    class func startup() {
+    class func startup(authorizationHandler:(success: Bool)->() = {_ in}) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = HealthKitManager()
-            Static.sharedManager?.startup()
+            Static.sharedManager!.startup(authorizationHandler)
         }
     }
     
@@ -57,11 +57,11 @@ class HealthKitManager {
         Static.authorizationStatus = .NotDetermined
     }
     
-    func startup() {
-        self.requestAuthorization()
+    func startup(authorizationHandler:(success: Bool)->()={_ in }) {
+        self.requestAuthorization(authorizationHandler)
     }
     
-    private func requestAuthorization() {
+    private func requestAuthorization(authorizationHandler:(success: Bool)->()={_ in }) {
         guard HKHealthStore.isHealthDataAvailable() else {
             return
         }
@@ -78,11 +78,17 @@ class HealthKitManager {
             if !success || error != nil {
                 DDLogWarn("Error accesing health kit data!: \(error! as NSError), \((error! as NSError).userInfo)")
                 HealthKitManager.authorizationStatus = .Denied
+                dispatch_async(dispatch_get_main_queue()) {
+                    authorizationHandler(success: false)
+                }
             } else {
                 HealthKitManager.authorizationStatus = .Authorized
                 self.getWeight()
                 self.getGender()
                 self.getAge()
+                dispatch_async(dispatch_get_main_queue()) {
+                    authorizationHandler(success: true)
+                }
             }
         }
     }
@@ -134,7 +140,7 @@ class HealthKitManager {
         self.healthStore.executeQuery(query)
     }
     
-    func deleteWorkoutAndSamplesForWorkoutUUID(uuidString: String, handler: ()->Void) {
+    func deleteWorkoutAndSamplesForWorkoutUUID(uuidString: String, handler: ()->()) {
         guard let uuid = NSUUID(UUIDString: uuidString) else {
             handler()
             return

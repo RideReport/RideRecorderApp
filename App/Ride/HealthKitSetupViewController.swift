@@ -44,29 +44,30 @@ class HealthKitSetupViewController : UIViewController {
         
         self.navigationItem.rightBarButtonItem = nil
         
-        HealthKitManager.startup()
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthKitIsSetup")
         NSUserDefaults.standardUserDefaults().synchronize()
 
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.Cycling.rawValue)
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        
-        let results: [AnyObject]?
-        do {
-            results = try context.executeFetchRequest(fetchedRequest)
-        } catch let error {
-            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
-            return
-        }
-        guard let theTrips = results as? [Trip] else {
-            return
-        }
+        HealthKitManager.startup() { success in 
+            let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+            let fetchedRequest = NSFetchRequest(entityName: "Trip")
+            fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.Cycling.rawValue)
+            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            
+            let results: [AnyObject]?
+            do {
+                results = try context.executeFetchRequest(fetchedRequest)
+            } catch let error {
+                DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+                return
+            }
+            guard let theTrips = results as? [Trip] else {
+                return
+            }
 
-        self.tripsRemainingToSync = theTrips
-        self.totalTripsToSync = theTrips.count
-        self.syncNextUnsyncedTrip()
+            self.tripsRemainingToSync = theTrips
+            self.totalTripsToSync = theTrips.count
+            self.syncNextUnsyncedTrip()
+        }
     }
     
     @IBAction func cancel(sender: AnyObject) {
