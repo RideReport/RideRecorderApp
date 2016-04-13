@@ -43,7 +43,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         var headerViewBackgroundViewFrame = self.tableView.bounds
         headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
-        headerViewBackgroundView.backgroundColor = UIColor(red: 229/255, green: 235/255, blue: 227/255, alpha: 1.0)
+        headerViewBackgroundView.backgroundColor = ColorPallete.sharedPallete.almostWhite
         self.tableView.insertSubview(headerViewBackgroundView, atIndex: 0)
         
         self.timeFormatter = NSDateFormatter()
@@ -387,7 +387,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
             headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
         } else {
-            headerView.tintColor = ColorPallete.sharedPallete.almostWhite
+            headerView.tintColor = self.view.backgroundColor
             headerView.opaque = false
             headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
             headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey

@@ -30,7 +30,7 @@ class ColorPallete : NSObject {
     
     var almostWhite: UIColor {
         get {
-            return UIColor(red: 248/255, green: 255/255, blue: 246/255, alpha: 1.0)
+            return UIColor(red: 242/255, green: 250/255, blue: 242/255, alpha: 1.0)
         }
     }
     
