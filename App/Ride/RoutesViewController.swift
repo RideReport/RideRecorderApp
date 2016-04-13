@@ -9,24 +9,17 @@
 import Foundation
 import CoreData
 import SystemConfiguration
-import PNChart
 
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var emptyTableChick: UIView!
     
-    @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var popupView: PopupView!
     
     private var dateOfLastTableRefresh: NSDate?
 
     private var reachability : Reachability!
-    
-    var pieChartModeShare: PNPieChart!
-    var pieChartRatings: PNPieChart!
-    var pieChartDaysBiked: PNPieChart!
-    var pieChartWeather: PNPieChart!
     
     private var hasShownStreakAnimation = false
     
@@ -44,6 +37,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.popupView.hidden = true
         
         self.tableView.layoutMargins = UIEdgeInsetsZero
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 48
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
@@ -137,10 +132,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 guard let strongSelf = self else {
                     return
                 }
-                strongSelf.refreshCharts()
+                strongSelf.refreshTitle()
             }
         } else {
-            self.refreshCharts()
+            self.refreshTitle()
         }
     }
     
@@ -246,167 +241,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    private func refreshCharts() {
+    private func refreshTitle() {
         let count = Trip.numberOfCycledTrips
         
         if (count == 0) {
             self.title = "Ride Report"
-            self.headerView.hidden = true
         } else {
-            let numCharts = 4
-            let margin: CGFloat = 16
-            let chartWidth = (self.view.frame.size.width - (CGFloat(numCharts + 1)) * margin)/CGFloat(numCharts)
-            
-            if count < 10 {
-                // Don't show stats until they get to >=10 rides
-                self.headerView.hidden = true
-                
-                return
-            } else {
-                var headerFrame = self.headerView.frame
-                headerFrame.size.height = chartWidth + margin + 46
-                self.headerView.frame = headerFrame
-                self.tableView.tableHeaderView = self.headerView
-            }
-            
             self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
-            
-            if let sections = self.fetchedResultsController.sections {
-                let bikedDays = sections.count
-                let firstTrip = (self.fetchedResultsController.fetchedObjects?.last as! Trip)
-                let unbikedDays = firstTrip.creationDate.countOfDaysSinceNow() - sections.count + 1
-                
-                let daysBikedData = [PNPieChartDataItem(value: CGFloat((bikedDays)), color: ColorPallete.sharedPallete.goodGreen),
-                    PNPieChartDataItem(value: CGFloat(unbikedDays), color: ColorPallete.sharedPallete.unknownGrey)]
-                
-                self.pieChartDaysBiked = PNPieChart(frame: CGRectMake(margin, margin, chartWidth, chartWidth), items: daysBikedData)
-                self.pieChartDaysBiked.showOnlyDescriptions = true
-                self.pieChartDaysBiked.strokeChart()
-                self.pieChartDaysBiked.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-                self.headerView.addSubview(self.pieChartDaysBiked)
-                
-                let daysBikedLabel = UILabel()
-                daysBikedLabel.textColor = ColorPallete.sharedPallete.darkGrey
-                daysBikedLabel.font = UIFont.boldSystemFontOfSize(14)
-                daysBikedLabel.adjustsFontSizeToFitWidth = true
-                daysBikedLabel.minimumScaleFactor = 0.6
-                daysBikedLabel.numberOfLines = 2
-                daysBikedLabel.textAlignment = NSTextAlignment.Center
-                daysBikedLabel.text = "All Time\nDays Biked"
-                daysBikedLabel.sizeToFit()
-                if daysBikedLabel.frame.width > chartWidth {
-                    daysBikedLabel.frame = CGRectMake(daysBikedLabel.frame.origin.x, daysBikedLabel.frame.origin.y, chartWidth, daysBikedLabel.frame.size.height)
-                }
-                daysBikedLabel.frame = CGRectMake(margin + (chartWidth - daysBikedLabel.frame.width)/2, margin + 8 + chartWidth, daysBikedLabel.frame.width, daysBikedLabel.frame.height)
-                self.headerView.addSubview(daysBikedLabel)
-            }
-            
-            var modeShareData : [PNPieChartDataItem] = []
-            var modeShareLabelTitle = ""
-            let numCycledTripsAllTime = CGFloat(Trip.numberOfCycledTrips)
-            let numCarTripsAllTime = CGFloat(Trip.numberOfAutomotiveTrips)
-            
-            if (numCycledTripsAllTime/numCarTripsAllTime >= 2) {
-                // if they have at least a 2/3 mode share by bike, show all time
-                modeShareData = [PNPieChartDataItem(value: numCycledTripsAllTime, color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
-                    PNPieChartDataItem(value: numCarTripsAllTime, color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTrips), color: ColorPallete.sharedPallete.transitBlue)]
-                modeShareLabelTitle = "All Time\nMode Use"
-            } else {
-                // otherwise show last 30 days to make it more actionable
-                modeShareData = [PNPieChartDataItem(value: CGFloat(Trip.numberOfCycledTripsLast30Days), color: ColorPallete.sharedPallete.goodGreen, description: ActivityType.Cycling.emoji),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfAutomotiveTripsLast30Days), color: ColorPallete.sharedPallete.autoBrown, description: ActivityType.Automotive.emoji),
-                    PNPieChartDataItem(value: CGFloat(Trip.numberOfBusTripsLast30Days), color: ColorPallete.sharedPallete.transitBlue)]
-                modeShareLabelTitle = "Mode Use\nThis Month"
-            }
-            
-            self.pieChartModeShare = PNPieChart(frame: CGRectMake(margin*2 + chartWidth, margin, chartWidth, chartWidth), items: modeShareData)
-            self.pieChartModeShare.showOnlyDescriptions = true
-            self.pieChartModeShare.strokeChart()
-            self.pieChartModeShare.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-            self.headerView.addSubview(self.pieChartModeShare)
-            let modeShareLabel = UILabel()
-            modeShareLabel.textColor = ColorPallete.sharedPallete.darkGrey
-            modeShareLabel.font = UIFont.boldSystemFontOfSize(14)
-            modeShareLabel.adjustsFontSizeToFitWidth = true
-            modeShareLabel.minimumScaleFactor = 0.6
-            modeShareLabel.numberOfLines = 2
-            modeShareLabel.textAlignment = NSTextAlignment.Center
-            modeShareLabel.text = modeShareLabelTitle
-            modeShareLabel.sizeToFit()
-            if modeShareLabel.frame.width > chartWidth {
-                modeShareLabel.frame = CGRectMake(modeShareLabel.frame.origin.x, modeShareLabel.frame.origin.y, chartWidth, modeShareLabel.frame.size.height)
-            }
-            modeShareLabel.frame = CGRectMake(margin*2 + chartWidth + (chartWidth - modeShareLabel.frame.width)/2, margin + 8 + chartWidth, modeShareLabel.frame.width, modeShareLabel.frame.height)
-            self.headerView.addSubview(modeShareLabel)
-
-            var ratingsData : [PNPieChartDataItem] = []
-            for countData in Trip.bikeTripCountsGroupedByAttribute("rating") {
-                if let rating = countData["rating"] as? NSNumber,
-                    count = countData["count"]  as? NSNumber {
-                    if rating.shortValue == Trip.Rating.NotSet.rawValue {
-                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.unknownGrey))
-                    } else if rating.shortValue == Trip.Rating.Good.rawValue {
-                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.goodGreen, description: "👍"))
-                    } else if rating.shortValue == Trip.Rating.Bad.rawValue {
-                        ratingsData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.badRed, description: "👎"))
-                    }
-                }
-            }
-            
-            self.pieChartRatings = PNPieChart(frame: CGRectMake(margin*3 + 2*chartWidth, margin, chartWidth, chartWidth), items: ratingsData)
-            self.pieChartRatings.showOnlyDescriptions = true
-            self.pieChartRatings.strokeChart()
-            self.pieChartRatings.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-            self.headerView.addSubview(self.pieChartRatings)
-            let ratingsLabel = UILabel()
-            ratingsLabel.textColor = ColorPallete.sharedPallete.darkGrey
-            ratingsLabel.font = UIFont.boldSystemFontOfSize(14)
-            ratingsLabel.adjustsFontSizeToFitWidth = true
-            ratingsLabel.minimumScaleFactor = 0.6
-            ratingsLabel.numberOfLines = 2
-            ratingsLabel.textAlignment = NSTextAlignment.Center
-            ratingsLabel.text = "Ride\nRatings"
-            ratingsLabel.sizeToFit()
-            if ratingsLabel.frame.width > chartWidth {
-                ratingsLabel.frame = CGRectMake(ratingsLabel.frame.origin.x, ratingsLabel.frame.origin.y, chartWidth, ratingsLabel.frame.size.height)
-            }
-            ratingsLabel.frame = CGRectMake(margin*3 + chartWidth*2 + (chartWidth - ratingsLabel.frame.width)/2, margin + 8 + chartWidth, ratingsLabel.frame.width, ratingsLabel.frame.height)
-            self.headerView.addSubview(ratingsLabel)
-            
-            var weatherData : [PNPieChartDataItem] = []
-            for countData in Trip.bikeTripCountsGroupedByAttribute("climacon") {
-                if let climacon = countData["climacon"] as? String,
-                    count = countData["count"]  as? NSNumber {
-                        if climacon == "☀️" {
-                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.goodGreen, description: "☀️"))
-                        } else if climacon == "☔️" {
-                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.unknownGrey, description: "☔️"))
-                        } else if climacon == "❄️" {
-                            weatherData.append(PNPieChartDataItem(value: CGFloat(count.floatValue), color: ColorPallete.sharedPallete.transitBlue, description: "❄️"))
-                        }
-                }
-            }
-            
-            self.pieChartWeather = PNPieChart(frame: CGRectMake(margin*4 + 3*chartWidth, margin, chartWidth, chartWidth), items: weatherData)
-            self.pieChartWeather.showOnlyDescriptions = true
-            self.pieChartWeather.strokeChart()
-            self.pieChartWeather.descriptionTextFont = UIFont.boldSystemFontOfSize(14)
-            self.headerView.addSubview(self.pieChartWeather)
-            let weatherLabel = UILabel()
-            weatherLabel.textColor = ColorPallete.sharedPallete.darkGrey
-            weatherLabel.font = UIFont.boldSystemFontOfSize(14)
-            weatherLabel.adjustsFontSizeToFitWidth = true
-            weatherLabel.minimumScaleFactor = 0.6
-            weatherLabel.numberOfLines = 2
-            weatherLabel.textAlignment = NSTextAlignment.Center
-            weatherLabel.text = "Weather\nBiked In"
-            weatherLabel.sizeToFit()
-            if weatherLabel.frame.width > chartWidth {
-                weatherLabel.frame = CGRectMake(weatherLabel.frame.origin.x, weatherLabel.frame.origin.y, chartWidth, weatherLabel.frame.size.height)
-            }
-            weatherLabel.frame = CGRectMake(margin*4 + chartWidth*3 + (chartWidth - weatherLabel.frame.width)/2, margin + 8 + chartWidth, weatherLabel.frame.width, weatherLabel.frame.height)
-            self.headerView.addSubview(weatherLabel)
         }
     }
     
@@ -473,23 +314,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
-            return 0
+            return 26
         }
         
-        return 22
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 75
-        } else {
-            return 48
-        }
+        return 26
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "  Trophies"
+            return "  " + String(Trip.numberOfRewardedTrips) + " Trophies"
         }
         
         let theSection = self.fetchedResultsController.sections![section - 1]
@@ -499,11 +332,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            if Trip.numberOfRewardedTrips > 0 {
-                return 1
-            } else {
-                return 0
-            }
+            return 1
         }
         
         let sectionInfo = self.fetchedResultsController.sections![section - 1]
@@ -514,7 +343,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableCell : UITableViewCell!
         
-        if indexPath.section == 0 {
+        if (indexPath.section == 0 && indexPath.row == 1) {
+            // dummy cell to force a separator view to draw between rewards and next section
+            let reuseID = "RoutesViewTableDummyCell"
+            
+            tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+        } else if indexPath.section == 0 {
             let reuseID = "RewardsViewTableCell"
             
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
@@ -538,124 +372,137 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let headerView = view as! UITableViewHeaderFooterView
         
         if section == 0 {
-            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
+            headerView.backgroundView?.backgroundColor = ColorPallete.sharedPallete.darkGrey
+            headerView.backgroundView?.tintColor = UIColor.clearColor()
+            headerView.contentView.backgroundColor = ColorPallete.sharedPallete.darkGrey
+            headerView.contentView.tintColor = UIColor.clearColor()
+            headerView.tintColor = ColorPallete.sharedPallete.darkGrey
             headerView.opaque = false
-            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
-            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
+            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
+            headerView.textLabel!.textColor = ColorPallete.sharedPallete.almostWhite
         } else {
-            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
+            headerView.tintColor = ColorPallete.sharedPallete.almostWhite
             headerView.opaque = false
-            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(14.0)
+            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
             headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
         }
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
-        if let text1 = tableCell.viewWithTag(1) as? UILabel {
-            var rewardString = ""
-            
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineHeightMultiple = 1.2
-            
-            let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
-            let crossWidth = ("x" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
-            let countWidth = ("99" as NSString).sizeWithAttributes([NSFontAttributeName: text1.font]).width
-            let columnSeperatorWidth : CGFloat = 10
-            let totalWidth = emojiWidth + crossWidth + countWidth + columnSeperatorWidth
-            
-            var tabStops : [NSTextTab] = []
-            var totalLineWidth : CGFloat = 0
-            var columnCount = 0
-            while totalLineWidth + totalWidth < (self.view.frame.size.width - 12) {
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"x")]))
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Right, location: totalLineWidth + emojiWidth + crossWidth + countWidth, options: [:]))
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + crossWidth + countWidth + columnSeperatorWidth, options: [:]))
-                totalLineWidth += totalWidth
-                columnCount += 1
-                print(String(totalLineWidth))
-            }
-            
-            paragraphStyle.tabStops = tabStops
-            
-            var i = 0
-            var lineCount = 0
-            let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
-            for countData in rewardsTripCounts {
-                if let rewardEmoji = countData["rewardEmoji"] as? String,
-                    count = countData["count"]  as? NSNumber {
-                      rewardString += rewardEmoji + "×\t" + count.stringValue
-                    i += 1
-                    if i>=columnCount {
-                        i = 0
-                        lineCount += 1
-                        rewardString += "\n"
-                    } else {
-                        rewardString += "\t"
-                    }
-                }
-            }
-        
-            let attrString = NSMutableAttributedString(string: rewardString)
-            attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
-
-            text1.attributedText = attrString
+        for case let button as UIButton in tableCell.subviews {
+            let image = button.backgroundImageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate)
+            button.setBackgroundImage(image, forState: .Normal)
         }
-        if let streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
-        let streakJewelLabel = tableCell.viewWithTag(3) as? UILabel{
-            Profile.profile().updateCurrentRideStreakLength()
-            
-            let animationDelay: NSTimeInterval = 0.6
-            
-            if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
-                if currentStreakLength == 1 {
-                    if (Trip.bikeTripsToday() == nil) {
-                        streakTextLabel.text = "You rode yesterday"
-                        streakJewelLabel.text = "🐣"
-                    } else {
-                        streakTextLabel.text = "You rode today"
-                        streakJewelLabel.text = "🐣"
-                    }
-                    if (!self.hasShownStreakAnimation) {
-                        self.hasShownStreakAnimation = true
-                        streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
-                    }
-                } else if currentStreakLength == 2 {
-                    if (Trip.bikeTripsToday() == nil) {
-                        streakTextLabel.text = "Ride today to start a ride streak!"
-                        streakJewelLabel.text = "💗"
-                    } else {
-                        streakTextLabel.text = "Ride tomorrow to start a ride streak"
-                        streakJewelLabel.text = "💗"
-                    }
-                    if (!self.hasShownStreakAnimation) {
-                        self.hasShownStreakAnimation = true
-                        streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
-                    }
-                } else {
-                    if (Trip.bikeTripsToday() == nil) {
-                        if (NSDate().isBeforeNoon()) {
-                            streakTextLabel.text = String(format: "Keep your %i day streak rolling", currentStreakLength)
-                            streakJewelLabel.text = "💗"
-                        } else {
-                            streakTextLabel.text = String(format: "Don't end your %i day streak!", currentStreakLength)
-                            streakJewelLabel.text = "💔"
-                        }
-                    } else {
-                        streakTextLabel.text = String(format: "%i day ride streak", currentStreakLength)
-                        streakJewelLabel.text = Profile.profile().currentStreakJewel
-                    }
-                    if (!self.hasShownStreakAnimation) {
-                        self.hasShownStreakAnimation = true
-                        streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
+        
+        
+        guard let trophySummaryLabel = tableCell.viewWithTag(1) as? UILabel,
+        streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
+        streakJewelLabel = tableCell.viewWithTag(3) as? UILabel,
+        trophyCountLabel = tableCell.viewWithTag(4) as? UILabel else {
+            return
+        }
+        
+        trophyCountLabel.text = "🏆"
+        trophyCountLabel.layer.masksToBounds = true
+        trophyCountLabel.layer.cornerRadius = 8.0
+        
+        var rewardString = ""
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.2
+        
+        let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: trophySummaryLabel.font]).width
+        let columnSeperatorWidth: CGFloat = 6
+        let totalWidth = emojiWidth + columnSeperatorWidth
+        
+        var tabStops : [NSTextTab] = []
+        var totalLineWidth : CGFloat = 0
+        var columnCount = 0
+        while totalLineWidth + totalWidth < (self.view.frame.size.width - trophyCountLabel.frame.size.width - 30) {
+            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth, options: [:]))
+            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"\t")]))
+            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
+            totalLineWidth += totalWidth
+            columnCount += 1
+            print(String(totalLineWidth))
+        }
+        
+        paragraphStyle.tabStops = tabStops
+        
+        var i = 1
+        var lineCount = 0
+        let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
+        for countData in rewardsTripCounts {
+            if let rewardEmoji = countData["rewardEmoji"] as? String {
+                  rewardString += rewardEmoji + "\t"
+                i += 1
+                if i>=columnCount {
+                    i = 1
+                    lineCount += 1
+                    if let lastEmoji = rewardsTripCounts.last?["rewardEmoji"] as? String where lastEmoji == rewardEmoji  {
+                        rewardString += "\n"
                     }
                 }
-            } else {
-                streakTextLabel.text = "No rides today"
-                streakJewelLabel.text = "🐣"
+            }
+        }
+    
+        let attrString = NSMutableAttributedString(string: rewardString)
+        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+
+        trophySummaryLabel.attributedText = attrString
+        Profile.profile().updateCurrentRideStreakLength()
+        
+        let animationDelay: NSTimeInterval = 0.6
+        
+        if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
+            if currentStreakLength == 1 {
+                if (Trip.bikeTripsToday() == nil) {
+                    streakTextLabel.text = "You rode yesterday"
+                    streakJewelLabel.text = "🐣"
+                } else {
+                    streakTextLabel.text = "You rode today"
+                    streakJewelLabel.text = "🐣"
+                }
                 if (!self.hasShownStreakAnimation) {
                     self.hasShownStreakAnimation = true
                     streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
                 }
+            } else if currentStreakLength == 2 {
+                if (Trip.bikeTripsToday() == nil) {
+                    streakTextLabel.text = "Ride today to start a ride streak!"
+                    streakJewelLabel.text = "💗"
+                } else {
+                    streakTextLabel.text = "Ride tomorrow to start a ride streak"
+                    streakJewelLabel.text = "💗"
+                }
+                if (!self.hasShownStreakAnimation) {
+                    self.hasShownStreakAnimation = true
+                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
+                }
+            } else {
+                if (Trip.bikeTripsToday() == nil) {
+                    if (NSDate().isBeforeNoon()) {
+                        streakTextLabel.text = String(format: "Keep your %i day streak rolling", currentStreakLength)
+                        streakJewelLabel.text = "💗"
+                    } else {
+                        streakTextLabel.text = String(format: "Don't end your %i day streak!", currentStreakLength)
+                        streakJewelLabel.text = "💔"
+                    }
+                } else {
+                    streakTextLabel.text = String(format: "%i day ride streak!", currentStreakLength)
+                    streakJewelLabel.text = Profile.profile().currentStreakJewel
+                }
+                if (!self.hasShownStreakAnimation) {
+                    self.hasShownStreakAnimation = true
+                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
+                }
+            }
+        } else {
+            streakTextLabel.text = "No rides today"
+            streakJewelLabel.text = "🐣"
+            if (!self.hasShownStreakAnimation) {
+                self.hasShownStreakAnimation = true
+                streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
             }
         }
     }
@@ -683,26 +530,25 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
+        guard let textLabel = tableCell.viewWithTag(1) as? UILabel, detailTextLabel = tableCell.viewWithTag(2) as? UILabel else {
+            return
+        }
         var dateTitle = ""
         if (trip.creationDate != nil) {
             dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
             
         }
         
-        var rewardString = ""
-        if let emoji = trip.rewardEmoji {
-            rewardString = " " + emoji
+        var description = String(format: "%@ %@ for %@ %@.", trip.climacon ?? "", dateTitle, trip.lengthString, trip.areaDescriptionString)
+        
+        if let rewardDescription = trip.rewardDescription,
+            rewardEmoji = trip.rewardEmoji where rewardDescription.rangeOfString("day ride streak") == nil {
+            description += ("\n\n" + rewardEmoji + " " + rewardDescription)
         }
+     
+        textLabel.text = description
         
-        var lengthString = String(format: "%.1f miles", trip.lengthMiles)
-        if (trip.lengthMiles < 0.2) {
-            // rounded to nearest 50
-            lengthString = String(format: "%.0f feet", round(Float(trip.lengthFeet)/50) * 50.0)
-        }
-        
-        tableCell.textLabel!.text = String(format: "%@ %@ %@ for %@%@", trip.climacon ?? "",  trip.isSynced ? "" : "🔹", dateTitle, lengthString, rewardString)
-        
-        tableCell.detailTextLabel!.text = String(format: "%@", trip.activityType.emoji)
+        detailTextLabel.text = trip.activityType.emoji
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -804,5 +650,26 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return false
         }
         return true
+    }
+}
+
+class RoutesViewControllerTrophyCountLabel: UILabel {
+    override func drawTextInRect(rect: CGRect) {
+        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(0, 6, 0, 0)))
+    }
+    
+    override var backgroundColor: UIColor? {
+        // prevent UITableView from making this clear during cell highlight
+        get {
+            return ColorPallete.sharedPallete.darkGrey
+        }
+        set {
+            super.backgroundColor = ColorPallete.sharedPallete.darkGrey
+        }
+    }
+    
+    override func intrinsicContentSize() -> CGSize {
+        let size = super.intrinsicContentSize()
+        return CGSizeMake(size.width + 26, size.height)
     }
 }

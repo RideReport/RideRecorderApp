@@ -14,8 +14,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var spriteKitView: SKView!
     @IBOutlet weak var rewardsLabel1: UILabel!
     @IBOutlet weak var rewardsLabel2: UILabel!
+    @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var rewardPopup: PopupView!
-    
     
     private var scene: SKScene!
     var imageDictionary : [String: UIImage] = [:]
@@ -29,7 +29,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         super.viewDidLoad()
         
         self.rewardPopup.hidden = true
-        self.title = "🏆 Trophy Room"
+        self.title = String(Trip.numberOfRewardedTrips) + " Trophies"
     }
     
     override func viewWillLayoutSubviews()
@@ -196,7 +196,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     
                 }
             }
-        } //end of preloadWithCompletionHandler block
+        } //end of preloadWithCompletionHandler block        
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

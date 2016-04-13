@@ -1051,20 +1051,40 @@ class Trip : NSManagedObject {
         }
     }
     
+    var lengthString: String {
+        get {
+            var lengthString = String(format: "%.1f miles", self.lengthMiles)
+            if (self.lengthMiles < 0.2) {
+                // rounded to nearest 50
+                lengthString = String(format: "%.0f feet", round(Float(self.lengthFeet)/50) * 50.0)
+            }
+            
+            return lengthString
+        }
+    }
+    
+    var areaDescriptionString: String {
+        get {
+            var areaDescriptionString = ""
+
+            if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
+                if (self.startingPlacemarkName == self.endingPlacemarkName) {
+                    areaDescriptionString = String(format: "in %@", startingPlacemarkName)
+                } else {
+                    areaDescriptionString = String(format: "from %@ to %@", startingPlacemarkName, endingPlacemarkName)
+                }
+            } else if let startingPlacemarkName = self.startingPlacemarkName {
+                areaDescriptionString = String(format: "from %@", startingPlacemarkName)
+            }
+            
+            return areaDescriptionString
+        }
+    }
+    
     func notificationString()->String? {
         var message = ""
         
-        if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
-            if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ %.1f miles in %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
-            } else {
-                message = String(format: "%@ %@ %.1f miles from %@ to %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName, endingPlacemarkName)
-            }
-        } else if let startingPlacemarkName = self.startingPlacemarkName {
-            message = String(format: "%@ %@ %.1f miles from %@.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
-        } else {
-            message = String(format: "%@ %@ %.1f miles.", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
-        }
+        message = String(format: "%@ %@ %@ %@.", self.climacon ?? "", self.activityType.emoji, self.lengthString, self.areaDescriptionString)
         
         if let rewardDescription = self.rewardDescription,
             rewardEmoji = self.rewardEmoji {
