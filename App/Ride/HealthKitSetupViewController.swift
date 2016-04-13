@@ -31,8 +31,6 @@ class HealthKitSetupViewController : UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        self.beatHeart()
     }
 
     @IBAction func sync(sender: AnyObject) {
@@ -41,6 +39,8 @@ class HealthKitSetupViewController : UIViewController {
         self.disclaimerLabel.hidden = true
         self.titleLabel.text = "Syncing Existing Rides"
         self.detailLabel.text = "We're syncing all your rides with the Health App. Future rides will be synced automatically."
+        
+        self.startBeatingHeart()
         
         self.navigationItem.rightBarButtonItem = nil
         
@@ -83,12 +83,12 @@ class HealthKitSetupViewController : UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func beatHeart() {
+    func startBeatingHeart() {
         CATransaction.begin()
         
         let growAnimation = CAKeyframeAnimation(keyPath: "transform")
         
-        let growScale: CGFloat = 1.2
+        let growScale: CGFloat = 1.1
         growAnimation.values = [
             NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
             NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
@@ -99,10 +99,15 @@ class HealthKitSetupViewController : UIViewController {
         growAnimation.keyTimes = [0, 0.12, 0.50, 0.62, 1]
         growAnimation.additive = true
         growAnimation.duration = 1.2
+        growAnimation.repeatCount = Float.infinity
         
         self.heartLabel.layer.addAnimation(growAnimation, forKey:"transform")
         
         CATransaction.commit()
+    }
+    
+    func stopBeatingHeart() {
+        self.heartLabel.layer.removeAnimationForKey("transform")
     }
 
     private func syncNextUnsyncedTrip() {
@@ -117,6 +122,7 @@ class HealthKitSetupViewController : UIViewController {
             self.detailLabel.hidden = false
             self.disclaimerLabel.hidden = true
             
+            self.stopBeatingHeart()
             self.navigationItem.leftBarButtonItem = nil
             
             self.titleLabel.text = "You're done!"

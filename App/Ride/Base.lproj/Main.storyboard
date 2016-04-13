@@ -595,7 +595,8 @@
                                                     <exclude reference="M6N-6o-KfO"/>
                                                 </mask>
                                             </variation>
-                                            <variation key="widthClass=compact">
+                                            <variation key="widthClass=compact" ambiguous="YES">
+                                                <rect key="frame" x="0.0" y="0.0" width="400" height="0.5"/>
                                                 <mask key="subviews">
                                                     <include reference="KmF-nL-bEp"/>
                                                 </mask>
