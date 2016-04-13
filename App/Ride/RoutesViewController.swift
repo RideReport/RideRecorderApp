@@ -40,6 +40,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 48
         
+        var headerViewBackgroundViewFrame = self.tableView.bounds
+        headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
+        let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
+        headerViewBackgroundView.backgroundColor = UIColor(red: 229/255, green: 235/255, blue: 227/255, alpha: 1.0)
+        self.tableView.insertSubview(headerViewBackgroundView, atIndex: 0)
+        
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mma"
@@ -314,7 +320,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
-            return 26
+            return 0
         }
         
         return 26
@@ -372,14 +378,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let headerView = view as! UITableViewHeaderFooterView
         
         if section == 0 {
-            headerView.backgroundView?.backgroundColor = ColorPallete.sharedPallete.darkGrey
+            headerView.backgroundView?.backgroundColor = ColorPallete.sharedPallete.unknownGrey
             headerView.backgroundView?.tintColor = UIColor.clearColor()
-            headerView.contentView.backgroundColor = ColorPallete.sharedPallete.darkGrey
+            headerView.contentView.backgroundColor = ColorPallete.sharedPallete.unknownGrey
             headerView.contentView.tintColor = UIColor.clearColor()
-            headerView.tintColor = ColorPallete.sharedPallete.darkGrey
+            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
             headerView.opaque = false
             headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
-            headerView.textLabel!.textColor = ColorPallete.sharedPallete.almostWhite
+            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
         } else {
             headerView.tintColor = ColorPallete.sharedPallete.almostWhite
             headerView.opaque = false
@@ -389,6 +395,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
+        // make sure the disclosure arrow tint color can be set
         for case let button as UIButton in tableCell.subviews {
             let image = button.backgroundImageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate)
             button.setBackgroundImage(image, forState: .Normal)
@@ -402,9 +409,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return
         }
         
-        trophyCountLabel.text = "🏆"
-        trophyCountLabel.layer.masksToBounds = true
-        trophyCountLabel.layer.cornerRadius = 8.0
+        trophyCountLabel.text = String(Trip.numberOfRewardedTrips) + " Trophies"
         
         var rewardString = ""
         
@@ -418,13 +423,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         var tabStops : [NSTextTab] = []
         var totalLineWidth : CGFloat = 0
         var columnCount = 0
-        while totalLineWidth + totalWidth < (self.view.frame.size.width - trophyCountLabel.frame.size.width - 30) {
+        while totalLineWidth + totalWidth < (self.view.frame.size.width - 30) {
             tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth, options: [:]))
             tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"\t")]))
             tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
             totalLineWidth += totalWidth
             columnCount += 1
-            print(String(totalLineWidth))
         }
         
         paragraphStyle.tabStops = tabStops
@@ -489,7 +493,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                         streakJewelLabel.text = "💔"
                     }
                 } else {
-                    streakTextLabel.text = String(format: "%i day ride streak!", currentStreakLength)
+                    streakTextLabel.text = String(format: "%i day ride streak", currentStreakLength)
                     streakJewelLabel.text = Profile.profile().currentStreakJewel
                 }
                 if (!self.hasShownStreakAnimation) {
@@ -650,26 +654,5 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return false
         }
         return true
-    }
-}
-
-class RoutesViewControllerTrophyCountLabel: UILabel {
-    override func drawTextInRect(rect: CGRect) {
-        super.drawTextInRect(UIEdgeInsetsInsetRect(rect, UIEdgeInsetsMake(0, 6, 0, 0)))
-    }
-    
-    override var backgroundColor: UIColor? {
-        // prevent UITableView from making this clear during cell highlight
-        get {
-            return ColorPallete.sharedPallete.darkGrey
-        }
-        set {
-            super.backgroundColor = ColorPallete.sharedPallete.darkGrey
-        }
-    }
-    
-    override func intrinsicContentSize() -> CGSize {
-        let size = super.intrinsicContentSize()
-        return CGSizeMake(size.width + 26, size.height)
     }
 }
