@@ -132,7 +132,11 @@ class HamburgerViewController: UITableViewController {
     #endif
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == 4) {
+        guard let cell = tableView.cellForRowAtIndexPath(indexPath) else {
+            return
+        }
+        
+        if (cell == self.debugCrazyPersonTableViewCell) {
             #if DEBUG
                 let debugVerbosityMode = NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode")
                 NSUserDefaults.standardUserDefaults().setBool(!debugVerbosityMode, forKey: "DebugVerbosityMode")
@@ -140,7 +144,7 @@ class HamburgerViewController: UITableViewController {
                 self.updateDebugCrazyPersonModeCellText()
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
             #endif
-        } else if (indexPath.row == 3) {
+        } else if (cell == self.healthKitTableViewCell) {
             let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
             
             if (priorHealthKitState) {
@@ -157,14 +161,14 @@ class HamburgerViewController: UITableViewController {
             }
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        } else if (indexPath.row == 1) {
+        } else if (cell == self.accountTableViewCell) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
                 APIClient.sharedClient.logout()
                 AppDelegate.appDelegate().transitionToCreatProfile()
             }
-        } else if (indexPath.row == 0) {
+        } else if (cell == self.pauseResueTableViewCell) {
             if (RouteManager.sharedManager.isPaused()) {
                 Mixpanel.sharedInstance().track(
                     "resumedTracking"

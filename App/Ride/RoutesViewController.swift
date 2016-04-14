@@ -40,11 +40,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 48
         
+        // when the user drags up they should see the right color above the rewards cell
         var headerViewBackgroundViewFrame = self.tableView.bounds
         headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
         headerViewBackgroundView.backgroundColor = ColorPallete.sharedPallete.almostWhite
         self.tableView.insertSubview(headerViewBackgroundView, atIndex: 0)
+        
+        // get rid of empty table view seperators
+        self.tableView.tableFooterView = UIView()
         
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
@@ -56,8 +60,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "bobbleChick")
-        self.emptyTableChick.addGestureRecognizer(tapRecognizer)
         self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
@@ -145,10 +147,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func bobbleChick() {
-        bobbleView(self.emptyTableChick)
-    }
-    
     func bobbleView(view: UIView) {
         CATransaction.begin()
         
@@ -234,13 +232,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let emptyTableViewWasHidden = self.emptyTableView.hidden
             
             self.emptyTableView.hidden = shouldHideEmptyTableView
-            self.tableView.hidden = !shouldHideEmptyTableView
-            
-            if emptyTableViewWasHidden && !shouldHideEmptyTableView {
-                self.emptyTableView.delay(0.5) {
-                    self.bobbleChick()
-                }
-            }
         } else {
             self.emptyTableView.hidden = true
             self.tableView.hidden = true
@@ -338,26 +329,31 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 1
+            return 2
         }
         
         let sectionInfo = self.fetchedResultsController.sections![section - 1]
         
-        return sectionInfo.numberOfObjects
+        // an extra row for our dummy cell
+        return sectionInfo.numberOfObjects + 1
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableCell : UITableViewCell!
         
-        if (indexPath.section == 0 && indexPath.row == 1) {
+        if ((indexPath.section == 0 && indexPath.row == 1) || (indexPath.section > 0 && indexPath.row == self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects)) {
             // dummy cell to force a separator view to draw between rewards and next section
             let reuseID = "RoutesViewTableDummyCell"
             
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+            tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
+            tableCell.layoutMargins = UIEdgeInsetsZero
+
         } else if indexPath.section == 0 {
             let reuseID = "RewardsViewTableCell"
             
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+            tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
             tableCell.layoutMargins = UIEdgeInsetsZero
             
             configureRewardsCell(tableCell)
@@ -369,6 +365,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
             let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             configureCell(tableCell, trip: trip)
+            if (indexPath.row == self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects - 1) {
+                tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
+            } else {
+                tableCell.separatorInset = UIEdgeInsetsMake(0, 46, 0, 0)
+            }
         }
         
         return tableCell
@@ -377,21 +378,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerView = view as! UITableViewHeaderFooterView
         
-        if section == 0 {
-            headerView.backgroundView?.backgroundColor = ColorPallete.sharedPallete.unknownGrey
-            headerView.backgroundView?.tintColor = UIColor.clearColor()
-            headerView.contentView.backgroundColor = ColorPallete.sharedPallete.unknownGrey
-            headerView.contentView.tintColor = UIColor.clearColor()
-            headerView.tintColor = ColorPallete.sharedPallete.unknownGrey
-            headerView.opaque = false
-            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
-            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
-        } else {
-            headerView.tintColor = self.view.backgroundColor
-            headerView.opaque = false
-            headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
-            headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
-        }
+        headerView.tintColor = self.view.backgroundColor
+        headerView.opaque = false
+        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
+        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
@@ -409,7 +399,12 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return
         }
         
-        trophyCountLabel.text = String(Trip.numberOfRewardedTrips) + " Trophies"
+        let trophyCount = Trip.numberOfRewardedTrips
+        if trophyCount > 0 {
+            trophyCountLabel.text = String(trophyCount) + " Trophies"
+        } else {
+            trophyCountLabel.text = "No Trophies Yet"
+        }
         
         var rewardString = ""
         

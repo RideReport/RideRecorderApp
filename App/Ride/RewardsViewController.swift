@@ -15,6 +15,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var rewardsLabel1: UILabel!
     @IBOutlet weak var rewardsLabel2: UILabel!
     @IBOutlet weak var footerView: UIView!
+    @IBOutlet weak var emptyTrophiesView: UIView!
+    @IBOutlet weak var bobbleChickView: UIView!
     @IBOutlet weak var rewardPopup: PopupView!
     
     private var scene: SKScene!
@@ -29,12 +31,48 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         super.viewDidLoad()
         
         self.rewardPopup.hidden = true
-        self.title = String(Trip.numberOfRewardedTrips) + " Trophies"
+        
+        let trophyCount = Trip.numberOfRewardedTrips
+        if trophyCount > 0 {
+            self.title = String(trophyCount) + " Trophies"
+        } else {
+            self.title = "No Trophies Yet"
+        }
     }
     
     override func viewWillLayoutSubviews()
     {
         super.viewWillLayoutSubviews()
+        
+        if Trip.numberOfRewardedTrips == 0 {
+            self.emptyTrophiesView.hidden = false
+            self.bobbleChickView.delay(0.2) {
+                CATransaction.begin()
+                
+                let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
+                
+                //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+                shakeAnimation.values = [
+                    NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
+                    NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
+                    NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
+                    NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
+                    NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
+                    NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
+                ]
+                shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
+                shakeAnimation.additive = true
+                shakeAnimation.duration = 0.6
+                
+                self.bobbleChickView.layer.addAnimation(shakeAnimation, forKey:"transform")
+                
+                CATransaction.commit()
+            }
+            
+            return
+        }
+        
+        self.emptyTrophiesView.hidden = true
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale.currentLocale()
