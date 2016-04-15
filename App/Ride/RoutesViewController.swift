@@ -566,7 +566,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
         }
         
-        var description = String(format: "%@ %@ for %@ %@.", trip.climacon ?? "", dateTitle, trip.lengthString, trip.areaDescriptionString)
+        let areaDescriptionString = trip.areaDescriptionString
+        let areaDescriptionPhrase = (areaDescriptionString != "") ? (" " + areaDescriptionString + ".") : ""
+        var description = String(format: "%@ %@ for %@%@", trip.climacon ?? "", dateTitle, trip.lengthString, areaDescriptionPhrase)
         
         if let rewardDescription = trip.rewardDescription,
             rewardEmoji = trip.rewardEmoji where rewardDescription.rangeOfString("day ride streak") == nil {
