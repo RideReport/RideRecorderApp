@@ -26,7 +26,10 @@ class CoreDataManager {
     class func startup(useInMemoryStore: Bool = false) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = CoreDataManager(useInMemoryStore: useInMemoryStore)
-            Static.sharedManager?.startup()
+            dispatch_async(dispatch_get_main_queue()) {
+                // run async
+                Static.sharedManager?.startup()
+            }
         }
     }
 
@@ -35,22 +38,20 @@ class CoreDataManager {
     }
     
     private func startup () {
-        dispatch_async(dispatch_get_main_queue(), {
-            // clean up open trips
-            for aTrip in Trip.openTrips() {
-                let trip = aTrip as! Trip
-                if (trip.locations.count <= 6) {
-                    // if it doesn't more than 6 points, toss it.
-                    trip.cancel()
-                } else if !trip.isClosed {
-                    trip.close()
-                }
+        // clean up open trips
+        for aTrip in Trip.openTrips() {
+            let trip = aTrip as! Trip
+            if (trip.locations.count <= 6) {
+                // if it doesn't more than 6 points, toss it.
+                trip.cancel()
+            } else if !trip.isClosed {
+                trip.close()
             }
-            
-            self.saveContext()
-            self.isStartingUp = false
-            NSNotificationCenter.defaultCenter().postNotificationName("CoreDataManagerDidStartup", object: nil)
-        })
+        }
+        
+        self.saveContext()
+        self.isStartingUp = false
+        NSNotificationCenter.defaultCenter().postNotificationName("CoreDataManagerDidStartup", object: nil)
     }
     
     func currentManagedObjectContext () -> NSManagedObjectContext {

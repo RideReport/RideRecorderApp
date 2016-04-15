@@ -10,7 +10,6 @@
         <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gGu-Nh-X07">
             <toolbarItems/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-            <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
             <nil key="simulatedBottomBarMetrics"/>
             <navigationBar key="navigationBar" contentMode="scaleToFill" id="Oah-sr-VPN">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>

@@ -56,42 +56,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
         
-        var hasSeenSetup = NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")
-        
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        dispatch_async(dispatch_get_main_queue()) {
-            // start managers after returing
+        // start managers after returing
+        
+        // Start Managers. The order matters!
+        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
+        CoreDataManager.startup()
+        APIClient.startup()
+        RandomForestManager.startup()
+        
+        if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+            HealthKitManager.startup()
+        }
+        
+        if (NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
+            // For new users, we wait to start permission-needing managers
+            // This avoids immediately presenting the privacy permission dialogs.
             
-            // Start Managers. The order matters!
-            Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
-            CoreDataManager.startup()
-            APIClient.startup()
-            RandomForestManager.startup()
-            
-            if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
-                self.startupHealthManager()
-            }
-            
-            // Start permission-needing managers
-            if (hasSeenSetup) {
-                // if they are new, we wait to start data gathering managers
-                // this avoids immediately presenting the privacy permission dialogs.
+            dispatch_async(dispatch_get_main_queue()) {
+                // perform async
                 self.startupNotifications()
-                self.startupMotionManager()
-                
-                if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
-                    DDLogInfo("Launched in background due to location update")
-                    self.startupRouteManager(true)
-                } else {
-                    self.startupRouteManager(false)
-                }
-
-                self.transitionToMainNavController()
-            } else {
-                // SetupPermissionsViewController starts up the managers
-                self.transitionToSetup()
             }
+            MotionManager.startup()
+            
+            if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
+                DDLogInfo("Launched in background due to location update")
+                RouteManager.startup(true)
+            } else {
+                RouteManager.startup(false)
+            }
+            
+            self.transitionToMainNavController()
+        } else {
+            // Otherwise SetupPermissionsViewController starts up the permission-needing managers
+            self.transitionToSetup()
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
@@ -146,18 +145,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         UIApplication.sharedApplication().registerForRemoteNotifications()
-    }
-    
-    func startupRouteManager(fromBackground: Bool) {
-        RouteManager.startup(fromBackground)
-    }
-    
-    func startupMotionManager() {
-        MotionManager.startup()
-    }
-    
-    func startupHealthManager() {
-        HealthKitManager.startup()
     }
     
     func transitionToSetup() {

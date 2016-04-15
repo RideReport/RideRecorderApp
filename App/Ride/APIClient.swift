@@ -243,7 +243,10 @@ class APIClient {
     class func startup(useDefaultConfiguration: Bool = false) {
         if (Static.sharedClient == nil) {
             Static.sharedClient = APIClient(useDefaultConfiguration: useDefaultConfiguration)
-            Static.sharedClient?.startup()
+            dispatch_async(dispatch_get_main_queue()) {
+                // run startup async
+                Static.sharedClient?.startup()
+            }
         }
     }
     

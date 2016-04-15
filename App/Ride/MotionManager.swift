@@ -55,7 +55,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     class func startup() {
         if (Static.sharedManager == nil) {
             Static.sharedManager = MotionManager()
-            Static.sharedManager?.startup()
+            dispatch_async(dispatch_get_main_queue()) {
+                // start async
+                Static.sharedManager?.startup()
+            }
         }
     }
     

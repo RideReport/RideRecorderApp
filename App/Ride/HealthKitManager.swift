@@ -48,7 +48,10 @@ class HealthKitManager {
     class func startup(authorizationHandler:(success: Bool)->() = {_ in}) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = HealthKitManager()
-            Static.sharedManager!.startup(authorizationHandler)
+            dispatch_async(dispatch_get_main_queue()) {
+                // startup async
+                Static.sharedManager!.startup(authorizationHandler)
+            }
         }
     }
     

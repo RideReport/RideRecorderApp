@@ -91,7 +91,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     class func startup(fromBackground: Bool) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = RouteManager()
-            Static.sharedManager?.startup(fromBackground)
+            dispatch_async(dispatch_get_main_queue()) {
+                // start async
+                Static.sharedManager?.startup(fromBackground)
+            }
         }
     }
     

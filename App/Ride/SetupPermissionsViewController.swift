@@ -120,7 +120,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                             }
                         }
                     }
-                    AppDelegate.appDelegate().startupRouteManager(false)
+                    RouteManager.startup(false)
                 }
             } else {
                 // they've already granted or denied it                
@@ -137,7 +137,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 self.helperTextLabel.delay(1.5) {
-                    AppDelegate.appDelegate().startupMotionManager()
+                    MotionManager.startup()
                     NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) {[weak self] (_) -> Void in
                         guard let strongSelf = self else {
                             return
