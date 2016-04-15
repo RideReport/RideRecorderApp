@@ -565,6 +565,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogInfo("Setting up geofences!")
         
         Profile.profile().setGeofencedLocation(center)
+        CoreDataManager.sharedManager.saveContext()
         
         // first we put a geofence in the middle as a fallback (exit event)
         let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
@@ -595,6 +596,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         Profile.profile().setGeofencedLocation(nil)
+        CoreDataManager.sharedManager.saveContext()
+
         self.geofenceSleepRegions = []
     }
     
