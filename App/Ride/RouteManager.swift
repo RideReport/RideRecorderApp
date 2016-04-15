@@ -204,7 +204,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func stopTrip() {
+    func abortTrip() {
+        self.stopTrip(true)
+    }
+    
+    private func stopTrip(abort: Bool = false) {
         guard let stoppedTrip = self.currentTrip else {
             return
         }
@@ -216,8 +220,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.lastMovingLocation = nil
         self.lastActiveTrackingActivityTypeQueryDate = nil
         
-        if (stoppedTrip.locations.count <= 6) {
-            // if it doesn't more than 6 points, toss it.
+        if (abort || stoppedTrip.locations.count <= 6) {
+            // if it is aborted or it doesn't more than 6 points, toss it.
             #if DEBUG
                 if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
                     let notif = UILocalNotification()

@@ -620,8 +620,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return nil
         }
         
+        let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
+        if !trip.isClosed {
+            return [UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Cancel Trip") { (action, indexPath) -> Void in
+                RouteManager.sharedManager.abortTrip()
+            }]
+        }
+        
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             APIClient.sharedClient.deleteTrip(trip)
         }
         
