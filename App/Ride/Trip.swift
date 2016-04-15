@@ -143,7 +143,7 @@ class Trip : NSManagedObject {
             if newValue {
                 self.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(self.creationDate)
             } else {
-                self.sectionIdentifier = nil
+                self.sectionIdentifier = "z" // force it to sort at the top of a reverse-sorted list
             }
         }
     }
@@ -708,6 +708,7 @@ class Trip : NSManagedObject {
         super.awakeFromInsert()
         self.creationDate = NSDate()
         self.generateUUID()
+        self.sectionIdentifier = "z" // has to be non-nil or it will not show up in the list
     }
     
     override func awakeFromFetch() {
