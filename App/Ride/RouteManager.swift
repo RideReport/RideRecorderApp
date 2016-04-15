@@ -422,6 +422,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     UIApplication.sharedApplication().presentLocalNotificationNow(notif)
                 }
             #endif
+            self.disableAllGeofences() // first remove any existing geofences
             self.setupGeofencesAroundCenter(loc)
         } else {
             DDLogInfo("Did not setup new geofence!")
