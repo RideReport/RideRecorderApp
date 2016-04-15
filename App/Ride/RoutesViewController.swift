@@ -235,11 +235,16 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
     
     private func refreshEmptyTableView() {
-        if (self.fetchedResultsController != nil) {
-            let shouldHideEmptyTableView = (self.fetchedResultsController.fetchedObjects!.count > 0)
-            self.emptyTableView.hidden = shouldHideEmptyTableView
-        } else {
+        guard let frc = self.fetchedResultsController else {
+            // Core Data hasn't loaded yet
             self.emptyTableView.hidden = true
+            return
+        }
+        
+        if let objectsInFirstRow = frc.sections?[1].numberOfObjects where objectsInFirstRow > 0 {
+            self.emptyTableView.hidden = true
+        } else {
+            self.emptyTableView.hidden = false
         }
     }
     
@@ -263,8 +268,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.refreshEmptyTableView()
         self.tableView.endUpdates()
+        
+        self.refreshEmptyTableView()
         
         // reload the rewards section as needed
         if rewardSectionNeedsReload {
