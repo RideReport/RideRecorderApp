@@ -93,8 +93,19 @@ class Trip : NSManagedObject {
     }
     
     private struct Static {
-        static var dateFormatter : NSDateFormatter!
-        static var yearDateFormatter : NSDateFormatter!
+        static var sectionDateFormatter : NSDateFormatter!
+    }
+    
+    class var sectionDateFormatter : NSDateFormatter {
+        get {
+            if (Static.sectionDateFormatter == nil) {
+                Static.sectionDateFormatter = NSDateFormatter()
+                Static.sectionDateFormatter.locale = NSLocale.currentLocale()
+                Static.sectionDateFormatter.dateFormat = "yyyy-MM-dd"
+            }
+            
+            return Static.sectionDateFormatter
+        }
     }
     
     private var currentStateNotification : UILocalNotification? = nil
@@ -128,6 +139,12 @@ class Trip : NSManagedObject {
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
             self.setPrimitiveValue(NSNumber(bool: newValue), forKey: "isClosed")
             self.didChangeValueForKey("isClosed")
+            
+            if newValue {
+                self.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(self.creationDate)
+            } else {
+                self.sectionIdentifier = nil
+            }
         }
     }
     @NSManaged var uuid : String!
@@ -135,66 +152,31 @@ class Trip : NSManagedObject {
     @NSManaged var length : NSNumber?
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
+    @NSManaged var sectionIdentifier : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
     class func reloadSectionIdentifiers() {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil")
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
-        for trip in self.allTrips() {
-            trip.setPrimitiveValue(nil, forKey: "sectionIdentifier")
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        guard let trips = results as? [Trip] else {
+            return
+        }
+        
+        for trip in trips {
+            trip.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(trip.creationDate)
         }
         
         CoreDataManager.sharedManager.saveContext()
-    }
-    
-    var sectionIdentifier : String? {
-        get {
-            self.willAccessValueForKey("sectionIdentifier")
-            var sectionString = self.primitiveValueForKey("sectionIdentifier") as! String?
-            self.didAccessValueForKey("sectionIdentifier")
-            if (sectionString == nil) {
-                // do the thing
-                if (self.creationDate == nil || (self.creationDate.isToday() && !self.isClosed)) {
-                    sectionString = "In Progress"
-                } else if (self.creationDate.isToday()) {
-                    sectionString = "Today"
-                } else if (self.creationDate.isYesterday()) {
-                    sectionString = "Yesterday"
-                } else if (self.creationDate.isInLastWeek()) {
-                    sectionString = self.creationDate.weekDay()
-                } else if (self.creationDate.isThisYear()) {
-                    sectionString = Trip.dateFormatter.stringFromDate(self.creationDate)
-                } else {
-                    sectionString = Trip.yearDateFormatter.stringFromDate(self.creationDate)
-                }
-                self.setPrimitiveValue(sectionString, forKey: "sectionIdentifier")
-            }
-            
-            return sectionString!
-        }
-    }
-    
-    class var dateFormatter : NSDateFormatter {
-        get {
-            if (Static.dateFormatter == nil) {
-                Static.dateFormatter = NSDateFormatter()
-                Static.dateFormatter.locale = NSLocale.currentLocale()
-                Static.dateFormatter.dateFormat = "MMM d"
-            }
-            
-            return Static.dateFormatter
-        }
-    }
-    
-    class var yearDateFormatter : NSDateFormatter {
-        get {
-            if (Static.yearDateFormatter == nil) {
-                Static.yearDateFormatter = NSDateFormatter()
-                Static.yearDateFormatter.locale = NSLocale.currentLocale()
-                Static.yearDateFormatter.dateFormat = "MMM d ''yy"
-            }
-            
-            return Static.yearDateFormatter
-        }
     }
     
     convenience init() {

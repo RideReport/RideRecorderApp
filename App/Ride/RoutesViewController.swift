@@ -27,6 +27,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
+    private var yearDateFormatter : NSDateFormatter!
     private var rewardSectionNeedsReload : Bool = false
     
     override func viewDidLoad() {
@@ -60,6 +61,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
         
+        self.yearDateFormatter = NSDateFormatter()
+        self.yearDateFormatter.locale = NSLocale.currentLocale()
+        self.yearDateFormatter.dateFormat = "MMM d ''yy"
+        
         self.emptyTableView.hidden = true
         
         if (CoreDataManager.sharedManager.isStartingUp) {
@@ -75,11 +80,14 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func coreDataDidLoad() {
+        self.reloadSectionIdentifiersIfNeeded()
+        
         let cacheName = "RoutesViewControllerFetchedResultsController"
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.fetchBatchSize = 20
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController!.delegate = self
@@ -101,7 +109,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             guard let strongSelf = self else {
                 return
             }
-            strongSelf.reloadTableIfNeeded()
+            strongSelf.reloadSectionIdentifiersIfNeeded()
         }
         
         NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: nil) {[weak self] (_) in
@@ -213,7 +221,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    private func reloadTableIfNeeded() {
+    private func reloadSectionIdentifiersIfNeeded() {
         if let date = self.dateOfLastTableRefresh where date.isToday() {
             // don't refresh if we've already done it today
         } else {
@@ -321,7 +329,24 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         
         let theSection = self.fetchedResultsController.sections![section - 1]
         
-        return "  ".stringByAppendingString(theSection.name)
+        var title = ""
+        if let date = Trip.sectionDateFormatter.dateFromString(theSection.name) {
+            if (date.isToday()) {
+                title = "Today"
+            } else if (date.isYesterday()) {
+                title = "Yesterday"
+            } else if (date.isInLastWeek()) {
+                title = date.weekDay()
+            } else if (date.isThisYear()) {
+                title = self.dateFormatter.stringFromDate(date)
+            } else {
+                title = self.yearDateFormatter.stringFromDate(date)
+            }
+        } else {
+            title = "In Progress"
+        }
+        
+        return "  ".stringByAppendingString(title)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
