@@ -575,7 +575,11 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
      
         textLabel.text = description
         
-        detailTextLabel.text = trip.activityType.emoji
+        if trip.isClosed {
+            detailTextLabel.text = trip.activityType.emoji
+        } else {
+            detailTextLabel.text = ""
+        }
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
