@@ -241,7 +241,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return
         }
         
-        if let sections = frc.sections where sections.count > 1 && sections[1].numberOfObjects > 0 {
+        if let sections = frc.sections where sections.count > 0 && sections[0].numberOfObjects > 0 {
             self.emptyTableView.hidden = true
         } else {
             self.emptyTableView.hidden = false
