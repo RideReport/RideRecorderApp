@@ -271,6 +271,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         self.tableView.endUpdates()
         
         self.refreshEmptyTableView()
+        self.refreshTitle()
         
         // reload the rewards section as needed
         if rewardSectionNeedsReload {
