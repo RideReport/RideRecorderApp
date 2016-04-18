@@ -43,15 +43,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.attributionButton.hidden = true
         self.mapView.rotateEnabled = false
         self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
-        
-        if let loc = RouteManager.sharedManager.location {
-            self.mapView.setCenterCoordinate(loc.coordinate, zoomLevel: 14, animated: false)
-        } else {
-            self.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
-        }
-        self.mapView.userTrackingMode = .Follow
-        self.mapView.showsUserLocation = true
-        self.mapView.setZoomLevel(14, animated: false)
 
         let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json")
         self.mapView.styleURL = styleURL

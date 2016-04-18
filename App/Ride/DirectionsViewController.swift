@@ -29,6 +29,13 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
                 self.mapViewController = viewController as! MapViewController
+                if let loc = RouteManager.sharedManager.location {
+                    self.mapViewController.mapView.setCenterCoordinate(loc.coordinate, zoomLevel: 14, animated: false)
+                } else {
+                    self.mapViewController.mapView.setCenterCoordinate(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
+                }
+                self.mapViewController.mapView.userTrackingMode = .Follow
+                self.mapViewController.mapView.showsUserLocation = true
             }
         }
         
