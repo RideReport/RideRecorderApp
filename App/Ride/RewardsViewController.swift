@@ -38,6 +38,15 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         } else {
             self.title = "No Trophies Yet"
         }
+        
+        if Trip.numberOfRewardedTrips == 0 {
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RewardsViewController.bobbleChick))
+            self.bobbleChickView.addGestureRecognizer(tapRecognizer)
+            
+            self.bobbleChickView.delay(0.2) {
+                self.bobbleChick()
+            }
+        }
     }
     
     override func viewWillLayoutSubviews()
@@ -46,28 +55,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         if Trip.numberOfRewardedTrips == 0 {
             self.emptyTrophiesView.hidden = false
-            self.bobbleChickView.delay(0.2) {
-                CATransaction.begin()
-                
-                let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
-                
-                //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
-                shakeAnimation.values = [
-                    NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
-                    NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
-                    NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
-                    NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
-                    NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
-                    NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
-                ]
-                shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
-                shakeAnimation.additive = true
-                shakeAnimation.duration = 0.6
-                
-                self.bobbleChickView.layer.addAnimation(shakeAnimation, forKey:"transform")
-                
-                CATransaction.commit()
-            }
             
             return
         }
@@ -306,5 +293,28 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             let velocity = self.currentVelocity {
             touchedSprite.physicsBody!.velocity = velocity
         }
+    }
+    
+    func bobbleChick() {
+        CATransaction.begin()
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+        shakeAnimation.values = [
+            NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
+            NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
+        ]
+        shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
+        shakeAnimation.additive = true
+        shakeAnimation.duration = 0.6
+        
+        self.bobbleChickView.layer.addAnimation(shakeAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
 }
