@@ -2437,7 +2437,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ufy-in-gpd">
+                            <view contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Ufy-in-gpd">
                                 <rect key="frame" x="0.0" y="64" width="600" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Rides Logged in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-ci-OtU">
@@ -2514,9 +2514,12 @@
                                 <constraints>
                                     <constraint firstItem="LqR-ci-OtU" firstAttribute="leading" secondItem="MF5-jO-gGh" secondAttribute="trailing" constant="8" id="15R-99-MHQ"/>
                                     <constraint firstAttribute="width" constant="600" id="2QQ-TL-c5p"/>
+                                    <constraint firstItem="LqR-ci-OtU" firstAttribute="top" secondItem="gvM-PU-BKI" secondAttribute="bottom" constant="-4.5" id="3XV-6n-Ppc"/>
                                     <constraint firstAttribute="height" constant="120" id="7J5-hw-TrY"/>
+                                    <constraint firstItem="MF5-jO-gGh" firstAttribute="top" secondItem="gvM-PU-BKI" secondAttribute="bottom" constant="-4.5" id="7xL-ap-Uap"/>
                                     <constraint firstAttribute="bottom" secondItem="LqR-ci-OtU" secondAttribute="bottom" id="8Pk-W1-54Y"/>
                                     <constraint firstItem="LqR-ci-OtU" firstAttribute="top" secondItem="gvM-PU-BKI" secondAttribute="bottom" constant="14" id="Cl2-rR-UXN"/>
+                                    <constraint firstAttribute="height" constant="105" id="J7C-lP-Pbd"/>
                                     <constraint firstItem="gvM-PU-BKI" firstAttribute="leading" secondItem="Ufy-in-gpd" secondAttribute="leading" constant="13" id="Mqk-3y-xpO"/>
                                     <constraint firstAttribute="height" constant="105" id="NVV-0V-aeB"/>
                                     <constraint firstAttribute="bottom" secondItem="MF5-jO-gGh" secondAttribute="bottom" id="NVt-kU-x8O"/>
@@ -2537,15 +2540,18 @@
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="2QQ-TL-c5p"/>
+                                        <exclude reference="J7C-lP-Pbd"/>
                                         <exclude reference="NVV-0V-aeB"/>
                                         <exclude reference="g9r-8X-kka"/>
                                         <exclude reference="o2G-gK-wlQ"/>
                                         <exclude reference="s5w-ID-xRs"/>
+                                        <exclude reference="7xL-ap-Uap"/>
                                         <exclude reference="NVt-kU-x8O"/>
                                         <exclude reference="QzW-Wt-TC2"/>
                                         <exclude reference="YBs-Xg-UxY"/>
                                         <exclude reference="p80-JO-gXt"/>
                                         <exclude reference="15R-99-MHQ"/>
+                                        <exclude reference="3XV-6n-Ppc"/>
                                         <exclude reference="8Pk-W1-54Y"/>
                                         <exclude reference="Cl2-rR-UXN"/>
                                     </mask>
@@ -2553,9 +2559,12 @@
                                 <variation key="widthClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="7J5-hw-TrY"/>
-                                        <include reference="NVV-0V-aeB"/>
+                                        <include reference="J7C-lP-Pbd"/>
+                                        <exclude reference="NVV-0V-aeB"/>
+                                        <include reference="7xL-ap-Uap"/>
                                         <include reference="NVt-kU-x8O"/>
                                         <exclude reference="x0v-xk-shr"/>
+                                        <include reference="3XV-6n-Ppc"/>
                                         <include reference="8Pk-W1-54Y"/>
                                     </mask>
                                 </variation>
