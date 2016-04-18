@@ -19,7 +19,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var bobbleChickView: UIView!
     @IBOutlet weak var rewardPopup: PopupView!
     
-    private var scene: SKScene!
+    private var scene: SKScene?
     var imageDictionary : [String: UIImage] = [:]
     
     var touchPoint: CGPoint = CGPoint()
@@ -100,9 +100,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
         
         self.scene = SKScene(size: self.view.bounds.size)
-        self.scene.backgroundColor = self.spriteKitView.backgroundColor!
-        self.scene.scaleMode = SKSceneScaleMode.ResizeFill
-        self.scene.delegate = self
+        self.scene!.backgroundColor = self.spriteKitView.backgroundColor!
+        self.scene!.scaleMode = SKSceneScaleMode.ResizeFill
+        self.scene!.delegate = self
         
         self.spriteKitView.ignoresSiblingOrder = true
         
@@ -113,10 +113,10 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         let topSpace : CGFloat = 400.0
         
-        self.scene.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height + topSpace))
-        self.scene.physicsBody!.friction = 0.8
-        self.scene.physicsBody!.restitution = 0.0
-        self.scene.physicsWorld.gravity = CGVectorMake(0,-9.8)
+        self.scene!.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height + topSpace))
+        self.scene!.physicsBody!.friction = 0.8
+        self.scene!.physicsBody!.restitution = 0.0
+        self.scene!.physicsWorld.gravity = CGVectorMake(0,-9.8)
         
         let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji", additionalAttributes: ["rewardDescription"])
         let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 26)!]
@@ -181,7 +181,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 let emojiInitialPadding: CGFloat = -7.0
                 
                 for emoji in emojis.shuffle() {
-                    self.scene.addChild(emoji)
+                    self.scene!.addChild(emoji)
 
                     let nodePlacementX = (CGFloat(nodeCount) * (emoji.size.width + emojiInitialPadding))
                     let nodePlacementXModuloWidth = nodePlacementX % self.view.frame.size.width
@@ -205,14 +205,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delayBeforeDroppingInLastReward * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                    guard let strongSelf = self else {
+                    guard let strongSelf = self, scene = strongSelf.scene else {
                         return
                     }
                     
                     lastEmoji.physicsBody!.density = 100.0 // make it heavy so it can knock other emoji around easily
                     lastEmoji.physicsBody!.dynamic = true
 
-                    strongSelf.scene.addChild(lastEmoji)
+                    scene.addChild(lastEmoji)
                     
                     if let name = lastEmoji.name {
                         strongSelf.rewardPopup.text = name
@@ -238,9 +238,13 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard let scene = self.scene else {
+            return
+        }
+        
         let touch = touches.first!
-        let point = touch.locationInNode(self.scene)
-        if let tappedSprite = self.scene.nodeAtPoint(point) as? SKSpriteNode {
+        let point = touch.locationInNode(scene)
+        if let tappedSprite = scene.nodeAtPoint(point) as? SKSpriteNode {
             self.touchPoint = point
             self.touchTime = touch.timestamp
             self.touchedSprite = tappedSprite
@@ -261,9 +265,13 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard let scene = self.scene else {
+            return
+        }
+        
         if let touchedSprite = self.touchedSprite {
             let touch = touches.first!
-            let point = touch.locationInNode(self.scene)
+            let point = touch.locationInNode(scene)
             
             let dt:CGFloat = CGFloat(touch.timestamp - self.touchTime)
             let distance = CGVector(dx: point.x - touchedSprite.position.x, dy: point.y - touchedSprite.position.y)
@@ -274,6 +282,10 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard let _ = self.scene else {
+            return
+        }
+        
         if self.touchedSprite != nil {
             self.touchedSprite!.physicsBody!.density = 0.5
             self.touchedSprite?.runAction(SKAction.scaleTo(1.0, duration: 0.2))
