@@ -278,24 +278,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
         
-        if (self.currentActiveMonitoringSensorDataCollection == nil &&
-            (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries)) {
-            self.lastActiveTrackingActivityTypeQueryDate = NSDate()
-            self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
-            
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
-                self.currentActiveMonitoringSensorDataCollection = nil
-                #if DEBUG
-                    if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
-                        let notif = UILocalNotification()
-                        notif.alertBody = "🐞 prediction: " + prediction.activityType.emoji + " confidence: " + String(prediction.confidence.floatValue)
-                        notif.category = "DEBUG_CATEGORY"
-                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                    }
-                #endif
-            }
-        }
-        
         for location in locations {
             DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
@@ -312,6 +294,25 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if (location.speed >= self.minimumSpeedToContinueMonitoring ||
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
+                // if we are moving sufficiently fast and havent taken a motion sample recently, do so
+                if (self.currentActiveMonitoringSensorDataCollection == nil &&
+                    (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries)) {
+                    self.lastActiveTrackingActivityTypeQueryDate = NSDate()
+                    self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
+                    
+                    MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
+                        self.currentActiveMonitoringSensorDataCollection = nil
+                        #if DEBUG
+                            if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                                let notif = UILocalNotification()
+                                notif.alertBody = "🐞 prediction: " + prediction.activityType.emoji + " confidence: " + String(prediction.confidence.floatValue)
+                                notif.category = "DEBUG_CATEGORY"
+                                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                            }
+                        #endif
+                    }
+                }
+                
                 if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
                     if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
                         // if the event is more recent than the one we already have
