@@ -99,6 +99,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         self.refreshEmptyTableView()
+        Profile.profile().updateCurrentRideStreakLength()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -270,6 +271,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         // reload the rewards section as needed
         if rewardSectionNeedsReload {
             rewardSectionNeedsReload = false
+            Profile.profile().updateCurrentRideStreakLength()
             self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }
@@ -477,8 +479,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             trophySummaryLabel.text = ""
         }
-        
-        Profile.profile().updateCurrentRideStreakLength()
         
         let animationDelay: NSTimeInterval = 0.6
         
