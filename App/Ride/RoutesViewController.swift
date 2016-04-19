@@ -120,6 +120,35 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             strongSelf.hasShownStreakAnimation = false
             strongSelf.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
         }
+        
+        if APIClient.sharedClient.accountVerificationStatus != .Unknown {
+            self.runCreateAccountOfferIfNeeded()
+        } else {
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "APIClientAccountStatusDidChange", object: nil)
+                strongSelf.runCreateAccountOfferIfNeeded()
+            }
+        }
+    }
+    
+    private func runCreateAccountOfferIfNeeded() {
+        if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
+
+            if (Trip.numberOfCycledTrips > 10 && !NSUserDefaults.standardUserDefaults().boolForKey("hasBeenOfferedCreateAccountAfter10Trips")) {
+                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
+                NSUserDefaults.standardUserDefaults().synchronize()
+                let alertController = UIAlertController(title: "Don't lose your trips!", message: "Create an account so you can recover your rides if your phone is lost.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                alertController.addAction(UIAlertAction(title: "Create Account", style: UIAlertActionStyle.Default, handler: { (_) in
+                    AppDelegate.appDelegate().transitionToCreatProfile()
+                }))
+                
+                alertController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
+                }
+            }
     }
     
     override func viewWillAppear(animated: Bool) {

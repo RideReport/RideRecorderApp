@@ -64,41 +64,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 if let tripViewController = strongSelf.tripViewController {
                     strongSelf.setSelectedTrip(tripViewController.selectedTrip)
                 }
-
-                if APIClient.sharedClient.accountVerificationStatus != .Unknown {
-                    strongSelf.runCreateAccountOfferIfNeeded()
-                }
-            }
-            NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "APIClientAccountStatusDidChange", object: nil)
-                if !CoreDataManager.sharedManager.isStartingUp {
-                    strongSelf.runCreateAccountOfferIfNeeded()
-                }
             }
         } else {
             if let tripViewController = self.tripViewController {
                 self.setSelectedTrip(tripViewController.selectedTrip)
-            }
-        }
-    }
-    
-    private func runCreateAccountOfferIfNeeded() {
-        if (Trip.numberOfCycledTrips > 10 && !NSUserDefaults.standardUserDefaults().boolForKey("hasBeenOfferedCreateAccountAfter10Trips")) {
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
-            NSUserDefaults.standardUserDefaults().synchronize()
-            
-            if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
-                let actionSheet = UIActionSheet(title: "You've logged over 10 rides! Would you like to create an account so you can recover your rides if your phone is lost?", delegate: nil, cancelButtonTitle:"Nope", destructiveButtonTitle: nil, otherButtonTitles: "Create Account")
-                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                    if (buttonIndex == 1) {
-                        AppDelegate.appDelegate().transitionToCreatProfile()
-                        
-                    }
-                }
-                actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
             }
         }
     }
