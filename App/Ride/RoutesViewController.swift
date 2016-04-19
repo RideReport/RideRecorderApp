@@ -429,8 +429,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         let trophyCount = Trip.numberOfRewardedTrips
-        if trophyCount > 0 {
+        if trophyCount > 1 {
             trophyCountLabel.text = String(trophyCount) + " Trophies"
+        } else if trophyCount == 1 {
+            trophyCountLabel.text = "You Got a Trophy!"
         } else {
             trophyCountLabel.text = "No Trophies Yet"
         }

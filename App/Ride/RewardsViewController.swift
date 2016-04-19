@@ -33,8 +33,10 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         self.rewardPopup.hidden = true
         
         let trophyCount = Trip.numberOfRewardedTrips
-        if trophyCount > 0 {
+        if trophyCount > 1 {
             self.title = String(trophyCount) + " Trophies"
+        } else if trophyCount == 1 {
+            self.title = "You Got a Trophy!"
         } else {
             self.title = "No Trophies Yet"
         }
