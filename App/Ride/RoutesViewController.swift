@@ -436,48 +436,52 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         var rewardString = ""
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.2
-        
-        let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: trophySummaryLabel.font]).width
-        let columnSeperatorWidth: CGFloat = 6
-        let totalWidth = emojiWidth + columnSeperatorWidth
-        
-        var tabStops : [NSTextTab] = []
-        var totalLineWidth : CGFloat = 0
-        var columnCount = 0
-        while totalLineWidth + totalWidth < (self.view.frame.size.width - 30) {
-            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth, options: [:]))
-            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"\t")]))
-            tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
-            totalLineWidth += totalWidth
-            columnCount += 1
-        }
-        
-        paragraphStyle.tabStops = tabStops
-        
-        var i = 1
-        var lineCount = 0
-        let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
-        for countData in rewardsTripCounts {
-            if let rewardEmoji = countData["rewardEmoji"] as? String {
-                  rewardString += rewardEmoji + "\t"
-                i += 1
-                if i>=columnCount {
-                    i = 1
-                    lineCount += 1
-                    if let lastEmoji = rewardsTripCounts.last?["rewardEmoji"] as? String where lastEmoji == rewardEmoji  {
-                        rewardString += "\n"
+        if trophyCount > 1 {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.2
+            
+            let emojiWidth = ("👍" as NSString).sizeWithAttributes([NSFontAttributeName: trophySummaryLabel.font]).width
+            let columnSeperatorWidth: CGFloat = 6
+            let totalWidth = emojiWidth + columnSeperatorWidth
+            
+            var tabStops : [NSTextTab] = []
+            var totalLineWidth : CGFloat = 0
+            var columnCount = 0
+            while totalLineWidth + totalWidth < (self.view.frame.size.width - 30) {
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Center, location: totalLineWidth, options: [:]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:NSCharacterSet(charactersInString:"\t")]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.Left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
+                totalLineWidth += totalWidth
+                columnCount += 1
+            }
+            
+            paragraphStyle.tabStops = tabStops
+            
+            var i = 1
+            var lineCount = 0
+            let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
+            for countData in rewardsTripCounts {
+                if let rewardEmoji = countData["rewardEmoji"] as? String {
+                      rewardString += rewardEmoji + "\t"
+                    i += 1
+                    if i>=columnCount {
+                        i = 1
+                        lineCount += 1
+                        if let lastEmoji = rewardsTripCounts.last?["rewardEmoji"] as? String where lastEmoji == rewardEmoji  {
+                            rewardString += "\n"
+                        }
                     }
                 }
             }
-        }
-    
-        let attrString = NSMutableAttributedString(string: rewardString)
-        attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+        
+            let attrString = NSMutableAttributedString(string: rewardString)
+            attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
 
-        trophySummaryLabel.attributedText = attrString
+            trophySummaryLabel.attributedText = attrString
+        } else {
+            trophySummaryLabel.text = ""
+        }
+        
         Profile.profile().updateCurrentRideStreakLength()
         
         let animationDelay: NSTimeInterval = 0.6
