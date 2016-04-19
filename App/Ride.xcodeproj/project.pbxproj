@@ -68,6 +68,9 @@
 		3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */; };
 		3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DA1EFE41C8F94EB002B12DB /* silence.mp3 */; };
+		3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
+		3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
+		3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -270,6 +273,7 @@
 		3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 39.xcdatamodel"; sourceTree = "<group>"; };
 		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
+		3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Float+Meters.swift"; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		4FAC5C188295BB7C11FE9D25 /* Pods_Motion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Motion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -700,6 +704,7 @@
 				844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */,
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
+				3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1204,6 +1209,7 @@
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
+				3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
 				3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */,
 				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* NSDate+HBAdditions.swift in Sources */,
@@ -1238,6 +1244,7 @@
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
 				3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
+				3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
 				849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */,
 				842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */,
 				842FDCAD1BD56F070079AFCC /* RouteManager.swift in Sources */,
@@ -1270,6 +1277,7 @@
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
 				3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
+				3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* DirectionsViewController.swift in Sources */,
 				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,

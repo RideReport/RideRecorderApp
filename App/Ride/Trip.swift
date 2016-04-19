@@ -149,7 +149,7 @@ class Trip : NSManagedObject {
     }
     @NSManaged var uuid : String!
     @NSManaged var creationDate : NSDate!
-    @NSManaged var length : NSNumber?
+    @NSManaged var length : Meters
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
     @NSManaged var sectionIdentifier : String?
@@ -673,36 +673,6 @@ class Trip : NSManagedObject {
         
         return count
     }
- 
-    
-    class var totalCycledMilesThisWeek : Float {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-7))
-        
-        let sumDescription = NSExpressionDescription()
-        sumDescription.name = "sumOfLengths"
-        sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
-        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
-        fetchedRequest.propertiesToFetch = [sumDescription]
-
-        var error : NSError?
-        let results: [AnyObject]?
-        do {
-            results = try context.executeFetchRequest(fetchedRequest)
-        } catch let error1 as NSError {
-            error = error1
-            results = nil
-        }
-        if (results == nil || error != nil) {
-            return 0.0
-        }
-        
-        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
-        return (totalLength.floatValue * 0.000621371)
-    }
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -809,7 +779,7 @@ class Trip : NSManagedObject {
             lastLocation = cllocation
         }
         
-        self.length = NSNumber(double: length)
+        self.length = Float(length)
     }
     
     func calculateAggregatePredictedActivityType() {
@@ -970,27 +940,7 @@ class Trip : NSManagedObject {
                 }
         }
     }
-    
-    var lengthMiles : Float {
-        get {
-            guard let length = self.length else {
-                return 0.0
-            }
-            
-            return (length.floatValue * 0.000621371)
-        }
-    }
-    
-    var lengthFeet : Float {
-        get {
-            guard let length = self.length else {
-                return 0.0
-            }
-            
-            return (length.floatValue * 3.28084)
-        }
-    }
-    
+
     func closestLocationToCoordinate(coordinate: CLLocationCoordinate2D)->Location! {
         let targetLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
     
@@ -1034,18 +984,6 @@ class Trip : NSManagedObject {
         }
     }
     
-    var lengthString: String {
-        get {
-            var lengthString = String(format: "%.1f miles", self.lengthMiles)
-            if (self.lengthMiles < 0.2) {
-                // rounded to nearest 50
-                lengthString = String(format: "%.0f feet", round(Float(self.lengthFeet)/50) * 50.0)
-            }
-            
-            return lengthString
-        }
-    }
-    
     var areaDescriptionString: String {
         get {
             var areaDescriptionString = ""
@@ -1067,7 +1005,7 @@ class Trip : NSManagedObject {
     func notificationString()->String? {
         var message = ""
         
-        message = String(format: "%@ %@ %@ %@.", self.climacon ?? "", self.activityType.emoji, self.lengthString, self.areaDescriptionString)
+        message = String(format: "%@ %@ %@ %@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, self.areaDescriptionString)
         
         if let rewardDescription = self.rewardDescription,
             rewardEmoji = self.rewardEmoji {
@@ -1082,14 +1020,14 @@ class Trip : NSManagedObject {
         
         if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %.1f miles in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %@ in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %.1f miles from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName, endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %@ from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName, endingPlacemarkName)
             }
         } else if let startingPlacemarkName = self.startingPlacemarkName {
-            message = String(format: "%@ %@ Rode %.1f miles from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles, startingPlacemarkName)
+            message = String(format: "%@ %@ Rode %@ from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ Rode %.1f miles with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.lengthMiles)
+            message = String(format: "%@ %@ Rode %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString)
         }
         
         

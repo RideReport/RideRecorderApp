@@ -396,7 +396,7 @@ class APIClient {
                                 activityType = ActivityType(rawValue: activityTypeNumber.shortValue) {
                             trip.activityType = activityType
                             trip.rating = rating
-                            trip.length = length
+                            trip.length = length.floatValue
                         }
                         
                         if let summary = tripJson["summary"].dictionary {

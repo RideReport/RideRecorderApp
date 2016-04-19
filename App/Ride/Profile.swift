@@ -70,7 +70,7 @@ class Profile : NSManagedObject {
         return nil
     }
     
-    var milesBiked : Float {
+    var metersBiked : Meters {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
@@ -95,11 +95,11 @@ class Profile : NSManagedObject {
             return 0.0
         }
         let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
-        return (totalLength.floatValue * 0.000621371)
+        return totalLength.floatValue
     }
     
-    var milesBikedJewel: String {
-        let totalMiles = self.milesBiked
+    var distanceBikedJewel: String {
+        let totalMiles = self.metersBiked.miles
         if totalMiles > 5000 {
             return "🌈  "
         } else if totalMiles > 2000 {

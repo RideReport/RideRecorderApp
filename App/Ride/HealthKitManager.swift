@@ -276,7 +276,7 @@ class HealthKitManager {
                     doubleValue: totalBurnDouble)
             }
             
-            let distance = HKQuantity(unit: HKUnit.mileUnit(), doubleValue: Double(trip.lengthMiles))
+            let distance = HKQuantity(unit: HKUnit.mileUnit(), doubleValue: Double(trip.length.miles))
             let cyclingDistanceSample = HKQuantitySample(type: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, quantity: distance, startDate: trip.startDate, endDate: trip.endDate)
             
             let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])

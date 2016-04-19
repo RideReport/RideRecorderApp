@@ -63,12 +63,8 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         self.updateTripPolylines()
         self.updateRideSummaryView()
         
-        let formatter = NSNumberFormatter()
-        formatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-        formatter.maximumFractionDigits = 0
-
         if let firstTripDate = Profile.profile().firstTripDate {
-            self.statsFirstLineLabel.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, formatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
+            self.statsFirstLineLabel.text = String(format: "%@%@ biked since %@", Profile.profile().distanceBikedJewel, Profile.profile().metersBiked.distanceString, dateFormatter.stringFromDate(firstTripDate))
         } else {
             self.statsFirstLineLabel.text = ""
         }

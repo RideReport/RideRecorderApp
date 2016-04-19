@@ -67,12 +67,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         dateFormatter.locale = NSLocale.currentLocale()
         dateFormatter.dateStyle = .ShortStyle
         
-        let numberFormatter = NSNumberFormatter()
-        numberFormatter.numberStyle = NSNumberFormatterStyle.DecimalStyle
-        numberFormatter.maximumFractionDigits = 0
-        
         if let firstTripDate = Profile.profile().firstTripDate {
-            self.rewardsLabel1.text = String(format: "%@%@ miles biked since %@", Profile.profile().milesBikedJewel, numberFormatter.stringFromNumber(NSNumber(float: Profile.profile().milesBiked))!, dateFormatter.stringFromDate(firstTripDate))
+            self.rewardsLabel1.text = String(format: "%@%@ biked since %@", Profile.profile().distanceBikedJewel, Profile.profile().metersBiked.distanceString, dateFormatter.stringFromDate(firstTripDate))
         } else {
             self.rewardsLabel1.hidden = true
         }

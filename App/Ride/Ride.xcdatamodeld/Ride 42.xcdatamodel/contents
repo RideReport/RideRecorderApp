@@ -88,7 +88,7 @@
         <attribute name="healthKitUuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isClosed" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
         <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" indexed="YES" syncable="YES"/>
-        <attribute name="length" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="length" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="locationsAreSynced" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="locationsNotYetDownloaded" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
