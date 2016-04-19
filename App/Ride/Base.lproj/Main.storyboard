@@ -1681,6 +1681,34 @@
                                             </mask>
                                         </variation>
                                     </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="← slide this notification left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="wbc-qD-8w8" customClass="AnimatedGradientLabel" customModule="Ride_Report" customModuleProvider="target">
+                                        <rect key="frame" x="60" y="127" width="480" height="43"/>
+                                        <color key="backgroundColor" red="0.50196081400000003" green="0.0" blue="0.25098040700000002" alpha="0.0" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="25" id="dle-g4-W27"/>
+                                            <constraint firstAttribute="width" constant="219" id="smC-F2-0YN"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="gradientColor">
+                                                <color key="value" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="dle-g4-W27"/>
+                                                <exclude reference="smC-F2-0YN"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="dle-g4-W27"/>
+                                                <include reference="smC-F2-0YN"/>
+                                            </mask>
+                                        </variation>
+                                    </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="iphonewhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="n3k-ze-oND">
                                         <rect key="frame" x="0.0" y="0.0" width="675" height="1292"/>
                                         <constraints>
@@ -1711,12 +1739,30 @@
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="centerX" secondItem="YsA-fO-x9S" secondAttribute="centerX" id="I7h-UM-1hD"/>
                                     <constraint firstItem="q2F-X1-4cA" firstAttribute="centerX" secondItem="YsA-fO-x9S" secondAttribute="centerX" id="VHk-8J-plX"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="centerY" secondItem="YsA-fO-x9S" secondAttribute="centerY" id="Zim-Ve-m5a"/>
+                                    <constraint firstItem="jcU-RA-OvC" firstAttribute="top" secondItem="wbc-qD-8w8" secondAttribute="bottom" constant="8" id="c7V-Jy-nGg"/>
                                     <constraint firstItem="q2F-X1-4cA" firstAttribute="centerY" secondItem="YsA-fO-x9S" secondAttribute="centerY" id="e7u-cf-uYg"/>
                                     <constraint firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="height" multiplier="338:647" id="mA6-sA-SH0"/>
                                     <constraint firstItem="jcU-RA-OvC" firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="width" multiplier="39:56" id="qJQ-iv-jfa"/>
                                     <constraint firstItem="q2F-X1-4cA" firstAttribute="width" secondItem="YsA-fO-x9S" secondAttribute="width" multiplier="5:7" id="qUd-Uo-te9"/>
+                                    <constraint firstItem="wbc-qD-8w8" firstAttribute="centerX" secondItem="YsA-fO-x9S" secondAttribute="centerX" id="wdd-P5-V85"/>
+                                    <constraint firstItem="wbc-qD-8w8" firstAttribute="top" secondItem="jcU-RA-OvC" secondAttribute="bottom" constant="12" id="xKW-aw-x6Q"/>
                                     <constraint firstItem="n3k-ze-oND" firstAttribute="height" secondItem="YsA-fO-x9S" secondAttribute="height" id="zfy-wH-lDN"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="c7V-Jy-nGg"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="subviews">
+                                        <include reference="wbc-qD-8w8"/>
+                                    </mask>
+                                    <mask key="constraints">
+                                        <include reference="wdd-P5-V85"/>
+                                        <exclude reference="xKW-aw-x6Q"/>
+                                        <include reference="c7V-Jy-nGg"/>
+                                    </mask>
+                                </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="subviews">
                                         <include reference="n3k-ze-oND"/>
@@ -1790,12 +1836,13 @@
                         <outlet property="iPhoneContainerView" destination="YsA-fO-x9S" id="DBu-Qu-JoQ"/>
                         <outlet property="iPhoneContainerViewTopConstraint" destination="ybR-Am-mXM" id="Xh9-Eg-B25"/>
                         <outlet property="nextButton" destination="2tn-qi-wgx" id="UM6-VA-Nb7"/>
+                        <outlet property="notificationHelperTextLabel" destination="wbc-qD-8w8" id="B9x-i5-a8v"/>
                         <outlet property="pushSimulationView" destination="jcU-RA-OvC" id="jaI-MQ-10w"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B5y-yY-RUS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="256" y="2023"/>
+            <point key="canvasLocation" x="255" y="2023"/>
         </scene>
         <!--Setup Finished View Controller-->
         <scene sceneID="VKZ-XD-iWn">
