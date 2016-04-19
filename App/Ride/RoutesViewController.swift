@@ -249,13 +249,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     private func refreshTitle() {
-        let count = Trip.numberOfCycledTrips
-        
-        if (count == 0) {
-            self.title = "Ride Report"
-        } else {
-            self.title = String(format: "%i Rides", Trip.numberOfCycledTrips)
-        }
+        self.title = "Ride Report"
     }
     
     func unloadFetchedResultsController() {
