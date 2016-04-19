@@ -147,8 +147,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 alertController.addAction(UIAlertAction(title: "Nope", style: UIAlertActionStyle.Cancel, handler: nil))
                 self.presentViewController(alertController, animated: true, completion: nil)
-                }
             }
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
