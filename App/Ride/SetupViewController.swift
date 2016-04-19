@@ -49,7 +49,9 @@ class SetupViewController: UINavigationController {
         self.setupVC(setupFinished)
         
         if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupPermissionVC, setupFinished]
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupFinished]
+        } else if (NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
+            self.myViewControllers = [setupTermsVC, setupRatingVC, setupCreateProfile, setupConfirmEmail, setupFinished]
         } else {
             self.myViewControllers = [setupTermsVC, setupRatingVC, setupPermissionVC, setupCreateProfile, setupConfirmEmail, setupFinished]
         }
