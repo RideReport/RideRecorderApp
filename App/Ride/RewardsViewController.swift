@@ -172,9 +172,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 for emoji in emojis.shuffle() {
                     self.scene!.addChild(emoji)
 
-                    let nodePlacementX = (CGFloat(nodeCount) * (emoji.size.width + emojiInitialPadding))
-                    let nodePlacementXModuloWidth = nodePlacementX % self.view.frame.size.width
-                    let targetPoint = CGPointMake(nodePlacementXModuloWidth, (emoji.size.height + emojiInitialPadding) * (nodePlacementX - nodePlacementXModuloWidth) / self.view.frame.size.width)
+                    let nodePlacementX = emoji.size.width + (CGFloat(nodeCount) * (emoji.size.width + emojiInitialPadding))
+                    let nodePlacementXModuloWidth = nodePlacementX % (self.view.frame.size.width - emoji.size.width)
+                    let targetPoint = CGPointMake(nodePlacementXModuloWidth, emoji.size.height + (emoji.size.height + emojiInitialPadding) * (nodePlacementX - nodePlacementXModuloWidth) / self.view.frame.size.width)
                     
                     emoji.runAction(SKAction.sequence([
                         SKAction.rotateByAngle(CGFloat(2 * M_PI * Double(arc4random_uniform(360)) / 360.0), duration: 0.0),
