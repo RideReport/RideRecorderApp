@@ -486,10 +486,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             if currentStreakLength == 1 {
                 if (Trip.bikeTripsToday() == nil) {
                     streakTextLabel.text = "You rode yesterday"
-                    streakJewelLabel.text = "🐣"
+                    streakJewelLabel.text = "💖"
                 } else {
                     streakTextLabel.text = "You rode today"
-                    streakJewelLabel.text = "🐣"
+                    streakJewelLabel.text = "💖"
                 }
                 if (!self.hasShownStreakAnimation) {
                     self.hasShownStreakAnimation = true
