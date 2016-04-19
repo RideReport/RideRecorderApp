@@ -331,7 +331,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return "  " + String(Trip.numberOfRewardedTrips) + " Trophies"
+            return "  Trophies"
         }
         
         let theSection = self.fetchedResultsController.sections![section - 1]
