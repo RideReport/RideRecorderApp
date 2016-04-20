@@ -12,6 +12,7 @@ import CoreMotion
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var startedInBackgroundBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
     
@@ -91,8 +92,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     class func startup(fromBackground: Bool) {
         if (Static.sharedManager == nil) {
             Static.sharedManager = RouteManager()
-            dispatch_async(dispatch_get_main_queue()) {
-                // start async
+            if !fromBackground {
+                dispatch_async(dispatch_get_main_queue()) {
+                    // start async if we start in the foreground (only!)
+                    Static.sharedManager?.startup(fromBackground)
+                }
+            } else {
                 Static.sharedManager?.startup(fromBackground)
             }
         }
@@ -109,11 +114,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startup(fromBackground: Bool) {
-        self.locationManager.delegate = self
-        self.locationManager.requestAlwaysAuthorization()
         if (fromBackground) {
             self.didStartFromBackground = true
+            
+            // launch a background task to be sure we dont get killed until we get our first location update!
+            if (self.startedInBackgroundBackgroundTaskID == UIBackgroundTaskInvalid) {
+                DDLogInfo("Beginning Route Manager Started in background Background task!")
+                self.startedInBackgroundBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                    DDLogInfo("Route Manager Started in background Background task!")
+                })
+            }
         }
+        self.locationManager.delegate = self
+        self.locationManager.requestAlwaysAuthorization()
     }
     
     var location: CLLocation? {
@@ -816,6 +829,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
 #endif
         self.beginDeferringUpdatesIfAppropriate()
+        
+        if (self.startedInBackgroundBackgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending Route Manager Started in background Background task!")
+            
+            UIApplication.sharedApplication().endBackgroundTask(self.startedInBackgroundBackgroundTaskID)
+            self.startedInBackgroundBackgroundTaskID = UIBackgroundTaskInvalid
+        }
         
         if (self.currentTrip != nil) {
             self.processActiveTrackingLocations(locations)
