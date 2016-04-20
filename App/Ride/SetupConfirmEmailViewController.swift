@@ -25,7 +25,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         self.passcodeInputView.keyboardAppearance = UIKeyboardAppearance.Light
         self.passcodeInputView.delegate = self
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupConfirmEmailViewController.back))
     }
     
     func back() {
@@ -67,11 +67,11 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
 
     override func viewWillAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "layoutPasscodeInputViewBottomContraints:", name: UIKeyboardWillHideNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "hidePINUIIfExpired", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SetupConfirmEmailViewController.layoutPasscodeInputViewBottomContraints(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SetupConfirmEmailViewController.layoutPasscodeInputViewBottomContraints(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(SetupConfirmEmailViewController.hidePINUIIfExpired), name: UIApplicationDidBecomeActiveNotification, object: nil)
 
-        self.pollTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: Selector("pollAccountStatus"), userInfo: nil, repeats: true)
+        self.pollTimer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: #selector(SetupConfirmEmailViewController.pollAccountStatus), userInfo: nil, repeats: true)
         
         self.hidePINUIIfExpired()
     

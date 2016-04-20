@@ -121,7 +121,6 @@ class CoreDataManager {
 
     func rollback () {
         if let moc = self.managedObjectContext {
-            var error: NSError? = nil
             if moc.hasChanges {
                 moc.rollback()
             }

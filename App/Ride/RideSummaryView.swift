@@ -186,13 +186,13 @@ import Foundation
         contentView.addSubview(slideLabel)
         
         clearButton = ClearButton(frame: CGRectMake(0, 0, 18, 18))
-        clearButton.addTarget(self, action: "pressedClearButton", forControlEvents: UIControlEvents.TouchUpInside)
+        clearButton.addTarget(self, action: #selector(RideSummaryView.pressedClearButton), forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(clearButton)
         
         let shareImage = UIImage(named: "Action.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         shareButton = UIButton(frame: CGRectMake(0,0,19,27))
         shareButton.setImage(shareImage, forState: UIControlState.Normal)
-        shareButton.addTarget(self, action: "pressedShareButton", forControlEvents: UIControlEvents.TouchUpInside)
+        shareButton.addTarget(self, action: #selector(RideSummaryView.pressedShareButton), forControlEvents: UIControlEvents.TouchUpInside)
         contentView.addSubview(shareButton)
         
         controlsView = UIView()
@@ -205,7 +205,7 @@ import Foundation
         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
         editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        editButton.addTarget(self, action: "pressedEditButton", forControlEvents: UIControlEvents.TouchUpInside)
+        editButton.addTarget(self, action: #selector(RideSummaryView.pressedEditButton), forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(editButton)
         
         destructiveButton = UIButton()
@@ -213,7 +213,7 @@ import Foundation
         destructiveButton.titleLabel?.textAlignment = NSTextAlignment.Center
         destructiveButton.backgroundColor = ColorPallete.sharedPallete.badRed
         destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        destructiveButton.addTarget(self, action: "pressedDestructiveButton", forControlEvents: UIControlEvents.TouchUpInside)
+        destructiveButton.addTarget(self, action: #selector(RideSummaryView.pressedDestructiveButton), forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(destructiveButton)
         
         actionButton = UIButton()
@@ -221,7 +221,7 @@ import Foundation
         actionButton.titleLabel?.textAlignment = NSTextAlignment.Center
         actionButton.backgroundColor = ColorPallete.sharedPallete.transitBlue
         actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        actionButton.addTarget(self, action: "pressedActionButton", forControlEvents: UIControlEvents.TouchUpInside)
+        actionButton.addTarget(self, action: #selector(RideSummaryView.pressedActionButton), forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(actionButton)
         
         reloadUI()

@@ -299,7 +299,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                         completionHandler()
                     })
                 } else if (identifier == "FLAG_IDENTIFIER") {
-                    Incident(location: trip.mostRecentLocation()!, trip: trip)
+                    _ = Incident(location: trip.mostRecentLocation()!, trip: trip)
                     CoreDataManager.sharedManager.saveContext()
                     completionHandler()
                 }

@@ -129,7 +129,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             var emojis : [SKSpriteNode] = []
             var lastEmojiReceived : SKSpriteNode? = nil
             
-            for (j, countData) in bikeTripEmojiCounts.enumerate() {
+            for countData in bikeTripEmojiCounts {
                 if let rewardEmoji = countData["rewardEmoji"] as? String,
                     rewardDescription = countData["rewardDescription"] as? String,
                     count = countData["count"] as? NSNumber {
@@ -140,7 +140,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     let insetEmojiSize = CGSizeMake(emojiSize.width - 8, emojiSize.height - 8)
                     texture.usesMipmaps = true
                     texture.filteringMode = SKTextureFilteringMode.Nearest
-                    for i in 0..<count.integerValue {
+                    for _ in 0..<count.integerValue {
                         let emoji = SKSpriteNode(texture: texture, size: imageSize)
                         emoji.name = rewardDescription
                         emoji.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)

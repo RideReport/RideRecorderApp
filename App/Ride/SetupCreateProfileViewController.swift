@@ -23,7 +23,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "didTap:")
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SetupCreateProfileViewController.didTap(_:)))
         self.view.addGestureRecognizer(tapRecognizer)
         self.facebookButton.readPermissions = ["public_profile", "email"]
         self.facebookButton.delegate = self
@@ -34,15 +34,15 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         
         if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
             self.isCreatingProfileOutsideGettingStarted = true
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
         } else {
             self.isCreatingProfileOutsideGettingStarted = false
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: "skip")
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
         }
     }
     
     func reloadUI() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: "create")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
         
         if (isInAlreadyHaveAccountState) {
             self.navigationItem.rightBarButtonItem?.title = "Log In"
