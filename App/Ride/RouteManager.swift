@@ -620,7 +620,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func beginDeferringUpdatesIfAppropriate() {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
             DDLogVerbose("Re-deferring updates")
-            
             self.isDefferringLocationUpdates = true
             self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
@@ -828,7 +827,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
 #endif
-        self.beginDeferringUpdatesIfAppropriate()
         
         if (self.startedInBackgroundBackgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending Route Manager Started in background Background task!")
@@ -852,5 +850,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Got significant location but already in Motion Monitoring or active tracking state.")
             }
         }
+        
+        self.beginDeferringUpdatesIfAppropriate()
     }
 }
