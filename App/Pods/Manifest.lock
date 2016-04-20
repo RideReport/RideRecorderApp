@@ -55,7 +55,6 @@ PODS:
     - UICountingLabel (~> 1.2.0)
   - SwiftChart (0.2.1)
   - SwiftyJSON (2.3.2)
-  - UIActionSheet+Blocks (0.9)
   - UICountingLabel (1.2.0)
 
 DEPENDENCIES:
@@ -77,7 +76,6 @@ DEPENDENCIES:
   - PNChart (from `../Submodules/PNChart`)
   - SwiftChart
   - SwiftyJSON
-  - UIActionSheet+Blocks
 
 EXTERNAL SOURCES:
   CocoaLumberjack:
@@ -109,7 +107,6 @@ SPEC CHECKSUMS:
   PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
-  UIActionSheet+Blocks: e180b7dad0a721ab7f212ac9742af799008bb358
   UICountingLabel: 1db4e7d023e1762171eb226d6dff47a7a84f27aa
 
 COCOAPODS: 0.39.0

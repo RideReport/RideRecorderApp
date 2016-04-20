@@ -179,40 +179,49 @@ class HamburgerViewController: UITableViewController {
                     routesVC.refreshHelperPopupUI()
                 }
             } else {
-                let actionSheet = UIActionSheet(title: "How Long Would You Like to Pause Ride Report?", delegate: nil, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Pause For an Hour", "Pause Until Tomorrow", "Pause Until Next Week", "Pause For Now")
-                actionSheet.tapBlock = {(actionSheet, buttonIndex) -> Void in
-                    if (buttonIndex == 1) {
-                        Mixpanel.sharedInstance().track(
-                            "pausedTracking",
-                            properties: ["duration": "hour"]
-                        )
-                        RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
-                    } else if (buttonIndex == 2){
-                        Mixpanel.sharedInstance().track(
-                            "pausedTracking",
-                            properties: ["duration": "day"]
-                        )
-                        RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
-                    } else if (buttonIndex == 3) {
-                        Mixpanel.sharedInstance().track(
-                            "pausedTracking",
-                            properties: ["duration": "week"]
-                        )
-                        RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
-                    } else if (buttonIndex == 4) {
-                        Mixpanel.sharedInstance().track(
-                            "pausedTracking",
-                            properties: ["duration": "indefinite"]
-                        )
-                        RouteManager.sharedManager.pauseTracking()
-                    }
-                    
+                let updateUIBlock = {
                     self.updatePauseResumeText()
                     if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
                         mainViewController.refreshHelperPopupUI()
                     }
                 }
-                actionSheet.showFromToolbar((self.navigationController?.toolbar)!)
+                
+                let alertController = UIAlertController(title: "How Long Would You Like to Pause Ride Report?", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+                alertController.addAction(UIAlertAction(title: "Pause For an Hour", style: UIAlertActionStyle.Default, handler: { (_) in
+                    Mixpanel.sharedInstance().track(
+                        "pausedTracking",
+                        properties: ["duration": "hour"]
+                    )
+                    RouteManager.sharedManager.pauseTracking(NSDate().hoursFrom(1))
+                    updateUIBlock()
+                }))
+                alertController.addAction(UIAlertAction(title: "Pause Until Tomorrow", style: UIAlertActionStyle.Default, handler: { (_) in
+                    Mixpanel.sharedInstance().track(
+                        "pausedTracking",
+                        properties: ["duration": "day"]
+                    )
+                    RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
+                    updateUIBlock()
+                }))
+                alertController.addAction(UIAlertAction(title: "Pause Until Next Week", style: UIAlertActionStyle.Default, handler: { (_) in
+                    Mixpanel.sharedInstance().track(
+                        "pausedTracking",
+                        properties: ["duration": "week"]
+                    )
+                    RouteManager.sharedManager.pauseTracking(NSDate.nextWeek())
+                    updateUIBlock()
+                }))
+                alertController.addAction(UIAlertAction(title: "Pause For Now", style: UIAlertActionStyle.Default, handler: { (_) in
+                    Mixpanel.sharedInstance().track(
+                        "pausedTracking",
+                        properties: ["duration": "indefinite"]
+                    )
+                    RouteManager.sharedManager.pauseTracking()
+                    updateUIBlock()
+                }))
+                
+                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
             }
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)

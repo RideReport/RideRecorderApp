@@ -671,35 +671,27 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             self.tableView.setEditing(false, animated: true)
             
-            UIActionSheet.showInView(self.view, withTitle: nil, cancelButtonTitle: "Dismiss", destructiveButtonTitle: nil, otherButtonTitles: ["Simulate Ride End", "Re-Classify", "Upload Sensor Data", "Sync to Health App"], tapBlock: { (actionSheet, tappedIndex) -> Void in
-                self.tappedButtonIndex(tappedIndex, trip: trip)
-            })
+            let alertController = UIAlertController(title: "Don't lose your trips!", message: "Create an account so you can recover your rides if your phone is lost.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+            alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
+                trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
+            }))
+            alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.Default, handler: { (_) in
+                for sensorCollection in trip.sensorDataCollections {
+                    RandomForestManager.sharedForest.classify(sensorCollection as! SensorDataCollection)
+                }
+                trip.calculateAggregatePredictedActivityType()
+            }))
+            alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.Default, handler: { (_) in
+                HealthKitManager.sharedManager.saveTrip(trip)
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Cancel, handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
         return [deleteAction, toolsAction]
     #else
         return [deleteAction]
     #endif
-    }
-    
-    func tappedButtonIndex(buttonIndex: Int, trip: Trip) {
-        if (buttonIndex == 0) {
-            trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
-        } else if (buttonIndex == 1) {
-            for sensorCollection in trip.sensorDataCollections {
-                RandomForestManager.sharedForest.classify(sensorCollection as! SensorDataCollection)
-            }
-            trip.calculateAggregatePredictedActivityType()
-        } else if (buttonIndex == 2) {
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
-            if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
-                reportModeClassificationViewController.trip = trip
-            }
-            self.presentViewController(reportModeClassificationNavigationViewController, animated: true, completion: nil)
-
-        } else if (buttonIndex == 3) {
-            HealthKitManager.sharedManager.saveTrip(trip)
-        }
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
