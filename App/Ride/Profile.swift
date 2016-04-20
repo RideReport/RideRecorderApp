@@ -229,11 +229,6 @@ class Profile : NSManagedObject {
             // if the streak counts up to yesterday, see if we have a ride today
             if (Trip.bikeTripsToday() != nil) {
                 self.currentStreakLength = NSNumber(int: currentStreakLength.integerValue + 1)
-                if (self.longestStreakLength == nil || currentStreakLength.integerValue > self.longestStreakLength!.integerValue) {
-                    // if this is our new longest streak, update it
-                    self.longestStreakLength = self.currentStreakLength
-                    self.longestStreakStartDate = self.currentStreakStartDate
-                }
             }
         } else {
             if (Trip.bikeTripsToday() != nil) {
@@ -244,6 +239,12 @@ class Profile : NSManagedObject {
                 // no streak
                 self.currentStreakLength = NSNumber(int: 0)
             }
+        }
+        
+        if (self.longestStreakLength == nil || currentStreakLength.integerValue > self.longestStreakLength!.integerValue) {
+            // if this is our new longest streak, update it
+            self.longestStreakLength = self.currentStreakLength
+            self.longestStreakStartDate = self.currentStreakStartDate
         }
         
         CoreDataManager.sharedManager.saveContext()
