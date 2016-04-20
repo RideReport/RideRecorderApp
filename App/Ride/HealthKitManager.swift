@@ -101,7 +101,7 @@ class HealthKitManager {
         let predicate = HKQuery.predicateForSamplesWithStartDate(startDate, endDate: endDate, options: HKQueryOptions.None)
         
         let query = HKSampleQuery(sampleType: heartRateType!, predicate: predicate, limit: 0, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate , ascending: false)]) { (query, results, error) -> Void in
-            completionHandler(results as! [HKQuantitySample]?)
+            completionHandler(results as? [HKQuantitySample])
         }
         
         self.healthStore.executeQuery(query)
