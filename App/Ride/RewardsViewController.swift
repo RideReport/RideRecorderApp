@@ -104,9 +104,10 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         self.scene!.physicsWorld.gravity = CGVectorMake(0,-9.8)
         
         let bikeTripEmojiCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji", additionalAttributes: ["rewardDescription"])
-        let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 26)!]
+        let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 48)!]
         
-        let imageSize = CGSizeMake(30.0, 30.0)
+        let imageSize = CGSizeMake(52.0, 52.0) // upscale so we can grow it
+        let emojiSpriteSize = CGSizeMake(30.0, 30.0)
         for countData in bikeTripEmojiCounts {
             if let rewardEmoji = countData["rewardEmoji"] as? String {
                 let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
@@ -136,12 +137,11 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                     let texture = textureAtlas.textureNamed(unicodeString as! String)
                     
-                    let emojiSize = (rewardEmoji as NSString).sizeWithAttributes(fontAttributes)
-                    let insetEmojiSize = CGSizeMake(emojiSize.width - 8, emojiSize.height - 8)
+                    let insetEmojiSize = CGSizeMake(emojiSpriteSize.width - 8, emojiSpriteSize.height - 8)
                     texture.usesMipmaps = true
                     texture.filteringMode = SKTextureFilteringMode.Nearest
                     for _ in 0..<count.integerValue {
-                        let emoji = SKSpriteNode(texture: texture, size: imageSize)
+                        let emoji = SKSpriteNode(texture: texture, size: emojiSpriteSize)
                         emoji.name = rewardDescription
                         emoji.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
                         emoji.physicsBody!.usesPreciseCollisionDetection = false
