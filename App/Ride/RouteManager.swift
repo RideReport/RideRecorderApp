@@ -213,7 +213,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // if we can't defer, try to use a distance filter and lower accuracy instead.
             DDLogInfo("Not deferring updates")
             self.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
     }
     
