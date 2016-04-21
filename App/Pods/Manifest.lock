@@ -36,26 +36,8 @@ PODS:
     - Mixpanel/Mixpanel (= 2.9.1)
   - Mixpanel/Mixpanel (2.9.1)
   - OAuthSwift (0.4.4)
-  - OHHTTPStubs (4.7.0):
-    - OHHTTPStubs/Default (= 4.7.0)
-  - OHHTTPStubs/Core (4.7.0)
-  - OHHTTPStubs/Default (4.7.0):
-    - OHHTTPStubs/Core
-    - OHHTTPStubs/JSON
-    - OHHTTPStubs/NSURLSession
-    - OHHTTPStubs/OHPathHelpers
-  - OHHTTPStubs/JSON (4.7.0):
-    - OHHTTPStubs/Core
-  - OHHTTPStubs/NSURLSession (4.7.0):
-    - OHHTTPStubs/Core
-  - OHHTTPStubs/OHPathHelpers (4.7.0)
-  - OHHTTPStubs/Swift (4.7.0):
-    - OHHTTPStubs/Core
-  - PNChart (0.8.6):
-    - UICountingLabel (~> 1.2.0)
   - SwiftChart (0.2.1)
   - SwiftyJSON (2.3.2)
-  - UICountingLabel (1.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 3.0)
@@ -71,9 +53,6 @@ DEPENDENCIES:
   - Mapbox-iOS-SDK
   - Mixpanel
   - OAuthSwift
-  - OHHTTPStubs
-  - OHHTTPStubs/Swift
-  - PNChart (from `../Submodules/PNChart`)
   - SwiftChart
   - SwiftyJSON
 
@@ -81,8 +60,6 @@ EXTERNAL SOURCES:
   CocoaLumberjack:
     :branch: swift_2.0
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
-  PNChart:
-    :path: ../Submodules/PNChart
 
 CHECKOUT OPTIONS:
   CocoaLumberjack:
@@ -103,10 +80,7 @@ SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 0a910c2cce1aa8cff5b9ec2a990e7a32332a776a
   Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
-  OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0
-  PNChart: c8f7aaa8c28abef26e55d80f473d2a1db77cd972
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
-  UICountingLabel: 1db4e7d023e1762171eb226d6dff47a7a84f27aa
 
 COCOAPODS: 0.39.0
