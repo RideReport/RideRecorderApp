@@ -32,6 +32,7 @@ class HamburgerViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.Tapping, ECSlidingViewControllerAnchoredGesture.Panning]
+        self.tableView.scrollsToTop = false // https://github.com/KnockSoftware/Ride/issues/204
     }
     
     override func viewWillAppear(animated: Bool) {
