@@ -91,8 +91,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     class func startup(fromBackground: Bool) {
         if (Static.sharedManager == nil) {
-            Static.sharedManager = RouteManager()
-            Static.sharedManager?.startup(fromBackground)
+            let startupBlock = {
+                Static.sharedManager = RouteManager()
+                Static.sharedManager?.startup(fromBackground)
+            }
+            
+            if !NSThread.currentThread().isMainThread {
+                dispatch_sync(dispatch_get_main_queue()) {
+                    // it is important to run initialization of CLLocationManager on the main thread
+                    startupBlock()
+                }
+            } else {
+                startupBlock()
+            }
+            
         }
     }
     
@@ -711,6 +723,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startTrackingMachine() {
+        DDLogVerbose("Starting Tracking Machine")
+
         self.locationManager.startMonitoringSignificantLocationChanges()
         
         if (!self.locationManagerIsUpdating) {
