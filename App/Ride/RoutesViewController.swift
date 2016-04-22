@@ -671,7 +671,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let trip : Trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             self.tableView.setEditing(false, animated: true)
             
-            let alertController = UIAlertController(title: "Don't lose your trips!", message: "Create an account so you can recover your rides if your phone is lost.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+            let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
             alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
                 trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
             }))

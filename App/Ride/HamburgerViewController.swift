@@ -170,7 +170,6 @@ class HamburgerViewController: UITableViewController {
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.Destructive, handler: { (_) in
                     RouteManager.sharedManager.abortTrip()
                     CoreDataManager.sharedManager.resetDatabase()
-                    
                     APIClient.sharedClient.logout()
                     AppDelegate.appDelegate().transitionToCreatProfile()
                 }))
