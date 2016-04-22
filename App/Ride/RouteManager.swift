@@ -49,7 +49,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var locationManager : CLLocationManager!
     
     var lastActiveTrackingActivityTypeQueryDate : NSDate?
-    let timeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 120
+    let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 4
+    let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 30
+    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 120
     
     var lastMotionMonitoringActivityTypeQueryDate : NSDate?
     let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
@@ -293,6 +295,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    private func isReadyForActiveTrackingActivityQuery()->Bool {
+        guard let lastQueryDate = self.lastActiveTrackingActivityTypeQueryDate else {
+            // if we've never taken a query for this trip, do it now
+            return true
+        }
+        
+        return (self.currentTrip!.sensorDataCollections.count < self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSinceNow) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
+                abs(lastQueryDate.timeIntervalSinceNow) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
+    }
+    
     private func processActiveTrackingLocations(locations: [CLLocation]) {
         var foundGPSSpeed = false
         
@@ -313,8 +325,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (location.speed >= self.minimumSpeedToContinueMonitoring ||
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
                 // if we are moving sufficiently fast and havent taken a motion sample recently, do so
-                if (self.currentActiveMonitoringSensorDataCollection == nil &&
-                    (self.lastActiveTrackingActivityTypeQueryDate == nil || abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenActiveTrackingActivityTypeQueries)) {
+                if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery()) {
                     self.lastActiveTrackingActivityTypeQueryDate = NSDate()
                     self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
                     
