@@ -489,6 +489,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
             for countData in rewardsTripCounts {
                 if let rewardEmoji = countData["rewardEmoji"] as? String {
+                    if rewardEmoji.containsUnsupportEmoji() {
+                        // support for older versions of iOS without a given emoji
+                        continue
+                    }
                       rewardString += rewardEmoji + "\t"
                     i += 1
                     if i>=columnCount {
@@ -600,7 +604,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         if let rewardDescription = trip.rewardDescription,
-            rewardEmoji = trip.rewardEmoji where rewardDescription.rangeOfString("day ride streak") == nil {
+            rewardEmoji = trip.displaySafeRewardEmoji where rewardDescription.rangeOfString("day ride streak") == nil {
             description += ("\n\n" + rewardEmoji + " " + rewardDescription)
         }
      

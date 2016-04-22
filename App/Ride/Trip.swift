@@ -127,6 +127,15 @@ class Trip : NSManagedObject {
     @NSManaged var rewardEmoji : String?
     @NSManaged var healthKitUuid : String?
     
+    var displaySafeRewardEmoji: String? {
+        if let emoji = self.rewardEmoji where emoji.containsUnsupportEmoji() {
+            // support for older versions of iOS without a given emoji
+            return "🏆"
+        }
+        
+        return self.rewardEmoji
+    }
+    
     var isClosed : Bool {
         get {
             if let num = (self.primitiveValueForKey("isClosed") as! NSNumber?) {
@@ -1008,7 +1017,7 @@ class Trip : NSManagedObject {
         message = String(format: "%@ %@ %@ %@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, self.areaDescriptionString)
         
         if let rewardDescription = self.rewardDescription,
-            rewardEmoji = self.rewardEmoji {
+            rewardEmoji = self.displaySafeRewardEmoji {
                 message += (" " + rewardEmoji + " " + rewardDescription)
         }
         
