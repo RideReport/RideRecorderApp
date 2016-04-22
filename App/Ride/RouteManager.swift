@@ -718,6 +718,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startTrackingMachine() {
+        self.locationManager.startMonitoringSignificantLocationChanges()
+        
         if (!self.locationManagerIsUpdating) {
             // if we are not already getting location updates, get a single update for our geofence.
             self.isGettingInitialLocationForGeofence = true
