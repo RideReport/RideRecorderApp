@@ -363,8 +363,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
             }
         } else {
-            self.currentTrip?.saveAndMarkDirty()
-            NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
+            if !self.isDefferringLocationUpdates {
+                self.currentTrip?.saveAndMarkDirty()
+                NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
+            }
         }
     }
     
@@ -780,6 +782,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (error != nil) {
             DDLogVerbose(String(format: "Error deferring updates: %@", error!))
             return
+        }
+        
+        if let trip = self.currentTrip {
+            trip.saveAndMarkDirty()
+            NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
         }
 
         DDLogVerbose("Finished deferring updates, redeffering.")
