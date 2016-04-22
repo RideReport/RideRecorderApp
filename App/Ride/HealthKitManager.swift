@@ -183,6 +183,11 @@ class HealthKitManager {
             return
         }
         
+        guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
+            // https://github.com/KnockSoftware/Ride/issues/206
+            return
+        }
+        
         // delete any thing trip data that may have already been saved for this trip
         if let uuid = trip.healthKitUuid {
             self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
