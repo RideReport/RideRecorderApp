@@ -49,7 +49,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var locationManager : CLLocationManager!
     
     var lastActiveTrackingActivityTypeQueryDate : NSDate?
-    let timeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 100
+    let timeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 120
     
     var lastMotionMonitoringActivityTypeQueryDate : NSDate?
     let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
@@ -315,6 +315,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     
                     MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
                         self.currentActiveMonitoringSensorDataCollection = nil
+                        
+                        // Schedule deferal right after query returns to avoid the query preventing the app from backgrounding
+                        self.beginDeferringUpdatesIfAppropriate()
                         #if DEBUG
                             if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
                                 let notif = UILocalNotification()
@@ -789,10 +792,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
         }
 
-        DDLogVerbose("Finished deferring updates, redeffering.")
-
-        // start deferring updates again.
-        self.beginDeferringUpdatesIfAppropriate()
+        DDLogVerbose("Finished deferring updates.")
+     
+        if (abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > 5) {
+            // if we've recently finished an activity query, go ahead and redefer as needed
+            self.beginDeferringUpdatesIfAppropriate()
+        }
     }
     
     func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
@@ -857,7 +862,5 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Got significant location but already in Motion Monitoring or active tracking state.")
             }
         }
-        
-        self.beginDeferringUpdatesIfAppropriate()
     }
 }
