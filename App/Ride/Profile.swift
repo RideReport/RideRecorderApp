@@ -24,6 +24,10 @@ class Profile : NSManagedObject {
         static var profile : Profile!
     }
     
+    class func resetProfile() {
+        Static.profile = nil
+    }
+    
     class func profile() -> Profile! {
         if (Static.profile == nil) {
             let context = CoreDataManager.sharedManager.currentManagedObjectContext()

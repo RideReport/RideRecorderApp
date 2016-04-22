@@ -54,6 +54,29 @@ class CoreDataManager {
         NSNotificationCenter.defaultCenter().postNotificationName("CoreDataManagerDidStartup", object: nil)
     }
     
+    func resetDatabase() {
+        guard let coordinator = self.persistentStoreCoordinator else {
+            return
+        }
+        
+        self.managedObjectContext?.reset()
+        for store in coordinator.persistentStores {
+            do {
+                try coordinator.removePersistentStore(store)
+                if let url = store.URL {
+                    try NSFileManager.defaultManager().removeItemAtURL(url)
+                }
+            }
+            catch let error {
+                DDLogError("Unresolved error reseting database! \(error as NSError), \((error as NSError).userInfo)")
+                abort()
+            }
+        }
+        
+        self.persistentStoreCoordinator = self.generatePSC()
+        self.managedObjectContext = self.generateMOC()
+    }
+    
     func currentManagedObjectContext () -> NSManagedObjectContext {
         return self.managedObjectContext!
     }
@@ -69,17 +92,17 @@ class CoreDataManager {
         let modelURL = NSBundle(forClass: self.dynamicType).URLForResource("Ride", withExtension: "momd")
         return NSManagedObjectModel(contentsOfURL: modelURL!)!
     }()
-
-    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
+    
+    private func generatePSC()->NSPersistentStoreCoordinator? {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        var options: [NSObject : AnyObject]?  = [
+        let options: [NSObject : AnyObject]?  = [
             NSMigratePersistentStoresAutomaticallyOption: true,
             NSInferMappingModelAutomaticallyOption: true,
             NSPersistentStoreFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication]
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")
-        var failureReason = "There was an error creating or loading the application's saved data."
+        let failureReason = "There was an error creating or loading the application's saved data."
         do {
             if (self.usesInMemoryStore) {
                 // used for testing Core Data Stack
@@ -98,24 +121,26 @@ class CoreDataManager {
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             DDLogError("Unresolved error \(error as NSError), \((error as NSError).userInfo)")
             abort()
-        } catch {
-            fatalError()
         }
         
         return coordinator
-    }()
+    }
 
-    lazy var managedObjectContext: NSManagedObjectContext? = {
+    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = self.generatePSC()
+
+    private func generateMOC()->NSManagedObjectContext? {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         if coordinator == nil {
             return nil
         }
-        var managedObjectContext = NSManagedObjectContext()
+        let managedObjectContext = NSManagedObjectContext()
         managedObjectContext.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
-    }()
+    }
+    
+    lazy var managedObjectContext: NSManagedObjectContext? = self.generateMOC()
 
     // MARK: - Core Data Saving support
 

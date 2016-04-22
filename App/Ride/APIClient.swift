@@ -714,6 +714,8 @@ class APIClient {
     }
     
     func logout()-> AuthenticatedAPIRequest {
+        Profile.resetProfile()
+        
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response) in
             switch response.result {
             case .Success(_):
