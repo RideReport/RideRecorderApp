@@ -146,6 +146,11 @@ class HamburgerViewController: UITableViewController {
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
             #endif
         } else if (cell == self.healthKitTableViewCell) {
+            guard #available(iOS 9.0, *) else {
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                return
+            }
+            
             let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
             
             if (priorHealthKitState) {
