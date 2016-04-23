@@ -409,6 +409,10 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
             tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
             tableCell.layoutMargins = UIEdgeInsetsZero
+            if #available(iOS 9.0, *) {} else {
+                // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
+                tableCell.accessoryType = .None
+            }
             
             configureRewardsCell(tableCell)
         }  else {
@@ -619,7 +623,13 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if (indexPath.section == 0) {
-            // handled via interface builder
+            if #available(iOS 9.0, *) {
+                // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
+                self.performSegueWithIdentifier("showRewardsView", sender: self)
+            } else {
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
+            
             return
         }
         

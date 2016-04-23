@@ -20,7 +20,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var rewardPopup: PopupView!
     
     private var scene: SKScene?
-    var imageDictionary : [String: UIImage] = [:]
+    private var imageDictionary : [String: UIImage] = [:]
     
     var touchPoint: CGPoint = CGPoint()
     var touchTime: NSTimeInterval = 0
@@ -50,7 +50,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             }
         }
     }
-    
+
     override func viewWillLayoutSubviews()
     {
         super.viewWillLayoutSubviews()
@@ -109,11 +109,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         let imageSize = CGSizeMake(52.0, 52.0) // upscale so we can grow it
         let emojiSpriteSize = CGSizeMake(30.0, 30.0)
         for countData in bikeTripEmojiCounts {
-            if var rewardEmoji = countData["rewardEmoji"] as? String {
-                if rewardEmoji.containsUnsupportEmoji() {
-                    // support for older versions of iOS without a given emoji
-                    rewardEmoji = "🏆"
-                }
+            if let rewardEmoji = countData["rewardEmoji"] as? String {
                 let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                 if (imageDictionary[unicodeString as! String] == nil) {
                     UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
@@ -135,13 +131,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             var lastEmojiReceived : SKSpriteNode? = nil
             
             for countData in bikeTripEmojiCounts {
-                if var rewardEmoji = countData["rewardEmoji"] as? String,
+                if let rewardEmoji = countData["rewardEmoji"] as? String,
                     let rewardDescription = countData["rewardDescription"] as? String,
                     let count = countData["count"] as? NSNumber {
-                    if rewardEmoji.containsUnsupportEmoji() {
-                        // support for older versions of iOS without a given emoji
-                        rewardEmoji = "🏆"
-                    }
                     let unicodeString = NSString(data: rewardEmoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                     let texture = textureAtlas.textureNamed(unicodeString as! String)
                     
