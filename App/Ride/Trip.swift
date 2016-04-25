@@ -1014,7 +1014,7 @@ class Trip : NSManagedObject {
     func notificationString()->String? {
         var message = ""
         
-        message = String(format: "%@ %@ %@ %@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, self.areaDescriptionString)
+        message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         if let rewardDescription = self.rewardDescription,
             rewardEmoji = self.displaySafeRewardEmoji {
