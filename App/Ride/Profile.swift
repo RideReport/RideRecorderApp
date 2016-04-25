@@ -223,6 +223,14 @@ class Profile : NSManagedObject {
                 }
             }
             self.currentStreakLength = NSNumber(integer: count)
+            self.currentStreakStartDate = currentDate
+            
+            if (self.longestStreakLength == nil || count > self.longestStreakLength!.integerValue) {
+                // if this is our new longest streak, update it
+                self.longestStreakLength = self.currentStreakLength
+                self.longestStreakStartDate = self.currentStreakStartDate
+            }
+            
             CoreDataManager.sharedManager.saveContext()
             return
         }
