@@ -365,8 +365,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
-            DDLogVerbose("Moving too slow for too long")
-            self.stopTrip()
+            if self.isDefferringLocationUpdates {
+                // if we are deferring, cancel. this is because we will sometime get
+                // bad locations (ie from startMonitoringSignificantLocationChanges or random locations from other apps) during our deferral period.
+                // we need to have a chance to process any other locations in the deferral period, in case they contain usable speeds
+                DDLogVerbose("Moving too slow for too long but we are defferred, Canceling…")
+                self.locationManager.disallowDeferredLocationUpdates()
+            } else {
+                DDLogVerbose("Moving too slow for too long, stopping.")
+                self.stopTrip()
+            }
         } else if (foundGPSSpeed == false) {
             let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp))
             var maximumTimeIntervalBetweenGPSMovements = self.maximumTimeIntervalBetweenUsuableSpeedReadings
