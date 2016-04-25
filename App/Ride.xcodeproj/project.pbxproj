@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		298BE4AE69FDA0783625F182 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0E122EDDBB5D8C24ABC57A /* Pods_Ride_Report.framework */; };
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
+		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D035CCB1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
+		3D035CCC1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
+		3D035CCD1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
@@ -74,6 +80,10 @@
 		3DB9BD1A1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
+		3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */; };
+		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
+		3DBABFD71CCEDBB500665646 /* ConnectedAppFinishedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD61CCEDBB500665646 /* ConnectedAppFinishedViewController.swift */; };
+		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -244,6 +254,8 @@
 		3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 42.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
+		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; };
+		3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppPINViewController.swift; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,6 +289,10 @@
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
 		3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Float+Meters.swift"; sourceTree = "<group>"; };
 		3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatedGradientLabel.swift; sourceTree = "<group>"; };
+		3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppConfirmViewController.swift; sourceTree = "<group>"; };
+		3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsBrowseViewController.swift; sourceTree = "<group>"; };
+		3DBABFD61CCEDBB500665646 /* ConnectedAppFinishedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppFinishedViewController.swift; sourceTree = "<group>"; };
+		3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppSettingsViewController.swift; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		4FAC5C188295BB7C11FE9D25 /* Pods_Motion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Motion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -574,6 +590,19 @@
 			path = Frameworks/ActivityPredictor;
 			sourceTree = SOURCE_ROOT;
 		};
+		3DBABFD51CCEDB9F00665646 /* Connected Apps */ = {
+			isa = PBXGroup;
+			children = (
+				3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */,
+				3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */,
+				3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */,
+				3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */,
+				3DBABFD61CCEDBB500665646 /* ConnectedAppFinishedViewController.swift */,
+				3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */,
+			);
+			name = "Connected Apps";
+			sourceTree = "<group>";
+		};
 		5A1465564B4DF111CE34A71E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -645,6 +674,7 @@
 			children = (
 				842599D61B90F3540038C3CA /* Setup */,
 				842141A61C407CEE009DA851 /* TripViewController.swift */,
+				3DBABFD51CCEDB9F00665646 /* Connected Apps */,
 				847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */,
 				3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */,
 				840042621C1B774700368A82 /* RideShareViewController.swift */,
@@ -1202,11 +1232,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */,
 				3D2705F81C8785F200A96DE0 /* MotionManager.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
 				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
+				3D035CCD1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1238,11 +1270,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */,
 				84C28E111C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
 				3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 				842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */,
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
+				3D035CCC1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
 				3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1277,6 +1311,7 @@
 				8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */,
 				8429E5D81A5DCBA000EB3E94 /* ActivityTypePrediction.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
+				3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */,
 				3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1301,21 +1336,26 @@
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				3D2AB3891CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
+				3DBABFD71CCEDBB500665646 /* ConnectedAppFinishedViewController.swift in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
 				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
+				3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */,
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
 				3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
+				3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */,
+				3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
 				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
+				3D035CCB1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */,
