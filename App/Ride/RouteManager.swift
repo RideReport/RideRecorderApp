@@ -802,9 +802,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didFinishDeferredUpdatesWithError error: NSError?) {
         self.isDefferringLocationUpdates = false
         
-        if (error != nil) {
-            DDLogVerbose(String(format: "Error deferring updates: %@", error!))
-            return
+        if let err = error {
+            if err.code != CLError.DeferredCanceled.rawValue {
+                DDLogVerbose(String(format: "Error deferring updates: %@", err))
+                return
+            } else {
+                DDLogVerbose("Deferred mode canceled, continuing…")
+            }
         }
         
         if let trip = self.currentTrip {
