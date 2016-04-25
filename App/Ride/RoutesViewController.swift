@@ -530,7 +530,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 }
                 if (!self.hasShownStreakAnimation) {
                     self.hasShownStreakAnimation = true
-                    streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
+                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
                 }
             } else if currentStreakLength == 2 {
                 if (Trip.bikeTripsToday() == nil) {
