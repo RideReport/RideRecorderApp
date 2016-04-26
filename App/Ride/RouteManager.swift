@@ -45,6 +45,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
+    private var numberOfNonMovingContiguousGPSLocations = 0
+    private var minimumNumberOfNonMovingContiguousGPSLocations = 3
     
     private var locationManager : CLLocationManager!
     
@@ -206,6 +208,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
+        self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveMonitoringLocation = fromLocation
         
         self.currentTrip?.saveAndMarkDirty()
@@ -238,6 +241,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
+        self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveTrackingActivityTypeQueryDate = nil
         
         if (abort || stoppedTrip.locations.count <= 6) {
@@ -314,6 +318,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             var manualSpeed : CLLocationSpeed = 0
             if (location.speed >= 0) {
                 foundGPSSpeed = true
+                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
+                    self.numberOfNonMovingContiguousGPSLocations = 0
+                } else {
+                    self.numberOfNonMovingContiguousGPSLocations += 1
+                }
             } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
                 // Some times locations given will not have a speed (a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
@@ -365,8 +374,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
-            DDLogVerbose("Moving too slow for too long")
-            self.stopTrip()
+            if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
+                DDLogVerbose("Moving too slow for too long")
+                self.stopTrip()
+            } else {
+                DDLogVerbose("Not enough slow locations to stop, waiting…")
+            }
         } else if (foundGPSSpeed == false) {
             let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp))
             var maximumTimeIntervalBetweenGPSMovements = self.maximumTimeIntervalBetweenUsuableSpeedReadings
