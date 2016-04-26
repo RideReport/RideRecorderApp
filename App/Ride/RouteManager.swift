@@ -543,6 +543,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
+                case .Automotive where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting automotive trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
                 case .Cycling where confidence > 0.8 && averageSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
@@ -559,8 +563,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
+                case .Bus where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
                 case .Rail where confidence > 0.8 && averageSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
+                case .Rail where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
                 case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
