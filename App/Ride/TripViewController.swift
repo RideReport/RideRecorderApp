@@ -61,7 +61,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
         }
         
         self.editModeView.hidden = true
-
+        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"

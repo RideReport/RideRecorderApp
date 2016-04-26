@@ -256,6 +256,7 @@
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; };
 		3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppPINViewController.swift; sourceTree = "<group>"; };
+		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1722,6 +1723,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */,
 				3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */,
 				3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */,
 				3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */,
@@ -1765,7 +1767,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */;
+			currentVersion = 3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";
