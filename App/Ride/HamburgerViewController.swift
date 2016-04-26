@@ -178,7 +178,7 @@ class HamburgerViewController: UITableViewController {
                     RouteManager.sharedManager.pauseTracking(NSDate.tomorrow())
                     updateUIBlock()
                 }))
-                alertController.addAction(UIAlertAction(title: "Pause Until Next Week", style: UIAlertActionStyle.Default, handler: { (_) in
+                alertController.addAction(UIAlertAction(title: "Pause For a Week", style: UIAlertActionStyle.Default, handler: { (_) in
                     Mixpanel.sharedInstance().track(
                         "pausedTracking",
                         properties: ["duration": "week"]

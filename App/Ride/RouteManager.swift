@@ -45,6 +45,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
     private var lastMovingLocation :  CLLocation?
+    private var numberOfNonMovingContiguousGPSLocations = 0
+    private var minimumNumberOfNonMovingContiguousGPSLocations = 3
     
     private var locationManager : CLLocationManager!
     
@@ -206,6 +208,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
+        self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveMonitoringLocation = fromLocation
         
         self.currentTrip?.saveAndMarkDirty()
@@ -238,6 +241,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
+        self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveTrackingActivityTypeQueryDate = nil
         
         if (abort || stoppedTrip.locations.count <= 6) {
@@ -314,6 +318,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             var manualSpeed : CLLocationSpeed = 0
             if (location.speed >= 0) {
                 foundGPSSpeed = true
+                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
+                    self.numberOfNonMovingContiguousGPSLocations = 0
+                } else {
+                    self.numberOfNonMovingContiguousGPSLocations += 1
+                }
             } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
                 // Some times locations given will not have a speed (a negative speed).
                 // Hence, we also calculate a 'manual' speed from the current location to the last one
@@ -365,15 +374,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
-            if self.isDefferringLocationUpdates {
-                // if we are deferring, cancel. this is because we will sometime get
-                // bad locations (ie from startMonitoringSignificantLocationChanges or random locations from other apps) during our deferral period.
-                // we need to have a chance to process any other locations in the deferral period, in case they contain usable speeds
-                DDLogVerbose("Moving too slow for too long but we are defferred, Canceling…")
-                self.locationManager.disallowDeferredLocationUpdates()
-            } else {
-                DDLogVerbose("Moving too slow for too long, stopping.")
+            if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
+                DDLogVerbose("Moving too slow for too long")
                 self.stopTrip()
+            } else {
+                DDLogVerbose("Not enough slow locations to stop, waiting…")
             }
         } else if (foundGPSSpeed == false) {
             let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp))
@@ -543,6 +548,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
+                case .Automotive where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting automotive trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
                 case .Cycling where confidence > 0.8 && averageSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
@@ -559,8 +568,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
+                case .Bus where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
                 case .Rail where confidence > 0.8 && averageSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
+                    
+                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
+                case .Rail where confidence > 0.6 && averageSpeed >= 6:
+                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
                     strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
                 case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
