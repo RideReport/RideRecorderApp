@@ -72,6 +72,8 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
         
         self.rideSummaryView.delegate = self
         self.rideSummaryView.showsEditButton = true
+        
+        self.rideSummaryView.body = ""
     }
     
     func reloadTripSelectedToolbar(tripChanged: Bool) {
