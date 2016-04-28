@@ -843,7 +843,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
 
         DDLogVerbose("Finished deferring updates.")
      
-        if (abs(self.lastActiveTrackingActivityTypeQueryDate!.timeIntervalSinceNow) > 5) {
+        if let date = self.lastActiveTrackingActivityTypeQueryDate where abs(date.timeIntervalSinceNow) < 5 {
             // if we've recently finished an activity query, go ahead and redefer as needed
             self.beginDeferringUpdatesIfAppropriate()
         }
