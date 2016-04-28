@@ -2982,6 +2982,9 @@
                                 <variation key="heightClass=regular" misplaced="YES">
                                     <rect key="frame" x="135" y="342" width="330" height="29"/>
                                 </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="89" width="360" height="29"/>
+                                </variation>
                                 <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
                                     <rect key="frame" x="60" y="331" width="281" height="29"/>
                                 </variation>
@@ -2994,30 +2997,10 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZSw-Jp-swQ" customClass="BKPasscodeInputView">
-                                <rect key="frame" x="0.0" y="159" width="600" height="189"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="377" id="aUU-Zo-7AN"/>
-                                    <constraint firstAttribute="height" constant="189" id="oMy-ke-IQa"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumLength">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="dotColor">
-                                        <color key="value" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="messageColor">
-                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="aUU-Zo-7AN"/>
-                                    </mask>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="360" width="360" height="63"/>
                                 </variation>
-                            </view>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A91-Qb-O3m">
                                 <rect key="frame" x="211" y="431" width="178" height="30"/>
                                 <constraints>
@@ -3035,10 +3018,40 @@
                                         <exclude reference="rnb-cp-hfH"/>
                                     </mask>
                                 </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="111" y="431" width="178" height="30"/>
+                                </variation>
                                 <connections>
                                     <action selector="tappedHaveAccount:" destination="vbo-yq-yL7" eventType="touchUpInside" id="gJX-Oc-ye5"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZSw-Jp-swQ" customClass="BKPasscodeInputView">
+                                <rect key="frame" x="0.0" y="159" width="600" height="189"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="377" id="aUU-Zo-7AN"/>
+                                    <constraint firstAttribute="height" constant="189" id="oMy-ke-IQa"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumLength">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="dotColor">
+                                        <color key="value" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="messageColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="drawsPasscodeSeparator" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="aUU-Zo-7AN"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="0.0" y="158" width="400" height="189"/>
+                                </variation>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -3530,6 +3543,7 @@
                                                     <rect key="frame" x="503" y="8" width="51" height="31"/>
                                                 </switch>
                                             </subviews>
+                                            <color key="backgroundColor" red="0.96470588239999999" green="1" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                             <constraints>
                                                 <constraint firstItem="afM-ya-35z" firstAttribute="leading" secondItem="FAt-4T-pUL" secondAttribute="leadingMargin" constant="32" id="40X-dH-azp"/>
                                                 <constraint firstItem="ySj-Nl-GGy" firstAttribute="leading" secondItem="afM-ya-35z" secondAttribute="trailing" constant="85" id="Pza-95-ecL"/>
@@ -3557,11 +3571,47 @@
                                     <constraint firstAttribute="width" constant="180" id="KUP-04-Oxz"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lfc-V3-ugu">
+                                <rect key="frame" x="268" y="544" width="64" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="6XM-7d-0gR"/>
+                                    <constraint firstAttribute="height" constant="32" id="LEA-4m-iq6"/>
+                                    <constraint firstAttribute="width" constant="122" id="Tkd-WL-JIq"/>
+                                    <constraint firstAttribute="height" constant="48" id="f0z-FN-47L"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Connect">
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="6XM-7d-0gR"/>
+                                        <exclude reference="Tkd-WL-JIq"/>
+                                        <exclude reference="f0z-FN-47L"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="273" y="689" width="54" height="27"/>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="6XM-7d-0gR"/>
+                                        <exclude reference="LEA-4m-iq6"/>
+                                        <include reference="Tkd-WL-JIq"/>
+                                        <include reference="f0z-FN-47L"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="connect:" destination="DkP-ZE-i1U" eventType="touchUpInside" id="yui-y1-eK9"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="width" secondItem="skW-Oz-QXS" secondAttribute="width" id="2tr-vG-qoD"/>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="top" secondItem="lRe-6R-CEp" secondAttribute="bottom" constant="18" id="FC7-Do-76x"/>
+                            <constraint firstItem="Lfc-V3-ugu" firstAttribute="centerX" secondItem="skW-Oz-QXS" secondAttribute="centerX" id="OU2-5t-TMf"/>
                             <constraint firstItem="lRe-6R-CEp" firstAttribute="centerX" secondItem="skW-Oz-QXS" secondAttribute="centerX" id="TeG-fq-Pe0"/>
                             <constraint firstAttribute="centerY" secondItem="VUK-8H-ODx" secondAttribute="centerY" id="UhL-0m-FfN"/>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="width" secondItem="skW-Oz-QXS" secondAttribute="width" multiplier="4:5" id="V6A-lj-to1"/>
@@ -3572,27 +3622,36 @@
                             <constraint firstAttribute="trailingMargin" secondItem="aKf-Bi-Atn" secondAttribute="trailing" id="fQz-iG-P6f"/>
                             <constraint firstAttribute="trailingMargin" secondItem="aKf-Bi-Atn" secondAttribute="trailing" id="iCY-ra-sQk"/>
                             <constraint firstItem="aKf-Bi-Atn" firstAttribute="top" secondItem="VUK-8H-ODx" secondAttribute="bottom" constant="8" id="mIW-so-kv0"/>
+                            <constraint firstItem="75R-Jm-Mve" firstAttribute="top" secondItem="Lfc-V3-ugu" secondAttribute="bottom" constant="17" id="nak-Mp-vE5"/>
                             <constraint firstAttribute="centerX" secondItem="VUK-8H-ODx" secondAttribute="centerX" id="rUb-UP-Zo7"/>
                             <constraint firstAttribute="leadingMargin" secondItem="aKf-Bi-Atn" secondAttribute="leading" id="xPC-Jz-sPf"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="Lfc-V3-ugu"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="2tr-vG-qoD"/>
                                 <exclude reference="WzC-Yl-5eH"/>
                                 <exclude reference="iCY-ra-sQk"/>
                                 <exclude reference="xPC-Jz-sPf"/>
+                                <exclude reference="nak-Mp-vE5"/>
+                                <exclude reference="OU2-5t-TMf"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="Lfc-V3-ugu"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="nak-Mp-vE5"/>
+                                <include reference="OU2-5t-TMf"/>
                             </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="TrR-Q1-3Ti">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="DbE-ts-k90">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Connect" id="Lsi-HS-psX">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="connect:" destination="DkP-ZE-i1U" id="QUr-9L-1KJ"/>
-                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>

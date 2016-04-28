@@ -26,8 +26,6 @@
         <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="deviceMotionAccelerations" inverseEntity="SensorDataCollection" syncable="YES"/>
     </entity>
     <entity name="DeviceMotionRotationRate" representedClassName=".DeviceMotionRotationRate" parentEntity="SensorData" syncable="YES">
-        <attribute name="attribute" optional="YES" syncable="YES"/>
-        <attribute name="attribute1" optional="YES" syncable="YES"/>
         <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="deviceMotionRotationRates" inverseEntity="SensorDataCollection" syncable="YES"/>
     </entity>
     <entity name="GyroscopeRotationRate" representedClassName=".GyroscopeRotationRate" parentEntity="SensorData" syncable="YES">
@@ -125,8 +123,9 @@
         <element name="AccelerometerAcceleration" positionX="-18" positionY="171" width="128" height="60"/>
         <element name="ActivityTypePrediction" positionX="-36" positionY="144" width="128" height="90"/>
         <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="120"/>
+        <element name="ConnectedAppScopes" positionX="-45" positionY="135" width="128" height="120"/>
         <element name="DeviceMotionAcceleration" positionX="-45" positionY="144" width="128" height="60"/>
-        <element name="DeviceMotionRotationRate" positionX="-36" positionY="153" width="128" height="90"/>
+        <element name="DeviceMotionRotationRate" positionX="-36" positionY="153" width="128" height="60"/>
         <element name="GyroscopeRotationRate" positionX="-27" positionY="162" width="128" height="60"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="135"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="285"/>
@@ -135,6 +134,5 @@
         <element name="SensorData" positionX="-45" positionY="144" width="128" height="105"/>
         <element name="SensorDataCollection" positionX="-54" positionY="135" width="128" height="180"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="420"/>
-        <element name="ConnectedAppScopes" positionX="-45" positionY="135" width="128" height="120"/>
     </elements>
 </model>
