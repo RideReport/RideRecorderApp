@@ -132,7 +132,7 @@ class HamburgerViewController: UITableViewController {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
-                let alertController = UIAlertController(title: "Log out of Ride Report?", message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                let alertController = UIAlertController(title: nil, message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.ActionSheet)
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.Destructive, handler: { (_) in
                     RouteManager.sharedManager.abortTrip()
                     CoreDataManager.sharedManager.resetDatabase()

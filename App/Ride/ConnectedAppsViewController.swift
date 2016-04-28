@@ -33,14 +33,14 @@ class ConnectedAppsViewController: UITableViewController {
             let cell = self.tableView.dequeueReusableCellWithIdentifier("SyncWithHealthAppCell", forIndexPath: indexPath)
             guard #available(iOS 9.0, *) else {
                 cell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
-                cell.accessoryType = UITableViewCellAccessoryType.None
+                cell.textLabel?.text = "Connect Health App"
                 return cell
             }
             
             if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
-                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+                cell.textLabel?.text = "Disconnect Health App"
             } else {
-                cell.accessoryType = UITableViewCellAccessoryType.None
+                cell.textLabel?.text = "Connect Health App"
             }
             return cell
         } else if indexPath.row == 2 {
@@ -72,10 +72,16 @@ class ConnectedAppsViewController: UITableViewController {
             
             if (priorHealthKitState) {
                 // it was enabled
-                HealthKitManager.shutdown()
-                NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
-                NSUserDefaults.standardUserDefaults().synchronize()
-                self.tableView.reloadData()
+                // it was enabled
+                let alertController = UIAlertController(title:nil, message: "Your rides will no longer automatically saved into the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.Destructive, handler: { (_) in
+                    HealthKitManager.shutdown()
+                    NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    self.tableView.reloadData()
+                }))
+                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
             } else {
                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
                 let healthKitNavVC = storyBoard.instantiateViewControllerWithIdentifier("HealthKitSetupNavController") as! UINavigationController
