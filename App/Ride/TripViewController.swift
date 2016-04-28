@@ -23,7 +23,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
-    weak var mapViewController: MapViewController! = nil
+    weak var mapViewController: MapViewController? = nil
     
     var selectedTrip : Trip! {
         didSet {
@@ -38,14 +38,20 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                             guard let reallyStrongSelf = self else {
                                 return
                             }
-                            reallyStrongSelf.mapViewController.setSelectedTrip(reallyStrongSelf.selectedTrip)
+                            if let mapViewController = reallyStrongSelf.mapViewController {
+                                mapViewController.setSelectedTrip(reallyStrongSelf.selectedTrip)
+                            }
                             reallyStrongSelf.reloadTripSelectedToolbar(oldValue != reallyStrongSelf.selectedTrip)
                         })
                     } else {
-                        strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                        if let mapViewController = strongSelf.mapViewController {
+                            mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                        }
                     }
                 }
-                strongSelf.mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                if let mapViewController = strongSelf.mapViewController {
+                    mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                }
                 strongSelf.reloadTripSelectedToolbar(oldValue != strongSelf.selectedTrip)
             })
         }
@@ -56,7 +62,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
         
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
-                self.mapViewController = viewController as! MapViewController
+                self.mapViewController = viewController as? MapViewController
             }
         }
         
@@ -227,7 +233,9 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     }
     
     func refreshSelectrTrip() {
-        self.mapViewController.setSelectedTrip(self.selectedTrip)
+        if let mapViewController = self.mapViewController {
+            mapViewController.setSelectedTrip(self.selectedTrip)
+        }
         self.reloadTripSelectedToolbar(false)
     }
 
