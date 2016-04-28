@@ -68,16 +68,16 @@ class HamburgerViewController: UITableViewController {
     func updateHealthKitText() {
         guard #available(iOS 9.0, *) else {
             self.healthKitTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
-            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.None
+            self.healthKitTableViewCell.textLabel?.text = "Connect Health App"
             return
         }
         
         if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
             self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            self.healthKitTableViewCell.textLabel?.text = "Disconnect Health App"
         } else {
             self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.healthKitTableViewCell.accessoryType = UITableViewCellAccessoryType.None
+            self.healthKitTableViewCell.textLabel?.text = "Connect Health App"
         }
     }
     
@@ -155,10 +155,15 @@ class HamburgerViewController: UITableViewController {
             
             if (priorHealthKitState) {
                 // it was enabled
-                HealthKitManager.shutdown()
-                NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
-                NSUserDefaults.standardUserDefaults().synchronize()
-                self.updateHealthKitText()
+                let alertController = UIAlertController(title:nil, message: "Your rides will no longer automatically saved into the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.Destructive, handler: { (_) in
+                    HealthKitManager.shutdown()
+                    NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    self.updateHealthKitText()
+                }))
+                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+                self.presentViewController(alertController, animated: true, completion: nil)
             } else {
                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
                 let healthKitNavVC = storyBoard.instantiateViewControllerWithIdentifier("HealthKitSetupNavController") as! UINavigationController
@@ -171,7 +176,7 @@ class HamburgerViewController: UITableViewController {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){
-                let alertController = UIAlertController(title: "Log out of Ride Report?", message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                let alertController = UIAlertController(title: nil, message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.ActionSheet)
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.Destructive, handler: { (_) in
                     RouteManager.sharedManager.abortTrip()
                     CoreDataManager.sharedManager.resetDatabase()

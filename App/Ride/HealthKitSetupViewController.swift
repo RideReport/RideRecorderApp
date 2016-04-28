@@ -37,8 +37,8 @@ class HealthKitSetupViewController : UIViewController {
         self.progressView.progress = 0.0
         self.progressView.hidden = false
         self.disclaimerLabel.hidden = true
-        self.titleLabel.text = "Syncing Existing Rides"
-        self.detailLabel.text = "We're syncing all your rides with the Health App. Future rides will be synced automatically."
+        self.titleLabel.text = "Saving Existing Rides"
+        self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
         
         self.startBeatingHeart()
         
@@ -126,7 +126,7 @@ class HealthKitSetupViewController : UIViewController {
             self.navigationItem.leftBarButtonItem = nil
             
             self.titleLabel.text = "You're done!"
-            self.detailLabel.text = "We've synced all your rides with the Health App. Future rides will be synced automatically."
+            self.detailLabel.text = "We've saved all your rides into the Health App. Future rides will be saved automatically."
             
             return
         }
