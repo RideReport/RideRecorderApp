@@ -610,6 +610,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         for location in locations {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
+            if abs(location.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
+                // https://github.com/KnockSoftware/Ride/issues/222
+                DDLogVerbose(String(format: "Got stale location! Date: %@", location.timestamp))
+                continue
+            }
+            
             let loc = Location(location: location, prototrip: self.currentPrototrip!)
             if let collection = self.currentMotionMonitoringSensorDataCollection {
                 loc.sensorDataCollection = collection
