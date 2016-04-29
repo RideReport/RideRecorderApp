@@ -497,7 +497,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        self.lastMotionMonitoringLocation = locations.first
+        var locs = locations
+
+        if let loc = locations.first where abs(loc.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
+            // https://github.com/KnockSoftware/Ride/issues/222
+            DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp))
+            if locations.count > 1 {
+                locs.removeFirst()
+            } else {
+                return
+            }
+        }
+        
+        self.lastMotionMonitoringLocation = locs.first
         
         if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
             self.isGettingInitialLocationForGeofence = false
@@ -547,39 +559,39 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 case .Automotive where confidence > 0.8 && averageSpeed >= 4:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
                 case .Automotive where confidence > 0.6 && averageSpeed >= 6:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Automotive)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
                 case .Cycling where confidence > 0.8 && averageSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
                 case .Cycling where confidence > 0.4 && averageSpeed >= 3 && averageSpeed < 8:
                     DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Cycling)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
                 case .Running where confidence < 0.8 && averageSpeed >= 2 && averageSpeed < 6.5:
                     DDLogVerbose("Starting running trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Running)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Running)
                 case .Bus where confidence > 0.8 && averageSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
                 case .Bus where confidence > 0.6 && averageSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Bus)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
                 case .Rail where confidence > 0.8 && averageSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
                 case .Rail where confidence > 0.6 && averageSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
-                    strongSelf.startTripFromLocation(locations.first!, predictedActivityType: .Rail)
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
                 case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
                     
@@ -607,14 +619,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        for location in locations {
+        for location in locs {
             DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-            
-            if abs(location.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
-                // https://github.com/KnockSoftware/Ride/issues/222
-                DDLogVerbose(String(format: "Got stale location! Date: %@", location.timestamp))
-                continue
-            }
             
             let loc = Location(location: location, prototrip: self.currentPrototrip!)
             if let collection = self.currentMotionMonitoringSensorDataCollection {
