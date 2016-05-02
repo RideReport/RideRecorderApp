@@ -183,6 +183,10 @@ class HealthKitManager {
             return
         }
         
+        guard trip.activityType == .Cycling else {
+            return
+        }
+        
         guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
             // https://github.com/KnockSoftware/Ride/issues/206
             return
