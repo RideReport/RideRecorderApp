@@ -266,15 +266,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 })
             }
             
-            if (!UIDevice.currentDevice().wifiEnabled && !NSUserDefaults.standardUserDefaults().boolForKey("HasWarnedUserAboutWifi")) {
-                let notif = UILocalNotification()
-                notif.alertBody = "Just FYI, Ride Report works best if WiFi is enabled when you hop on your bike."
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
-                
-                NSUserDefaults.standardUserDefaults().setBool(true, forKey: "HasWarnedUserAboutWifi")
-                NSUserDefaults.standardUserDefaults().synchronize()
-            }
-            
             stoppedTrip.close() {
                 stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(10))
                 if (HealthKitManager.authorizationStatus == .Authorized) {
