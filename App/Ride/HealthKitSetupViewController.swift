@@ -16,6 +16,7 @@ class HealthKitSetupViewController : UIViewController {
     @IBOutlet weak var disclaimerLabel: UILabel!
     
     @IBOutlet weak var heartLabel: UILabel!
+    @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
 
     var tripsRemainingToSync: [Trip]?
@@ -42,7 +43,7 @@ class HealthKitSetupViewController : UIViewController {
         
         self.startBeatingHeart()
         
-        self.navigationItem.rightBarButtonItem = nil
+        self.connectButton.hidden = true
         
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthKitIsSetup")
         NSUserDefaults.standardUserDefaults().synchronize()
@@ -124,6 +125,7 @@ class HealthKitSetupViewController : UIViewController {
             
             self.stopBeatingHeart()
             self.navigationItem.leftBarButtonItem = nil
+            self.navigationItem.backBarButtonItem = nil
             
             self.titleLabel.text = "You're done!"
             self.detailLabel.text = "We've saved all your rides into the Health App. Future rides will be saved automatically."

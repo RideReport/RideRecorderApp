@@ -8,19 +8,19 @@
         <attribute name="confidence" optional="YES" attributeType="Float" defaultValueString="0" indexed="YES" syncable="YES"/>
         <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SensorDataCollection" inverseName="activityTypePredictions" inverseEntity="SensorDataCollection" syncable="YES"/>
     </entity>
-    <entity name="ConnectedApp" syncable="YES">
+    <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="base_image_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="connectedApps" inverseEntity="Profile" syncable="YES"/>
         <relationship name="scopes" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ConnectedAppScopes" inverseName="connectedApp" inverseEntity="ConnectedAppScopes" syncable="YES"/>
     </entity>
-    <entity name="ConnectedAppScopes" syncable="YES">
+    <entity name="ConnectedAppScopes" representedClassName=".ConnectedAppScopes" syncable="YES">
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="granted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
-        <attribute name="machineName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="machineName" attributeType="String" syncable="YES"/>
         <attribute name="optional" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
-        <relationship name="connectedApp" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="scopes" inverseEntity="ConnectedApp" syncable="YES"/>
+        <relationship name="connectedApp" maxCount="1" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="scopes" inverseEntity="ConnectedApp" syncable="YES"/>
     </entity>
     <entity name="DeviceMotionAcceleration" representedClassName=".DeviceMotionAcceleration" parentEntity="SensorData" syncable="YES">
         <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="deviceMotionAccelerations" inverseEntity="SensorDataCollection" syncable="YES"/>

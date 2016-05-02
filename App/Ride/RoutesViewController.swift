@@ -90,9 +90,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
-        self.fetchedResultsController!.delegate = self
+        self.fetchedResultsController.delegate = self
         do {
-            try self.fetchedResultsController!.performFetch()
+            try self.fetchedResultsController.performFetch()
         } catch let error {
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
             abort()
@@ -283,7 +283,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func unloadFetchedResultsController() {
-        self.fetchedResultsController?.delegate = nil
+        self.fetchedResultsController.delegate = nil
         self.fetchedResultsController = nil
     }
 

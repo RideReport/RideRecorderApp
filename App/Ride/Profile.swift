@@ -18,6 +18,7 @@ class Profile : NSManagedObject {
     @NSManaged var longestStreakStartDate : NSDate?
     @NSManaged var longestStreakLength : NSNumber?
     @NSManaged private(set) var lastGeofencedLocation : Location?
+    @NSManaged var connectedApps : NSOrderedSet!
 
     struct Static {
         static var onceToken : dispatch_once_t = 0
