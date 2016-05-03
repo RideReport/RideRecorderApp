@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 
 class ConnectedAppPINViewController : UIViewController, BKPasscodeInputViewDelegate {
+    var connectingApp: ConnectedApp!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     
@@ -31,6 +32,11 @@ class ConnectedAppPINViewController : UIViewController, BKPasscodeInputViewDeleg
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if self.connectingApp != nil {
+            self.titleLabel.text = String(format: "Connect %@", self.connectingApp.name ?? "App")
+            self.detailLabel.text = String(format: "Enter your PIN to share your data with %@.", self.connectingApp.name ?? "App")
+        }
         
         self.passcodeInputView.becomeFirstResponder()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConnectedAppPINViewController.layoutPasscodeInputViewBottomContraints(_:)), name: UIKeyboardWillShowNotification, object: nil)
@@ -88,5 +94,11 @@ class ConnectedAppPINViewController : UIViewController, BKPasscodeInputViewDeleg
 //                }
 //            }
 //        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let appVC = segue.destinationViewController as? ConnectedAppConfirmViewController {
+            appVC.connectingApp = self.connectingApp
+        }
     }
 }

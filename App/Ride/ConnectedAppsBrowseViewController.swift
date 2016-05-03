@@ -9,6 +9,7 @@
 
 import Foundation
 import CoreData
+import Kingfisher
 
 class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -40,6 +41,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchedRequest.predicate = NSPredicate(format: "profile == nil")
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -58,6 +60,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     override func viewWillAppear(animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
+        APIClient.sharedClient.getThirdPartyApps()
     }
     
     //
@@ -93,12 +96,16 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects + 1
+        if section == 0 {
+            return NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup") ? 0 : 1
+        }
+        
+        let sectionInfo = self.fetchedResultsController.sections![0]
+        return sectionInfo.numberOfObjects
     }
     
     //
@@ -110,8 +117,11 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             descriptionLabel = tableCell.viewWithTag(2) as? UILabel,
             imageView = tableCell.viewWithTag(3) as? UIImageView {
             nameLabel.text = app.name
-            descriptionLabel.text = app.description
-            imageView.image = UIImage(named: "Icon")
+            descriptionLabel.text = app.descriptionText
+            
+            if let urlString = app.baseImageUrl, url = NSURL(string: urlString) {
+                imageView.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
+            }
         }
     }
     
@@ -121,21 +131,29 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if indexPath.row == 0 {
+        if indexPath.section == 0 {
             let tableCell = self.tableView.dequeueReusableCellWithIdentifier("HealthAppCell", forIndexPath: indexPath)
-            let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
-            tableCell.userInteractionEnabled = !priorHealthKitState
-            for view in tableCell.contentView.subviews {
-                view.alpha = priorHealthKitState ? 0.5 : 1
-            }
             
             return tableCell
         } else {
             let tableCell = self.tableView.dequeueReusableCellWithIdentifier("ConnectedAppCell", forIndexPath: indexPath)
-            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row - 1, inSection: indexPath.section)) as? ConnectedApp {
+            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp {
                 self.configureCell(tableCell, app: app)
             }
             return tableCell
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let indexPath = self.tableView.indexPathForSelectedRow else {
+            return
+        }
+        
+        if (indexPath.section == 1) {
+            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp,
+                let appVC = segue.destinationViewController as? ConnectedAppPINViewController {
+                appVC.connectingApp = app
+            }
         }
     }
     

@@ -18,9 +18,9 @@
 		3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
-		3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScopes.swift */; };
-		3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScopes.swift */; };
-		3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScopes.swift */; };
+		3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
 		3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
 		3D1A15511CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
 		3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
@@ -267,7 +267,7 @@
 		3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppPINViewController.swift; sourceTree = "<group>"; };
 		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
 		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; };
-		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScopes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppScopes.swift; sourceTree = "<group>"; };
+		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppScope.swift; sourceTree = "<group>"; };
 		3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthAppSettingsViewController.swift; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
@@ -706,7 +706,7 @@
 		8445317B19FF031D0096F26E /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScopes.swift */,
+				3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */,
 				3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */,
 				84AEAF091AF2A30D00C04E7D /* Profile.swift */,
 				847A05661A01B2FE008F5371 /* Location.swift */,
@@ -1250,7 +1250,7 @@
 			files = (
 				3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
-				3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */,
+				3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */,
 				3D2705F81C8785F200A96DE0 /* MotionManager.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
@@ -1291,7 +1291,7 @@
 			files = (
 				3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
-				3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */,
+				3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */,
 				84C28E111C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
 				3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
@@ -1371,7 +1371,7 @@
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
-				3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScopes.swift in Sources */,
+				3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
 				3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */,
 				3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,

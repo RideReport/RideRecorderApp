@@ -15,6 +15,7 @@ target 'Ride Report' do
     pod 'Mixpanel'
     pod 'SwiftyJSON'
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'Kingfisher', '~> 2.3'
 end
 
 target 'Motion' do

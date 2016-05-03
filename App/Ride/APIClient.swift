@@ -653,6 +653,25 @@ class APIClient {
         
         return self.tripRequests[trip]!
     }
+    
+    //
+    // MARK: - Third Party App API Methods
+    //
+    
+    
+    func getThirdPartyApps()-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "apps") { (response) -> Void in
+            let json : JSON = ["uuid": "test123", "name": "Love to Ride", "description_text": "Automatically sync your bike rides with Love to Ride", "base_image_url": "https://lovetoride.net/assets/home/welcome-banner-44f0bce80bbe9ac2e47cd0eb929b58f6.png"]
+            ConnectedApp.createOrUpdate(withJson: json)
+            
+            switch response.result {
+            case .Success(let json):
+                DDLogWarn("Do stuff here")
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
 
     
     //

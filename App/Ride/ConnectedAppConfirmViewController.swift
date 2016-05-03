@@ -9,6 +9,7 @@
 import Foundation
 
 class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
+    var connectingApp: ConnectedApp!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var connectingAppLogo: UIImageView!
     @IBOutlet weak var connectingAppDetailText: UILabel!
@@ -18,16 +19,29 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
-        self.connectingAppDetailText.text = String(format: "%@ would access your data from your trips in Ride Report.", "Love to Ride")
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.connectingApp != nil {
+            self.connectingAppDetailText.text = String(format: "%@ would access your data from your trips in Ride Report.", self.connectingApp.name ?? "App")
+            if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
+                self.connectingAppLogo.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
+            }
+        }
+    }
+    
     @IBAction func connect(sender: AnyObject) {
         self.performSegueWithIdentifier("showConnectedAppFinished", sender: self)
+    }
+    
+    @IBAction func cancel(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
