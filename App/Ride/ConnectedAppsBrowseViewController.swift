@@ -13,6 +13,7 @@ import Kingfisher
 
 class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var emptyTableView: UIView!
 
     private var fetchedResultsController : NSFetchedResultsController! = nil
     
@@ -23,16 +24,9 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                strongSelf.coreDataDidLoad()
-            }
-        } else {
-            self.coreDataDidLoad()
-        }
+        self.emptyTableView.hidden = true
+        
+        self.coreDataDidLoad()
     }
     
     func coreDataDidLoad() {
@@ -60,7 +54,9 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     override func viewWillAppear(animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
-        APIClient.sharedClient.getThirdPartyApps()
+        APIClient.sharedClient.getThirdPartyApps().apiResponse { _ in
+            self.refreshEmptyTableView()
+        }
     }
     
     //
@@ -73,6 +69,8 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.tableView.endUpdates()
+        
+        self.refreshEmptyTableView()
     }
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
@@ -111,6 +109,21 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     //
     // MARK: - Table View
     //
+    
+    private func refreshEmptyTableView() {
+        guard let _ = self.fetchedResultsController else {
+            // Core Data hasn't loaded yet
+            self.emptyTableView.hidden = true
+            return
+        }
+        
+        if self.tableView.numberOfRowsInSection(0) + self.tableView.numberOfRowsInSection(1) > 0 {
+            self.emptyTableView.hidden = true
+        } else {
+            self.emptyTableView.hidden = false
+        }
+    }
+    
     
     func configureCell(tableCell: UITableViewCell, app: ConnectedApp) {
         if let nameLabel = tableCell.viewWithTag(1) as? UILabel,
