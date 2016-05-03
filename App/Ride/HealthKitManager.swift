@@ -192,10 +192,18 @@ class HealthKitManager {
             return
         }
         
+        guard !trip.isBeingSavedToHealthKit else {
+            DDLogWarn("Tried to save trip when it is already being saved!")
+            return
+        }
+        
+        trip.isBeingSavedToHealthKit = true
+        
         // delete any thing trip data that may have already been saved for this trip
         if let uuid = trip.healthKitUuid {
             self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
                 dispatch_async(dispatch_get_main_queue()) {
+                    trip.isBeingSavedToHealthKit = false
                     trip.healthKitUuid = nil
                     CoreDataManager.sharedManager.saveContext()
                     self.saveTrip(trip)
@@ -294,6 +302,7 @@ class HealthKitManager {
             self.healthStore.saveObject(ride) { (success, error) -> Void in
                 if !success {
                     // log error
+                    trip.isBeingSavedToHealthKit = false
                     handler(success: false)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
@@ -306,9 +315,11 @@ class HealthKitManager {
                         self.healthStore.addSamples(burnSamples, toWorkout: ride) { (_, _) -> Void in
                             if let heartRateSamples = samples where heartRateSamples.count > 0 {
                                 self.healthStore.addSamples(heartRateSamples, toWorkout: ride) { (_, _) -> Void in
+                                    trip.isBeingSavedToHealthKit = false
                                     handler(success: true)
                                 }
                             } else {
+                                trip.isBeingSavedToHealthKit = false
                                 handler(success: true)
                             }
                         }

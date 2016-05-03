@@ -126,6 +126,7 @@ class Trip : NSManagedObject {
     @NSManaged var rewardDescription : String?
     @NSManaged var rewardEmoji : String?
     @NSManaged var healthKitUuid : String?
+    var isBeingSavedToHealthKit: Bool = false
     
     var displaySafeRewardEmoji: String? {
         if let emoji = self.rewardEmoji where emoji.containsUnsupportEmoji() {
