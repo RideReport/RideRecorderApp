@@ -140,6 +140,22 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
         }
         
     }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let indexPath = self.tableView.indexPathForSelectedRow else {
+            return
+        }
+        
+        if (indexPath.section == 1) {
+            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp,
+                let appNC = segue.destinationViewController as?  UINavigationController,
+                let appVC = appNC.topViewController as? ConnectedAppSettingsViewController {
+                appVC.connectingApp = app
+            }
+        }
+    }
+
 }
 
 

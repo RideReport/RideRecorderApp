@@ -16,7 +16,7 @@ class ConnectedApp: NSManagedObject {
     @NSManaged var name: String?
     @NSManaged var uuid: String
     @NSManaged var profile: Profile?
-    @NSManaged var scopes: NSOrderedSet?
+    @NSManaged var scopes: [ConnectedAppScope]
     
     class func createOrUpdate(withJson json: JSON)->ConnectedApp? {
         guard let uuid = json["uuid"].string else {

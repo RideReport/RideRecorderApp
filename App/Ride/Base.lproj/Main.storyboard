@@ -3766,6 +3766,9 @@
                                                 </label>
                                                 <switch opaque="NO" tag="2" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ySj-Nl-GGy">
                                                     <rect key="frame" x="503" y="8" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="didFlipSwitch:" destination="DkP-ZE-i1U" eventType="valueChanged" id="9PI-gK-LtA"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <color key="backgroundColor" red="0.96470588239999999" green="1" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>

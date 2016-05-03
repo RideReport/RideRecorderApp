@@ -44,7 +44,7 @@ class ConnectedAppScope: NSManagedObject {
             connectedAppScope.connectedApp = connectedApp
         }
         
-        if let optional = json["name"].bool {
+        if let optional = json["optional"].bool {
             connectedAppScope.optional = optional
         }
         if let descriptionText = json["description_text"].string {
