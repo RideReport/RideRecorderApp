@@ -112,7 +112,28 @@ class Trip : NSManagedObject {
         
     @NSManaged var startingPlacemarkName : String?
     @NSManaged var endingPlacemarkName : String?
-    @NSManaged var activityType : ActivityType
+    var activityType : ActivityType {
+        get {
+            if let num = (self.primitiveValueForKey("activityType") as? NSNumber),
+            let activityType = ActivityType(rawValue: num.shortValue) {
+                return activityType
+            }
+            
+            return .Unknown
+        }
+        set {
+            self.willChangeValueForKey("activityType")
+            self.setPrimitiveValue(NSNumber(short: newValue.rawValue), forKey: "activityType")
+            self.didChangeValueForKey("activityType")
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                // newly closed trips should be synced to healthkit
+                if (HealthKitManager.authorizationStatus == .Authorized) {
+                    HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                }
+            }
+        }
+    }
     @NSManaged var batteryAtEnd : NSNumber?
     @NSManaged var batteryAtStart : NSNumber?
     @NSManaged var sensorDataCollections : NSOrderedSet!
@@ -139,7 +160,7 @@ class Trip : NSManagedObject {
     
     var isClosed : Bool {
         get {
-            if let num = (self.primitiveValueForKey("isClosed") as! NSNumber?) {
+            if let num = (self.primitiveValueForKey("isClosed") as? NSNumber) {
                 return num.boolValue
             }
             return false
@@ -151,6 +172,13 @@ class Trip : NSManagedObject {
             self.didChangeValueForKey("isClosed")
             
             if newValue {
+                dispatch_async(dispatch_get_main_queue()) {
+                    // newly closed trips should be synced to healthkit
+                    if (HealthKitManager.authorizationStatus == .Authorized) {
+                        HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                    }
+                }
+                
                 self.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(self.creationDate)
             } else {
                 self.sectionIdentifier = "z" // force it to sort at the top of a reverse-sorted list

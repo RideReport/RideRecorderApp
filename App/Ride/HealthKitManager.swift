@@ -177,23 +177,21 @@ class HealthKitManager {
         })
     }
     
-    func saveTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
+    func saveOrUpdateTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
         guard #available(iOS 9.0, *) else {
             handler(success: false)
             return
         }
         
-        guard trip.activityType == .Cycling else {
-            return
-        }
-        
         guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
             // https://github.com/KnockSoftware/Ride/issues/206
+            handler(success: false)
             return
         }
         
         guard !trip.isBeingSavedToHealthKit else {
             DDLogWarn("Tried to save trip when it is already being saved!")
+            handler(success: false)
             return
         }
         
@@ -206,9 +204,16 @@ class HealthKitManager {
                     trip.isBeingSavedToHealthKit = false
                     trip.healthKitUuid = nil
                     CoreDataManager.sharedManager.saveContext()
-                    self.saveTrip(trip)
+                    self.saveOrUpdateTrip(trip)
                 }
             }
+            handler(success: false)
+            return
+        }
+        
+        // a non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point)
+        guard trip.activityType == .Cycling else {
+            trip.isBeingSavedToHealthKit = false
             handler(success: false)
             return
         }
