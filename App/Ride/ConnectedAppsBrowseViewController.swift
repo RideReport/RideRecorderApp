@@ -57,6 +57,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         APIClient.sharedClient.getThirdPartyApps().apiResponse { _ in
             self.refreshEmptyTableView()
         }
+        
+        if let indexPath = tableView.indexPathForSelectedRow {
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        }
     }
     
     //

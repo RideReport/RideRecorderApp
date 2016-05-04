@@ -41,6 +41,8 @@ class HealthKitSetupViewController : UIViewController {
         self.titleLabel.text = "Saving Existing Rides"
         self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
         
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(HealthKitSetupViewController.cancel))
+        
         self.startBeatingHeart()
         
         self.connectButton.hidden = true
@@ -72,12 +74,17 @@ class HealthKitSetupViewController : UIViewController {
     }
     
     @IBAction func cancel(sender: AnyObject) {
-        self.didCancel = true
-        HealthKitManager.shutdown()
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
-        NSUserDefaults.standardUserDefaults().synchronize()
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
+        let alertController = UIAlertController(title:nil, message: "Your future rides will not be automatically saved to the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (_) in
+            self.didCancel = true
+            HealthKitManager.shutdown()
+            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     @IBAction func done(sender: AnyObject) {
@@ -125,7 +132,7 @@ class HealthKitSetupViewController : UIViewController {
             
             self.stopBeatingHeart()
             self.navigationItem.leftBarButtonItem = nil
-            self.navigationItem.backBarButtonItem = nil
+            self.navigationItem.hidesBackButton = true
             
             self.titleLabel.text = "You're done!"
             self.detailLabel.text = "We've saved all your rides into the Health App. Future rides will be saved automatically."

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTE-dm-KG0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="aTE-dm-KG0">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -2986,14 +2986,7 @@
                         </variation>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="TJR-0C-npn">
-                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="vA6-7O-yIb">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancel:" destination="SXf-PS-yM0" id="e99-VG-hVE"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="TJR-0C-npn"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="connectButton" destination="wcb-pj-ucz" id="6PW-Pi-Bwq"/>
@@ -3145,14 +3138,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" id="rSz-4y-Sw9">
-                        <barButtonItem key="leftBarButtonItem" style="plain" systemItem="cancel" id="Txj-av-26S">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="cancel:" destination="KUZ-bI-q9X" id="j1e-IQ-9UL"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="rSz-4y-Sw9"/>
                     <connections>
                         <outlet property="detailLabel" destination="CJb-91-51k" id="jdQ-KC-zDB"/>
                         <outlet property="passcodeInputView" destination="ZSw-Jp-swQ" id="oGU-0y-CDY"/>
@@ -3508,7 +3494,7 @@
             </objects>
             <point key="canvasLocation" x="2056.5" y="-2919"/>
         </scene>
-        <!--Connect App-->
+        <!--Apps-->
         <scene sceneID="9wk-VO-7vE">
             <objects>
                 <viewController id="3rn-Nd-Z14" customClass="ConnectedAppsBrowseViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
@@ -3555,7 +3541,7 @@
                                                         <constraint firstAttribute="height" constant="64" id="Nya-0R-KR3"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="64"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="default">
                                                         <mask key="constraints">
@@ -3847,14 +3833,14 @@ All the Apps</string>
                                 <exclude reference="p0Z-jS-tJ3"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="1VM-Uc-NaM"/>
-                                <exclude reference="7m2-BT-aPt"/>
-                                <exclude reference="E5c-xU-0Np"/>
-                                <exclude reference="w6x-oL-IiT"/>
                                 <exclude reference="FqX-S1-6Jh"/>
                                 <exclude reference="dZJ-aW-cAl"/>
                                 <exclude reference="don-4v-RYy"/>
                                 <exclude reference="rxd-xB-mgo"/>
+                                <exclude reference="1VM-Uc-NaM"/>
+                                <exclude reference="7m2-BT-aPt"/>
+                                <exclude reference="E5c-xU-0Np"/>
+                                <exclude reference="w6x-oL-IiT"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -3863,18 +3849,18 @@ All the Apps</string>
                                 <include reference="p0Z-jS-tJ3"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="1VM-Uc-NaM"/>
-                                <include reference="7m2-BT-aPt"/>
-                                <include reference="E5c-xU-0Np"/>
-                                <include reference="w6x-oL-IiT"/>
                                 <include reference="FqX-S1-6Jh"/>
                                 <include reference="dZJ-aW-cAl"/>
                                 <include reference="don-4v-RYy"/>
                                 <include reference="rxd-xB-mgo"/>
+                                <include reference="1VM-Uc-NaM"/>
+                                <include reference="7m2-BT-aPt"/>
+                                <include reference="E5c-xU-0Np"/>
+                                <include reference="w6x-oL-IiT"/>
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="Connect App" id="xNQ-D0-fIa">
+                    <navigationItem key="navigationItem" title="Apps" id="xNQ-D0-fIa">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="pg0-NX-kRV">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -4139,7 +4125,7 @@ All the Apps</string>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="OaG-YB-2K0">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="kds-yx-QDZ">
+                        <barButtonItem key="leftBarButtonItem" title="Dismiss" id="kds-yx-QDZ">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancel:" destination="hhs-Za-tpd" id="qGn-fU-TkE"/>
@@ -4316,7 +4302,7 @@ All the Apps</string>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" id="0Ji-xJ-ZfG">
-                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="sGM-g0-vAM">
+                        <barButtonItem key="leftBarButtonItem" title="Dismiss" id="sGM-g0-vAM">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="cancel:" destination="4VH-xS-e9i" id="DrK-S6-WnY"/>
