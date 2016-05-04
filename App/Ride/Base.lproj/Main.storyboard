@@ -4071,6 +4071,9 @@ All the Apps</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="40" y="279" width="320" height="42"/>
+                                </variation>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AppIcon40x40.png" translatesAutoresizingMaskIntoConstraints="NO" id="K6g-wP-E6m">
                                 <rect key="frame" x="210" y="81" width="180" height="180"/>
@@ -4078,6 +4081,9 @@ All the Apps</string>
                                     <constraint firstAttribute="height" constant="180" id="0yI-o4-ljZ"/>
                                     <constraint firstAttribute="width" constant="180" id="oGG-DP-03X"/>
                                 </constraints>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="110" y="81" width="180" height="180"/>
+                                </variation>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cUD-Rz-l9F">
                                 <rect key="frame" x="214" y="516" width="171" height="48"/>
@@ -4121,6 +4127,11 @@ All the Apps</string>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="wcX-pI-k3b"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="constraints">
+                                <exclude reference="NY7-Eh-kTT"/>
                             </mask>
                         </variation>
                     </view>
@@ -4177,7 +4188,7 @@ All the Apps</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fC1-1h-Vad" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="miM-Fr-gmr">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="miM-Fr-gmr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

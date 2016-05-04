@@ -52,7 +52,7 @@
 {
     _maximumLength = 4;
     _dotSize = CGSizeMake(18.0f, 19.0f);
-    _separatorSize = CGSizeMake(18.0f, 2.0f);
+    _separatorSize = CGSizeMake(25.0f, 2.0f);
     _dotSpacing = 25.0f;
     _lineHeight = 3.0f;
     _dotColor = [UIColor blackColor];
@@ -189,7 +189,7 @@
 {
     CGFloat width = self.maximumLength * _dotSize.width + (self.maximumLength - 1) * _dotSpacing;
     if (self.drawsPasscodeSeparator) {
-        width += (_dotSpacing + _separatorSize.width);
+        width += _separatorSize.width;
     }
     
     return CGSizeMake(width ,
@@ -219,10 +219,7 @@
             UIImage *image = nil;
             
             if (self.drawsPasscodeSeparator && i > 1 && (floor(self.maximumLength/2) - i) == 0) {
-                CGRect lineFrame = CGRectMake(origin.x, origin.y,
-                                              self.separatorSize.width, self.separatorSize.height);
-                CGContextFillRect(context, lineFrame);
-                origin.x += (self.separatorSize.width + self.dotSpacing);
+                origin.x += self.separatorSize.width;
             }
             
             if (i < self.mutablePasscode.length) {
@@ -248,10 +245,7 @@
         
         for (NSUInteger i = 0; i < self.maximumLength; i++) {
             if (self.drawsPasscodeSeparator && i > 1 && (floor(self.maximumLength/2) - i) == 0) {
-                CGRect lineFrame = CGRectMake(origin.x, origin.y,
-                                              self.separatorSize.width, self.separatorSize.height);
-                CGContextFillRect(context, lineFrame);
-                origin.x += (self.separatorSize.width + self.dotSpacing);
+                origin.x += self.separatorSize.width;
             }
             
             if (i < self.mutablePasscode.length) {
