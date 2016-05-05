@@ -20,14 +20,9 @@ class BrowserViewController: UIViewController
         
         if let url = NSURL(string: self.urlString!)
         {
-            
-//            if let safariViewController : SFSafariViewController = NSClassFromString("SFSafariViewController") {
-//                let instance = safariViewController(URL: loadUrl)
-//            } else {
-                self.webView = UIWebView(frame: self.view.frame)
-                webView.loadRequest(NSURLRequest(URL: url))
-                self.view.addSubview(webView)
-//            }
+            self.webView = UIWebView(frame: self.view.frame)
+            webView.loadRequest(NSURLRequest(URL: url))
+            self.view.addSubview(webView)
         }
     }
 }
