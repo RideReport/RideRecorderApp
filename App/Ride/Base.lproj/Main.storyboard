@@ -925,6 +925,11 @@
                                 <variation key="heightClass=regular" misplaced="YES">
                                     <rect key="frame" x="598" y="64" width="0.0" height="45"/>
                                 </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="94Y-bV-ClB"/>
+                                    </mask>
+                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -1136,7 +1141,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="ZP0-k8-iEQ"/>
-                                            <constraint firstAttribute="height" constant="45" id="kvk-uL-dhB"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="kvk-uL-dhB"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
@@ -1161,6 +1166,9 @@
                                                 <real key="value" value="0.0"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="string" keyPath="text" value="Sweet ass trip!"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="fontSize">
+                                                <real key="value" value="32"/>
+                                            </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -1169,6 +1177,11 @@
                                         </variation>
                                         <variation key="heightClass=regular" misplaced="YES">
                                             <rect key="frame" x="598" y="64" width="0.0" height="45"/>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="constraints">
+                                                <exclude reference="kvk-uL-dhB"/>
+                                            </mask>
                                         </variation>
                                     </view>
                                 </subviews>
@@ -1187,7 +1200,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JpX-cP-1N2">
+                            <view hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JpX-cP-1N2">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🐣" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="0dk-gX-rzL">
@@ -1289,7 +1302,7 @@
                             <constraint firstItem="t9b-xK-6VG" firstAttribute="top" secondItem="Vyp-aA-a6p" secondAttribute="bottom" id="g4V-jM-hUA"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="height" secondItem="hJl-Yr-562" secondAttribute="height" constant="-87" id="l9Y-6u-jfE"/>
                             <constraint firstItem="OXK-3C-Lwj" firstAttribute="centerY" secondItem="hJl-Yr-562" secondAttribute="centerY" id="r15-Es-Jsf"/>
-                            <constraint firstItem="DQX-lR-nka" firstAttribute="centerY" secondItem="hJl-Yr-562" secondAttribute="centerY" multiplier="1:3" id="upK-dt-UyT"/>
+                            <constraint firstItem="DQX-lR-nka" firstAttribute="centerY" secondItem="hJl-Yr-562" secondAttribute="centerY" multiplier="2:3" id="upK-dt-UyT"/>
                             <constraint firstItem="Vyp-aA-a6p" firstAttribute="width" secondItem="hJl-Yr-562" secondAttribute="width" id="xid-zW-eVw"/>
                             <constraint firstItem="t9b-xK-6VG" firstAttribute="top" secondItem="JpX-cP-1N2" secondAttribute="bottom" id="yTz-Ae-wPo"/>
                         </constraints>

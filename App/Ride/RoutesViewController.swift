@@ -696,7 +696,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 trip.calculateAggregatePredictedActivityType()
             }))
             alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.Default, handler: { (_) in
-                HealthKitManager.sharedManager.saveTrip(trip)
+                HealthKitManager.sharedManager.saveOrUpdateTrip(trip)
             }))
             
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Cancel, handler: nil))

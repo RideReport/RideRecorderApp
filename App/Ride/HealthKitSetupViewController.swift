@@ -139,7 +139,7 @@ class HealthKitSetupViewController : UIViewController {
             
             return
         }
-        HealthKitManager.sharedManager.saveTrip(nextTrip) { _ in
+        HealthKitManager.sharedManager.saveOrUpdateTrip(nextTrip) { _ in
             dispatch_async(dispatch_get_main_queue()) {
                 self.tripsRemainingToSync!.removeFirst()
                 let progress = Float(self.totalTripsToSync - self.tripsRemainingToSync!.count) / Float(self.totalTripsToSync)

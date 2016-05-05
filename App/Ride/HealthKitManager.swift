@@ -152,6 +152,7 @@ class HealthKitManager {
         let workoutPredicate = HKQuery.predicateForObjectWithUUID(uuid)
         self.healthStore.executeQuery(HKSampleQuery(sampleType: HKQuantityType.workoutType(), predicate: workoutPredicate, limit: 1, sortDescriptors: nil) { (query, results, error) in
             guard let workout = results?.first as? HKWorkout else {
+                DDLogWarn("Error deleting workout!")
                 handler()
                 return
             }
@@ -177,30 +178,44 @@ class HealthKitManager {
         })
     }
     
-    func saveTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
+    func saveOrUpdateTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
         guard #available(iOS 9.0, *) else {
             handler(success: false)
             return
         }
         
-        guard trip.activityType == .Cycling else {
+        guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
+            // https://github.com/KnockSoftware/Ride/issues/206
+            handler(success: false)
             return
         }
         
-        guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
-            // https://github.com/KnockSoftware/Ride/issues/206
+        guard !trip.isBeingSavedToHealthKit else {
+            DDLogWarn("Tried to save trip when it is already being saved!")
+            handler(success: false)
             return
         }
+        
+        trip.isBeingSavedToHealthKit = true
         
         // delete any thing trip data that may have already been saved for this trip
         if let uuid = trip.healthKitUuid {
+            DDLogWarn("Deleting existing workout with matching UUID.")
             self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
                 dispatch_async(dispatch_get_main_queue()) {
+                    trip.isBeingSavedToHealthKit = false
                     trip.healthKitUuid = nil
                     CoreDataManager.sharedManager.saveContext()
-                    self.saveTrip(trip)
+                    self.saveOrUpdateTrip(trip)
                 }
             }
+            handler(success: false)
+            return
+        }
+        
+        // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
+        guard trip.activityType == .Cycling && trip.isClosed else {
+            trip.isBeingSavedToHealthKit = false
             handler(success: false)
             return
         }
@@ -294,6 +309,7 @@ class HealthKitManager {
             self.healthStore.saveObject(ride) { (success, error) -> Void in
                 if !success {
                     // log error
+                    trip.isBeingSavedToHealthKit = false
                     handler(success: false)
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
@@ -306,9 +322,11 @@ class HealthKitManager {
                         self.healthStore.addSamples(burnSamples, toWorkout: ride) { (_, _) -> Void in
                             if let heartRateSamples = samples where heartRateSamples.count > 0 {
                                 self.healthStore.addSamples(heartRateSamples, toWorkout: ride) { (_, _) -> Void in
+                                    trip.isBeingSavedToHealthKit = false
                                     handler(success: true)
                                 }
                             } else {
+                                trip.isBeingSavedToHealthKit = false
                                 handler(success: true)
                             }
                         }

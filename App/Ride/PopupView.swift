@@ -15,6 +15,7 @@ import Foundation
     @IBInspectable var arrowBaseWidth: CGFloat = 10
     @IBInspectable var cornerRadius: CGFloat = 10
     @IBInspectable var arrowInset: CGFloat = 10
+    @IBInspectable var fontSize: CGFloat = 14
     @IBInspectable var strokeColor: UIColor = UIColor.darkGrayColor()
     @IBInspectable var fillColor: UIColor = UIColor.whiteColor()
     @IBInspectable var text: String = "Popupview Text" {
@@ -25,6 +26,7 @@ import Foundation
     
     private var textLabel : UILabel! = nil
     private var widthConstraint : NSLayoutConstraint! = nil
+    private var heightConstraint : NSLayoutConstraint! = nil
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -39,7 +41,6 @@ import Foundation
     
     func commonInit() {
         self.textLabel = UILabel(frame: CGRectMake(7, 20, self.frame.size.width, self.frame.size.height - 20))
-        self.textLabel.font = UIFont.systemFontOfSize(14)
         self.textLabel.textColor = UIColor.whiteColor()
         self.textLabel.numberOfLines = 1
         self.textLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
@@ -52,18 +53,26 @@ import Foundation
     private func reloadView() {
         let rightHandBefore = self.frame.origin.x + self.frame.width
         self.textLabel.text = self.text
+        self.textLabel.font = UIFont.systemFontOfSize(self.fontSize)
         self.textLabel.sizeToFit()
         if (self.superview != nil && self.textLabel.frame.width > (self.superview!.frame.width - 30)) {
             self.textLabel.frame.size.width = self.textLabel.frame.width - 30
         }
         let newWidth = self.textLabel.frame.width + 20
-        self.frame = CGRectMake(rightHandBefore - newWidth, self.frame.origin.y, newWidth, self.frame.height)
+        let newHeight = self.textLabel.frame.height + 28
+        self.frame = CGRectMake(rightHandBefore - newWidth, self.frame.origin.y, newWidth, newHeight)
         
         if (self.widthConstraint != nil) {
             self.removeConstraint(self.widthConstraint)
         }
         self.widthConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: newWidth)
         self.addConstraint(self.widthConstraint)
+        
+        if (self.heightConstraint != nil) {
+            self.removeConstraint(self.heightConstraint)
+        }
+        self.heightConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: newHeight)
+        self.addConstraint(self.heightConstraint)
         self.setNeedsDisplay()
     }
     

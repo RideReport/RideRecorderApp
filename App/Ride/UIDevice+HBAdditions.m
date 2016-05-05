@@ -12,6 +12,7 @@
 #import <ifaddrs.h>
 #import <net/if.h>
 #import <SystemConfiguration/CaptiveNetwork.h>
+#import <sys/utsname.h>
 
 @implementation UIDevice (UIDevice)
 
@@ -50,6 +51,15 @@
     }
     
     return output;
+}
+
+- (NSString*)deviceModel;
+{
+    struct utsname systemInfo;
+    uname(&systemInfo);
+    
+    return [NSString stringWithCString:systemInfo.machine
+                              encoding:NSUTF8StringEncoding];
 }
 
 - (NSDictionary *)dailyUsageStasticsForBundleIdentifier:(NSString *)bundleID;

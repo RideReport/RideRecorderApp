@@ -53,7 +53,11 @@ class HelpViewController: UITableViewController, MFMailComposeViewControllerDele
             return
         }
         
-        let body = "What happened?\n"
+        let versionNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? "Unknown Version"
+        let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as? String ?? ""
+        let osNumber = UIDevice.currentDevice().systemVersion
+        let phoneModel = UIDevice.currentDevice().deviceModel()
+        let body = String(format: "Tell us briefly what happened.\n\n\n\n\n=====================\n Version:%@ (%@)\niOS Version: %@\niPhone Model: %@", versionNumber, buildNumber, osNumber, phoneModel)
         
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Report Bug Report")

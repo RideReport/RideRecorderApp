@@ -12,7 +12,7 @@
 
 @property (nonatomic, readonly, getter=isWiFiEnabled) BOOL wifiEnabled;
 
-- (NSDictionary *)usageStastics;
+- (NSString*)deviceModel;
 - (NSDictionary *)dailyUsageStasticsForBundleIdentifier:(NSString *)bundleID;
 - (NSDictionary *)weeklyUsageStasticsForBundleIdentifier:(NSString *)bundleID;
 
