@@ -152,6 +152,7 @@ class HealthKitManager {
         let workoutPredicate = HKQuery.predicateForObjectWithUUID(uuid)
         self.healthStore.executeQuery(HKSampleQuery(sampleType: HKQuantityType.workoutType(), predicate: workoutPredicate, limit: 1, sortDescriptors: nil) { (query, results, error) in
             guard let workout = results?.first as? HKWorkout else {
+                DDLogWarn("Error deleting workout!")
                 handler()
                 return
             }
@@ -199,6 +200,7 @@ class HealthKitManager {
         
         // delete any thing trip data that may have already been saved for this trip
         if let uuid = trip.healthKitUuid {
+            DDLogWarn("Deleting existing workout with matching UUID.")
             self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
                 dispatch_async(dispatch_get_main_queue()) {
                     trip.isBeingSavedToHealthKit = false
@@ -211,8 +213,8 @@ class HealthKitManager {
             return
         }
         
-        // a non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point)
-        guard trip.activityType == .Cycling else {
+        // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
+        guard trip.activityType == .Cycling && trip.isClosed else {
             trip.isBeingSavedToHealthKit = false
             handler(success: false)
             return
