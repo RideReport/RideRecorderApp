@@ -13,6 +13,7 @@ import SwiftyJSON
 class ConnectedApp: NSManagedObject {
     @NSManaged var baseImageUrl: String?
     @NSManaged var descriptionText: String?
+    @NSManaged var webAuthorizeUrl: String?
     @NSManaged var name: String?
     @NSManaged var uuid: String
     @NSManaged var profile: Profile?
@@ -52,6 +53,10 @@ class ConnectedApp: NSManagedObject {
         }
         if let descriptionText = json["description_text"].string {
             connectedApp.descriptionText = descriptionText
+        }
+        
+        if let authURL = json["web_authorize_url"].string {
+            connectedApp.webAuthorizeUrl = authURL
         }
 
         if let scopes = json["scopes"].array {

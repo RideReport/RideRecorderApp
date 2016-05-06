@@ -157,13 +157,14 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         if indexPath.section == 0 {
             // handled by storyboard
         } else {
-            guard let url = NSURL(string: "https://www.lovetoride.net/global/user_sessions/new?locale=en-GB") else {
-                return
-            }
-            
             guard let indexPath = self.tableView.indexPathForSelectedRow, let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp else {
                 return
             }
+
+            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) else {
+                return
+            }
+            
             
             self.selectedConnectedApp = app
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: "RideReportAuthCodeCallBackNotification", object: nil)
