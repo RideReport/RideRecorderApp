@@ -14,11 +14,12 @@ class ConnectedAppScope: NSManagedObject {
     @NSManaged var descriptionText: String?
     @NSManaged var granted: Bool
     @NSManaged var machineName: String
+    @NSManaged var type: String
     @NSManaged var required: Bool
     @NSManaged var connectedApp: ConnectedApp
     
     class func createOrUpdate(withJson json: JSON, connectedApp: ConnectedApp)->ConnectedAppScope? {
-        guard let machineName = json["machine_name"].string else {
+        guard let machineName = json["machine_name"].string, type = json["type"].string else {
             return nil
         }
         
@@ -43,6 +44,8 @@ class ConnectedAppScope: NSManagedObject {
             connectedAppScope.machineName = machineName
             connectedAppScope.connectedApp = connectedApp
         }
+        
+        connectedAppScope.type = type
         
         if let required = json["required"].bool {
             connectedAppScope.required = required

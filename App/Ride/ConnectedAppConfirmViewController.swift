@@ -70,6 +70,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableCell = self.tableView.dequeueReusableCellWithIdentifier("AppConfirmPermisionTableCell", forIndexPath: indexPath)
         if let permissionText = tableCell.viewWithTag(1) as? UILabel, permissionSwitch = tableCell.viewWithTag(2) as? UISwitch {
+            // For now we assume that all scopes are of type Bool
             if  indexPath.row < connectingApp.scopes.count {
                 let scope = connectingApp.scopes[indexPath.row]
                 permissionText.text = scope.descriptionText

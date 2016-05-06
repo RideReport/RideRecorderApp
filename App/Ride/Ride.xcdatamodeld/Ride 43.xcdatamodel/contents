@@ -22,6 +22,7 @@
         <attribute name="granted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="machineName" attributeType="String" syncable="YES"/>
         <attribute name="required" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="type" attributeType="String" syncable="YES"/>
         <relationship name="connectedApp" maxCount="1" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="scopes" inverseEntity="ConnectedApp" syncable="YES"/>
     </entity>
     <entity name="DeviceMotionAcceleration" representedClassName=".DeviceMotionAcceleration" parentEntity="SensorData" syncable="YES">
@@ -125,7 +126,7 @@
         <element name="AccelerometerAcceleration" positionX="-18" positionY="171" width="128" height="60"/>
         <element name="ActivityTypePrediction" positionX="-36" positionY="144" width="128" height="90"/>
         <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="150"/>
-        <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="120"/>
+        <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="135"/>
         <element name="DeviceMotionAcceleration" positionX="-45" positionY="144" width="128" height="60"/>
         <element name="DeviceMotionRotationRate" positionX="-36" positionY="153" width="128" height="60"/>
         <element name="GyroscopeRotationRate" positionX="-27" positionY="162" width="128" height="60"/>
