@@ -366,7 +366,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                     }
                 }
             } else if (url.host == "authcode-callback") {
-                NSNotificationCenter.defaultCenter().postNotificationName("RideReportAuthCodeCallBackNotification", object: url.lastPathComponent)
+                NSNotificationCenter.defaultCenter().postNotificationName("RideReportAuthCodeCallBackNotification", object: url)
             }
         } else if (url.host == "oauth-callback") {
             if ( url.path!.hasPrefix("/facebook" )){

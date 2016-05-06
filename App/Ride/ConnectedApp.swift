@@ -19,6 +19,8 @@ class ConnectedApp: NSManagedObject {
     @NSManaged var profile: Profile?
     @NSManaged var scopes: [ConnectedAppScope]
     
+    var authorizationCode: String?
+    
     class func createOrUpdate(withJson json: JSON)->ConnectedApp? {
         guard let uuid = json["uuid"].string else {
             return nil
