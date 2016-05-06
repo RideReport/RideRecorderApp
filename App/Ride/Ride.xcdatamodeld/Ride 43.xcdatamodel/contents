@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="AccelerometerAcceleration" representedClassName=".AccelerometerAcceleration" parentEntity="SensorData" syncable="YES">
         <relationship name="sensorDataCollection" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="SensorDataCollection" inverseName="accelerometerAccelerations" inverseEntity="SensorDataCollection" syncable="YES"/>
     </entity>
@@ -20,7 +20,7 @@
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="granted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="machineName" attributeType="String" syncable="YES"/>
-        <attribute name="optional" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
+        <attribute name="required" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <relationship name="connectedApp" maxCount="1" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="scopes" inverseEntity="ConnectedApp" syncable="YES"/>
     </entity>
     <entity name="DeviceMotionAcceleration" representedClassName=".DeviceMotionAcceleration" parentEntity="SensorData" syncable="YES">

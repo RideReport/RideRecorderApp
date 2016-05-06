@@ -10,11 +10,14 @@
 import Foundation
 import CoreData
 import Kingfisher
+import SafariServices
 
 class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
-
+    
+    private var selectedConnectedApp: ConnectedApp? = nil
+    private var safariViewController: UIViewController? = nil
     private var fetchedResultsController : NSFetchedResultsController! = nil
     
     @IBAction func cancel(sender: AnyObject) {
@@ -27,6 +30,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         self.emptyTableView.hidden = true
         
         self.coreDataDidLoad()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func coreDataDidLoad() {
@@ -61,6 +68,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         if let indexPath = tableView.indexPathForSelectedRow {
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
     }
     
     //
@@ -142,6 +153,30 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.section == 0 {
+            // handled by storyboard
+        } else {
+            guard let url = NSURL(string: "https://www.lovetoride.net/global/user_sessions/new?locale=en-GB") else {
+                return
+            }
+            
+            guard let indexPath = self.tableView.indexPathForSelectedRow, let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp else {
+                return
+            }
+            
+            self.selectedConnectedApp = app
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: "RideReportAuthCodeCallBackNotification", object: nil)
+            
+            if #available(iOS 9.0, *) {
+                self.safariViewController = SFSafariViewController(URL: url)
+                self.navigationController?.pushViewController(self.safariViewController!, animated: true)
+            } else {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
+    }
+    
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
         return CGFloat.min
@@ -162,15 +197,21 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let indexPath = self.tableView.indexPathForSelectedRow else {
-            return
-        }
-        
-        if (indexPath.section == 1) {
-            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp,
-                let appVC = segue.destinationViewController as? ConnectedAppPINViewController {
+        if (segue.identifier == "showConnectAppConfirmViewController") {
+            if let app = self.selectedConnectedApp,
+                appVC = segue.destinationViewController as? ConnectedAppConfirmViewController {
                 appVC.connectingApp = app
+                
+                self.selectedConnectedApp = nil
             }
+        }
+    }
+    
+    func authCodeCallbackNotificationReceived(notification: NSNotification) {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+        
+        if let _ = self.safariViewController {
+            self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
         }
     }
     

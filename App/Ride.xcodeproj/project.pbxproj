@@ -12,9 +12,7 @@
 		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
-		3D035CCB1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
-		3D035CCC1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
-		3D035CCD1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */; };
+		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
 		3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
@@ -264,7 +262,7 @@
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; };
-		3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppPINViewController.swift; sourceTree = "<group>"; };
+		3D0FD6041CDC019300632BFB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
 		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; };
 		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppScope.swift; sourceTree = "<group>"; };
@@ -513,6 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */,
 				3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */,
 				3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */,
 				3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */,
@@ -543,6 +542,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D0FD6041CDC019300632BFB /* SafariServices.framework */,
 				3D2AB38F1CA4A76400582A5D /* opencv2.framework */,
 				3D818A151C938C0B00B64403 /* CoreMedia.framework */,
 				3D818A131C938BED00B64403 /* AssetsLibrary.framework */,
@@ -610,7 +610,6 @@
 				3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */,
 				3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */,
 				3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */,
-				3D035CCA1CCEC27B00444DCF /* ConnectedAppPINViewController.swift */,
 				3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */,
 				3DBABFD61CCEDBB500665646 /* ConnectedAppFinishedViewController.swift */,
 				3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */,
@@ -688,8 +687,8 @@
 			isa = PBXGroup;
 			children = (
 				842599D61B90F3540038C3CA /* Setup */,
-				842141A61C407CEE009DA851 /* TripViewController.swift */,
 				3DBABFD51CCEDB9F00665646 /* Connected Apps */,
+				842141A61C407CEE009DA851 /* TripViewController.swift */,
 				847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */,
 				3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */,
 				840042621C1B774700368A82 /* RideShareViewController.swift */,
@@ -1256,7 +1255,6 @@
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
 				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
-				3D035CCD1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1297,7 +1295,6 @@
 				3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
 				842FDCC71BD580040079AFCC /* CLLocation+HBAdditions.swift in Sources */,
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
-				3D035CCC1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
 				3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1379,7 +1376,6 @@
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
 				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
-				3D035CCB1CCEC27B00444DCF /* ConnectedAppPINViewController.swift in Sources */,
 				8452AC181B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift in Sources */,
 				84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */,
 				84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */,

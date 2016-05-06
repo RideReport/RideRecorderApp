@@ -3015,155 +3015,6 @@
             </objects>
             <point key="canvasLocation" x="3484.5" y="-3593"/>
         </scene>
-        <!--Connected AppPIN View Controller-->
-        <scene sceneID="qQW-uW-21b">
-            <objects>
-                <viewController id="KUZ-bI-q9X" customClass="ConnectedAppPINViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9Ao-Wn-qfc"/>
-                        <viewControllerLayoutGuide type="bottom" id="8tZ-vl-1ey"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="9gn-OL-16n">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect Love to Ride" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="jDG-4m-cXb">
-                                <rect key="frame" x="20" y="89.5" width="560" height="29"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="29" id="62J-7Y-8WU"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="135" y="342" width="330" height="29"/>
-                                </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="89" width="360" height="29"/>
-                                </variation>
-                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="60" y="331" width="281" height="29"/>
-                                </variation>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your PIN to share your data with Love to Ride." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="CJb-91-51k">
-                                <rect key="frame" x="20" y="360.5" width="560" height="63"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="63" id="ZyJ-YX-mYG"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="360" width="360" height="63"/>
-                                </variation>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A91-Qb-O3m">
-                                <rect key="frame" x="211" y="431" width="178" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="AKe-s0-nfJ"/>
-                                    <constraint firstAttribute="width" constant="178" id="ZOM-lq-b01"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="178" id="rnb-cp-hfH"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <state key="normal" title="How do I get a PIN?">
-                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="rnb-cp-hfH"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="111" y="431" width="178" height="30"/>
-                                </variation>
-                                <connections>
-                                    <action selector="tappedHaveAccount:" destination="vbo-yq-yL7" eventType="touchUpInside" id="gJX-Oc-ye5"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZSw-Jp-swQ" customClass="BKPasscodeInputView">
-                                <rect key="frame" x="0.0" y="159" width="600" height="189"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="377" id="aUU-Zo-7AN"/>
-                                    <constraint firstAttribute="height" constant="189" id="oMy-ke-IQa"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="maximumLength">
-                                        <integer key="value" value="8"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="dotColor">
-                                        <color key="value" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="messageColor">
-                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="drawsPasscodeSeparator" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="aUU-Zo-7AN"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="158" width="400" height="189"/>
-                                </variation>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="ZSw-Jp-swQ" firstAttribute="centerX" secondItem="9gn-OL-16n" secondAttribute="centerX" id="1LR-Y6-Awm"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="CJb-91-51k" secondAttribute="trailing" id="6eb-dK-05n"/>
-                            <constraint firstItem="A91-Qb-O3m" firstAttribute="centerX" secondItem="9gn-OL-16n" secondAttribute="centerX" id="6gz-pG-p4H"/>
-                            <constraint firstItem="jDG-4m-cXb" firstAttribute="centerY" secondItem="9gn-OL-16n" secondAttribute="centerY" multiplier="2:3" id="9jg-gy-uvW"/>
-                            <constraint firstItem="jDG-4m-cXb" firstAttribute="centerX" secondItem="9gn-OL-16n" secondAttribute="centerX" id="FRg-xl-yag"/>
-                            <constraint firstItem="CJb-91-51k" firstAttribute="top" secondItem="ZSw-Jp-swQ" secondAttribute="bottom" constant="12.5" id="JJc-DD-Tya"/>
-                            <constraint firstItem="A91-Qb-O3m" firstAttribute="top" secondItem="CJb-91-51k" secondAttribute="bottom" constant="7.5" id="XJG-zT-uCB"/>
-                            <constraint firstItem="ZSw-Jp-swQ" firstAttribute="width" secondItem="9gn-OL-16n" secondAttribute="width" id="a7c-4b-IaG"/>
-                            <constraint firstItem="jDG-4m-cXb" firstAttribute="top" secondItem="9Ao-Wn-qfc" secondAttribute="bottom" constant="25.5" id="af9-QF-3fX"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="jDG-4m-cXb" secondAttribute="trailing" id="csm-mt-aMB"/>
-                            <constraint firstItem="ZSw-Jp-swQ" firstAttribute="top" secondItem="jDG-4m-cXb" secondAttribute="bottom" constant="40.5" id="dg1-Qn-oeI"/>
-                            <constraint firstItem="CJb-91-51k" firstAttribute="top" secondItem="jDG-4m-cXb" secondAttribute="bottom" constant="13" id="kjb-rR-8mj"/>
-                            <constraint firstItem="8tZ-vl-1ey" firstAttribute="top" secondItem="ZSw-Jp-swQ" secondAttribute="bottom" constant="252" id="wfq-TJ-AiH"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="jDG-4m-cXb" secondAttribute="leading" id="yVP-tb-wsz"/>
-                            <constraint firstAttribute="leadingMargin" secondItem="CJb-91-51k" secondAttribute="leading" id="zSl-39-ahP"/>
-                        </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="9jg-gy-uvW"/>
-                                <exclude reference="af9-QF-3fX"/>
-                                <exclude reference="kjb-rR-8mj"/>
-                            </mask>
-                        </variation>
-                        <variation key="widthClass=compact">
-                            <mask key="subviews">
-                                <include reference="jDG-4m-cXb"/>
-                                <include reference="CJb-91-51k"/>
-                            </mask>
-                            <mask key="constraints">
-                                <exclude reference="9jg-gy-uvW"/>
-                                <include reference="FRg-xl-yag"/>
-                                <include reference="csm-mt-aMB"/>
-                                <include reference="yVP-tb-wsz"/>
-                                <include reference="6eb-dK-05n"/>
-                                <exclude reference="kjb-rR-8mj"/>
-                                <include reference="zSl-39-ahP"/>
-                            </mask>
-                        </variation>
-                    </view>
-                    <navigationItem key="navigationItem" id="rSz-4y-Sw9"/>
-                    <connections>
-                        <outlet property="detailLabel" destination="CJb-91-51k" id="jdQ-KC-zDB"/>
-                        <outlet property="passcodeInputView" destination="ZSw-Jp-swQ" id="oGU-0y-CDY"/>
-                        <outlet property="passcodeInputViewBottomLayoutConstraint" destination="wfq-TJ-AiH" id="2UB-Kh-qvE"/>
-                        <outlet property="titleLabel" destination="jDG-4m-cXb" id="7sJ-ql-dNT"/>
-                        <segue destination="DkP-ZE-i1U" kind="show" identifier="showConnectedAppConfirm" id="7sI-nf-1lm"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1GE-xf-TUs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3484.5" y="-2919"/>
-        </scene>
         <!--Help View Controller-->
         <scene sceneID="PZ8-47-zrp">
             <objects>
@@ -3665,9 +3516,6 @@
                                             <constraint firstAttribute="trailing" secondItem="QiD-gN-A8Z" secondAttribute="trailing" constant="41" id="9gX-mD-q5q"/>
                                             <constraint firstAttribute="trailing" secondItem="eCp-zZ-8BL" secondAttribute="trailing" constant="41" id="UAB-on-SPV"/>
                                         </constraints>
-                                        <connections>
-                                            <segue destination="KUZ-bI-q9X" kind="show" id="Vqt-r1-XkK"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
@@ -3885,11 +3733,12 @@ All the Apps</string>
                         <outlet property="emptyTableView" destination="p0Z-jS-tJ3" id="egm-sc-ATn"/>
                         <outlet property="tableView" destination="0d0-Jf-oXW" id="xq1-fs-ZCY"/>
                         <outlet property="view" destination="nFz-ik-M8z" id="elH-BL-F9l"/>
+                        <segue destination="DkP-ZE-i1U" kind="show" identifier="showConnectAppConfirmViewController" id="9NQ-yp-dE0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DjJ-91-3tY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2788.5" y="-2919"/>
+            <point key="canvasLocation" x="2728.5" y="-2919"/>
         </scene>
         <!--Connected App Confirm View Controller-->
         <scene sceneID="Irk-ah-jXf">
@@ -4065,7 +3914,7 @@ All the Apps</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IeN-xk-ZER" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4143" y="-2919"/>
+            <point key="canvasLocation" x="3739.5" y="-2919"/>
         </scene>
         <!--Connected App Settings View Controller-->
         <scene sceneID="EVi-mT-zYH">
@@ -4194,7 +4043,7 @@ All the Apps</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tWe-uv-tsO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4792.5" y="-2912"/>
+            <point key="canvasLocation" x="4423.5" y="-2919"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="v90-QX-I7k">

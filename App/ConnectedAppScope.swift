@@ -14,7 +14,7 @@ class ConnectedAppScope: NSManagedObject {
     @NSManaged var descriptionText: String?
     @NSManaged var granted: Bool
     @NSManaged var machineName: String
-    @NSManaged var optional: Bool
+    @NSManaged var required: Bool
     @NSManaged var connectedApp: ConnectedApp
     
     class func createOrUpdate(withJson json: JSON, connectedApp: ConnectedApp)->ConnectedAppScope? {
@@ -44,8 +44,8 @@ class ConnectedAppScope: NSManagedObject {
             connectedAppScope.connectedApp = connectedApp
         }
         
-        if let optional = json["optional"].bool {
-            connectedAppScope.optional = optional
+        if let required = json["required"].bool {
+            connectedAppScope.required = required
         }
         if let descriptionText = json["description_text"].string {
             connectedAppScope.descriptionText = descriptionText

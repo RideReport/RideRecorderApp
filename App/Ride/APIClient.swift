@@ -661,7 +661,7 @@ class APIClient {
     
     func getThirdPartyApps()-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "apps") { (response) -> Void in
-            let scopes = [["machine_name": "share_metadarta", "description_text": "Share my trip times and lengths", "optional" : false], ["machine_name": "share_routes", "description_text": "Share my trip routes!", "optional" : true]]
+            let scopes = [["machine_name": "share_metadarta", "description_text": "Share my trip times and lengths", "required" : false], ["machine_name": "share_routes", "description_text": "Share my trip routes!", "required" : true]]
             let json : JSON = ["uuid": "test123", "name": "Love to Ride", "description_text": "Automatically sync your bike rides with Love to Ride", "base_image_url": "https://lovetoride.net/assets/home/welcome-banner-44f0bce80bbe9ac2e47cd0eb929b58f6.png", "scopes": scopes]
             ConnectedApp.createOrUpdate(withJson: json)
             
