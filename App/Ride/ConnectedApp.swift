@@ -69,4 +69,15 @@ class ConnectedApp: NSManagedObject {
         
         return connectedApp
     }
+    
+    func json()->JSON {
+        var dict: JSON = ["uuid": self.uuid]
+        if let code = self.authorizationCode {
+            dict["code"].string = code
+        }
+        
+        dict["scopes"].arrayObject = self.scopes.map {return $0.json().object}
+        
+        return dict
+    }
 }

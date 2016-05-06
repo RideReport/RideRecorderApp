@@ -13,12 +13,17 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var connectingAppLogo: UIImageView!
     @IBOutlet weak var connectingAppDetailText: UILabel!
+    @IBOutlet weak var connectButton: UIButton!
+    @IBOutlet weak var connectionActivityIndicatorView: UIActivityIndicatorView!
+    
+    private var hasCanceled = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.connectionActivityIndicatorView.hidden = true
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -54,12 +59,45 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     }
     
     @IBAction func connect(sender: AnyObject) {
-        self.connectingApp.profile = Profile.profile()
-        CoreDataManager.sharedManager.saveContext()
-        self.performSegueWithIdentifier("showConnectedAppFinished", sender: self)
+        self.connectButton.hidden = true
+        self.connectionActivityIndicatorView.hidden = false
+        
+        self.postConnectApplication()
+    }
+    
+    func postConnectApplication() {
+        guard !self.hasCanceled else {
+            return
+        }
+        
+        APIClient.sharedClient.connectApplication(self.connectingApp).apiResponse {[weak self] (response) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            switch response.result {
+            case .Success(let json):
+                if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
+                    strongSelf.performSegueWithIdentifier("showConnectedAppFinished", sender: self)
+                } else {
+                    // otherwise, keep polling
+                    strongSelf.performSelector(#selector(ConnectedAppConfirmViewController.postConnectApplication), withObject: nil, afterDelay: 2.0)
+                }
+            case .Failure(_):
+                let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be connected to %@. Please Try Again Later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+                alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
+                    strongSelf.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                strongSelf.presentViewController(alertController, animated: true, completion: nil)
+                
+                strongSelf.connectionActivityIndicatorView.hidden = true
+            }
+        }
     }
     
     @IBAction func cancel(sender: AnyObject) {
+        self.hasCanceled = true
+        APIClient.sharedClient.disconnectApplication(self.connectingApp)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

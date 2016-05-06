@@ -3853,12 +3853,34 @@ All the Apps</string>
                                     <action selector="connect:" destination="DkP-ZE-i1U" eventType="touchUpInside" id="yui-y1-eK9"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="cKH-Fb-sSq">
+                                <rect key="frame" x="-10" y="-10" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="37" id="iPd-Mv-jVt"/>
+                                    <constraint firstAttribute="height" constant="37" id="qBa-fJ-AH5"/>
+                                </constraints>
+                                <color key="color" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="iPd-Mv-jVt"/>
+                                        <exclude reference="qBa-fJ-AH5"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="iPd-Mv-jVt"/>
+                                        <include reference="qBa-fJ-AH5"/>
+                                    </mask>
+                                </variation>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="width" secondItem="skW-Oz-QXS" secondAttribute="width" id="2tr-vG-qoD"/>
+                            <constraint firstItem="75R-Jm-Mve" firstAttribute="top" secondItem="cKH-Fb-sSq" secondAttribute="bottom" constant="23" id="Bvs-x7-9UA"/>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="top" secondItem="lRe-6R-CEp" secondAttribute="bottom" constant="18" id="FC7-Do-76x"/>
                             <constraint firstItem="Lfc-V3-ugu" firstAttribute="centerX" secondItem="skW-Oz-QXS" secondAttribute="centerX" id="OU2-5t-TMf"/>
+                            <constraint firstItem="cKH-Fb-sSq" firstAttribute="centerX" secondItem="skW-Oz-QXS" secondAttribute="centerX" id="SlJ-rz-LkA"/>
                             <constraint firstItem="lRe-6R-CEp" firstAttribute="centerX" secondItem="skW-Oz-QXS" secondAttribute="centerX" id="TeG-fq-Pe0"/>
                             <constraint firstAttribute="centerY" secondItem="VUK-8H-ODx" secondAttribute="centerY" id="UhL-0m-FfN"/>
                             <constraint firstItem="VUK-8H-ODx" firstAttribute="width" secondItem="skW-Oz-QXS" secondAttribute="width" multiplier="4:5" id="V6A-lj-to1"/>
@@ -3876,23 +3898,29 @@ All the Apps</string>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="Lfc-V3-ugu"/>
+                                <exclude reference="cKH-Fb-sSq"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="2tr-vG-qoD"/>
                                 <exclude reference="WzC-Yl-5eH"/>
                                 <exclude reference="iCY-ra-sQk"/>
                                 <exclude reference="xPC-Jz-sPf"/>
-                                <exclude reference="nak-Mp-vE5"/>
                                 <exclude reference="OU2-5t-TMf"/>
+                                <exclude reference="SlJ-rz-LkA"/>
+                                <exclude reference="Bvs-x7-9UA"/>
+                                <exclude reference="nak-Mp-vE5"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="Lfc-V3-ugu"/>
+                                <include reference="cKH-Fb-sSq"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="nak-Mp-vE5"/>
                                 <include reference="OU2-5t-TMf"/>
+                                <include reference="SlJ-rz-LkA"/>
+                                <include reference="Bvs-x7-9UA"/>
+                                <include reference="nak-Mp-vE5"/>
                             </mask>
                         </variation>
                     </view>
@@ -3906,8 +3934,10 @@ All the Apps</string>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" barStyle="black" prompted="NO"/>
                     <connections>
+                        <outlet property="connectButton" destination="Lfc-V3-ugu" id="wd9-Mh-NHw"/>
                         <outlet property="connectingAppDetailText" destination="VUK-8H-ODx" id="xrg-og-T3G"/>
                         <outlet property="connectingAppLogo" destination="lRe-6R-CEp" id="E2X-Tt-NIC"/>
+                        <outlet property="connectionActivityIndicatorView" destination="cKH-Fb-sSq" id="JUY-NL-4gK"/>
                         <outlet property="tableView" destination="aKf-Bi-Atn" id="l7q-06-7Jq"/>
                         <segue destination="Z0h-P6-EGY" kind="show" identifier="showConnectedAppFinished" id="Iqn-e1-VkI"/>
                     </connections>

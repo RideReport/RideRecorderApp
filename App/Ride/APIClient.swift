@@ -655,19 +655,58 @@ class APIClient {
     }
     
     //
-    // MARK: - Third Party App API Methods
+    // MARK: - Application API Methods
     //
     
     
-    func getThirdPartyApps()-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "apps") { (response) -> Void in
-            let scopes = [["machine_name": "share_metadarta", "type": "bool", "description_text": "Share my trip times and lengths", "required" : false], ["machine_name": "share_routes", "type": "bool", "description_text": "Share my trip routes!", "required" : true]]
-            let json : JSON = ["uuid": "test123", "name": "Love to Ride", "description_text": "Automatically sync your bike rides with Love to Ride", "base_image_url": "https://lovetoride.net/assets/home/welcome-banner-44f0bce80bbe9ac2e47cd0eb929b58f6.png", "web_authorize_url": "https://www.lovetoride.net/global/user_sessions/new?locale=en-GB", "scopes": scopes]
-            ConnectedApp.createOrUpdate(withJson: json)
-            
+    func getAllApplications()-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications") { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                DDLogWarn("Do stuff here")
+                if let apps = json.array {
+                    for appDict in apps {
+                        ConnectedApp.createOrUpdate(withJson: appDict)
+                    }
+                    CoreDataManager.sharedManager.saveContext()
+                }
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
+    
+    func getApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications/" + app.uuid) { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                ConnectedApp.createOrUpdate(withJson: json)
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party app: %@", error))
+            }
+        }
+    }
+    
+    func connectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/connect", parameters: app.json().dictionaryObject) { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
+                    ConnectedApp.createOrUpdate(withJson: json)
+                    app.profile = Profile.profile()
+                    CoreDataManager.sharedManager.saveContext()
+                }
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
+    
+    func disconnectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                app.profile = nil
+                CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):
                 DDLogWarn(String(format: "Error getting third party apps: %@", error))
             }

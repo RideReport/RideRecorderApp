@@ -56,4 +56,11 @@ class ConnectedAppScope: NSManagedObject {
         
         return connectedAppScope
     }
+    
+    func json()->JSON {
+        var dict: JSON = ["machine_name": self.machineName]
+        dict["granted"].bool = self.granted
+        
+        return dict
+    }
 }

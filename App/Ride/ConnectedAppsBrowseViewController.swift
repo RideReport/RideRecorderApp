@@ -61,7 +61,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     override func viewWillAppear(animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
-        APIClient.sharedClient.getThirdPartyApps().apiResponse { _ in
+        APIClient.sharedClient.getAllApplications().apiResponse { _ in
             self.refreshEmptyTableView()
         }
         
