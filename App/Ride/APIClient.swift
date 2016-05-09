@@ -72,7 +72,7 @@ class AuthenticatedAPIRequest {
     }
     
     #if (arch(i386) || arch(x86_64)) && os(iOS)
-    static var serverAddress = "https://api.ride.report/api/v2/"
+    static var serverAddress = "http://10.0.1.15:8000/api/v2/"
     #else
     static var serverAddress = "https://api.ride.report/api/v2/"
     #endif
