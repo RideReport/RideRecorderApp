@@ -77,7 +77,8 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
         if case .Area(_, let count, _, _) = APIClient.sharedClient.area {
             if !self.counter.hidden {
                 var j = 0
-                for var i = 0; i < Int(count); i+=499 {
+                var i = 0
+                while i < Int(count) {
                     let c = UInt(i)
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
                         guard let strongSelf = self else {
@@ -87,6 +88,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                         strongSelf.counter.updateCounter(c, animate: false)
                     }
                     j += 1
+                    i += 499
                 }
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
@@ -152,7 +154,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                 self.counterText.hidden = false
                 
                 self.counter.updateCounter(count, animate: true)
-                self.counterTimer = NSTimer.scheduledTimerWithTimeInterval(3600.0/Double(countPerHour), target: self.counter, selector: "incrementCounter", userInfo: nil, repeats: true)
+                self.counterTimer = NSTimer.scheduledTimerWithTimeInterval(3600.0/Double(countPerHour), target: self.counter, selector: #selector(RCounter.incrementCounter as RCounter -> () -> Void), userInfo: nil, repeats: true)
                 self.counterText.text = String(format: "Rides in %@", name)
 
                 if (launched) {

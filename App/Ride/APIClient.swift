@@ -269,7 +269,7 @@ class APIClient {
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
             // avoid a bug that could have this called twice on app launch
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(APIClient.appDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
         })
     }
     
@@ -704,7 +704,7 @@ class APIClient {
     func disconnectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .Success(_):
                 app.profile = nil
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):

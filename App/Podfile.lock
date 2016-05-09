@@ -33,9 +33,9 @@ PODS:
   - KeychainAccess (2.0.0)
   - Kingfisher (2.3.1)
   - Mapbox-iOS-SDK (3.1.2)
-  - Mixpanel (2.9.1):
-    - Mixpanel/Mixpanel (= 2.9.1)
-  - Mixpanel/Mixpanel (2.9.1)
+  - Mixpanel (2.9.9):
+    - Mixpanel/Mixpanel (= 2.9.9)
+  - Mixpanel/Mixpanel (2.9.9)
   - OAuthSwift (0.4.4)
   - SwiftChart (0.2.1)
   - SwiftyJSON (2.3.2)
@@ -81,7 +81,7 @@ SPEC CHECKSUMS:
   KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
   Kingfisher: 6d3fbada4829cbc7b89e883e8218c28afeb64e42
   Mapbox-iOS-SDK: 0a910c2cce1aa8cff5b9ec2a990e7a32332a776a
-  Mixpanel: 5ca24b2a05f4c77fe9bcfe7671d681d0f3f8d76f
+  Mixpanel: 818d1940c2d9402453b349545022a86968097f57
   OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a

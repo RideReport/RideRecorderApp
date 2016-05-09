@@ -189,8 +189,6 @@
 		849FB1F61B87F1250002306F /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
 		84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
-		84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA31B029F85009ABC19 /* PCStackMenu.m */; };
-		84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */; };
 		84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */; };
 		84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
@@ -407,10 +405,6 @@
 		84AEAF091AF2A30D00C04E7D /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Profile.swift; path = Ride/Profile.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84AEAF0B1AF3F15A00C04E7D /* Ride 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 21.xcdatamodel"; sourceTree = "<group>"; };
 		84AEAF0E1AF4350900C04E7D /* Ride 22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 22.xcdatamodel"; sourceTree = "<group>"; };
-		84AFFEA21B029F85009ABC19 /* PCStackMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenu.h; sourceTree = "<group>"; };
-		84AFFEA31B029F85009ABC19 /* PCStackMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenu.m; sourceTree = "<group>"; };
-		84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenuItem.h; sourceTree = "<group>"; };
-		84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenuItem.m; sourceTree = "<group>"; };
 		84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UITableNext@2x.png"; sourceTree = "<group>"; };
 		84AFFEAA1B041462009ABC19 /* ColorPallete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorPallete.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84B223A71A881C3900CA27EB /* UIDevice+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIDevice+HBAdditions.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -658,7 +652,6 @@
 			isa = PBXGroup;
 			children = (
 				844B949A1B8BE1A3009F4E27 /* BKPasscodeView */,
-				84AFFEA11B029F85009ABC19 /* PCStackMenu */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
@@ -803,17 +796,6 @@
 			path = ride_response_json;
 			sourceTree = "<group>";
 		};
-		84AFFEA11B029F85009ABC19 /* PCStackMenu */ = {
-			isa = PBXGroup;
-			children = (
-				84AFFEA21B029F85009ABC19 /* PCStackMenu.h */,
-				84AFFEA31B029F85009ABC19 /* PCStackMenu.m */,
-				84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */,
-				84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */,
-			);
-			path = PCStackMenu;
-			sourceTree = "<group>";
-		};
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
@@ -950,7 +932,6 @@
 				84D7E1461AB0D6F5005187E0 /* ShellScript */,
 				45E2A85907F69D047C66CBF3 /* Embed Pods Frameworks */,
 				3D0D8B211CE0F8D20059AC6B /* ShellScript */,
-				3D0D8B221CE0FDA50059AC6B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -969,7 +950,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
 					3D2705D81C8785D400A96DE0 = {
@@ -1106,19 +1087,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\n#  enable-charles-proxy.sh\n#\n#  Created by John Boiles on 9/21/15.\n#\n#  This script sets :NSAppTransportSecurity:NSAllowsArbitraryLoads to true in the Info.plist file if building the Debug configuration.\n#  This enables debugging from https proxies such as Charles.\n\nINFO_PLIST=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nPLISTBUDDY=\"/usr/libexec/PlistBuddy\"\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ] && [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n$PLISTBUDDY -c \"Add :NSAppTransportSecurity dict\" \"${INFO_PLIST}\" || true\n$PLISTBUDDY -c \"Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true\" \"${INFO_PLIST}\" || true\n$PLISTBUDDY -c \"Set :NSAppTransportSecurity:NSAllowsArbitraryLoads true\" \"${INFO_PLIST}\"\nelse\n$PLISTBUDDY -c \"Delete :NSAppTransportSecurity:NSAllowsArbitraryLoads\" \"${INFO_PLIST}\" || true\nfi\n\nALLOWS_ARBITRARY_LOADS_ENABLED=$($PLISTBUDDY -c \"Print :NSAppTransportSecurity:NSAllowsArbitraryLoads\" \"${INFO_PLIST}\")\nif [ \"${ALLOWS_ARBITRARY_LOADS_ENABLED}\" == \"true\" ]; then\necho \"warning: :NSAppTransportSecurity:NSAllowsArbitraryLoads set to true (potentially insecure).\"\nfi";
-		};
-		3D0D8B221CE0FDA50059AC6B /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "// mark todos as warning\n\nTAGS=\"TODO:|FIXME:\"\necho \"searching ${SRCROOT} for ${TAGS}\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"";
 		};
 		45E2A85907F69D047C66CBF3 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1368,7 +1336,6 @@
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
-				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
@@ -1400,7 +1367,6 @@
 				3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
 				3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */,
 				3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
-				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
 				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
@@ -1545,6 +1511,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
+				PRODUCT_BUNDLE_IDENTIFIER = "Knock.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1564,6 +1531,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
+				PRODUCT_BUNDLE_IDENTIFIER = "Knock.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 			};

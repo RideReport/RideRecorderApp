@@ -26,7 +26,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         self.termsTextView.selectable = true
         self.termsTextView.editable = false
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: "didTapLink:")
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SetupTermsViewController.didTapLink(_:)))
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
         helperTextLabel.markdownStringValue = "Collect trophies and stats with your daily errands and commutes. Just hop on your bike and Ride Report will take care of the rest."

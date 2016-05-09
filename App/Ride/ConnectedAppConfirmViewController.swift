@@ -76,7 +76,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             }
             
             switch response.result {
-            case .Success(let json):
+            case .Success(_):
                 if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
                     strongSelf.performSegueWithIdentifier("showConnectedAppFinished", sender: self)
                 } else {
