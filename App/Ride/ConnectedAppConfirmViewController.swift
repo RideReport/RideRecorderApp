@@ -39,7 +39,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             }
 
             
-            self.connectingAppDetailText.text = String(format: "%@ would access your data from your trips in Ride Report.", self.connectingApp.name ?? "App")
+            self.connectingAppDetailText.text = String(format: "%@ would access your data from your rides in Ride Report.", self.connectingApp.name ?? "App")
             if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
                 self.connectingAppLogo.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
             }
