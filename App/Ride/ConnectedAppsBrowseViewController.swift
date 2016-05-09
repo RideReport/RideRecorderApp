@@ -210,12 +210,16 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     
     func authCodeCallbackNotificationReceived(notification: NSNotification) {
         if let _ = self.safariViewController, callbackUrl = notification.object as? NSURL, app = self.selectedConnectedApp,
-            uuid = callbackUrl.lastPathComponent, code = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "code" }).first?.value {
+            uuid = callbackUrl.lastPathComponent {
             if uuid == app.uuid {
-                NSNotificationCenter.defaultCenter().removeObserver(self)
-                
-                app.authorizationCode = code
-                self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
+                if let code = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "code" }).first?.value {
+                    NSNotificationCenter.defaultCenter().removeObserver(self)
+                    
+                    app.authorizationCode = code
+                    self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
+                } else if let _ = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
+                    self.navigationController?.popViewControllerAnimated(true)
+                }
             } else {
                 // For now, ignore this edge case because we only have one app.
                 // The right thing to do here may be to look up the app by the uuid and show that app

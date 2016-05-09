@@ -78,7 +78,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             switch response.result {
             case .Success(_):
                 if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
-                    strongSelf.performSegueWithIdentifier("showConnectedAppFinished", sender: self)
+                    strongSelf.dismissViewControllerAnimated(true, completion: nil)
                 } else {
                     // otherwise, keep polling
                     strongSelf.performSelector(#selector(ConnectedAppConfirmViewController.postConnectApplication), withObject: nil, afterDelay: 2.0)

@@ -3846,7 +3846,6 @@ All the Apps</string>
                         <outlet property="connectingAppLogo" destination="lRe-6R-CEp" id="E2X-Tt-NIC"/>
                         <outlet property="connectionActivityIndicatorView" destination="cKH-Fb-sSq" id="JUY-NL-4gK"/>
                         <outlet property="tableView" destination="aKf-Bi-Atn" id="l7q-06-7Jq"/>
-                        <segue destination="Z0h-P6-EGY" kind="show" identifier="showConnectedAppFinished" id="Iqn-e1-VkI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IeN-xk-ZER" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3951,36 +3950,6 @@ All the Apps</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8sJ-XL-daI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2958" y="-1517"/>
-        </scene>
-        <!--Connected App Finished View Controller-->
-        <scene sceneID="Jlp-EB-MM0">
-            <objects>
-                <viewController id="Z0h-P6-EGY" customClass="ConnectedAppFinishedViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="2E9-MC-lHz"/>
-                        <viewControllerLayoutGuide type="bottom" id="g68-9r-olU"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="PGy-lR-O0A">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="You're all set!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="dme-NZ-PN8">
-                                <rect key="frame" x="43" y="254" width="480" height="43"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="0.96470588239999999" green="1" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="dme-NZ-PN8" firstAttribute="centerX" secondItem="PGy-lR-O0A" secondAttribute="centerX" id="oIt-XQ-2Jo"/>
-                            <constraint firstItem="dme-NZ-PN8" firstAttribute="centerY" secondItem="PGy-lR-O0A" secondAttribute="centerY" id="z53-Wc-uHJ"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="tWe-uv-tsO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4423.5" y="-2919"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="v90-QX-I7k">
