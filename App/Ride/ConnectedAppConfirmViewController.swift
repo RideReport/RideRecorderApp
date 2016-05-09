@@ -39,7 +39,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             }
 
             
-            self.connectingAppDetailText.text = String(format: "%@ would access your data from your rides in Ride Report.", self.connectingApp.name ?? "App")
+            self.connectingAppDetailText.text = String(format: "%@ would like following data about your rides:", self.connectingApp.name ?? "App")
             if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
                 self.connectingAppLogo.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
             }
@@ -111,7 +111,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             // For now we assume that all scopes are of type Bool
             if  indexPath.row < connectingApp.scopes.count {
                 let scope = connectingApp.scopes[indexPath.row]
-                permissionText.text = scope.descriptionText
+                permissionText.text = (scope.descriptionText ?? "") + (scope.required ? " (required)" : "")
                 permissionSwitch.enabled = !scope.required
                 permissionSwitch.on = scope.granted
             }
