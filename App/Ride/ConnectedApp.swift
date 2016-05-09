@@ -21,6 +21,27 @@ class ConnectedApp: NSManagedObject {
     
     var authorizationCode: String?
     
+    class func allApps(limit: Int = 0) -> [ConnectedApp] {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+        if (limit != 0) {
+            fetchedRequest.fetchLimit = limit
+        }
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        guard let apps = results as? [ConnectedApp] else {
+            return []
+        }
+        
+        return apps
+    }
+    
     class func createOrUpdate(withJson json: JSON)->ConnectedApp? {
         guard let uuid = json["uuid"].string else {
             return nil
@@ -62,8 +83,17 @@ class ConnectedApp: NSManagedObject {
         }
 
         if let scopes = json["scopes"].array {
+            var scopesToDelete = connectedApp.scopes
+            
             for scope in scopes {
-                ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: connectedApp)
+                if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: connectedApp), index = scopesToDelete.indexOf(scope) {
+                    scopesToDelete.removeAtIndex(index)
+                }
+            }
+            
+            for scope in scopesToDelete {
+                // delete any app objects we did not receive
+                CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(scope)
             }
         }
         

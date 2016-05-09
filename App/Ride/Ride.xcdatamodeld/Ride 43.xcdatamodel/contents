@@ -15,7 +15,7 @@
         <attribute name="uuid" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="webAuthorizeUrl" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="profile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="connectedApps" inverseEntity="Profile" syncable="YES"/>
-        <relationship name="scopes" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="ConnectedAppScope" inverseName="connectedApp" inverseEntity="ConnectedAppScope" syncable="YES"/>
+        <relationship name="scopes" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="ConnectedAppScope" inverseName="connectedApp" inverseEntity="ConnectedAppScope" syncable="YES"/>
     </entity>
     <entity name="ConnectedAppScope" representedClassName=".ConnectedAppScope" syncable="YES">
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>

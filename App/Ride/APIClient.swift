@@ -664,9 +664,19 @@ class APIClient {
             switch response.result {
             case .Success(let json):
                 if let apps = json.array {
+                    var appsToDelete = ConnectedApp.allApps()
+                    
                     for appDict in apps {
-                        ConnectedApp.createOrUpdate(withJson: appDict)
+                        if let app = ConnectedApp.createOrUpdate(withJson: appDict), index = appsToDelete.indexOf(app) {
+                            appsToDelete.removeAtIndex(index)
+                        }
                     }
+                    
+                    for app in appsToDelete {
+                        // delete any app objects we did not receive
+                        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                    }
+                    
                     CoreDataManager.sharedManager.saveContext()
                 }
             case .Failure(let error):
@@ -749,6 +759,15 @@ class APIClient {
                     NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidGetArea", object: nil)
                 } else {
                     self.area = .Unknown
+                }
+                
+                if let connectedApps = json["connected_apps"].array {
+                    for appDict in connectedApps {
+                        let app = ConnectedApp.createOrUpdate(withJson: appDict)
+                        app?.profile = Profile.profile()
+                    }
+                    
+                    CoreDataManager.sharedManager.saveContext()
                 }
                 
                 if let mixPanelID = json["mixpanel_id"].string {

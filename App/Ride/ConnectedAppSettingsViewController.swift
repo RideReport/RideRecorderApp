@@ -30,8 +30,12 @@ class ConnectedAppSettingsViewController : UIViewController{
                 scope.granted = true
             }
             
-            APIClient.sharedClient.getApplication(self.connectingApp).apiResponse { _ in
-                self.refreshUI()
+            APIClient.sharedClient.getApplication(self.connectingApp).apiResponse {[weak self] _ in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                strongSelf.refreshUI()
             }
             
             self.refreshUI()
@@ -52,9 +56,22 @@ class ConnectedAppSettingsViewController : UIViewController{
     @IBAction func disconnect(sender: AnyObject) {
         let alertController = UIAlertController(title: "Disconnect?", message: String(format: "Your trips data will no longer be shared with %@.", self.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
         alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.Destructive, handler: { (_) in
-            self.connectingApp.profile = nil
-            CoreDataManager.sharedManager.saveContext()
-            self.dismissViewControllerAnimated(true, completion: nil)
+            APIClient.sharedClient.disconnectApplication(self.connectingApp).apiResponse{ [weak self] (response) in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                switch response.result {
+                case .Success(_):
+                    strongSelf.dismissViewControllerAnimated(true, completion: nil)
+                case .Failure(_):
+                    let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be disconnected from %@. Please Try Again Later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+                    alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
+                        strongSelf.dismissViewControllerAnimated(true, completion: nil)
+                    }))
+                    strongSelf.presentViewController(alertController, animated: true, completion: nil)
+                }
+            }
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
