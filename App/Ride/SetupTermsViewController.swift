@@ -29,7 +29,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SetupTermsViewController.didTapLink(_:)))
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
-        helperTextLabel.markdownStringValue = "Collect trophies and stats with your daily errands and commutes. Just hop on your bike and Ride Report will take care of the rest."
+        helperTextLabel.markdownStringValue = "Track your miles, map your routes, and earn ride streaks for every ride you take. Just hop on your bike – **Ride Report will start automatically**."
     }
     
     override func viewWillAppear(animated: Bool) {

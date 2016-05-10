@@ -548,11 +548,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hQC-Qb-oe8">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hQC-Qb-oe8">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="🚲" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="glo-RJ-K1F">
-                                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🚲" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="glo-RJ-K1F">
+                                        <rect key="frame" x="260" y="232.5" width="80" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="Gqt-hd-2Tq"/>
                                             <constraint firstAttribute="width" constant="80" id="VzI-ib-MQQ"/>
@@ -567,8 +567,8 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Hop on your bike! Ride Report will start automatically." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
-                                        <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hop on your bike! Ride Report will start automatically." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="OjU-pQ-Ua5">
+                                        <rect key="frame" x="60" y="309" width="480" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -935,33 +935,17 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerX" secondItem="BOa-Zo-opp" secondAttribute="centerX" id="5Ih-Pl-RsF"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="29L-cp-Li4"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" constant="-64" id="2yP-Ih-wqK"/>
                             <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
                             <constraint firstAttribute="height" secondItem="W5I-Vg-qji" secondAttribute="height" id="JO5-OL-3Hf"/>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="P1r-Ch-eUz"/>
                             <constraint firstItem="wvU-m5-X4Y" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" constant="7" id="Qjf-Cr-Vc6"/>
-                            <constraint firstItem="Q0Q-Ap-BP2" firstAttribute="top" secondItem="W5I-Vg-qji" secondAttribute="bottom" id="VUF-xP-28K"/>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="height" secondItem="BOa-Zo-opp" secondAttribute="height" id="WfE-1U-FyZ"/>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="dc2-ar-IbU"/>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerY" secondItem="BOa-Zo-opp" secondAttribute="centerY" id="eG5-nZ-6j8"/>
-                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="hpf-9W-QYR"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="height" secondItem="BOa-Zo-opp" secondAttribute="height" id="boS-NI-JG8"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerX" secondItem="BOa-Zo-opp" secondAttribute="centerX" id="clf-Iy-X6w"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="centerX" secondItem="BOa-Zo-opp" secondAttribute="centerX" id="mAD-t8-7Hh"/>
-                            <constraint firstItem="Q0Q-Ap-BP2" firstAttribute="top" secondItem="hQC-Qb-oe8" secondAttribute="bottom" id="moT-BL-K5M"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="centerY" secondItem="BOa-Zo-opp" secondAttribute="centerY" id="r3E-Iz-eO8"/>
                             <constraint firstItem="wvU-m5-X4Y" firstAttribute="leading" secondItem="BOa-Zo-opp" secondAttribute="leadingMargin" constant="-14" id="vte-wx-ygx"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="hpf-9W-QYR"/>
-                                <exclude reference="5Ih-Pl-RsF"/>
-                                <exclude reference="P1r-Ch-eUz"/>
-                                <exclude reference="WfE-1U-FyZ"/>
-                                <exclude reference="dc2-ar-IbU"/>
-                                <exclude reference="eG5-nZ-6j8"/>
-                                <exclude reference="VUF-xP-28K"/>
-                                <exclude reference="moT-BL-K5M"/>
-                            </mask>
-                        </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
                                 <include reference="hQC-Qb-oe8"/>
@@ -970,15 +954,7 @@
                         <variation key="widthClass=compact">
                             <mask key="constraints">
                                 <exclude reference="JO5-OL-3Hf"/>
-                                <include reference="hpf-9W-QYR"/>
                                 <exclude reference="r3E-Iz-eO8"/>
-                                <include reference="5Ih-Pl-RsF"/>
-                                <include reference="P1r-Ch-eUz"/>
-                                <exclude reference="WfE-1U-FyZ"/>
-                                <include reference="dc2-ar-IbU"/>
-                                <exclude reference="eG5-nZ-6j8"/>
-                                <include reference="VUF-xP-28K"/>
-                                <include reference="moT-BL-K5M"/>
                             </mask>
                         </variation>
                     </view>
@@ -1840,7 +1816,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're set! Go get on your bike and Ride Report will take care of the rest." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're set! Hop on your bike and Ride Report will start automatically." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="wjC-A5-4oV">
                                 <rect key="frame" x="60" y="279" width="480" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -2097,12 +2073,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
-                                <rect key="frame" x="60" y="279" width="480" height="63"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="placeholder placeholder placeholder placeholder placeholderplaceholder placeholder placeholder placeholder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
+                                <rect key="frame" x="60" y="268" width="480" height="64.5"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="63" id="H6P-Gz-cQ1"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="63" id="H6P-Gz-cQ1"/>
                                 </constraints>
-                                <string key="text">Collect trophies for every mile you bike, for mutli-day steaks, for every ride in the rain. Just hop on your bike and Ride Report will take care of the rest.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -2155,8 +2130,8 @@
                                     <outlet property="delegate" destination="326-On-509" id="A3V-24-RL4"/>
                                 </connections>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Make Every Ride Count" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
-                                <rect key="frame" x="168" y="242" width="264" height="29"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Make Every Ride Count" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
+                                <rect key="frame" x="60" y="231" width="480" height="29"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -2191,6 +2166,7 @@
                             <constraint firstItem="mTI-Gc-S80" firstAttribute="centerY" secondItem="7cW-Zb-E0S" secondAttribute="centerY" id="DZB-m0-PhM"/>
                             <constraint firstItem="JzU-pM-JS3" firstAttribute="centerX" secondItem="7cW-Zb-E0S" secondAttribute="centerX" id="Fp3-aQ-b3J"/>
                             <constraint firstItem="UL8-8P-mSA" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" multiplier="4:5" id="Gi1-tz-gv3"/>
+                            <constraint firstItem="zas-tV-1iZ" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" multiplier="4:5" id="Iau-er-V1H"/>
                             <constraint firstItem="UL8-8P-mSA" firstAttribute="top" secondItem="zas-tV-1iZ" secondAttribute="bottom" constant="8" id="LLU-Vz-7EJ"/>
                             <constraint firstItem="8qs-Gs-CEz" firstAttribute="top" secondItem="JzU-pM-JS3" secondAttribute="bottom" constant="-2" id="LvE-SJ-JDA"/>
                             <constraint firstAttribute="centerX" secondItem="UL8-8P-mSA" secondAttribute="centerX" id="Mv5-F8-8je"/>
