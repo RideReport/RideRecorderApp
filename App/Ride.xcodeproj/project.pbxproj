@@ -12,6 +12,7 @@
 		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 3D0D8B231CE2560E0059AC6B /* bell.aiff */; };
 		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
 		3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
@@ -259,6 +260,7 @@
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; };
+		3D0D8B231CE2560E0059AC6B /* bell.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bell.aiff; sourceTree = "<group>"; };
 		3D0FD6041CDC019300632BFB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
 		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; };
@@ -747,6 +749,7 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3D0D8B231CE2560E0059AC6B /* bell.aiff */,
 				3D49510F1C8E092300E216AA /* forest.cv */,
 				3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */,
 				3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */,
@@ -1047,6 +1050,7 @@
 				3D4951101C8E092300E216AA /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
+				3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
 				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,

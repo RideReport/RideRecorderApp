@@ -1005,7 +1005,7 @@ class Trip : NSManagedObject {
             // don't show a notification for anything but bike trips.
             self.currentStateNotification = UILocalNotification()
             self.currentStateNotification?.alertBody = self.notificationString()
-            self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
+            self.currentStateNotification?.soundName = "bell.aiff"
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
