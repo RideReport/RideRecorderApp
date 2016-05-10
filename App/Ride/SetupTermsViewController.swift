@@ -30,27 +30,6 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
         helperTextLabel.markdownStringValue = "Track your miles, map your routes, and earn ride streaks for every ride you take. Just hop on your bike – **Ride Report will start automatically**."
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if let _scene = self.scene {
-            _scene.paused = false
-        }
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        if let _scene = self.scene {
-            _scene.paused = true
-        }
-    }
-    
-    override func viewWillLayoutSubviews()
-    {
-        super.viewWillLayoutSubviews()
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale.currentLocale()
@@ -73,7 +52,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
             self.scene.physicsBody!.contactTestBitMask = 1|2
             self.scene.physicsWorld.gravity = CGVectorMake(0,-0.4)
             self.scene.physicsWorld.contactDelegate = self
-
+            
             
             let emojis = "👍 👎 🙌 🌂 🍄 🌤 🌧 ⛄️ 💧 🚴 🚲 🚀 🌈 🌠 🎉 ❤️ 💙 💜 💚 💛 📢 🎖 🏅 🏆 🎗 💫 🍁 🎩 👻 👒".componentsSeparatedByString(" ")
             let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 36)!]
@@ -94,7 +73,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                     
                     imageDictionary[unicodeString as! String] = emojiImage
                 }
-
+                
             }
             
             let textureAtlas = SKTextureAtlas(dictionary: imageDictionary)
@@ -107,7 +86,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                     if emoji.containsUnsupportEmoji() {
                         continue
                     }
-
+                    
                     
                     let unicodeString = NSString(data: emoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
                     let texture = textureAtlas.textureNamed(unicodeString as! String)
@@ -129,15 +108,36 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                 let shuffledEmojis = emojisSprites.shuffle()
                 for emojiSprite in shuffledEmojis  {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.25 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                        guard let strongSelf = self else {
+                        guard let strongSelf = self, strongScene = strongSelf.scene else {
                             return
                         }
                         
-                        strongSelf.scene.addChild(emojiSprite)
+                        strongScene.addChild(emojiSprite)
                     }
                     nodeCount += 1
                 }
             }
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let _scene = self.scene {
+            _scene.paused = false
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let _scene = self.scene {
+            _scene.paused = true
+            _scene.removeAllActions()
+            _scene.removeAllChildren()
+            _scene.removeFromParent()
+            self.scene = nil
+            nodesToMoveBack = []
         }
     }
     
