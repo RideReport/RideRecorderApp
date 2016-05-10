@@ -936,16 +936,22 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="width" secondItem="BOa-Zo-opp" secondAttribute="width" id="29L-cp-Li4"/>
-                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" constant="-64" id="2yP-Ih-wqK"/>
+                            <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="2yP-Ih-wqK"/>
                             <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
-                            <constraint firstAttribute="height" secondItem="W5I-Vg-qji" secondAttribute="height" id="JO5-OL-3Hf"/>
                             <constraint firstItem="wvU-m5-X4Y" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" constant="7" id="Qjf-Cr-Vc6"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="height" secondItem="BOa-Zo-opp" secondAttribute="height" id="boS-NI-JG8"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerX" secondItem="BOa-Zo-opp" secondAttribute="centerX" id="clf-Iy-X6w"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="centerX" secondItem="BOa-Zo-opp" secondAttribute="centerX" id="mAD-t8-7Hh"/>
-                            <constraint firstItem="W5I-Vg-qji" firstAttribute="centerY" secondItem="BOa-Zo-opp" secondAttribute="centerY" id="r3E-Iz-eO8"/>
+                            <constraint firstItem="Q0Q-Ap-BP2" firstAttribute="top" secondItem="W5I-Vg-qji" secondAttribute="bottom" id="v15-tM-MP1"/>
                             <constraint firstItem="wvU-m5-X4Y" firstAttribute="leading" secondItem="BOa-Zo-opp" secondAttribute="leadingMargin" constant="-14" id="vte-wx-ygx"/>
+                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="noH-Mh-pvM" secondAttribute="bottom" id="zRJ-hK-67N"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="zRJ-hK-67N"/>
+                                <exclude reference="v15-tM-MP1"/>
+                            </mask>
+                        </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
                                 <include reference="hQC-Qb-oe8"/>
@@ -953,8 +959,8 @@
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="constraints">
-                                <exclude reference="JO5-OL-3Hf"/>
-                                <exclude reference="r3E-Iz-eO8"/>
+                                <include reference="zRJ-hK-67N"/>
+                                <include reference="v15-tM-MP1"/>
                             </mask>
                         </variation>
                     </view>
@@ -2408,7 +2414,8 @@
                                                 <integer key="value" value="5"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
-                                        <variation key="widthClass=compact">
+                                        <variation key="widthClass=compact" misplaced="YES">
+                                            <rect key="frame" x="68.5" y="85" width="135" height="70"/>
                                             <mask key="constraints">
                                                 <include reference="cp8-j3-r4h"/>
                                             </mask>
