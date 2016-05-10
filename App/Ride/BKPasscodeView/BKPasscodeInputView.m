@@ -36,6 +36,7 @@
 @implementation BKPasscodeInputView
 
 @synthesize maximumLength = _maximumLength;
+@synthesize drawsPasscodeSeparator = _drawsPasscodeSeparator;
 @synthesize keyboardType = _keyboardType;
 @synthesize passcodeField = _passcodeField;
 
@@ -159,6 +160,7 @@
                 passcodeField.keyboardType = _keyboardType;
                 passcodeField.keyboardAppearance = _keyboardAppearance;
                 passcodeField.maximumLength = _maximumLength;
+                passcodeField.drawsPasscodeSeparator = _drawsPasscodeSeparator;
                 passcodeField.dotColor = _dotColor;
                 [passcodeField addTarget:self action:@selector(passcodeControlEditingChanged:) forControlEvents:UIControlEventEditingChanged];
                 
@@ -220,6 +222,14 @@
         [(BKPasscodeField *)_passcodeField setMaximumLength:maximumLength];
     }
 }
+
+- (void)setDrawsPasscodeSeparator:(BOOL)drawsPasscodeSeparator
+{
+    _drawsPasscodeSeparator = drawsPasscodeSeparator;
+    
+    if ([_passcodeField isKindOfClass:[BKPasscodeField class]]) {
+        [(BKPasscodeField *)_passcodeField setDrawsPasscodeSeparator:drawsPasscodeSeparator];
+    }}
 
 - (void)setKeyboardType:(UIKeyboardType)keyboardType
 {
@@ -456,6 +466,7 @@
     view.keyboardType = self.keyboardType;
     view.keyboardAppearance = self.keyboardAppearance;
     view.maximumLength = self.maximumLength;
+    view.drawsPasscodeSeparator = self.drawsPasscodeSeparator;
     
     return view;
 }

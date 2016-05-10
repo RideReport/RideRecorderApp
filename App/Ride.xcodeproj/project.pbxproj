@@ -9,6 +9,20 @@
 /* Begin PBXBuildFile section */
 		298BE4AE69FDA0783625F182 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0E122EDDBB5D8C24ABC57A /* Pods_Ride_Report.framework */; };
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
+		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
+		3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 3D0D8B231CE2560E0059AC6B /* bell.aiff */; };
+		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
+		3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
+		3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
+		3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
+		3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
+		3D1A15511CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
+		3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
@@ -74,6 +88,9 @@
 		3DB9BD1A1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
+		3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */; };
+		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
+		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -172,8 +189,6 @@
 		849FB1F61B87F1250002306F /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
 		84A08C6B1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		84AEAF0A1AF2A30D00C04E7D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
-		84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA31B029F85009ABC19 /* PCStackMenu.m */; };
-		84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */; };
 		84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */; };
 		84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B223A81A881C3900CA27EB /* UIDevice+HBAdditions.m */; };
@@ -244,6 +259,13 @@
 		3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 42.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
+		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; };
+		3D0D8B231CE2560E0059AC6B /* bell.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bell.aiff; sourceTree = "<group>"; };
+		3D0FD6041CDC019300632BFB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
+		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; };
+		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppScope.swift; sourceTree = "<group>"; };
+		3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthAppSettingsViewController.swift; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -277,6 +299,9 @@
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
 		3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Float+Meters.swift"; sourceTree = "<group>"; };
 		3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatedGradientLabel.swift; sourceTree = "<group>"; };
+		3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppConfirmViewController.swift; sourceTree = "<group>"; };
+		3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsBrowseViewController.swift; sourceTree = "<group>"; };
+		3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppSettingsViewController.swift; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		4FAC5C188295BB7C11FE9D25 /* Pods_Motion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Motion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
@@ -380,10 +405,6 @@
 		84AEAF091AF2A30D00C04E7D /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Profile.swift; path = Ride/Profile.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84AEAF0B1AF3F15A00C04E7D /* Ride 21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 21.xcdatamodel"; sourceTree = "<group>"; };
 		84AEAF0E1AF4350900C04E7D /* Ride 22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 22.xcdatamodel"; sourceTree = "<group>"; };
-		84AFFEA21B029F85009ABC19 /* PCStackMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenu.h; sourceTree = "<group>"; };
-		84AFFEA31B029F85009ABC19 /* PCStackMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenu.m; sourceTree = "<group>"; };
-		84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PCStackMenuItem.h; sourceTree = "<group>"; };
-		84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PCStackMenuItem.m; sourceTree = "<group>"; };
 		84AFFEA81B03D773009ABC19 /* UITableNext@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UITableNext@2x.png"; sourceTree = "<group>"; };
 		84AFFEAA1B041462009ABC19 /* ColorPallete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ColorPallete.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84B223A71A881C3900CA27EB /* UIDevice+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIDevice+HBAdditions.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -484,6 +505,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */,
 				3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */,
 				3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */,
 				3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */,
@@ -514,6 +536,7 @@
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D0FD6041CDC019300632BFB /* SafariServices.framework */,
 				3D2AB38F1CA4A76400582A5D /* opencv2.framework */,
 				3D818A151C938C0B00B64403 /* CoreMedia.framework */,
 				3D818A131C938BED00B64403 /* AssetsLibrary.framework */,
@@ -574,6 +597,19 @@
 			path = Frameworks/ActivityPredictor;
 			sourceTree = SOURCE_ROOT;
 		};
+		3DBABFD51CCEDB9F00665646 /* Connected Apps */ = {
+			isa = PBXGroup;
+			children = (
+				3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */,
+				3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */,
+				3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */,
+				3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */,
+				3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */,
+				3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */,
+			);
+			name = "Connected Apps";
+			sourceTree = "<group>";
+		};
 		5A1465564B4DF111CE34A71E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,7 +651,6 @@
 			isa = PBXGroup;
 			children = (
 				844B949A1B8BE1A3009F4E27 /* BKPasscodeView */,
-				84AFFEA11B029F85009ABC19 /* PCStackMenu */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
@@ -644,6 +679,7 @@
 			isa = PBXGroup;
 			children = (
 				842599D61B90F3540038C3CA /* Setup */,
+				3DBABFD51CCEDB9F00665646 /* Connected Apps */,
 				842141A61C407CEE009DA851 /* TripViewController.swift */,
 				847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */,
 				3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */,
@@ -654,7 +690,6 @@
 				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
-				3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -662,6 +697,8 @@
 		8445317B19FF031D0096F26E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */,
+				3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */,
 				84AEAF091AF2A30D00C04E7D /* Profile.swift */,
 				847A05661A01B2FE008F5371 /* Location.swift */,
 				8421418F1C3C8E19009DA851 /* Prototrip.swift */,
@@ -712,6 +749,7 @@
 		8453BD5F1A425CF200FE2645 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3D0D8B231CE2560E0059AC6B /* bell.aiff */,
 				3D49510F1C8E092300E216AA /* forest.cv */,
 				3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */,
 				3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */,
@@ -756,17 +794,6 @@
 				8492BCB31C35C0A0006BDDB8 /* trip_with_reward_200.json */,
 			);
 			path = ride_response_json;
-			sourceTree = "<group>";
-		};
-		84AFFEA11B029F85009ABC19 /* PCStackMenu */ = {
-			isa = PBXGroup;
-			children = (
-				84AFFEA21B029F85009ABC19 /* PCStackMenu.h */,
-				84AFFEA31B029F85009ABC19 /* PCStackMenu.m */,
-				84AFFEA41B029F85009ABC19 /* PCStackMenuItem.h */,
-				84AFFEA51B029F85009ABC19 /* PCStackMenuItem.m */,
-			);
-			path = PCStackMenu;
 			sourceTree = "<group>";
 		};
 		84D1554619D2733500316995 = {
@@ -904,6 +931,7 @@
 				8444971F1A3A4E740009F889 /* CopyFiles */,
 				84D7E1461AB0D6F5005187E0 /* ShellScript */,
 				45E2A85907F69D047C66CBF3 /* Embed Pods Frameworks */,
+				3D0D8B211CE0F8D20059AC6B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -922,7 +950,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
 					3D2705D81C8785D400A96DE0 = {
@@ -1022,6 +1050,7 @@
 				3D4951101C8E092300E216AA /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
+				3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */,
 				845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */,
 				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
@@ -1047,6 +1076,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3D0D8B211CE0F8D20059AC6B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\n#  enable-charles-proxy.sh\n#\n#  Created by John Boiles on 9/21/15.\n#\n#  This script sets :NSAppTransportSecurity:NSAllowsArbitraryLoads to true in the Info.plist file if building the Debug configuration.\n#  This enables debugging from https proxies such as Charles.\n\nINFO_PLIST=\"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\nPLISTBUDDY=\"/usr/libexec/PlistBuddy\"\n\nif [ ${PLATFORM_NAME} = \"iphonesimulator\" ] && [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n$PLISTBUDDY -c \"Add :NSAppTransportSecurity dict\" \"${INFO_PLIST}\" || true\n$PLISTBUDDY -c \"Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true\" \"${INFO_PLIST}\" || true\n$PLISTBUDDY -c \"Set :NSAppTransportSecurity:NSAllowsArbitraryLoads true\" \"${INFO_PLIST}\"\nelse\n$PLISTBUDDY -c \"Delete :NSAppTransportSecurity:NSAllowsArbitraryLoads\" \"${INFO_PLIST}\" || true\nfi\n\nALLOWS_ARBITRARY_LOADS_ENABLED=$($PLISTBUDDY -c \"Print :NSAppTransportSecurity:NSAllowsArbitraryLoads\" \"${INFO_PLIST}\")\nif [ \"${ALLOWS_ARBITRARY_LOADS_ENABLED}\" == \"true\" ]; then\necho \"warning: :NSAppTransportSecurity:NSAllowsArbitraryLoads set to true (potentially insecure).\"\nfi";
+		};
 		45E2A85907F69D047C66CBF3 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1202,6 +1244,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
+				3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
+				3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */,
 				3D2705F81C8785F200A96DE0 /* MotionManager.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
@@ -1225,6 +1270,7 @@
 				3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3DA1EFDD1C8F872D002B12DB /* NSData+GZIP.swift in Sources */,
+				3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */,
 				3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */,
 				3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */,
@@ -1238,6 +1284,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
+				3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
+				3D1A154D1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				842FDCAB1BD56F000079AFCC /* Migration.xcmappingmodel in Sources */,
 				84C28E111C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
 				3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */,
@@ -1261,6 +1310,7 @@
 				842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */,
 				3D2AB38A1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				844B0B921BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
+				3D1A15511CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				842FDCA31BD56E030079AFCC /* APIClientTests.swift in Sources */,
 				844B0B951BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift in Sources */,
 				842FDCA41BD56E650079AFCC /* APIClient.swift in Sources */,
@@ -1277,6 +1327,7 @@
 				8452AC0D1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift in Sources */,
 				8429E5D81A5DCBA000EB3E94 /* ActivityTypePrediction.swift in Sources */,
 				8429E5DA1A5DCBFE00EB3E94 /* Incident.swift in Sources */,
+				3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */,
 				3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */,
 				8445317619FEEB210096F26E /* RouteManager.swift in Sources */,
 				3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
@@ -1286,7 +1337,6 @@
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
-				84AFFEA61B029F85009ABC19 /* PCStackMenu.m in Sources */,
 				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
@@ -1306,13 +1356,17 @@
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
+				3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */,
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
 				3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				84F8E63B1AFAA09C00270C76 /* Migration.xcmappingmodel in Sources */,
-				84AFFEA71B029F85009ABC19 /* PCStackMenuItem.m in Sources */,
+				3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
+				3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
+				3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */,
+				3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
 				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,
@@ -1331,6 +1385,7 @@
 				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
+				3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				842141901C3C8E19009DA851 /* Prototrip.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,
@@ -1456,6 +1511,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
+				PRODUCT_BUNDLE_IDENTIFIER = "Knock.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1475,6 +1531,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "/Users/admin/Developer/mapbox-gl-native/mason_packages/ios-8.4/libuv/0.10.28/lib";
+				PRODUCT_BUNDLE_IDENTIFIER = "Knock.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RideTests/Ride Tests-Bridging-Header.h";
 			};
@@ -1682,6 +1739,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */,
 				3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */,
 				3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */,
 				3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */,
@@ -1725,7 +1783,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */;
+			currentVersion = 3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

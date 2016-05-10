@@ -887,6 +887,9 @@ class Trip : NSManagedObject {
             } else {
                 topActivityType = .Walking
             }
+        } else if topActivityType == .Cycling && self.averageMovingSpeed <= 2 && self.length < 800 {
+            // https://github.com/KnockSoftware/Ride/issues/243
+            topActivityType = .Walking
         }
         
         self.activityType = topActivityType
@@ -1005,7 +1008,7 @@ class Trip : NSManagedObject {
             // don't show a notification for anything but bike trips.
             self.currentStateNotification = UILocalNotification()
             self.currentStateNotification?.alertBody = self.notificationString()
-            self.currentStateNotification?.soundName = UILocalNotificationDefaultSoundName
+            self.currentStateNotification?.soundName = "bell.aiff"
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
@@ -1300,6 +1303,24 @@ class Trip : NSManagedObject {
         let time = endDate.timeIntervalSinceDate(startDate)
         
         return distance/time
+    }
+    
+    var averageMovingSpeed : CLLocationSpeed {
+        var sumSpeed : Double = 0.0
+        var count = 0
+        for loc in self.locations.array {
+            let location = loc as! Location
+            if (location.speed!.doubleValue > 0.1 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                count += 1
+                sumSpeed += (location as Location).speed!.doubleValue
+            }
+        }
+        
+        if (count == 0) {
+            return 0
+        }
+        
+        return sumSpeed/Double(count)
     }
     
     var averageSpeed : CLLocationSpeed {

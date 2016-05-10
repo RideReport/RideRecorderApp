@@ -25,7 +25,7 @@ class HamburgerNavController: UINavigationController {
 
 class HamburgerViewController: UITableViewController {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
-    @IBOutlet weak var healthKitTableViewCell: UITableViewCell!
+    @IBOutlet weak var connectedAppsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
     @IBOutlet weak var debugCrazyPersonTableViewCell: UITableViewCell!
     
@@ -39,7 +39,6 @@ class HamburgerViewController: UITableViewController {
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
         self.updatePauseResumeText()
-        self.updateHealthKitText()
         self.tableView.reloadData()
 
         NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
@@ -63,22 +62,6 @@ class HamburgerViewController: UITableViewController {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-    func updateHealthKitText() {
-        guard #available(iOS 9.0, *) else {
-            self.healthKitTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
-            self.healthKitTableViewCell.textLabel?.text = "Connect Health App"
-            return
-        }
-        
-        if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
-            self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.healthKitTableViewCell.textLabel?.text = "Disconnect Health App"
-        } else {
-            self.healthKitTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.healthKitTableViewCell.textLabel?.text = "Connect Health App"
-        }
     }
     
     func updateAccountStatusText() {
@@ -114,7 +97,7 @@ class HamburgerViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         #if DEBUG
-            return 5
+            return 4
         #else
             return 4
         #endif
@@ -145,34 +128,7 @@ class HamburgerViewController: UITableViewController {
                 self.updateDebugCrazyPersonModeCellText()
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
             #endif
-        } else if (cell == self.healthKitTableViewCell) {
-            guard #available(iOS 9.0, *) else {
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                return
-            }
-            
-            let priorHealthKitState = NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")
-            
-            if (priorHealthKitState) {
-                // it was enabled
-                let alertController = UIAlertController(title:nil, message: "Your rides will no longer automatically saved into the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
-                alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.Destructive, handler: { (_) in
-                    HealthKitManager.shutdown()
-                    NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
-                    NSUserDefaults.standardUserDefaults().synchronize()
-                    self.updateHealthKitText()
-                }))
-                alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-                self.presentViewController(alertController, animated: true, completion: nil)
-            } else {
-                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-                let healthKitNavVC = storyBoard.instantiateViewControllerWithIdentifier("HealthKitSetupNavController") as! UINavigationController
-                
-                self.presentViewController(healthKitNavVC, animated: true, completion: nil)
-            }
-            
-            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        } else if (cell == self.accountTableViewCell) {
+        }  else if (cell == self.accountTableViewCell) {
             if (APIClient.sharedClient.accountVerificationStatus == .Unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
             } else if (APIClient.sharedClient.accountVerificationStatus == .Verified){

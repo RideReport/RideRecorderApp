@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="23" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="automotive" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="confidence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -10,7 +10,7 @@
         <attribute name="unknown" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="walking" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="prototrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prototrip" inverseName="activities" inverseEntity="Prototrip" syncable="YES"/>
-        <relationship name="trip" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Trip" inverseName="activities" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="activities" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="Incident" representedClassName=".Incident" syncable="YES">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,8 +47,8 @@
     <entity name="Prototrip" representedClassName=".Prototrip" syncable="YES">
         <attribute name="batteryAtStart" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
-        <relationship name="activities" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Activity" inverseName="prototrip" inverseEntity="Activity" syncable="YES"/>
-        <relationship name="locations" optional="YES" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Location" inverseName="prototrip" inverseEntity="Location" syncable="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Activity" inverseName="prototrip" inverseEntity="Activity" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="prototrip" inverseEntity="Location" syncable="YES"/>
     </entity>
     <entity name="Trip" representedClassName=".Trip" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
@@ -80,7 +80,7 @@
         <element name="Incident" positionX="-45" positionY="72" width="128" height="135"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="240"/>
         <element name="Profile" positionX="-45" positionY="144" width="128" height="150"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="390"/>
         <element name="Prototrip" positionX="-54" positionY="135" width="128" height="105"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="390"/>
     </elements>
 </model>

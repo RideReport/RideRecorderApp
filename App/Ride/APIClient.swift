@@ -72,7 +72,7 @@ class AuthenticatedAPIRequest {
     }
     
     #if (arch(i386) || arch(x86_64)) && os(iOS)
-    static var serverAddress = "https://api.ride.report/api/v2/"
+    static var serverAddress = "http://10.0.1.15:8000/api/v2/"
     #else
     static var serverAddress = "https://api.ride.report/api/v2/"
     #endif
@@ -269,7 +269,7 @@ class APIClient {
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
             // avoid a bug that could have this called twice on app launch
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "appDidBecomeActive", name: UIApplicationDidBecomeActiveNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(APIClient.appDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
         })
     }
     
@@ -653,6 +653,75 @@ class APIClient {
         
         return self.tripRequests[trip]!
     }
+    
+    //
+    // MARK: - Application API Methods
+    //
+    
+    
+    func getAllApplications()-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications") { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                if let apps = json.array {
+                    var appsToDelete = ConnectedApp.allApps()
+                    
+                    for appDict in apps {
+                        if let app = ConnectedApp.createOrUpdate(withJson: appDict), index = appsToDelete.indexOf(app) {
+                            appsToDelete.removeAtIndex(index)
+                        }
+                    }
+                    
+                    for app in appsToDelete {
+                        // delete any app objects we did not receive
+                        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                    }
+                    
+                    CoreDataManager.sharedManager.saveContext()
+                }
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
+    
+    func getApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications/" + app.uuid) { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                ConnectedApp.createOrUpdate(withJson: json)
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party app: %@", error))
+            }
+        }
+    }
+    
+    func connectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/connect", parameters: app.json().dictionaryObject) { (response) -> Void in
+            switch response.result {
+            case .Success(let json):
+                if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
+                    ConnectedApp.createOrUpdate(withJson: json)
+                    app.profile = Profile.profile()
+                    CoreDataManager.sharedManager.saveContext()
+                }
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
+    
+    func disconnectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
+            switch response.result {
+            case .Success(_):
+                app.profile = nil
+                CoreDataManager.sharedManager.saveContext()
+            case .Failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            }
+        }
+    }
 
     
     //
@@ -690,6 +759,15 @@ class APIClient {
                     NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidGetArea", object: nil)
                 } else {
                     self.area = .Unknown
+                }
+                
+                if let connectedApps = json["connected_apps"].array {
+                    for appDict in connectedApps {
+                        let app = ConnectedApp.createOrUpdate(withJson: appDict)
+                        app?.profile = Profile.profile()
+                    }
+                    
+                    CoreDataManager.sharedManager.saveContext()
                 }
                 
                 if let mixPanelID = json["mixpanel_id"].string {

@@ -47,6 +47,9 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         
         if let shortCode = userInfo?["shortcodeLength"] as! Int? {
             self.passcodeInputView.maximumLength = UInt(shortCode)
+            if self.passcodeInputView.maximumLength > 4 {
+                self.passcodeInputView.drawsPasscodeSeparator = true
+            }
             self.passcodeInputView.hidden = false
             helperTextLabel.markdownStringValue = "**Enter the secret code** in the email we just sent."
         

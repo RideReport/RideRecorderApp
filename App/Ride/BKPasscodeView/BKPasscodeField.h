@@ -22,6 +22,7 @@
 
 // configurations
 @property (nonatomic) NSUInteger            maximumLength;
+@property (nonatomic) BOOL                  drawsPasscodeSeparator;
 @property (nonatomic) CGSize                dotSize;
 @property (nonatomic) CGFloat           	lineHeight;
 @property (nonatomic) CGFloat           	dotSpacing;

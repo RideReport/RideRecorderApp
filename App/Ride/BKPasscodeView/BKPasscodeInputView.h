@@ -27,6 +27,7 @@ IB_DESIGNABLE
 @property (nonatomic) IBInspectable UIKeyboardType                    keyboardType;
 @property (nonatomic) IBInspectable UIKeyboardAppearance                    keyboardAppearance;
 @property (nonatomic) IBInspectable NSUInteger                        maximumLength;
+@property (nonatomic) IBInspectable BOOL          drawsPasscodeSeparator;
 @property (nonatomic, strong) IBInspectable UIColor       *dotColor;
 @property (nonatomic, strong) IBInspectable UIColor       *messageColor;
 

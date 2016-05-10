@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) NSMutableString       *mutablePasscode;
 @property (strong, nonatomic) NSRegularExpression   *nonDigitRegularExpression;
+@property (nonatomic) CGSize                separatorSize;
 
 @end
 
@@ -51,6 +52,7 @@
 {
     _maximumLength = 4;
     _dotSize = CGSizeMake(18.0f, 19.0f);
+    _separatorSize = CGSizeMake(25.0f, 2.0f);
     _dotSpacing = 25.0f;
     _lineHeight = 3.0f;
     _dotColor = [UIColor blackColor];
@@ -185,7 +187,12 @@
 
 - (CGSize)contentSize
 {
-    return CGSizeMake(self.maximumLength * _dotSize.width + (self.maximumLength - 1) * _dotSpacing,
+    CGFloat width = self.maximumLength * _dotSize.width + (self.maximumLength - 1) * _dotSpacing;
+    if (self.drawsPasscodeSeparator) {
+        width += _separatorSize.width;
+    }
+    
+    return CGSizeMake(width ,
                       _dotSize.height);
 }
 
@@ -204,9 +211,16 @@
     
     if ([self.imageSource respondsToSelector:@selector(passcodeField:dotImageAtIndex:filled:)]) {
         
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
+        
         for (NSUInteger i = 0; i < self.maximumLength; i++) {
             
             UIImage *image = nil;
+            
+            if (self.drawsPasscodeSeparator && i > 1 && (floor(self.maximumLength/2) - i) == 0) {
+                origin.x += self.separatorSize.width;
+            }
             
             if (i < self.mutablePasscode.length) {
                 // draw filled image
@@ -230,6 +244,9 @@
         CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
         
         for (NSUInteger i = 0; i < self.maximumLength; i++) {
+            if (self.drawsPasscodeSeparator && i > 1 && (floor(self.maximumLength/2) - i) == 0) {
+                origin.x += self.separatorSize.width;
+            }
             
             if (i < self.mutablePasscode.length) {
                 // draw circle
