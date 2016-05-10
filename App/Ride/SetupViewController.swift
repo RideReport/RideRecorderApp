@@ -83,6 +83,8 @@ class SetupViewController: UINavigationController {
     }
     
     func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil) {
+        if let button = sender as? UIControl { button.userInteractionEnabled = false }
+        
         let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
@@ -95,10 +97,13 @@ class SetupViewController: UINavigationController {
             transition.type = kCATransitionFade
             self.view.layer.addAnimation(transition, forKey: nil)
             self.setViewControllers([nextPage], animated: false)
+            if let button = sender as? UIControl { button.userInteractionEnabled = true }
         }
     }
     
     func previousPage(sender: AnyObject) {
+        if let button = sender as? UIControl { button.userInteractionEnabled = false }
+
         let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! - 1) < 0) {
@@ -110,6 +115,7 @@ class SetupViewController: UINavigationController {
             transition.type = kCATransitionFade
             self.view.layer.addAnimation(transition, forKey: nil)
             self.setViewControllers([prevPage], animated: false)
+            if let button = sender as? UIControl { button.userInteractionEnabled = true }
         }
     }
     
