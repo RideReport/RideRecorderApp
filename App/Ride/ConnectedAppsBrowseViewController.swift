@@ -148,7 +148,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             descriptionLabel.text = app.descriptionText
             
             if let urlString = app.baseImageUrl, url = NSURL(string: urlString) {
-                imageView.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
+                imageView.kf_setImageWithURL(url)
             }
         }
     }

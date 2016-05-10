@@ -45,7 +45,7 @@ class ConnectedAppSettingsViewController : UIViewController{
     private func refreshUI() {
         self.connectedAppDetailText.text = String(format: "%@ accesses data from your trips in Ride Report.", self.connectingApp.name ?? "App")
         if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
-            self.connectedAppLogo.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
+            self.connectedAppLogo.kf_setImageWithURL(url)
         }
     }
     

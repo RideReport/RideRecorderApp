@@ -41,7 +41,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             
             self.connectingAppDetailText.text = String(format: "%@ would like following data about your rides:", self.connectingApp.name ?? "App")
             if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
-                self.connectingAppLogo.kf_setImageWithURL(url, placeholderImage: UIImage(named: "placeholder"))
+                self.connectingAppLogo.kf_setImageWithURL(url)
             }
             self.tableView.reloadData()
         }
