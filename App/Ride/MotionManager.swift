@@ -215,6 +215,15 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
             
         self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard error == nil else {
+                DDLogInfo("Error reading accelerometer data! Ending early…")
+                sensorDataCollection.addUnknownTypePrediction()
+                handler(sensorDataCollection: sensorDataCollection)
+                self.isQueryingMotionData = false
+                self.stopMotionUpdatesAsNeeded()
+                return
+            }
+            
             guard let accelerometerAcceleration = motion else {
                 return
             }
@@ -230,6 +239,15 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (motion, error) in
+            guard error == nil else {
+                DDLogInfo("Error reading accelerometer data! Ending early…")
+                sensorDataCollection.addUnknownTypePrediction()
+                handler(sensorDataCollection: sensorDataCollection)
+                self.isQueryingMotionData = false
+                self.stopMotionUpdatesAsNeeded()
+                return
+            }
+            
             guard let gyroscopeData = motion else {
                 return
             }
