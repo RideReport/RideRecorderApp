@@ -103,26 +103,47 @@ class Profile : NSManagedObject {
         return totalLength.floatValue
     }
     
-    var distanceBikedJewel: String {
-        let totalMiles = self.metersBiked.miles
-        if totalMiles > 5000 {
-            return "🌈  "
-        } else if totalMiles > 2000 {
-            return "🌌  "
-        } else if totalMiles > 1000 {
-            return "🌠  "
-        } else if totalMiles > 500 {
-            return "🌋  "
-        } else if totalMiles > 100 {
-            return "🗻  "
-        } else if totalMiles > 50 {
-            return "🏔  "
-        } else if totalMiles > 25 {
-            return "⛰  "
-        } else if totalMiles > 10 {
-            return "🌅  "
+    var tripsBikedJewel: String {
+        let totalTrips = Trip.numberOfCycledTrips
+        if totalTrips > 5000 {
+            return "🌈"
+        } else if totalTrips > 2000 {
+            return "🌌"
+        } else if totalTrips > 1000 {
+            return "🌠"
+        } else if totalTrips > 500 {
+            return "🌋"
+        } else if totalTrips > 100 {
+            return "🗻"
+        } else if totalTrips > 50 {
+            return "🏔"
+        } else if totalTrips > 25 {
+            return "⛰"
+        } else if totalTrips > 10 {
+            return "🌅"
         } else {
-            return "🌄  "
+            return "🌄"
+        }
+    }
+    
+    var distanceBikedImpressiveStat: (emoji: String, description: String) {
+        let totalMiles = self.metersBiked.miles
+        if totalMiles > 20000 {
+            return ("🌍", String(format: "%0.f miles (around the world %.1f times)!", totalMiles, totalMiles/24901))
+        } else if totalMiles > 6000 {
+            return ("🌘", String(format: "%0.f miles (around the moon %.1f times)!", totalMiles, totalMiles/6786))
+        } else if totalMiles > 1700 {
+            return ("🇺🇸", String(format: "%0.f miles (across the US %.1f times)!", totalMiles, totalMiles/2680))
+        } else if totalMiles > 810 {
+            return ("🏔", String(format: "%0.f miles (across Alaska %.1f times)!", totalMiles, totalMiles/770))
+        } else if totalMiles > 400 {
+            return ("🌲", String(format: "%0.f miles (across Oregon %.1f times)!", totalMiles, totalMiles/400))
+        } else if totalMiles > 250 {
+            return ("🌅", String(format: "%0.f miles (across California %.1f times)!", totalMiles, totalMiles/250))
+        } else if totalMiles > 37 {
+            return ("🐄", String(format: "%0.f miles (across Vermont %.1f times)!", totalMiles, totalMiles/37))
+        } else {
+            return ("🐣", String(format: "%.0f miles", totalMiles))
         }
     }
     
