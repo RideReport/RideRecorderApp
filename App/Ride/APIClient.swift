@@ -761,14 +761,21 @@ class APIClient {
                     self.area = .Unknown
                 }
                 
+                
+                if let statusText = json["status_text"].string, statusEmoji = json["status_emoji"].string {
+                    Profile.profile().statusText = statusText
+                    Profile.profile().statusEmoji = statusEmoji
+                }
+                
                 if let connectedApps = json["connected_apps"].array {
                     for appDict in connectedApps {
                         let app = ConnectedApp.createOrUpdate(withJson: appDict)
                         app?.profile = Profile.profile()
                     }
-                    
-                    CoreDataManager.sharedManager.saveContext()
                 }
+                
+                CoreDataManager.sharedManager.saveContext()
+                NSNotificationCenter.defaultCenter().postNotificationName("APIClientStatusTextDidChange", object: nil)
                 
                 if let mixPanelID = json["mixpanel_id"].string {
                     Mixpanel.sharedInstance().identify(mixPanelID)

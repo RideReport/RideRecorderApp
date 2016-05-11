@@ -17,6 +17,8 @@ class Profile : NSManagedObject {
     @NSManaged var currentStreakLength : NSNumber?
     @NSManaged var longestStreakStartDate : NSDate?
     @NSManaged var longestStreakLength : NSNumber?
+    @NSManaged var statusText : String?
+    @NSManaged var statusEmoji : String?
     @NSManaged private(set) var lastGeofencedLocation : Location?
     @NSManaged var connectedApps : NSOrderedSet!
 

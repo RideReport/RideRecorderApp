@@ -21,7 +21,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
 
     private var reachability : Reachability!
     
-    private var hasShownStreakAnimation = false
+    private var shouldShowStreakAnimation = false
     
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
@@ -113,17 +113,17 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             strongSelf.reloadSectionIdentifiersIfNeeded()
         }
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: nil) {[weak self] (_) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.hasShownStreakAnimation = false
-            strongSelf.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
-        }
-        
         if APIClient.sharedClient.accountVerificationStatus != .Unknown {
             self.runCreateAccountOfferIfNeeded()
         } else {
+            NSNotificationCenter.defaultCenter().addObserverForName("APIClientStatusTextDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                strongSelf.shouldShowStreakAnimation = true
+                strongSelf.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.None)
+            }
+            
             NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
                 guard let strongSelf = self else {
                     return
@@ -517,58 +517,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             trophySummaryLabel.text = ""
         }
         
-        let animationDelay: NSTimeInterval = 0.6
-        
-        if let currentStreakLength = Profile.profile().currentStreakLength?.integerValue where currentStreakLength > 0 {
-            if currentStreakLength == 1 {
-                if (Trip.bikeTripsToday() == nil) {
-                    streakTextLabel.text = "You rode yesterday"
-                    streakJewelLabel.text = "💖"
+        if let statusText = Profile.profile().statusText, statusEmoji = Profile.profile().statusEmoji {
+            streakTextLabel.text = statusText
+            streakJewelLabel.text = statusEmoji
+            if (self.shouldShowStreakAnimation) {
+                self.shouldShowStreakAnimation = false
+                if statusEmoji == "🐣" {
+                    self.bobbleView(streakJewelLabel)
                 } else {
-                    streakTextLabel.text = "You rode today"
-                    streakJewelLabel.text = "💖"
-                }
-                if (!self.hasShownStreakAnimation) {
-                    self.hasShownStreakAnimation = true
-                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
-                }
-            } else if currentStreakLength == 2 {
-                if (Trip.bikeTripsToday() == nil) {
-                    streakTextLabel.text = "Ride today to start a ride streak!"
-                    streakJewelLabel.text = "💗"
-                } else {
-                    streakTextLabel.text = "Ride tomorrow to start a ride streak"
-                    streakJewelLabel.text = "💗"
-                }
-                if (!self.hasShownStreakAnimation) {
-                    self.hasShownStreakAnimation = true
-                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
-                }
-            } else {
-                if (Trip.bikeTripsToday() == nil) {
-                    if (NSDate().isBeforeNoon()) {
-                        streakTextLabel.text = String(format: "Keep your %i day streak rolling", currentStreakLength)
-                        streakJewelLabel.text = "💗"
-                    } else {
-                        streakTextLabel.text = String(format: "Don't end your %i day streak!", currentStreakLength)
-                        streakJewelLabel.text = "💔"
-                    }
-                } else {
-                    streakTextLabel.text = String(format: "%i day ride streak", currentStreakLength)
-                    streakJewelLabel.text = Profile.profile().currentStreakJewel
-                }
-                if (!self.hasShownStreakAnimation) {
-                    self.hasShownStreakAnimation = true
-                    streakJewelLabel.delay(animationDelay) { self.beatHeart(streakJewelLabel) }
+                    self.beatHeart(streakJewelLabel)
                 }
             }
         } else {
-            streakTextLabel.text = "No rides today"
-            streakJewelLabel.text = "🐣"
-            if (!self.hasShownStreakAnimation) {
-                self.hasShownStreakAnimation = true
-                streakJewelLabel.delay(animationDelay) { self.bobbleView(streakJewelLabel) }
-            }
+            streakTextLabel.text = ""
+            streakJewelLabel.text = ""
         }
     }
     
