@@ -157,11 +157,13 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         if indexPath.section == 0 {
             // handled by storyboard
         } else {
-            guard let indexPath = self.tableView.indexPathForSelectedRow, let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp else {
+            guard let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp else {
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 return
             }
 
-            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) else {
+            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil else {
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 return
             }
             
