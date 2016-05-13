@@ -42,8 +42,8 @@ import Foundation
     func commonInit() {
         self.textLabel = UILabel(frame: CGRectMake(7, 20, self.frame.size.width, self.frame.size.height - 20))
         self.textLabel.textColor = UIColor.whiteColor()
-        self.textLabel.numberOfLines = 1
-        self.textLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        self.textLabel.numberOfLines = 0
+        self.textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         self.textLabel.adjustsFontSizeToFitWidth = true
         self.textLabel.minimumScaleFactor = 0.4
         self.reloadView()
@@ -54,10 +54,11 @@ import Foundation
         let rightHandBefore = self.frame.origin.x + self.frame.width
         self.textLabel.text = self.text
         self.textLabel.font = UIFont.systemFontOfSize(self.fontSize)
-        self.textLabel.sizeToFit()
-        if (self.superview != nil && self.textLabel.frame.width > (self.superview!.frame.width - 30)) {
-            self.textLabel.frame.size.width = self.textLabel.frame.width - 30
+        if let superview = self.superview {
+            self.textLabel.frame.size.width = superview.frame.width - 30
         }
+        self.textLabel.sizeToFit()
+        
         let newWidth = self.textLabel.frame.width + 20
         let newHeight = self.textLabel.frame.height + 28
         self.frame = CGRectMake(rightHandBefore - newWidth, self.frame.origin.y, newWidth, newHeight)
