@@ -286,6 +286,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func handleNotificationAction(identifier: String?, userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
         if let uuid = userInfo["uuid"] as? String,
             trip = Trip.tripWithUUID(uuid) {
+                DDLogInfo(String(format: "Received trip rating notification action"))
                 if (identifier == "GOOD_RIDE_IDENTIFIER") {
                     trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
                     self.postTripRatedThanksNotification(true)

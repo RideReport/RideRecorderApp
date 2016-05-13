@@ -8,6 +8,7 @@
 
 import Foundation
 import HealthKit
+import CoreData
 
 enum HealthKitManagerAuthorizationStatus {
     case NotDetermined
@@ -23,6 +24,8 @@ class HealthKitManager {
     var currentWeightKilograms  = 62.0
     var currentGender : HKBiologicalSex = HKBiologicalSex.NotSet
     var currentAgeYears = 30.0
+    
+    private var tripsRemainingToSave: [Trip]?
 
     
     struct Static {
@@ -90,9 +93,53 @@ class HealthKitManager {
                 self.getGender()
                 self.getAge()
                 dispatch_async(dispatch_get_main_queue()) {
+                    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(HealthKitManager.saveUnsavedTrips), name: UIApplicationDidBecomeActiveNotification, object: nil)
+                    self.saveUnsavedTrips()
                     authorizationHandler(success: true)
                 }
             }
+        }
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    @objc private func saveUnsavedTrips() {
+        if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+            dispatch_async(dispatch_get_main_queue()) {
+                let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+                let fetchedRequest = NSFetchRequest(entityName: "Trip")
+                fetchedRequest.predicate = NSPredicate(format: "isSavedToHealthKit == false")
+                fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                
+                let results: [AnyObject]?
+                do {
+                    results = try context.executeFetchRequest(fetchedRequest)
+                } catch let error {
+                    DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+                    return
+                }
+                guard let theTrips = results as? [Trip] where theTrips.count > 0 else {
+                    return
+                }
+                
+                self.tripsRemainingToSave = theTrips
+                self.saveNextUnsavedTrip()
+            }
+        }
+    }
+    
+    private func saveNextUnsavedTrip() {
+        guard let nextTrip = self.tripsRemainingToSave?.first else {
+            self.tripsRemainingToSave = nil
+            return
+        }
+        
+        self.saveOrUpdateTrip(nextTrip) { _ in
+            self.tripsRemainingToSave!.removeFirst()
+            
+            self.saveNextUnsavedTrip()
         }
     }
     
@@ -143,20 +190,13 @@ class HealthKitManager {
         self.healthStore.executeQuery(query)
     }
     
-    func deleteWorkoutAndSamplesForWorkoutUUID(uuidString: String, handler: ()->()) {
-        guard let uuid = NSUUID(UUIDString: uuidString) else {
-            handler()
+    func deleteWorkoutAndSamplesForTrip(trip:Trip, handler: (success: Bool)->()) {
+        guard let uuidString = trip.healthKitUuid, uuid = NSUUID(UUIDString: uuidString) else {
+            handler(success: false)
             return
         }
         
-        let workoutPredicate = HKQuery.predicateForObjectWithUUID(uuid)
-        self.healthStore.executeQuery(HKSampleQuery(sampleType: HKQuantityType.workoutType(), predicate: workoutPredicate, limit: 1, sortDescriptors: nil) { (query, results, error) in
-            guard let workout = results?.first as? HKWorkout else {
-                DDLogWarn("Error deleting workout!")
-                handler()
-                return
-            }
-            
+        let deleteBlock = { (workout: HKWorkout) in
             let samplesPredicate = HKQuery.predicateForObjectsFromWorkout(workout)
             if #available(iOS 9.0, *) {
                 self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!, predicate: samplesPredicate) { (_, _, _) in
@@ -164,18 +204,29 @@ class HealthKitManager {
                     self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, predicate: samplesPredicate) { (_, _, _) in
                         // delete the workout last, after all associated objects are deleted.
                         self.healthStore.deleteObject(workout, withCompletion: { (b, e) in
-                            handler()
+                            handler(success: true)
                         })
                     }
                 }
             } else {
                 // Fallback for iOS 8
-                handler()
-                self.healthStore.deleteObject(workout, withCompletion: { (_, _) in
-                    handler()
-                })
+                handler(success: false)
             }
-        })
+        }
+        
+        if let workout = trip.workoutObject {
+            deleteBlock(workout)
+        } else {
+            let workoutPredicate = HKQuery.predicateForObjectWithUUID(uuid)
+            self.healthStore.executeQuery(HKSampleQuery(sampleType: HKQuantityType.workoutType(), predicate: workoutPredicate, limit: 1, sortDescriptors: nil) { (query, results, error) in
+                guard let workout = results?.first as? HKWorkout else {
+                    handler(success: false)
+                    return
+                }
+                
+                deleteBlock(workout)
+            })
+        }
     }
     
     func saveOrUpdateTrip(trip:Trip, handler:(success: Bool)->Void={_ in }) {
@@ -199,17 +250,22 @@ class HealthKitManager {
         trip.isBeingSavedToHealthKit = true
         
         // delete any thing trip data that may have already been saved for this trip
-        if let uuid = trip.healthKitUuid {
+        if trip.healthKitUuid != nil {
             DDLogWarn("Deleting existing workout with matching UUID.")
-            self.deleteWorkoutAndSamplesForWorkoutUUID(uuid) {
-                dispatch_async(dispatch_get_main_queue()) {
+            self.deleteWorkoutAndSamplesForTrip(trip) { (success) in
+                if success {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        trip.isBeingSavedToHealthKit = false
+                        trip.healthKitUuid = nil
+                        CoreDataManager.sharedManager.saveContext()
+                        self.saveOrUpdateTrip(trip, handler: handler)
+                    }
+                } else {
+                    DDLogWarn("Failed to delete existing workout with matching UUID. Will try later.")
                     trip.isBeingSavedToHealthKit = false
-                    trip.healthKitUuid = nil
-                    CoreDataManager.sharedManager.saveContext()
-                    self.saveOrUpdateTrip(trip)
+                    handler(success: false)
                 }
             }
-            handler(success: false)
             return
         }
         
@@ -314,6 +370,7 @@ class HealthKitManager {
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
                         trip.healthKitUuid = ride.UUID.UUIDString
+                        trip.isSavedToHealthKit = true
                         CoreDataManager.sharedManager.saveContext()
                     }
                     

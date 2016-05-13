@@ -658,7 +658,20 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                 trip.calculateAggregatePredictedActivityType()
             }))
             alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.Default, handler: { (_) in
-                HealthKitManager.sharedManager.saveOrUpdateTrip(trip)
+                let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                })
+                
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(30 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                    trip.isSavedToHealthKit = false
+                    CoreDataManager.sharedManager.saveContext()
+                    HealthKitManager.sharedManager.saveOrUpdateTrip(trip) {_ in 
+                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                            
+                            UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                        }
+                    }
+                })
             }))
             
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Cancel, handler: nil))

@@ -12,6 +12,7 @@ import CoreData
 import CoreLocation
 import CoreMotion
 import MapKit
+import HealthKit
 
 @objc enum ActivityType : Int16 {
     case Unknown = 0
@@ -129,6 +130,7 @@ class Trip : NSManagedObject {
             dispatch_async(dispatch_get_main_queue()) {
                 // newly closed trips should be synced to healthkit
                 if (HealthKitManager.authorizationStatus == .Authorized) {
+                    self.isSavedToHealthKit = false
                     HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                 }
             }
@@ -141,6 +143,7 @@ class Trip : NSManagedObject {
     @NSManaged var incidents : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
+    @NSManaged var isSavedToHealthKit : Bool
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var summaryIsSynced : Bool
     @NSManaged var locationsNotYetDownloaded : Bool
@@ -148,6 +151,7 @@ class Trip : NSManagedObject {
     @NSManaged var rewardEmoji : String?
     @NSManaged var healthKitUuid : String?
     var isBeingSavedToHealthKit: Bool = false
+    var workoutObject: HKWorkout? = nil
     
     var displaySafeRewardEmoji: String? {
         if let emoji = self.rewardEmoji where emoji.containsUnsupportEmoji() {
@@ -175,6 +179,7 @@ class Trip : NSManagedObject {
                 dispatch_async(dispatch_get_main_queue()) {
                     // newly closed trips should be synced to healthkit
                     if (HealthKitManager.authorizationStatus == .Authorized) {
+                        self.isSavedToHealthKit = false
                         HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                     }
                 }
