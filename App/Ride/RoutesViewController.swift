@@ -125,7 +125,9 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
                     return
                 }
                 strongSelf.shouldShowStreakAnimation = true
-                strongSelf.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.None)
+                if let rewardsCell = strongSelf.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) {
+                    strongSelf.configureRewardsCell(rewardsCell)
+                }
             }
             
             NSNotificationCenter.defaultCenter().addObserverForName("APIClientAccountStatusDidChange", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
