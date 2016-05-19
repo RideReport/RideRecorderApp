@@ -252,7 +252,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             self.safariViewControllerActivityIndicator = nil
         }
         
-        if !didLoadSuccessfully {
+        if !didLoadSuccessfully && self.selectedConnectedApp?.authorizationCode == nil {
             let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
             alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
                 self.navigationController?.popViewControllerAnimated(true)
