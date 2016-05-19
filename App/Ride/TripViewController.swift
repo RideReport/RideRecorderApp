@@ -143,6 +143,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
 
         NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {

@@ -51,6 +51,11 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             }
         }
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+    }
 
     override func viewWillLayoutSubviews()
     {
