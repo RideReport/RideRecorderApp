@@ -112,7 +112,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             // For now we assume that all scopes are of type Bool
             if  indexPath.row < connectingApp.scopes.count {
                 let scope = connectingApp.scopes[indexPath.row]
-                permissionText.text = (scope.descriptionText ?? "") + (scope.required ? " (required)" : "")
+                permissionText.text = scope.descriptionText ?? ""
                 permissionSwitch.enabled = !scope.required
                 permissionSwitch.on = scope.granted
             }
