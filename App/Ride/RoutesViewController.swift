@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import SystemConfiguration
 
+
 class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
@@ -32,7 +33,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
+        
         self.navigationItem.hidesBackButton = true
         
         self.popupView.hidden = true
@@ -47,6 +49,8 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
         headerViewBackgroundView.backgroundColor = ColorPallete.sharedPallete.almostWhite
         self.tableView.insertSubview(headerViewBackgroundView, atIndex: 0)
+        
+        self.tableView.registerClass(RoutesTableViewHeaderCell.self, forHeaderFooterViewReuseIdentifier: "RoutesViewTableSectionHeaderCell")
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
@@ -330,9 +334,15 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             
         case .Insert:
             self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+            if let headerView = self.tableView!.headerViewForSection(newIndexPath!.section + 1) {
+                self.configureHeaderView(headerView, forHeaderInSection: newIndexPath!.section + 1)
+            }
             rewardSectionNeedsReload = true
         case .Delete:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
+            if let headerView = self.tableView!.headerViewForSection(indexPath!.section + 1) {
+                self.configureHeaderView(headerView, forHeaderInSection: indexPath!.section + 1)
+            }
             rewardSectionNeedsReload = true
         case .Move:
             self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
@@ -346,22 +356,27 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         return self.fetchedResultsController.sections!.count + 1
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 0
+//    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+//        let headerView = view as! UITableViewHeaderFooterView
+//        
+//        headerView.tintColor = self.view.backgroundColor
+//        headerView.opaque = false
+//        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
+//        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
+//    }
+    
+    private func configureHeaderView(headerView: UITableViewHeaderFooterView, forHeaderInSection section: Int) {
+        guard let view = headerView as? RoutesTableViewHeaderCell else {
+            return
         }
         
-        return 26
-    }
-    
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var title = ""
         if section == 0 {
-            return "  Trophies"
+            title = "  Trophies"
         }
         
         let theSection = self.fetchedResultsController.sections![section - 1]
         
-        var title = ""
         if let date = Trip.sectionDateFormatter.dateFromString(theSection.name) {
             if (date.isToday()) {
                 title = "Today"
@@ -378,7 +393,38 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             title = "In Progress"
         }
         
-        return "  ".stringByAppendingString(title)
+        var totalLength: Meters = 0
+        if let tripsInSection = theSection.objects as? [Trip] {
+            for trip in tripsInSection {
+                if trip.activityType == .Cycling {
+                    totalLength += trip.length
+                }
+            }
+        }
+        
+        view.dateLabel.text = "  " + title
+        if totalLength > 0 {
+            view.milesLabel.text = totalLength.distanceString
+        }
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 0
+        }
+        
+        return 26
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let reuseID = "RoutesViewTableSectionHeaderCell"
+        
+        if let headerView = self.tableView.dequeueReusableHeaderFooterViewWithIdentifier(reuseID) {
+            self.configureHeaderView(headerView, forHeaderInSection: section)
+            return headerView
+        }
+        
+        return nil
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -431,15 +477,6 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
         }
         
         return tableCell
-    }
-    
-    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let headerView = view as! UITableViewHeaderFooterView
-        
-        headerView.tintColor = self.view.backgroundColor
-        headerView.opaque = false
-        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
-        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
@@ -699,5 +736,46 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
             return false
         }
         return true
+    }
+}
+
+class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
+    private var dateLabel: UILabel!
+    private var milesLabel: UILabel!
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        commonInit()
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        self.backgroundView = UIView()
+        
+        self.contentView.backgroundColor = UIColor.whiteColor()
+        
+        self.dateLabel = UILabel()
+        self.dateLabel.font = UIFont.boldSystemFontOfSize(16.0)
+        self.dateLabel.textColor = ColorPallete.sharedPallete.darkGrey
+        self.dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.dateLabel.numberOfLines = 1
+        self.contentView.addSubview(self.dateLabel)
+        NSLayoutConstraint(item: self.dateLabel, attribute: .Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1, constant: -6).active = true
+        NSLayoutConstraint(item: self.dateLabel, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+        
+        self.milesLabel = UILabel()
+        self.milesLabel.font = UIFont.systemFontOfSize(16.0)
+        self.milesLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+        self.milesLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.milesLabel.numberOfLines = 1
+        self.milesLabel.textAlignment = .Right
+        self.contentView.addSubview(self.milesLabel)
+        NSLayoutConstraint(item: self.milesLabel, attribute: .Trailing, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1, constant: -10).active = true
+        NSLayoutConstraint(item: self.milesLabel, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 0).active = true
     }
 }
