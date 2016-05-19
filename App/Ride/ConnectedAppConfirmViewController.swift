@@ -14,7 +14,8 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     @IBOutlet weak var connectingAppLogo: UIImageView!
     @IBOutlet weak var connectingAppDetailText: UILabel!
     @IBOutlet weak var connectButton: UIButton!
-    @IBOutlet weak var connectionActivityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var connectionActivityIndicatorView: UIView!
+    @IBOutlet weak var connectionActivityIndicatorViewText: UILabel!
     
     private var hasCanceled = false
     
@@ -39,7 +40,8 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             }
 
             
-            self.connectingAppDetailText.text = String(format: "%@ would like following data about your rides:", self.connectingApp.name ?? "App")
+            self.connectingAppDetailText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
+            self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")
             if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
                 self.connectingAppLogo.kf_setImageWithURL(url)
             }
@@ -59,7 +61,6 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     }
     
     @IBAction func connect(sender: AnyObject) {
-        self.connectButton.hidden = true
         self.connectionActivityIndicatorView.hidden = false
         
         self.postConnectApplication()
