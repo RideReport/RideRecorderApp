@@ -163,7 +163,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                 return
             }
 
-            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil else {
+            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil && (url.scheme == "https") else {
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 return
             }
