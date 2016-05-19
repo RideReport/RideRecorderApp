@@ -235,8 +235,16 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                     
                     app.authorizationCode = code
                     
-                    // If we receive an authcode, don't showPageLoadError
-                    NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(ConnectedAppsBrowseViewController.showPageLoadError), object: nil)
+                    if #available(iOS 9.0, *) {
+                        // Avoid a possible scenario where didCompleteInitialLoad gets called with didLoadSuccessfully=false because the webpage
+                        // decided to callback early. This can happen if the user is already logged in.
+                        // We delay showPageLoadError to give authCodeCallbackNotificationReceived a chance to callback
+                        
+                        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(ConnectedAppsBrowseViewController.showPageLoadError), object: nil)
+                        if let sfc = self.safariViewController as? SFSafariViewController {
+                            sfc.delegate = nil
+                        }
+                    }
 
                     self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
                 } else if let _ = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
@@ -264,10 +272,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             self.safariViewControllerActivityIndicator = nil
         }
         
-        if !didLoadSuccessfully && self.selectedConnectedApp?.authorizationCode == nil {
-            // Avoid a possible scenario where didCompleteInitialLoad gets called with didLoadSuccessfully=false because the webpage
-            // decided to callback early. This can happen if the user is already logged in.
-            // We delay showPageLoadError to give authCodeCallbackNotificationReceived a chance to callback
+        if !didLoadSuccessfully {
             self.performSelector(#selector(ConnectedAppsBrowseViewController.showPageLoadError), withObject: nil, afterDelay: 1.0)
         }
     }
