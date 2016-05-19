@@ -101,14 +101,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func startupNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = "Comfortable\n👍"
+        goodRideAction.title = "Great!\n👍"
         goodRideAction.activationMode = UIUserNotificationActivationMode.Background
         goodRideAction.destructive = false
         goodRideAction.authenticationRequired = false
         
         let badRideAction = UIMutableUserNotificationAction()
         badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = "Stressful\n👎"
+        badRideAction.title = "Not Great\n👎"
         badRideAction.activationMode = UIUserNotificationActivationMode.Background
         badRideAction.destructive = true
         badRideAction.authenticationRequired = false
