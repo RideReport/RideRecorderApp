@@ -41,12 +41,12 @@ import Foundation
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: String = "Avoid\n👎" {
+    @IBInspectable var desturctiveActionTitle: String = "Stressful\n👎" {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: String = "Recommend\n👍" {
+    @IBInspectable var actionTitle: String = "Comfortable\n👍" {
         didSet {
             reloadUI()
         }

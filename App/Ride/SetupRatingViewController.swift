@@ -40,7 +40,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
 
-        helperTextLabel.animatedSetMarkdownStringValue("Recommend a route with a **Thumbs up**, or tell others to avoid it with a **thumbs down**.")
+        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a chill ride, **thumbs down** if something stressed you out.")
     }
     
     func didTapActionButton(view: RideSummaryView) {
