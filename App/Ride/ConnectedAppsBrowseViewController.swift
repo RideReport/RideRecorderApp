@@ -234,6 +234,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                     NSNotificationCenter.defaultCenter().removeObserver(self)
                     
                     app.authorizationCode = code
+                    
+                    // If we receive an authcode, don't showPageLoadError
+                    NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(ConnectedAppsBrowseViewController.showPageLoadError), object: nil)
+
                     self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
                 } else if let _ = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
                     self.navigationController?.popViewControllerAnimated(true)
@@ -245,6 +249,14 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
+    @objc private func showPageLoadError() {
+        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
+            self.navigationController?.popViewControllerAnimated(true)
+        }))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
     @available(iOS 9.0, *)
     func safariViewController(controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
         if let loadingIndicator = self.safariViewControllerActivityIndicator {
@@ -253,11 +265,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
         
         if !didLoadSuccessfully && self.selectedConnectedApp?.authorizationCode == nil {
-            let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
-            alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
-                self.navigationController?.popViewControllerAnimated(true)
-            }))
-            self.presentViewController(alertController, animated: true, completion: nil)
+            // Avoid a possible scenario where didCompleteInitialLoad gets called with didLoadSuccessfully=false because the webpage
+            // decided to callback early. This can happen if the user is already logged in.
+            // We delay showPageLoadError to give authCodeCallbackNotificationReceived a chance to callback
+            self.performSelector(#selector(ConnectedAppsBrowseViewController.showPageLoadError), withObject: nil, afterDelay: 1.0)
         }
     }
 }
