@@ -12,12 +12,13 @@ import CoreData
 import Kingfisher
 import SafariServices
 
-class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate {
+class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, SFSafariViewControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     
     private var selectedConnectedApp: ConnectedApp? = nil
     private var safariViewController: UIViewController? = nil
+    private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
     private var fetchedResultsController : NSFetchedResultsController! = nil
     
     @IBAction func cancel(sender: AnyObject) {
@@ -172,8 +173,23 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: "RideReportAuthCodeCallBackNotification", object: nil)
             
             if #available(iOS 9.0, *) {
-                self.safariViewController = SFSafariViewController(URL: url)
-                self.navigationController?.pushViewController(self.safariViewController!, animated: true)
+                let sfvc = SFSafariViewController(URL: url)
+                self.safariViewController = sfvc
+                sfvc.delegate = self
+                self.navigationController?.pushViewController(sfvc, animated: true)
+                if let coordinator = transitionCoordinator() {
+                    coordinator.animateAlongsideTransition(nil, completion: { (context) in
+                        let targetSubview = sfvc.view
+                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+                        loadingIndicator.color = ColorPallete.sharedPallete.darkGrey
+                        self.safariViewControllerActivityIndicator = loadingIndicator
+                        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+                        targetSubview.addSubview(loadingIndicator)
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterX, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterX, multiplier: 1, constant: 0).active = true
+                        loadingIndicator.startAnimating()
+                    })
+                }
             } else {
                 UIApplication.sharedApplication().openURL(url)
             }
@@ -229,4 +245,11 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
+    @available(iOS 9.0, *)
+    func safariViewController(controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+        if let loadingIndicator = self.safariViewControllerActivityIndicator {
+            loadingIndicator.removeFromSuperview()
+            self.safariViewControllerActivityIndicator = nil
+        }
+    }
 }
