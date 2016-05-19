@@ -65,7 +65,7 @@ class ConnectedAppSettingsViewController : UIViewController{
                 case .Success(_):
                     strongSelf.dismissViewControllerAnimated(true, completion: nil)
                 case .Failure(_):
-                    let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be disconnected from %@. Please Try Again Later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+                    let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be disconnected from %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
                     alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
                         strongSelf.dismissViewControllerAnimated(true, completion: nil)
                     }))

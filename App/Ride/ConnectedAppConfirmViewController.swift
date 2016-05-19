@@ -84,7 +84,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
                     strongSelf.performSelector(#selector(ConnectedAppConfirmViewController.postConnectApplication), withObject: nil, afterDelay: 2.0)
                 }
             case .Failure(_):
-                let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be connected to %@. Please Try Again Later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+                let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be connected to %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
                 alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
                     strongSelf.dismissViewControllerAnimated(true, completion: nil)
                 }))
