@@ -264,7 +264,13 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         if let touchedSprite = self.touchedSprite {
             let touch = touches.first!
-            let point = touch.locationInNode(scene)
+            var point = touch.locationInNode(scene)
+            
+            // avoid the crazy edge dragging thing by constraining point within the scene
+            point.x = min(point.x, scene.size.width - touchedSprite.size.width/2)
+            point.x = max(point.x, touchedSprite.size.width/2)
+            point.y = min(point.y, scene.size.height - touchedSprite.size.height/2)
+            point.y = max(point.y, touchedSprite.size.height/2)
             
             let dt:CGFloat = CGFloat(touch.timestamp - self.touchTime)
             let distance = CGVector(dx: point.x - touchedSprite.position.x, dy: point.y - touchedSprite.position.y)
