@@ -768,9 +768,20 @@ class APIClient {
                 }
                 
                 if let connectedApps = json["connected_apps"].array {
+                    var appsToDelete = ConnectedApp.allApps()
+                    
                     for appDict in connectedApps {
-                        let app = ConnectedApp.createOrUpdate(withJson: appDict)
-                        app?.profile = Profile.profile()
+                        if let app = ConnectedApp.createOrUpdate(withJson: appDict) {
+                            if let index = appsToDelete.indexOf(app) {
+                                appsToDelete.removeAtIndex(index)
+                            }
+                            app.profile = Profile.profile()
+                        }
+                    }
+                    
+                    for app in appsToDelete {
+                        // delete any app objects we did not receive
+                        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
                     }
                 }
                 
