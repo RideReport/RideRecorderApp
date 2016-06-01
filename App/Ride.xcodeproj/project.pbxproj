@@ -171,7 +171,7 @@
 		845A04501C1F795000556CD9 /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A044C1C1F795000556CD9 /* pinRed@3x.png */; };
 		847A05651A01B2F1008F5371 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
 		847A05671A01B2FE008F5371 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
-		847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* RoutesViewController.swift */; };
+		847A056F1A02E757008F5371 /* TripsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A056E1A02E757008F5371 /* TripsViewController.swift */; };
 		847ED0911A40DA0D00CAA396 /* DirectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */; };
 		848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		848777B91A683A4A00B59B06 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
@@ -384,7 +384,7 @@
 		8478621F1A267BB600176500 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		847A05641A01B2F1008F5371 /* Trip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Trip.swift; path = Ride/Trip.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847A05661A01B2FE008F5371 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = Location.swift; path = Ride/Location.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		847A056E1A02E757008F5371 /* RoutesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RoutesViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		847A056E1A02E757008F5371 /* TripsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TripsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DirectionsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		847ED0921A41112800CAA396 /* Ride 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 7.xcdatamodel"; sourceTree = "<group>"; };
 		848777B61A6834C300B59B06 /* UIView+HBadditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "UIView+HBadditions.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -689,7 +689,7 @@
 				8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */,
 				8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */,
 				84D1555919D2733500316995 /* MapViewController.swift */,
-				847A056E1A02E757008F5371 /* RoutesViewController.swift */,
+				847A056E1A02E757008F5371 /* TripsViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
 			);
@@ -1344,7 +1344,7 @@
 				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
 				84C28E101C125EFD0075DD7E /* NSObject+HBAdditions.m in Sources */,
-				847A056F1A02E757008F5371 /* RoutesViewController.swift in Sources */,
+				847A056F1A02E757008F5371 /* TripsViewController.swift in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
 				8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */,
 				8453BD561A42500500FE2645 /* NSDate+HBAdditions.swift in Sources */,

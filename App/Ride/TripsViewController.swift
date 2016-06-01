@@ -333,6 +333,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
+            if let headerView = self.tableView!.headerViewForSection(indexPath!.section + 1) {
+                self.configureHeaderView(headerView, forHeaderInSection: indexPath!.section + 1)
+            }
             
         case .Insert:
             self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
