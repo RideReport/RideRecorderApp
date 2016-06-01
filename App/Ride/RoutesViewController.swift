@@ -1,5 +1,5 @@
 //
-//  RoutesViewController.swift
+//  TripsViewController.swift
 //  Ride Report
 //
 //  Created by William Henderson on 10/30/14.
@@ -11,7 +11,7 @@ import CoreData
 import SystemConfiguration
 
 
-class RoutesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
+class TripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var emptyTableChick: UIView!
@@ -86,7 +86,7 @@ class RoutesViewController: UIViewController, UITableViewDataSource, UITableView
     func coreDataDidLoad() {
         self.reloadSectionIdentifiersIfNeeded()
         
-        let cacheName = "RoutesViewControllerFetchedResultsController"
+        let cacheName = "TripsViewControllerFetchedResultsController"
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Trip")

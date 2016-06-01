@@ -150,13 +150,13 @@ class HamburgerViewController: UITableViewController {
                 )
                 RouteManager.sharedManager.resumeTracking()
                 self.updatePauseResumeText()
-                if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
+                if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
                     routesVC.refreshHelperPopupUI()
                 }
             } else {
                 let updateUIBlock = {
                     self.updatePauseResumeText()
-                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? RoutesViewController) {
+                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
                         mainViewController.refreshHelperPopupUI()
                     }
                 }
