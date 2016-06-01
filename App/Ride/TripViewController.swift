@@ -28,7 +28,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     var selectedTrip : Trip! {
         didSet {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                guard let strongSelf = self else {
+                guard let strongSelf = self, _ = selectedRideToolBar else {
                     return
                 }
                 
