@@ -781,7 +781,7 @@ class APIClient {
                     
                     for app in appsToDelete {
                         // delete any app objects we did not receive
-                        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                        app.profile = nil
                     }
                 }
                 
