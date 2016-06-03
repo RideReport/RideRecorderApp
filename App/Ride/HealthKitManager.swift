@@ -72,17 +72,22 @@ class HealthKitManager {
             return
         }
         
-        let readTypes : Set<HKObjectType> = [HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierBiologicalSex)!,
-                                             HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierDateOfBirth)!,
-                                            HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass)!,
-                                            HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)!]
-        let writeTypes : Set<HKSampleType> = [HKQuantityType.workoutType(),
-        HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!,
-        HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!]
+        guard let sexCharacteristic = HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierBiologicalSex),
+            dobCharacteristc = HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierDateOfBirth),
+            bodyMassCharacteristic = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass),
+            heartRateCharactertistic = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate),
+            energyBurnedType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned),
+            cyclingType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling) else {
+                DDLogWarn("Couldn't find charactertisitcs and/or types!")
+                return
+        }
         
-        healthStore.requestAuthorizationToShareTypes(writeTypes, readTypes: readTypes) { (success, error) -> Void in
-            if !success || error != nil {
-                DDLogWarn("Error accesing health kit data!: \(error! as NSError), \((error! as NSError).userInfo)")
+        let readTypes : Set<HKObjectType> = [sexCharacteristic, dobCharacteristc, bodyMassCharacteristic, heartRateCharactertistic]
+        let writeTypes : Set<HKSampleType> = [HKQuantityType.workoutType(), energyBurnedType, cyclingType]
+        
+        healthStore.requestAuthorizationToShareTypes(writeTypes, readTypes: readTypes) { (success, err) -> Void in
+            if let error = err {
+                DDLogWarn("Error accesing health kit data!: \(error), \(error.userInfo)")
                 HealthKitManager.authorizationStatus = .Denied
                 dispatch_async(dispatch_get_main_queue()) {
                     authorizationHandler(success: false)
@@ -137,17 +142,22 @@ class HealthKitManager {
         }
         
         self.saveOrUpdateTrip(nextTrip) { _ in
-            self.tripsRemainingToSave!.removeFirst()
+            self.tripsRemainingToSave?.removeFirst()
             
             self.saveNextUnsavedTrip()
         }
     }
     
     func getHeartRateSamples(startDate:NSDate, endDate: NSDate, completionHandler:([HKQuantitySample]?)->Void) {
-        let heartRateType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate)
+        guard let heartRateType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeartRate) else {
+            DDLogWarn("Couldn't find heart rate type!")
+            completionHandler(nil)
+            return
+        }
+        
         let predicate = HKQuery.predicateForSamplesWithStartDate(startDate, endDate: endDate, options: HKQueryOptions.None)
         
-        let query = HKSampleQuery(sampleType: heartRateType!, predicate: predicate, limit: 0, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate , ascending: false)]) { (query, results, error) -> Void in
+        let query = HKSampleQuery(sampleType: heartRateType, predicate: predicate, limit: 0, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate , ascending: false)]) { (query, results, error) -> Void in
             completionHandler(results as? [HKQuantitySample])
         }
         
@@ -171,18 +181,21 @@ class HealthKitManager {
     }
     
     func getWeight() {
-        let weightType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMassIndex)
+        guard let weightType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMassIndex) else {
+            DDLogWarn("Couldn't find body mass type!")
+            return
+        }
         
-        let query = HKSampleQuery(sampleType: weightType!, predicate: nil, limit: 1, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate , ascending: false)]) { (query, results, error) -> Void in
-            if (results == nil) {
-                if (error != nil) {
-                    
+        let query = HKSampleQuery(sampleType: weightType, predicate: nil, limit: 1, sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierEndDate , ascending: false)]) { (query, res, error) -> Void in
+            if let results = res {
+                if let result = results.first as? HKQuantitySample {
+                    self.currentWeightKilograms = (result.quantity.doubleValueForUnit(HKUnit.gramUnit())) / 1000.0
+                } else {
+                    // ask for the user's weight?
                 }
             } else {
-                if (results!.count < 1) {
-                    // ask for the user's weight
-                } else {
-                    self.currentWeightKilograms = ((results!.first! as! HKQuantitySample).quantity.doubleValueForUnit(HKUnit.gramUnit())) / 1000.0
+                if (error != nil) {
+                    
                 }
             }
         }
@@ -191,6 +204,13 @@ class HealthKitManager {
     }
     
     func deleteWorkoutAndSamplesForTrip(trip:Trip, handler: (success: Bool)->()) {
+        guard let activeEnergyBurnedType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned),
+                cyclingDistanceType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling) else {
+                DDLogWarn("Couldn't find types!")
+                handler(success: false)
+                return
+        }
+        
         guard let uuidString = trip.healthKitUuid, uuid = NSUUID(UUIDString: uuidString) else {
             handler(success: false)
             return
@@ -199,9 +219,9 @@ class HealthKitManager {
         let deleteBlock = { (workout: HKWorkout) in
             let samplesPredicate = HKQuery.predicateForObjectsFromWorkout(workout)
             if #available(iOS 9.0, *) {
-                self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!, predicate: samplesPredicate) { (_, _, _) in
+                self.healthStore.deleteObjectsOfType(activeEnergyBurnedType, predicate: samplesPredicate) { (_, _, _) in
                     // for all deletions, we make a best attempt and proceed with the handler regardless of the result
-                    self.healthStore.deleteObjectsOfType(HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, predicate: samplesPredicate) { (_, _, _) in
+                    self.healthStore.deleteObjectsOfType(cyclingDistanceType, predicate: samplesPredicate) { (_, _, _) in
                         // delete the workout last, after all associated objects are deleted.
                         self.healthStore.deleteObject(workout, withCompletion: { (b, e) in
                             handler(success: true)
@@ -233,6 +253,13 @@ class HealthKitManager {
         guard #available(iOS 9.0, *) else {
             handler(success: false)
             return
+        }
+        
+        guard let activeEnergyBurnedType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned),
+            cyclingDistanceType = HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling) else {
+                DDLogWarn("Couldn't find types!")
+                handler(success: false)
+                return
         }
         
         guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
@@ -277,7 +304,7 @@ class HealthKitManager {
         }
         
         // first, we calculate our total burn plus burn samples
-        var totalBurn :HKQuantity! = nil
+        var totalBurn :HKQuantity? = nil
         var burnSamples :[HKSample] = []
         self.getHeartRateSamples(trip.startDate, endDate: trip.endDate) { (samples) -> Void in
             if let heartRateSamples = samples where heartRateSamples.count > 0 {
@@ -299,7 +326,7 @@ class HealthKitManager {
                     }()
                     
                     totalBurnDouble += burnDouble
-                    let sample = HKQuantitySample(type: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!, quantity: HKQuantity(unit: HKUnit.kilocalorieUnit(),
+                    let sample = HKQuantitySample(type: activeEnergyBurnedType, quantity: HKQuantity(unit: HKUnit.kilocalorieUnit(),
                         doubleValue: burnDouble), startDate: sample.startDate, endDate: sample.endDate)
                     burnSamples.append(sample)
                 }
@@ -309,18 +336,20 @@ class HealthKitManager {
                 // otherwise, calculate using speed based on:
                 // http://www.acefitness.org/updateable/update_display.aspx?pageID=593
 
-                var lastLoc : Location! = nil
+                var lastLoc : Location? = nil
                 var totalBurnDouble : Double = 0
                 for loc in trip.locations {
-                    let location = loc as! Location
+                    guard let location = loc as? Location, speed = location.speed, date = location.date else {
+                        continue
+                    }
                     if location.isGeofencedLocation {
                         continue
                     }
                     
-                    if (location.date != nil && location.speed!.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
-                        if (lastLoc != nil && lastLoc.date!.compare(location.date!) != NSComparisonResult.OrderedDescending) {
+                    if (location.date != nil && speed.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                        if let lastLocation = lastLoc, let lastDate = lastLocation.date where lastDate.compare(date) != NSComparisonResult.OrderedDescending {
                             let calPerKgMin : Double = {
-                                switch (location.speed!.doubleValue) {
+                                switch (speed.doubleValue) {
                                 case 0...1:
                                     // standing
                                     return 0.4
@@ -339,10 +368,10 @@ class HealthKitManager {
                                 }
                             }()
                             
-                            let burnDouble = calPerKgMin * self.currentWeightKilograms * ((location.date!.timeIntervalSinceReferenceDate - lastLoc.date!.timeIntervalSinceReferenceDate)/60)
+                            let burnDouble = calPerKgMin * self.currentWeightKilograms * ((date.timeIntervalSinceReferenceDate - lastDate.timeIntervalSinceReferenceDate)/60)
                             totalBurnDouble += burnDouble
-                            let sample = HKQuantitySample(type: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!, quantity: HKQuantity(unit: HKUnit.kilocalorieUnit(),
-                                doubleValue: burnDouble), startDate: lastLoc.date!, endDate: location.date!)
+                            let sample = HKQuantitySample(type: activeEnergyBurnedType, quantity: HKQuantity(unit: HKUnit.kilocalorieUnit(),
+                                doubleValue: burnDouble), startDate: lastDate, endDate: date)
                             
                             
                             burnSamples.append(sample)
@@ -357,7 +386,7 @@ class HealthKitManager {
             }
             
             let distance = HKQuantity(unit: HKUnit.mileUnit(), doubleValue: Double(trip.length.miles))
-            let cyclingDistanceSample = HKQuantitySample(type: HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!, quantity: distance, startDate: trip.startDate, endDate: trip.endDate)
+            let cyclingDistanceSample = HKQuantitySample(type: cyclingDistanceType, quantity: distance, startDate: trip.startDate, endDate: trip.endDate)
             
             let ride = HKWorkout(activityType: HKWorkoutActivityType.Cycling, startDate: trip.startDate, endDate: trip.endDate, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.localDevice(), metadata: [HKMetadataKeyIndoorWorkout: false])
             
