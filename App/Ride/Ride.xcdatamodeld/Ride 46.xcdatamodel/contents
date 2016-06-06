@@ -113,8 +113,6 @@
         <attribute name="locationsAreSynced" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="locationsNotYetDownloaded" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <attribute name="rewardDescription" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="rewardEmoji" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sectionIdentifier" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="startingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="summaryIsSynced" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
@@ -124,6 +122,12 @@
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
         <relationship name="sensorDataCollections" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SensorDataCollection" inverseName="trip" inverseEntity="SensorDataCollection" syncable="YES"/>
         <relationship name="simplifiedLocations" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Location" inverseName="simplifiedInTrip" inverseEntity="Location" syncable="YES"/>
+        <relationship name="tripRewards" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
+    </entity>
+    <entity name="TripReward" representedClassName=".TripReward" syncable="YES">
+        <attribute name="descriptionText" attributeType="String" syncable="YES"/>
+        <attribute name="emoji" attributeType="String" syncable="YES"/>
+        <relationship name="trip" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="tripRewards" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <elements>
         <element name="AccelerometerAcceleration" positionX="-18" positionY="171" width="128" height="60"/>
@@ -139,6 +143,7 @@
         <element name="Prototrip" positionX="-54" positionY="135" width="128" height="120"/>
         <element name="SensorData" positionX="-45" positionY="144" width="128" height="105"/>
         <element name="SensorDataCollection" positionX="-54" positionY="135" width="128" height="180"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="435"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="420"/>
+        <element name="TripReward" positionX="-36" positionY="144" width="128" height="90"/>
     </elements>
 </model>

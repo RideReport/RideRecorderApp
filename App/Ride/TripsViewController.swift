@@ -532,19 +532,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             var i = 1
             var lineCount = 0
-            let rewardsTripCounts = Trip.bikeTripCountsGroupedByAttribute("rewardEmoji")
+            let rewardsTripCounts = TripReward.tripRewardCountsGroupedByAttribute("emoji")
             for countData in rewardsTripCounts {
-                if let rewardEmoji = countData["rewardEmoji"] as? String {
-                    if rewardEmoji.containsUnsupportEmoji() {
+                if let emoji = countData["emoji"] as? String {
+                    if emoji.containsUnsupportEmoji() {
                         // support for older versions of iOS without a given emoji
                         continue
                     }
-                      rewardString += rewardEmoji + "\t"
+                      rewardString += emoji + "\t"
                     i += 1
                     if i>=columnCount {
                         i = 1
                         lineCount += 1
-                        if let lastEmoji = rewardsTripCounts.last?["rewardEmoji"] as? String where lastEmoji == rewardEmoji  {
+                        if let lastEmoji = rewardsTripCounts.last?["emoji"] as? String where lastEmoji == emoji  {
                             rewardString += "\n"
                         }
                     }
@@ -611,9 +611,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let areaDescriptionString = trip.areaDescriptionString
         var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
-        if let rewardDescription = trip.rewardDescription,
-            rewardEmoji = trip.displaySafeRewardEmoji where rewardDescription.rangeOfString("day ride streak") == nil {
-            description += ("\n\n" + rewardEmoji + " " + rewardDescription)
+        for reward in trip.tripRewards.array as! [TripReward] {
+            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                description += ("\n\n" + emoji + " " + reward.descriptionText)
+            }
         }
      
         textLabel.text = description

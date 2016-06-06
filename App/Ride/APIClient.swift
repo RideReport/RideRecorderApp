@@ -335,24 +335,16 @@ class APIClient {
     //
     
     private func runMigrations() {
-        let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripsListOnSummaryAPIAtLeastOnce")
+        let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripRewardToTripRewardsMigration")
         if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.getAllTrips().apiResponse() { (response) in
                     if case .Success = response.result {
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripsListOnSummaryAPIAtLeastOnce")
+                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripRewardToTripRewardsMigration")
                         NSUserDefaults.standardUserDefaults().synchronize()
                     }
                 }
             })
-        }
-        
-        self.runDataMigration(dataMigrationName: "hasRunSummarySyncedPropertyAdditionMigration") {
-            for t in Trip.unweatheredTrips() {
-                let trip = t as! Trip
-                trip.summaryIsSynced = false
-                trip.saveAndMarkDirty()
-            }
         }
     }
     
@@ -365,7 +357,6 @@ class APIClient {
             handler()
         }
     }
-    
     
     //
     // MARK: - Trip Synchronization

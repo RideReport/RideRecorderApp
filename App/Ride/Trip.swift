@@ -141,26 +141,16 @@ class Trip : NSManagedObject {
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
     @NSManaged var incidents : NSOrderedSet!
+    @NSManaged var tripRewards : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
     @NSManaged var isSavedToHealthKit : Bool
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var summaryIsSynced : Bool
     @NSManaged var locationsNotYetDownloaded : Bool
-    @NSManaged var rewardDescription : String?
-    @NSManaged var rewardEmoji : String?
     @NSManaged var healthKitUuid : String?
     var isBeingSavedToHealthKit: Bool = false
     var workoutObject: HKWorkout? = nil
-    
-    var displaySafeRewardEmoji: String? {
-        if let emoji = self.rewardEmoji where emoji.containsUnsupportEmoji() {
-            // support for older versions of iOS without a given emoji
-            return "🏆"
-        }
-        
-        return self.rewardEmoji
-    }
     
     var isClosed : Bool {
         get {
@@ -638,7 +628,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "rewardEmoji != nil")
+        fetchedRequest.predicate = NSPredicate(format: "tripRewards.@count > 0")
         
         var error : NSError?
         let count = context.countForFetchRequest(fetchedRequest, error: &error)
@@ -647,58 +637,6 @@ class Trip : NSManagedObject {
         }
         
         return count
-    }
-    
-    class func bikeTripCountsGroupedByAttribute(attribute: String, additionalAttributes: [String]? = nil) -> [[String: AnyObject]] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let  countExpression = NSExpressionDescription()
-        countExpression.name = "count"
-        countExpression.expression = NSExpression(forFunction: "count:", arguments: [NSExpression(forKeyPath: attribute)])
-        countExpression.expressionResultType = NSAttributeType.Integer32AttributeType
-        let entityDescription = NSEntityDescription.entityForName("Trip", inManagedObjectContext: CoreDataManager.sharedManager.managedObjectContext!)!
-        
-        guard let attributeDescription = entityDescription.attributesByName[attribute] else {
-            return []
-        }
-        
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-        var propertiesToFetch = [attributeDescription, countExpression]
-        var propertiesToGroupBy = [attributeDescription]
-        if let otherAttributes = additionalAttributes {
-            for otherAttribute in otherAttributes {
-                if let attributeDesc = entityDescription.attributesByName[otherAttribute] {
-                    propertiesToFetch.append(attributeDesc)
-                    propertiesToGroupBy.append(attributeDesc)
-                }
-            }
-        }
-        
-        fetchedRequest.propertiesToFetch = propertiesToFetch
-        fetchedRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
-        
-        var error : NSError?
-        let results: [AnyObject]?
-
-        do {
-            results = try context.executeFetchRequest(fetchedRequest)
-        } catch let error1 as NSError {
-            error = error1
-            results = nil
-        }
-        if (results == nil || error != nil) {
-            return []
-        }
-        
-        let dictResults = results as! [[String: AnyObject]]
-        
-        if (dictResults.count == 1 && (dictResults[0]["count"]! as? NSNumber)?.integerValue == 0) {
-            return []
-        }
-        
-        return dictResults
     }
     
     class var numberOfBadTrips : Int {
@@ -938,19 +876,20 @@ class Trip : NSManagedObject {
             self.endingPlacemarkName = endPlaceName
         }
         
+        for reward in self.tripRewards.array as! [TripReward] {
+            self.managedObjectContext?.deleteObject(reward)
+        }
+        
         if let rewardEmoji = summary["rewardEmoji"] as? String,
-            rewardDescription = summary["rewardDescription"] as? String {
-                if (rewardDescription == "") {
-                    self.rewardDescription = nil
-                } else {
-                    self.rewardDescription = rewardDescription
+            rewardDescription = summary["rewardDescription"] as? String where rewardDescription != "" && rewardEmoji != "" {
+            let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
+        } else if let rewards = summary["rewards"] as? [AnyObject] {
+            for reward in rewards {
+                if let description = reward["description"] as? String,
+                    emoji = reward["emoji"] as? String {
+                    let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
                 }
-                
-                if (rewardEmoji == "") {
-                    self.rewardEmoji = nil
-                } else {
-                    self.rewardEmoji = rewardEmoji
-                }
+            }
         }
     }
     
@@ -971,19 +910,19 @@ class Trip : NSManagedObject {
             self.endingPlacemarkName = endPlaceName
         }
         
+        for reward in self.tripRewards.array as! [TripReward] {
+            self.managedObjectContext?.deleteObject(reward)
+        }
+        
         if let rewardEmoji = summary["rewardEmoji"]?.string,
-            rewardDescription = summary["rewardDescription"]?.string {
-                if (rewardDescription == "") {
-                    self.rewardDescription = nil
-                } else {
-                    self.rewardDescription = rewardDescription
+            rewardDescription = summary["rewardDescription"]?.string where rewardDescription != "" && rewardEmoji != "" {
+            let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
+        } else if let rewards = summary["rewards"]?.array {
+            for reward in rewards {
+                if let description = reward["description"].string, emoji = reward["emoji"].string {
+                    let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
                 }
-                
-                if (rewardEmoji == "") {
-                    self.rewardEmoji = nil
-                } else {
-                    self.rewardEmoji = rewardEmoji
-                }
+            }
         }
     }
 
@@ -1053,9 +992,8 @@ class Trip : NSManagedObject {
         
         message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
-        if let rewardDescription = self.rewardDescription,
-            rewardEmoji = self.displaySafeRewardEmoji {
-                message += (" " + rewardEmoji + " " + rewardDescription)
+        if let reward = self.tripRewards.firstObject as? TripReward {
+                message += (" " + reward.emoji + " " + reward.description)
         }
         
         return message
