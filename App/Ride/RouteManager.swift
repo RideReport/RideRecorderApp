@@ -57,6 +57,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     var lastMotionMonitoringActivityTypeQueryDate : NSDate?
     let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
+    let timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery : NSTimeInterval = 30
     var numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
     let maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange = 6 // ~60 seconds
     
@@ -508,8 +509,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
 
-        if (self.currentMotionMonitoringSensorDataCollection == nil &&
-            (self.lastMotionMonitoringActivityTypeQueryDate == nil || abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries)) {
+        if (self.lastMotionMonitoringActivityTypeQueryDate == nil ||
+            ((abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) && (self.currentMotionMonitoringSensorDataCollection == nil
+                // the below OR clause is a work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
+                || (abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery)))) {
+            
             self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
             
             self.currentMotionMonitoringSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
