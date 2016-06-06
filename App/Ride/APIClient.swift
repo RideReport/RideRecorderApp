@@ -221,6 +221,7 @@ class APIClient {
     var notificationDeviceToken: NSData?
     
     private var manager : Manager
+    var isMigrating = false
     private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     private var didEncounterUnrecoverableErrorSyncronizingTrips = false
     private var isRequestingAuthentication = false
@@ -335,15 +336,30 @@ class APIClient {
     //
     
     private func runMigrations() {
+        self.isMigrating = true
         let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripRewardToTripRewardsMigration")
         if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.getAllTrips().apiResponse() { (response) in
-                    if case .Success = response.result {
+            let _ = AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
+                switch response.result {
+                case .Success(let json):
+                        for tripJson in json.array! {
+                            // to make this not take forefver, only change the trips with rewards
+                            if let uuid = tripJson["uuid"].string, summary = tripJson["summary"].dictionary where (summary["rewards"] != nil || (summary["rewardEmoji"] != nil && summary["rewardEmoji"]?.string != "")) {
+                                if let trip = Trip.tripWithUUID(uuid) {
+                                    trip.loadSummaryFromJSON(summary)
+                                }
+                            }
+                        }
+                        
+                        CoreDataManager.sharedManager.saveContext()
+                        
                         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripRewardToTripRewardsMigration")
                         NSUserDefaults.standardUserDefaults().synchronize()
-                    }
+                case .Failure(let error):
+                    DDLogWarn(String(format: "Error retriving getting trip data: %@", error))
                 }
+                
+                self.isMigrating = false
             })
         }
     }

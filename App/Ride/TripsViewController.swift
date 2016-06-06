@@ -294,10 +294,18 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        if (APIClient.sharedClient.isMigrating) {
+            return
+        }
+        
         self.tableView.beginUpdates()
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        if (APIClient.sharedClient.isMigrating) {
+            return
+        }
+        
         self.tableView.endUpdates()
         
         self.refreshEmptyTableView()
@@ -325,6 +333,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        if (APIClient.sharedClient.isMigrating) {
+            return
+        }
+        
         switch(type) {
             
         case .Update:

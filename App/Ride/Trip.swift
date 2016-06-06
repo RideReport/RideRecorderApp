@@ -127,11 +127,13 @@ class Trip : NSManagedObject {
             self.setPrimitiveValue(NSNumber(short: newValue.rawValue), forKey: "activityType")
             self.didChangeValueForKey("activityType")
             
-            dispatch_async(dispatch_get_main_queue()) {
-                // newly closed trips should be synced to healthkit
-                if (HealthKitManager.authorizationStatus == .Authorized) {
-                    self.isSavedToHealthKit = false
-                    HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+            if self.activityType != newValue {
+                dispatch_async(dispatch_get_main_queue()) {
+                    // newly closed trips should be synced to healthkit
+                    if (HealthKitManager.authorizationStatus == .Authorized) {
+                        self.isSavedToHealthKit = false
+                        HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                    }
                 }
             }
         }
@@ -166,11 +168,13 @@ class Trip : NSManagedObject {
             self.didChangeValueForKey("isClosed")
             
             if newValue {
-                dispatch_async(dispatch_get_main_queue()) {
-                    // newly closed trips should be synced to healthkit
-                    if (HealthKitManager.authorizationStatus == .Authorized) {
-                        self.isSavedToHealthKit = false
-                        HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                if !self.isClosed {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        // newly closed trips should be synced to healthkit
+                        if (HealthKitManager.authorizationStatus == .Authorized) {
+                            self.isSavedToHealthKit = false
+                            HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                        }
                     }
                 }
                 
