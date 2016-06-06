@@ -65,14 +65,9 @@ class HelpViewController: UITableViewController, MFMailComposeViewControllerDele
         composer.mailComposeDelegate = self
         composer.setMessageBody(body as String, isHTML: false)
         
-        let firstFileInfo = fileInfos.first! as! DDLogFileInfo
-        if let firstFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: firstFileInfo.filePath)) {
-            composer.addAttachmentData(firstFileData, mimeType: "text/plain", fileName: firstFileInfo.fileName)
-            
-            if (fileInfos.count > 1) {
-                let secondFileInfo = fileInfos[1] as! DDLogFileInfo
-                let secondFileData = NSData(contentsOfURL: NSURL(fileURLWithPath: secondFileInfo.filePath!))
-                composer.addAttachmentData(secondFileData!, mimeType: "text/plain", fileName: secondFileInfo.fileName)
+        for fileInfo in fileInfos {
+            if let filePath = fileInfo.filePath, let fileData = NSData(contentsOfURL: NSURL(fileURLWithPath: filePath)) {
+                composer.addAttachmentData(fileData, mimeType: "text/plain", fileName: fileInfo.fileName)
             }
         }
         
