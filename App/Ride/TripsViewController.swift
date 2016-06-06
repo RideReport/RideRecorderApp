@@ -410,6 +410,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         view.dateLabel.text = "  " + title
         if totalLength > 0 {
             view.milesLabel.text = totalLength.distanceString
+        } else {
+            view.milesLabel.text = "No Rides"
         }
     }
     
