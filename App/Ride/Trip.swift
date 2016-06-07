@@ -997,7 +997,7 @@ class Trip : NSManagedObject {
         message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         if let reward = self.tripRewards.firstObject as? TripReward {
-                message += (" " + reward.emoji + " " + reward.description)
+                message += (" " + reward.emoji + " " + reward.descriptionText)
         }
         
         return message
