@@ -681,7 +681,9 @@ class APIClient {
                     
                     for app in appsToDelete {
                         // delete any app objects we did not receive
-                        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                        if !app.isHiddenApp {
+                            CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                        }
                     }
                     
                     CoreDataManager.sharedManager.saveContext()
@@ -696,7 +698,7 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications/" + app.uuid) { (response) -> Void in
             switch response.result {
             case .Success(let json):
-                ConnectedApp.createOrUpdate(withJson: json)
+                app.updateWithJson(withJson: json)
             case .Failure(let error):
                 DDLogWarn(String(format: "Error getting third party app: %@", error))
             }

@@ -18,6 +18,7 @@ class ConnectedApp: NSManagedObject {
     @NSManaged var uuid: String
     @NSManaged var profile: Profile?
     @NSManaged var scopes: [ConnectedAppScope]
+    @NSManaged var isHiddenApp: Bool
     
     var authorizationCode: String?
     
@@ -42,13 +43,9 @@ class ConnectedApp: NSManagedObject {
         return apps
     }
     
-    class func createOrUpdate(withJson json: JSON)->ConnectedApp? {
-        guard let uuid = json["uuid"].string else {
-            return nil
-        }
-        
+    class func createOrUpdate(uuid: String)->ConnectedApp {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-                let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
         fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", uuid)
         fetchedRequest.fetchLimit = 1
         
@@ -60,33 +57,47 @@ class ConnectedApp: NSManagedObject {
             results = nil
         }
         
-        var connectedApp : ConnectedApp!
         if let result = results?.first as? ConnectedApp {
-            connectedApp = result
-        } else {
-            connectedApp = ConnectedApp(entity: NSEntityDescription.entityForName("ConnectedApp", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
-            connectedApp.uuid = uuid
+            return result
         }
         
+        let app = ConnectedApp(entity: NSEntityDescription.entityForName("ConnectedApp", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        app.uuid = uuid
+        
+        return app
+    }
+    
+    class func createOrUpdate(withJson json: JSON)->ConnectedApp? {
+        guard let uuid = json["uuid"].string else {
+            return nil
+        }
+        
+        let connectedApp = ConnectedApp.createOrUpdate(uuid)
+        connectedApp.updateWithJson(withJson: json)
+        
+        return connectedApp
+    }
+    
+    func updateWithJson(withJson json: JSON) {
         if let baseImageUrl = json["base_image_url"].string {
-            connectedApp.baseImageUrl = baseImageUrl
+            self.baseImageUrl = baseImageUrl
         }
         if let name = json["name"].string {
-            connectedApp.name = name
+            self.name = name
         }
         if let descriptionText = json["description_text"].string {
-            connectedApp.descriptionText = descriptionText
+            self.descriptionText = descriptionText
         }
         
         if let authURL = json["web_authorize_url"].string {
-            connectedApp.webAuthorizeUrl = authURL
+            self.webAuthorizeUrl = authURL
         }
-
+        
         if let scopes = json["scopes"].array {
-            var scopesToDelete = connectedApp.scopes
+            var scopesToDelete = self.scopes
             
             for scope in scopes {
-                if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: connectedApp), index = scopesToDelete.indexOf(scope) {
+                if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: self), index = scopesToDelete.indexOf(scope) {
                     scopesToDelete.removeAtIndex(index)
                 }
             }
@@ -96,8 +107,6 @@ class ConnectedApp: NSManagedObject {
                 CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(scope)
             }
         }
-        
-        return connectedApp
     }
     
     func json()->JSON {

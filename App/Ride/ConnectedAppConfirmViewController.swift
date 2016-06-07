@@ -38,7 +38,6 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             for scope in self.connectingApp.scopes {
                 scope.granted = true
             }
-
             
             self.connectingAppDetailText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
             self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")

@@ -368,6 +368,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 }
             } else if (url.host == "authcode-callback") {
                 NSNotificationCenter.defaultCenter().postNotificationName("RideReportAuthCodeCallBackNotification", object: url)
+            } else if (url.host == "authorize-application") {
+                if let uuid = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "uuid" }).first?.value {
+                    let app = ConnectedApp.createOrUpdate(uuid)
+                    
+                    APIClient.sharedClient.getApplication(app).apiResponse({ (response) in
+                        switch response.result {
+                        case .Success(let json):
+                            app.isHiddenApp = true
+                            CoreDataManager.sharedManager.saveContext()
+                        case .Failure(let error):
+                            DDLogWarn(String(format: "Error getting third party app from URL scheme: %@", error))
+                        }
+                    })
+                }
             }
         } else if (url.host == "oauth-callback") {
             if ( url.path!.hasPrefix("/facebook" )){

@@ -163,7 +163,15 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                 return
             }
 
-            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil && (url.scheme == "https") else {
+            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil else {
+                // if there is no authorize url, go straight to permissions screen
+                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                self.selectedConnectedApp = app
+                self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
+                return
+            }
+            
+            if url.scheme != "https" {
                 self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
                 return
             }

@@ -11,6 +11,7 @@
     <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="baseImageUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isHiddenApp" transient="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="webAuthorizeUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -132,7 +133,7 @@
     <elements>
         <element name="AccelerometerAcceleration" positionX="-18" positionY="171" width="128" height="60"/>
         <element name="ActivityTypePrediction" positionX="-36" positionY="144" width="128" height="90"/>
-        <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="150"/>
+        <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="165"/>
         <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="135"/>
         <element name="DeviceMotionAcceleration" positionX="-45" positionY="144" width="128" height="60"/>
         <element name="DeviceMotionRotationRate" positionX="-36" positionY="153" width="128" height="60"/>
