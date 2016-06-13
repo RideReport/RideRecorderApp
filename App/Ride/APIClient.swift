@@ -742,7 +742,7 @@ class APIClient {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        var parameters: [String: AnyObject] = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
+        var parameters: [String: AnyObject] = [:]
         if let deviceToken = self.notificationDeviceToken {
             parameters["device_token"] = deviceToken.hexadecimalString()
             #if DEBUG
