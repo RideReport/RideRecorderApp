@@ -66,23 +66,18 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
  provides the most secure and lowest friction way for a user to authorize the application to
  interact with Facebook.
 
- The \c FBSDKLoginBehavior enum specifies which log in method should be attempted. Most
- applications will use the default, which attempts a login through the Facebook app and falls
- back to the browser if needed.
-
- If log in cannot be completed using the specificed behavior, the completion handler will
- be invoked with an error in the \c FBSDKErrorDomain and a code of \c FBSDKLoginUnknownErrorCode.
+ The \c FBSDKLoginBehavior enum specifies which log-in methods may be used. The SDK
+  will determine the best behavior based on the current device (such as iOS version).
  */
 typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 {
   /*!
-   @abstract Attempts log in through the native Facebook app. If the Facebook app is
-   not installed on the device, falls back to \c FBSDKLoginBehaviorBrowser. This is the
-   default behavior.
+   @abstract This is the default behavior, and indicates logging in through the native
+   Facebook app may be used. The SDK may still use Safari instead.
    */
   FBSDKLoginBehaviorNative = 0,
   /*!
-   @abstract Attempts log in through the Safari browser
+   @abstract Attempts log in through the Safari or SFSafariViewController, if available.
    */
   FBSDKLoginBehaviorBrowser,
   /*!
@@ -93,7 +88,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
    */
   FBSDKLoginBehaviorSystemAccount,
   /*!
-   @abstract Attemps log in through a modal \c UIWebView pop up
+   @abstract Attempts log in through a modal \c UIWebView pop up
 
    @note This behavior is only available to certain types of apps. Please check the Facebook
    Platform Policy to verify your app meets the restrictions.
@@ -110,7 +105,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
  a cached token available (typically in your viewDidLoad).
 
  If you are managing your own token instances outside of "currentAccessToken", you will need to set
- "currentAccessToken" before calling logIn* to authorize futher permissions on your tokens.
+ "currentAccessToken" before calling logIn* to authorize further permissions on your tokens.
  */
 @interface FBSDKLoginManager : NSObject
 
@@ -122,8 +117,6 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 
 /*!
  @abstract the login behavior
- @discussion you should only set this if you want an explicit login flow; otherwise, the SDK
-  will automatically determine the best flow available.
  */
 @property (assign, nonatomic) FBSDKLoginBehavior loginBehavior;
 
@@ -150,9 +143,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
   are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
   provide more information to the user if they decline permissions.
 
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
-  and will pass the "rerequest" flag to the login dialog.
-
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
@@ -172,9 +162,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
  provide more information to the user if they decline permissions.
 
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
- and will pass the "rerequest" flag to the login dialog.
-
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
@@ -192,7 +179,7 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
 /*!
  @method
 
- @abstract Issues an asychronous renewCredentialsForAccount call to the device's Facebook account store.
+ @abstract Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
 
  @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
 

@@ -15,6 +15,7 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#import "FBSDKGraphErrorRecoveryProcessor.h"
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKErrorRecoveryAttempter.h"
@@ -23,7 +24,10 @@
 {
   FBSDKErrorRecoveryAttempter *_recoveryAttempter;
   NSError *_error;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   UIAlertView *_alertView;
+#pragma clang diagnostic pop
 }
 
 @property (nonatomic, strong, readwrite) id<FBSDKGraphErrorRecoveryProcessorDelegate>delegate;
@@ -59,17 +63,20 @@
 
         // Set up a block to do the typical recovery work so that we can chain it for ios auth special cases.
         // the block returns YES if recovery UI is started (meaning we wait for the alertviewdelegate to resume control flow).
-        BOOL (^standardRecoveryWork)() = ^BOOL(){
+        BOOL (^standardRecoveryWork)(void) = ^BOOL{
           NSArray *recoveryOptionsTitles = error.userInfo[NSLocalizedRecoveryOptionsErrorKey];
           if (recoveryOptionsTitles.count > 0 && _recoveryAttempter) {
             NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
             _error = error;
             dispatch_async(dispatch_get_main_queue(), ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
               _alertView = [[UIAlertView alloc] initWithTitle:nil
                                                       message:recoverySuggestion
                                                      delegate:self
                                             cancelButtonTitle:nil
                                             otherButtonTitles:nil];
+#pragma clang diagnostic pop
               for (NSString *option in recoveryOptionsTitles) {
                 [_alertView addButtonWithTitle:option];
               }
@@ -87,7 +94,7 @@
           // (for example, this can repair expired tokens seamlessly)
           [[FBSDKSystemAccountStoreAdapter sharedInstance]
            renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-             dispatch_async(dispatch_get_main_queue(), ^() {
+             dispatch_async(dispatch_get_main_queue(), ^{
                if (result == ACAccountCredentialRenewResultRenewed) {
                  [self.delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
                  self.delegate = nil;
@@ -113,11 +120,14 @@
             NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                               @"OK",
                                               @"The title of the label to dismiss the alert when presenting user facing error messages");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [[[UIAlertView alloc] initWithTitle:title
                                         message:message
                                        delegate:nil
                               cancelButtonTitle:localizedOK
                               otherButtonTitles:nil] show];
+#pragma clang diagnostic pop
           });
         }
       }
@@ -128,12 +138,15 @@
 
 #pragma mark - UIAlertViewDelegate
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   [_recoveryAttempter attemptRecoveryFromError:_error optionIndex:buttonIndex delegate:self didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
   _alertView.delegate = nil;
   _alertView = nil;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
 

@@ -450,18 +450,25 @@ static NSMapTable *_transientObjects;
   [_transientObjects setObject:@(count + 1) forKey:object];
 }
 
-+ (void)unregisterTransientObject:(id)object
++ (void)unregisterTransientObject:(__weak id)object
 {
+  if (!object) {
+    return;
+  }
   NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
   NSUInteger count = [(NSNumber *)[_transientObjects objectForKey:object] unsignedIntegerValue];
   if (count == 1) {
     [_transientObjects removeObjectForKey:object];
   } else if (count != 0) {
     [_transientObjects setObject:@(count - 1) forKey:object];
+  } else {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                       formatString:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
+     " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
   }
 }
 
-+ (UIViewController *)viewControllerforView:(UIView*)view
++ (UIViewController *)viewControllerForView:(UIView *)view
 {
   UIResponder *responder = view.nextResponder;
   while (responder) {
@@ -481,10 +488,11 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
   });
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = FBSDK_CANOPENURL_FACEBOOK;
+  components.path = @"/";
   return [[UIApplication sharedApplication]
-          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_FACEBOOK
-                                              host:nil
-                                              path:@"/"]];
+          canOpenURL:components.URL];
 }
 
 + (BOOL)isMessengerAppInstalled
@@ -493,10 +501,11 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   });
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = FBSDK_CANOPENURL_MESSENGER;
+  components.path = @"/";
   return [[UIApplication sharedApplication]
-          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_MESSENGER
-                                              host:nil
-                                              path:@"/"]];
+          canOpenURL:components.URL];
 
 }
 
@@ -578,6 +587,16 @@ static NSMapTable *_transientObjects;
   }
 }
 
++ (NSString *)validateRequiredClientAccessToken {
+  if (![FBSDKSettings clientToken]) {
+    NSString *reason = @"ClientToken is required to be set for this operation. "
+    @"Set the FacebookClientToken in the Info.plist or call [FBSDKSettings setClientToken:]. "
+    @"You can find your client token in your App Settings -> Advanced.";
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+  return [NSString stringWithFormat:@"%@|%@", [FBSDKSettings appID], [FBSDKSettings clientToken]];
+}
+
 + (void)validateURLSchemes
 {
   [self validateAppID];
@@ -585,6 +604,16 @@ static NSMapTable *_transientObjects;
   if (![self isRegisteredURLScheme:defaultUrlScheme]) {
     NSString *reason = [NSString stringWithFormat:@"%@ is not registered as a URL scheme. Please add it in your Info.plist", defaultUrlScheme];
     @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+}
+
++ (void)validateFacebookReservedURLSchemes
+{
+  for (NSString * fbUrlScheme in @[FBSDK_CANOPENURL_FACEBOOK, FBSDK_CANOPENURL_MESSENGER, FBSDK_CANOPENURL_FBAPI, FBSDK_CANOPENURL_SHARE_EXTENSION]) {
+    if ([self isRegisteredURLScheme:fbUrlScheme]) {
+      NSString *reason = [NSString stringWithFormat:@"%@ is registered as a URL scheme. Please move the entry from CFBundleURLSchemes in your Info.plist to LSApplicationQueriesSchemes. If you are trying to resolve \"canOpenURL: failed\" warnings, those only indicate that the Facebook app is not installed on your device or simulator and can be ignored.", fbUrlScheme];
+      @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+    }
   }
 }
 
@@ -598,6 +627,20 @@ static NSMapTable *_transientObjects;
   return topController;
 }
 
++ (NSString *)hexadecimalStringFromData:(NSData *)data
+{
+  NSUInteger dataLength = data.length;
+  if (dataLength == 0) {
+    return nil;
+  }
+
+  const unsigned char *dataBuffer = data.bytes;
+  NSMutableString *hexString  = [NSMutableString stringWithCapacity:(dataLength * 2)];
+  for (int i = 0; i < dataLength; ++i) {
+    [hexString appendFormat:@"%02x", dataBuffer[i]];
+  }
+  return [hexString copy];
+}
 
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme {
   static dispatch_once_t fetchBundleOnce;
@@ -652,6 +695,48 @@ static NSMapTable *_transientObjects;
   });
 
   return [schemes containsObject:urlScheme];
+}
+
++ (BOOL)isPublishPermission:(NSString *)permission
+{
+  return [permission hasPrefix:@"publish"] ||
+  [permission hasPrefix:@"manage"] ||
+  [permission isEqualToString:@"ads_management"] ||
+  [permission isEqualToString:@"create_event"] ||
+  [permission isEqualToString:@"rsvp_event"];
+}
+
++ (BOOL)areAllPermissionsReadPermissions:(NSSet *)permissions
+{
+  for (NSString *permission in permissions) {
+    if ([[self class] isPublishPermission:permission]) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
++ (BOOL)areAllPermissionsPublishPermissions:(NSSet *)permissions
+{
+  for (NSString *permission in permissions) {
+    if (![[self class] isPublishPermission:permission]) {
+      return NO;
+    }
+  }
+  return YES;
+}
+
++ (Class)resolveBoltsClassWithName:(NSString *)className;
+{
+  Class clazz = NSClassFromString(className);
+  if (clazz == nil) {
+    NSString *message = [NSString stringWithFormat:@"Unable to load class %@. Did you link Bolts.framework?", className];
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:message
+                                 userInfo:nil];
+  }
+
+  return clazz;
 }
 
 @end
