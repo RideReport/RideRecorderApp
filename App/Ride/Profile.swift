@@ -149,14 +149,6 @@ class Profile : NSManagedObject {
         }
     }
     
-    var currentStreakJewel: String {
-        guard let streakLength = self.currentStreakLength else {
-            return ""
-        }
-        
-        return self.jewelForLength(streakLength.integerValue)
-    }
-    
     var longestStreakJewel: String {
         guard let streakLength = self.longestStreakLength else {
             return ""

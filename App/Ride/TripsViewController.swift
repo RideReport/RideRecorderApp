@@ -103,7 +103,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         self.refreshEmptyTableView()
-        Profile.profile().updateCurrentRideStreakLength()
         
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -314,7 +313,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         // reload the rewards section as needed
         if rewardSectionNeedsReload {
             rewardSectionNeedsReload = false
-            Profile.profile().updateCurrentRideStreakLength()
             self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }

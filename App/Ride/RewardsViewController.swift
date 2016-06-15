@@ -67,6 +67,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             return
         }
         
+        Profile.profile().updateCurrentRideStreakLength()
+        
         self.emptyTrophiesView.hidden = true
         
         let dateFormatter = NSDateFormatter()

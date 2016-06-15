@@ -64,6 +64,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         self.updateRideSummaryView()
         
         self.statsFirstLineLabel.text = String(format: "%@  %@", Profile.profile().distanceBikedImpressiveStat.emoji, Profile.profile().distanceBikedImpressiveStat.description)
+        Profile.profile().updateCurrentRideStreakLength()
         
         if let longestStreak = Profile.profile().longestStreakLength?.integerValue, longestStreakLengthDate = Profile.profile().longestStreakStartDate {
             self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak, dateFormatter.stringFromDate(longestStreakLengthDate))
