@@ -30,12 +30,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var dateFormatter : NSDateFormatter!
     private var yearDateFormatter : NSDateFormatter!
     private var rewardSectionNeedsReload : Bool = false
+    private var sectionNeedingReload: Int = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         self.navigationItem.hidesBackButton = true
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Rides", style: .Plain, target: nil, action: nil)
         
         self.popupView.hidden = true
         
@@ -91,7 +92,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.fetchBatchSize = 20
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "isBikeTrip", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -315,6 +316,22 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             rewardSectionNeedsReload = false
             self.tableView!.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
         }
+        
+        if sectionNeedingReload != -1 {
+            let numberOfRowsToReload = max(self.tableView(tableView, numberOfRowsInSection: sectionNeedingReload), self.tableView.numberOfRowsInSection(sectionNeedingReload))
+            var pathsToReload: [NSIndexPath] = []
+            for i in 0..<numberOfRowsToReload {
+                let indexPath = NSIndexPath(forRow: i, inSection: sectionNeedingReload)
+                pathsToReload.append(indexPath)
+            }
+            for indexPath in pathsToReload {
+                if let cell = self.tableView!.cellForRowAtIndexPath(indexPath) {
+                    configureCell(cell, indexPath: indexPath)
+                }
+            }
+            
+            sectionNeedingReload = -1
+        }
     }
     
     func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
@@ -338,13 +355,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         switch(type) {
             
         case .Update:
-            let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
-            let cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1))
-            if (cell != nil) {
-                configureCell(cell!, trip:trip)
+            let indexPath = NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)
+            if let cell = self.tableView!.cellForRowAtIndexPath(indexPath) {
+                configureCell(cell, indexPath: indexPath)
             }
-            if let headerView = self.tableView!.headerViewForSection(indexPath!.section + 1) {
-                self.configureHeaderView(headerView, forHeaderInSection: indexPath!.section + 1)
+
+            if let headerView = self.tableView!.headerViewForSection(indexPath.section) {
+                self.configureHeaderView(headerView, forHeaderInSection: indexPath.section)
             }
             
         case .Insert:
@@ -360,25 +377,16 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
             rewardSectionNeedsReload = true
         case .Move:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
-                withRowAnimation: UITableViewRowAnimation.Fade)
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
-                withRowAnimation: UITableViewRowAnimation.Fade)
+            // caused when a trip's isBikeTrip status changes
+            // in this case, we should reload the whole section.
+            sectionNeedingReload = indexPath!.section + 1
+            self.tableView!.reloadSections(NSIndexSet(index: indexPath!.section + 1), withRowAnimation: UITableViewRowAnimation.Fade)
         }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections!.count + 1
     }
-    
-//    func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-//        let headerView = view as! UITableViewHeaderFooterView
-//        
-//        headerView.tintColor = self.view.backgroundColor
-//        headerView.opaque = false
-//        headerView.textLabel!.font = UIFont.boldSystemFontOfSize(16.0)
-//        headerView.textLabel!.textColor = ColorPallete.sharedPallete.darkGrey
-//    }
     
     private func configureHeaderView(headerView: UITableViewHeaderFooterView, forHeaderInSection section: Int) {
         guard let view = headerView as? RoutesTableViewHeaderCell else {
@@ -421,7 +429,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if totalLength > 0 {
             view.milesLabel.text = totalLength.distanceString
         } else {
-            view.milesLabel.text = "No Rides"
+            view.milesLabel.text = "no rides"
         }
     }
     
@@ -430,7 +438,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return 0
         }
         
-        return 26
+        return 28
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -444,29 +452,42 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         return nil
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 2
+    private func numberOfBikeTripsInSection(section: Int)->Int {
+        guard section > 0 else {
+            return 0
         }
         
-        let sectionInfo = self.fetchedResultsController.sections![section - 1]
+        var count = 0
+        if let objects = self.fetchedResultsController.sections![section - 1].objects {
+            for obj in objects {
+                if let trip = obj as? Trip where trip.isBikeTrip {
+                    count += 1
+                }
+            }
+        }
         
-        // an extra row for our dummy cell
-        return sectionInfo.numberOfObjects + 1
+        return count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 1
+        }
+        
+        let numBikeTrips = numberOfBikeTripsInSection(section)
+        if self.fetchedResultsController.sections![section - 1].numberOfObjects > numBikeTrips {
+            // if there are other types of trips too, then we one extra row for 'Other trips'
+            return numBikeTrips + 1
+        } else {
+            return numBikeTrips
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableCell : UITableViewCell!
+        let numRowsInSection = self.tableView(tableView, numberOfRowsInSection: indexPath.section)
         
-        if ((indexPath.section == 0 && indexPath.row == 1) || (indexPath.section > 0 && indexPath.row == self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects)) {
-            // dummy cell to force a separator view to draw between rewards and next section
-            let reuseID = "RoutesViewTableDummyCell"
-            
-            tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
-            tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
-            tableCell.layoutMargins = UIEdgeInsetsZero
-
-        } else if indexPath.section == 0 {
+        if indexPath.section == 0 {
             let reuseID = "RewardsViewTableCell"
             
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
@@ -482,27 +503,18 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let reuseID = "RoutesViewTableCell"
             
             tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+            configureCell(tableCell, indexPath: indexPath)
+            
             tableCell.layoutMargins = UIEdgeInsetsZero
 
-            let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
-            configureCell(tableCell, trip: trip)
-            if (indexPath.row == self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects - 1) {
-                tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
-            } else {
-                tableCell.separatorInset = UIEdgeInsetsMake(0, 46, 0, 0)
-            }
+            tableCell.separatorInset = UIEdgeInsetsMake(0, 20, 0, 0)
         }
         
         return tableCell
     }
     
     func configureRewardsCell(tableCell: UITableViewCell) {
-        // make sure the disclosure arrow tint color can be set
-        for case let button as UIButton in tableCell.subviews {
-            let image = button.backgroundImageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate)
-            button.setBackgroundImage(image, forState: .Normal)
-        }
-        
+        setDisclosureArrowColor(tableCell)
         
         guard let trophySummaryLabel = tableCell.viewWithTag(1) as? UILabel,
         streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
@@ -610,31 +622,48 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         CATransaction.commit()
     }
     
-    func configureCell(tableCell: UITableViewCell, trip: Trip) {
-        guard let textLabel = tableCell.viewWithTag(1) as? UILabel, detailTextLabel = tableCell.viewWithTag(2) as? UILabel else {
+    func setDisclosureArrowColor(tableCell: UITableViewCell) {
+        for case let button as UIButton in tableCell.subviews {
+            let image = button.backgroundImageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate)
+            button.setBackgroundImage(image, forState: .Normal)
+        }
+    }
+    
+    func configureCell(tableCell: UITableViewCell, indexPath: NSIndexPath) {
+        guard let textLabel = tableCell.viewWithTag(1) as? UILabel else {
             return
         }
-        var dateTitle = ""
-        if (trip.creationDate != nil) {
-            dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
-            
-        }
         
-        let areaDescriptionString = trip.areaDescriptionString
-        var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        setDisclosureArrowColor(tableCell)
         
-        for reward in trip.tripRewards.array as! [TripReward] {
-            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
-                description += ("\n\n" + emoji + " " + reward.descriptionText)
+        if (indexPath.row < numberOfBikeTripsInSection(indexPath.section)) {
+            let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
+            var dateTitle = ""
+            if (trip.creationDate != nil) {
+                dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
+                
             }
-        }
-     
-        textLabel.text = description
-        
-        if trip.isClosed {
-            detailTextLabel.text = trip.activityType.emoji
+            
+            let areaDescriptionString = trip.areaDescriptionString
+            var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+            
+            for reward in trip.tripRewards.array as! [TripReward] {
+                if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                    description += ("\n\n" + emoji + " " + reward.descriptionText)
+                }
+            }
+            
+            textLabel.textColor = ColorPallete.sharedPallete.darkGrey
+            textLabel.text = description
         } else {
-            detailTextLabel.text = ""
+            let otherTripsCount = self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects - numberOfBikeTripsInSection(indexPath.section)
+            textLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+            
+            if otherTripsCount == 1 {
+                textLabel.text = "1 Other Trip"
+            } else {
+                textLabel.text = String(otherTripsCount) + " Other Trips"
+            }
         }
     }
     
@@ -651,7 +680,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         if let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as? Trip {
-            self.performSegueWithIdentifier("showTrip", sender: trip)
+            if trip.activityType == .Cycling {
+                self.performSegueWithIdentifier("showTrip", sender: trip)
+            } else {
+                self.performSegueWithIdentifier("showOtherTripsView", sender: trip.creationDate)
+            }
         }
     }
     
@@ -660,6 +693,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             if let tripVC = segue.destinationViewController as? TripViewController,
                 trip = sender as? Trip {
                 tripVC.selectedTrip = trip
+            }
+        } else if (segue.identifier == "showOtherTripsView") {
+            if let otherTripVC = segue.destinationViewController as? OtherTripsViewController,
+                date = sender as? NSDate {
+                otherTripVC.dateOfTripsToShow = date
             }
         }
     }
@@ -758,6 +796,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 }
 
 class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
+    private var separatorView: UIView!
     private var dateLabel: UILabel!
     private var milesLabel: UILabel!
     
@@ -784,7 +823,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         self.dateLabel.numberOfLines = 1
         self.contentView.addSubview(self.dateLabel)
         NSLayoutConstraint(item: self.dateLabel, attribute: .Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1, constant: -6).active = true
-        NSLayoutConstraint(item: self.dateLabel, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+        NSLayoutConstraint(item: self.dateLabel, attribute: .Baseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Baseline, multiplier: 1, constant: -4).active = true
         
         self.milesLabel = UILabel()
         self.milesLabel.font = UIFont.systemFontOfSize(16.0)
@@ -794,6 +833,15 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         self.milesLabel.textAlignment = .Right
         self.contentView.addSubview(self.milesLabel)
         NSLayoutConstraint(item: self.milesLabel, attribute: .Trailing, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1, constant: -10).active = true
-        NSLayoutConstraint(item: self.milesLabel, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+        NSLayoutConstraint(item: self.milesLabel, attribute: .Baseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Baseline, multiplier: 1, constant: -4).active = true
+        
+        self.separatorView = UIView()
+        self.separatorView.backgroundColor = ColorPallete.sharedPallete.unknownGrey
+        self.separatorView.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(self.separatorView)
+        NSLayoutConstraint(item: self.separatorView, attribute: .Width, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Width, multiplier: 1, constant: 0).active = true
+        NSLayoutConstraint(item: self.separatorView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 1).active = true
+        NSLayoutConstraint(item: self.separatorView, attribute: .Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1, constant: -8).active = true
+        NSLayoutConstraint(item: self.separatorView, attribute: .Top, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Top, multiplier: 1, constant: -1).active = true
     }
 }

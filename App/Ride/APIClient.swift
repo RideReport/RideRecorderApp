@@ -336,9 +336,10 @@ class APIClient {
     //
     
     private func runMigrations() {
-        self.isMigrating = true
         let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripRewardToTripRewardsMigration")
         if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
+            self.isMigrating = true
+
             let _ = AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
                 switch response.result {
                 case .Success(let json):

@@ -74,6 +74,7 @@
 		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
+		3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */; };
 		3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844497211A3A4EB40009F889 /* APIClient.swift */; };
 		3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
 		3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B931BEAAB8B0004C1BF /* ParameterEncoding+GZIP.swift */; };
@@ -298,6 +299,7 @@
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
+		3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTripsViewController.swift; sourceTree = "<group>"; };
 		3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 39.xcdatamodel"; sourceTree = "<group>"; };
 		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
@@ -681,6 +683,7 @@
 				847A056E1A02E757008F5371 /* TripsViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
+				3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1313,6 +1316,7 @@
 				844497221A3A4EB40009F889 /* APIClient.swift in Sources */,
 				3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
+				3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */,
 				3D7FFA8C1D061F260077E591 /* TripReward.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,

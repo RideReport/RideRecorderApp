@@ -123,11 +123,15 @@ class Trip : NSManagedObject {
             return .Unknown
         }
         set {
+            let oldValue = self.activityType
+            
             self.willChangeValueForKey("activityType")
             self.setPrimitiveValue(NSNumber(short: newValue.rawValue), forKey: "activityType")
             self.didChangeValueForKey("activityType")
             
-            if self.activityType != newValue {
+            if oldValue != newValue {
+                self.isBikeTrip = (newValue == .Cycling)
+
                 dispatch_async(dispatch_get_main_queue()) {
                     // newly closed trips should be synced to healthkit
                     if (HealthKitManager.authorizationStatus == .Authorized) {
@@ -146,6 +150,7 @@ class Trip : NSManagedObject {
     @NSManaged var tripRewards : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
+    @NSManaged var isBikeTrip : Bool
     @NSManaged var isSavedToHealthKit : Bool
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var summaryIsSynced : Bool
@@ -195,7 +200,7 @@ class Trip : NSManagedObject {
     class func reloadSectionIdentifiers() {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil")
+        fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil || isBikeTrip == nil")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
         let results: [AnyObject]?
@@ -211,6 +216,7 @@ class Trip : NSManagedObject {
         
         for trip in trips {
             trip.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(trip.creationDate)
+            trip.isBikeTrip = (trip.activityType == .Cycling)
         }
         
         CoreDataManager.sharedManager.saveContext()
