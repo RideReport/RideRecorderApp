@@ -660,7 +660,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             textLabel.textColor = ColorPallete.sharedPallete.unknownGrey
             
             if otherTripsCount == 1 {
-                textLabel.text = "1 Other Trip"
+                textLabel.text = " 1 Other Trip"
             } else {
                 textLabel.text = String(otherTripsCount) + " Other Trips"
             }
@@ -812,6 +812,10 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
     }
     
     func commonInit() {
+        guard self.dateLabel == nil else {
+            return
+        }
+        
         self.backgroundView = UIView()
         
         self.contentView.backgroundColor = UIColor.whiteColor()
@@ -840,7 +844,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         self.separatorView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(self.separatorView)
         NSLayoutConstraint(item: self.separatorView, attribute: .Width, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Width, multiplier: 1, constant: 0).active = true
-        NSLayoutConstraint(item: self.separatorView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 1).active = true
+        NSLayoutConstraint(item: self.separatorView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 1/UIScreen.mainScreen().scale).active = true
         NSLayoutConstraint(item: self.separatorView, attribute: .Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1, constant: -8).active = true
         NSLayoutConstraint(item: self.separatorView, attribute: .Top, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Top, multiplier: 1, constant: -1).active = true
     }

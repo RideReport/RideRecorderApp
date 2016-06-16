@@ -195,7 +195,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func configureCell(tableCell: UITableViewCell, trip: Trip) {
-        guard let textLabel = tableCell.viewWithTag(1) as? UILabel else {
+        guard let textLabel = tableCell.viewWithTag(1) as? UILabel, let detailLabel = tableCell.viewWithTag(2) as? UILabel else {
             return
         }
         
@@ -217,6 +217,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         textLabel.text = description
+        detailLabel.text = trip.activityType.emoji
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
