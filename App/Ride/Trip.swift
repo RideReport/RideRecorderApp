@@ -130,7 +130,9 @@ class Trip : NSManagedObject {
             self.didChangeValueForKey("activityType")
             
             if oldValue != newValue {
-                self.isBikeTrip = (newValue == .Cycling)
+                if self.isClosed {
+                    self.sectionIdentifier = self.sectionIdentifierString()
+                }
 
                 dispatch_async(dispatch_get_main_queue()) {
                     // newly closed trips should be synced to healthkit
@@ -150,7 +152,6 @@ class Trip : NSManagedObject {
     @NSManaged var tripRewards : NSOrderedSet!
     @NSManaged var hasSmoothed : Bool
     @NSManaged var isSynced : Bool
-    @NSManaged var isBikeTrip : Bool
     @NSManaged var isSavedToHealthKit : Bool
     @NSManaged var locationsAreSynced : Bool
     @NSManaged var summaryIsSynced : Bool
@@ -183,9 +184,9 @@ class Trip : NSManagedObject {
                     }
                 }
                 
-                self.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(self.creationDate)
+                self.sectionIdentifier = self.sectionIdentifierString()
             } else {
-                self.sectionIdentifier = "z" // force it to sort at the top of a reverse-sorted list
+                self.sectionIdentifier = Trip.inProgressSectionIdentifierSuffix() // force it to sort at the top of a reverse-sorted list
             }
         }
     }
@@ -197,10 +198,25 @@ class Trip : NSManagedObject {
     @NSManaged var sectionIdentifier : String?
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
-    class func reloadSectionIdentifiers() {
+    class func cyclingSectionIdentifierSuffix()->String {
+        return "yy"
+    }
+    
+    class func inProgressSectionIdentifierSuffix()->String {
+        return "z"
+    }
+    
+    private func sectionIdentifierString()->String {
+        return  Trip.sectionDateFormatter.stringFromDate(self.creationDate) + (self.activityType == .Cycling ? Trip.cyclingSectionIdentifierSuffix() : "")
+    }
+    
+    class func reloadSectionIdentifiers(exhaustively: Bool = false) {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil || isBikeTrip == nil")
+        if !exhaustively {
+            fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil")
+        }
+        
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
         let results: [AnyObject]?
@@ -215,8 +231,7 @@ class Trip : NSManagedObject {
         }
         
         for trip in trips {
-            trip.sectionIdentifier = Trip.sectionDateFormatter.stringFromDate(trip.creationDate)
-            trip.isBikeTrip = (trip.activityType == .Cycling)
+            trip.sectionIdentifier = trip.sectionIdentifierString()
         }
         
         CoreDataManager.sharedManager.saveContext()

@@ -92,7 +92,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 self.rideSummaryView.body = "Downloading Trip Data…"
             } else if ((trip.startDate.isToday() && !trip.isClosed)) {
                 self.rideSummaryView.dateString = ""
-                self.rideSummaryView.body = "Trip in Progress…"
+                self.rideSummaryView.body = String(format: "🏁 Started trip at %@.", self.timeFormatter.stringFromDate(trip.startDate))
             } else {
                 if (trip.startDate.isToday()) {
                     dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)

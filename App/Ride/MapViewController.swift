@@ -153,23 +153,30 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
-            dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                trip.simplify() {
-                    if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                        strongSelf.setSelectedTrip(trip)
+        var locs = trip.locations
+        
+        // if the trip is closed, use the simplified locations for efficiency
+        if trip.isClosed {
+            guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
+                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                    guard let strongSelf = self else {
+                        return
                     }
-                }
-            })
-            return
+                    
+                    trip.simplify() {
+                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
+                            strongSelf.setSelectedTrip(trip)
+                        }
+                    }
+                    })
+                return
+            }
+            
+            locs = trip.simplifiedLocations
         }
         
-        if let startLoc = trip.simplifiedLocations.firstObject as? Location,
-            endLoc = trip.simplifiedLocations.lastObject as? Location {
+        if let startLoc = locs.firstObject as? Location,
+            endLoc = locs.lastObject as? Location {
                 self.startPoint = MGLPointAnnotation()
                 self.startPoint!.coordinate = startLoc.coordinate()
                 mapView.addAnnotation(self.startPoint!)
@@ -181,7 +188,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-        for location in trip.simplifiedLocations.array {
+        for location in locs.array {
             let location = (location as! Location)
             
             let coord = location.coordinate()

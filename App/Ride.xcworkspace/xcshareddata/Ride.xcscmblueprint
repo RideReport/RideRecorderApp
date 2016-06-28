@@ -12,6 +12,7 @@
     "88660284676E3071B724F73E00548AD998AF7379" : 0,
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : 0,
     "67620B5EFA902936DF04070AF595B76AB0333747" : 0,
+    "3C2E9C004FDFAE66D2A692C81442DFDD336D5B50" : 0,
     "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : 0,
     "DD245E27E44024E470FBF9128E97F88E374703AA" : 0,
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : 0,
@@ -27,6 +28,7 @@
     "88660284676E3071B724F73E00548AD998AF7379" : "Ride\/Submodules\/DMActivityInstagram\/",
     "B1E05D58146BF7B992144E82CC3F91DAC86DD1C5" : "mapbox-gl-native\/src\/mbgl\/util\/geojsonvt\/",
     "67620B5EFA902936DF04070AF595B76AB0333747" : "RideApp\/Alamofire",
+    "3C2E9C004FDFAE66D2A692C81442DFDD336D5B50" : "workshop\/",
     "D1BB63D501E0048981F00509C5A268D4AF5FEE4C" : "mapbox-gl-native\/platform\/ios\/vendor\/SMCalloutView\/",
     "DD245E27E44024E470FBF9128E97F88E374703AA" : "Ride\/App\/RideTests\/DVR\/",
     "8695F9610F28C2C5DE5773E7F33F1D6934DB725E" : "Ride",
@@ -40,6 +42,11 @@
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:quicklywilliam\/ActivityPredictor.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "03B0A350DD018B25C7A37A6D7B63834B334B71A8"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/quicklywilliam\/workshop.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3C2E9C004FDFAE66D2A692C81442DFDD336D5B50"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:pixyzehn\/PathMenu.git",
