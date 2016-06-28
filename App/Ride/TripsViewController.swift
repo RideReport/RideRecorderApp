@@ -32,6 +32,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var rewardSectionNeedsReload : Bool = false
     private var sectionNeedingReloadAfterUpdates : Int = -1
     private var sectionHeaderNeedingReloadAfterUpdates : Int = -1
+    private var sectionChangeType : NSFetchedResultsChangeType? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -320,6 +321,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.refreshEmptyTableView()
         self.refreshTitle()
         
+        self.sectionChangeType = nil
+        
         if (sectionNeedingReloadAfterUpdates != -1) {
             // reload both the section and the other trips section following, if it exists
             self.tableView!.reloadSections(NSIndexSet(index: sectionNeedingReloadAfterUpdates), withRowAnimation: .Fade)
@@ -348,8 +351,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         switch type {
         case .Insert:
             self.tableView!.insertSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: .Fade)
+            sectionChangeType = .Insert
         case .Delete:
             self.tableView!.deleteSections(NSIndexSet(index: sectionIndex + 1), withRowAnimation: .Fade)
+            sectionChangeType = .Delete
         case .Move, .Update:
             // do nothing
 
@@ -395,18 +400,26 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
             rewardSectionNeedsReload = true
         case .Move:
-            if indexPath!.section == newIndexPath!.section && indexPath!.row == newIndexPath!.row {
-                sectionNeedingReloadAfterUpdates = indexPath!.section + 1
-                
+            sectionHeaderNeedingReloadAfterUpdates = indexPath!.section + 1
+            
+            guard let trip = anObject as? Trip else {
                 return
             }
-            
-            sectionHeaderNeedingReloadAfterUpdates = indexPath!.section + 1
         
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
-                                                   withRowAnimation: .Fade)
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
-                                                   withRowAnimation: .Fade)
+            if trip.activityType != .Cycling ||  sectionChangeType == .Delete {
+                // if the trip
+                self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
+                                                       withRowAnimation: .Fade)
+            } else {
+                sectionNeedingReloadAfterUpdates = indexPath!.section + 1
+            }
+            if trip.activityType == .Cycling ||  sectionChangeType == .Insert {
+                // only insert the first row
+                self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
+                                                       withRowAnimation: .Fade)
+            } else {
+                sectionNeedingReloadAfterUpdates = newIndexPath!.section + 1
+            }
         }
     }
 
@@ -486,7 +499,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 title = self.yearDateFormatter.stringFromDate(date)
             }
         } else {
-            title = "In Progress"
+            view.dateLabel.text = "  In Progress"
+            view.milesLabel.text = ""
+            return
         }
         
         var totalLength: Meters = 0
