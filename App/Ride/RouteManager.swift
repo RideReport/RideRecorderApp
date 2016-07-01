@@ -154,7 +154,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func tripQualifiesForResumptions(trip: Trip, fromLocation: CLLocation)->Bool {
         var timeoutInterval: NSTimeInterval = 0
         switch trip.activityType {
-        case .Cycling where trip.length.miles >= 15:
+        case .Cycling where trip.length.miles >= 12:
             timeoutInterval = 900
         default:
             timeoutInterval = 240
