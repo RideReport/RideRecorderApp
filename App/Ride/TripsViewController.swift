@@ -405,16 +405,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             guard let trip = anObject as? Trip else {
                 return
             }
+            
+            let theSection = self.fetchedResultsController.sections![indexPath!.section]
+            let isInProgresstrip = theSection.name.containsString(Trip.inProgressSectionIdentifierSuffix())
         
-            if trip.activityType != .Cycling ||  sectionChangeType == .Delete {
-                // if the trip
+            if isInProgresstrip || trip.activityType != .Cycling ||  sectionChangeType == .Delete {
+                // if the trip is moving to in progress, or if it is moving from the cycling trips to other trips, then delete a row
                 self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                                                        withRowAnimation: .Fade)
             } else {
                 sectionNeedingReloadAfterUpdates = indexPath!.section + 1
             }
             if trip.activityType == .Cycling ||  sectionChangeType == .Insert {
-                // only insert the first row
+                // if the trip is a cycling trip, or we are inserting a new section
                 self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
                                                        withRowAnimation: .Fade)
             } else {
