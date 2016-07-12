@@ -640,7 +640,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                     if i>=columnCount {
                         i = 1
                         lineCount += 1
-                        if let lastEmoji = rewardsTripCounts.last?["emoji"] as? String where lastEmoji == emoji  {
+                        if let lastEmoji = rewardsTripCounts.last?["emoji"] as? String where lastEmoji != emoji  {
                             rewardString += "\n"
                         }
                     }
