@@ -856,7 +856,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return false
         }
         
-        if (!isOtherTripsSection(indexPath.section)) {
+        if (isOtherTripsSection(indexPath.section - 1)) {
             return false
         }
         
