@@ -12,13 +12,14 @@ import Mixpanel
 class ReportModeClassificationViewController : UIViewController, MGLMapViewDelegate, UITextFieldDelegate {
     var trip: Trip! {
         didSet {
-            guard self.view != nil else {
-                // view has not loaded yet.
-                return
-            }
-            
-            self.updateTripPolylines()
-            self.updateRideSummaryView()
+            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                guard let strongSelf = self, _ = strongSelf.view else {
+                    return
+                }
+
+                strongSelf.updateTripPolylines()
+                strongSelf.updateRideSummaryView()
+            })
         }
     }
     

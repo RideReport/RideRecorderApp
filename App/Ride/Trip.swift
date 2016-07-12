@@ -94,6 +94,7 @@ class Trip : NSManagedObject {
     }
     
     private struct Static {
+        static var timeFormatter : NSDateFormatter!
         static var sectionDateFormatter : NSDateFormatter!
     }
     
@@ -106,6 +107,20 @@ class Trip : NSManagedObject {
             }
             
             return Static.sectionDateFormatter
+        }
+    }
+    
+    class var timeDateFormatter : NSDateFormatter {
+        get {
+            if (Static.timeFormatter == nil) {
+                Static.timeFormatter = NSDateFormatter()
+                Static.timeFormatter.locale = NSLocale.currentLocale()
+                Static.timeFormatter.dateFormat = "h:mma"
+                Static.timeFormatter.AMSymbol = (Static.timeFormatter.AMSymbol as NSString).lowercaseString
+                Static.timeFormatter.PMSymbol = (Static.timeFormatter.PMSymbol as NSString).lowercaseString
+            }
+            
+            return Static.timeFormatter
         }
     }
     
@@ -1022,6 +1037,42 @@ class Trip : NSManagedObject {
         }
         
         return message
+    }
+    
+    func timeString()->String {
+        var timeString = ""
+
+        if (self.creationDate != nil) {
+            timeString = String(format: "%@", Trip.timeDateFormatter.stringFromDate(self.creationDate))
+        }
+        
+        return timeString
+    }
+    
+    func displayStringWithTime()->String {
+        let areaDescriptionString = self.areaDescriptionString
+        var description = String(format: "%@ %@ for %@%@.", self.climacon ?? "", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        
+        for reward in self.tripRewards.array as! [TripReward] {
+            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                description += ("\n\n" + emoji + " " + reward.descriptionText)
+            }
+        }
+        
+        return description
+    }
+    
+    func displayString()->String {
+        let areaDescriptionString = self.areaDescriptionString
+        var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        
+        for reward in self.tripRewards.array as! [TripReward] {
+            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                description += ("\n\n" + emoji + " " + reward.descriptionText)
+            }
+        }
+        
+        return description
     }
     
     func shareString()->String {

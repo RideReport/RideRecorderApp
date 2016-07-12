@@ -132,6 +132,8 @@ import Foundation
     
     var appIconView : UIImageView!
     
+    private var heightConstraint : NSLayoutConstraint! = nil
+    
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -169,10 +171,7 @@ import Foundation
         contentView.addSubview(dateLabel)
         
         bodyLabel = UILabel()
-        bodyLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
-        bodyLabel.minimumScaleFactor = 0.6
         bodyLabel.adjustsFontSizeToFitWidth = true
-        bodyLabel.numberOfLines = 2
         contentView.addSubview(bodyLabel)
         
         self.lineViewTop = UIView()
@@ -255,6 +254,16 @@ import Foundation
         reloadUI()
     }
     
+    override func didMoveToSuperview() {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.reloadUI()
+        }
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -279,8 +288,6 @@ import Foundation
         
         self.controlsView.frame = CGRect(x: scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, y: 0, width: self.isShowingControls ? self.totalButtonWidth : 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        
-        reloadUI()
     }
     
     private var totalButtonWidth : CGFloat {
@@ -300,26 +307,6 @@ import Foundation
     }
     
     func reloadUI() {
-        if self.style == .LockScreenStyle && self.bounds.height < 100 {
-            self.appNameLabel.font = UIFont.systemFontOfSize(15)
-            self.bodyLabel.font = UIFont.systemFontOfSize(12)
-            self.dateLabel.font = UIFont.systemFontOfSize(11)
-            self.slideLabel.font = UIFont.systemFontOfSize(11)
-            
-            self.editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            self.actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            self.destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-        } else {
-            appNameLabel.font = UIFont.boldSystemFontOfSize(18)
-            dateLabel.font = UIFont.systemFontOfSize(14)
-            bodyLabel.font = UIFont.systemFontOfSize(16)
-            slideLabel.font = UIFont.systemFontOfSize(14)
-            
-            editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-        }
-        
         appNameLabel.textColor = self.textColor
         dateLabel.textColor = self.textColor.colorWithAlphaComponent(0.4)
         bodyLabel.textColor = self.textColor
@@ -337,13 +324,43 @@ import Foundation
         bodyLabel.text = self.body
         appIconView.image = self.appIcon
         
+        if self.style == .LockScreenStyle && self.bounds.height < 100 {
+            self.appNameLabel.font = UIFont.systemFontOfSize(15)
+            self.bodyLabel.font = UIFont.systemFontOfSize(12)
+            self.dateLabel.font = UIFont.systemFontOfSize(11)
+            self.slideLabel.font = UIFont.systemFontOfSize(11)
+            
+            self.editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            self.actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            self.destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            
+            self.bodyLabel.minimumScaleFactor = 0.6
+            self.bodyLabel.numberOfLines = 2
+            self.bodyLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        } else {
+            appNameLabel.font = UIFont.boldSystemFontOfSize(18)
+            dateLabel.font = UIFont.systemFontOfSize(16)
+            bodyLabel.font = UIFont.systemFontOfSize(18)
+            slideLabel.font = UIFont.systemFontOfSize(14)
+            
+            editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            
+            bodyLabel.minimumScaleFactor = 1.0
+            bodyLabel.numberOfLines = 0
+            bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        }
+
+        
         var insetLeft : CGFloat = 46
         let insetRight : CGFloat = 4
         var insetY : CGFloat = 8
         
         var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
         var bodySizeOffset: CGFloat = 0
-        var dateLabelOffset: CGFloat = 0
+        var dateLabelOffsetX: CGFloat = 0
+        var dateLabelOffsetY: CGFloat = 0
         
         switch self.style {
         case .AppStyle:
@@ -367,10 +384,10 @@ import Foundation
             self.lineViewBottom.hidden = false
             self.clearButton.hidden = true
             self.shareButton.hidden = true
-            dateLabelOffset = 6
+            dateLabelOffsetX = 6
         case .ShareStyle:
             insetLeft = 8
-            insetY = 2
+            insetY = 4
             
             self.appNameLabel.hidden = false
             self.appIconView.hidden = true
@@ -379,16 +396,32 @@ import Foundation
             self.lineViewBottom.hidden = true
             self.clearButton.hidden = true
             self.shareButton.hidden = true
-            dateLabelOffset = 6
+            dateLabelOffsetX = 8
+            dateLabelOffsetY = 1
         }
         
         let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
         let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - insetLeft - insetRight - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.TruncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
         appNameLabel.frame = CGRectMake(insetLeft, insetY, appNameSize.width, appNameSize.height)
-        dateLabel.frame = CGRectMake(appNameSize.width + insetLeft + dateLabelOffset, insetY, dateLabelSize.width, appNameSize.height)
+        dateLabel.frame = CGRectMake(appNameSize.width + insetLeft + dateLabelOffsetX, insetY + dateLabelOffsetY, dateLabelSize.width, appNameSize.height)
         bodyLabel.frame = CGRectMake(insetLeft, insetY + appNameSize.height, bodySize.width, bodySize.height)
         slideLabel.frame = CGRectMake(insetLeft, bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, self.bounds.width, 16)
+        
+        
+        if (self.heightConstraint != nil) {
+            self.removeConstraint(self.heightConstraint)
+        }
+        
+        if self.style != .LockScreenStyle || self.bounds.height > 100 {
+            self.bodyLabel.sizeToFit()
+            let newHeight = self.bodyLabel.frame.height + self.bodyLabel.frame.origin.y + 5
+            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, newHeight)
+            
+            self.heightConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: newHeight)
+            self.addConstraint(self.heightConstraint)
+            self.setNeedsDisplay()
+        }
     }
     
     func showControls(animated: Bool = true) {

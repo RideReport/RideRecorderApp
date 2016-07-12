@@ -26,7 +26,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     private var fetchedResultsController : NSFetchedResultsController! = nil
 
-    private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     private var yearDateFormatter : NSDateFormatter!
     private var rewardSectionNeedsReload : Bool = false
@@ -57,12 +56,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
-        
-        self.timeFormatter = NSDateFormatter()
-        self.timeFormatter.locale = NSLocale.currentLocale()
-        self.timeFormatter.dateFormat = "h:mma"
-        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
-        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
         
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
@@ -235,7 +228,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             } else {
                 if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
-                        self.popupView.text = "Ride Report is paused until " + self.timeFormatter.stringFromDate(pausedUntilDate)
+                        self.popupView.text = "Ride Report is paused until " + Trip.timeDateFormatter.stringFromDate(pausedUntilDate)
                     } else if (pausedUntilDate.isTomorrow()) {
                         self.popupView.text = "Ride Report is paused until tomorrow"
                     } else if (pausedUntilDate.isThisWeek()) {
@@ -718,24 +711,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if !isOtherTripsSection(indexPath.section - 1) {
         
             let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
-            var dateTitle = ""
-            if (trip.creationDate != nil) {
-                dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
-                
-            }
             
             if !trip.isClosed {
-                textLabel.text = String(format: "🏁 Started trip at %@.", dateTitle)
+                textLabel.text = String(format: "🏁 Started trip at %@.", trip.timeString())
             } else {
-                let areaDescriptionString = trip.areaDescriptionString
-                var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
-                
-                for reward in trip.tripRewards.array as! [TripReward] {
-                    if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
-                        description += ("\n\n" + emoji + " " + reward.descriptionText)
-                    }
-                }
-                textLabel.text = description
+                textLabel.text = trip.displayStringWithTime()
             }
             
             textLabel.textColor = ColorPallete.sharedPallete.darkGrey

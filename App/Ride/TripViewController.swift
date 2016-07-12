@@ -99,13 +99,13 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 } else if (trip.startDate.isYesterday()) {
                     dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else if (trip.startDate.isInLastWeek()) {
-                    dateTitle = trip.startDate.weekDay()
+                    dateTitle = trip.startDate.weekDay() + " at " + self.timeFormatter.stringFromDate(trip.startDate)
                 } else {
                     dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
                 }
                 
                 self.rideSummaryView.dateString = dateTitle
-                self.rideSummaryView.body = trip.notificationString()!
+                self.rideSummaryView.body = trip.displayString()
                 if (tripChanged) {
                     self.rideSummaryView.hideControls(false)
                 }
