@@ -189,7 +189,7 @@ import Foundation
         contentView.addSubview(clearButton)
         
         let shareImage = UIImage(named: "Action.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        shareButton = UIButton(frame: CGRectMake(0,0,47,27))
+        shareButton = UIButton(frame: CGRectMake(0,0,47,87))
         shareButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.01)
         shareButton.setImage(shareImage, forState: UIControlState.Normal)
         shareButton.addTarget(self, action: #selector(RideSummaryView.pressedShareButton), forControlEvents: UIControlEvents.TouchUpInside)
