@@ -731,7 +731,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         NSUserDefaults.standardUserDefaults().synchronize()
         
         DDLogInfo("Paused Tracking")
-        self.disableAllGeofences()
+        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.locationManager.location)
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
