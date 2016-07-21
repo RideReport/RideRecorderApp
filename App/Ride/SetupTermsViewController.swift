@@ -21,6 +21,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
     
     let topSpace : CGFloat = 100
     let bottomSpace : CGFloat = 100
+    let imageSize = CGSizeMake(80.0, 80.0)
     
     override func viewDidLoad() {
         self.termsTextView.selectable = true
@@ -48,13 +49,14 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
             self.scene.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y - bottomSpace, self.view.bounds.size.width, self.view.bounds.size.height + topSpace + bottomSpace))
             self.scene.physicsBody!.friction = 0.0
             self.scene.physicsWorld.gravity = CGVectorMake(0,0)
+            self.scene.physicsBody!.categoryBitMask = 1
+            self.scene.physicsBody!.contactTestBitMask = 1|2
             self.scene.physicsWorld.contactDelegate = self
             
             
-            let emojis = "👍 👎 🙌 🌂 🍄 🌤 🌧 ⛄️ 💧 🚴 🚲 🚀 🌈 🌠 🎉 ❤️ 💙 💜 💚 💛 📢 🎖 🏅 🏆 🎗 💫 🍁 🎩 👻 👒".componentsSeparatedByString(" ")
+            let emojis = "🙌 🌂 🌤 🌧 ⛄️ 💧 🚴 🚲 🌈 🌠 ❤️ 💙 💜 💚 💛 🎖 🏅 🏆 🎗 💫 🍁 🎩 👒".componentsSeparatedByString(" ")
             let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 56)!]
             
-            let imageSize = CGSizeMake(80.0, 80.0)
             for emoji in emojis {
                 if emoji.containsUnsupportEmoji() {
                     continue
@@ -92,20 +94,19 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                     let insetEmojiSize = CGSizeMake(emojiSize.width - 8, emojiSize.height - 8)
                     texture.usesMipmaps = true
                     texture.filteringMode = SKTextureFilteringMode.Nearest
-                    for _ in 0...1 {
-                        let emojiSprite = SKSpriteNode(texture: texture, size: imageSize)
-                        emojiSprite.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
-                        emojiSprite.physicsBody?.collisionBitMask = 0
-                        emojiSprite.physicsBody?.linearDamping = 0.0
-                        emojiSprite.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - imageSize.width))), self.view.frame.size.height + self.topSpace - imageSize.height)
-                        emojisSprites.append(emojiSprite)
-                    }
+                    let emojiSprite = SKSpriteNode(texture: texture, size: self.imageSize)
+                    emojiSprite.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
+                    emojiSprite.physicsBody?.collisionBitMask = 0
+                    self.scene.physicsBody!.categoryBitMask = 2
+                    emojiSprite.physicsBody?.linearDamping = 0.0
+                    emojiSprite.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - self.imageSize.width))), self.view.frame.size.height + self.topSpace - self.imageSize.height)
+                    emojisSprites.append(emojiSprite)
                 }
                 
                 var nodeCount = 0
                 let shuffledEmojis = emojisSprites.shuffle()
                 for emojiSprite in shuffledEmojis  {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.65 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(nodeCount)*0.85 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
                         guard let strongSelf = self, strongScene = strongSelf.scene else {
                             return
                         }
@@ -165,7 +166,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
     func update(currentTime: NSTimeInterval, forScene scene: SKScene) {
         for node in nodesToMoveBack {
             node.physicsBody!.angularVelocity = 0
-            node.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - 40.0))), self.view.frame.size.height + self.topSpace - 40)
+            node.position = CGPointMake(20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - imageSize.width))), self.view.frame.size.height + self.topSpace - imageSize.height)
         }
         nodesToMoveBack = []
     }
