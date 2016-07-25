@@ -299,6 +299,7 @@ class HealthKitManager {
         // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
         guard trip.activityType == .Cycling && trip.isClosed else {
             trip.isBeingSavedToHealthKit = false
+            trip.isSavedToHealthKit = true
             handler(success: false)
             return
         }
@@ -394,6 +395,7 @@ class HealthKitManager {
             self.healthStore.saveObject(ride) { (success, error) -> Void in
                 if !success {
                     // log error
+                    DDLogInfo(String(format: "Workout save failed! error: %@", error ?? "No error"))
                     trip.isBeingSavedToHealthKit = false
                     handler(success: false)
                 } else {
