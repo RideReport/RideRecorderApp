@@ -14,6 +14,8 @@ class ConnectedApp: NSManagedObject {
     @NSManaged var baseImageUrl: String?
     @NSManaged var descriptionText: String?
     @NSManaged var webAuthorizeUrl: String?
+    @NSManaged var appSettingsUrl: String?
+    @NSManaged var appSettingsText: String?
     @NSManaged var name: String?
     @NSManaged var uuid: String
     @NSManaged var profile: Profile?
@@ -82,6 +84,16 @@ class ConnectedApp: NSManagedObject {
         if let baseImageUrl = json["base_image_url"].string {
             self.baseImageUrl = baseImageUrl
         }
+        
+        
+        if let appSettingsUrl = json["app_settings_url"].string {
+            self.appSettingsUrl = appSettingsUrl
+        }
+        
+        if let appSettingsText = json["app_settings_text"].string {
+            self.appSettingsText = appSettingsText
+        }
+        
         if let name = json["name"].string {
             self.name = name
         }

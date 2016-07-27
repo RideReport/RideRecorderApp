@@ -7,12 +7,17 @@
 //
 
 import Foundation
+import SafariServices
 
-class ConnectedAppSettingsViewController : UIViewController{
+class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControllerDelegate{
     var connectingApp: ConnectedApp!
 
+    @IBOutlet weak var connectedAppSettingsButton: UIButton!
     @IBOutlet weak var connectedAppLogo: UIImageView!
     @IBOutlet weak var connectedAppDetailText: UILabel!
+    
+    private var safariViewController: UIViewController? = nil
+    private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,10 +52,43 @@ class ConnectedAppSettingsViewController : UIViewController{
         if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
             self.connectedAppLogo.kf_setImageWithURL(url)
         }
+        
+        if let settingsText = self.connectingApp.appSettingsText {
+            self.connectedAppSettingsButton.hidden = false
+            self.connectedAppSettingsButton.setTitle(settingsText, forState: UIControlState.Normal)
+        } else {
+            self.connectedAppSettingsButton.hidden = true
+        }
     }
     
     @IBAction func cancel(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func settings(sender: AnyObject) {
+        if let urlString = self.connectingApp.appSettingsUrl, url = NSURL(string: urlString) {
+            if #available(iOS 9.0, *) {
+                let sfvc = SFSafariViewController(URL: url)
+                self.safariViewController = sfvc
+                sfvc.delegate = self
+                self.navigationController?.pushViewController(sfvc, animated: true)
+                if let coordinator = transitionCoordinator() {
+                    coordinator.animateAlongsideTransition(nil, completion: { (context) in
+                        let targetSubview = sfvc.view
+                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+                        loadingIndicator.color = ColorPallete.sharedPallete.darkGrey
+                        self.safariViewControllerActivityIndicator = loadingIndicator
+                        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+                        targetSubview.addSubview(loadingIndicator)
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterY, multiplier: 1, constant: 0).active = true
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterX, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterX, multiplier: 1, constant: 0).active = true
+                        loadingIndicator.startAnimating()
+                    })
+                }
+            } else {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
     }
     
     @IBAction func disconnect(sender: AnyObject) {
@@ -75,5 +113,25 @@ class ConnectedAppSettingsViewController : UIViewController{
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    @objc private func showPageLoadError() {
+        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.connectingApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
+            self.navigationController?.popViewControllerAnimated(true)
+        }))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    @available(iOS 9.0, *)
+    func safariViewController(controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+        if let loadingIndicator = self.safariViewControllerActivityIndicator {
+            loadingIndicator.removeFromSuperview()
+            self.safariViewControllerActivityIndicator = nil
+        }
+        
+        if !didLoadSuccessfully {
+            self.performSelector(#selector(ConnectedAppSettingsViewController.showPageLoadError), withObject: nil, afterDelay: 1.0)
+        }
     }
 }
