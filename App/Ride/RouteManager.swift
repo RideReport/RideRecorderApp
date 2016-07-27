@@ -352,7 +352,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
-            if let collection = self.currentActiveMonitoringSensorDataCollection {
+            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate where location.timestamp.timeIntervalSinceDate(sensorDataCollectionDate) > -0.1 {
+                // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
                 loc.sensorDataCollection = collection
             }
             
