@@ -641,6 +641,12 @@ class APIClient {
                 if includeLocations {
                     trip.locationsAreSynced = true
                 }
+                
+                if let accountStatus = json["accountStatus"].dictionary, statusText = accountStatus["status_text"]?.string, statusEmoji = accountStatus["status_emoji"]?.string {
+                    Profile.profile().statusText = statusText
+                    Profile.profile().statusEmoji = statusEmoji
+                }
+                
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):
                 DDLogWarn(String(format: "Error syncing trip: %@", error))
