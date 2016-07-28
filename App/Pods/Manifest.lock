@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (3.1.4)
+  - Alamofire (3.4.1)
   - Bolts (1.7.0):
     - Bolts/AppLinks (= 1.7.0)
     - Bolts/Tasks (= 1.7.0)
@@ -61,7 +61,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
 
 SPEC CHECKSUMS:
-  Alamofire: fbc829692f351fa1d8a31dd75fd7f7f56fea31fb
+  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
   Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
   CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
   Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
@@ -78,6 +78,6 @@ SPEC CHECKSUMS:
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: 32df104f077fa6ef7d8357f7ae21953729cc88db
+PODFILE CHECKSUM: 5183eac64f8dcd3c93818a47de3a7b2570388797
 
 COCOAPODS: 1.0.1
