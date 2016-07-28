@@ -26,7 +26,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0035
     let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
     let backupGeofenceIdentifier = "com.Knock.RideReport.backupGeofence"
-    let geofenceSleepRegionRadius : CLLocationDistance = 80
+    let geofenceSleepRegionRadius : CLLocationDistance = 90
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
