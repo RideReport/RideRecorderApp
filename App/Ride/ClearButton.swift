@@ -39,10 +39,10 @@ import Foundation
         UIColor.blackColor().setFill()
         circle.fill()
         let ctx = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(ctx, CGBlendMode.DestinationOut)
+        CGContextSetBlendMode(ctx!, CGBlendMode.DestinationOut)
         line1.stroke()
         line2.stroke()
-        let maskImage = UIGraphicsGetImageFromCurrentImageContext().imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        let maskImage = UIGraphicsGetImageFromCurrentImageContext()!.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         UIGraphicsEndImageContext()
         let maskLayer = CALayer()
         maskLayer.contentsScale = maskImage.scale

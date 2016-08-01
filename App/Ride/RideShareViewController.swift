@@ -85,7 +85,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
     @IBAction func share(sender: AnyObject) {
         UIGraphicsBeginImageContextWithOptions(self.shareView.bounds.size, true, 0.0);
         self.shareView.drawViewHierarchyInRect(self.shareView.bounds, afterScreenUpdates: false)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
         let instagramActivity = DMActivityInstagram()

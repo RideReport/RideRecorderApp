@@ -23,18 +23,18 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.12.0):
     - FBSDKCoreKit
-  - KeychainAccess (2.0.0)
-  - Kingfisher (2.3.1)
+  - KeychainAccess (2.3.6)
+  - Kingfisher (2.4.2)
   - Mapbox-iOS-SDK (3.2.2)
   - Mixpanel (2.9.9):
     - Mixpanel/Mixpanel (= 2.9.9)
   - Mixpanel/Mixpanel (2.9.9)
-  - OAuthSwift (0.4.4)
+  - OAuthSwift (0.6.0)
   - SwiftChart (0.2.1)
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
-  - Alamofire (~> 3.0)
+  - Alamofire (from `git@github.com:Alamofire/Alamofire.git`, branch `swift2.3`)
   - CocoaLumberjack/Swift (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`, branch `swift_2.0`)
   - Crashlytics
   - ECSlidingViewController (~> 2.0.3)
@@ -42,8 +42,8 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - KeychainAccess
-  - Kingfisher (~> 2.3)
+  - KeychainAccess (from `git@github.com:kishikawakatsumi/KeychainAccess.git`, branch `swift-2.3`)
+  - Kingfisher (from `git@github.com:onevcat/Kingfisher.git`, branch `swift2.3`)
   - Mapbox-iOS-SDK
   - Mixpanel
   - OAuthSwift
@@ -51,14 +51,32 @@ DEPENDENCIES:
   - SwiftyJSON
 
 EXTERNAL SOURCES:
+  Alamofire:
+    :branch: swift2.3
+    :git: git@github.com:Alamofire/Alamofire.git
   CocoaLumberjack:
     :branch: swift_2.0
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+  KeychainAccess:
+    :branch: swift-2.3
+    :git: git@github.com:kishikawakatsumi/KeychainAccess.git
+  Kingfisher:
+    :branch: swift2.3
+    :git: git@github.com:onevcat/Kingfisher.git
 
 CHECKOUT OPTIONS:
+  Alamofire:
+    :commit: 3e0cf8d49814c0f57279f201a42cc055d996d1d7
+    :git: git@github.com:Alamofire/Alamofire.git
   CocoaLumberjack:
     :commit: 479279f102a8ab23084290697bafa77aac0d1bdf
     :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
+  KeychainAccess:
+    :commit: 90f3e11fe37cdaea27ac4b82dcf4560b2c90ad07
+    :git: git@github.com:kishikawakatsumi/KeychainAccess.git
+  Kingfisher:
+    :commit: a6db187d4da98d35b2688c088fb6dd3b26ac0ffd
+    :git: git@github.com:onevcat/Kingfisher.git
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
@@ -70,14 +88,14 @@ SPEC CHECKSUMS:
   FBSDKCoreKit: 6e56d5a2a64a755ad4efb5dbeee8f82fb1b99775
   FBSDKLoginKit: 03f68a8d48c2c8bb81d7eb8097973d483543e1f6
   FBSDKShareKit: df1491f064cffc8ebcc3fc8b71be94cc190c728e
-  KeychainAccess: 1e705665a234b3af69d653aaa3c8f696e4a992f1
-  Kingfisher: 6d3fbada4829cbc7b89e883e8218c28afeb64e42
+  KeychainAccess: 7f10e2ef998ddf954a64d5d608be08677774684d
+  Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
   Mapbox-iOS-SDK: 117ba1b0ed31107d3fe5826878a0f1531775aedc
   Mixpanel: 818d1940c2d9402453b349545022a86968097f57
-  OAuthSwift: b25a2b1a4c913d06a2b92b2a1c34ed6208b56951
+  OAuthSwift: 8895267fbd6437a52aea26541572a617c7a8c7c1
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: 5183eac64f8dcd3c93818a47de3a7b2570388797
+PODFILE CHECKSUM: bce35c6a63ac915b6c79eb88f9e5fe2aadb74c9a
 
 COCOAPODS: 1.0.1

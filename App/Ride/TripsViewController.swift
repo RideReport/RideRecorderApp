@@ -896,7 +896,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         self.dateLabel.numberOfLines = 1
         self.contentView.addSubview(self.dateLabel)
         NSLayoutConstraint(item: self.dateLabel, attribute: .Leading, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LeadingMargin, multiplier: 1, constant: -6).active = true
-        NSLayoutConstraint(item: self.dateLabel, attribute: .Baseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Baseline, multiplier: 1, constant: -4).active = true
+        NSLayoutConstraint(item: self.dateLabel, attribute: .LastBaseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LastBaseline, multiplier: 1, constant: -4).active = true
         
         self.milesLabel = UILabel()
         self.milesLabel.font = UIFont.systemFontOfSize(16.0)
@@ -906,7 +906,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         self.milesLabel.textAlignment = .Right
         self.contentView.addSubview(self.milesLabel)
         NSLayoutConstraint(item: self.milesLabel, attribute: .Trailing, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .TrailingMargin, multiplier: 1, constant: -10).active = true
-        NSLayoutConstraint(item: self.milesLabel, attribute: .Baseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .Baseline, multiplier: 1, constant: -4).active = true
+        NSLayoutConstraint(item: self.milesLabel, attribute: .LastBaseline, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: .LastBaseline, multiplier: 1, constant: -4).active = true
         
         self.separatorView = UIView()
         self.separatorView.backgroundColor = ColorPallete.sharedPallete.unknownGrey

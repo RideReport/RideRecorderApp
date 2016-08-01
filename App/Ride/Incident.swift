@@ -76,7 +76,7 @@ class Incident : NSManagedObject {
             let pinImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             
-            return pinImage
+            return pinImage!
         }
     }
     

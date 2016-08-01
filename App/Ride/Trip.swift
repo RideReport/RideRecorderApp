@@ -272,13 +272,11 @@ class Trip : NSManagedObject {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class func allBikeTrips(limit: Int = 0) -> [AnyObject] {
@@ -574,13 +572,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfAutomotiveTrips : Int {
@@ -590,13 +586,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Automotive.rawValue)
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfBusTrips : Int {
@@ -606,13 +600,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Bus.rawValue)
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfCycledTripsLast30Days : Int {
@@ -622,13 +614,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-30))
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfAutomotiveTripsLast30Days : Int {
@@ -638,13 +628,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Automotive.rawValue, NSDate().daysFrom(-30))
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfBusTripsLast30Days : Int {
@@ -654,13 +642,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Bus.rawValue, NSDate().daysFrom(-30))
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfRewardedTrips : Int {
@@ -670,13 +656,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "tripRewards.@count > 0")
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     class var numberOfBadTrips : Int {
@@ -686,13 +670,11 @@ class Trip : NSManagedObject {
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
         fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Bad.rawValue)
         
-        var error : NSError?
-        let count = context.countForFetchRequest(fetchedRequest, error: &error)
-        if (count == NSNotFound || error != nil) {
-            return 0
+        if let count = try? context.countForFetchRequest(fetchedRequest) {
+            return count
         }
         
-        return count
+        return 0
     }
     
     override func awakeFromInsert() {
