@@ -207,6 +207,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentPrototrip = nil
         }
         
+        if #available(iOS 10.0, *) {
+            WatchManager.sharedManager.beginRideWorkout()
+        } else {
+            // Fallback on earlier versions
+        }
+        
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
         self.numberOfNonMovingContiguousGPSLocations = 0

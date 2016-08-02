@@ -94,6 +94,17 @@
 		3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */; };
 		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
 		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
+		3DC7709E1D5022C300862545 /* WatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709D1D5022C300862545 /* WatchManager.swift */; };
+		3DC770A01D502B0900862545 /* iPhoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709F1D502B0900862545 /* iPhoneManager.swift */; };
+		3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7A1D50159E00A5D719 /* Interface.storyboard */; };
+		3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7D1D50159E00A5D719 /* Assets.xcassets */; };
+		3DD06C851D50159E00A5D719 /* Ride Report Watch App Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3DD06C8C1D50159E00A5D719 /* InterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C8B1D50159E00A5D719 /* InterfaceController.swift */; };
+		3DD06C8E1D50159E00A5D719 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C8D1D50159E00A5D719 /* ExtensionDelegate.swift */; };
+		3DD06C901D50159E00A5D719 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C8F1D50159E00A5D719 /* NotificationController.swift */; };
+		3DD06C921D50159E00A5D719 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C911D50159E00A5D719 /* ComplicationController.swift */; };
+		3DD06C941D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C931D50159E00A5D719 /* Assets.xcassets */; };
+		3DD06C981D50159E00A5D719 /* Ride Report Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -232,6 +243,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3DD06C861D50159E00A5D719 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84D1554719D2733500316995 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DD06C831D50159E00A5D719;
+			remoteInfo = "Ride Report Watch App Extension";
+		};
+		3DD06C961D50159E00A5D719 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84D1554719D2733500316995 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3DD06C771D50159E00A5D719;
+			remoteInfo = "Ride Report Watch App";
+		};
 		8429E5D11A5DC58500EB3E94 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 84D1554719D2733500316995 /* Project object */;
@@ -242,6 +267,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		3DD06C9E1D50159E00A5D719 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3DD06C851D50159E00A5D719 /* Ride Report Watch App Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DD06CA01D50159E00A5D719 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				3DD06C981D50159E00A5D719 /* Ride Report Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8444971F1A3A4E740009F889 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -309,7 +356,21 @@
 		3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppConfirmViewController.swift; sourceTree = "<group>"; };
 		3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppsBrowseViewController.swift; sourceTree = "<group>"; };
 		3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppSettingsViewController.swift; sourceTree = "<group>"; };
+		3DC7709D1D5022C300862545 /* WatchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchManager.swift; sourceTree = "<group>"; };
+		3DC7709F1D502B0900862545 /* iPhoneManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iPhoneManager.swift; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
+		3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DD06C7B1D50159E00A5D719 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		3DD06C7D1D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3DD06C7F1D50159E00A5D719 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Ride Report Watch App Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DD06C8A1D50159E00A5D719 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		3DD06C8B1D50159E00A5D719 /* InterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceController.swift; sourceTree = "<group>"; };
+		3DD06C8D1D50159E00A5D719 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
+		3DD06C8F1D50159E00A5D719 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		3DD06C911D50159E00A5D719 /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		3DD06C931D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3DD06C951D50159E00A5D719 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -484,6 +545,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DD06C811D50159E00A5D719 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8429E5C81A5DC58500EB3E94 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -615,6 +683,39 @@
 			name = "Connected Apps";
 			sourceTree = "<group>";
 		};
+		3DD06C791D50159E00A5D719 /* Ride Report Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				3DD06C7A1D50159E00A5D719 /* Interface.storyboard */,
+				3DD06C7D1D50159E00A5D719 /* Assets.xcassets */,
+				3DD06C7F1D50159E00A5D719 /* Info.plist */,
+			);
+			path = "Ride Report Watch App";
+			sourceTree = "<group>";
+		};
+		3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension */ = {
+			isa = PBXGroup;
+			children = (
+				3DD06C8B1D50159E00A5D719 /* InterfaceController.swift */,
+				3DD06C8D1D50159E00A5D719 /* ExtensionDelegate.swift */,
+				3DC7709F1D502B0900862545 /* iPhoneManager.swift */,
+				3DD06C8F1D50159E00A5D719 /* NotificationController.swift */,
+				3DD06C911D50159E00A5D719 /* ComplicationController.swift */,
+				3DD06C931D50159E00A5D719 /* Assets.xcassets */,
+				3DD06C951D50159E00A5D719 /* Info.plist */,
+				3DD06C891D50159E00A5D719 /* Supporting Files */,
+			);
+			path = "Ride Report Watch App Extension";
+			sourceTree = "<group>";
+		};
+		3DD06C891D50159E00A5D719 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3DD06C8A1D50159E00A5D719 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		8411B04F1C20EC20002E8E80 /* DMActivityInstagram */ = {
 			isa = PBXGroup;
 			children = (
@@ -665,6 +766,7 @@
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
 				844497211A3A4EB40009F889 /* APIClient.swift */,
 				84033D981A8BD26900339171 /* MotionManager.swift */,
+				3DC7709D1D5022C300862545 /* WatchManager.swift */,
 			);
 			name = "Service Managers";
 			sourceTree = "<group>";
@@ -801,6 +903,8 @@
 				84D1555119D2733500316995 /* Ride */,
 				84D1556A19D2733500316995 /* RideTests */,
 				3D2705DA1C8785D400A96DE0 /* Motion */,
+				3DD06C791D50159E00A5D719 /* Ride Report Watch App */,
+				3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension */,
 				84D1555019D2733500316995 /* Products */,
 				1FF80F3C1C874B8ABE8DA81D /* Frameworks */,
 				E6A5322F1E904223508D00FB /* Pods */,
@@ -813,6 +917,8 @@
 				84D1554F19D2733500316995 /* Ride Report.app */,
 				8429E5CB1A5DC58500EB3E94 /* Ride Report Tests.xctest */,
 				3D2705D91C8785D400A96DE0 /* Motion.app */,
+				3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */,
+				3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -904,6 +1010,40 @@
 			productReference = 3D2705D91C8785D400A96DE0 /* Motion.app */;
 			productType = "com.apple.product-type.application";
 		};
+		3DD06C771D50159E00A5D719 /* Ride Report Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DD06C9F1D50159E00A5D719 /* Build configuration list for PBXNativeTarget "Ride Report Watch App" */;
+			buildPhases = (
+				3DD06C761D50159E00A5D719 /* Resources */,
+				3DD06C9E1D50159E00A5D719 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3DD06C871D50159E00A5D719 /* PBXTargetDependency */,
+			);
+			name = "Ride Report Watch App";
+			productName = "Ride Report Watch App";
+			productReference = 3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		3DD06C831D50159E00A5D719 /* Ride Report Watch App Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3DD06C9D1D50159E00A5D719 /* Build configuration list for PBXNativeTarget "Ride Report Watch App Extension" */;
+			buildPhases = (
+				3DD06C801D50159E00A5D719 /* Sources */,
+				3DD06C811D50159E00A5D719 /* Frameworks */,
+				3DD06C821D50159E00A5D719 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Ride Report Watch App Extension";
+			productName = "Ride Report Watch App Extension";
+			productReference = 3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
 		8429E5CA1A5DC58500EB3E94 /* Ride Report Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8429E5D31A5DC58500EB3E94 /* Build configuration list for PBXNativeTarget "Ride Report Tests" */;
@@ -935,10 +1075,12 @@
 				3D0D8B211CE0F8D20059AC6B /* ShellScript */,
 				B8DD001B285051999A9DF313 /* [CP] Embed Pods Frameworks */,
 				F4DF214A44C7C33B7D04ED13 /* [CP] Copy Pods Resources */,
+				3DD06CA01D50159E00A5D719 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3DD06C971D50159E00A5D719 /* PBXTargetDependency */,
 			);
 			name = "Ride Report";
 			productName = Ride;
@@ -952,13 +1094,23 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0730;
+				LastSwiftUpdateCheck = 0800;
 				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Knock Softwae, Inc";
 				TargetAttributes = {
 					3D2705D81C8785D400A96DE0 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = 9NRH28TN93;
+					};
+					3DD06C771D50159E00A5D719 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 9NRH28TN93;
+						ProvisioningStyle = Automatic;
+					};
+					3DD06C831D50159E00A5D719 = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 9NRH28TN93;
+						ProvisioningStyle = Automatic;
 					};
 					8429E5CA1A5DC58500EB3E94 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1005,6 +1157,8 @@
 				84D1554E19D2733500316995 /* Ride Report */,
 				8429E5CA1A5DC58500EB3E94 /* Ride Report Tests */,
 				3D2705D81C8785D400A96DE0 /* Motion */,
+				3DD06C771D50159E00A5D719 /* Ride Report Watch App */,
+				3DD06C831D50159E00A5D719 /* Ride Report Watch App Extension */,
 			);
 		};
 /* End PBXProject section */
@@ -1019,6 +1173,23 @@
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
 				3D4951121C8E092300E216AA /* forest.cv in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DD06C761D50159E00A5D719 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */,
+				3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DD06C821D50159E00A5D719 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DD06C941D50159E00A5D719 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,6 +1409,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3DD06C801D50159E00A5D719 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3DD06C901D50159E00A5D719 /* NotificationController.swift in Sources */,
+				3DD06C921D50159E00A5D719 /* ComplicationController.swift in Sources */,
+				3DD06C8E1D50159E00A5D719 /* ExtensionDelegate.swift in Sources */,
+				3DC770A01D502B0900862545 /* iPhoneManager.swift in Sources */,
+				3DD06C8C1D50159E00A5D719 /* InterfaceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8429E5C71A5DC58500EB3E94 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1340,6 +1523,7 @@
 				84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */,
 				84033D991A8BD26900339171 /* MotionManager.swift in Sources */,
 				8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */,
+				3DC7709E1D5022C300862545 /* WatchManager.swift in Sources */,
 				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
@@ -1354,6 +1538,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3DD06C871D50159E00A5D719 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DD06C831D50159E00A5D719 /* Ride Report Watch App Extension */;
+			targetProxy = 3DD06C861D50159E00A5D719 /* PBXContainerItemProxy */;
+		};
+		3DD06C971D50159E00A5D719 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3DD06C771D50159E00A5D719 /* Ride Report Watch App */;
+			targetProxy = 3DD06C961D50159E00A5D719 /* PBXContainerItemProxy */;
+		};
 		8429E5D21A5DC58500EB3E94 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 84D1554E19D2733500316995 /* Ride Report */;
@@ -1376,6 +1570,14 @@
 				3D2705E51C8785D400A96DE0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3DD06C7A1D50159E00A5D719 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3DD06C7B1D50159E00A5D719 /* Base */,
+			);
+			name = Interface.storyboard;
 			sourceTree = "<group>";
 		};
 		84D1555B19D2733500316995 /* Main.storyboard */ = {
@@ -1452,6 +1654,110 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Motion/Motion-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		3DD06C991D50159E00A5D719 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IBSC_MODULE = Ride_Report_Watch_App_Extension;
+				INFOPLIST_FILE = "Ride Report Watch App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		3DD06C9A1D50159E00A5D719 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				IBSC_MODULE = Ride_Report_Watch_App_Extension;
+				INFOPLIST_FILE = "Ride Report Watch App/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
+		3DD06C9B1D50159E00A5D719 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Ride Report Watch App Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		3DD06C9C1D50159E00A5D719 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				INFOPLIST_FILE = "Ride Report Watch App Extension/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "${TARGET_NAME}";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Release;
 		};
@@ -1585,6 +1891,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 9NRH28TN93;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1612,8 +1920,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = 9NRH28TN93/;
+				PROVISIONING_PROFILE = "6438ed5f-b808-40aa-8a8e-4f2e003ce209";
+				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 2.3;
@@ -1629,6 +1937,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
+				DEVELOPMENT_TEAM = 9NRH28TN93;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1656,8 +1965,8 @@
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				PROVISIONING_PROFILE_SPECIFIER = 9NRH28TN93/;
+				PROVISIONING_PROFILE = "6438ed5f-b808-40aa-8a8e-4f2e003ce209";
+				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 2.3;
@@ -1673,6 +1982,24 @@
 			buildConfigurations = (
 				3D2705E81C8785D400A96DE0 /* Debug */,
 				3D2705E91C8785D400A96DE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3DD06C9D1D50159E00A5D719 /* Build configuration list for PBXNativeTarget "Ride Report Watch App Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DD06C9B1D50159E00A5D719 /* Debug */,
+				3DD06C9C1D50159E00A5D719 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3DD06C9F1D50159E00A5D719 /* Build configuration list for PBXNativeTarget "Ride Report Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DD06C991D50159E00A5D719 /* Debug */,
+				3DD06C9A1D50159E00A5D719 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
