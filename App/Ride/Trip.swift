@@ -210,7 +210,22 @@ class Trip : NSManagedObject {
     @NSManaged var length : Meters
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
-    @NSManaged var sectionIdentifier : String?
+    var sectionIdentifier : String? {
+        get {
+            return self.primitiveValueForKey("sectionIdentifier") as? String
+        }
+        set {
+            if (newValue != self.sectionIdentifier) {
+                // work around dumb bug
+                // https://developer.apple.com/library/prerelease/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
+                didChangeSection = true
+            }
+            self.willChangeValueForKey("sectionIdentifier")
+            self.setPrimitiveValue(newValue, forKey: "sectionIdentifier")
+            self.didChangeValueForKey("sectionIdentifier")
+        }
+    }
+    var didChangeSection : Bool = false
     @NSManaged var simplifiedLocations : NSOrderedSet!
     
     class func cyclingSectionIdentifierSuffix()->String {
