@@ -597,7 +597,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 0.65:
                     DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
