@@ -10,7 +10,6 @@
             <objects>
                 <controller identifier="InterfaceController" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Ride_Report_Watch_App" customModuleProvider="target">
                     <items>
-                        <map height="107" alignment="left" id="PpQ-2C-Ndu"/>
                         <label width="136" height="38" alignment="left" text="5.1 miles" minimumScaleFactor="0.5" id="G43-Dz-gTm">
                             <color key="textColor" red="0.0" green="0.56638695100000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="font" type="system" weight="semibold" pointSize="34"/>
