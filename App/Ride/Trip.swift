@@ -208,6 +208,8 @@ class Trip : NSManagedObject {
     @NSManaged var uuid : String!
     @NSManaged var creationDate : NSDate!
     @NSManaged var length : Meters
+    var inProgressLength : Meters = 0
+    private var lastInProgressLocation : Location? = nil
     @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
     var sectionIdentifier : String? {
@@ -798,6 +800,27 @@ class Trip : NSManagedObject {
         }
         
         self.length = Float(length)
+    }
+    
+    func updateInProgressLength()->Bool {
+        let locSize = self.locations.count
+        if (locSize % 10 == 0) {
+            // every 10
+            if let thisLoc = self.locations.lastObject as? Location {
+                if let lasLoc = self.lastInProgressLocation {
+                    let thiscllocation = thisLoc.clLocation()
+                    let lastcllocation = lasLoc.clLocation()
+
+                    inProgressLength += Float(lastcllocation.distanceFromLocation(thiscllocation))
+                    lastInProgressLocation = thisLoc
+                    return true
+                } else {
+                    lastInProgressLocation = thisLoc
+                }
+            }
+        }
+        
+        return false
     }
     
     func calculateAggregatePredictedActivityType() {

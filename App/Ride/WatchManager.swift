@@ -78,6 +78,18 @@ class WatchManager : NSObject, WCSessionDelegate {
         }
     }
     
+    func updateWorkoutDistance(distance: Meters) {
+        getActiveWCSession { (wcSession) in
+            if wcSession.activationState == .Activated && wcSession.watchAppInstalled {
+                do {
+                    try wcSession.updateApplicationContext(["tripDistance": distance])
+                } catch let error {
+                    // log the error or something i guess
+                }
+            }
+        }
+    }
+    
     func beginRideWorkout() {
         getActiveWCSession { (wcSession) in
             if wcSession.activationState == .Activated && wcSession.watchAppInstalled {

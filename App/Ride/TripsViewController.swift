@@ -728,7 +728,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             
             if !trip.isClosed {
-                textLabel.text = String(format: "🏁 Started trip at %@.", trip.timeString())
+                textLabel.text = String(format: "🏁 %@ starting at %@.", trip.inProgressLength.distanceString, trip.timeString())
             } else {
                 textLabel.text = trip.displayStringWithTime()
             }

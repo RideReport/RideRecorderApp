@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11185.3" systemVersion="15F34" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="11191" systemVersion="15F34" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11151.4"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11074"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11156"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="11077"/>
     </dependencies>
     <scenes>
-        <!--Interface Controller-->
+        <!--InterfaceController-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Ride_Report_Watch_App" customModuleProvider="target">
+                <controller identifier="InterfaceController" id="AgC-eL-Hgc" customClass="InterfaceController" customModule="Ride_Report_Watch_App" customModuleProvider="target">
                     <items>
-                        <label alignment="left" text="Label" id="G43-Dz-gTm">
+                        <map height="107" alignment="left" id="PpQ-2C-Ndu"/>
+                        <label width="136" height="38" alignment="left" text="5.1 miles" minimumScaleFactor="0.5" id="G43-Dz-gTm">
                             <color key="textColor" red="0.0" green="0.56638695100000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="font" type="system" weight="semibold" pointSize="34"/>
                         </label>
-                        <label alignment="left" text="Label" id="o2X-9B-TDF">
-                            <color key="textColor" red="1" green="0.041046944600000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                        </label>
-                        <label alignment="left" text="Label" id="poa-Ko-HAb">
-                            <color key="textColor" red="1" green="0.97880674710000004" blue="0.13324607359999999" alpha="1" colorSpace="calibratedRGB"/>
-                        </label>
-                        <label width="136" alignment="left" alpha="0.0" text="Marker Saved!" textAlignment="right" id="Kg7-oy-ZmP">
-                            <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <group width="1" height="23" alignment="left" id="JvG-9Z-Uhz">
+                            <items>
+                                <label alignment="left" text="321 kCal" minimumScaleFactor="0.69999999999999996" id="o2X-9B-TDF">
+                                    <color key="textColor" red="1" green="0.041046944600000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="font" type="system" pointSize="19"/>
+                                </label>
+                                <label width="55" height="25" alignment="left" text="3:21" textAlignment="right" minimumScaleFactor="0.69999999999999996" id="poa-Ko-HAb">
+                                    <color key="textColor" red="1" green="0.97880674710000004" blue="0.13324607359999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <fontDescription key="font" type="system" pointSize="19"/>
+                                </label>
+                            </items>
+                        </group>
+                        <label width="136" alignment="left" text="Ride In progress" textAlignment="left" id="Kg7-oy-ZmP">
+                            <color key="textColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="font" style="UICTFontTextStyleFootnote"/>
                         </label>
                     </items>
                     <connections>
@@ -31,7 +40,7 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="220" y="345"/>
+            <point key="canvasLocation" x="220" y="336.5"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">

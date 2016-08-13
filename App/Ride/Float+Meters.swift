@@ -6,6 +6,8 @@
 //  Copyright © 2016 Knock Softwae, Inc. All rights reserved.
 //
 
+import Foundation
+
 typealias Meters = Float
 
 extension Float {

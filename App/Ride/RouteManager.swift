@@ -251,6 +251,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveTrackingActivityTypeQueryDate = nil
         
+        if #available(iOS 10.0, *) {
+            WatchManager.sharedManager.endRideWorkout()
+        } else {
+            // Fallback on earlier versions
+        }
+        
         if (abort || stoppedTrip.locations.count <= 6) {
             // if it is aborted or it doesn't more than 6 points, toss it.
             #if DEBUG
@@ -358,6 +364,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
+            let updatedInProgressLength = self.currentTrip!.updateInProgressLength()
+            if #available(iOS 10.0, *) {
+                if (updatedInProgressLength) {
+                    WatchManager.sharedManager.updateWorkoutDistance(self.currentTrip!.inProgressLength)
+                }
+            } else {
+                // Fallback on earlier versions
+            }
+            
             if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate where location.timestamp.timeIntervalSinceDate(sensorDataCollectionDate) > -0.1 {
                 // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
                 loc.sensorDataCollection = collection
@@ -554,6 +569,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 DDLogVerbose(String(format: "Prediction: %i confidence: %f speed: %f", activityType.rawValue, confidence, averageSpeed))
                 
+                
                 switch activityType {
                 case .Automotive where confidence > 0.8 && averageSpeed >= 4:
                     DDLogVerbose("Starting automotive trip, high confidence")
@@ -567,7 +583,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
-                case .Cycling where confidence > 0.4 && averageSpeed >= 3 && averageSpeed < 9:
+                case .Cycling where confidence > 0.4 && averageSpeed >= 2.5 && averageSpeed < 9:
                     DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
@@ -603,7 +619,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 0.65:
                     DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)

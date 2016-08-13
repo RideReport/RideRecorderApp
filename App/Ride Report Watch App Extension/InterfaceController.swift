@@ -14,13 +14,13 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     let healthStore = HKHealthStore()
     var workoutSession : HKWorkoutSession?
     var activeDataQueries = [HKQuery]()
-    var workoutStartDate : Date?
-    var workoutEndDate : Date?
-    var totalEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 0)
-    var totalDistance = HKQuantity(unit: HKUnit.meter(), doubleValue: 0)
+    var workoutStartDate : NSDate?
+    var workoutEndDate : NSDate?
+    var totalEnergyBurned = HKQuantity(unit: HKUnit.kilocalorieUnit(), doubleValue: 0)
+    var totalDistance = HKQuantity(unit: HKUnit.meterUnit(), doubleValue: 0)
     var workoutEvents = [HKWorkoutEvent]()
     var metadata = [String: AnyObject]()
-    var timer : Timer?
+    var timer : NSTimer?
     var isPaused = false
     
     @IBOutlet var durationLabel: WKInterfaceLabel!
@@ -30,8 +30,11 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     
     // MARK: Interface Controller Overrides
     
-    override func awake(withContext context: AnyObject?) {
-        super.awake(withContext: context)
+    override func awakeWithContext(context: AnyObject?) {
+        super.awakeWithContext(context)
+        
+        iPhoneManager.startup()
+        iPhoneManager.sharedManager.addDelegate(self)
         
         // Start a workout session with the configuration
         if let workoutConfiguration = context as? HKWorkoutConfiguration {
@@ -39,11 +42,9 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
                 workoutSession = try HKWorkoutSession(configuration: workoutConfiguration)
                 workoutSession?.delegate = self
                 
-                workoutStartDate = Date()
+                workoutStartDate = NSDate()
                 
-                healthStore.start(workoutSession!)
-                iPhoneManager.startup()
-                iPhoneManager.sharedManager.addDelegate(delegate: self)
+                healthStore.startWorkoutSession(workoutSession!)
                 iPhoneManager.sharedManager.tripState = .InProgress
             } catch {
                 // ...
@@ -54,6 +55,9 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        iPhoneManager.sharedManager.activate()
+        
+        updateLabels()
     }
     
     override func didDeactivate() {
@@ -65,32 +69,24 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     // MARK: Totals
     
     private func totalCalories() -> Double {
-        return totalEnergyBurned.doubleValue(for: HKUnit.kilocalorie())
+        return totalEnergyBurned.doubleValueForUnit(HKUnit.kilocalorieUnit())
     }
     
     private func totalMeters() -> Double {
-        return totalDistance.doubleValue(for: HKUnit.meter())
+        return totalDistance.doubleValueForUnit(HKUnit.meterUnit())
     }
     
     private func setTotalCalories(calories: Double) {
-        totalEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: calories)
+        totalEnergyBurned = HKQuantity(unit: HKUnit.kilocalorieUnit(), doubleValue: calories)
     }
     
     private func setTotalMeters(meters: Double) {
-        totalDistance = HKQuantity(unit: HKUnit.meter(), doubleValue: meters)
-    }
-    
-    // MARK: IB Actions
-    
-    @IBAction func didTapMarkerButton() {
-        let markerEvent = HKWorkoutEvent(type: .marker, date: Date())
-        workoutEvents.append(markerEvent)
-        notifyEvent(markerEvent)
+        totalDistance = HKQuantity(unit: HKUnit.meterUnit(), doubleValue: meters)
     }
     
     // MARK: Convenience
     
-    private func computeDurationOfWorkout(withEvents workoutEvents: [HKWorkoutEvent]?, startDate: Date?, endDate: Date?) -> TimeInterval {
+    private func computeDurationOfWorkout(withEvents workoutEvents: [HKWorkoutEvent]?, startDate: NSDate?, endDate: NSDate?) -> NSTimeInterval {
         var duration = 0.0
         
         if var lastDate = startDate {
@@ -99,11 +95,11 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
             if let events = workoutEvents {
                 for event in events {
                     switch event.type {
-                    case .pause:
-                        duration += event.date.timeIntervalSince(lastDate)
+                    case .Pause:
+                        duration += event.date.timeIntervalSinceDate(lastDate)
                         paused = true
                         
-                    case .resume:
+                    case .Resume:
                         lastDate = event.date
                         paused = false
                         
@@ -115,9 +111,9 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
             
             if !paused {
                 if let end = endDate {
-                    duration += end.timeIntervalSince(lastDate)
+                    duration += end.timeIntervalSinceDate(lastDate)
                 } else {
-                    duration += NSDate().timeIntervalSince(lastDate)
+                    duration += NSDate().timeIntervalSinceDate(lastDate)
                 }
             }
         }
@@ -126,13 +122,13 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
         return duration
     }
     
-    private func timeFormat(duration: TimeInterval) -> String {
-        let durationFormatter = DateComponentsFormatter()
-        durationFormatter.unitsStyle = .positional
-        durationFormatter.allowedUnits = [.second, .minute, .hour]
-        durationFormatter.zeroFormattingBehavior = .pad
+    private func timeFormat(duration: NSTimeInterval) -> String {
+        let durationFormatter = NSDateComponentsFormatter()
+        durationFormatter.unitsStyle = .Positional
+        durationFormatter.allowedUnits = [.Second, .Minute, .Hour]
+        durationFormatter.zeroFormattingBehavior = .Pad
         
-        if let string = durationFormatter.string(from: duration) {
+        if let string = durationFormatter.stringFromTimeInterval(duration) {
             return string
         } else {
             return ""
@@ -140,21 +136,35 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     }
     
     func updateLabels() {
-        caloriesLabel.setText(String(format: "%.1f Calories", totalEnergyBurned.doubleValue(for: HKUnit.kilocalorie())))
-        distanceLabel.setText( String(format: "%.1f Meters", totalDistance.doubleValue(for: HKUnit.meter())))
+       if iPhoneManager.sharedManager.tripState == .InProgress {
+            markerLabel.setText("Ride In Progress")
+            caloriesLabel.setText(String(format: "%.1f Calories", totalEnergyBurned.doubleValueForUnit(HKUnit.kilocalorieUnit())))
+            distanceLabel.setText(iPhoneManager.sharedManager.tripDistance.distanceString)
+            
+            let duration = computeDurationOfWorkout(withEvents: workoutEvents, startDate: workoutStartDate, endDate: workoutEndDate)
+            durationLabel.setText(timeFormat(duration))
+        } else {
+            caloriesLabel.setText("--")
+            distanceLabel.setText("--")
+            durationLabel.setText("--")
+
+            if iPhoneManager.sharedManager.tripState == .Stopped {
+                markerLabel.setText("Ride Stopped")
+            } else {
+                markerLabel.setText("--")
+            }
+        }
         
-        let duration = computeDurationOfWorkout(withEvents: workoutEvents, startDate: workoutStartDate, endDate: workoutEndDate)
-        durationLabel.setText(timeFormat(duration: duration))
     }
     
     func updateState() {
         if let session = workoutSession {
             switch session.state {
-            case .running:
+            case .Running:
                 setTitle("Active Workout")
-            case .paused:
+            case .Paused:
                 setTitle("Paused Workout")
-            case .notStarted, .ended:
+            case .NotStarted, .Ended:
                 setTitle("Workout")
             }
         }
@@ -163,10 +173,10 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     func notifyEvent(_: HKWorkoutEvent) {
         weak var weakSelf = self
         
-        DispatchQueue.main.async {
+        dispatch_async(dispatch_get_main_queue()) {
             weakSelf?.markerLabel.setAlpha(1)
-            WKInterfaceDevice.current().play(.notification)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+1) {
+            WKInterfaceDevice.currentDevice().playHaptic(.Notification)
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
                 weakSelf?.markerLabel.setAlpha(0)
             }
         }
@@ -174,45 +184,40 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     
     // MARK: Data Queries
     
-    func startAccumulatingData(startDate: Date) {
-        startQuery(quantityTypeIdentifier: HKQuantityTypeIdentifier.distanceWalkingRunning)
-        startQuery(quantityTypeIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)
+    func startAccumulatingData(startDate: NSDate) {
+        startQuery(HKQuantityTypeIdentifierActiveEnergyBurned)
         
         startTimer()
     }
     
-    func startQuery(quantityTypeIdentifier: HKQuantityTypeIdentifier) {
-        let datePredicate = HKQuery.predicateForSamples(withStart: workoutStartDate, end: nil, options: .strictStartDate)
-        let devicePredicate = HKQuery.predicateForObjects(from: [HKDevice.local()])
+    func startQuery(quantityTypeIdentifier: String) {
+        let datePredicate = HKQuery.predicateForSamplesWithStartDate(workoutStartDate, endDate: nil, options: .StrictStartDate)
+        let devicePredicate = HKQuery.predicateForObjectsFromDevices([HKDevice.localDevice()])
         let queryPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [datePredicate, devicePredicate])
         
-        let updateHandler: ((HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, Error?) -> Void) = { query, samples, deletedObjects, queryAnchor, error in
-            self.process(samples: samples, quantityTypeIdentifier: quantityTypeIdentifier)
+        let updateHandler: ((HKAnchoredObjectQuery, [HKSample]?, [HKDeletedObject]?, HKQueryAnchor?, NSError?) -> Void) = { query, samples, deletedObjects, queryAnchor, error in
+            self.process(samples, quantityTypeIdentifier: quantityTypeIdentifier)
         }
         
-        let query = HKAnchoredObjectQuery(type: HKObjectType.quantityType(forIdentifier: quantityTypeIdentifier)!,
+        let query = HKAnchoredObjectQuery(type: HKObjectType.quantityTypeForIdentifier(quantityTypeIdentifier)!,
                                           predicate: queryPredicate,
                                           anchor: nil,
                                           limit: HKObjectQueryNoLimit,
                                           resultsHandler: updateHandler)
         query.updateHandler = updateHandler
-        healthStore.execute(query)
+        healthStore.executeQuery(query)
         
         activeDataQueries.append(query)
     }
     
-    func process(samples: [HKSample]?, quantityTypeIdentifier: HKQuantityTypeIdentifier) {
-        DispatchQueue.main.async { [weak self] in
-            guard let strongSelf = self, !strongSelf.isPaused else { return }
-            
+    func process(samples: [HKSample]?, quantityTypeIdentifier: String) {
+        dispatch_async(dispatch_get_main_queue()) { [weak self] in
+            guard let strongSelf = self where !strongSelf.isPaused else { return }
             if let quantitySamples = samples as? [HKQuantitySample] {
                 for sample in quantitySamples {
-                    if quantityTypeIdentifier == HKQuantityTypeIdentifier.distanceWalkingRunning {
-                        let newMeters = sample.quantity.doubleValue(for: HKUnit.meter())
-                        strongSelf.setTotalMeters(meters: strongSelf.totalMeters() + newMeters)
-                    } else if quantityTypeIdentifier == HKQuantityTypeIdentifier.activeEnergyBurned {
-                        let newKCal = sample.quantity.doubleValue(for: HKUnit.kilocalorie())
-                        strongSelf.setTotalCalories(calories: strongSelf.totalCalories() + newKCal)
+                    if quantityTypeIdentifier == HKQuantityTypeIdentifierActiveEnergyBurned {
+                        let newKCal = sample.quantity.doubleValueForUnit(HKUnit.kilocalorieUnit())
+                        strongSelf.setTotalCalories(strongSelf.totalCalories() + newKCal)
                     }
                 }
                 
@@ -223,7 +228,7 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     
     func stopAccumulatingData() {
         for query in activeDataQueries {
-            healthStore.stop(query)
+            healthStore.stopQuery(query)
         }
         
         activeDataQueries.removeAll()
@@ -231,13 +236,13 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     }
     
     func pauseAccumulatingData() {
-        DispatchQueue.main.sync {
+        dispatch_sync(dispatch_get_main_queue()) { 
             isPaused = true
         }
     }
     
     func resumeAccumulatingData() {
-        DispatchQueue.main.sync {
+        dispatch_sync(dispatch_get_main_queue()) {
             isPaused = false
         }
     }
@@ -246,14 +251,14 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     
     func startTimer() {
         print("start timer")
-        timer = Timer.scheduledTimer(timeInterval: 1,
+        timer = NSTimer.scheduledTimerWithTimeInterval(1,
                                      target: self,
                                      selector: #selector(timerDidFire),
                                      userInfo: nil,
                                      repeats: true)
     }
     
-    func timerDidFire(timer: Timer) {
+    func timerDidFire(timer: NSTimer) {
         print("timer")
         updateLabels()
     }
@@ -266,36 +271,40 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     
     func stateDidChange() {
         if iPhoneManager.sharedManager.tripState == .Stopped {
-            healthStore.end(workoutSession!)
+            healthStore.endWorkoutSession(workoutSession!)
         } else {
-            updateLabels()
+            
         }
+        
+        updateLabels()
     }
 
     
     // MARK: HKWorkoutSessionDelegate
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {
+    func workoutSession(workoutSession: HKWorkoutSession, didFailWithError error: NSError) {
         print("workout session did fail with error: \(error)")
     }
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didGenerate event: HKWorkoutEvent) {
+    func workoutSession(workoutSession: HKWorkoutSession, didGenerate event: HKWorkoutEvent) {
         workoutEvents.append(event)
     }
     
-    func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {
+    func workoutSession(workoutSession: HKWorkoutSession, didChangeToState toState: HKWorkoutSessionState, fromState: HKWorkoutSessionState, date: NSDate) {
         switch toState {
-        case .running:
-            if fromState == .notStarted {
-                startAccumulatingData(startDate: workoutStartDate!)
+        case .Running:
+            if fromState == .NotStarted {
+                startAccumulatingData(workoutStartDate!)
             } else {
                 resumeAccumulatingData()
             }
             
-        case .paused:
+        case .Paused:
             pauseAccumulatingData()
             
-        case .ended:
+        case .Ended:
+            iPhoneManager.sharedManager.tripState = .Stopped
+            workoutEndDate = NSDate()
             stopAccumulatingData()
             saveWorkout()
             
@@ -310,41 +319,41 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
     private func saveWorkout() {
         // Create and save a workout sample
         let configuration = workoutSession!.workoutConfiguration
-        let isIndoor = (configuration.locationType == .indoor) as NSNumber
+        let isIndoor = (configuration.locationType == .Indoor) as NSNumber
         print("locationType: \(configuration)")
         
         let workout = HKWorkout(activityType: configuration.activityType,
-                                start: workoutStartDate!,
-                                end: workoutEndDate!,
+                                startDate: workoutStartDate!,
+                                endDate: workoutEndDate!,
                                 workoutEvents: workoutEvents,
                                 totalEnergyBurned: totalEnergyBurned,
                                 totalDistance: totalDistance,
                                 metadata: [HKMetadataKeyIndoorWorkout:isIndoor]);
         
-        healthStore.save(workout) { success, _ in
+        healthStore.saveObject(workout) { success, _ in
             if success {
                 self.addSamples(toWorkout: workout)
             }
         }
         
         // Pass the workout to Summary Interface Controller
-        WKInterfaceController.reloadRootControllers(withNames: ["SummaryInterfaceController"], contexts: [workout])
+        WKInterfaceController.reloadRootControllersWithNames(["SummaryInterfaceController"], contexts: [workout])
     }
     
     private func addSamples(toWorkout workout: HKWorkout) {
         // Create energy and distance samples
-        let totalEnergyBurnedSample = HKQuantitySample(type: HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.activeEnergyBurned)!,
+        let totalEnergyBurnedSample = HKQuantitySample(type: HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned)!,
                                                        quantity: totalEnergyBurned,
-                                                       start: workoutStartDate!,
-                                                       end: workoutEndDate!)
+                                                       startDate: workoutStartDate!,
+                                                       endDate: workoutEndDate!)
         
-        let totalDistanceSample = HKQuantitySample(type: HKObjectType.quantityType(forIdentifier: HKQuantityTypeIdentifier.distanceCycling)!,
+        let totalDistanceSample = HKQuantitySample(type: HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceCycling)!,
                                                    quantity: totalDistance,
-                                                   start: workoutStartDate!,
-                                                   end: workoutEndDate!)
+                                                   startDate: workoutStartDate!,
+                                                   endDate: workoutEndDate!)
         
         // Add samples to workout
-        healthStore.add([totalEnergyBurnedSample, totalDistanceSample], to: workout) { (success: Bool, error: Error?) in
+        healthStore.addSamples([totalEnergyBurnedSample, totalDistanceSample], toWorkout: workout) { (success: Bool, error: NSError?) in
             if success {
                 // Samples have been added
             }

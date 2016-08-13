@@ -70,6 +70,8 @@
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
+		3D8969421D5FD21B0034578A /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
+		3D8969441D5FDDCE0034578A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8969431D5FDDCE0034578A /* HealthKit.framework */; };
 		3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
 		3D9471C81C861A7D00CF5D90 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
 		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
@@ -344,6 +346,7 @@
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		3D8969431D5FDDCE0034578A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
 		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
@@ -351,6 +354,7 @@
 		3DA1EFD91C8F79F3002B12DB /* Ride 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 39.xcdatamodel"; sourceTree = "<group>"; };
 		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
+		3DACFF751D5FB8210011FE9E /* Ride Report Watch App Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ride Report Watch App Extension.entitlements"; sourceTree = "<group>"; };
 		3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Float+Meters.swift"; sourceTree = "<group>"; };
 		3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatedGradientLabel.swift; sourceTree = "<group>"; };
 		3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedAppConfirmViewController.swift; sourceTree = "<group>"; };
@@ -549,6 +553,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D8969441D5FDDCE0034578A /* HealthKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,12 +608,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F410A050E964D8D2D4AF83A0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1FF80F3C1C874B8ABE8DA81D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D8969431D5FDDCE0034578A /* HealthKit.framework */,
 				3D0FD6041CDC019300632BFB /* SafariServices.framework */,
 				3D2AB38F1CA4A76400582A5D /* opencv2.framework */,
 				3D818A151C938C0B00B64403 /* CoreMedia.framework */,
@@ -696,6 +709,7 @@
 		3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension */ = {
 			isa = PBXGroup;
 			children = (
+				3DACFF751D5FB8210011FE9E /* Ride Report Watch App Extension.entitlements */,
 				3DD06C8B1D50159E00A5D719 /* InterfaceController.swift */,
 				3DD06C8D1D50159E00A5D719 /* ExtensionDelegate.swift */,
 				3DC7709F1D502B0900862545 /* iPhoneManager.swift */,
@@ -1016,6 +1030,7 @@
 			buildPhases = (
 				3DD06C761D50159E00A5D719 /* Resources */,
 				3DD06C9E1D50159E00A5D719 /* Embed App Extensions */,
+				F410A050E964D8D2D4AF83A0 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1106,11 +1121,22 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 9NRH28TN93;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes.watchos.app = {
+								enabled = 0;
+							};
+						};
 					};
 					3DD06C831D50159E00A5D719 = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 9NRH28TN93;
+						DevelopmentTeamName = "Knock Software, Inc";
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.HealthKit.watchos = {
+								enabled = 1;
+							};
+						};
 					};
 					8429E5CA1A5DC58500EB3E94 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1413,6 +1439,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D8969421D5FD21B0034578A /* Float+Meters.swift in Sources */,
 				3DD06C901D50159E00A5D719 /* NotificationController.swift in Sources */,
 				3DD06C921D50159E00A5D719 /* ComplicationController.swift in Sources */,
 				3DD06C8E1D50159E00A5D719 /* ExtensionDelegate.swift in Sources */,
@@ -1674,12 +1701,12 @@
 				);
 				IBSC_MODULE = Ride_Report_Watch_App_Extension;
 				INFOPLIST_FILE = "Ride Report Watch App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.WatchApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
@@ -1699,12 +1726,12 @@
 				DEVELOPMENT_TEAM = 9NRH28TN93;
 				IBSC_MODULE = Ride_Report_Watch_App_Extension;
 				INFOPLIST_FILE = "Ride Report Watch App/Info.plist";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.WatchApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
@@ -1718,6 +1745,8 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report Watch App Extension/Ride Report Watch App Extension.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 9NRH28TN93;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1726,12 +1755,12 @@
 				);
 				INFOPLIST_FILE = "Ride Report Watch App Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.WatchApp.WatchExtension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
@@ -1745,17 +1774,19 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report Watch App Extension/Ride Report Watch App Extension.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 9NRH28TN93;
 				INFOPLIST_FILE = "Ride Report Watch App Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.watchkitapp.watchkitextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport.WatchApp.WatchExtension;
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
@@ -1921,7 +1952,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "6438ed5f-b808-40aa-8a8e-4f2e003ce209";
-				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
+				PROVISIONING_PROFILE_SPECIFIER = "9NRH28TN93/Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 2.3;

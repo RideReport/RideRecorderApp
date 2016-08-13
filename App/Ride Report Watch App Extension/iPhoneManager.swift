@@ -20,7 +20,7 @@ class iPhoneManager : NSObject, WCSessionDelegate {
         case Stopped
     }
     var tripState: TripState = .Unknown
-    var tripDistance = 0
+    var tripDistance: Meters = 0
     
     private var iPhoneStateChangedDelegates = [iPhoneStateChangedDelegate]()
     private var wcSession: WCSession?
@@ -40,9 +40,9 @@ class iPhoneManager : NSObject, WCSessionDelegate {
     }
     
     func removeDelegate<T where T: iPhoneStateChangedDelegate, T: Equatable>(delegateToRemove: T) {
-        for (index, delegate) in iPhoneStateChangedDelegates.enumerated() {
+        for (index, delegate) in iPhoneStateChangedDelegates.enumerate() {
             if let aDelegate = delegate as? T where aDelegate == delegateToRemove {
-                iPhoneStateChangedDelegates.remove(at: index)
+                iPhoneStateChangedDelegates.removeAtIndex(index)
                 break
             }
         }
@@ -64,6 +64,11 @@ class iPhoneManager : NSObject, WCSessionDelegate {
         // send connected message?
     }
     
+    func activate() {
+        WCSession.defaultSession().delegate = self
+        WCSession.defaultSession().activateSession()
+    }
+    
     
     // MARK: Utility methods
     
@@ -72,8 +77,9 @@ class iPhoneManager : NSObject, WCSessionDelegate {
             if state == "ended" {
                 tripState = .Stopped
             }
-        } else if let distance = applicationContext["tripDistance"] as? Int {
+        } else if let distance = applicationContext["tripDistance"] as? Float {
             tripDistance = distance
+            tripState = .InProgress
         }
         
         iPhoneStateChangedDelegates.forEach { $0.stateDidChange()}
@@ -82,18 +88,17 @@ class iPhoneManager : NSObject, WCSessionDelegate {
     func send(command: String) {
         let message = ["command": command]
         if let session = wcSession {
-            if session.isReachable {
-                session.sendMessage(message, replyHandler: nil)
+            if session.reachable {
+                session.sendMessage(message, replyHandler: nil, errorHandler: nil)
             }
         } else {
-            WCSession.default().delegate = self
-            WCSession.default().activate()
+            activate()
             messagesToSend.append(message)
         }
     }
     
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if activationState == .activated {
+    func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
+        if activationState == .Activated {
             wcSession = session
             sendPending()
         }
@@ -101,9 +106,9 @@ class iPhoneManager : NSObject, WCSessionDelegate {
     
     private func sendPending() {
         if let session = wcSession {
-            if session.isReachable {
+            if session.reachable {
                 for message in messagesToSend {
-                    session.sendMessage(message, replyHandler: nil)
+                    session.sendMessage(message, replyHandler: nil, errorHandler: nil)
                 }
                 messagesToSend.removeAll()
             }
