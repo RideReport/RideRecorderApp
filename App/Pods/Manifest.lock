@@ -66,7 +66,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   Alamofire:
-    :commit: 3e0cf8d49814c0f57279f201a42cc055d996d1d7
+    :commit: 1ac83593aaea0bb31c5d22c86d5a2cf90498ee71
     :git: git@github.com:Alamofire/Alamofire.git
   CocoaLumberjack:
     :commit: 479279f102a8ab23084290697bafa77aac0d1bdf
@@ -75,7 +75,7 @@ CHECKOUT OPTIONS:
     :commit: 90f3e11fe37cdaea27ac4b82dcf4560b2c90ad07
     :git: git@github.com:kishikawakatsumi/KeychainAccess.git
   Kingfisher:
-    :commit: a6db187d4da98d35b2688c088fb6dd3b26ac0ffd
+    :commit: dfda5b03406b3b1bd098d2c21c64c9ef3925fe6e
     :git: git@github.com:onevcat/Kingfisher.git
 
 SPEC CHECKSUMS:
@@ -96,6 +96,6 @@ SPEC CHECKSUMS:
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: bce35c6a63ac915b6c79eb88f9e5fe2aadb74c9a
+PODFILE CHECKSUM: 33038391f2447395dfc79a77c46ce79501f461f6
 
 COCOAPODS: 1.0.1
