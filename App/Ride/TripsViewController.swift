@@ -360,7 +360,22 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        switch(type) {
+        var changeType = type
+        var newIndexPath = newIndexPath
+
+        if let trip = anObject as? Trip {
+            if (type == .Update && trip.didChangeSection == true) {
+                // work around dumb bug
+                // https://developer.apple.com/library/prerelease/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
+                changeType = .Move
+                if (newIndexPath == nil) {
+                    newIndexPath = indexPath
+                }
+            }
+            trip.didChangeSection = false
+        }
+        
+        switch(changeType) {
             
         case .Update:
             let indexPathPlusOne = NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)

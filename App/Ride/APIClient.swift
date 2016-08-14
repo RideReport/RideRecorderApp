@@ -282,7 +282,8 @@ class APIClient {
             // used for testing
             configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         }
-        configuration.timeoutIntervalForRequest = 10
+        configuration.timeoutIntervalForRequest = 4
+        configuration.timeoutIntervalForResource = 10
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
             "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
         ]
