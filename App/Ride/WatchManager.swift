@@ -91,17 +91,13 @@ class WatchManager : NSObject, WCSessionDelegate {
     }
     
     func beginRideWorkout() {
-        getActiveWCSession { (wcSession) in
-            if wcSession.activationState == .Activated && wcSession.watchAppInstalled {
-                let workoutConfiguration = HKWorkoutConfiguration()
-                workoutConfiguration.activityType = .Cycling
-                workoutConfiguration.locationType = .Outdoor
-                
-                self.healthStore.startWatchAppWithWorkoutConfiguration(workoutConfiguration, completion: { (success, error) in
-                    // handle some errors brah
-                })
-            }
-        }
+        let workoutConfiguration = HKWorkoutConfiguration()
+        workoutConfiguration.activityType = .Cycling
+        workoutConfiguration.locationType = .Outdoor
+        
+        self.healthStore.startWatchAppWithWorkoutConfiguration(workoutConfiguration, completion: { (success, error) in
+            DDLogWarn(String(format: "Got error starting workout: %@", error ?? ""))
+        })
     }
     
     // MARK: WCSessionDelegate
