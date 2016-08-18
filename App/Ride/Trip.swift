@@ -183,13 +183,15 @@ class Trip : NSManagedObject {
             return false
         }
         set {
+            let oldValue = self.isClosed
+            
             self.willChangeValueForKey("isClosed")
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
             self.setPrimitiveValue(NSNumber(bool: newValue), forKey: "isClosed")
             self.didChangeValueForKey("isClosed")
             
             if newValue {
-                if !self.isClosed {
+                if !oldValue {
                     dispatch_async(dispatch_get_main_queue()) {
                         // newly closed trips should be synced to healthkit
                         if (HealthKitManager.authorizationStatus == .Authorized) {
@@ -916,6 +918,8 @@ class Trip : NSManagedObject {
         if let thePrototrip = prototrip {
             thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
+        
+        CoreDataManager.sharedManager.saveContext()
     }
     
     func loadSummaryFromAPNDictionary(summary: [NSObject: AnyObject]) {
