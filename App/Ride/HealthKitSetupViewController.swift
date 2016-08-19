@@ -74,8 +74,8 @@ class HealthKitSetupViewController : UIViewController {
     }
     
     @IBAction func cancel(sender: AnyObject) {
-        let alertController = UIAlertController(title:nil, message: "Your future rides will not be automatically saved to the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Destructive, handler: { (_) in
+        let alertController = UIAlertController(title:nil, message: "Future rides will not be automatically saved to the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        alertController.addAction(UIAlertAction(title: "Cancel Saving", style: UIAlertActionStyle.Destructive, handler: { (_) in
             self.didCancel = true
             HealthKitManager.shutdown()
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
@@ -83,7 +83,7 @@ class HealthKitSetupViewController : UIViewController {
             
             self.dismissViewControllerAnimated(true, completion: nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Keep Saving", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
