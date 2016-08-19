@@ -187,10 +187,10 @@
                                             </mask>
                                         </variation>
                                     </view>
-                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4NJ-dl-vCN">
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4NJ-dl-vCN">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="53.5"/>
                                         <subviews>
-                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kfe-xn-NjE" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kfe-xn-NjE" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="53.5"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <userDefinedRuntimeAttributes>
@@ -343,10 +343,10 @@
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="466"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jWq-xM-57W">
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jWq-xM-57W">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                         <subviews>
-                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2RN-ka-e5s" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="2RN-ka-e5s" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="600" height="72"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <userDefinedRuntimeAttributes>
@@ -740,7 +740,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="800" height="207"/>
                                 </variation>
                             </tableView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvU-m5-X4Y" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wvU-m5-X4Y" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                 <rect key="frame" x="6" y="71" width="122" height="45"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -935,7 +935,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OXK-3C-Lwj" customClass="SKView">
                                 <rect key="frame" x="0.0" y="64" width="600" height="440"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
+                                    <view hidden="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DQX-lR-nka" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="155" y="547" width="115.5" height="45"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -1575,7 +1575,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d6b-No-TID" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2840" y="2754"/>
+            <point key="canvasLocation" x="3456" y="2753"/>
         </scene>
         <!--Setup Create Profile View Controller-->
         <scene sceneID="Bvj-Yk-ehI">
@@ -1721,7 +1721,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bQH-ed-1on" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1575" y="2754"/>
+            <point key="canvasLocation" x="2191" y="2753"/>
         </scene>
         <!--Setup Confirm Email View Controller-->
         <scene sceneID="Gc1-K8-kPP">
@@ -1787,7 +1787,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AqY-RV-ypH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2206" y="2754"/>
+            <point key="canvasLocation" x="2822" y="2753"/>
         </scene>
         <!--Setup Terms View Controller-->
         <scene sceneID="eaN-6Y-TvX">
@@ -1999,10 +1999,10 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mW-Sz-0y6">
+                            <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8mW-Sz-0y6">
                                 <rect key="frame" x="0.0" y="64" width="600" height="71"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XUD-tz-9dU" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="XUD-tz-9dU" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="71"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <userDefinedRuntimeAttributes>
@@ -2411,18 +2411,6 @@
                                     <rect key="frame" x="20" y="300" width="360" height="3"/>
                                 </variation>
                             </progressView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report will automatically save your ride data including active energy burned and cycling distance to the Health App." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Y5r-bc-kIk">
-                                <rect key="frame" x="20" y="337.5" width="560" height="63"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="63" id="2hE-bj-C4W"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="widthClass=compact" misplaced="YES">
-                                    <rect key="frame" x="20" y="301" width="360" height="63"/>
-                                </variation>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fHr-qR-O7M">
                                 <rect key="frame" x="268" y="544" width="64" height="32"/>
                                 <constraints>
@@ -2497,6 +2485,18 @@
                                     <action selector="sync:" destination="SXf-PS-yM0" eventType="touchUpInside" id="xNl-13-MgV"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report will automatically save your rides including active energy burned and cycling distance to the Health App." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Y5r-bc-kIk">
+                                <rect key="frame" x="20" y="337" width="560" height="63"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="2hE-bj-C4W"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="301" width="360" height="63"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -2537,10 +2537,10 @@
                                 <include reference="I7k-p2-FvW"/>
                                 <include reference="kh1-ft-ElB"/>
                                 <include reference="puj-T1-Dy7"/>
-                                <include reference="Y5r-bc-kIk"/>
                                 <include reference="fHr-qR-O7M"/>
                                 <include reference="IcI-Yk-A7s"/>
                                 <include reference="wcb-pj-ucz"/>
+                                <include reference="Y5r-bc-kIk"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="3wC-dV-JFU"/>
@@ -2960,13 +2960,13 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Automatically save your ride data to the Health App." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EJV-4L-r3I">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Automatically save your rides to the Health App." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EJV-4L-r3I">
                                                     <rect key="frame" x="80" y="38" width="479" height="34.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="❤️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6C-kf-kSg">
+                                                <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="❤️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6C-kf-kSg">
                                                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="64" id="C5V-od-Ggc"/>
@@ -3798,6 +3798,7 @@ All the Apps</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="detailLabel" destination="1en-Lb-DNs" id="Ixe-RK-t8N"/>
                         <outlet property="heartLabel" destination="mYx-gk-GgM" id="mH7-Dr-7si"/>
                     </connections>
                 </viewController>
@@ -3995,6 +3996,219 @@ Label</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q5e-fk-Orc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1548" y="1223"/>
+        </scene>
+        <!--Setup Watch Activity Syncing View Controller-->
+        <scene sceneID="WHC-Rl-kWF">
+            <objects>
+                <viewController storyboardIdentifier="SetupWatchActivitySyncingViewController" id="C9S-9a-hGF" customClass="SetupWatchActivitySyncingViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sxW-md-NXP"/>
+                        <viewControllerLayoutGuide type="bottom" id="YBB-Jo-5DS"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="o2q-hx-oti">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save Rides to Apple Watch" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="hmw-5B-hqO">
+                                <rect key="frame" x="20" y="284" width="560" height="31.5"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="31.5" id="0rv-it-7RS"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="135" y="342" width="330" height="29"/>
+                                </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="256" width="360" height="32"/>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="60" y="331" width="281" height="29"/>
+                                </variation>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ride Report will ask for gender, birth date and other data to help calculate energy burned." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="cxO-Cm-RPc">
+                                <rect key="frame" x="20" y="523" width="560" height="63"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="gSa-yC-7f2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="gSa-yC-7f2"/>
+                                    </mask>
+                                </variation>
+                            </label>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="lsj-vV-lf2">
+                                <rect key="frame" x="20" y="328" width="560" height="2.5"/>
+                                <color key="tintColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="progressTintColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="trackTintColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="300" width="360" height="3"/>
+                                </variation>
+                            </progressView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Abv-tF-UsB">
+                                <rect key="frame" x="20" y="337" width="560" height="63"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="63" id="oBL-hT-H6b"/>
+                                </constraints>
+                                <string key="text">Trying to fill your rings? Ride Report can automatically save your rides to the Health App, so you get workout credit on your Apple Watch.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="20" y="301" width="360" height="63"/>
+                                </variation>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5DC-rg-JBz">
+                                <rect key="frame" x="268" y="544" width="64" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="4Sd-Kh-fAM"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Nice">
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="273" y="689" width="54" height="27"/>
+                                </variation>
+                                <connections>
+                                    <action selector="next:" destination="C9S-9a-hGF" eventType="touchUpInside" id="rTB-14-AHD"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="⌚️" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="spD-ZQ-6Ti">
+                                <rect key="frame" x="252" y="202" width="96" height="74"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="74" id="Tfj-g1-q1J"/>
+                                    <constraint firstAttribute="width" constant="96" id="x43-15-2tk"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="70"/>
+                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="135" y="342" width="330" height="29"/>
+                                </variation>
+                                <variation key="widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="152" y="174" width="96" height="74"/>
+                                    <mask key="constraints">
+                                        <include reference="Tfj-g1-q1J"/>
+                                        <include reference="x43-15-2tk"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
+                                    <rect key="frame" x="60" y="331" width="281" height="29"/>
+                                </variation>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SaV-Y1-ZX6">
+                                <rect key="frame" x="239" y="548" width="122" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="7KV-8C-b87"/>
+                                    <constraint firstAttribute="height" constant="32" id="QKj-vQ-BYx"/>
+                                    <constraint firstAttribute="width" constant="122" id="fki-du-Kkj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <state key="normal" title="Aight">
+                                    <color key="titleColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="7KV-8C-b87"/>
+                                        <exclude reference="QKj-vQ-BYx"/>
+                                        <include reference="fki-du-Kkj"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="connect:" destination="DkP-ZE-i1U" eventType="touchUpInside" id="SGb-jE-FwO"/>
+                                    <action selector="sync:" destination="C9S-9a-hGF" eventType="touchUpInside" id="hhA-Nd-5mg"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.97254901959999995" green="1" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="lsj-vV-lf2" firstAttribute="top" secondItem="hmw-5B-hqO" secondAttribute="bottom" constant="12" id="01k-9t-8sw"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="hmw-5B-hqO" secondAttribute="leading" id="0Lb-SZ-nGX"/>
+                            <constraint firstItem="5DC-rg-JBz" firstAttribute="centerX" secondItem="o2q-hx-oti" secondAttribute="centerX" id="7YD-6l-GVY"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="lsj-vV-lf2" secondAttribute="leading" id="E4F-o4-ToJ"/>
+                            <constraint firstItem="Abv-tF-UsB" firstAttribute="top" secondItem="lsj-vV-lf2" secondAttribute="bottom" constant="8" id="Hbc-fu-wJS"/>
+                            <constraint firstItem="YBB-Jo-5DS" firstAttribute="top" secondItem="5DC-rg-JBz" secondAttribute="bottom" constant="24" id="KRl-DF-uHl"/>
+                            <constraint firstItem="hmw-5B-hqO" firstAttribute="top" secondItem="spD-ZQ-6Ti" secondAttribute="bottom" constant="8" id="PxX-21-LXq"/>
+                            <constraint firstItem="spD-ZQ-6Ti" firstAttribute="centerX" secondItem="o2q-hx-oti" secondAttribute="centerX" id="RpU-8n-WBe"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Abv-tF-UsB" secondAttribute="trailing" id="UPC-gB-WoV"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="cxO-Cm-RPc" secondAttribute="leading" id="W4l-nF-XlY"/>
+                            <constraint firstItem="SaV-Y1-ZX6" firstAttribute="centerX" secondItem="o2q-hx-oti" secondAttribute="centerX" id="aDz-tc-T61"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="hmw-5B-hqO" secondAttribute="trailing" id="ab0-FW-KGW"/>
+                            <constraint firstItem="hmw-5B-hqO" firstAttribute="centerX" secondItem="o2q-hx-oti" secondAttribute="centerX" id="e98-Dj-P8Z"/>
+                            <constraint firstItem="YBB-Jo-5DS" firstAttribute="top" secondItem="cxO-Cm-RPc" secondAttribute="bottom" constant="14" id="hTO-Cc-bYo"/>
+                            <constraint firstItem="cxO-Cm-RPc" firstAttribute="top" secondItem="SaV-Y1-ZX6" secondAttribute="bottom" constant="8.5" id="kMT-YF-Ekp"/>
+                            <constraint firstItem="lsj-vV-lf2" firstAttribute="centerX" secondItem="o2q-hx-oti" secondAttribute="centerX" id="omp-ka-dcw"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="Abv-tF-UsB" secondAttribute="leading" id="w3W-jU-gul"/>
+                            <constraint firstItem="hmw-5B-hqO" firstAttribute="centerY" secondItem="o2q-hx-oti" secondAttribute="centerY" id="wwE-bD-7Ms"/>
+                            <constraint firstItem="YBB-Jo-5DS" firstAttribute="top" secondItem="SaV-Y1-ZX6" secondAttribute="bottom" constant="20" id="xBe-T0-IdH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cxO-Cm-RPc" secondAttribute="trailing" id="xC6-kq-Hub"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="lsj-vV-lf2" secondAttribute="trailing" id="xKY-wH-KiI"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="kMT-YF-Ekp"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="hmw-5B-hqO"/>
+                                <include reference="cxO-Cm-RPc"/>
+                                <include reference="lsj-vV-lf2"/>
+                                <include reference="Abv-tF-UsB"/>
+                                <include reference="5DC-rg-JBz"/>
+                                <include reference="spD-ZQ-6Ti"/>
+                                <include reference="SaV-Y1-ZX6"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="0Lb-SZ-nGX"/>
+                                <include reference="PxX-21-LXq"/>
+                                <include reference="ab0-FW-KGW"/>
+                                <include reference="e98-Dj-P8Z"/>
+                                <include reference="wwE-bD-7Ms"/>
+                                <include reference="RpU-8n-WBe"/>
+                                <include reference="01k-9t-8sw"/>
+                                <include reference="E4F-o4-ToJ"/>
+                                <include reference="omp-ka-dcw"/>
+                                <include reference="xKY-wH-KiI"/>
+                                <include reference="UPC-gB-WoV"/>
+                                <include reference="w3W-jU-gul"/>
+                                <include reference="W4l-nF-XlY"/>
+                                <include reference="kMT-YF-Ekp"/>
+                                <include reference="xC6-kq-Hub"/>
+                                <include reference="aDz-tc-T61"/>
+                                <include reference="KRl-DF-uHl"/>
+                                <include reference="hTO-Cc-bYo"/>
+                                <include reference="xBe-T0-IdH"/>
+                                <include reference="7YD-6l-GVY"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Qqb-7s-mDw"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="connectButton" destination="SaV-Y1-ZX6" id="kdU-NP-hhK"/>
+                        <outlet property="detailLabel" destination="Abv-tF-UsB" id="Lum-mA-xdg"/>
+                        <outlet property="disclaimerLabel" destination="cxO-Cm-RPc" id="hsb-fY-Dku"/>
+                        <outlet property="doneButton" destination="5DC-rg-JBz" id="6D4-Nx-axh"/>
+                        <outlet property="heartLabel" destination="spD-ZQ-6Ti" id="ADU-VI-Ed2"/>
+                        <outlet property="progressView" destination="lsj-vV-lf2" id="98f-IY-wi6"/>
+                        <outlet property="titleLabel" destination="hmw-5B-hqO" id="sKN-qs-G8h"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zgi-VM-sGI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1565" y="2753"/>
         </scene>
     </scenes>
     <resources>

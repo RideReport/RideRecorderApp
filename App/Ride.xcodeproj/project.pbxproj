@@ -65,6 +65,7 @@
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
+		3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */; };
 		3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */; };
 		3D7FFA8C1D061F260077E591 /* TripReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFA8B1D061F260077E591 /* TripReward.swift */; };
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
@@ -291,6 +292,7 @@
 		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
+		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
 		3D7FFA8B1D061F260077E591 /* TripReward.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripReward.swift; path = Ride/TripReward.swift; sourceTree = "<group>"; };
 		3D7FFA8D1D061F5E0077E591 /* Ride 46.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 46.xcdatamodel"; sourceTree = "<group>"; };
@@ -637,6 +639,7 @@
 				8452AC0C1B8BC79E005B4C2D /* SetupCreateProfileViewController.swift */,
 				8452AC171B8BCACA005B4C2D /* SetupConfirmEmailViewController.swift */,
 				84BD37021A706C6D0084B6AF /* SetupFinishedViewController.swift */,
+				3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */,
 			);
 			name = Setup;
 			sourceTree = "<group>";
@@ -1320,6 +1323,7 @@
 				3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */,
 				3D7FFA8C1D061F260077E591 /* TripReward.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
+				3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				3D1A154C1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
