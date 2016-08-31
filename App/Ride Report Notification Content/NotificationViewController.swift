@@ -17,16 +17,8 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet var rewardDescriptionLabel: UILabel!
     @IBOutlet var bottomSpaceConstraint: NSLayoutConstraint!
     
-    weak var mapViewController: MapViewController? = nil
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        for viewController in self.childViewControllers {
-            if (viewController.isKindOfClass(MapViewController)) {
-                self.mapViewController = viewController as? MapViewController
-            }
-        }
         
         CoreDataManager.startup()
     }
@@ -34,8 +26,6 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     func didReceiveNotification(notification: UNNotification) {
         if let uuid = notification.request.content.userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
-
-            mapViewController?.setSelectedTrip(trip)
             
             rideEmojiLabel.text = trip.climacon ?? ""
             rideDescriptionLabel.text = trip.displayStringWithTime()

@@ -5,5 +5,4 @@
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import "UILabel+HBAdditions.h"
 #import "UIDevice+HBAdditions.h"
-#import <Mapbox/Mapbox.h>
 #include <zlib.h>

@@ -28,7 +28,6 @@ target 'Motion' do
 end
 
 target 'Ride Report Notification Content' do
-    pod 'Mapbox-iOS-SDK'
     pod 'SwiftyJSON'
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
 end

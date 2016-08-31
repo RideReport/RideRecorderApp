@@ -127,7 +127,6 @@
 		3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */; };
 		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
 		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
-		3DC5BB0A1D779994002DE253 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
 		3DC770A01D502B0900862545 /* iPhoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709F1D502B0900862545 /* iPhoneManager.swift */; };
 		3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7A1D50159E00A5D719 /* Interface.storyboard */; };
 		3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7D1D50159E00A5D719 /* Assets.xcassets */; };
@@ -1615,7 +1614,6 @@
 				3D265C091D77781A00405F69 /* Incident.swift in Sources */,
 				3D265C0A1D77782000405F69 /* Ride.xcdatamodeld in Sources */,
 				3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */,
-				3DC5BB0A1D779994002DE253 /* MapViewController.swift in Sources */,
 				3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */,
 				3D265C081D77781A00405F69 /* ActivityTypePrediction.swift in Sources */,
 				3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */,
