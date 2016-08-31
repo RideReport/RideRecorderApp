@@ -149,6 +149,8 @@ class Trip : NSManagedObject {
                     self.sectionIdentifier = self.sectionIdentifierString()
                 }
 
+                #if NOTIFICATIONCONTENTEXTENSION
+                #else
                 dispatch_async(dispatch_get_main_queue()) {
                     // newly closed trips should be synced to healthkit
                     if (HealthKitManager.authorizationStatus == .Authorized) {
@@ -156,6 +158,7 @@ class Trip : NSManagedObject {
                         HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                     }
                 }
+                #endif
             }
         }
     }
@@ -194,10 +197,13 @@ class Trip : NSManagedObject {
                 if !oldValue {
                     dispatch_async(dispatch_get_main_queue()) {
                         // newly closed trips should be synced to healthkit
+                        #if NOTIFICATIONCONTENTEXTENSION
+                        #else
                         if (HealthKitManager.authorizationStatus == .Authorized) {
                             self.isSavedToHealthKit = false
                             HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                         }
+                        #endif
                     }
                 }
                 
@@ -1007,6 +1013,8 @@ class Trip : NSManagedObject {
         return closestLocation
     }
     
+    #if NOTIFICATIONCONTENTEXTENSION
+    #else
     func sendTripCompletionNotificationLocally(clearRemoteMessage: Bool = false, forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
         
@@ -1032,6 +1040,7 @@ class Trip : NSManagedObject {
             }
         }
     }
+    #endif
     
     var areaDescriptionString: String {
         get {
@@ -1120,6 +1129,8 @@ class Trip : NSManagedObject {
         return false
     }
     
+    #if NOTIFICATIONCONTENTEXTENSION
+    #else
     func cancelTripStateNotification(clearRemoteMessage: Bool = false) {
         // clear any remote push notifications
         if clearRemoteMessage {
@@ -1132,6 +1143,7 @@ class Trip : NSManagedObject {
             self.currentStateNotification = nil
         }
     }
+    #endif
     
     private func usableLocationsForSimplification()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()

@@ -27,6 +27,12 @@ target 'Motion' do
     pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
 end
 
+target 'Ride Report Notification Content' do
+    pod 'Mapbox-iOS-SDK'
+    pod 'SwiftyJSON'
+    pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+end
+
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

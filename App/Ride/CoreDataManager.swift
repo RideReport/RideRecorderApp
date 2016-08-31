@@ -82,9 +82,13 @@ class CoreDataManager {
     }
     
     lazy var applicationDocumentsDirectory: NSURL = {
-        // The directory the application uses to store the Core Data store file. This code uses a directory named "Serious.k" in the application's documents Application Support directory.
+        NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.com.Knock.RideReport")
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         return urls[urls.count-1] 
+    }()
+    
+    lazy var sharedGroupContainerDirectory: NSURL = {
+        return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.com.Knock.RideReport")!
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -101,14 +105,25 @@ class CoreDataManager {
             NSMigratePersistentStoresAutomaticallyOption: true,
             NSInferMappingModelAutomaticallyOption: true,
             NSPersistentStoreFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication]
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")
+        
+        let url = self.sharedGroupContainerDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")!
+        let oldCoreDataUrl = self.applicationDocumentsDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")!
+        
         let failureReason = "There was an error creating or loading the application's saved data."
         do {
             if (self.usesInMemoryStore) {
                 // used for testing Core Data Stack
                 try coordinator!.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
             } else {
-                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
+                if (!NSFileManager.defaultManager().fileExistsAtPath(url.path!) && NSFileManager.defaultManager().fileExistsAtPath(oldCoreDataUrl.path!)) {
+                    // Migrate the database from the old application directory to the new shared app group directory
+                    let oldStore = try? coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: oldCoreDataUrl, options: options)
+                    if let storeToMigrate = oldStore {
+                        try coordinator!.migratePersistentStore(storeToMigrate, toURL: url, options: [:], withType: NSSQLiteStoreType)
+                    }
+                } else {
+                    try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
+                }
             }
         } catch let error {
             coordinator = nil

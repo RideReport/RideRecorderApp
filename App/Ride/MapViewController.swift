@@ -11,7 +11,6 @@ import CoreLocation
 import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
-    weak var tripViewController: TripViewController? = nil
     @IBOutlet weak var mapView:  MGLMapView!
         
     private var tripsAreLoaded = false
@@ -23,14 +22,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     private var hasCenteredMap : Bool = false
     
-    private var selectedIncident : Incident? = nil
+    private var _selectedTrip : Trip? = nil
         
     private var dateFormatter : NSDateFormatter!
     
     private var tempBackgroundView : UIView?
     private var hasInsertedTempBackgroundView = false
-    
-    private var annotationPopOverController : UIPopoverController? = nil
     
     override func viewDidLoad() {
         self.dateFormatter = NSDateFormatter()
@@ -55,21 +52,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let diskCapacity = 40 * 1024 * 1024
         let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
         NSURLCache.setSharedURLCache(urlCache)
-        
-        if (CoreDataManager.sharedManager.isStartingUp || APIClient.sharedClient.accountVerificationStatus == .Unknown) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                if let tripViewController = strongSelf.tripViewController {
-                    strongSelf.setSelectedTrip(tripViewController.selectedTrip)
-                }
-            }
-        } else {
-            if let tripViewController = self.tripViewController {
-                self.setSelectedTrip(tripViewController.selectedTrip)
-            }
-        }
     }
     
     deinit {
@@ -94,10 +76,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if let tripViewController = self.tripViewController {
-            self.setSelectedTrip(tripViewController.selectedTrip)
-        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -110,12 +88,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                     self.tempBackgroundView = nil                    
                 })
             }
-        }
-    }
-    
-    override func didMoveToParentViewController(parent: UIViewController?) {
-        if let tripViewController = parent as? TripViewController {
-            self.tripViewController = tripViewController
         }
     }
     
@@ -133,6 +105,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     //
     
     func setSelectedTrip(selectedTrip : Trip?) {
+        _selectedTrip = selectedTrip
+        
         if let tripBackingLine = self.selectedTripLine {
             self.mapView.removeAnnotation(tripBackingLine)
         }
@@ -146,7 +120,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             self.mapView.removeAnnotation(endPoint)
         }
         
-        guard let trip = selectedTrip else {
+        guard _selectedTrip != nil else {
+            self.selectedTripLine = nil
+            self.selectedTripBackingLine = nil
+            
+            return
+        }
+        
+        guard let trip = _selectedTrip else {
             self.selectedTripLine = nil
             self.selectedTripBackingLine = nil
             
@@ -249,11 +230,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         })
     }
     
-    func addIncidentToMap(incident: Incident) {
-//        self.mapView.addAnnotation(incident)
-//        self.mapView.selectAnnotation(incident, animated: true)
-    }
-
     //
     // MARK: - Map Kit
     //
@@ -279,12 +255,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
         if (!self.hasCenteredMap && userLocation != nil) {
-            if let tripViewController = self.tripViewController {
-                if (tripViewController.selectedTrip == nil) {
-                    // don't recenter the map if the user has already selected a trip
-                    
-                    self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
-                }
+            if _selectedTrip == nil {
+                self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
             }
         
             self.hasCenteredMap = true
@@ -303,20 +275,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let view = UIButton(type: UIButtonType.DetailDisclosure)
         
         return view
-    }
-    
-    func mapView(mapView: MGLMapView, annotation: MGLAnnotation, calloutAccessoryControlTapped control: UIControl) {
-        if let tripViewController = self.tripViewController {
-            tripViewController.performSegueWithIdentifier("showIncidentEditor", sender: self.selectedIncident)
-        }
-    }
-    
-    func mapView(mapView: MGLMapView, didSelectAnnotation annotation: MGLAnnotation) {
-        self.selectedIncident = annotation as? Incident
-    }
-    
-    func mapView(mapView: MGLMapView, didDeselectAnnotation annotation: MGLAnnotation) {
-        self.selectedIncident = nil
     }
     
     func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
@@ -344,7 +302,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
         }
         
-        if let tripViewController = self.tripViewController, trip = tripViewController.selectedTrip {
+        if let trip = _selectedTrip {
             if (trip.activityType == .Cycling) {
                 if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
                     return ColorPallete.sharedPallete.goodGreen

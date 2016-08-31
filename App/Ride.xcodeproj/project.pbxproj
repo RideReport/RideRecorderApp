@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1C98221F7CAACDDF6359D9BF /* Pods_Motion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C98A81E3D0F4DAF0462BF67 /* Pods_Motion.framework */; };
 		24C1DF999B3DD3D53FC86163 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E531BFADB3FF661B0CC787A /* Pods_Ride_Report.framework */; };
+		2957A5F3E17619044AD2AC0B /* Pods_Ride_Report_Notification_Content.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0B4C19345F274AFA87F393 /* Pods_Ride_Report_Notification_Content.framework */; };
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
 		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D035CC81CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
@@ -27,6 +28,24 @@
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
+		3D265BFF1D77781A00405F69 /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
+		3D265C001D77781A00405F69 /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
+		3D265C011D77781A00405F69 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
+		3D265C021D77781A00405F69 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
+		3D265C031D77781A00405F69 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
+		3D265C041D77781A00405F69 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
+		3D265C051D77781A00405F69 /* TripReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFA8B1D061F260077E591 /* TripReward.swift */; };
+		3D265C061D77781A00405F69 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
+		3D265C071D77781A00405F69 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
+		3D265C081D77781A00405F69 /* ActivityTypePrediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* ActivityTypePrediction.swift */; };
+		3D265C091D77781A00405F69 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
+		3D265C0A1D77782000405F69 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
+		3D265C0B1D77783600405F69 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
+		3D265C0D1D777B4300405F69 /* NSData+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B901BEAAA4D0004C1BF /* NSData+GZIP.swift */; };
+		3D265C0E1D777B4300405F69 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
+		3D265C101D777CB000405F69 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
+		3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
+		3D265C121D777D4900405F69 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
 		3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */; };
 		3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2705DD1C8785D400A96DE0 /* ViewController.swift */; };
 		3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D2705DF1C8785D400A96DE0 /* Main.storyboard */; };
@@ -62,6 +81,17 @@
 		3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
 		3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
 		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
+		3D3306071D7774E900B7E56A /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3306061D7774E900B7E56A /* UserNotifications.framework */; };
+		3D3306091D7774E900B7E56A /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D3306081D7774E900B7E56A /* UserNotificationsUI.framework */; };
+		3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33060B1D7774E900B7E56A /* NotificationViewController.swift */; };
+		3D33060F1D7774E900B7E56A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D33060D1D7774E900B7E56A /* MainInterface.storyboard */; };
+		3D3306131D7774E900B7E56A /* Ride Report Notification Content.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
+		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
+		3D4288801D778F600071CEAE /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A04491C1F795000556CD9 /* pinGreen@2x.png */; };
+		3D4288811D778F600071CEAE /* pinGreen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A044A1C1F795000556CD9 /* pinGreen@3x.png */; };
+		3D4288821D778F600071CEAE /* pinRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A044B1C1F795000556CD9 /* pinRed@2x.png */; };
+		3D4288831D778F600071CEAE /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 845A044C1C1F795000556CD9 /* pinRed@3x.png */; };
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
@@ -97,6 +127,7 @@
 		3DBABFD21CCED10600665646 /* ConnectedAppConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */; };
 		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
 		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
+		3DC5BB0A1D779994002DE253 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555919D2733500316995 /* MapViewController.swift */; };
 		3DC770A01D502B0900862545 /* iPhoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709F1D502B0900862545 /* iPhoneManager.swift */; };
 		3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7A1D50159E00A5D719 /* Interface.storyboard */; };
 		3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7D1D50159E00A5D719 /* Assets.xcassets */; };
@@ -244,6 +275,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3D3306111D7774E900B7E56A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84D1554719D2733500316995 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D3306041D7774E900B7E56A;
+			remoteInfo = "Ride Report Notification Content";
+		};
 		3DD06C861D50159E00A5D719 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 84D1554719D2733500316995 /* Project object */;
@@ -261,6 +299,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		3D3306171D7774EA00B7E56A /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				3D3306131D7774E900B7E56A /* Ride Report Notification Content.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3DD06C9E1D50159E00A5D719 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -302,6 +351,8 @@
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D2649991CE3F31700837BAC /* Ride 44.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 44.xcdatamodel"; sourceTree = "<group>"; };
+		3D265C0C1D7779AF00405F69 /* Ride Report Notification Content.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ride Report Notification Content.entitlements"; sourceTree = "<group>"; };
+		3D265C0F1D777B8100405F69 /* Ride-Report-Content-Extension-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Ride-Report-Content-Extension-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D2705D91C8785D400A96DE0 /* Motion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Motion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3D2705DD1C8785D400A96DE0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -320,6 +371,12 @@
 		3D2AB38F1CA4A76400582A5D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Frameworks/opencv2.framework; sourceTree = "<group>"; };
 		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
+		3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Ride Report Notification Content.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D3306061D7774E900B7E56A /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		3D3306081D7774E900B7E56A /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		3D33060B1D7774E900B7E56A /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		3D33060E1D7774E900B7E56A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		3D3306101D7774E900B7E56A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
@@ -358,6 +415,7 @@
 		3DD06C931D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DD06C951D50159E00A5D719 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
+		70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report Notification Content.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content.debug.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84033D9E1A969B3600339171 /* Ride 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 12.xcdatamodel"; sourceTree = "<group>"; };
@@ -513,6 +571,8 @@
 		84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
 		9B75EDF5D5AE16B4ADCD80DD /* Pods-Ride Report.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report/Pods-Ride Report.debug.xcconfig"; sourceTree = "<group>"; };
 		ACF967AD7612C6A3410A16E0 /* Pods-Motion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Motion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Motion/Pods-Motion.debug.xcconfig"; sourceTree = "<group>"; };
+		BA0B4C19345F274AFA87F393 /* Pods_Ride_Report_Notification_Content.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Ride_Report_Notification_Content.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCC544044156D4BFA69CBFFD /* Pods-Ride Report Notification Content.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report Notification Content.release.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -528,6 +588,17 @@
 				3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */,
 				3D2705FC1C8787A900A96DE0 /* CoreData.framework in Frameworks */,
 				1C98221F7CAACDDF6359D9BF /* Pods_Motion.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D3306021D7774E900B7E56A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D265C121D777D4900405F69 /* libz.tbd in Frameworks */,
+				3D3306091D7774E900B7E56A /* UserNotificationsUI.framework in Frameworks */,
+				3D3306071D7774E900B7E56A /* UserNotifications.framework in Frameworks */,
+				2957A5F3E17619044AD2AC0B /* Pods_Ride_Report_Notification_Content.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +704,9 @@
 				845330A21A40B01100452EEB /* MessageUI.framework */,
 				0C98A81E3D0F4DAF0462BF67 /* Pods_Motion.framework */,
 				2E531BFADB3FF661B0CC787A /* Pods_Ride_Report.framework */,
+				3D3306061D7774E900B7E56A /* UserNotifications.framework */,
+				3D3306081D7774E900B7E56A /* UserNotificationsUI.framework */,
+				BA0B4C19345F274AFA87F393 /* Pods_Ride_Report_Notification_Content.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -665,6 +739,18 @@
 			path = Frameworks/ActivityPredictor;
 			sourceTree = SOURCE_ROOT;
 		};
+		3D33060A1D7774E900B7E56A /* Ride Report Notification Content */ = {
+			isa = PBXGroup;
+			children = (
+				3D265C0F1D777B8100405F69 /* Ride-Report-Content-Extension-Bridging-Header.h */,
+				3D265C0C1D7779AF00405F69 /* Ride Report Notification Content.entitlements */,
+				3D33060B1D7774E900B7E56A /* NotificationViewController.swift */,
+				3D33060D1D7774E900B7E56A /* MainInterface.storyboard */,
+				3D3306101D7774E900B7E56A /* Info.plist */,
+			);
+			path = "Ride Report Notification Content";
+			sourceTree = "<group>";
+		};
 		3DBABFD51CCEDB9F00665646 /* Connected Apps */ = {
 			isa = PBXGroup;
 			children = (
@@ -678,17 +764,18 @@
 			name = "Connected Apps";
 			sourceTree = "<group>";
 		};
-		3DD06C791D50159E00A5D719 /* Ride Report Watch App */ = {
+		3DD06C791D50159E00A5D719 /* Ride Report Watch App (disabled) */ = {
 			isa = PBXGroup;
 			children = (
 				3DD06C7A1D50159E00A5D719 /* Interface.storyboard */,
 				3DD06C7D1D50159E00A5D719 /* Assets.xcassets */,
 				3DD06C7F1D50159E00A5D719 /* Info.plist */,
 			);
+			name = "Ride Report Watch App (disabled)";
 			path = "Ride Report Watch App";
 			sourceTree = "<group>";
 		};
-		3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension */ = {
+		3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension (disabled) */ = {
 			isa = PBXGroup;
 			children = (
 				3DACFF751D5FB8210011FE9E /* Ride Report Watch App Extension.entitlements */,
@@ -701,6 +788,7 @@
 				3DD06C951D50159E00A5D719 /* Info.plist */,
 				3DD06C891D50159E00A5D719 /* Supporting Files */,
 			);
+			name = "Ride Report Watch App Extension (disabled)";
 			path = "Ride Report Watch App Extension";
 			sourceTree = "<group>";
 		};
@@ -898,10 +986,11 @@
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,
 				84D1557719D2737D00316995 /* MapKit.framework */,
 				84D1555119D2733500316995 /* Ride */,
+				3D33060A1D7774E900B7E56A /* Ride Report Notification Content */,
 				84D1556A19D2733500316995 /* RideTests */,
 				3D2705DA1C8785D400A96DE0 /* Motion */,
-				3DD06C791D50159E00A5D719 /* Ride Report Watch App */,
-				3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension */,
+				3DD06C791D50159E00A5D719 /* Ride Report Watch App (disabled) */,
+				3DD06C881D50159E00A5D719 /* Ride Report Watch App Extension (disabled) */,
 				84D1555019D2733500316995 /* Products */,
 				1FF80F3C1C874B8ABE8DA81D /* Frameworks */,
 				E6A5322F1E904223508D00FB /* Pods */,
@@ -916,6 +1005,7 @@
 				3D2705D91C8785D400A96DE0 /* Motion.app */,
 				3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */,
 				3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */,
+				3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -980,6 +1070,8 @@
 				23AC0BC0E166427BFE478766 /* Pods-Motion.release.xcconfig */,
 				9B75EDF5D5AE16B4ADCD80DD /* Pods-Ride Report.debug.xcconfig */,
 				1030029425775D4A4EBEB737 /* Pods-Ride Report.release.xcconfig */,
+				70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */,
+				FCC544044156D4BFA69CBFFD /* Pods-Ride Report Notification Content.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1006,6 +1098,26 @@
 			productName = Motion;
 			productReference = 3D2705D91C8785D400A96DE0 /* Motion.app */;
 			productType = "com.apple.product-type.application";
+		};
+		3D3306041D7774E900B7E56A /* Ride Report Notification Content */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D3306141D7774EA00B7E56A /* Build configuration list for PBXNativeTarget "Ride Report Notification Content" */;
+			buildPhases = (
+				DB359C22CEC3DF1FBA44CDB5 /* [CP] Check Pods Manifest.lock */,
+				3D3306011D7774E900B7E56A /* Sources */,
+				3D3306021D7774E900B7E56A /* Frameworks */,
+				3D3306031D7774E900B7E56A /* Resources */,
+				C9667251C19397B89BC2A1A4 /* [CP] Embed Pods Frameworks */,
+				E2D39A7B257F68829AFC7DB5 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Ride Report Notification Content";
+			productName = "Ride Report Notification Content";
+			productReference = 3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		3DD06C771D50159E00A5D719 /* Ride Report Watch App */ = {
 			isa = PBXNativeTarget;
@@ -1073,10 +1185,12 @@
 				3D0D8B211CE0F8D20059AC6B /* ShellScript */,
 				B8DD001B285051999A9DF313 /* [CP] Embed Pods Frameworks */,
 				F4DF214A44C7C33B7D04ED13 /* [CP] Copy Pods Resources */,
+				3D3306171D7774EA00B7E56A /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3D3306121D7774E900B7E56A /* PBXTargetDependency */,
 			);
 			name = "Ride Report";
 			productName = Ride;
@@ -1097,6 +1211,16 @@
 					3D2705D81C8785D400A96DE0 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = 9NRH28TN93;
+					};
+					3D3306041D7774E900B7E56A = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = 9NRH28TN93;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					3DD06C771D50159E00A5D719 = {
 						CreatedOnToolsVersion = 8.0;
@@ -1127,7 +1251,7 @@
 						DevelopmentTeam = 9NRH28TN93;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -1164,6 +1288,7 @@
 				84D1554E19D2733500316995 /* Ride Report */,
 				8429E5CA1A5DC58500EB3E94 /* Ride Report Tests */,
 				3D2705D81C8785D400A96DE0 /* Motion */,
+				3D3306041D7774E900B7E56A /* Ride Report Notification Content */,
 				3DD06C771D50159E00A5D719 /* Ride Report Watch App */,
 				3DD06C831D50159E00A5D719 /* Ride Report Watch App Extension */,
 			);
@@ -1180,6 +1305,18 @@
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
 				3D4951121C8E092300E216AA /* forest.cv in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D3306031D7774E900B7E56A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D4288821D778F600071CEAE /* pinRed@2x.png in Resources */,
+				3D4288801D778F600071CEAE /* pinGreen@2x.png in Resources */,
+				3D4288831D778F600071CEAE /* pinRed@3x.png in Resources */,
+				3D33060F1D7774E900B7E56A /* MainInterface.storyboard in Resources */,
+				3D4288811D778F600071CEAE /* pinGreen@3x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1343,6 +1480,51 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ride Report/Pods-Ride Report-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		C9667251C19397B89BC2A1A4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DB359C22CEC3DF1FBA44CDB5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E2D39A7B257F68829AFC7DB5 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		F4DF214A44C7C33B7D04ED13 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1413,6 +1595,34 @@
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
 				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D3306011D7774E900B7E56A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */,
+				3D265C001D77781A00405F69 /* ConnectedApp.swift in Sources */,
+				3D265C011D77781A00405F69 /* Profile.swift in Sources */,
+				3D265C021D77781A00405F69 /* Location.swift in Sources */,
+				3D265C031D77781A00405F69 /* Prototrip.swift in Sources */,
+				3D265C101D777CB000405F69 /* NSDate+HBAdditions.swift in Sources */,
+				3D265BFF1D77781A00405F69 /* ConnectedAppScope.swift in Sources */,
+				3D265C0D1D777B4300405F69 /* NSData+GZIP.swift in Sources */,
+				3D265C071D77781A00405F69 /* SensorDataCollection.swift in Sources */,
+				3D265C041D77781A00405F69 /* Trip.swift in Sources */,
+				3D265C091D77781A00405F69 /* Incident.swift in Sources */,
+				3D265C0A1D77782000405F69 /* Ride.xcdatamodeld in Sources */,
+				3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */,
+				3DC5BB0A1D779994002DE253 /* MapViewController.swift in Sources */,
+				3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */,
+				3D265C081D77781A00405F69 /* ActivityTypePrediction.swift in Sources */,
+				3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */,
+				3D265C051D77781A00405F69 /* TripReward.swift in Sources */,
+				3D265C0B1D77783600405F69 /* CoreDataManager.swift in Sources */,
+				3D265C0E1D777B4300405F69 /* Float+Meters.swift in Sources */,
+				3D265C061D77781A00405F69 /* SensorData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1546,6 +1756,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3D3306121D7774E900B7E56A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D3306041D7774E900B7E56A /* Ride Report Notification Content */;
+			targetProxy = 3D3306111D7774E900B7E56A /* PBXContainerItemProxy */;
+		};
 		3DD06C871D50159E00A5D719 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3DD06C831D50159E00A5D719 /* Ride Report Watch App Extension */;
@@ -1573,6 +1788,14 @@
 				3D2705E51C8785D400A96DE0 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		3D33060D1D7774E900B7E56A /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D33060E1D7774E900B7E56A /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 		3DD06C7A1D50159E00A5D719 /* Interface.storyboard */ = {
@@ -1657,6 +1880,58 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Motion/Motion-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		3D3306151D7774EA00B7E56A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report Notification Content/Ride Report Notification Content.entitlements";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Ride Report Notification Content/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Knock.RideReport.Ride-Report-Notification-Content";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "NOTIFICATIONCONTENTEXTENSION DEBUG";
+				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
+				SWIFT_VERSION = 2.3;
+			};
+			name = Debug;
+		};
+		3D3306161D7774EA00B7E56A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FCC544044156D4BFA69CBFFD /* Pods-Ride Report Notification Content.release.xcconfig */;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = "Ride Report Notification Content/Ride Report Notification Content.entitlements";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 9NRH28TN93;
+				INFOPLIST_FILE = "Ride Report Notification Content/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Knock.RideReport.Ride-Report-Notification-Content";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NOTIFICATIONCONTENTEXTENSION;
+				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1989,6 +2264,15 @@
 			buildConfigurations = (
 				3D2705E81C8785D400A96DE0 /* Debug */,
 				3D2705E91C8785D400A96DE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D3306141D7774EA00B7E56A /* Build configuration list for PBXNativeTarget "Ride Report Notification Content" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D3306151D7774EA00B7E56A /* Debug */,
+				3D3306161D7774EA00B7E56A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
