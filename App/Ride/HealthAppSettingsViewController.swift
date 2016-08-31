@@ -16,7 +16,7 @@ class HealthAppSettingsViewController : UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if #available(iOS 9.0, *) {
+        if #available(iOS 10.0, *) {
             if WCSession.isSupported() {
                 // if a watch is paired
                 self.detailLabel.text = "Ride Report automatically saves all your rides to the Health App and your Apple Watch."

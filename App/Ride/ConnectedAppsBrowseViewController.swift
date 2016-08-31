@@ -213,7 +213,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             let tableCell = self.tableView.dequeueReusableCellWithIdentifier("HealthAppCell", forIndexPath: indexPath)
-            if #available(iOS 9.0, *) {
+            if #available(iOS 10.0, *) {
                 if WCSession.isSupported() {
                     // if a watch is paired
                     if let nameLabel = tableCell.viewWithTag(1) as? UILabel,

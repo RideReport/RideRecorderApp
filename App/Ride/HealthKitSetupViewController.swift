@@ -30,7 +30,7 @@ class HealthKitSetupViewController : UIViewController {
         self.progressView.hidden = true
         self.doneButton.hidden = true
         
-        if #available(iOS 9.0, *) {
+        if #available(iOS 10.0, *) {
             if WCSession.isSupported() {
                 // if a watch is paired
                 self.titleLabel.text = "Health App and Apple Watch"
@@ -145,7 +145,7 @@ class HealthKitSetupViewController : UIViewController {
             
             self.titleLabel.text = "You're done!"
             
-            if #available(iOS 9.0, *) {
+            if #available(iOS 10.0, *) {
                 if WCSession.isSupported() {
                     // if a watch is paired
                     self.detailLabel.text = "Your rides will be automatically saved to your Apple Watch and the Health App."

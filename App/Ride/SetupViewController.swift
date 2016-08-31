@@ -49,7 +49,7 @@ class SetupViewController: UINavigationController {
             self.myViewControllers.append(setupPermissionVC)
         }
         
-        if #available(iOS 9.0, *) {
+        if #available(iOS 10.0, *) {
             if (WCSession.isSupported() && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
                 // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
                 let healthKitVC = self.storyboard!.instantiateViewControllerWithIdentifier("SetupWatchActivitySyncingViewController") as! SetupChildViewController
