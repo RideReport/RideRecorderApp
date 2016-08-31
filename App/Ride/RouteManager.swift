@@ -207,12 +207,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentPrototrip = nil
         }
         
-        if #available(iOS 10.0, *) {
-            WatchManager.sharedManager.beginRideWorkout()
-        } else {
-            // Fallback on earlier versions
-        }
-        
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
         self.numberOfNonMovingContiguousGPSLocations = 0
@@ -250,12 +244,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.lastMovingLocation = nil
         self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveTrackingActivityTypeQueryDate = nil
-        
-        if #available(iOS 10.0, *) {
-            WatchManager.sharedManager.endRideWorkout()
-        } else {
-            // Fallback on earlier versions
-        }
         
         if (abort || stoppedTrip.locations.count <= 6) {
             // if it is aborted or it doesn't more than 6 points, toss it.
@@ -365,13 +353,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
             let updatedInProgressLength = self.currentTrip!.updateInProgressLength()
-            if #available(iOS 10.0, *) {
-                if (updatedInProgressLength) {
-                    WatchManager.sharedManager.updateWorkoutDistance(self.currentTrip!.inProgressLength)
-                }
-            } else {
-                // Fallback on earlier versions
-            }
             
             if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate where location.timestamp.timeIntervalSinceDate(sensorDataCollectionDate) > -0.1 {
                 // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
