@@ -264,6 +264,7 @@ class HealthKitManager {
         
         guard trip.startDate.compare(trip.endDate) != .OrderedDescending else {
             // https://github.com/KnockSoftware/Ride/issues/206
+            DDLogInfo(String(format: "Workout start date is not before end date!"))
             handler(success: false)
             return
         }
@@ -298,11 +299,14 @@ class HealthKitManager {
         
         // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
         guard trip.activityType == .Cycling && trip.isClosed else {
+            DDLogInfo(String(format: "Trip not closed or not a cycling trip. Skipping workout save…"))
             trip.isBeingSavedToHealthKit = false
             trip.isSavedToHealthKit = true
             handler(success: false)
             return
         }
+        
+        DDLogInfo(String(format: "Workout saving…"))
         
         // first, we calculate our total burn plus burn samples
         var totalBurn :HKQuantity? = nil
@@ -399,6 +403,7 @@ class HealthKitManager {
                     trip.isBeingSavedToHealthKit = false
                     handler(success: false)
                 } else {
+                    DDLogInfo(String(format: "Workout saved."))
                     dispatch_async(dispatch_get_main_queue()) {
                         trip.healthKitUuid = ride.UUID.UUIDString
                         trip.isSavedToHealthKit = true

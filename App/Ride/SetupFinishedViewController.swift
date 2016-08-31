@@ -25,14 +25,14 @@ class SetupFinishedViewController: SetupChildViewController {
                     properties: ["createdAccount": "false"]
                 )
                 
-                self.helperTextLabel.markdownStringValue = "**You're all set!** You can create an account later if you change your mind."
+                self.helperTextLabel.markdownStringValue = "**You're ready to ride!** You can create an account later if you change your mind."
             } else if (finishType == "InitialSetupCreatedAccount") {
                 Mixpanel.sharedInstance().track(
                     "finishedSetup",
                     properties: ["createdAccount": "true"]
                 )
                 
-                self.helperTextLabel.markdownStringValue = "**You're all set!**"
+                self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
             } else if (finishType == "CreateAccountSkippedAccount") {
                 self.helperTextLabel.markdownStringValue = "Cool. You can create an account later if you change your mind."
             } else if (finishType == "CreatedAccountCreatedAccount") {
@@ -40,10 +40,10 @@ class SetupFinishedViewController: SetupChildViewController {
                     "createdAccount"
                 )
                 
-                self.helperTextLabel.markdownStringValue = "**You're all set!**"
+                self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
             }
         } else {
-            self.helperTextLabel.markdownStringValue = "**You're all set!**"
+            self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
         }
     }
     

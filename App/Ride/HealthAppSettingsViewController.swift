@@ -7,12 +7,21 @@
 //
 
 import Foundation
+import WatchConnectivity
 
 class HealthAppSettingsViewController : UIViewController{
     @IBOutlet weak var heartLabel: UILabel!
+    @IBOutlet weak var detailLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOS 9.0, *) {
+            if WCSession.isSupported() {
+                // if a watch is paired
+                self.detailLabel.text = "Ride Report automatically saves all your rides to the Health App and your Apple Watch."
+            }
+        }
     }
     
     override func viewDidAppear(animated: Bool) {

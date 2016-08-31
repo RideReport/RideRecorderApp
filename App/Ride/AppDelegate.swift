@@ -214,6 +214,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
+    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+        DDLogInfo("Received Memory Warning!")
+    }
+    
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         self.notificationRegistrationStatus = .Registered
         

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import WatchConnectivity
 
 class SetupChildViewController : UIViewController {
     var parent : SetupViewController?
@@ -33,27 +34,40 @@ class SetupViewController: UINavigationController {
         let setupTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupTerms") as! SetupChildViewController
         self.setupVC(setupTermsVC)
         
-        let setupPermissionVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupPermissions") as! SetupChildViewController
-        self.setupVC(setupPermissionVC)
-        
         let setupRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupRating") as! SetupChildViewController
         self.setupVC(setupRatingVC)
-        
-        let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
-        self.setupVC(setupCreateProfile)
-        
-        let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
-        self.setupVC(setupConfirmEmail)
         
         let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
         self.setupVC(setupFinished)
         
+        self.myViewControllers = [setupTermsVC, setupRatingVC]
+        
+        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
+            // if they haven't seen setup, ask for permissions
+            let setupPermissionVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupPermissions") as! SetupChildViewController
+            self.setupVC(setupPermissionVC)
+            self.myViewControllers.append(setupPermissionVC)
+        }
+        
+        if #available(iOS 9.0, *) {
+            if (WCSession.isSupported() && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+                // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
+                let healthKitVC = self.storyboard!.instantiateViewControllerWithIdentifier("SetupWatchActivitySyncingViewController") as! SetupChildViewController
+                self.setupVC(healthKitVC)
+                self.myViewControllers.append(healthKitVC)
+            }
+        }
+        
         if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupFinished]
-        } else if (NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupCreateProfile, setupConfirmEmail, setupFinished]
+            self.myViewControllers.append(setupFinished)
         } else {
-            self.myViewControllers = [setupTermsVC, setupRatingVC, setupPermissionVC, setupCreateProfile, setupConfirmEmail, setupFinished]
+            let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
+            self.setupVC(setupCreateProfile)
+            
+            let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
+            self.setupVC(setupConfirmEmail)
+
+            self.myViewControllers.appendContentsOf([setupCreateProfile, setupConfirmEmail, setupFinished])
         }
         
         self.myViewControllers.first!.childViewControllerWillPresent()

@@ -8,9 +8,8 @@
 
 import Foundation
 import CoreData
-import WatchConnectivity
 
-class HealthKitSetupViewController : UIViewController {
+class SetupWatchActivitySyncingViewController : SetupChildViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
@@ -19,7 +18,7 @@ class HealthKitSetupViewController : UIViewController {
     @IBOutlet weak var heartLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
-
+    
     var tripsRemainingToSync: [Trip]?
     var totalTripsToSync = 0
     private var didCancel = false
@@ -29,37 +28,26 @@ class HealthKitSetupViewController : UIViewController {
         
         self.progressView.hidden = true
         self.doneButton.hidden = true
-        
-        if #available(iOS 9.0, *) {
-            if WCSession.isSupported() {
-                // if a watch is paired
-                self.titleLabel.text = "Health App and Apple Watch"
-                self.detailLabel.text = "Trying to fill your rings? Ride Report can automatically save your rides to the Health App, so you get workout credit on your Apple Watch."
-            }
-        }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        self.navigationController?.navigationBarHidden = false
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupWatchActivitySyncingViewController.next))
     }
-
+    
+    @IBAction override func next(sender: AnyObject) {
+        super.next(sender)
+    }
+    
     @IBAction func sync(sender: AnyObject) {
-        self.progressView.progress = 0.0
-        self.progressView.hidden = false
-        self.disclaimerLabel.hidden = true
-        self.titleLabel.text = "Saving Existing Rides"
-        self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
-        
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(HealthKitSetupViewController.cancel))
-        
-        self.startBeatingHeart()
-        
-        self.connectButton.hidden = true
         
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthKitIsSetup")
         NSUserDefaults.standardUserDefaults().synchronize()
-
-        HealthKitManager.startup() { success in 
+        
+        HealthKitManager.startup() { success in
             let context = CoreDataManager.sharedManager.currentManagedObjectContext()
             let fetchedRequest = NSFetchRequest(entityName: "Trip")
             fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.Cycling.rawValue)
@@ -75,10 +63,24 @@ class HealthKitSetupViewController : UIViewController {
             guard let theTrips = results as? [Trip] else {
                 return
             }
-
+            
             self.tripsRemainingToSync = theTrips
             self.totalTripsToSync = theTrips.count
-            self.syncNextUnsyncedTrip()
+            if (theTrips.count > 0) {
+                self.progressView.progress = 0.0
+                self.progressView.hidden = false
+                self.disclaimerLabel.hidden = true
+                self.titleLabel.text = "Saving Existing Rides"
+                self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
+                
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupWatchActivitySyncingViewController.cancel))
+                
+                self.connectButton.hidden = true
+                
+                self.syncNextUnsyncedTrip()
+            } else {
+                self.next(sender)
+            }
         }
     }
     
@@ -90,43 +92,12 @@ class HealthKitSetupViewController : UIViewController {
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
             NSUserDefaults.standardUserDefaults().synchronize()
             
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.next(sender)
         }))
         alertController.addAction(UIAlertAction(title: "Keep Saving", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    @IBAction func done(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func startBeatingHeart() {
-        CATransaction.begin()
-        
-        let growAnimation = CAKeyframeAnimation(keyPath: "transform")
-        
-        let growScale: CGFloat = 1.1
-        growAnimation.values = [
-            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(growScale, growScale, 1.0)),
-            NSValue(CATransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0)),
-        ]
-        growAnimation.keyTimes = [0, 0.12, 0.50, 0.62, 1]
-        growAnimation.additive = true
-        growAnimation.duration = 1.2
-        growAnimation.repeatCount = Float.infinity
-        
-        self.heartLabel.layer.addAnimation(growAnimation, forKey:"transform")
-        
-        CATransaction.commit()
-    }
-    
-    func stopBeatingHeart() {
-        self.heartLabel.layer.removeAnimationForKey("transform")
-    }
-
     private func syncNextUnsyncedTrip() {
         guard !self.didCancel else {
             return
@@ -139,20 +110,11 @@ class HealthKitSetupViewController : UIViewController {
             self.detailLabel.hidden = false
             self.disclaimerLabel.hidden = true
             
-            self.stopBeatingHeart()
             self.navigationItem.leftBarButtonItem = nil
             self.navigationItem.hidesBackButton = true
             
-            self.titleLabel.text = "You're done!"
-            
-            if #available(iOS 9.0, *) {
-                if WCSession.isSupported() {
-                    // if a watch is paired
-                    self.detailLabel.text = "Your rides will be automatically saved to your Apple Watch and the Health App."
-                }
-            } else {
-                self.detailLabel.text = "We've saved all your rides into the Health App. Future rides will be saved automatically."
-            }
+            self.titleLabel.text = "All Set!"
+            self.detailLabel.text = "Your rides will be automatically saved to your Apple Watch and the Health App."
             
             return
         }
@@ -161,7 +123,7 @@ class HealthKitSetupViewController : UIViewController {
                 self.tripsRemainingToSync!.removeFirst()
                 let progress = Float(self.totalTripsToSync - self.tripsRemainingToSync!.count) / Float(self.totalTripsToSync)
                 self.progressView.setProgress(progress, animated: true)
-
+                
                 self.syncNextUnsyncedTrip()
             }
         }
