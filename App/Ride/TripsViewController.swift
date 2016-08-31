@@ -717,31 +717,65 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func configureCell(tableCell: UITableViewCell, indexPath: NSIndexPath) {
-        guard let textLabel = tableCell.viewWithTag(1) as? UILabel else {
+        guard let rideEmojiLabel = tableCell.viewWithTag(1) as? UILabel,
+            let rideDescriptionLabel = tableCell.viewWithTag(2) as? UILabel,
+            let rewardEmojiLabel = tableCell.viewWithTag(3) as? UILabel,
+            let rewardDescriptionLabel = tableCell.viewWithTag(4) as? UILabel else {
             return
         }
         
         setDisclosureArrowColor(tableCell)
+        
+        var bottomSpaceConstraint : NSLayoutConstraint? = nil
+        var topSpaceConstraint : NSLayoutConstraint? = nil
+        for constraint in tableCell.contentView.constraints {
+            if constraint.identifier == "emojiBottomSpace" {
+                bottomSpaceConstraint = constraint
+            } else if constraint.identifier == "emojiTopSpace" {
+                topSpaceConstraint = constraint
+            }
+        }
         
         if !isOtherTripsSection(indexPath.section - 1) {
         
             let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as! Trip
             
             if !trip.isClosed {
-                textLabel.text = String(format: "🏁 %@ starting at %@.", trip.inProgressLength.distanceString, trip.timeString())
+                rideEmojiLabel.text = "🏁"
+                rideDescriptionLabel.text = String(format: "🏁 %@ starting at %@.", trip.inProgressLength.distanceString, trip.timeString())
+                rewardEmojiLabel.text = ""
+                rewardDescriptionLabel.text = ""
+                bottomSpaceConstraint?.constant = 0
             } else {
-                textLabel.text = trip.displayStringWithTime()
+                rideEmojiLabel.text = trip.climacon ?? ""
+                rideDescriptionLabel.text = trip.displayStringWithTime()
+                
+                if let reward = trip.tripRewards.firstObject as? TripReward where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                    rewardEmojiLabel.text = reward.displaySafeEmoji
+                    rewardDescriptionLabel.text = reward.descriptionText
+                    bottomSpaceConstraint?.constant = 14
+                } else {
+                    rewardEmojiLabel.text = ""
+                    rewardDescriptionLabel.text = ""
+                    bottomSpaceConstraint?.constant = 0
+                }
             }
             
-            textLabel.textColor = ColorPallete.sharedPallete.darkGrey
+            rideDescriptionLabel.textColor = ColorPallete.sharedPallete.darkGrey
         } else {
             let otherTripsCount = self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects
-            textLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+            rideEmojiLabel.text = ""
+            rideDescriptionLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+            
+            rewardEmojiLabel.text = ""
+            rewardDescriptionLabel.text = ""
+            bottomSpaceConstraint?.constant = 0
+            topSpaceConstraint?.constant = 4
             
             if otherTripsCount == 1 {
-                textLabel.text = " 1 Other Trip"
+                rideDescriptionLabel.text = " 1 Other Trip"
             } else {
-                textLabel.text = String(otherTripsCount) + " Other Trips"
+                rideDescriptionLabel.text = String(otherTripsCount) + " Other Trips"
             }
         }
     }

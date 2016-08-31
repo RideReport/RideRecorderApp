@@ -1075,13 +1075,7 @@ class Trip : NSManagedObject {
     
     func displayStringWithTime()->String {
         let areaDescriptionString = self.areaDescriptionString
-        var description = String(format: "%@ %@ for %@%@.", self.climacon ?? "", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
-        
-        for reward in self.tripRewards.array as! [TripReward] {
-            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
-                description += ("\n\n" + emoji + " " + reward.descriptionText)
-            }
-        }
+        var description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
@@ -1091,7 +1085,7 @@ class Trip : NSManagedObject {
         var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         for reward in self.tripRewards.array as! [TripReward] {
-            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+            if let emoji = reward.displaySafeEmoji {
                 description += ("\n\n" + emoji + " " + reward.descriptionText)
             }
         }
