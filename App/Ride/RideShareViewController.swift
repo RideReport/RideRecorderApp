@@ -126,7 +126,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         
         self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(trip.startDate))
 
-        self.rideSummaryView.body = trip.displayString()
+        self.rideSummaryView.body = trip.fullDisplayString()
         self.rideSummaryView.hideControls(false)
 
     }

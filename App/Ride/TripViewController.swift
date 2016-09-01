@@ -105,7 +105,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 }
                 
                 self.rideSummaryView.dateString = dateTitle
-                self.rideSummaryView.body = trip.displayString()
+                self.rideSummaryView.body = trip.fullDisplayString()
                 if (tripChanged) {
                     self.rideSummaryView.hideControls(false)
                 }

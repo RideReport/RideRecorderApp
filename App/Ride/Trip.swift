@@ -149,8 +149,6 @@ class Trip : NSManagedObject {
                     self.sectionIdentifier = self.sectionIdentifierString()
                 }
 
-                #if NOTIFICATIONCONTENTEXTENSION
-                #else
                 dispatch_async(dispatch_get_main_queue()) {
                     // newly closed trips should be synced to healthkit
                     if (HealthKitManager.authorizationStatus == .Authorized) {
@@ -158,7 +156,6 @@ class Trip : NSManagedObject {
                         HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                     }
                 }
-                #endif
             }
         }
     }
@@ -197,13 +194,10 @@ class Trip : NSManagedObject {
                 if !oldValue {
                     dispatch_async(dispatch_get_main_queue()) {
                         // newly closed trips should be synced to healthkit
-                        #if NOTIFICATIONCONTENTEXTENSION
-                        #else
                         if (HealthKitManager.authorizationStatus == .Authorized) {
                             self.isSavedToHealthKit = false
                             HealthKitManager.sharedManager.saveOrUpdateTrip(self)
                         }
-                        #endif
                     }
                 }
                 
@@ -1013,8 +1007,6 @@ class Trip : NSManagedObject {
         return closestLocation
     }
     
-    #if NOTIFICATIONCONTENTEXTENSION
-    #else
     func sendTripCompletionNotificationLocally(clearRemoteMessage: Bool = false, forFutureDate scheduleDate: NSDate? = nil) {
         DDLogInfo("Sending notification…")
         
@@ -1028,7 +1020,13 @@ class Trip : NSManagedObject {
             self.currentStateNotification?.alertAction = "rate"
             self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
             
-            self.currentStateNotification?.userInfo = ["uuid" : self.uuid]
+            var userInfo = ["uuid" : self.uuid, "rideDescription" : self.displayString(), "rideEmoji" : self.climacon ?? self.activityType.emoji]
+            if let reward = self.tripRewards.firstObject as? TripReward {
+                userInfo["rewardEmoji"] = reward.displaySafeEmoji
+                userInfo["rewardDescription"] = reward.descriptionText
+            }
+            
+            self.currentStateNotification?.userInfo = userInfo
             
             if let date = scheduleDate {
                 self.currentStateNotification?.fireDate = date
@@ -1040,7 +1038,6 @@ class Trip : NSManagedObject {
             }
         }
     }
-    #endif
     
     var areaDescriptionString: String {
         get {
@@ -1082,6 +1079,13 @@ class Trip : NSManagedObject {
         return timeString
     }
     
+    func displayString()->String {
+        let areaDescriptionString = self.areaDescriptionString
+        var description = String(format: "%@%@.", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        
+        return description
+    }
+    
     func displayStringWithTime()->String {
         let areaDescriptionString = self.areaDescriptionString
         var description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
@@ -1089,7 +1093,7 @@ class Trip : NSManagedObject {
         return description
     }
     
-    func displayString()->String {
+    func fullDisplayString()->String {
         let areaDescriptionString = self.areaDescriptionString
         var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
@@ -1128,9 +1132,7 @@ class Trip : NSManagedObject {
         
         return false
     }
-    
-    #if NOTIFICATIONCONTENTEXTENSION
-    #else
+
     func cancelTripStateNotification(clearRemoteMessage: Bool = false) {
         // clear any remote push notifications
         if clearRemoteMessage {
@@ -1143,7 +1145,6 @@ class Trip : NSManagedObject {
             self.currentStateNotification = nil
         }
     }
-    #endif
     
     private func usableLocationsForSimplification()->[Location] {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()

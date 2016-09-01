@@ -6,9 +6,5 @@
 	<string>NSFileProtectionCompleteUntilFirstUserAuthentication</string>
 	<key>com.apple.developer.healthkit</key>
 	<true/>
-	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.com.Knock.RideReport</string>
-	</array>
 </dict>
 </plist>

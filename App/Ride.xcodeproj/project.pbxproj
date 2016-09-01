@@ -28,19 +28,6 @@
 		3D21CF531CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CF541CA9D5DB002C7108 /* ReportModeClassificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */; };
 		3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
-		3D265BFF1D77781A00405F69 /* ConnectedAppScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */; };
-		3D265C001D77781A00405F69 /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
-		3D265C011D77781A00405F69 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AEAF091AF2A30D00C04E7D /* Profile.swift */; };
-		3D265C021D77781A00405F69 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05661A01B2FE008F5371 /* Location.swift */; };
-		3D265C031D77781A00405F69 /* Prototrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8421418F1C3C8E19009DA851 /* Prototrip.swift */; };
-		3D265C041D77781A00405F69 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A05641A01B2F1008F5371 /* Trip.swift */; };
-		3D265C051D77781A00405F69 /* TripReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFA8B1D061F260077E591 /* TripReward.swift */; };
-		3D265C061D77781A00405F69 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
-		3D265C071D77781A00405F69 /* SensorDataCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */; };
-		3D265C081D77781A00405F69 /* ActivityTypePrediction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D71A5DCBA000EB3E94 /* ActivityTypePrediction.swift */; };
-		3D265C091D77781A00405F69 /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8429E5D91A5DCBFE00EB3E94 /* Incident.swift */; };
-		3D265C0A1D77782000405F69 /* Ride.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84D1555619D2733500316995 /* Ride.xcdatamodeld */; };
-		3D265C0B1D77783600405F69 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D1557919D2743900316995 /* CoreDataManager.swift */; };
 		3D265C0D1D777B4300405F69 /* NSData+GZIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844B0B901BEAAA4D0004C1BF /* NSData+GZIP.swift */; };
 		3D265C0E1D777B4300405F69 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3D265C101D777CB000405F69 /* NSDate+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8453BD551A42500500FE2645 /* NSDate+HBAdditions.swift */; };
@@ -1217,7 +1204,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -1250,7 +1237,7 @@
 						DevelopmentTeam = 9NRH28TN93;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -1602,25 +1589,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */,
-				3D265C001D77781A00405F69 /* ConnectedApp.swift in Sources */,
-				3D265C011D77781A00405F69 /* Profile.swift in Sources */,
-				3D265C021D77781A00405F69 /* Location.swift in Sources */,
-				3D265C031D77781A00405F69 /* Prototrip.swift in Sources */,
 				3D265C101D777CB000405F69 /* NSDate+HBAdditions.swift in Sources */,
-				3D265BFF1D77781A00405F69 /* ConnectedAppScope.swift in Sources */,
 				3D265C0D1D777B4300405F69 /* NSData+GZIP.swift in Sources */,
-				3D265C071D77781A00405F69 /* SensorDataCollection.swift in Sources */,
-				3D265C041D77781A00405F69 /* Trip.swift in Sources */,
-				3D265C091D77781A00405F69 /* Incident.swift in Sources */,
-				3D265C0A1D77782000405F69 /* Ride.xcdatamodeld in Sources */,
 				3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */,
 				3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */,
-				3D265C081D77781A00405F69 /* ActivityTypePrediction.swift in Sources */,
 				3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */,
-				3D265C051D77781A00405F69 /* TripReward.swift in Sources */,
-				3D265C0B1D77783600405F69 /* CoreDataManager.swift in Sources */,
 				3D265C0E1D777B4300405F69 /* Float+Meters.swift in Sources */,
-				3D265C061D77781A00405F69 /* SensorData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1889,7 +1863,6 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report Notification Content/Ride Report Notification Content.entitlements";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 9NRH28TN93;
 				ENABLE_BITCODE = NO;
@@ -1903,7 +1876,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Knock.RideReport.Ride-Report-Notification-Content";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "NOTIFICATIONCONTENTEXTENSION DEBUG";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
 				SWIFT_VERSION = 2.3;
 			};
@@ -1917,7 +1890,6 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Ride Report Notification Content/Ride Report Notification Content.entitlements";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 9NRH28TN93;
@@ -1928,7 +1900,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Knock.RideReport.Ride-Report-Notification-Content";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NOTIFICATIONCONTENTEXTENSION;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 2.3;

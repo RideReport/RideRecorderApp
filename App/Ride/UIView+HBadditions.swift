@@ -47,7 +47,7 @@ extension UIView {
         return self
     }
     
-    func popIn(completionHandler:() -> Void = {}) -> Self {
+    func popIn(duration: NSTimeInterval = 0.8, completionHandler:() -> Void = {}) -> Self {
         self.hidden = false
         
         CATransaction.begin()
@@ -60,7 +60,7 @@ extension UIView {
         
         let scaleAnimation = CAKeyframeAnimation(keyPath: "transform")
         scaleAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0, 1.01)
-        scaleAnimation.duration = 0.8
+        scaleAnimation.duration = duration
         scaleAnimation.values = [NSValue(CATransform3D: CATransform3DMakeScale(0.3, 0.3, 1.0)),
                                 NSValue(CATransform3D: CATransform3DMakeScale(1.5, 1.5, 1.0)),
                                 NSValue(CATransform3D: CATransform3DIdentity)]
@@ -68,7 +68,7 @@ extension UIView {
         
         let opacityAnimation = CABasicAnimation(keyPath: "opacity")
         opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints:0.18, 0.71, 0, 1.01)
-        opacityAnimation.duration = 0.8;
+        opacityAnimation.duration = duration;
         opacityAnimation.fromValue = NSNumber(float: 0.0)
         opacityAnimation.toValue =   NSNumber(float: 1.0)
         self.layer.addAnimation(opacityAnimation, forKey:"opacity")
