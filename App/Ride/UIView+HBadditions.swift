@@ -80,6 +80,63 @@ extension UIView {
         return self
     }
     
+    func sparkle(baseColor: UIColor, inRect rect: CGRect, completionHandler: () -> Void = {}) -> Self {
+        let lifetime : NSTimeInterval = 1.0
+        
+        let emitterMaker = { (color: UIColor) -> CAEmitterCell in
+            let cell = CAEmitterCell()
+            cell.birthRate = 150
+            cell.scale = 0.7
+            cell.velocity = 40
+            cell.lifetime = Float(lifetime)
+            cell.lifetimeRange = 0.3
+            cell.alphaRange = 0.8
+            cell.alphaSpeed = -0.7
+            cell.beginTime = 0
+            cell.emissionRange = CGFloat(2.0 * M_PI)
+            cell.scaleSpeed = -0.1
+            cell.spin = 2
+
+            cell.color = color.CGColor
+            cell.greenRange = 0.2
+            cell.greenSpeed = 0.1
+            cell.contents = UIImage(named: "tspark.png")?.CGImage
+            
+            return cell
+        }
+        
+        let particleEmitter = CAEmitterLayer()
+        particleEmitter.renderMode = kCAEmitterLayerAdditive
+        
+        particleEmitter.emitterPosition = CGPoint(x: rect.origin.x + rect.size.width / 2, y: rect.origin.y + rect.size.height / 2)
+        particleEmitter.emitterShape = kCAEmitterLayerRectangle
+        particleEmitter.emitterSize = CGSize(width: rect.size.width, height: rect.size.height/2)
+        particleEmitter.emitterCells = [emitterMaker(baseColor)]
+        
+        self.layer.addSublayer(particleEmitter)
+
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            completionHandler()
+            particleEmitter.birthRate = 0
+            self.delay(lifetime) {
+                particleEmitter.removeFromSuperlayer()
+            }
+        }
+        
+        
+        let opacityAnimation = CABasicAnimation(keyPath: "opacity")
+        opacityAnimation.timingFunction = CAMediaTimingFunction(controlPoints:0.18, 0.71, 0, 1.01)
+        opacityAnimation.duration = 0.2;
+        opacityAnimation.fromValue = NSNumber(float: 1.0)
+        opacityAnimation.toValue =   NSNumber(float: 1.0)
+        self.layer.addAnimation(opacityAnimation, forKey:"opacity")
+
+        CATransaction.commit()
+        
+        return self
+    }
+    
     func fadeIn(completionHandler: () -> Void = {}) -> Self {
         self.hidden = false
         

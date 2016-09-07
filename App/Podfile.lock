@@ -26,6 +26,7 @@ PODS:
   - KeychainAccess (2.3.6)
   - Kingfisher (2.4.2)
   - Mapbox-iOS-SDK (3.2.2)
+  - MapboxStatic.swift (0.6.0)
   - Mixpanel (2.9.9):
     - Mixpanel/Mixpanel (= 2.9.9)
   - Mixpanel/Mixpanel (2.9.9)
@@ -45,6 +46,7 @@ DEPENDENCIES:
   - KeychainAccess (from `git@github.com:kishikawakatsumi/KeychainAccess.git`, branch `swift-2.3`)
   - Kingfisher (from `git@github.com:onevcat/Kingfisher.git`, branch `swift2.3`)
   - Mapbox-iOS-SDK
+  - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`, tag `v0.6.0`)
   - Mixpanel
   - OAuthSwift
   - SwiftChart
@@ -63,6 +65,9 @@ EXTERNAL SOURCES:
   Kingfisher:
     :branch: swift2.3
     :git: git@github.com:onevcat/Kingfisher.git
+  MapboxStatic.swift:
+    :git: https://github.com/mapbox/MapboxStatic.swift.git
+    :tag: v0.6.0
 
 CHECKOUT OPTIONS:
   Alamofire:
@@ -77,6 +82,9 @@ CHECKOUT OPTIONS:
   Kingfisher:
     :commit: dfda5b03406b3b1bd098d2c21c64c9ef3925fe6e
     :git: git@github.com:onevcat/Kingfisher.git
+  MapboxStatic.swift:
+    :git: https://github.com/mapbox/MapboxStatic.swift.git
+    :tag: v0.6.0
 
 SPEC CHECKSUMS:
   Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
@@ -91,11 +99,12 @@ SPEC CHECKSUMS:
   KeychainAccess: 7f10e2ef998ddf954a64d5d608be08677774684d
   Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
   Mapbox-iOS-SDK: 117ba1b0ed31107d3fe5826878a0f1531775aedc
+  MapboxStatic.swift: 3185804edec6bea74be7d74fb3ca9a666009f7a2
   Mixpanel: 818d1940c2d9402453b349545022a86968097f57
   OAuthSwift: 8895267fbd6437a52aea26541572a617c7a8c7c1
   SwiftChart: b76d4607022107a46473aa29a93c867872253d68
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: d18593cee0cf936705451db211ff34398083b4d9
+PODFILE CHECKSUM: 64a61a307ccf8ff0663c488049180e5dead0241b
 
 COCOAPODS: 1.0.1

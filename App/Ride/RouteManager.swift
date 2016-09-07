@@ -268,7 +268,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             stoppedTrip.close() {
-                stoppedTrip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(15))
+                stoppedTrip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
                 APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
                     switch response.result {
                     case .Success(_):

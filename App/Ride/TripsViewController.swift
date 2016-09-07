@@ -855,7 +855,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
             alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
-                trip.sendTripCompletionNotificationLocally(forFutureDate: NSDate().secondsFrom(5))
+                trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
             }))
             alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.Default, handler: { (_) in
                 for sensorCollection in trip.sensorDataCollections {

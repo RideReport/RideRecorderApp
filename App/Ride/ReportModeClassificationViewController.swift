@@ -95,7 +95,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         
         self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(trip.startDate))
 
-        self.rideSummaryView.body = trip.notificationString()!
+        self.rideSummaryView.body = trip.notificationString()
         self.rideSummaryView.hideControls(false)
 
     }
