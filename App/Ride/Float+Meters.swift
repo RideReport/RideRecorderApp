@@ -21,7 +21,11 @@ extension Float {
                 if (self < METERS_CUTOFF) {
                     format = "\(self.stringWithDecimals(0)) meters"
                 } else {
-                    format = "\(self.kilometers.stringWithDecimals(1)) km";
+                    if NSLocale.isGB() {
+                        format = "\(self.miles.stringWithDecimals(1)) miles";
+                    } else {
+                        format = "\(self.kilometers.stringWithDecimals(1)) km";
+                    }
                 }
             } else { // assume Imperial / U.S.
                 if (feet < FEET_CUTOFF) {
@@ -63,5 +67,13 @@ extension NSLocale {
     class func isMetric() -> Bool {
         let locale = NSLocale.currentLocale()
         return locale.objectForKey(NSLocaleUsesMetricSystem) as! Bool
+    }
+    
+    class func isGB()-> Bool {
+        if let countryString = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as? String {
+            return countryString == "GB"
+        }
+        
+        return false
     }
 }
