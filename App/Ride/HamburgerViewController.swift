@@ -9,6 +9,7 @@
 import Foundation
 import ECSlidingViewController
 import Mixpanel
+import MessageUI
 
 class HamburgerNavController: UINavigationController {
     
@@ -23,10 +24,11 @@ class HamburgerNavController: UINavigationController {
     
 }
 
-class HamburgerViewController: UITableViewController {
+class HamburgerViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
     @IBOutlet weak var connectedAppsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
+    @IBOutlet weak var sendReportTableViewCell: UITableViewCell!
     @IBOutlet weak var debugCrazyPersonTableViewCell: UITableViewCell!
     
     override func viewDidLoad() {
@@ -97,9 +99,9 @@ class HamburgerViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         #if DEBUG
-            return 4
+            return 5
         #else
-            return 4
+            return 5
         #endif
     }
     
@@ -120,7 +122,9 @@ class HamburgerViewController: UITableViewController {
             return
         }
         
-        if (cell == self.debugCrazyPersonTableViewCell) {
+        if (cell == self.sendReportTableViewCell) {
+            self.sendLogFile()
+        } else if (cell == self.debugCrazyPersonTableViewCell) {
             #if DEBUG
                 let debugVerbosityMode = NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode")
                 NSUserDefaults.standardUserDefaults().setBool(!debugVerbosityMode, forKey: "DebugVerbosityMode")
@@ -201,6 +205,44 @@ class HamburgerViewController: UITableViewController {
             
             self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
+    }
+    
+    func sendLogFile() {
+        guard MFMailComposeViewController.canSendMail() else {
+            let alert = UIAlertView(title:"No email account", message: "Whoops, it looks like you don't have an email account configured on this iPhone", delegate: nil, cancelButtonTitle:"Ima Fix It")
+            alert.show()
+            return
+        }
+        
+        let fileInfos = AppDelegate.appDelegate().fileLogger.logFileManager.sortedLogFileInfos()
+        if (fileInfos == nil || fileInfos.count == 0) {
+            return
+        }
+        
+        let versionNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as? String ?? "Unknown Version"
+        let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as? String ?? ""
+        let osNumber = UIDevice.currentDevice().systemVersion
+        let phoneModel = UIDevice.currentDevice().deviceModel()
+        let body = String(format: "Tell us briefly what happened.\n\n\n\n\n=====================\n Version:%@ (%@)\niOS Version: %@\niPhone Model: %@", versionNumber, buildNumber, osNumber, phoneModel)
+        
+        let composer = MFMailComposeViewController()
+        composer.setSubject("Ride Report Bug Report")
+        composer.setToRecipients(["logs@ride.report"])
+        composer.mailComposeDelegate = self
+        composer.setMessageBody(body as String, isHTML: false)
+        
+        for fileInfo in fileInfos {
+            if let filePath = fileInfo.filePath, let fileData = NSData(contentsOfURL: NSURL(fileURLWithPath: filePath)) {
+                composer.addAttachmentData(fileData, mimeType: "text/plain", fileName: fileInfo.fileName)
+            }
+        }
+        
+        
+        self.presentViewController(composer, animated:true, completion:nil)
+    }
+    
+    func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 
