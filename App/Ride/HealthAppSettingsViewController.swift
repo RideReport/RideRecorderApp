@@ -19,7 +19,7 @@ class HealthAppSettingsViewController : UIViewController{
         if #available(iOS 10.0, *) {
             if WCSession.isSupported() {
                 // if a watch is paired
-                self.detailLabel.text = "Ride Report automatically saves all your rides to the Health App and your Apple Watch."
+                self.detailLabel.text = "Ride Report automatically saves all your rides to your Apple Watch and the Health App."
             }
         }
     }
@@ -54,7 +54,13 @@ class HealthAppSettingsViewController : UIViewController{
     }
     
     @IBAction func disconnect(sender: AnyObject) {
-        let alertController = UIAlertController(title:nil, message: "Your rides will no longer automatically saved into the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        var message = "Your rides will no longer automatically saved into the Health App."
+        if #available(iOS 10.0, *) {
+            if WCSession.isSupported() {
+                message = "Your rides will no longer automatically saved to your Apple Watch."
+            }
+        }
+        let alertController = UIAlertController(title:nil, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
         alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.Destructive, handler: { (_) in
             HealthKitManager.shutdown()
             NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")

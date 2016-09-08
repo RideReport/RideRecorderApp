@@ -33,8 +33,8 @@ class HealthKitSetupViewController : UIViewController {
         if #available(iOS 10.0, *) {
             if WCSession.isSupported() {
                 // if a watch is paired
-                self.titleLabel.text = "Health App and Apple Watch"
-                self.detailLabel.text = "Trying to fill your rings? Ride Report can automatically save your rides to the Health App, so you get workout credit on your Apple Watch."
+                self.titleLabel.text = "Save Rides to Apple Watch"
+                self.detailLabel.text = "Trying to fill your rings? Ride Report can automatically log your rides as exercise on your Apple Watch and the Health App."
             }
         }
     }
@@ -49,6 +49,11 @@ class HealthKitSetupViewController : UIViewController {
         self.disclaimerLabel.hidden = true
         self.titleLabel.text = "Saving Existing Rides"
         self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
+        if #available(iOS 10.0, *) {
+            if WCSession.isSupported() {
+                self.detailLabel.text = "We're saving all your rides to your Apple Watch. Future rides will be saved automatically."
+            }
+        }
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(HealthKitSetupViewController.cancel))
         
@@ -83,7 +88,13 @@ class HealthKitSetupViewController : UIViewController {
     }
     
     @IBAction func cancel(sender: AnyObject) {
-        let alertController = UIAlertController(title:nil, message: "Future rides will not be automatically saved to the Health App.", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        var message = "Future rides will not be automatically saved to the Health App."
+        if #available(iOS 10.0, *) {
+            if WCSession.isSupported() {
+                message = "Future rides will not be automatically saved to your Apple Watch."
+            }
+        }
+        let alertController = UIAlertController(title:nil, message: message, preferredStyle: UIAlertControllerStyle.ActionSheet)
         alertController.addAction(UIAlertAction(title: "Cancel Saving", style: UIAlertActionStyle.Destructive, handler: { (_) in
             self.didCancel = true
             HealthKitManager.shutdown()

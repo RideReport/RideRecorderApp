@@ -13,38 +13,8 @@ class SetupFinishedViewController: SetupChildViewController {
     
     @IBOutlet weak var helperTextLabel : UILabel!
     
-    override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
-        super.childViewControllerWillPresent(userInfo)
-        
-        let _ = self.view.subviews // hack for a gross crash.
-        
-        if let finishType = userInfo?["finishType"] as! String? {
-            if (finishType == "InitialSetupSkippedAccount") {
-                Mixpanel.sharedInstance().track(
-                    "finishedSetup",
-                    properties: ["createdAccount": "false"]
-                )
-                
-                self.helperTextLabel.markdownStringValue = "**You're ready to ride!** You can create an account later if you change your mind."
-            } else if (finishType == "InitialSetupCreatedAccount") {
-                Mixpanel.sharedInstance().track(
-                    "finishedSetup",
-                    properties: ["createdAccount": "true"]
-                )
-                
-                self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
-            } else if (finishType == "CreateAccountSkippedAccount") {
-                self.helperTextLabel.markdownStringValue = "Cool. You can create an account later if you change your mind."
-            } else if (finishType == "CreatedAccountCreatedAccount") {
-                Mixpanel.sharedInstance().track(
-                    "createdAccount"
-                )
-                
-                self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
-            }
-        } else {
-            self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
-        }
+    override func viewDidLoad() {
+        self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
     }
     
     override func viewDidAppear(animated: Bool) {

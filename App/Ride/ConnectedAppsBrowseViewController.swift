@@ -218,8 +218,8 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                     // if a watch is paired
                     if let nameLabel = tableCell.viewWithTag(1) as? UILabel,
                         descriptionLabel = tableCell.viewWithTag(2) as? UILabel {
-                        nameLabel.text = "Health App + Apple Watch"
-                        descriptionLabel.text = "Automatically save your rides to Apple Watch and the Health App."
+                        nameLabel.text = "Apple Watch"
+                        descriptionLabel.text = "Automatically save your rides to your Apple Watch."
                     }
                 }
             }

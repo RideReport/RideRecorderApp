@@ -49,6 +49,16 @@ class SetupViewController: UINavigationController {
             self.myViewControllers.append(setupPermissionVC)
         }
         
+        if (APIClient.sharedClient.accountVerificationStatus != .Verified) {
+            let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
+            self.setupVC(setupCreateProfile)
+            
+            let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
+            self.setupVC(setupConfirmEmail)
+
+            self.myViewControllers.appendContentsOf([setupCreateProfile, setupConfirmEmail])
+        }
+        
         if #available(iOS 10.0, *) {
             if (WCSession.isSupported() && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
                 // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
@@ -58,17 +68,7 @@ class SetupViewController: UINavigationController {
             }
         }
         
-        if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-            self.myViewControllers.append(setupFinished)
-        } else {
-            let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
-            self.setupVC(setupCreateProfile)
-            
-            let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
-            self.setupVC(setupConfirmEmail)
-
-            self.myViewControllers.appendContentsOf([setupCreateProfile, setupConfirmEmail, setupFinished])
-        }
+        self.myViewControllers.append(setupFinished)
         
         self.myViewControllers.first!.childViewControllerWillPresent()
         
@@ -87,7 +87,7 @@ class SetupViewController: UINavigationController {
         
         self.myViewControllers = [setupCreateProfile, setupConfirmEmail, setupFinished]
         
-        self.myViewControllers.first!.childViewControllerWillPresent(["isCreatingProfileOutsideGettingStarted": true])
+        self.myViewControllers.first!.childViewControllerWillPresent()
         
         self.setViewControllers([self.myViewControllers.first!], animated: false)
     }
@@ -96,15 +96,16 @@ class SetupViewController: UINavigationController {
         vc.parent = self
     }
     
-    func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil) {
+    func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil, skipNext: Bool = false) {
         if let button = sender as? UIControl { button.userInteractionEnabled = false }
         
         let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
+        let interval = skipNext ? 2 : 1
         
-        if (pageNumber == nil || (pageNumber! + 1) >= self.myViewControllers.count) {
+        if (pageNumber == nil || (pageNumber! + interval) >= (self.myViewControllers.count - 1)) {
             self.done()
         } else {
-            let nextPage = self.myViewControllers[pageNumber! + 1]
+            let nextPage = self.myViewControllers[pageNumber! + interval]
             nextPage.childViewControllerWillPresent(userInfo)
             let transition = CATransition()
             transition.duration = 0.6

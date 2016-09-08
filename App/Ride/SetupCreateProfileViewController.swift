@@ -56,7 +56,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     func skip() {
-        self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreateAccountSkippedAccount" : "InitialSetupSkippedAccount"])
+        self.parent?.nextPage(self, userInfo: nil, skipNext: true)
     }
     
     func create() {

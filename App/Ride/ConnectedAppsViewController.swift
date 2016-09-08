@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import ECSlidingViewController
+import WatchConnectivity
 
 class ConnectedAppsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     private var fetchedResultsController : NSFetchedResultsController! = nil
@@ -125,6 +126,14 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
         if indexPath.section == 0 {
             // health kit cell
             let tableCell = self.tableView.dequeueReusableCellWithIdentifier("SyncWithHealthAppCell", forIndexPath: indexPath)
+            if #available(iOS 10.0, *) {
+                if WCSession.isSupported() {
+                    // if a watch is paired
+                    if let nameLabel = tableCell.viewWithTag(1) as? UILabel {
+                        nameLabel.text = "Apple Watch"
+                    }
+                }
+            }
             
             return tableCell
         } else if indexPath.section == 1 {

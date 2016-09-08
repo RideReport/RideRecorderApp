@@ -15,7 +15,6 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     
     private var pollTimer : NSTimer? = nil
     private var timeOfInitialPresesntation : NSDate? = nil
-    private var isCreatingProfileOutsideGettingStarted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,12 +37,6 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         let _ = self.view.subviews // hack for a gross crash.
         
         self.timeOfInitialPresesntation = NSDate()
-        
-        if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
-            self.isCreatingProfileOutsideGettingStarted = true
-        } else {
-            self.isCreatingProfileOutsideGettingStarted = false
-        }
         
         if let shortCode = userInfo?["shortcodeLength"] as! Int? {
             self.passcodeInputView.maximumLength = UInt(shortCode)
@@ -99,7 +92,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     func pollAccountStatus() {
         APIClient.sharedClient.updateAccountStatus().apiResponse() { (response) in
             if (APIClient.sharedClient.accountVerificationStatus == .Verified) {
-                self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+                self.parent?.nextPage(self)
             }
         }
     }
@@ -132,7 +125,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         APIClient.sharedClient.verifyToken(passcodeInputView.passcode).apiResponse() { (response) in
             switch response.result {
             case .Success:
-                self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+                self.parent?.nextPage(self)
             case .Failure:
                 if let httpResponse = response.response where httpResponse.statusCode == 404 {
                     passcodeInputView.errorMessage = "That's not it."
