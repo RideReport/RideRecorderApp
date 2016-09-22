@@ -94,7 +94,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         switch(type) {
             
         case .Update:
-            if let path = indexPath, app = self.fetchedResultsController.objectAtIndexPath(path) as? ConnectedApp,
+            if let path = newIndexPath, app = self.fetchedResultsController.objectAtIndexPath(path) as? ConnectedApp,
                 cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)) {
                 configureCell(cell, app:app)
             }
