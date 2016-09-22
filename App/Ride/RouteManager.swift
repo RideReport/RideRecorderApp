@@ -615,14 +615,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        for location in locs {
-            DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-            
-            let loc = Location(location: location, prototrip: self.currentPrototrip!)
-            if let collection = self.currentMotionMonitoringSensorDataCollection {
-                loc.sensorDataCollection = collection
+        if let protoTrip = self.currentPrototrip {
+            for location in locs {
+                DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
+                
+                let loc = Location(location: location, prototrip: protoTrip)
+                if let collection = self.currentMotionMonitoringSensorDataCollection {
+                    loc.sensorDataCollection = collection
+                }
             }
         }
+        
         CoreDataManager.sharedManager.saveContext()
     }
     
