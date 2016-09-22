@@ -145,7 +145,7 @@ class Profile : NSManagedObject {
         } else if totalMiles > 37 {
             return ("🐄", String(format: "%@ (across Vermont %.1f times)!", self.metersBiked.distanceString, totalMiles/37))
         } else {
-            return ("🐣", String(format: "%@", totalMiles))
+            return ("🐣", String(format: "%.1f", totalMiles))
         }
     }
     
