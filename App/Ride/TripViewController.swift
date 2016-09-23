@@ -19,6 +19,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     @IBOutlet weak var modeSelectorView: ModeSelectorView!
     
     var mapInfoIsDismissed : Bool = false
+    var hasRequestedTripInfo : Bool = false
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
@@ -33,7 +34,8 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 }
                 
                 if (strongSelf.selectedTrip != nil) {
-                    if (strongSelf.selectedTrip.locationsNotYetDownloaded || !strongSelf.selectedTrip.summaryIsSynced) {
+                    if (!strongSelf.hasRequestedTripInfo && (strongSelf.selectedTrip.locationsNotYetDownloaded || !strongSelf.selectedTrip.summaryIsSynced)) {
+                        strongSelf.hasRequestedTripInfo = true
                         APIClient.sharedClient.getTrip(strongSelf.selectedTrip).apiResponse({ [weak self] (_) -> Void in
                             guard let reallyStrongSelf = self else {
                                 return
