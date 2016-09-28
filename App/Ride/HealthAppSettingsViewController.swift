@@ -17,7 +17,7 @@ class HealthAppSettingsViewController : UIViewController{
         super.viewDidLoad()
         
         if #available(iOS 10.0, *) {
-            if WCSession.isSupported() {
+            if WatchManager.sharedManager.paired {
                 // if a watch is paired
                 self.detailLabel.text = "Ride Report automatically saves all your rides to your Apple Watch and the Health App."
             }
@@ -56,7 +56,7 @@ class HealthAppSettingsViewController : UIViewController{
     @IBAction func disconnect(sender: AnyObject) {
         var message = "Your rides will no longer automatically saved into the Health App."
         if #available(iOS 10.0, *) {
-            if WCSession.isSupported() {
+            if WatchManager.sharedManager.paired {
                 message = "Your rides will no longer automatically saved to your Apple Watch."
             }
         }

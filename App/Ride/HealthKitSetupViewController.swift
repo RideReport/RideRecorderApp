@@ -31,7 +31,7 @@ class HealthKitSetupViewController : UIViewController {
         self.doneButton.hidden = true
         
         if #available(iOS 10.0, *) {
-            if WCSession.isSupported() {
+            if WatchManager.sharedManager.paired {
                 // if a watch is paired
                 self.titleLabel.text = "Save Rides to Apple Watch"
                 self.detailLabel.text = "Trying to fill your rings? Ride Report can automatically log your rides as exercise on your Apple Watch and the Health App."
@@ -50,7 +50,7 @@ class HealthKitSetupViewController : UIViewController {
         self.titleLabel.text = "Saving Existing Rides"
         self.detailLabel.text = "We're saving all your rides into the Health App. Future rides will be saved automatically."
         if #available(iOS 10.0, *) {
-            if WCSession.isSupported() {
+            if WatchManager.sharedManager.paired {
                 self.detailLabel.text = "We're saving all your rides to your Apple Watch. Future rides will be saved automatically."
             }
         }
@@ -90,7 +90,7 @@ class HealthKitSetupViewController : UIViewController {
     @IBAction func cancel(sender: AnyObject) {
         var message = "Future rides will not be automatically saved to the Health App."
         if #available(iOS 10.0, *) {
-            if WCSession.isSupported() {
+            if WatchManager.sharedManager.paired {
                 message = "Future rides will not be automatically saved to your Apple Watch."
             }
         }
@@ -157,7 +157,7 @@ class HealthKitSetupViewController : UIViewController {
             self.titleLabel.text = "You're done!"
             
             if #available(iOS 10.0, *) {
-                if WCSession.isSupported() {
+                if WatchManager.sharedManager.paired {
                     // if a watch is paired
                     self.detailLabel.text = "Your rides will be automatically saved to your Apple Watch and the Health App."
                 }

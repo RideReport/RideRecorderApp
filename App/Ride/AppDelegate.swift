@@ -67,6 +67,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         CoreDataManager.startup()
         APIClient.startup()
         RandomForestManager.startup()
+        if #available(iOS 10.0, *) {
+            WatchManager.startup()
+        }
         
         if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
             HealthKitManager.startup()

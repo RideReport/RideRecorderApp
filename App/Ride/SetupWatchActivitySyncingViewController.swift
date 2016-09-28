@@ -66,11 +66,11 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
         self.ringsView.setActivitySummary(summary, animated: true)
     }
     
-    @IBAction override func next(sender: AnyObject) {
+    @IBAction override func next(_ sender: AnyObject) {
         super.next(sender)
     }
     
-    @IBAction func sync(sender: AnyObject) {
+    @IBAction func sync(_ sender: AnyObject) {
         self.detailLabel.fadeOut()
         self.connectButton.fadeOut()
         self.skipButton.fadeOut()
@@ -118,7 +118,7 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
         }
     }
     
-    @IBAction func cancel(sender: AnyObject) {
+    @IBAction func cancel(_ sender: AnyObject) {
         let alertController = UIAlertController(title:nil, message: "Future rides will not be automatically saved to to your Apple Watch.", preferredStyle: UIAlertControllerStyle.ActionSheet)
         alertController.addAction(UIAlertAction(title: "Cancel Saving", style: UIAlertActionStyle.Destructive, handler: { (_) in
             self.didCancel = true

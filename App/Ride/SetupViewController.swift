@@ -23,6 +23,7 @@ class SetupChildViewController : UIViewController {
 
 class SetupViewController: UINavigationController {
     var myViewControllers : [SetupChildViewController]!
+    private var hasAddedWatchkitToSetup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,15 +60,6 @@ class SetupViewController: UINavigationController {
             self.myViewControllers.appendContentsOf([setupCreateProfile, setupConfirmEmail])
         }
         
-        if #available(iOS 10.0, *) {
-            if (WCSession.isSupported() && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
-                // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
-                let healthKitVC = self.storyboard!.instantiateViewControllerWithIdentifier("SetupWatchActivitySyncingViewController") as! SetupChildViewController
-                self.setupVC(healthKitVC)
-                self.myViewControllers.append(healthKitVC)
-            }
-        }
-        
         self.myViewControllers.append(setupFinished)
         
         self.myViewControllers.first!.childViewControllerWillPresent()
@@ -97,6 +89,19 @@ class SetupViewController: UINavigationController {
     }
     
     func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil, skipNext: Bool = false) {
+        if (!hasAddedWatchkitToSetup) {
+            // defer this to allow the session to activate.
+            hasAddedWatchkitToSetup = true
+            if #available(iOS 10.0, *) {
+                if (WatchManager.sharedManager.paired && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+                    // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
+                    let healthKitVC = self.storyboard!.instantiateViewControllerWithIdentifier("SetupWatchActivitySyncingViewController") as! SetupChildViewController
+                    self.setupVC(healthKitVC)
+                    self.myViewControllers.insert(healthKitVC, atIndex: (self.myViewControllers.count - 1))
+                }
+            }
+        }
+        
         if let button = sender as? UIControl { button.userInteractionEnabled = false }
         
         let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)

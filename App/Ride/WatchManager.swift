@@ -49,72 +49,31 @@ class WatchManager : NSObject, WCSessionDelegate {
         
     }
     
-    private func startup() {
+    var paired: Bool {
+        get {
+            return WCSession.defaultSession().paired
+        }
     }
     
-    func getActiveWCSession(completion: (WCSession)->Void) {
+    private func startup() {
         guard WCSession.isSupported() else { return }
         
         let wcSession = WCSession.defaultSession()
         wcSession.delegate = self
         
-        if wcSession.activationState == .Activated {
-            completion(wcSession)
-        } else {
+        if wcSession.activationState != .Activated {
             wcSession.activateSession()
-            wcSessionActivationCompletion = completion
         }
-    }
-    
-    func endRideWorkout() {
-        getActiveWCSession { (wcSession) in
-            if wcSession.activationState == .Activated && wcSession.watchAppInstalled {
-                do {
-                    try wcSession.updateApplicationContext(["tripState": "ended"])
-                } catch let error {
-                    // log the error or something i guess
-                }
-            }
-        }
-    }
-    
-    func updateWorkoutDistance(distance: Meters) {
-        getActiveWCSession { (wcSession) in
-            if wcSession.activationState == .Activated && wcSession.watchAppInstalled {
-                do {
-                    try wcSession.updateApplicationContext(["tripDistance": distance])
-                } catch let error {
-                    // log the error or something i guess
-                }
-            }
-        }
-    }
-    
-    func beginRideWorkout() {
-        let workoutConfiguration = HKWorkoutConfiguration()
-        workoutConfiguration.activityType = .Cycling
-        workoutConfiguration.locationType = .Outdoor
-        
-        self.healthStore.startWatchAppWithWorkoutConfiguration(workoutConfiguration, completion: { (success, error) in
-            DDLogWarn(String(format: "Got error starting workout: %@", error ?? ""))
-        })
     }
     
     // MARK: WCSessionDelegate
     
     func session(session: WCSession, activationDidCompleteWithState activationState: WCSessionActivationState, error: NSError?) {
-        if activationState == .Activated {
-            if let activationCompletion = wcSessionActivationCompletion {
-                activationCompletion(session)
-                wcSessionActivationCompletion = nil
-            }
-        }
+        //
     }
     
     func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
-        if let state = message["State"] as? String {
-            //
-        }
+        //
     }
     
     func sessionDidBecomeInactive(session: WCSession) {

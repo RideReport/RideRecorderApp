@@ -127,7 +127,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             // health kit cell
             let tableCell = self.tableView.dequeueReusableCellWithIdentifier("SyncWithHealthAppCell", forIndexPath: indexPath)
             if #available(iOS 10.0, *) {
-                if WCSession.isSupported() {
+                if WatchManager.sharedManager.paired {
                     // if a watch is paired
                     if let nameLabel = tableCell.viewWithTag(1) as? UILabel {
                         nameLabel.text = "Apple Watch"

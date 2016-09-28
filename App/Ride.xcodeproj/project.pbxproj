@@ -107,6 +107,7 @@
 		3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */; };
 		3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */; };
 		3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DA1EFE41C8F94EB002B12DB /* silence.mp3 */; };
+		3DA2B0041D9B463700F7D448 /* WatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709D1D5022C300862545 /* WatchManager.swift */; };
 		3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
@@ -1658,6 +1659,7 @@
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				844B0B911BEAAA4D0004C1BF /* NSData+GZIP.swift in Sources */,
 				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
+				3DA2B0041D9B463700F7D448 /* WatchManager.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,
 				3D2AB3861CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				84C29F6D1BDEDD070003A26B /* ClearButton.swift in Sources */,
