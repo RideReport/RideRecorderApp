@@ -425,7 +425,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.startLocationTrackingIfNeeded()
-        self.locationManager.stopMonitoringSignificantLocationChanges()
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
         #if DEBUG
@@ -471,8 +470,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else {
             DDLogInfo("Did not setup new geofence!")
         }
-        
-        self.locationManager.startMonitoringSignificantLocationChanges()
         
         if let prototrip = self.currentPrototrip {
             prototrip.managedObjectContext?.deleteObject(prototrip)
