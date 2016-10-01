@@ -72,7 +72,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         self.notificationHelperTextLabel.fadeOut()
         
         if #available(iOS 10.0, *) {
-            helperTextLabel.animatedSetMarkdownStringValue("Now tap the **View** button.")
+            helperTextLabel.animatedSetMarkdownStringValue("Ok, tap the **View** button.")
         } else {
             helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a great ride, **thumbs down** if something stressed you out.")
         }
@@ -94,9 +94,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     
     private func showTripRichNotification() {
         self.buttonContainerView.popIn()
-        helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a great ride, **thumbs down** if something stressed you out.")
-        
-        
+        helperTextLabel.animatedSetMarkdownStringValue("Now rate your trip! Was it a **Great ride**, or… **Not Great**?")
     }
     
     func didTapActionButton(view: RideSummaryView) {
