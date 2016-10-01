@@ -65,7 +65,8 @@ class AnimatedGradientLabel : UILabel {
     
     override var text: String? {
         didSet {
-            self.maskinglabel.attributedText = self.attributedText
+            self.maskinglabel.text = self.text
+            self.reloadAnimations()
         }
     }
     

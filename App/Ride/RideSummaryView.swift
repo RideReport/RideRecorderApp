@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AudioToolbox
 
 @objc protocol RideSummaryViewDelegate {
     optional func didOpenControls(view: RideSummaryView)
@@ -16,6 +17,7 @@ import Foundation
     optional func didTapActionButton(view: RideSummaryView)
     optional func didTapClearButton(view: RideSummaryView)
     optional func didTapShareButton(view: RideSummaryView)
+    optional func didDeepTouchSummaryView(view: RideSummaryView)
 }
 
 @IBDesignable class RideSummaryView : UIView, UIScrollViewDelegate {
@@ -58,12 +60,6 @@ import Foundation
         }
     }
     
-    @IBInspectable var textColor: UIColor = ColorPallete.sharedPallete.almostWhite {
-        didSet {
-            reloadUI()
-        }
-    }
-    
     enum RideSummaryViewStyle : NSInteger {
         case LockScreenStyle = 1
         case AppStyle
@@ -82,6 +78,10 @@ import Foundation
         didSet {
             reloadUI()
         }
+    }
+    
+    override func canBecomeFocused() -> Bool {
+        return !self.allowsScrolling
     }
     
     var showsEditButton : Bool = false {
@@ -105,13 +105,22 @@ import Foundation
         }
     }
     
+    var allowsScrolling : Bool = true {
+        didSet {
+            self.scrollView.scrollEnabled = allowsScrolling
+            self.scrollView.delaysContentTouches = allowsScrolling
+            self.scrollView.exclusiveTouch = allowsScrolling
+            self.scrollView.userInteractionEnabled = allowsScrolling
+        }
+    }
+    
     let buttonWidth : CGFloat = 78.0
     
     weak var delegate : RideSummaryViewDelegate? = nil
     
     var isShowingControls = false
     
-    let insetX : CGFloat = 15
+    var insetX : CGFloat = 15
     
     var scrollView : UIScrollView!
     var controlsView : UIView!
@@ -128,9 +137,12 @@ import Foundation
     var slideLabel : UILabel!
     
     var lineViewTop : UIView!
+    var titleBar : UIView!
     var lineViewBottom : UIView!
     
     var appIconView : UIImageView!
+    
+    private var didFireDeepTouchForTouchEvent = false
     
     private var heightConstraint : NSLayoutConstraint! = nil
     
@@ -158,7 +170,10 @@ import Foundation
         contentView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.01)
         scrollView.addSubview(contentView)
         
-        appIconView = UIImageView(frame: CGRectMake(insetX, 10, 20, 20))
+        self.titleBar = UIView()
+        contentView.addSubview(self.titleBar)
+        
+        appIconView = UIImageView()
         appIconView.layer.cornerRadius = 3
         appIconView.layer.masksToBounds = true
         appIconView.backgroundColor = UIColor.clearColor()
@@ -203,7 +218,6 @@ import Foundation
         editButton = UIButton()
         editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         editButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
         editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         editButton.addTarget(self, action: #selector(RideSummaryView.pressedEditButton), forControlEvents: UIControlEvents.TouchUpInside)
         controlsView.addSubview(editButton)
@@ -277,12 +291,14 @@ import Foundation
 
         self.shareButton.frame = CGRect(x: self.bounds.width - self.shareButton.frame.size.width - 10, y: (self.bounds.height - self.shareButton.frame.size.height)/2.0, width: self.shareButton.frame.size.width, height: self.shareButton.frame.size.height)
         
-        self.editButton.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: self.bounds.height)
+        self.editButton.frame = CGRect(x: buttonOffsetX, y: 0, width: buttonWidth, height: self.bounds.height)
         self.destructiveButton.frame = CGRect(x: self.totalButtonWidth - 2 * buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
         self.actionButton.frame = CGRect(x: self.totalButtonWidth - buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
         
         self.lineViewTop.frame = CGRectMake(insetX, 0.0, self.bounds.width + self.totalButtonWidth, 1.0)
         self.lineViewBottom.frame = CGRectMake(insetX, self.bounds.height - 1, self.bounds.width + self.totalButtonWidth, 1.0)
+        
+        self.titleBar.frame = CGRectMake(0, 0.0, self.bounds.width, 30)
                 
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
         self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
@@ -291,34 +307,50 @@ import Foundation
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
     }
     
+    private var buttonOffsetX : CGFloat {
+        get {
+            if #available(iOS 10.0, *) {
+                return 6
+            }
+            return 0
+        }
+    }
+    
     private var totalButtonWidth : CGFloat {
         get {
             if (self.showsEditButton && self.showsActionButon && self.showsDestructiveActionButon) {
-                return buttonWidth * 3
+                return buttonWidth * 3 + buttonOffsetX
             } else if (self.showsEditButton && self.showsActionButon) {
-                return buttonWidth * 2
+                return buttonWidth * 2 + buttonOffsetX
             } else if (self.showsEditButton && self.showsDestructiveActionButon) {
-                return buttonWidth * 2
+                return buttonWidth * 2 + buttonOffsetX
             } else if (self.showsDestructiveActionButon && self.showsActionButon) {
-                return buttonWidth * 2
+                return buttonWidth * 2 + buttonOffsetX
             }
             
-            return buttonWidth
+            return buttonWidth + buttonOffsetX
         }
     }
     
     func reloadUI() {
-        appNameLabel.textColor = self.textColor
-        dateLabel.textColor = self.textColor.colorWithAlphaComponent(0.4)
-        bodyLabel.textColor = self.textColor
-        self.lineViewTop.backgroundColor = self.textColor.colorWithAlphaComponent(0.2)
-        self.lineViewBottom.backgroundColor = self.textColor.colorWithAlphaComponent(0.2)
-        slideLabel.textColor = self.textColor.colorWithAlphaComponent(0.4)
-        shareButton.tintColor = self.textColor
+        var textColor = ColorPallete.sharedPallete.almostWhite
+        if #available(iOS 10.0, *) {
+            textColor = UIColor.blackColor()
+        }
+        
+        appNameLabel.textColor = textColor
+        dateLabel.textColor = textColor.colorWithAlphaComponent(0.4)
+        bodyLabel.textColor = textColor
+        self.lineViewTop.backgroundColor = textColor.colorWithAlphaComponent(0.2)
+        self.titleBar.hidden = true
+        self.lineViewBottom.backgroundColor = textColor.colorWithAlphaComponent(0.2)
+        slideLabel.textColor = textColor.colorWithAlphaComponent(0.4)
+        shareButton.tintColor = textColor
         
         destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
         actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)
         editButton.setTitle(self.editTitle, forState: UIControlState.Normal)
+        editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
         
         appNameLabel.text = self.appName
         dateLabel.text = self.dateString
@@ -355,8 +387,10 @@ import Foundation
 
         
         var insetLeft : CGFloat = 46
+        var insetLeftBody : CGFloat = 46
         let insetRight : CGFloat = 4
         var insetY : CGFloat = 8
+        var bodySpacingY : CGFloat = 0
         
         var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
         var bodySizeOffset: CGFloat = 0
@@ -366,6 +400,7 @@ import Foundation
         switch self.style {
         case .AppStyle:
             insetLeft = 8
+            insetLeftBody = 8
             insetY = 2
             appNameSize = CGSizeMake(0, appNameSize.height + 2)
             
@@ -378,16 +413,36 @@ import Foundation
             self.shareButton.hidden = false
             bodySizeOffset = 30
         case .LockScreenStyle:
+            if #available(iOS 10.0, *) {
+                insetX = 6
+                insetY = 6
+                insetLeft = 36
+                insetLeftBody = 8
+                bodySpacingY = 14
+                self.contentView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.55)
+                self.titleBar.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.6)
+                editButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.55)
+                self.editButton.layer.cornerRadius = 10
+                self.contentView.layer.cornerRadius = 10
+                self.contentView.clipsToBounds = true
+                self.lineViewTop.hidden = true
+                self.lineViewBottom.hidden = true
+                self.titleBar.hidden = false
+                self.slideLabel.hidden = true
+            } else {
+                self.layer.cornerRadius = 0
+                self.lineViewTop.hidden = false
+                self.lineViewBottom.hidden = false
+                self.slideLabel.hidden = false
+            }
             self.appNameLabel.hidden = false
             self.appIconView.hidden = false
-            self.slideLabel.hidden = false
-            self.lineViewTop.hidden = false
-            self.lineViewBottom.hidden = false
             self.clearButton.hidden = true
             self.shareButton.hidden = true
             dateLabelOffsetX = 6
         case .ShareStyle:
             insetLeft = 8
+            insetLeftBody = 8
             insetY = 4
             
             self.appNameLabel.hidden = false
@@ -402,12 +457,18 @@ import Foundation
         }
         
         let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - insetLeft - insetRight - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.TruncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - insetLeftBody - insetRight - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.TruncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
+        appIconView.frame = CGRectMake(insetX, insetY, 20, 20)
         appNameLabel.frame = CGRectMake(insetLeft, insetY, appNameSize.width, appNameSize.height)
         dateLabel.frame = CGRectMake(appNameSize.width + insetLeft + dateLabelOffsetX, insetY + dateLabelOffsetY, dateLabelSize.width, appNameSize.height)
-        bodyLabel.frame = CGRectMake(insetLeft, insetY + appNameSize.height, bodySize.width, bodySize.height)
-        slideLabel.frame = CGRectMake(insetLeft, bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, self.bounds.width, 16)
+        if self.style == .LockScreenStyle {
+            if #available(iOS 10.0, *) {
+                dateLabel.frame = CGRectMake(self.bounds.width - dateLabelSize.width - 8, insetY + dateLabelOffsetY, dateLabelSize.width, appNameSize.height)
+            }
+        }
+        bodyLabel.frame = CGRectMake(insetLeftBody, insetY + bodySpacingY + appNameSize.height, bodySize.width, bodySize.height)
+        slideLabel.frame = CGRectMake(insetLeftBody, bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, self.bounds.width, 16)
         
         
         if (self.heightConstraint != nil) {
@@ -456,6 +517,10 @@ import Foundation
 
     
     func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        if (!allowsScrolling) {
+            return
+        }
+        
         var offsetXThreshold = self.totalButtonWidth
         if (offsetXThreshold > self.buttonWidth*2) {
             // if there are more than two buttons, lower the threshold to make it easier to slide over to the buttons
@@ -482,6 +547,10 @@ import Foundation
     }
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
+        if (!allowsScrolling) {
+            return
+        }
+        
         if (scrollView.contentOffset.x < 0) {
             scrollView.contentOffset = CGPointZero
         }
@@ -504,6 +573,32 @@ import Foundation
             if self.isShowingControls {
                 self.isShowingControls = false
                 delegate?.didCloseControls?(self)
+            }
+        }
+    }
+    
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        didFireDeepTouchForTouchEvent = false
+    }
+    
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        super.touchesMoved(touches, withEvent: event)
+        
+        if (didFireDeepTouchForTouchEvent) {
+            return
+        }
+        
+        if let touch = touches.first {
+            if #available(iOS 9.0, *) {
+                if touch.force/touch.maximumPossibleForce > 0.7 {
+                    didFireDeepTouchForTouchEvent = true
+                    if #available(iOS 10.0, *) {
+                        UIImpactFeedbackGenerator().impactOccurred()
+                    } else {
+                        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate)
+                    }
+                    delegate?.didDeepTouchSummaryView?(self)
+                }
             }
         }
     }
