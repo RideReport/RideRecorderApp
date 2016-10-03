@@ -9,27 +9,19 @@
 import Foundation
 import CoreData
 
-class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertViewDelegate {
-    @IBOutlet weak var selectedTripView: UIView!
-    @IBOutlet weak var editModeView: UIView!
-    weak var rideSummaryView: RideSummaryView!
-    @IBOutlet weak var ridesHistoryButton: UIButton!
-    @IBOutlet weak var closeRideButton: UIButton!
-    @IBOutlet weak var selectedRideToolBar: UIView!
-    @IBOutlet weak var modeSelectorView: ModeSelectorView!
-    
+class TripViewController: UIViewController {
     var mapInfoIsDismissed : Bool = false
     var hasRequestedTripInfo : Bool = false
     
-    private var timeFormatter : NSDateFormatter!
-    private var dateFormatter : NSDateFormatter!
+    @IBOutlet weak var tripSummaryContainerView: UIView!
     
+    weak var tripSummaryViewController: TripSummaryViewController? = nil
     weak var mapViewController: MapViewController? = nil
     
     var selectedTrip : Trip! {
         didSet {
             dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                guard let strongSelf = self, _ = strongSelf.selectedRideToolBar else {
+                guard let strongSelf = self, _ = strongSelf.tripSummaryViewController else {
                     return
                 }
                 
@@ -43,7 +35,9 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                             if let mapViewController = reallyStrongSelf.mapViewController {
                                 mapViewController.setSelectedTrip(reallyStrongSelf.selectedTrip)
                             }
-                            reallyStrongSelf.reloadTripSelectedToolbar(oldValue != reallyStrongSelf.selectedTrip)
+                            if let tripSummaryViewController = reallyStrongSelf.tripSummaryViewController {
+                                tripSummaryViewController.selectedTrip = reallyStrongSelf.selectedTrip
+                            }
                         })
                     } else {
                         if let mapViewController = strongSelf.mapViewController {
@@ -54,7 +48,9 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
                 if let mapViewController = strongSelf.mapViewController {
                     mapViewController.setSelectedTrip(strongSelf.selectedTrip)
                 }
-                strongSelf.reloadTripSelectedToolbar(oldValue != strongSelf.selectedTrip)
+                if let tripSummaryViewController = strongSelf.tripSummaryViewController {
+                    tripSummaryViewController.selectedTrip = strongSelf.selectedTrip
+                }
             })
         }
     }
@@ -65,77 +61,10 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
                 self.mapViewController = viewController as? MapViewController
+            } else if (viewController.isKindOfClass(TripSummaryViewController)) {
+                self.tripSummaryViewController = viewController as? TripSummaryViewController
+                NSLayoutConstraint(item: self.tripSummaryContainerView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: viewController.view.bounds.height).active = true
             }
-        }
-        
-        self.editModeView.hidden = true
-        
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MMM d"
-        
-        self.timeFormatter = NSDateFormatter()
-        self.timeFormatter.locale = NSLocale.currentLocale()
-        self.timeFormatter.dateFormat = "h:mm a"
-        
-        self.rideSummaryView.delegate = self
-        self.rideSummaryView.showsEditButton = true
-        
-        self.rideSummaryView.body = ""
-    }
-    
-    func reloadTripSelectedToolbar(tripChanged: Bool) {
-        if (self.selectedTrip != nil) {
-            let trip = self.selectedTrip
-            var dateTitle = ""
-            
-            if (trip.locationsNotYetDownloaded) {
-                self.rideSummaryView.dateString = ""
-                self.rideSummaryView.body = "Downloading Trip Data…"
-            } else if ((trip.startDate.isToday() && !trip.isClosed)) {
-                self.rideSummaryView.dateString = ""
-                self.rideSummaryView.body = String(format: "🏁 Started trip at %@.", self.timeFormatter.stringFromDate(trip.startDate))
-            } else {
-                if (trip.startDate.isToday()) {
-                    dateTitle = "Today at " + self.timeFormatter.stringFromDate(trip.startDate)
-                } else if (trip.startDate.isYesterday()) {
-                    dateTitle = "Yesterday at " + self.timeFormatter.stringFromDate(trip.startDate)
-                } else if (trip.startDate.isInLastWeek()) {
-                    dateTitle = trip.startDate.weekDay() + " at " + self.timeFormatter.stringFromDate(trip.startDate)
-                } else {
-                    dateTitle = String(format: "%@", self.dateFormatter.stringFromDate(trip.startDate)) + " at " + self.timeFormatter.stringFromDate(trip.startDate)
-                }
-                
-                self.rideSummaryView.dateString = dateTitle
-                self.rideSummaryView.body = trip.fullDisplayString()
-                if (tripChanged) {
-                    self.rideSummaryView.hideControls(false)
-                }
-                
-                self.rideSummaryView.editTitle = "Not a\n" + trip.activityType.noun + "?"
-                
-                if (trip.activityType == .Cycling) {
-                    if (trip.rating.shortValue == Trip.Rating.NotSet.rawValue) {
-                        self.rideSummaryView.delay(0.1, completionHandler: {
-                            self.rideSummaryView.showControls()
-                        })
-                    }
-                    self.rideSummaryView.showsShareButon = true
-                    self.rideSummaryView.showsActionButon = true
-                    self.rideSummaryView.showsDestructiveActionButon = true
-                } else {
-                    self.rideSummaryView.showsShareButon = false
-                    self.rideSummaryView.showsActionButon = false
-                    self.rideSummaryView.showsDestructiveActionButon = false
-                    self.rideSummaryView.delay(0.5, completionHandler: {
-                        self.rideSummaryView.showControls()
-                    })
-                }
-            }
-            
-            self.selectedRideToolBar.hidden = false
-        } else {
-            self.selectedRideToolBar.hidden = true
         }
     }
     
@@ -146,12 +75,72 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        
+        if let tripSummaryViewController = self.tripSummaryViewController {
+            let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(TripViewController.panGesture))
+            tripSummaryViewController.view.addGestureRecognizer(gesture)
+            
+            let blurRadius: CGFloat = 2
+            let cornerRadius: CGFloat = 7
+            let yOffset: CGFloat = 0.5
+            
+            let shadowLayer = CALayer();
+            shadowLayer.shadowColor = UIColor.blackColor().CGColor
+            shadowLayer.shadowOffset = CGSizeMake(0,yOffset)
+            shadowLayer.shadowOpacity = 0.6
+            shadowLayer.shadowRadius = blurRadius
+            shadowLayer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: cornerRadius).CGPath
+            
+            // Shadow mask frame
+            let frame = CGRectOffset(CGRectInset(view.layer.frame, 0, -2*blurRadius), 0, yOffset)
+            
+            var trans = CGAffineTransformMakeTranslation(-view.frame.origin.x,
+                                                         -view.frame.origin.y - yOffset + 2*blurRadius)
+            
+            let path = CGPathCreateMutable()
+            CGPathAddRoundedRect(path, nil, CGRectMake(0, 0, frame.size.width, frame.size.height), cornerRadius, cornerRadius)
+            CGPathAddPath(path, &trans, shadowLayer.shadowPath!)
+            CGPathCloseSubpath(path)
+            
+            let maskLayer = CAShapeLayer()
+            maskLayer.frame = frame
+            maskLayer.fillRule = kCAFillRuleEvenOdd
+            maskLayer.path = path
+            
+            shadowLayer.mask = maskLayer
+            tripSummaryContainerView.layer.insertSublayer(shadowLayer, above: view.layer)
+            tripSummaryViewController.view.layer.cornerRadius = cornerRadius
+            tripSummaryViewController.view.clipsToBounds = true
+        }
+    }
+    
+    func panGesture(recognizer: UIPanGestureRecognizer) {
+        guard let tripSummaryViewController = self.tripSummaryViewController else {
+            return
+        }
+        
+        let location = recognizer.locationInView(self.view)
+        let velocity = recognizer.velocityInView(tripSummaryContainerView)
+        let minY = self.view.frame.size.height - tripSummaryViewController.view.frame.height
+        let maxY: CGFloat = self.view.frame.size.height - 150
+        if (location.y <= maxY) && (location.y >= minY) {
+            tripSummaryContainerView.frame = CGRectMake(0, location.y, view.frame.width, view.frame.height)
+            recognizer.setTranslation(CGPointZero, inView: tripSummaryContainerView)
+        }
+        
+        if recognizer.state == .Ended {
+            let speedConst: CGFloat = 300
+            var duration =  velocity.y < 0 ? Double(speedConst / -velocity.y) : Double(speedConst / velocity.y )
 
-        NSNotificationCenter.defaultCenter().addObserverForName("TripDidCloseOrCancelTrip", object: nil, queue: nil) {[weak self] (notif) -> Void in
-            guard let strongSelf = self else {
-                return
+            duration = min(duration, 0.3)
+            
+            UIView.animateWithDuration(duration) {
+                if  velocity.y >= 0 {
+                    self.tripSummaryContainerView.frame = CGRectMake(0, maxY, self.tripSummaryContainerView.frame.width, self.tripSummaryContainerView.frame.height)
+                } else {
+                    self.tripSummaryContainerView.frame = CGRectMake(0, minY, self.tripSummaryContainerView.frame.width, self.tripSummaryContainerView.frame.height)
+                }
             }
-            strongSelf.reloadTripSelectedToolbar(false)
         }
     }
     
@@ -191,98 +180,7 @@ class TripViewController: UIViewController, RideSummaryViewDelegate, UIAlertView
     // MARK: - UI Actions
     //
     
-    private func transitionToTripView() {
-        CATransaction.begin()
-        let transition = CATransition()
-        transition.duration = 0.5
-        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromLeft
-        self.editModeView.layer.addAnimation(transition, forKey: "transition")
-        self.editModeView.hidden = true
-        self.selectedTripView.hidden = false
-        CATransaction.commit()
-    }
-    
-  
-    @IBAction func selectedNewMode(sender: AnyObject) {
-        let mode = self.modeSelectorView.selectedMode
-        if mode != self.selectedTrip.activityType {
-            self.selectedTrip.activityType = self.modeSelectorView.selectedMode
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-            
-            self.refreshSelectrTrip()
-            
-            let alert = UIAlertView(title: "Ride Report was confused 😬", message: "Would you like to report this misclassification so that Ride Report can get better in the future?", delegate: self, cancelButtonTitle: "Nah", otherButtonTitles: "Sure")
-            alert.show()
-        }
-        
-        self.transitionToTripView()
-    }
-    
-    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        if (buttonIndex == 1) {
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
-            if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
-                reportModeClassificationViewController.trip = self.selectedTrip
-            }
-            self.presentViewController(reportModeClassificationNavigationViewController, animated: true, completion: nil)
-        }
-    }
-    
     @IBAction func showRides(sender: AnyObject) {
         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func refreshSelectrTrip() {
-        if let mapViewController = self.mapViewController {
-            mapViewController.setSelectedTrip(self.selectedTrip)
-        }
-        self.reloadTripSelectedToolbar(false)
-    }
-
-    //
-    // MARK: - Push Simulator View Actions
-    //
-    
-    func didTapEditButton(view: RideSummaryView) {
-        CATransaction.begin()
-            let transition = CATransition()
-            transition.duration = 0.5
-            transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-            transition.type = kCATransitionReveal
-            transition.subtype = kCATransitionFromRight
-            self.selectedTripView.layer.addAnimation(transition, forKey: "transition")
-            self.editModeView.hidden = false
-            self.selectedTripView.hidden = true
-        CATransaction.commit()
-    }
-    
-    func didTapShareButton(view: RideSummaryView) {
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let rideShareNavVC = storyBoard.instantiateViewControllerWithIdentifier("RideShareNavViewController") as! UINavigationController
-        if let rideShareVC = rideShareNavVC.topViewController as? RideShareViewController {
-            rideShareVC.trip = self.selectedTrip
-        }
-        self.presentViewController(rideShareNavVC, animated: true, completion: nil)
-    }
-    
-    func didTapDestructiveButton(view: RideSummaryView) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-    }
-    
-    func didTapActionButton(view: RideSummaryView) {
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
-        
-        self.refreshSelectrTrip()
-    }
-    
-    func didTapClearButton(view: RideSummaryView) {
-        self.selectedTrip = nil
     }
 }
