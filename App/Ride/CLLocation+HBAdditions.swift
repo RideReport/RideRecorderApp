@@ -19,3 +19,51 @@ extension CLLocation {
         return distance/time
     }
 }
+
+extension CLLocationSpeed {
+    var string: String {
+        get {            
+            let format:String
+            if (NSLocale.isMetric()) {
+                if (self.kilometersPerHour < 1) {
+                    format = "\(self.stringWithDecimals(0)) mps"
+                } else {
+                    if NSLocale.isGB() {
+                        format = "\(self.milesPerHour.stringWithDecimals(1)) mph";
+                    } else {
+                        format = "\(self.kilometersPerHour.stringWithDecimals(1)) kph";
+                    }
+                }
+            } else {
+                if (self.milesPerHour < 1) {
+                    format = "\(self.feetPerSecond.stringWithDecimals(0)) fps";
+                } else {
+                    format = "\(self.milesPerHour.stringWithDecimals(1)) mph";
+                }
+            }
+            return format
+        }
+    }
+    
+    var milesPerHour: Double {
+        get {
+            return self * 2.23693629
+        }
+    }
+    
+    var feetPerSecond: Double {
+        get {
+            return self * 3.2808399
+        }
+    }
+    
+    var kilometersPerHour: Double {
+        get {
+            return self * 3.6
+        }
+    }
+    
+    private func stringWithDecimals(decimals:Int) -> String {
+        return String(format: "%.\(decimals)f", self)
+    }
+}

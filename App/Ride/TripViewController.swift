@@ -11,6 +11,7 @@ import CoreData
 
 class TripViewController: UIViewController {
     var mapInfoIsDismissed : Bool = false
+    var isInitialTripUpdate = true
     var hasRequestedTripInfo : Bool = false
     
     @IBOutlet weak var tripSummaryContainerView: UIView!
@@ -32,26 +33,42 @@ class TripViewController: UIViewController {
                             guard let reallyStrongSelf = self else {
                                 return
                             }
-                            if let mapViewController = reallyStrongSelf.mapViewController {
-                                mapViewController.setSelectedTrip(reallyStrongSelf.selectedTrip)
-                            }
-                            if let tripSummaryViewController = reallyStrongSelf.tripSummaryViewController {
-                                tripSummaryViewController.selectedTrip = reallyStrongSelf.selectedTrip
-                            }
+                            
+                            reallyStrongSelf.updateChildViews()
                         })
                     } else {
-                        if let mapViewController = strongSelf.mapViewController {
-                            mapViewController.setSelectedTrip(strongSelf.selectedTrip)
-                        }
+                        strongSelf.updateChildViews()
                     }
                 }
                 if let mapViewController = strongSelf.mapViewController {
                     mapViewController.setSelectedTrip(strongSelf.selectedTrip)
                 }
-                if let tripSummaryViewController = strongSelf.tripSummaryViewController {
-                    tripSummaryViewController.selectedTrip = strongSelf.selectedTrip
-                }
             })
+        }
+    }
+    
+    private func updateChildViews() {
+        if let mapViewController = self.mapViewController {
+            mapViewController.setSelectedTrip(self.selectedTrip)
+        }
+        if let tripSummaryViewController = self.tripSummaryViewController {
+            tripSummaryViewController.selectedTrip = self.selectedTrip
+        }
+        
+        if self.isInitialTripUpdate {
+            self.isInitialTripUpdate = false
+            
+            if let tripSummaryViewController = self.tripSummaryViewController {
+                
+                let minY = self.view.frame.size.height - tripSummaryViewController.maxY
+                let peakY = self.view.frame.size.height - tripSummaryViewController.peakY
+                
+                if let trip = self.selectedTrip where trip.activityType == .Cycling && trip.rating == NSNumber(short: Trip.Rating.NotSet.rawValue) {
+                    self.tripSummaryContainerView.frame = CGRectMake(0, minY, self.view.frame.width, self.view.frame.height)
+                } else {
+                    self.tripSummaryContainerView.frame = CGRectMake(0, peakY, self.view.frame.width, self.view.frame.height)
+                }
+            }
         }
     }
     
@@ -121,8 +138,8 @@ class TripViewController: UIViewController {
         
         let location = recognizer.locationInView(self.view)
         let velocity = recognizer.velocityInView(tripSummaryContainerView)
-        let minY = self.view.frame.size.height - tripSummaryViewController.view.frame.height
-        let maxY: CGFloat = self.view.frame.size.height - 150
+        let minY = self.view.frame.size.height - tripSummaryViewController.maxY
+        let maxY = self.view.frame.size.height - tripSummaryViewController.peakY
         if (location.y <= maxY) && (location.y >= minY) {
             tripSummaryContainerView.frame = CGRectMake(0, location.y, view.frame.width, view.frame.height)
             recognizer.setTranslation(CGPointZero, inView: tripSummaryContainerView)

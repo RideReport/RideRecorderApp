@@ -127,6 +127,11 @@
 		3DD06C901D50159E00A5D719 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C8F1D50159E00A5D719 /* NotificationController.swift */; };
 		3DD06C921D50159E00A5D719 /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD06C911D50159E00A5D719 /* ComplicationController.swift */; };
 		3DD06C941D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C931D50159E00A5D719 /* Assets.xcassets */; };
+		3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
+		3DF07A721DA5BCE20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
+		3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
+		3DF07A741DA5BCE40015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
+		3DF07A751DA5BCE60015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -407,6 +412,7 @@
 		3DD06C931D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3DD06C951D50159E00A5D719 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
+		3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocale+Additions.swift"; sourceTree = "<group>"; };
 		70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report Notification Content.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content.debug.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -918,6 +924,7 @@
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 				3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */,
+				3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1560,6 +1567,7 @@
 				3D2705EF1C8785E000A96DE0 /* SensorData.swift in Sources */,
 				3DA1EFE01C8F879E002B12DB /* UIDevice+HBAdditions.m in Sources */,
 				3D2705F11C8785E000A96DE0 /* ActivityTypePrediction.swift in Sources */,
+				3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */,
 				3DA1EFDC1C8F8724002B12DB /* ParameterEncoding+GZIP.swift in Sources */,
 				3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */,
 				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
@@ -1588,6 +1596,7 @@
 				3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */,
 				3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */,
 				3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */,
+				3DF07A751DA5BCE60015005C /* NSLocale+Additions.swift in Sources */,
 				3D265C0E1D777B4300405F69 /* Float+Meters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1596,6 +1605,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DF07A741DA5BCE40015005C /* NSLocale+Additions.swift in Sources */,
 				3D8969421D5FD21B0034578A /* Float+Meters.swift in Sources */,
 				3DD06C901D50159E00A5D719 /* NotificationController.swift in Sources */,
 				3DD06C921D50159E00A5D719 /* ComplicationController.swift in Sources */,
@@ -1618,6 +1628,7 @@
 				842FDCB01BD56F0D0079AFCC /* MotionManager.swift in Sources */,
 				842FDCA71BD56EF70079AFCC /* Trip.swift in Sources */,
 				3D2AB38D1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
+				3DF07A721DA5BCE20015005C /* NSLocale+Additions.swift in Sources */,
 				3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
 				849162A71ADC3FE20035900B /* NSDate+HBAdditions.swift in Sources */,
 				3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
@@ -1678,6 +1689,7 @@
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				3D2AB3891CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
+				3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */,
 				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,

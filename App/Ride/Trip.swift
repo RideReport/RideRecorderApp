@@ -1490,6 +1490,24 @@ class Trip : NSManagedObject {
         return distance/time
     }
     
+    var averageBikingSpeed : CLLocationSpeed {
+        var sumSpeed : Double = 0.0
+        var count = 0
+        for loc in self.locations.array {
+            let location = loc as! Location
+            if (location.speed!.doubleValue > 1.0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                count += 1
+                sumSpeed += (location as Location).speed!.doubleValue
+            }
+        }
+        
+        if (count == 0) {
+            return 0
+        }
+        
+        return sumSpeed/Double(count)
+    }
+    
     var averageMovingSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0

@@ -62,18 +62,3 @@ extension Float {
         return String(format: "%.\(decimals)f", self)
     }
 }
-
-extension NSLocale {
-    class func isMetric() -> Bool {
-        let locale = NSLocale.currentLocale()
-        return locale.objectForKey(NSLocaleUsesMetricSystem) as! Bool
-    }
-    
-    class func isGB()-> Bool {
-        if let countryString = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as? String {
-            return countryString == "GB"
-        }
-        
-        return false
-    }
-}

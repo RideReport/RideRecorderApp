@@ -33,8 +33,6 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var shareView: UIView!
     @IBOutlet weak var rideSummaryView: RideSummaryView!
     @IBOutlet weak var mapView:  MGLMapView!
-    @IBOutlet weak var statsFirstLineLabel:  UILabel!
-    @IBOutlet weak var statsSecondLineLabel:  UILabel!
     
     private var activityViewController: UIActivityViewController!
     
@@ -60,17 +58,12 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/base-style.json")
         self.mapView.styleURL = styleURL
         
-        self.updateTripPolylines()
         self.updateRideSummaryView()
-        
-        self.statsFirstLineLabel.text = String(format: "%@  %@", Profile.profile().distanceBikedImpressiveStat.emoji, Profile.profile().distanceBikedImpressiveStat.description)
-        Profile.profile().updateCurrentRideStreakLength()
-        
-        if let longestStreak = Profile.profile().longestStreakLength?.integerValue, longestStreakLengthDate = Profile.profile().longestStreakStartDate {
-            self.statsSecondLineLabel.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak, dateFormatter.stringFromDate(longestStreakLengthDate))
-        } else {
-            self.statsSecondLineLabel.text = ""
-        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.updateTripPolylines()
     }
     
     
@@ -210,8 +203,8 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
         }
         
         let padFactorX : Double = 0.1
-        let padFactorTop : Double = 0.95
-        let padFactorBottom : Double = 0.8
+        let padFactorTop : Double = 1.0
+        let padFactorBottom : Double = 0.2
 
         let sizeLong = (maxLong - minLong)
         let sizeLat = (maxLat - minLat)
@@ -222,7 +215,7 @@ class RideShareViewController : UIViewController, MGLMapViewDelegate {
                 return
             }
             
-            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: false)
+            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: true)
         })
     }
 

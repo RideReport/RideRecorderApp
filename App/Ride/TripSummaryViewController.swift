@@ -11,12 +11,19 @@ import CoreData
 
 class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAlertViewDelegate {
     @IBOutlet weak var grabberBarView: UIView!
-    @IBOutlet weak var editModeView: UIView!
     @IBOutlet weak var modeSelectorView: ModeSelectorView!
     @IBOutlet weak var rideEmojiLabel: UILabel!
     @IBOutlet weak var rideDescriptionLabel: UILabel!
     @IBOutlet weak var rewardEmojiLabel: UILabel!
     @IBOutlet weak var rewardDescriptionLabel: UILabel!
+    @IBOutlet weak var greatButton: UIButton!
+    @IBOutlet weak var notGreatButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var changeModeButton: UIButton!
+    @IBOutlet weak var buttonsView: UIView!
+    @IBOutlet weak var statsView: UIView!
+    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var avgSpeedLabel: UILabel!
     
     private var blurEffect: UIBlurEffect!
     private var visualEffect: UIVisualEffectView!
@@ -25,16 +32,29 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
+    var maxY: CGFloat {
+        get {
+            if self.selectedTrip.activityType == .Cycling {
+                return statsView.frame.maxY
+            }
+            
+            return buttonsView.frame.maxY + 10
+        }
+    }
+    
+    var peakY: CGFloat {
+        get {
+            if let _ = self.selectedTrip.tripRewards.firstObject as? TripReward {
+                return max(rewardDescriptionLabel.frame.maxY, rewardEmojiLabel.frame.maxY) + 10
+            }
+            return max(rideDescriptionLabel.frame.maxY, rideEmojiLabel.frame.maxY) + 10
+        }
+    }
+    
     var selectedTrip : Trip! {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                guard let strongSelf = self, _ = strongSelf.rideDescriptionLabel else {
-                    return
-                }
-                
-                if (strongSelf.selectedTrip != nil) {
-                    strongSelf.reloadUI()
-                }
+            if (self.selectedTrip != nil) {
+                reloadUI()
             }
         }
     }
@@ -45,8 +65,6 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         grabberBarView.layer.cornerRadius = 3
         grabberBarView.clipsToBounds = true
         
-        self.editModeView.hidden = true
-        
         self.dateFormatter = NSDateFormatter()
         self.dateFormatter.locale = NSLocale.currentLocale()
         self.dateFormatter.dateFormat = "MMM d"
@@ -54,12 +72,21 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         self.timeFormatter = NSDateFormatter()
         self.timeFormatter.locale = NSLocale.currentLocale()
         self.timeFormatter.dateFormat = "h:mm a"
+        
+        self.modeSelectorView.hidden = true
+        
+        for button in [self.greatButton, self.notGreatButton, self.shareButton] {
+            button.titleLabel?.numberOfLines = 1
+            button.titleLabel?.adjustsFontSizeToFitWidth = true
+            button.titleLabel?.minimumScaleFactor = 0.6
+        }
+        
+        self.shareButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0)
     }
     
     func reloadUI() {
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
-            var dateTitle = ""
             
             if (trip.locationsNotYetDownloaded) {
                 self.rideDescriptionLabel.text = "Downloading Trip Data…"
@@ -75,10 +102,20 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
                 rewardEmojiLabel.text = ""
                 rewardDescriptionLabel.text = ""
             } else {
+                if self.selectedTrip.activityType == .Cycling {
+                    durationLabel.text = self.selectedTrip.duration().intervalString
+                    avgSpeedLabel.text = self.selectedTrip.averageBikingSpeed.string
+                    statsView.hidden = false
+                } else {
+                    statsView.hidden = true
+                }
+                
+                self.changeModeButton.setTitle("Not a " + trip.activityType.noun + "?", forState: .Normal)
+
                 rideEmojiLabel.text = self.selectedTrip.climacon ?? ""
                 rideDescriptionLabel.text = self.selectedTrip.displayStringWithTime()
                 
-                if let reward = self.selectedTrip.tripRewards.firstObject as? TripReward where reward.descriptionText.rangeOfString("day ride streak") == nil {
+                if let reward = self.selectedTrip.tripRewards.firstObject as? TripReward {
                     rewardEmojiLabel.text = reward.displaySafeEmoji
                     rewardDescriptionLabel.text = reward.descriptionText
                 } else {
@@ -157,9 +194,34 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     // MARK: - UI Actions
     //
     
+    @IBAction func changeMode(_: AnyObject) {
+        CATransaction.begin()
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionReveal
+        transition.subtype = kCATransitionFromRight
+        self.buttonsView.layer.addAnimation(transition, forKey: "transition")
+        self.modeSelectorView.hidden = false
+        self.buttonsView.hidden = true
+        CATransaction.commit()
+    }
+    
 
-    @IBAction func selectedNewMode(sender: AnyObject) {
+    @IBAction func selectedNewMode(_: AnyObject) {
         let mode = self.modeSelectorView.selectedMode
+        
+        CATransaction.begin()
+        let transition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        transition.type = kCATransitionPush
+        transition.subtype = kCATransitionFromLeft
+        self.modeSelectorView.layer.addAnimation(transition, forKey: "transition")
+        self.modeSelectorView.hidden = true
+        self.buttonsView.hidden = false
+        CATransaction.commit()
+        
         if mode != self.selectedTrip.activityType {
             self.selectedTrip.activityType = self.modeSelectorView.selectedMode
             APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
@@ -186,7 +248,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     // MARK: - Push Simulator View Actions
     //
     
-    func didTapShareButton(view: RideSummaryView) {
+    @IBAction func tappedShare(_: AnyObject) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let rideShareNavVC = storyBoard.instantiateViewControllerWithIdentifier("RideShareNavViewController") as! UINavigationController
         if let rideShareVC = rideShareNavVC.topViewController as? RideShareViewController {
@@ -195,14 +257,14 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         self.presentViewController(rideShareNavVC, animated: true, completion: nil)
     }
     
-    func didTapDestructiveButton(view: RideSummaryView) {
+    @IBAction func tappedNotGreat(_: AnyObject) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
-    func didTapActionButton(view: RideSummaryView) {
+    @IBAction func tappedGreat(_: AnyObject) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         

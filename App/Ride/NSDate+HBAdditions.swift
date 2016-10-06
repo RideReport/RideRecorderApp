@@ -154,3 +154,11 @@ extension NSDate {
         return self.isEqualToDay(NSDate.yesterday())
     }
 }
+
+extension NSTimeInterval {
+    var intervalString: String {
+        let minutes = ceil((self / 60)) % 60
+        let hours = Int(self) / 3600
+        return String(format: "%02d:%02.0f", hours, minutes)
+    }
+}

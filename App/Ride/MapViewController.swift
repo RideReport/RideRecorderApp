@@ -214,8 +214,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         let padFactorX : Double = 0.1
-        let padFactorTop : Double = 0.45
-        let padFactorBottom : Double = 0.3
+        let padFactorTop : Double = 0.2
+        let padFactorBottom : Double = 0.5
         
         let sizeLong = (maxLong - minLong)
         let sizeLat = (maxLat - minLat)
