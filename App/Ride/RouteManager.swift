@@ -740,6 +740,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogInfo("Paused Tracking")
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.locationManager.location)
+        Profile.profile().setGeofencedLocation(nil)
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
@@ -752,6 +753,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             DDLogInfo("Paused Tracking due to battery life")
             
             self.stopMotionMonitoringAndSetupGeofences(aroundLocation: location)
+            Profile.profile().setGeofencedLocation(nil)
         }
     }
     
