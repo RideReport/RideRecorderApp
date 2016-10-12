@@ -1122,7 +1122,7 @@ class Trip : NSManagedObject {
                 let attachmentCallbackHandler = { (attachment: UNNotificationAttachment?) in
                     let content = UNMutableNotificationContent()
                     content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
-                    content.sound = UNNotificationSound(named: "bell.aif")
+                    content.sound = UNNotificationSound(named: "bell.aiff")
                     content.body = self.notificationString()
                     content.userInfo = userInfo
                     if let attachment = attachment {
