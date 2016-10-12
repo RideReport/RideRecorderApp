@@ -145,13 +145,16 @@ class TripViewController: UIViewController {
             return
         }
         
-        let location = recognizer.locationInView(self.view)
+        let translation = recognizer.translationInView(self.view)
+
         let velocity = recognizer.velocityInView(tripSummaryContainerView)
         let minY = self.view.frame.size.height - tripSummaryViewController.maxY
         let maxY = self.view.frame.size.height - tripSummaryViewController.peakY
-        if (location.y <= maxY) && (location.y >= minY) {
-            tripSummaryContainerView.frame = CGRectMake(0, location.y, view.frame.width, view.frame.height)
-            recognizer.setTranslation(CGPointZero, inView: tripSummaryContainerView)
+        
+        let locY = (tripSummaryContainerView.center.y + translation.y) - tripSummaryContainerView.frame.height/2.0
+        if (locY <= maxY) && (locY >= minY) {
+            tripSummaryContainerView.center = CGPointMake(tripSummaryContainerView.center.x, tripSummaryContainerView.center.y + translation.y)
+            recognizer.setTranslation(CGPointZero, inView: self.view)
         }
         
         if recognizer.state == .Ended {
