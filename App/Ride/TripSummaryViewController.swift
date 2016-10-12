@@ -18,7 +18,6 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     @IBOutlet weak var rewardDescriptionLabel: UILabel!
     @IBOutlet weak var greatButton: UIButton!
     @IBOutlet weak var notGreatButton: UIButton!
-    @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var statsView: UIView!
@@ -39,6 +38,16 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             }
             
             return buttonsView.frame.maxY + 10
+        }
+    }
+    
+    var peakUnratedY: CGFloat {
+        get {
+            if self.selectedTrip.activityType == .Cycling {
+                return buttonsView.frame.maxY + 10
+            }
+            
+            return self.peakY
         }
     }
     
@@ -75,13 +84,11 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         
         self.modeSelectorView.hidden = true
         
-        for button in [self.greatButton, self.notGreatButton, self.shareButton] {
+        for button in [self.greatButton, self.notGreatButton] {
             button.titleLabel?.numberOfLines = 1
             button.titleLabel?.adjustsFontSizeToFitWidth = true
             button.titleLabel?.minimumScaleFactor = 0.6
         }
-        
-        self.shareButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0)
     }
     
     func reloadUI() {
@@ -247,15 +254,6 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     //
     // MARK: - Push Simulator View Actions
     //
-    
-    @IBAction func tappedShare(_: AnyObject) {
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let rideShareNavVC = storyBoard.instantiateViewControllerWithIdentifier("RideShareNavViewController") as! UINavigationController
-        if let rideShareVC = rideShareNavVC.topViewController as? RideShareViewController {
-            rideShareVC.trip = self.selectedTrip
-        }
-        self.presentViewController(rideShareNavVC, animated: true, completion: nil)
-    }
     
     @IBAction func tappedNotGreat(_: AnyObject) {
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)

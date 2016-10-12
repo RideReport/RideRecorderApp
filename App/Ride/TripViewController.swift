@@ -60,11 +60,11 @@ class TripViewController: UIViewController {
             
             if let tripSummaryViewController = self.tripSummaryViewController {
                 
-                let minY = self.view.frame.size.height - tripSummaryViewController.maxY
+                let peakUnrealtedY = self.view.frame.size.height - tripSummaryViewController.peakUnratedY
                 let peakY = self.view.frame.size.height - tripSummaryViewController.peakY
                 
                 if let trip = self.selectedTrip where trip.activityType == .Cycling && trip.rating == NSNumber(short: Trip.Rating.NotSet.rawValue) {
-                    self.tripSummaryContainerView.frame = CGRectMake(0, minY, self.view.frame.width, self.view.frame.height)
+                    self.tripSummaryContainerView.frame = CGRectMake(0, peakUnrealtedY, self.view.frame.width, self.view.frame.height)
                 } else {
                     self.tripSummaryContainerView.frame = CGRectMake(0, peakY, self.view.frame.width, self.view.frame.height)
                 }
@@ -88,6 +88,15 @@ class TripViewController: UIViewController {
     //
     // MARK: - UIVIewController
     //
+    
+    @IBAction func tappedShare(_: AnyObject) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let rideShareNavVC = storyBoard.instantiateViewControllerWithIdentifier("RideShareNavViewController") as! UINavigationController
+        if let rideShareVC = rideShareNavVC.topViewController as? RideShareViewController {
+            rideShareVC.trip = self.selectedTrip
+        }
+        self.presentViewController(rideShareNavVC, animated: true, completion: nil)
+    }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
