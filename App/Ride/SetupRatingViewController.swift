@@ -32,18 +32,18 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
             pushSimulationView.showsActionButon = false
             pushSimulationView.showsDestructiveActionButon = false
             if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
-                helperTextLabel.markdownStringValue = "You can help others find good routes by rating your trips, right from your lock screen. **Press firmly to rate your ride.**"
+                helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Press it firmly** to rate your ride."
                 pushSimulationView.showsEditButton = false
                 pushSimulationView.allowsScrolling = false
                 pushSimulationView.slideLabel.text = "Press for more"
                 self.notificationHelperTextLabel.text = "firmly press this notification"
             } else {
-                helperTextLabel.markdownStringValue = "You can help others find good routes by rating your trips, right from your lock screen. **Slide left to rate your ride.**"
+                helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Slide it left** to rate your ride."
                 pushSimulationView.showsEditButton = true
                 pushSimulationView.editTitle = "View"
             }
         } else {
-            helperTextLabel.markdownStringValue = "You can help others find good routes by rating your trips, right from your lock screen. **Slide left to rate your ride.**"
+            helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Slide it left** to rate your ride."
         }
         
         self.notificationHelperTextLabel.hidden = true
@@ -74,7 +74,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         if #available(iOS 10.0, *) {
             helperTextLabel.animatedSetMarkdownStringValue("Ok, tap the **View** button.")
         } else {
-            helperTextLabel.animatedSetMarkdownStringValue("**Thumbs up** for a great ride, **thumbs down** if something stressed you out.")
+            helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
         }
     }
     
@@ -94,7 +94,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     
     private func showTripRichNotification() {
         self.buttonContainerView.popIn()
-        helperTextLabel.animatedSetMarkdownStringValue("Now rate your trip! Was it a **Great ride**, or… **Not Great**?")
+        helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
     }
     
     func didTapActionButton(view: RideSummaryView) {
