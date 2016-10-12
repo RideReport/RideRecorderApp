@@ -155,9 +155,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         var timeoutInterval: NSTimeInterval = 0
         switch trip.activityType {
         case .Cycling where trip.length.miles >= 12:
-            timeoutInterval = 900
+            timeoutInterval = 1080
         default:
-            timeoutInterval = 240
+            timeoutInterval = 300
         }
         
         return abs(trip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < timeoutInterval
