@@ -8,7 +8,7 @@
 
 import Foundation
 
-@IBDesignable class PopupView : UIView {
+@IBDesignable class PopupView : UIButton {
     
     @IBInspectable var strokeWidth: CGFloat = 2
     @IBInspectable var arrowHeight: CGFloat = 10

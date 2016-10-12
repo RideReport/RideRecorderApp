@@ -110,6 +110,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 return
             }
             strongSelf.reloadSectionIdentifiersIfNeeded()
+            strongSelf.refreshHelperPopupUI()
         }
         
         if APIClient.sharedClient.accountVerificationStatus != .Unknown {
@@ -215,17 +216,33 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.reachability = nil
     }
     
+    func launchPermissions() {
+        if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+            UIApplication.sharedApplication().openURL(appSettings)
+        }
+    }
+    
+    func resumeRideReport() {
+        RouteManager.sharedManager.resumeTracking()
+        refreshHelperPopupUI()
+    }
+    
     
     func refreshHelperPopupUI() {
+        popupView.removeTarget(self, action: nil, forControlEvents: UIControlEvents.AllEvents)
+        
         if (RouteManager.sharedManager.isPaused()) {
             if (self.popupView.hidden) {
                 self.popupView.popIn()
             }
             if (RouteManager.sharedManager.isPausedDueToUnauthorized()) {
                 self.popupView.text = "Ride Report needs permission to run"
+                popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), forControlEvents: UIControlEvents.TouchUpInside)
             } else if (RouteManager.sharedManager.isPausedDueToBatteryLife()) {
                 self.popupView.text = "Ride Report is paused until you charge your phone"
             } else {
+                popupView.addTarget(self, action: #selector(TripsViewController.resumeRideReport), forControlEvents: UIControlEvents.TouchUpInside)
+                
                 if let pausedUntilDate = RouteManager.sharedManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
                         self.popupView.text = "Ride Report is paused until " + Trip.timeDateFormatter.stringFromDate(pausedUntilDate)
