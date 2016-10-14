@@ -17,7 +17,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     var dateOfTripsToShow: NSDate? {
         didSet {
             dispatch_async(dispatch_get_main_queue()) { [weak self] in
-                guard let strongSelf = self, _ = strongSelf.dateOfTripsToShow else {
+                guard let strongSelf = self, let _ = strongSelf.dateOfTripsToShow else {
                     return
                 }
                 
@@ -31,6 +31,19 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.timeFormatter = NSDateFormatter()
+        self.timeFormatter.locale = NSLocale.currentLocale()
+        self.timeFormatter.dateFormat = "h:mma"
+        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
+        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
+        
+        self.dateFormatter = NSDateFormatter()
+        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter.dateFormat = "MMM d"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,16 +55,6 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
-        
-        self.timeFormatter = NSDateFormatter()
-        self.timeFormatter.locale = NSLocale.currentLocale()
-        self.timeFormatter.dateFormat = "h:mma"
-        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
-        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
-        
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
-        self.dateFormatter.dateFormat = "MMM d"
         
         self.emptyTableView.hidden = true
         
