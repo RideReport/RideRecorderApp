@@ -67,7 +67,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             return
         }
         
-        let cacheName = "TripsViewControllerFetchedResultsController"
+        let cacheName = "OtherTripsViewControllerFetchedResultsController"
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         NSFetchedResultsController.deleteCacheWithName(cacheName)
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
