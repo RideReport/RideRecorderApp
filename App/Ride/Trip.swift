@@ -841,6 +841,7 @@ class Trip : NSManagedObject {
         for collection in self.sensorDataCollections {
             if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
                 var voteValue = powf(topPrediction.confidence.floatValue, 1.5) // make the difference bigger
+                let averageMovingSpeed = collection.averageMovingSpeed
                 let averageSpeed = collection.averageMovingSpeed
                 
                 if averageSpeed < 0 {
@@ -851,15 +852,15 @@ class Trip : NSManagedObject {
                     switch topPrediction.activityType {
                     case .Automotive where averageSpeed < 1, .Cycling where averageSpeed < 1, .Rail where averageSpeed < 1, .Bus where averageSpeed < 1:
                         voteValue = 0
-                    case .Automotive where averageSpeed < 6.5:
+                    case .Automotive where averageMovingSpeed < 6.5:
                         voteValue = voteValue/3
-                    case .Bus where averageSpeed < 3.6:
+                    case .Bus where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
-                    case .Rail where averageSpeed < 3.6:
+                    case .Rail where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
-                    case .Cycling where averageSpeed < 3 || averageSpeed > 13.4:
+                    case .Cycling where averageMovingSpeed < 3 || averageMovingSpeed > 13.4:
                         voteValue = voteValue/3
-                    case .Running where averageSpeed < 2.2:
+                    case .Running where averageMovingSpeed < 2.2:
                         voteValue = 0
                     case .Walking where averageSpeed > 3:
                         voteValue = 0
