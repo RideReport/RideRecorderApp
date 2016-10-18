@@ -72,6 +72,28 @@ class SensorDataCollection : NSManagedObject {
         sensorData.date =  NSDate(timeInterval: logItem.timestamp, sinceDate: self.referenceBootDate)
     }
     
+    var averageMovingSpeed : CLLocationSpeed {
+        guard self.locations != nil && self.locations.count > 0 else {
+            return -1.0
+        }
+        
+        var sumSpeed : Double = 0.0
+        var count = 0
+        for loc in self.locations.array {
+            let location = loc as! Location
+            if (location.speed!.doubleValue >= Location.minimumMovingSpeed && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                count += 1
+                sumSpeed += (location as Location).speed!.doubleValue
+            }
+        }
+        
+        if (count == 0) {
+            return -1.0
+        }
+        
+        return sumSpeed/Double(count)
+    }
+    
     var averageSpeed : CLLocationSpeed {
         guard self.locations != nil && self.locations.count > 0 else {
             return -1.0
@@ -81,7 +103,7 @@ class SensorDataCollection : NSManagedObject {
         var count = 0
         for loc in self.locations.array {
             let location = loc as! Location
-            if (location.speed!.doubleValue >= 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+            if (location.speed!.doubleValue >= 0.0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
                 count += 1
                 sumSpeed += (location as Location).speed!.doubleValue
             }

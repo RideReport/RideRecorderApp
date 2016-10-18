@@ -13,6 +13,7 @@ import CoreMotion
 import MapKit
 
 class Location : NSManagedObject {
+    
     @NSManaged var altitude : NSNumber?
     @NSManaged var verticalAccuracy : NSNumber?
     @NSManaged var course : NSNumber?
@@ -35,6 +36,11 @@ class Location : NSManagedObject {
         
         self.trip = trip
     }
+    
+    class var minimumMovingSpeed: CLLocationSpeed {
+        return 0.5
+    }
+    
     
     class var acceptableLocationAccuracy:CLLocationAccuracy {
         return kCLLocationAccuracyNearestTenMeters * 3

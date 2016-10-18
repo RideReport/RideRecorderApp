@@ -528,6 +528,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     return
                 }
                 
+                let averageMovingSpeed = sensorDataCollection.averageMovingSpeed
                 let averageSpeed = sensorDataCollection.averageSpeed
                 strongSelf.currentMotionMonitoringSensorDataCollection = nil
                 
@@ -553,43 +554,43 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 
                 switch activityType {
-                case .Automotive where confidence > 0.8 && averageSpeed >= 4:
+                case .Automotive where confidence > 0.8 && averageMovingSpeed >= 4:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
-                case .Automotive where confidence > 0.6 && averageSpeed >= 6:
+                case .Automotive where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
-                case .Cycling where confidence > 0.8 && averageSpeed >= 2:
+                case .Cycling where confidence > 0.8 && averageMovingSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
-                case .Cycling where confidence > 0.4 && averageSpeed >= 2.5 && averageSpeed < 9:
+                case .Cycling where confidence > 0.4 && averageMovingSpeed >= 2.5 && averageMovingSpeed < 9:
                     DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
-                case .Running where confidence < 0.8 && averageSpeed >= 2 && averageSpeed < 6.5:
+                case .Running where confidence < 0.8 && averageMovingSpeed >= 2 && averageMovingSpeed < 6.5:
                     DDLogVerbose("Starting running trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Running)
-                case .Bus where confidence > 0.8 && averageSpeed >= 3:
+                case .Bus where confidence > 0.8 && averageMovingSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
-                case .Bus where confidence > 0.6 && averageSpeed >= 6:
+                case .Bus where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
-                case .Rail where confidence > 0.8 && averageSpeed >= 3:
+                case .Rail where confidence > 0.8 && averageMovingSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
-                case .Rail where confidence > 0.6 && averageSpeed >= 6:
+                case .Rail where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
                     strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
-                case .Walking where confidence > 0.9 && averageSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
+                case .Walking where confidence > 0.9 && averageMovingSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
