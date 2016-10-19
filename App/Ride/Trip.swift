@@ -1187,6 +1187,8 @@ class Trip : NSManagedObject {
                 }
             } else if let startingPlacemarkName = self.startingPlacemarkName {
                 areaDescriptionString = String(format: "from %@", startingPlacemarkName)
+            } else if let endingPlacemarkName = self.endingPlacemarkName {
+                areaDescriptionString = String(format: "to %@", endingPlacemarkName)
             }
             
             return areaDescriptionString
@@ -1253,6 +1255,8 @@ class Trip : NSManagedObject {
             }
         } else if let startingPlacemarkName = self.startingPlacemarkName {
             message = String(format: "%@ %@ Rode %@ from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
+        } else if let endingPlacemarkName = self.endingPlacemarkName {
+            message = String(format: "%@ %@ Rode %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, endingPlacemarkName)
         } else {
             message = String(format: "%@ %@ Rode %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString)
         }
