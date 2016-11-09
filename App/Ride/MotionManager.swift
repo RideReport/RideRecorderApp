@@ -29,7 +29,6 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     static let updateInterval: NSTimeInterval = 50/1000
 
     private var isGatheringMotionData: Bool = false
-    private var isQueryingMotionData: Bool = false
     
     struct Static {
         static var onceToken : dispatch_once_t = 0
@@ -99,7 +98,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     
     func stopGatheringSensorData() {
         self.isGatheringMotionData = false
-        self.stopMotionUpdatesAsNeeded()
+        self.stopMotionUpdates()
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending GatherSensorData background task!")
@@ -151,18 +150,16 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func stopMotionUpdatesAsNeeded() {
-        if (!self.isQueryingMotionData && !self.isGatheringMotionData) {
-            self.motionManager.stopDeviceMotionUpdates()
-            self.motionManager.stopAccelerometerUpdates()
-            self.motionManager.stopGyroUpdates()
+    private func stopMotionUpdates() {
+        self.motionManager.stopDeviceMotionUpdates()
+        self.motionManager.stopAccelerometerUpdates()
+        self.motionManager.stopGyroUpdates()
+        
+        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending background task with Stop Motion Updates!")
             
-            if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                DDLogInfo("Ending background task with Stop Motion Updates!")
-                
-                UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                self.backgroundTaskID = UIBackgroundTaskInvalid
-            }
+            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
         }
     }
     
@@ -176,59 +173,44 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
-            // this shouldn't happen
             DDLogInfo("Could not query activity type, background task already in process!")
             sensorDataCollection.addUnknownTypePrediction()
             handler(sensorDataCollection: sensorDataCollection)
             return
         }
 
-        self.isQueryingMotionData = true
+        sensorDataCollection.isBeingCollected = true
         
         let completionBlock = {
-            guard self.isQueryingMotionData else {
-                // avoid possible race condition where completion block could be called multiple times
-                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                    DDLogInfo("Ending Query Activity Type background task though isQueryingMotionData was false!")
-                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                    self.backgroundTaskID = UIBackgroundTaskInvalid
-                }
-                
+            guard sensorDataCollection.isBeingCollected else {
+                // avoid possible race condition where completion block could be called after we have already finished
                 return
             }
             
             if sensorDataCollection.accelerometerAccelerations.count >= MotionManager.sampleWindowSize &&
                 sensorDataCollection.gyroscopeRotationRates.count >= MotionManager.sampleWindowSize
             {
-                self.isQueryingMotionData = false
-                self.stopMotionUpdatesAsNeeded()
-                // run classification
-                RandomForestManager.sharedForest.classify(sensorDataCollection)
+                sensorDataCollection.isBeingCollected = false
+                self.stopMotionUpdates()
                 
+                RandomForestManager.sharedForest.classify(sensorDataCollection)
                 handler(sensorDataCollection: sensorDataCollection)
-                if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-                    DDLogInfo("Ending Query Activity Type background task!")
-                    UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
-                    self.backgroundTaskID = UIBackgroundTaskInvalid
-                }
             }
         }
             
         self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard error == nil else {
                 DDLogInfo("Error reading accelerometer data! Ending early…")
+                sensorDataCollection.isBeingCollected = false
+                self.stopMotionUpdates()
+                
                 sensorDataCollection.addUnknownTypePrediction()
                 handler(sensorDataCollection: sensorDataCollection)
-                self.isQueryingMotionData = false
-                self.stopMotionUpdatesAsNeeded()
+
                 return
             }
             
             guard let accelerometerAcceleration = motion else {
-                return
-            }
-            guard self.isQueryingMotionData else {
-                self.stopMotionUpdatesAsNeeded()
                 return
             }
             
@@ -241,18 +223,17 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (motion, error) in
             guard error == nil else {
                 DDLogInfo("Error reading accelerometer data! Ending early…")
+                
+                sensorDataCollection.isBeingCollected = false
+                self.stopMotionUpdates()
+                
                 sensorDataCollection.addUnknownTypePrediction()
                 handler(sensorDataCollection: sensorDataCollection)
-                self.isQueryingMotionData = false
-                self.stopMotionUpdatesAsNeeded()
+                
                 return
             }
             
             guard let gyroscopeData = motion else {
-                return
-            }
-            guard self.isQueryingMotionData else {
-                self.stopMotionUpdatesAsNeeded()
                 return
             }
             

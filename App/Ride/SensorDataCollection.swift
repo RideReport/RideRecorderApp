@@ -11,7 +11,9 @@ import CoreData
 import CoreMotion
 import MapKit
 
-class SensorDataCollection : NSManagedObject {    
+class SensorDataCollection : NSManagedObject {
+    var isBeingCollected = false
+    
     @NSManaged var accelerometerAccelerations : NSOrderedSet!
     @NSManaged var deviceMotionAccelerations : NSOrderedSet!
     @NSManaged var deviceMotionRotationRates : NSOrderedSet!
