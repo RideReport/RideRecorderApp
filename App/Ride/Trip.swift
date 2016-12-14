@@ -586,6 +586,31 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
+    class func nextUnsyncedSummaryTrip() -> Trip? {
+        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let closedPredicate = NSPredicate(format: "isClosed == YES")
+        let syncedPredicate = NSPredicate(format: "summaryIsSynced == NO")
+        
+        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedPredicate])
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        fetchedRequest.fetchLimit = 1
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.executeFetchRequest(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return (results!.first as! Trip)
+    }
+    
     class var numberOfCycledTrips : Int {
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         

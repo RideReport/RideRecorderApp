@@ -467,6 +467,12 @@ class APIClient {
                 CoreDataManager.sharedManager.saveContext()
             case .Failure(let error):
                 DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error))
+                
+                if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                    // unclear what to do in this case (probably we should try to upload the trip again?), but at a minimum we should never try to sync the summary again.
+                    trip.summaryIsSynced = true
+                    CoreDataManager.sharedManager.saveContext()
+                }
             }
         })
     }
@@ -513,6 +519,10 @@ class APIClient {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
                         self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
                     })
+                })
+            } else if let trip = Trip.nextUnsyncedSummaryTrip() {
+                self.getTrip(trip).apiResponse({ (_) in
+                    self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
                 })
             } else {
                 completionBlock()
