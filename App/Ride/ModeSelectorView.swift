@@ -9,7 +9,7 @@
 import Foundation
 
 @IBDesignable class ModeSelectorView : UISegmentedControl {
-    private var shownModes: [ActivityType] = [.Cycling, .Walking, .Automotive, .Bus, .Rail] {
+    private var shownModes: [ActivityType] = [.Cycling, .Walking, .Running, .Automotive, .Bus, .Rail] {
         didSet {
             reloadUI()
         }
@@ -178,6 +178,16 @@ import Foundation
         self.setBackgroundImage(imageWithColor(UIColor.clearColor()), forState: .Normal, barMetrics: .Default)
         self.setBackgroundImage(imageWithColor(ColorPallete.sharedPallete.unknownGrey), forState: .Selected, barMetrics: .Default)
         self.setDividerImage(imageWithColor(UIColor.clearColor()), forLeftSegmentState: .Normal, rightSegmentState: .Normal, barMetrics: .Default)
+        
+        self.apportionsSegmentWidthsByContent = true
+        
+        if #available(iOS 9.0, *) {
+            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).adjustsFontSizeToFitWidth = true
+            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).minimumScaleFactor = 0.4
+            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).numberOfLines = 0
+        } else {
+            self.fontSize = 30
+        }
         
         self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize)], forState: .Normal)
         self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize), NSForegroundColorAttributeName:UIColor.blackColor()], forState: .Selected)
