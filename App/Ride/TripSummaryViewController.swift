@@ -33,7 +33,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
     var maxY: CGFloat {
         get {
-            if self.selectedTrip.activityType == .Cycling {
+            if let trip = self.selectedTrip where trip.activityType == .Cycling {
                 return statsView.frame.maxY
             }
             
