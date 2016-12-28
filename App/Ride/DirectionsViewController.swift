@@ -78,6 +78,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
             if !self.counter.hidden {
                 var j = 0
                 var i = 0
+                let increment = Int(count)/100
                 while i < Int(count) {
                     let c = UInt(i)
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
@@ -88,7 +89,7 @@ class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
                         strongSelf.counter.updateCounter(c, animate: false)
                     }
                     j += 1
-                    i += 499
+                    i += increment
                 }
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
