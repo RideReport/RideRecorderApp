@@ -20,6 +20,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     @IBOutlet weak var notGreatButton: UIButton!
     @IBOutlet weak var changeModeButton: UIButton!
     @IBOutlet weak var buttonsView: UIView!
+    @IBOutlet var buttonsViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var statsView: UIView!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
@@ -30,6 +31,8 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
+    
+    private var initialButtonsViewHeight: CGFloat = 0
     
     var maxY: CGFloat {
         get {
@@ -113,8 +116,18 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
                     durationLabel.text = self.selectedTrip.duration().intervalString
                     avgSpeedLabel.text = self.selectedTrip.averageBikingSpeed.string
                     statsView.hidden = false
+                    greatButton.hidden = false
+                    notGreatButton.hidden = false
+                    let buttonsViewHeight = self.changeModeButton.frame.height + 8 + 14.0 + self.greatButton.frame.size.height
+                    buttonsView.frame.size.height = buttonsViewHeight
+                    buttonsViewHeightConstraint?.constant = buttonsViewHeight
                 } else {
                     statsView.hidden = true
+                    greatButton.hidden = true
+                    notGreatButton.hidden = true
+                    let buttonsViewHeight = self.changeModeButton.frame.height + 16
+                    buttonsView.frame.size.height = buttonsViewHeight
+                    buttonsViewHeightConstraint?.constant = buttonsViewHeight
                 }
                 
                 self.changeModeButton.setTitle("Not a " + trip.activityType.noun + "?", forState: .Normal)
@@ -161,6 +174,8 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        
+        initialButtonsViewHeight = self.buttonsView.frame.height
         
         createBackgroundViewIfNeeded()
     }
