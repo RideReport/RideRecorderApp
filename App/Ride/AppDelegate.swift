@@ -276,6 +276,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.sharedManager.saveContext()
             trip.sendTripCompletionNotificationLocally(clearRemoteMessage)
+            if let statusText = userInfo["status_text"] as? String, statusEmoji = userInfo["status_emoji"] as? String {
+                Profile.profile().statusText = statusText
+                Profile.profile().statusEmoji = statusEmoji
+                CoreDataManager.sharedManager.saveContext()
+            }
             completionBlock()
         } else {
             completionBlock()
