@@ -809,7 +809,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        if let trip = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as? Trip {
+        if let trip = try? self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: indexPath.section - 1)) as? Trip {
             if trip.activityType == .Cycling || trip.isClosed == false {
                 self.performSegueWithIdentifier("showTrip", sender: trip)
             } else {
