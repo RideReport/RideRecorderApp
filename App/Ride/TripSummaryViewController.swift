@@ -37,7 +37,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     var maxY: CGFloat {
         get {
             guard buttonsView != nil else {
-                return
+                return 0
             }
             
             if let trip = self.selectedTrip where trip.activityType == .Cycling {
