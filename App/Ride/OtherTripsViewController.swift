@@ -70,6 +70,10 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             return
         }
         
+        guard tableView != nil else {
+            return
+        }
+        
         let cacheName = "OtherTripsViewControllerFetchedResultsController"
         let context = CoreDataManager.sharedManager.currentManagedObjectContext()
         NSFetchedResultsController.deleteCacheWithName(cacheName)
