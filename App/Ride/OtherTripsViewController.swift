@@ -87,7 +87,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             try self.fetchedResultsController.performFetch()
         } catch let error {
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
-            abort()
+            self.navigationController?.popViewControllerAnimated(true)
         }
         
         self.title = "Other trips on " + self.dateFormatter.stringFromDate(date)
