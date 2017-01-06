@@ -142,6 +142,10 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        guard let tableView = self.tableView else {
+            return
+        }
+        
         if (APIClient.sharedClient.isMigrating) {
             return
         }
@@ -150,7 +154,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             
         case .Update:
             let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
-            let cell = self.tableView!.cellForRowAtIndexPath(indexPath!)
+            let cell = tableView.cellForRowAtIndexPath(indexPath!)
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
