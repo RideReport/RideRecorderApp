@@ -920,7 +920,7 @@ class Trip : NSManagedObject {
             } else {
                 topActivityType = .Walking
             }
-        } else if topActivityType == .Cycling && self.averageMovingSpeed <= 2 && self.length < 800 {
+        } else if topActivityType == .Cycling && self.averageMovingSpeed <= 2 && self.length < 800 && topVote < 0.7 {
             // https://github.com/KnockSoftware/Ride/issues/243
             topActivityType = .Walking
         }
