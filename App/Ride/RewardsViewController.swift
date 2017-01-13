@@ -14,7 +14,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var spriteKitView: SKView!
     @IBOutlet weak var rewardsLabel1: UILabel!
     @IBOutlet weak var rewardsLabel2: UILabel!
-    @IBOutlet weak var rewardsLabel3: UILabel!
     @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var emptyTrophiesView: UIView!
     @IBOutlet weak var bobbleChickView: UIView!
@@ -67,8 +66,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             return
         }
         
-        Profile.profile().updateCurrentRideStreakLength()
-        
         self.emptyTrophiesView.hidden = true
         
         let dateFormatter = NSDateFormatter()
@@ -83,11 +80,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         self.rewardsLabel2.text = String(format: "%@  %@", Profile.profile().distanceBikedImpressiveStat.emoji, Profile.profile().distanceBikedImpressiveStat.description)
         
-        if let longestStreak = Profile.profile().longestStreakLength?.integerValue, longestStreakDate = Profile.profile().longestStreakStartDate {
-            self.rewardsLabel3.text = String(format: "%@  Longest streak: %i days on %@", Profile.profile().longestStreakJewel, longestStreak, dateFormatter.stringFromDate(longestStreakDate))
-        } else {
-            self.rewardsLabel3.hidden = true
-        }
         
         guard self.scene == nil else {
             // make sure we haven't already loaded the scene

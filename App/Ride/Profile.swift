@@ -14,10 +14,6 @@ class Profile : NSManagedObject {
     @NSManaged var accessToken : String?
     @NSManaged var supportId : String?
     @NSManaged var accessTokenExpiresIn : NSDate?
-    @NSManaged var currentStreakStartDate : NSDate?
-    @NSManaged var currentStreakLength : NSNumber?
-    @NSManaged var longestStreakStartDate : NSDate?
-    @NSManaged var longestStreakLength : NSNumber?
     @NSManaged var statusText : String?
     @NSManaged var statusEmoji : String?
     @NSManaged private(set) var lastGeofencedLocation : Location?
@@ -150,14 +146,6 @@ class Profile : NSManagedObject {
         }
     }
     
-    var longestStreakJewel: String {
-        guard let streakLength = self.longestStreakLength else {
-            return ""
-        }
-        
-        return self.jewelForLength(streakLength.integerValue)
-    }
-    
     private func jewelForLength(length: Int)->String {
         if length >= 100 {
             return "🏆"
@@ -178,104 +166,5 @@ class Profile : NSManagedObject {
         } else {
             return "❤️"
         }
-    }
-    
-    func updateCurrentRideStreakLength() {
-        if (self.longestStreakStartDate == nil || self.longestStreakLength == nil) {
-            var longestStreakFoundYetLength = 0
-            var longestStreakFoundYetStartDate = NSDate()
-            
-            var thisStreakLength = 0
-            var thisStreakStartDate = NSDate()
-            for trip in Trip.allBikeTrips() {
-                let tripDate = (trip as! Trip).creationDate
-                if (tripDate.isEqualToDay(thisStreakStartDate)) {
-                    thisStreakStartDate = thisStreakStartDate.daysFrom(-1)
-                    thisStreakLength += 1
-                } else if (tripDate.compare(thisStreakStartDate) == NSComparisonResult.OrderedDescending) {
-                    // if the tripDate is after the thisStreakStartDate, keep going
-                } else {
-                    // there was no trip on thisStreakStartDate. thisStreak is over,
-                    // so update longestStreak and then go back to the prior day
-                    // to keep looking for a longer streak
-                    if (thisStreakLength > longestStreakFoundYetLength) {
-                        longestStreakFoundYetLength = thisStreakLength
-                        longestStreakFoundYetStartDate = thisStreakStartDate
-                    }
-                    
-                    thisStreakLength = 0
-                    thisStreakStartDate = thisStreakStartDate.daysFrom(-1)
-                }
-            }
-            
-            self.longestStreakLength = NSNumber(integer: longestStreakFoundYetLength)
-            self.longestStreakStartDate = longestStreakFoundYetStartDate
-            
-            CoreDataManager.sharedManager.saveContext()
-        }
-        
-        guard let currentStreakLength = self.currentStreakLength, currentStreakDate = self.currentStreakStartDate else {
-            // if it isn't currently set, calculate the current streak. this should only happen
-            // if the user is upgrading from a version that didnt store it
-            var count = 0
-            var currentDate = NSDate()
-            for trip in Trip.allBikeTrips() {
-                let tripDate = (trip as! Trip).creationDate
-                if (tripDate.isEqualToDay(currentDate)) {
-                    currentDate = currentDate.daysFrom(-1)
-                    count += 1
-                } else if (tripDate.compare(currentDate) == NSComparisonResult.OrderedDescending) {
-                    // if the tripDate is after the currentDate, keep going
-                } else if (currentDate.isEqualToDay(NSDate())) {
-                    // if the trip wasn't today but there was a trip yesterday,
-                    // they could still take a trip today so the streak is still valid
-                    // even though today doesn't count
-                    if (tripDate.isEqualToDay(currentDate.daysFrom(-1))) {
-                        // we have a ride yesterday, skip to the day before
-                        currentDate = currentDate.daysFrom(-2)
-                        count += 1
-                    }
-                } else {
-                    break
-                }
-            }
-            self.currentStreakLength = NSNumber(integer: count)
-            self.currentStreakStartDate = currentDate
-            
-            if (self.longestStreakLength == nil || count > self.longestStreakLength!.integerValue) {
-                // if this is our new longest streak, update it
-                self.longestStreakLength = self.currentStreakLength
-                self.longestStreakStartDate = self.currentStreakStartDate
-            }
-            
-            CoreDataManager.sharedManager.saveContext()
-            return
-        }
-        
-        if (currentStreakDate.daysFrom(currentStreakLength.integerValue).isToday()) {
-            // if the streak counts up to today, the count is current
-        } else if (currentStreakDate.daysFrom(currentStreakLength.integerValue + 1).isToday()) {
-            // if the streak counts up to yesterday, see if we have a ride today
-            if (Trip.bikeTripsToday() != nil) {
-                self.currentStreakLength = NSNumber(int: currentStreakLength.integerValue + 1)
-            }
-        } else {
-            if (Trip.bikeTripsToday() != nil) {
-                // the last streak expired but it is time to start a new one
-                self.currentStreakLength = NSNumber(int: currentStreakLength.integerValue + 1)
-                self.currentStreakStartDate = NSDate()
-            } else {
-                // no streak
-                self.currentStreakLength = NSNumber(int: 0)
-            }
-        }
-        
-        if (self.longestStreakLength == nil || currentStreakLength.integerValue > self.longestStreakLength!.integerValue) {
-            // if this is our new longest streak, update it
-            self.longestStreakLength = self.currentStreakLength
-            self.longestStreakStartDate = self.currentStreakStartDate
-        }
-        
-        CoreDataManager.sharedManager.saveContext()
     }
 }
