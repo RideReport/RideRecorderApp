@@ -18,6 +18,10 @@ class Profile : NSManagedObject {
     @NSManaged var statusEmoji : String?
     @NSManaged private(set) var lastGeofencedLocation : Location?
     @NSManaged var connectedApps : NSOrderedSet!
+    
+    @NSManaged var dateOfBirth : NSDate?
+    @NSManaged var weightKilograms : NSNumber?
+    @NSManaged var gender : NSNumber
 
     struct Static {
         static var onceToken : dispatch_once_t = 0

@@ -167,6 +167,11 @@ class HealthKitManager {
     func getAge() {
         do {
             let dob = try self.healthStore.dateOfBirth()
+
+            dispatch_async(dispatch_get_main_queue()) {
+                Profile.profile().dateOfBirth = dob
+                CoreDataManager.sharedManager.saveContext()
+            }
             self.currentAgeYears = Double(NSCalendar.currentCalendar().components(NSCalendarUnit.Year, fromDate: dob, toDate: NSDate(), options: NSCalendarOptions.WrapComponents).year)
         } catch _ {
         }
@@ -175,6 +180,12 @@ class HealthKitManager {
     func getGender() {
         do {
             self.currentGender = try self.healthStore.biologicalSex().biologicalSex
+            if self.currentGender != .NotSet {
+                dispatch_async(dispatch_get_main_queue()) {
+                    Profile.profile().gender = NSNumber(integer: self.currentGender.rawValue)
+                    CoreDataManager.sharedManager.saveContext()
+                }
+            }
         } catch _ {
             self.currentGender = HKBiologicalSex.NotSet
         }
@@ -190,6 +201,12 @@ class HealthKitManager {
             if let results = res {
                 if let result = results.first as? HKQuantitySample {
                     self.currentWeightKilograms = (result.quantity.doubleValueForUnit(HKUnit.gramUnit())) / 1000.0
+                    if self.currentWeightKilograms > 0 {
+                        dispatch_async(dispatch_get_main_queue()) {
+                            Profile.profile().weightKilograms = NSNumber(double: self.currentWeightKilograms)
+                            CoreDataManager.sharedManager.saveContext()
+                        }
+                    }
                 } else {
                     // ask for the user's weight?
                 }

@@ -12,6 +12,14 @@ import Alamofire
 import OAuthSwift
 import Mixpanel
 
+private enum HKBiologicalSex : Int {
+    case NotSet
+    case Female
+    case Male
+    @available(iOS 8.2, *)
+    case Other
+}
+
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
 
@@ -768,6 +776,23 @@ class APIClient {
             #if DEBUG
                 parameters["is_development_client"] = true
             #endif
+        }
+        
+        if let preferredLanguage = NSLocale.preferredLanguages().first {
+            parameters["preferred_language"] = preferredLanguage
+        }
+        
+        if let dob = Profile.profile().dateOfBirth {
+            parameters["date_of_birth"] = dob.JSONString()
+        }
+        
+        if let weight = Profile.profile().weightKilograms where weight.intValue > 0 {
+            parameters["weight_kilograms"] = weight
+        }
+        
+        let gender = Profile.profile().gender
+        if  gender.integerValue != HKBiologicalSex.NotSet.rawValue {
+            parameters["gender"] = gender
         }
         
         if (RouteManager.hasStarted()) {
