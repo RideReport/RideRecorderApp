@@ -413,6 +413,7 @@
 		3DD06C951D50159E00A5D719 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
 		3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocale+Additions.swift"; sourceTree = "<group>"; };
+		3DF146E41E29854B00A25C7A /* Ride 48.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 48.xcdatamodel"; sourceTree = "<group>"; };
 		70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report Notification Content.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content.debug.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -2310,6 +2311,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3DF146E41E29854B00A25C7A /* Ride 48.xcdatamodel */,
 				3D1B5CDF1D4932D000045388 /* Ride 47.xcdatamodel */,
 				3D7FFA8D1D061F5E0077E591 /* Ride 46.xcdatamodel */,
 				3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */,
@@ -2358,7 +2360,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 3D1B5CDF1D4932D000045388 /* Ride 47.xcdatamodel */;
+			currentVersion = 3DF146E41E29854B00A25C7A /* Ride 48.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

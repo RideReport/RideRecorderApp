@@ -12,6 +12,7 @@ import CoreLocation
 
 class Profile : NSManagedObject {
     @NSManaged var accessToken : String?
+    @NSManaged var supportId : String?
     @NSManaged var accessTokenExpiresIn : NSDate?
     @NSManaged var currentStreakStartDate : NSDate?
     @NSManaged var currentStreakLength : NSNumber?

@@ -796,6 +796,10 @@ class APIClient {
                     Profile.profile().statusEmoji = statusEmoji
                 }
                 
+                if let supportId = json["support_id"].string {
+                    Profile.profile().supportId = supportId
+                }
+                
                 if let connectedApps = json["connected_apps"].array {
                     var appsToDelete = ConnectedApp.allApps()
                     

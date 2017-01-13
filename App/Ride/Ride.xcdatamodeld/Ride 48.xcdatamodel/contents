@@ -72,6 +72,7 @@
         <attribute name="longestStreakStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="statusEmoji" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="statusText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="supportId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="connectedApps" toMany="YES" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="profile" inverseEntity="ConnectedApp" syncable="YES"/>
         <relationship name="lastGeofencedLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="lastGeofencedLocationOfProfile" inverseEntity="Location" syncable="YES"/>
@@ -143,7 +144,7 @@
         <element name="GyroscopeRotationRate" positionX="-27" positionY="162" width="128" height="60"/>
         <element name="Incident" positionX="-45" positionY="72" width="128" height="135"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="285"/>
-        <element name="Profile" positionX="-45" positionY="144" width="128" height="210"/>
+        <element name="Profile" positionX="-45" positionY="144" width="128" height="225"/>
         <element name="Prototrip" positionX="-54" positionY="135" width="128" height="120"/>
         <element name="SensorData" positionX="-45" positionY="144" width="128" height="105"/>
         <element name="SensorDataCollection" positionX="-54" positionY="135" width="128" height="180"/>

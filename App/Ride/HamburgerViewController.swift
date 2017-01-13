@@ -223,7 +223,8 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         let buildNumber = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as? String ?? ""
         let osNumber = UIDevice.currentDevice().systemVersion
         let phoneModel = UIDevice.currentDevice().deviceModel()
-        let body = String(format: "Tell us briefly what happened.\n\n\n\n\n=====================\n Version:%@ (%@)\niOS Version: %@\niPhone Model: %@", versionNumber, buildNumber, osNumber, phoneModel)
+        let supportId = Profile.profile().supportId ?? ""
+        let body = String(format: "Tell us briefly what happened.\n\n\n\n\n=====================\n Support Id: %@\nVersion:%@ (%@)\niOS Version: %@\niPhone Model: %@", supportId, versionNumber, buildNumber, osNumber, phoneModel)
         
         let composer = MFMailComposeViewController()
         composer.setSubject("Ride Report Bug Report")
