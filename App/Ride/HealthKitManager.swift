@@ -192,7 +192,7 @@ class HealthKitManager {
     }
     
     func getWeight() {
-        guard let weightType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMassIndex) else {
+        guard let weightType = HKQuantityType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass) else {
             DDLogWarn("Couldn't find body mass type!")
             return
         }

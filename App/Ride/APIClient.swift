@@ -778,7 +778,7 @@ class APIClient {
             #endif
         }
         
-        if let preferredLanguage = NSLocale.preferredLanguages().first {
+        if let preferredLanguage = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) as? String {
             parameters["preferred_language"] = preferredLanguage
         }
         
