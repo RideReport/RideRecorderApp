@@ -247,10 +247,6 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        if (indexPath.section == 0) {
-            return nil
-        }
-        
         let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
         if !trip.isClosed {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Cancel Trip") { (action, indexPath) -> Void in
@@ -311,7 +307,6 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-
         return true
     }
 }
