@@ -151,7 +151,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     // If we see sufficient motion of the right kind, we keep tracking. Otherwise, we end the trip.
     //
     
-    private func tripQualifiesForResumptions(trip: Trip, fromLocation: CLLocation)->Bool {
+    private func tripQualifiesForResumptions(trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
+        if (trip.activityType != activityType) {
+            if (trip.activityType.isMotorizedMode && activityType.isMotorizedMode) {
+                // if both trips are motorized, allow resumption since our mode detection within motorized mode is not great
+            } else {
+                return false
+            }
+        }
+        
         var timeoutInterval: NSTimeInterval = 0
         switch trip.activityType {
         case .Cycling where trip.length.miles >= 12:
@@ -184,7 +192,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         // Resume the most recent trip if it was recent enough
-        if let mostRecentTrip = Trip.mostRecentTrip() where mostRecentTrip.activityType == activityType && self.tripQualifiesForResumptions(mostRecentTrip, fromLocation: firstLocationOfNewTrip)  {
+        if let mostRecentTrip = Trip.mostRecentTrip() where self.tripQualifiesForResumptions(mostRecentTrip, activityType: activityType, fromLocation: firstLocationOfNewTrip)  {
             DDLogInfo("Resuming ride")
             #if DEBUG
                 if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {

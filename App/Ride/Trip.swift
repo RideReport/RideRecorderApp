@@ -29,6 +29,12 @@ import MapboxStatic
     
     static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
     
+    var isMotorizedMode: Bool {
+        get {
+            return (self == .Automotive || self == .Bus || self == .Rail)
+        }
+    }
+    
     var emoji: String {
         get {
             var tripTypeString = ""
