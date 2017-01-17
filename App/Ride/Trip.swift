@@ -877,7 +877,7 @@ class Trip : NSManagedObject {
                     switch topPrediction.activityType {
                     case .Automotive where averageSpeed < 1, .Cycling where averageSpeed < 1, .Rail where averageSpeed < 1, .Bus where averageSpeed < 1:
                         voteValue = 0
-                    case .Automotive where averageMovingSpeed < 6.5:
+                    case .Automotive where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
                     case .Bus where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
