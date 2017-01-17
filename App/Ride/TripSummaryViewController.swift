@@ -50,6 +50,10 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
     var peakUnratedY: CGFloat {
         get {
+            guard buttonsView != nil else {
+                return self.peakY
+            }
+            
             if self.selectedTrip.activityType == .Cycling {
                 return buttonsView.frame.maxY + 10
             }
@@ -60,6 +64,10 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
     var peakY: CGFloat {
         get {
+            guard rewardDescriptionLabel != nil else {
+                return 0
+            }
+            
             if let _ = self.selectedTrip.tripRewards.firstObject as? TripReward {
                 return max(rewardDescriptionLabel.frame.maxY, rewardEmojiLabel.frame.maxY) + 10
             }
