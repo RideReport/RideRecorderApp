@@ -10,7 +10,6 @@ import Foundation
 
 
 extension NSDate {
-    
     class func tomorrow() -> NSDate {
         return NSDate().beginingOfDay().daysFrom(1)
     }
@@ -33,6 +32,7 @@ extension NSDate {
     class var jsonDateFormatter: NSDateFormatter {
         get {
             let jsonDateFormatter = NSDateFormatter()
+            jsonDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
             jsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ssZZZ"
             
             return jsonDateFormatter
@@ -41,10 +41,11 @@ extension NSDate {
     
     class var jsonMillisecondDateFormatter: NSDateFormatter {
         get {
-        let jsonMillisecondDateFormatter = NSDateFormatter()
-        jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZZZ"
+            let jsonMillisecondDateFormatter = NSDateFormatter()
+            jsonMillisecondDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+            jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZZZ"
         
-        return jsonMillisecondDateFormatter
+            return jsonMillisecondDateFormatter
         }
     }
     
