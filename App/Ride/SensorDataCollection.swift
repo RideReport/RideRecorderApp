@@ -15,8 +15,6 @@ class SensorDataCollection : NSManagedObject {
     var isBeingCollected = false
     
     @NSManaged var accelerometerAccelerations : NSOrderedSet!
-    @NSManaged var deviceMotionAccelerations : NSOrderedSet!
-    @NSManaged var deviceMotionRotationRates : NSOrderedSet!
     @NSManaged var gyroscopeRotationRates : NSOrderedSet!
     @NSManaged var activityTypePredictions : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
@@ -193,8 +191,6 @@ class SensorDataCollection : NSManagedObject {
     func jsonDictionary() -> [String: AnyObject] {
         var dict:[String: AnyObject] = [:]
         dict["accelerometerAccelerations"] = jsonArray(forSensorDataSet: self.accelerometerAccelerations)
-        dict["deviceMotionAccelerations"] = jsonArray(forSensorDataSet: self.deviceMotionAccelerations)
-        dict["deviceMotionRotationRates"] = jsonArray(forSensorDataSet: self.deviceMotionRotationRates)
         dict["gyroscopeRotationsRates"] = jsonArray(forSensorDataSet: self.gyroscopeRotationRates)
         
         var locsArray : [AnyObject] = []

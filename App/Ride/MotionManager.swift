@@ -67,7 +67,6 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.deviceMotionUpdateInterval = MotionManager.updateInterval
         self.motionManager.accelerometerUpdateInterval = MotionManager.updateInterval
         self.motionManager.gyroUpdateInterval = MotionManager.updateInterval
     }
@@ -119,16 +118,6 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         
         self.isGatheringMotionData = true
         
-        self.motionManager.startDeviceMotionUpdatesToQueue(self.motionQueue) { (motion, error) in
-            guard let deviceMotion = motion else {
-                return
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                sensorDataCollection.addDeviceMotion(deviceMotion)
-            }
-        }
-        
         self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (data, error) in
             guard let accelerometerData = data else {
                 return
@@ -139,21 +128,24 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (data, error) in
-            guard let gyroData = data else {
-                return
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                sensorDataCollection.addGyroscopeData(gyroData)
+        if (!RandomForestManager.useAccelerometerOnly) {
+            self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (data, error) in
+                guard let gyroData = data else {
+                    return
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    sensorDataCollection.addGyroscopeData(gyroData)
+                }
             }
         }
     }
     
     private func stopMotionUpdates() {
-        self.motionManager.stopDeviceMotionUpdates()
         self.motionManager.stopAccelerometerUpdates()
-        self.motionManager.stopGyroUpdates()
+        if (!RandomForestManager.useAccelerometerOnly) {
+            self.motionManager.stopGyroUpdates()
+        }
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending background task with Stop Motion Updates!")
@@ -188,7 +180,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
             
             if sensorDataCollection.accelerometerAccelerations.count >= MotionManager.sampleWindowSize &&
-                sensorDataCollection.gyroscopeRotationRates.count >= MotionManager.sampleWindowSize
+                (RandomForestManager.useAccelerometerOnly || sensorDataCollection.gyroscopeRotationRates.count >= MotionManager.sampleWindowSize)
             {
                 sensorDataCollection.isBeingCollected = false
                 self.stopMotionUpdates()
@@ -220,26 +212,28 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (motion, error) in
-            guard error == nil else {
-                DDLogInfo("Error reading accelerometer data! Ending early…")
+        if (!RandomForestManager.useAccelerometerOnly) {
+            self.motionManager.startGyroUpdatesToQueue(self.motionQueue) { (motion, error) in
+                guard error == nil else {
+                    DDLogInfo("Error reading accelerometer data! Ending early…")
+                    
+                    sensorDataCollection.isBeingCollected = false
+                    self.stopMotionUpdates()
+                    
+                    sensorDataCollection.addUnknownTypePrediction()
+                    handler(sensorDataCollection: sensorDataCollection)
+                    
+                    return
+                }
                 
-                sensorDataCollection.isBeingCollected = false
-                self.stopMotionUpdates()
+                guard let gyroscopeData = motion else {
+                    return
+                }
                 
-                sensorDataCollection.addUnknownTypePrediction()
-                handler(sensorDataCollection: sensorDataCollection)
-                
-                return
-            }
-            
-            guard let gyroscopeData = motion else {
-                return
-            }
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                sensorDataCollection.addGyroscopeData(gyroscopeData)
-                completionBlock()
+                dispatch_async(dispatch_get_main_queue()) {
+                    sensorDataCollection.addGyroscopeData(gyroscopeData)
+                    completionBlock()
+                }
             }
         }
     }
