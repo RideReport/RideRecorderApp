@@ -1088,7 +1088,7 @@ class Trip : NSManagedObject {
             )
             
             let options = SnapshotOptions(
-                mapIdentifiers: ["quicklywilliam.l4imi65m"],
+                mapIdentifiers: ["quicklywilliam.2onj5igf"],
                 size: CGSize(width: width, height: width))
             options.centerCoordinate = nil
             options.overlays = [backingPath, path, startMarker, endMarker]
