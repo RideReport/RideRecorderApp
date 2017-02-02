@@ -434,7 +434,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let theSection = self.fetchedResultsController.sections![indexPath!.section]
             let isInProgresstrip = theSection.name.containsString(Trip.inProgressSectionIdentifierSuffix())
         
-            if isInProgresstrip || trip.activityType != .Cycling ||  sectionChangeType == .Delete {
+            if isInProgresstrip || (trip.isClosed && trip.activityType != .Cycling) ||  sectionChangeType == .Delete {
                 // if the trip is moving to in progress, or if it is moving from the cycling trips to other trips, then delete a row
                 self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
                                                        withRowAnimation: .Fade)
