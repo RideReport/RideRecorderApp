@@ -49,6 +49,15 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         self.notificationHelperTextLabel.hidden = true
         self.notificationHelperTextLabel.delay(4) {
             if !self.didFigureOutNotificationview {
+                if #available(iOS 10.0, *) {
+                    if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+                        self.helperTextLabel.animatedSetMarkdownStringValue("Try **pressing firmly** on the notification down there on the pretend iPhone 👇")
+                    } else {
+                        self.helperTextLabel.animatedSetMarkdownStringValue("Try **sliding left** on the notification down there on the pretend iPhone 👇")
+                    }
+                } else {
+                    self.helperTextLabel.animatedSetMarkdownStringValue("Try **sliding left** on the notification down there on the pretend iPhone 👇")
+                }
                 self.notificationHelperTextLabel.hidden = false
             }
         }
