@@ -42,16 +42,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     func reloadUI() {
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
-        
         if (isInAlreadyHaveAccountState) {
-            self.navigationItem.rightBarButtonItem?.title = "Log In"
-            self.helperTextLabel.markdownStringValue = "Log in to your account to **load your ride data** onto this iPhone."
-            self.haveAccountButton.setTitle("Don't have an account?", forState: UIControlState.Normal)
+            self.helperTextLabel.markdownStringValue = "Log in to my Ride Report account"
+            self.haveAccountButton.setTitle("I don't have an account", forState: UIControlState.Normal)
         } else {
-            self.navigationItem.rightBarButtonItem?.title = "Create"
-            self.helperTextLabel.markdownStringValue = "Create a free account to **keep your rides backed up** in case your phone is lost or stolen."
-            self.haveAccountButton.setTitle("Already have an account?", forState: UIControlState.Normal)
+            self.helperTextLabel.markdownStringValue = "Ok, last step!\n Let's create your **free Ride Report account**."
+            self.haveAccountButton.setTitle("I already have an account", forState: UIControlState.Normal)
         }
     }
     
@@ -93,17 +89,14 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.reloadUI()
         
         self.navigationController?.navigationBarHidden = false
-        self.navigationItem.rightBarButtonItem?.enabled = false
+        self.navigationItem.rightBarButtonItem = nil
         
         NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
                 return
             }
 
-            let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-            let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-            
-            if (emailPredicate.evaluateWithObject(strongSelf.emailTextField.text)) {
+            if (strongSelf.textFieldHasValidEmail()) {
                 strongSelf.navigationItem.rightBarButtonItem?.enabled = true
                 strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
             } else {
@@ -111,6 +104,13 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
                 strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
             }
         }
+    }
+    
+    private func textFieldHasValidEmail()->Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        
+        return emailPredicate.evaluateWithObject(self.emailTextField.text)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -136,8 +136,24 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         }
         
     }
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        if (isInAlreadyHaveAccountState) {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log in", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
+        } else {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
+        }
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        self.navigationItem.rightBarButtonItem = nil
+    }
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if (!self.textFieldHasValidEmail()) {
+            return false
+        }
+        
         self.emailTextField.resignFirstResponder()
         self.create()
         
