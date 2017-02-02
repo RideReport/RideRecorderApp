@@ -23,7 +23,7 @@ class SetupChildViewController : UIViewController {
 
 class SetupViewController: UINavigationController {
     var myViewControllers : [SetupChildViewController]!
-    private var hasAddedWatchkitToSetup = false
+    var hasAddedWatchkitToSetup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()

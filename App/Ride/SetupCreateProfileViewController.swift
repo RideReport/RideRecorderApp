@@ -46,7 +46,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.helperTextLabel.markdownStringValue = "Log in to my Ride Report account"
             self.haveAccountButton.setTitle("I don't have an account", forState: UIControlState.Normal)
         } else {
-            self.helperTextLabel.markdownStringValue = "Ok, last step!\n Let's create your **free Ride Report account**."
+            if let parent = self.parent where parent.hasAddedWatchkitToSetup {
+                // it's not the last step
+                self.helperTextLabel.markdownStringValue = "Ok, now let's create your **free Ride Report account**."
+            } else {
+                self.helperTextLabel.markdownStringValue = "Ok, last step!\n Let's create your **free Ride Report account**."
+            }
             self.haveAccountButton.setTitle("I already have an account", forState: UIControlState.Normal)
         }
     }
