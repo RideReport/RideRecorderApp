@@ -12,15 +12,25 @@ import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
     @IBOutlet weak var mapView:  MGLMapView!
-        
+    @IBInspectable var showStressMap : Bool = false
+    
     private var tripsAreLoaded = false
     
-    private var selectedTripLine : MGLPolyline?
-    private var selectedTripBackingLine : MGLPolyline?
+    private let tripFeatureSourceIdentifier = "trip-polyline"
+    
+    private var selectedTripLineFeature : MGLPolylineFeature?
+    private var selectedTripLineSource : MGLShapeSource!
     private var startPoint: MGLPointAnnotation?
     private var endPoint: MGLPointAnnotation?
     
+    var padFactorX : Double = 0.1
+    var padFactorTop : Double = 0.1
+    var padFactorBottom : Double = 0.1
+    
+    
     private var hasCenteredMap : Bool = false
+    
+    private var needsTripLoad : Bool = false
     
     private var _selectedTrip : Trip? = nil
         
@@ -41,17 +51,68 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.mapView.rotateEnabled = false
         self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
 
-        let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json")
+        let styleURL = showStressMap ? NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json") : NSURL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")
         self.mapView.styleURL = styleURL
         
         self.mapView.tintColor = ColorPallete.sharedPallete.transitBlue
-        
         
         // set the size of the url cache for tile caching.
         let memoryCapacity = 1 * 1024 * 1024
         let diskCapacity = 40 * 1024 * 1024
         let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
         NSURLCache.setSharedURLCache(urlCache)
+    }
+    
+    func mapView(mapView: MGLMapView, didFinishLoadingStyle style: MGLStyle) {
+        if (self.selectedTripLineSource == nil) {
+            self.selectedTripLineSource = MGLShapeSource(identifier: tripFeatureSourceIdentifier, shape: nil, options: nil)
+            self.mapView.style?.addSource(self.selectedTripLineSource)
+            
+            let tripBackinglayer = MGLLineStyleLayer(identifier: "trip-backing", source: self.selectedTripLineSource!)
+            tripBackinglayer.lineWidth = MGLStyleValue(rawValue: 3)
+            tripBackinglayer.lineGapWidth = MGLStyleValue(rawValue: 6)
+            tripBackinglayer.lineOpacity = MGLStyleValue(rawValue: 0.6)
+            tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.notificationActionGrey)
+            
+            let goodBikelayer = MGLLineStyleLayer(identifier: "good-bike", source: self.selectedTripLineSource!)
+            goodBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.Good.numberValue)])
+            goodBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.goodGreen)
+            
+            let badBikelayer = MGLLineStyleLayer(identifier: "bad-bike", source: self.selectedTripLineSource!)
+            badBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.Bad.numberValue)])
+            badBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.badRed)
+            
+            let unratedBikelayer = MGLLineStyleLayer(identifier: "unrated-bike", source: self.selectedTripLineSource!)
+            unratedBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.NotSet.numberValue)])
+            unratedBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.unknownGrey)
+            
+            let buslayer = MGLLineStyleLayer(identifier: "bus-trip", source: self.selectedTripLineSource!)
+            buslayer.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Bus.numberValue), NSPredicate(format: "%K == %@", "activityType", ActivityType.Rail.numberValue)])
+            buslayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.transitBlue)
+            
+            let otherTriplayer = MGLLineStyleLayer(identifier: "other-trip", source: self.selectedTripLineSource!)
+            otherTriplayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K != %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K != %@", "activityType", ActivityType.Bus.numberValue, NSPredicate(format: "%K != %@", "activityType", ActivityType.Rail.numberValue))])
+            otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.autoBrown)
+
+            var count = 0
+            for layer in [tripBackinglayer, goodBikelayer, badBikelayer, unratedBikelayer, buslayer, otherTriplayer] {
+                layer.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                if layer != tripBackinglayer {
+                    layer.lineWidth = MGLStyleValue(rawValue: 8)
+                    layer.lineOpacity = MGLStyleValue(rawValue: 0.9)
+                }
+                layer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
+                layer.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
+                mapView.style?.addLayer(layer)
+                count += 1
+            }
+        }
+        
+        if (needsTripLoad) {
+            needsTripLoad = false
+            self.setSelectedTrip(_selectedTrip)
+        }
+
     }
     
     deinit {
@@ -107,12 +168,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     func setSelectedTrip(selectedTrip : Trip?) {
         _selectedTrip = selectedTrip
         
-        if let tripBackingLine = self.selectedTripLine {
-            self.mapView.removeAnnotation(tripBackingLine)
+        if self.selectedTripLineSource == nil {
+            needsTripLoad = true
+            return
         }
-        if let tripLine = self.selectedTripBackingLine {
-            self.mapView.removeAnnotation(tripLine)
-        }
+        
         if let startPoint = self.startPoint {
             self.mapView.removeAnnotation(startPoint)
         }
@@ -121,15 +181,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         guard _selectedTrip != nil else {
-            self.selectedTripLine = nil
-            self.selectedTripBackingLine = nil
+            self.selectedTripLineSource = nil
             
             return
         }
         
         guard let trip = _selectedTrip else {
-            self.selectedTripLine = nil
-            self.selectedTripBackingLine = nil
+            self.selectedTripLineSource = nil
             
             return
         }
@@ -182,11 +240,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        self.selectedTripLine = MGLPolyline(coordinates: &coordinates, count: count)
-        self.selectedTripBackingLine = MGLPolyline(coordinates: &coordinates, count: count)
-
-        self.mapView.addOverlay(self.selectedTripBackingLine!)
-        self.mapView.addOverlay(self.selectedTripLine!)
+        self.selectedTripLineFeature = MGLPolylineFeature(coordinates: &coordinates, count: count)
+        self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating]
+        self.selectedTripLineSource.shape = self.selectedTripLineFeature
         
         let point0 = coordinates[0]
         var minLong : Double = point0.longitude
@@ -213,14 +269,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             i += 1
         }
         
-        let padFactorX : Double = 0.1
-        let padFactorTop : Double = 0.2
-        let padFactorBottom : Double = 0.5
         
         let sizeLong = (maxLong - minLong)
         let sizeLat = (maxLat - minLat)
         
-        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX))) // extra padding on the top so that it isn't under the notification bar.
+        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
         dispatch_async(dispatch_get_main_queue(), { [weak self] in
             guard let strongSelf = self else {
                 return
@@ -275,49 +328,5 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let view = UIButton(type: UIButtonType.DetailDisclosure)
         
         return view
-    }
-    
-    func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
-        if (annotation == self.selectedTripBackingLine) {
-            return 14
-        } else if (annotation == self.selectedTripLine) {
-            return 8
-        }
-
-        return 0
-    }
-    
-    func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
-        if (annotation == self.selectedTripBackingLine) {
-            return 1.0
-        } else if (annotation == self.selectedTripLine) {
-            return 1.0
-        }
-        
-        return 0
-    }
-    
-    func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
-        if (annotation == self.selectedTripBackingLine) {
-            return UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
-        }
-        
-        if let trip = _selectedTrip {
-            if (trip.activityType == .Cycling) {
-                if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
-                    return ColorPallete.sharedPallete.goodGreen
-                } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
-                    return ColorPallete.sharedPallete.badRed
-                } else {
-                    return ColorPallete.sharedPallete.unknownGrey
-                }
-            } else if (trip.activityType == .Bus) {
-                return ColorPallete.sharedPallete.transitBlue
-            }
-            
-            return ColorPallete.sharedPallete.autoBrown
-        }
-        
-        return UIColor.clearColor()
     }
 }

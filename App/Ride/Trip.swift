@@ -63,6 +63,10 @@ import MapboxStatic
         }
     }
     
+    var numberValue: NSNumber {
+        return NSNumber(short: self.rawValue)
+    }
+    
     var noun: String {
         get {
             var tripTypeString = ""
@@ -99,6 +103,11 @@ class Trip : NSManagedObject {
         case NotSet = 0
         case Good
         case Bad
+        
+        
+        var numberValue: NSNumber {
+            return NSNumber(short: self.rawValue)
+        }
     }
     
     private struct Static {

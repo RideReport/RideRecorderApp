@@ -75,6 +75,9 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="s16-8X-TfT"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showStressMap" value="YES"/>
+                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="mapView" destination="s4l-my-UT6" id="DQE-jq-MNt"/>
                     </connections>
@@ -98,14 +101,16 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EAJ-hS-lAz">
                                 <rect key="frame" x="0.0" y="114" width="375" height="375"/>
                                 <subviews>
-                                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i3d-VO-CBb" customClass="MGLMapView">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="4NJ-dl-vCN">
+                                    <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZrE-Gw-CPY">
+                                        <rect key="frame" x="-0.5" y="-0.5" width="375" height="375"/>
+                                        <connections>
+                                            <segue destination="3Dc-gi-inb" kind="embed" id="L0d-7P-d45"/>
+                                        </connections>
+                                    </containerView>
+                                    <view contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4NJ-dl-vCN">
                                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                                         <subviews>
-                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="kfe-xn-NjE" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
+                                            <view userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kfe-xn-NjE" customClass="RideSummaryView" customModule="Ride_Report" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <userDefinedRuntimeAttributes>
@@ -141,24 +146,21 @@
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="i3d-VO-CBb" firstAttribute="centerY" secondItem="EAJ-hS-lAz" secondAttribute="centerY" id="TG3-Ez-ppk"/>
-                                    <constraint firstItem="i3d-VO-CBb" firstAttribute="centerX" secondItem="EAJ-hS-lAz" secondAttribute="centerX" id="a7q-yi-Rna"/>
-                                    <constraint firstItem="i3d-VO-CBb" firstAttribute="width" secondItem="EAJ-hS-lAz" secondAttribute="width" id="aqV-m1-DDR"/>
+                                    <constraint firstItem="ZrE-Gw-CPY" firstAttribute="centerY" secondItem="EAJ-hS-lAz" secondAttribute="centerY" id="4DU-9F-MBR"/>
+                                    <constraint firstItem="ZrE-Gw-CPY" firstAttribute="width" secondItem="EAJ-hS-lAz" secondAttribute="width" id="AUD-P0-0Df"/>
+                                    <constraint firstItem="ZrE-Gw-CPY" firstAttribute="height" secondItem="EAJ-hS-lAz" secondAttribute="height" id="Ziz-Tg-bQc"/>
                                     <constraint firstAttribute="trailing" secondItem="4NJ-dl-vCN" secondAttribute="trailing" id="lqy-zH-Xnm"/>
+                                    <constraint firstItem="ZrE-Gw-CPY" firstAttribute="centerX" secondItem="EAJ-hS-lAz" secondAttribute="centerX" id="myv-mw-UT5"/>
                                     <constraint firstItem="4NJ-dl-vCN" firstAttribute="top" secondItem="EAJ-hS-lAz" secondAttribute="top" id="qJX-Vc-C2h"/>
-                                    <constraint firstItem="i3d-VO-CBb" firstAttribute="height" secondItem="EAJ-hS-lAz" secondAttribute="height" id="sN6-ju-sYw"/>
                                     <constraint firstItem="4NJ-dl-vCN" firstAttribute="leading" secondItem="EAJ-hS-lAz" secondAttribute="leading" id="wwK-jG-Q1R"/>
                                 </constraints>
                                 <variation key="widthClass=compact">
                                     <mask key="subviews">
-                                        <include reference="i3d-VO-CBb"/>
                                         <include reference="4NJ-dl-vCN"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="qJX-Vc-C2h"/>
                                         <include reference="wwK-jG-Q1R"/>
-                                        <include reference="TG3-Ez-ppk"/>
-                                        <include reference="a7q-yi-Rna"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -195,7 +197,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="mapView" destination="i3d-VO-CBb" id="GFl-MX-PcN"/>
                         <outlet property="rideSummaryView" destination="kfe-xn-NjE" id="WdX-r2-IBr"/>
                         <outlet property="shareView" destination="EAJ-hS-lAz" id="yTF-B1-fMZ"/>
                     </connections>
@@ -233,10 +234,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aA-ck-72u">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6aA-ck-72u">
                                 <rect key="frame" x="0.0" y="134" width="375" height="0.0"/>
                                 <subviews>
-                                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NJV-xo-lZr" customClass="MGLMapView">
+                                    <view multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NJV-xo-lZr" customClass="MGLMapView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
@@ -4238,6 +4239,35 @@ Label</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2DO-wq-DAw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2448.8000000000002" y="1065.0674662668666"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="ZBy-Ro-dTZ">
+            <objects>
+                <viewController id="3Dc-gi-inb" customClass="MapViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PTJ-n6-U1q">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aqL-R9-BiE" customClass="MGLMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                                <color key="backgroundColor" red="0.9765625" green="1" blue="0.96770134230000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="aqL-R9-BiE" firstAttribute="height" secondItem="PTJ-n6-U1q" secondAttribute="height" id="3kW-0M-EWP"/>
+                            <constraint firstItem="aqL-R9-BiE" firstAttribute="centerX" secondItem="PTJ-n6-U1q" secondAttribute="centerX" id="70t-66-3fS"/>
+                            <constraint firstItem="aqL-R9-BiE" firstAttribute="centerY" secondItem="PTJ-n6-U1q" secondAttribute="centerY" id="VWA-MC-eey"/>
+                            <constraint firstItem="aqL-R9-BiE" firstAttribute="width" secondItem="PTJ-n6-U1q" secondAttribute="width" id="z1y-DK-SNr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="aqL-R9-BiE" id="dpD-Lh-OZi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eo7-He-oHM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4873" y="465"/>
         </scene>
     </scenes>
     <resources>

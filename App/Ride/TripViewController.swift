@@ -39,18 +39,16 @@ class TripViewController: UIViewController {
                     } else {
                         strongSelf.updateChildViews()
                     }
-                }
-                if let mapViewController = strongSelf.mapViewController {
-                    mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                } else {
+                    if let mapViewController = strongSelf.mapViewController {
+                        mapViewController.setSelectedTrip(strongSelf.selectedTrip)
+                    }
                 }
             })
         }
     }
     
     private func updateChildViews() {
-        if let mapViewController = self.mapViewController {
-            mapViewController.setSelectedTrip(self.selectedTrip)
-        }
         if let tripSummaryViewController = self.tripSummaryViewController {
             tripSummaryViewController.selectedTrip = self.selectedTrip
         }
@@ -69,6 +67,13 @@ class TripViewController: UIViewController {
                     self.tripSummaryContainerView.frame = CGRectMake(0, peakY, self.view.frame.width, self.view.frame.height)
                 }
             }
+        }
+        
+        if let mapViewController = self.mapViewController {
+            mapViewController.padFactorTop = 0.2
+            mapViewController.padFactorBottom = 3 * Double((self.view.frame.size.height - self.tripSummaryContainerView.frame.origin.y) / (self.view.frame.size.height))
+
+            mapViewController.setSelectedTrip(self.selectedTrip)
         }
     }
     
