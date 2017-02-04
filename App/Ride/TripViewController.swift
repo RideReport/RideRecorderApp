@@ -14,6 +14,9 @@ class TripViewController: UIViewController {
     var isInitialTripUpdate = true
     var hasRequestedTripInfo : Bool = false
     
+    private var hasGivenFeedbackForReachedThreshold = false
+    private var feedbackGenerator: NSObject!
+    
     @IBOutlet weak var tripSummaryContainerView: UIView!
     
     weak var tripSummaryViewController: TripSummaryViewController? = nil
@@ -79,6 +82,10 @@ class TripViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if #available(iOS 10.0, *) {
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Medium)
+            (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
+        }
         
         for viewController in self.childViewControllers {
             if (viewController.isKindOfClass(MapViewController)) {
@@ -158,8 +165,18 @@ class TripViewController: UIViewController {
         
         let locY = (tripSummaryContainerView.center.y + translation.y) - tripSummaryContainerView.frame.height/2.0
         if (locY <= maxY) && (locY >= minY) {
+            hasGivenFeedbackForReachedThreshold = false
             tripSummaryContainerView.center = CGPointMake(tripSummaryContainerView.center.x, tripSummaryContainerView.center.y + translation.y)
             recognizer.setTranslation(CGPointZero, inView: self.view)
+        } else {
+            if (!hasGivenFeedbackForReachedThreshold) {
+                hasGivenFeedbackForReachedThreshold = true
+                if #available(iOS 10.0, *) {
+                    if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                        feedbackGenerator.impactOccurred()
+                    }
+                }
+            }
         }
         
         if recognizer.state == .Ended {
@@ -168,13 +185,23 @@ class TripViewController: UIViewController {
 
             duration = min(duration, 0.3)
             
-            UIView.animateWithDuration(duration) {
+            UIView.animateWithDuration(duration, animations: { 
                 if  velocity.y >= 0 {
                     self.tripSummaryContainerView.frame = CGRectMake(0, maxY, self.tripSummaryContainerView.frame.width, self.tripSummaryContainerView.frame.height)
                 } else {
                     self.tripSummaryContainerView.frame = CGRectMake(0, minY, self.tripSummaryContainerView.frame.width, self.tripSummaryContainerView.frame.height)
                 }
-            }
+            }, completion: { (didComplete) in
+                if (didComplete && !self.hasGivenFeedbackForReachedThreshold) {
+                    self.hasGivenFeedbackForReachedThreshold = true
+                    if #available(iOS 10.0, *) {
+                        if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                            feedbackGenerator.impactOccurred()
+                        }
+                    }
+                }
+                self.hasGivenFeedbackForReachedThreshold = false
+            })
         }
     }
     

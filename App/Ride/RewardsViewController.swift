@@ -19,8 +19,13 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var bobbleChickView: UIView!
     @IBOutlet weak var rewardPopup: PopupView!
     
+    
+    
     private var scene: SKScene?
     private var imageDictionary : [String: UIImage] = [:]
+    
+    private var feedbackGenerator: NSObject!
+    private var inflateFeedbackGenerator: NSObject!
     
     var touchPoint: CGPoint = CGPoint()
     var touchTime: NSTimeInterval = 0
@@ -29,6 +34,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if #available(iOS 10.0, *) {
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Light)
+            (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
+            
+            self.inflateFeedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Heavy)
+            (self.inflateFeedbackGenerator as! UIImpactFeedbackGenerator).prepare()
+        }
         
         self.rewardPopup.hidden = true
         
@@ -99,6 +112,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         self.scene!.physicsBody!.friction = 0.8
         self.scene!.physicsBody!.restitution = 0.0
         self.scene!.physicsWorld.gravity = CGVectorMake(0,-9.8)
+        self.scene!.physicsWorld.contactDelegate = self
         
         let bikeTripEmojiCounts = TripReward.tripRewardCountsGroupedByAttribute("emoji", additionalAttributes: ["descriptionText"])
         let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 48)!]
@@ -145,6 +159,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                         emoji.physicsBody!.restitution = 0.6
                         emoji.physicsBody!.friction = 1.0
                         emoji.physicsBody!.density = 0.005
+                        emoji.physicsBody!.contactTestBitMask = 1
                         emoji.physicsBody!.linearDamping = 0.0
                         emoji.physicsBody!.angularDamping = 0.0
                         emoji.physicsBody!.dynamic = false
@@ -227,6 +242,11 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         let touch = touches.first!
         let point = touch.locationInNode(scene)
         if let tappedSprite = scene.nodeAtPoint(point) as? SKSpriteNode {
+            if #available(iOS 10.0, *) {
+                if let feedbackGenerator = self.inflateFeedbackGenerator as? UIImpactFeedbackGenerator {
+                    feedbackGenerator.impactOccurred()
+                }
+            }
             self.touchPoint = point
             self.touchTime = touch.timestamp
             self.touchedSprite = tappedSprite
@@ -284,6 +304,16 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.rewardPopup.delay(1) {
                 if self.touchedSprite == nil {
                     self.rewardPopup.fadeOut()
+                }
+            }
+        }
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        if let selectedSprite = self.touchedSprite where contact.bodyB == selectedSprite.physicsBody {
+            if #available(iOS 10.0, *) {
+                if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                    feedbackGenerator.impactOccurred()
                 }
             }
         }

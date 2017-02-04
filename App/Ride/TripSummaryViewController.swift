@@ -25,6 +25,8 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
     
+    private var feedbackGenerator: NSObject!
+    
     private var blurEffect: UIBlurEffect!
     private var visualEffect: UIVisualEffectView!
     private var bluredView: UIVisualEffectView!
@@ -103,6 +105,11 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             button.titleLabel?.numberOfLines = 1
             button.titleLabel?.adjustsFontSizeToFitWidth = true
             button.titleLabel?.minimumScaleFactor = 0.6
+        }
+        
+        if #available(iOS 10.0, *) {
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Medium)
+            (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
         }
     }
     
@@ -243,6 +250,12 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
 
     @IBAction func selectedNewMode(_: AnyObject) {
+        if #available(iOS 10.0, *) {
+            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                feedbackGenerator.impactOccurred()
+            }
+        }
+        
         let mode = self.modeSelectorView.selectedMode
         
         CATransaction.begin()
@@ -283,6 +296,12 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     //
     
     @IBAction func tappedNotGreat(_: AnyObject) {
+        if #available(iOS 10.0, *) {
+            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                feedbackGenerator.impactOccurred()
+            }
+        }
+        
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
@@ -290,6 +309,12 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     }
     
     @IBAction func tappedGreat(_: AnyObject) {
+        if #available(iOS 10.0, *) {
+            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                feedbackGenerator.impactOccurred()
+            }
+        }
+        
         self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
