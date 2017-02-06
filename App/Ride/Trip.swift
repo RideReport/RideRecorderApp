@@ -971,6 +971,8 @@ class Trip : NSManagedObject {
     }
     
     func loadSummaryFromAPNDictionary(summary: [NSObject: AnyObject]) {
+        self.summaryIsSynced = true
+
         if let climacon = summary["weatherEmoji"] as? String {
             self.climacon = climacon
         }
