@@ -39,9 +39,9 @@ class TripViewController: UIViewController {
                             
                             reallyStrongSelf.updateChildViews()
                         })
-                    } else {
-                        strongSelf.updateChildViews()
                     }
+                    
+                    strongSelf.updateChildViews()
                 } else {
                     if let mapViewController = strongSelf.mapViewController {
                         mapViewController.setSelectedTrip(strongSelf.selectedTrip)
