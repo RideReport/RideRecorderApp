@@ -765,6 +765,45 @@ class APIClient {
     // MARK: - Authenciatation API Methods
     //
     
+    func profileDictionary() -> [String: AnyObject] {
+        var profileDictionary = [String: AnyObject]()
+        
+        // iOS Data
+        var iosDictionary = [String: AnyObject]()
+        if let preferredLanguage = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) as? String {
+            iosDictionary["preferred_language"] = preferredLanguage
+        }
+        
+        if let model = UIDevice.currentDevice().deviceModel() {
+            iosDictionary["device_model"] = model
+        }
+        
+        if !iosDictionary.isEmpty {
+            profileDictionary["ios"] = iosDictionary
+        }
+        
+        // Health Kit Data
+        var healthKitDictionary = [String: AnyObject]()
+        if let dob = Profile.profile().dateOfBirth {
+            healthKitDictionary["date_of_birth"] = dob.JSONString()
+        }
+        
+        if let weight = Profile.profile().weightKilograms where weight.intValue > 0 {
+            healthKitDictionary["weight_kilograms"] = weight
+        }
+        
+        let gender = Profile.profile().gender
+        if  gender.integerValue != HKBiologicalSex.NotSet.rawValue {
+            healthKitDictionary["gender"] = gender
+        }
+        
+        if !healthKitDictionary.isEmpty {
+            profileDictionary["healthkit"] = healthKitDictionary
+        }
+
+        return profileDictionary
+    }
+    
     func updateAccountStatus()-> AuthenticatedAPIRequest {
         guard self.hasRegisteredForRemoteNotifications else {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
@@ -778,22 +817,8 @@ class APIClient {
             #endif
         }
         
-        if let preferredLanguage = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) as? String {
-            parameters["preferred_language"] = preferredLanguage
-        }
+        parameters["profile"] = self.profileDictionary()
         
-        if let dob = Profile.profile().dateOfBirth {
-            parameters["date_of_birth"] = dob.JSONString()
-        }
-        
-        if let weight = Profile.profile().weightKilograms where weight.intValue > 0 {
-            parameters["weight_kilograms"] = weight
-        }
-        
-        let gender = Profile.profile().gender
-        if  gender.integerValue != HKBiologicalSex.NotSet.rawValue {
-            parameters["gender"] = gender
-        }
         
         if (RouteManager.hasStarted()) {
             if let loc = RouteManager.sharedManager.location {
