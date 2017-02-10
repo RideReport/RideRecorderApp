@@ -49,6 +49,30 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         self.notificationHelperTextLabel.hidden = true
         self.notificationHelperTextLabel.delay(4) {
             if !self.didFigureOutNotificationview {
+                let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
+                opacityAnimation.duration = 0.8;
+                opacityAnimation.fromValue = NSNumber(float: 0.0)
+                opacityAnimation.toValue =   NSNumber(float: 1.0)
+                
+                self.pushSimulationView.layer.shadowOpacity = 0.9
+                self.pushSimulationView.layer.shadowColor = ColorPallete.sharedPallete.notificationActionBlue.CGColor
+                self.pushSimulationView.layer.shadowOffset = CGSizeMake(0,0);
+                
+                let shadowRadiusAnimation = CABasicAnimation(keyPath: "shadowRadius")
+                shadowRadiusAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+                shadowRadiusAnimation.duration = 1.0;
+                shadowRadiusAnimation.fromValue = NSNumber(float: 0.0)
+                shadowRadiusAnimation.toValue =   NSNumber(float: 14.0)
+                shadowRadiusAnimation.autoreverses = true
+                shadowRadiusAnimation.repeatCount = FLT_MAX
+                
+                self.pushSimulationView.layer.addAnimation(shadowRadiusAnimation, forKey: "shadowRadius")
+                self.pushSimulationView.layer.addAnimation(opacityAnimation, forKey: "shadowOpacity")
+
+                self.pushSimulationView.layer.shadowOpacity = 1.0
+                self.pushSimulationView.layer.shadowColor = ColorPallete.sharedPallete.notificationActionBlue.CGColor
+                self.pushSimulationView.layer.shadowOffset = CGSizeMake(0,0);
+                
                 if #available(iOS 10.0, *) {
                     if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
                         self.helperTextLabel.animatedSetMarkdownStringValue("Try **pressing firmly** on the notification down there on the pretend iPhone 👇")
@@ -79,6 +103,13 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     func didOpenControls(view: RideSummaryView) {
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
+        self.pushSimulationView.layer.removeAllAnimations()
+        let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
+        opacityAnimation.duration = 0.8;
+        opacityAnimation.fromValue = NSNumber(float: 1.0)
+        opacityAnimation.toValue =   NSNumber(float: 0.0)
+        self.pushSimulationView.layer.addAnimation(opacityAnimation, forKey: "shadowOpacity")
+        self.pushSimulationView.layer.shadowOpacity = 0.0
         
         if #available(iOS 10.0, *) {
             helperTextLabel.animatedSetMarkdownStringValue("Ok, tap the **View** button.")
