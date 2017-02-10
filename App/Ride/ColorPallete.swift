@@ -88,4 +88,10 @@ class ColorPallete : NSObject {
         }
     }
     
+    var brightBlue: UIColor {
+        get {
+            return UIColor(red: 0.0/255.0, green: 190.0/255.0, blue: 255.0/255.0, alpha: 1.0)
+        }
+    }
+    
 }
