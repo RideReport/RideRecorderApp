@@ -92,8 +92,8 @@ class CoreDataManager {
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle(forClass: self.dynamicType).URLForResource("Ride", withExtension: "momd")
-        return NSManagedObjectModel(contentsOfURL: modelURL!)!
+        let modelURL = NSBundle.mainBundle().URLForResource("Ride", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOfURL: modelURL)!
     }()
     
     private func generatePSC()->NSPersistentStoreCoordinator? {
