@@ -142,7 +142,7 @@ class Location : NSManagedObject {
     
     func jsonDictionary() -> [String: AnyObject] {
         var locDict = [
-            "course": self.course!,
+            "course": self.course ?? 0,
             "date": self.date!.JSONString(),
             "horizontalAccuracy": self.horizontalAccuracy!,
             "speed": self.speed!,
