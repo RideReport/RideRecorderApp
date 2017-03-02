@@ -25,7 +25,7 @@ PODS:
     - FBSDKCoreKit
   - KeychainAccess (2.3.6)
   - Kingfisher (2.4.2)
-  - Mapbox-iOS-SDK (3.4.1)
+  - Mapbox-iOS-SDK (3.4.2)
   - MapboxStatic.swift (0.6.0)
   - Mixpanel (2.9.9):
     - Mixpanel/Mixpanel (= 2.9.9)
@@ -98,7 +98,7 @@ SPEC CHECKSUMS:
   FBSDKShareKit: df1491f064cffc8ebcc3fc8b71be94cc190c728e
   KeychainAccess: 7f10e2ef998ddf954a64d5d608be08677774684d
   Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
-  Mapbox-iOS-SDK: 9c0d23e9a3784e6c9e45af4339898e4598b5b09b
+  Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
   MapboxStatic.swift: 3185804edec6bea74be7d74fb3ca9a666009f7a2
   Mixpanel: 818d1940c2d9402453b349545022a86968097f57
   OAuthSwift: 8895267fbd6437a52aea26541572a617c7a8c7c1
