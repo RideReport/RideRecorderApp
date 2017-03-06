@@ -267,6 +267,9 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                 alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
                 }))
+                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
+                    trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
+                }))
                 alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.Default, handler: { (_) in
                     for sensorCollection in trip.sensorDataCollections {
                         RandomForestManager.sharedForest.classify(sensorCollection as! SensorDataCollection)
