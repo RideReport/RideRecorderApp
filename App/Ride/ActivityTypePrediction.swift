@@ -29,4 +29,8 @@ class ActivityTypePrediction : NSManagedObject {
             "activityType": NSNumber(short: self.activityType.rawValue)
         ]
     }
+    
+    override var debugDescription: String {
+        return activityType.emoji + ": " + confidence.stringValue
+    }
 }
