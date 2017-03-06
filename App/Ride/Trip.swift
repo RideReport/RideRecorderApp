@@ -882,7 +882,7 @@ class Trip : NSManagedObject {
             if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
                 var voteValue = powf(topPrediction.confidence.floatValue, 1.5) // make the difference bigger
                 let averageMovingSpeed = collection.averageMovingSpeed
-                let averageSpeed = collection.averageMovingSpeed
+                let averageSpeed = collection.averageSpeed
                 
                 if averageSpeed < 0 {
                     // negative speed means location data wasn't good. count these votes for half
