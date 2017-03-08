@@ -137,6 +137,13 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     }
     
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
+        if (!RandomForestManager.sharedForest.canPredict) {
+            DDLogInfo("Random forest was not ready!")
+            sensorDataCollection.addUnknownTypePrediction()
+            handler(sensorDataCollection: sensorDataCollection)
+            return
+        }
+        
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning Query Activity Type background task!")
             self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
