@@ -20,13 +20,10 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager: CMMotionActivityManager!
     private var motionManager: CMMotionManager!
     private var motionQueue: NSOperationQueue!
-    private var motionCheckStartDate: NSDate!
+
     let motionStartTimeoutInterval: NSTimeInterval = 30
     let motionContinueTimeoutInterval: NSTimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
-
-    static let sampleWindowSize: Int = 64
-    static let updateInterval: NSTimeInterval = 50/1000
 
     private var isGatheringMotionData: Bool = false
     
@@ -67,7 +64,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         self.motionQueue = NSOperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.accelerometerUpdateInterval = MotionManager.updateInterval
+        self.motionManager.accelerometerUpdateInterval = RandomForestManager.sharedForest.desiredSampleInterval/2.0
     }
     
     private func startup() {
@@ -163,8 +160,11 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 return
             }
             
-            if sensorDataCollection.accelerometerAccelerations.count >= MotionManager.sampleWindowSize
-            {
+            guard let firstReadingDate = (sensorDataCollection.accelerometerAccelerations.firstObject as? SensorData)?.date, let lastReadingDate = (sensorDataCollection.accelerometerAccelerations.lastObject as? SensorData)?.date else {
+                return
+            }
+            
+            if lastReadingDate.timeIntervalSinceDate(firstReadingDate) >= RandomForestManager.sharedForest.desiredSessionDuration {
                 sensorDataCollection.isBeingCollected = false
                 self.stopMotionUpdates()
                 
