@@ -10,7 +10,6 @@
 		1C98221F7CAACDDF6359D9BF /* Pods_Motion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C98A81E3D0F4DAF0462BF67 /* Pods_Motion.framework */; };
 		24C1DF999B3DD3D53FC86163 /* Pods_Ride_Report.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E531BFADB3FF661B0CC787A /* Pods_Ride_Report.framework */; };
 		2957A5F3E17619044AD2AC0B /* Pods_Ride_Report_Notification_Content.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BA0B4C19345F274AFA87F393 /* Pods_Ride_Report_Notification_Content.framework */; };
-		3D029A861E6F8AE40030397D /* 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D029A831E6F8AE40030397D /* 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv */; };
 		3D029A871E6F8AE40030397D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D029A841E6F8AE40030397D /* config.json */; };
 		3D029A8A1E6F91610030397D /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A891E6F91610030397D /* jsoncpp.cpp */; };
 		3D029A8C1E70CBAD0030397D /* RatingChoiceSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A8B1E70CBAD0030397D /* RatingChoiceSelectorView.swift */; };
@@ -69,6 +68,7 @@
 		3D2AB3901CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
 		3D2AB3911CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
 		3D2AB3921CA4A76400582A5D /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2AB38F1CA4A76400582A5D /* opencv2.framework */; };
+		3D2BC48E1E73883400245D91 /* 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D2BC48D1E73883400245D91 /* 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv */; };
 		3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
 		3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */; };
 		3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */; };
@@ -340,7 +340,6 @@
 		3D02377A1CC1627500E3D5BB /* Ride 42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 42.xcdatamodel"; sourceTree = "<group>"; };
 		3D029A7F1E6F8ABA0030397D /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
 		3D029A801E6F8ABA0030397D /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
-		3D029A831E6F8AE40030397D /* 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv; path = models/ios/19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv; sourceTree = "<group>"; };
 		3D029A841E6F8AE40030397D /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = config.json; path = models/ios/config.json; sourceTree = "<group>"; };
 		3D029A891E6F91610030397D /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsoncpp.cpp; sourceTree = "<group>"; };
 		3D029A8B1E70CBAD0030397D /* RatingChoiceSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingChoiceSelectorView.swift; sourceTree = "<group>"; };
@@ -375,6 +374,7 @@
 		3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomForestManager.h; sourceTree = "<group>"; };
 		3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
 		3D2AB38F1CA4A76400582A5D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Frameworks/opencv2.framework; sourceTree = "<group>"; };
+		3D2BC48D1E73883400245D91 /* 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv; path = "../../../../Ride-Android/ActivityPredictor/models/ios/6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv"; sourceTree = "<group>"; };
 		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Ride Report Notification Content.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -760,8 +760,8 @@
 				3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */,
 				3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */,
 				3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */,
-				3D029A831E6F8AE40030397D /* 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv */,
 				3D029A841E6F8AE40030397D /* config.json */,
+				3D2BC48D1E73883400245D91 /* 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv */,
 				3D029A7E1E6F8ABA0030397D /* json */,
 			);
 			name = ActivityPredictor;
@@ -1402,7 +1402,6 @@
 				3D4951101C8E092300E216AA /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
-				3D029A861E6F8AE40030397D /* 19c51901f1b4f2461b4a615e812bb18df9126857c83204cb2ddf0f5408c872b5.cv in Resources */,
 				3D3C3E1F1E68E69B004C719E /* pinRed@2x.png in Resources */,
 				3D3C3E211E68E69B004C719E /* pinRed@3x.png in Resources */,
 				3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */,
@@ -1424,6 +1423,7 @@
 				8492BCB41C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
 				3D3C3E1D1E68E69B004C719E /* pinGreen@3x.png in Resources */,
 				84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */,
+				3D2BC48E1E73883400245D91 /* 6daed8a3d45473790f48d7e948e902085ae8f903738a8c486dc3f150fbb00df4.cv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
