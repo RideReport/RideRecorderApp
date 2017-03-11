@@ -14,7 +14,7 @@ class TripViewController: UIViewController {
     var isInitialTripUpdate = true
     var hasRequestedTripInfo : Bool = false
     
-    private var hasGivenFeedbackForReachedThreshold = false
+    private var hasGivenFeedbackForReachedThreshold = true
     private var feedbackGenerator: NSObject!
     
     @IBOutlet weak var tripSummaryContainerView: UIView!
@@ -166,7 +166,10 @@ class TripViewController: UIViewController {
         
         let locY = (tripSummaryContainerView.center.y + translation.y) - tripSummaryContainerView.frame.height/2.0
         if (locY <= maxY) && (locY >= minY) {
-            hasGivenFeedbackForReachedThreshold = false
+            let feedbackBufferHeight: CGFloat = 10
+            if (locY < maxY - feedbackBufferHeight && locY > minY + feedbackBufferHeight) {
+                hasGivenFeedbackForReachedThreshold = false
+            }
             tripSummaryContainerView.center = CGPointMake(tripSummaryContainerView.center.x, tripSummaryContainerView.center.y + translation.y)
             recognizer.setTranslation(CGPointZero, inView: self.view)
         } else {
@@ -203,7 +206,7 @@ class TripViewController: UIViewController {
                         }
                     }
                 }
-                self.hasGivenFeedbackForReachedThreshold = false
+                self.hasGivenFeedbackForReachedThreshold = true
             })
         }
     }
