@@ -104,22 +104,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func startupNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = "Great!\n👍"
+        goodRideAction.title = RatingChoice.Good.emoji + " " + RatingChoice.Good.noun
         goodRideAction.activationMode = UIUserNotificationActivationMode.Background
         goodRideAction.destructive = false
         goodRideAction.authenticationRequired = false
         
+        
+        let mixedRideAction = UIMutableUserNotificationAction()
+        mixedRideAction.identifier = "MIXED_RIDE_IDENTIFIER"
+        mixedRideAction.title =  RatingChoice.Mixed.emoji + " " + RatingChoice.Mixed.noun
+        mixedRideAction.activationMode = UIUserNotificationActivationMode.Background
+        mixedRideAction.destructive = false
+        mixedRideAction.authenticationRequired = false
+        
         let badRideAction = UIMutableUserNotificationAction()
         badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = "Not Great\n👎"
+        badRideAction.title = RatingChoice.Bad.emoji + " " + RatingChoice.Bad.noun
         badRideAction.activationMode = UIUserNotificationActivationMode.Background
-        badRideAction.destructive = true
+        badRideAction.destructive = false
         badRideAction.authenticationRequired = false
+
         
         let rideCompleteCategory = UIMutableUserNotificationCategory()
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
-        rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
-        rideCompleteCategory.setActions([goodRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
+        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
+        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
    
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
@@ -302,14 +311,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             trip = Trip.tripWithUUID(uuid) {
                 DDLogInfo(String(format: "Received trip rating notification action"))
                 if (identifier == "GOOD_RIDE_IDENTIFIER") {
-                    trip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Good)
                     self.postTripRatedThanksNotification(true)
 
                     APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-                    trip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Bad)
+                    
+                    self.postTripRatedThanksNotification(false)
+                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                        completionHandler()
+                    })
+                } else if (identifier == "MIXED_RIDE_IDENTIFIER") {
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Mixed)
                     
                     self.postTripRatedThanksNotification(false)
                     APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in

@@ -96,19 +96,82 @@ import MapboxStatic
     }
 }
 
-class Trip : NSManagedObject {
-    let simplificationEpisilon: CLLocationDistance = 0.00005
+
+enum RatingChoice: Int16 {
+    case NotSet = 0
+    case Good
+    case Bad
+    case Mixed
     
-    enum Rating : Int16 {
-        case NotSet = 0
-        case Good
-        case Bad
-        
-        
-        var numberValue: NSNumber {
-            return NSNumber(short: self.rawValue)
+    var numberValue: NSNumber {
+        return NSNumber(short: self.rawValue)
+    }
+    
+    var emoji: String {
+        get {
+            switch self {
+            case .Bad:
+                return "😡"
+            case .Mixed:
+                return "😕"
+            case .Good:
+                return "☺️"
+            case .NotSet:
+                return ""
+            }
         }
     }
+    
+    var noun: String {
+        get {
+            switch self {
+            case .Bad:
+                return "Stressful"
+            case .Mixed:
+                return "Mixed"
+            case .Good:
+                return "Chill"
+            case .NotSet:
+                return ""
+            }
+        }
+    }
+}
+
+enum RatingVersion: Int16 {
+    case v1 = 0
+    case v2beta
+    
+    static var currentRatingVersion: RatingVersion {
+        return RatingVersion.v2beta
+    }
+    
+    var numberValue: NSNumber {
+        return NSNumber(short: self.rawValue)
+    }
+}
+
+struct Rating {
+    private(set) var choice: RatingChoice
+    private(set) var version: RatingVersion
+    
+    static func ratingWithCurrentVersion(choice: RatingChoice) -> Rating {
+        return Rating(choice: choice, version: RatingVersion.currentRatingVersion)
+    }
+    
+    init(choice: RatingChoice, version: RatingVersion) {
+        self.choice = choice
+        self.version = version
+    }
+    
+    init(rating: Int16, version: Int16) {
+        self.choice = RatingChoice(rawValue: rating) ?? RatingChoice.NotSet
+        self.version = RatingVersion(rawValue: version) ?? RatingVersion.currentRatingVersion
+    }
+}
+
+class Trip : NSManagedObject {
+    let simplificationEpisilon: CLLocationDistance = 0.00005
     
     private struct Static {
         static var timeFormatter : NSDateFormatter!
@@ -176,6 +239,28 @@ class Trip : NSManagedObject {
             }
         }
     }
+    
+    @NSManaged var ratingVersion : NSNumber
+    var rating: Rating {
+        get {
+            if let numRating = (self.primitiveValueForKey("rating") as? NSNumber),
+                let numVersion = (self.primitiveValueForKey("ratingVersion") as? NSNumber) {
+                return  Rating(rating: numRating.shortValue, version: numVersion.shortValue)
+            }
+            
+            return Rating.ratingWithCurrentVersion(RatingChoice.NotSet)
+        }
+        set {
+            self.willChangeValueForKey("rating")
+            self.setPrimitiveValue(NSNumber(short: newValue.choice.rawValue), forKey: "rating")
+            self.didChangeValueForKey("rating")
+            
+            self.willChangeValueForKey("ratingVersion")
+            self.setPrimitiveValue(NSNumber(short: newValue.version.rawValue), forKey: "ratingVersion")
+            self.didChangeValueForKey("ratingVersion")
+        }
+    }
+    
     @NSManaged var batteryAtEnd : NSNumber?
     @NSManaged var batteryAtStart : NSNumber?
     @NSManaged var sensorDataCollections : NSOrderedSet!
@@ -229,7 +314,6 @@ class Trip : NSManagedObject {
     @NSManaged var length : Meters
     var inProgressLength : Meters = 0
     private var lastInProgressLocation : Location? = nil
-    @NSManaged var rating : NSNumber!
     @NSManaged var climacon : String?
     var sectionIdentifier : String? {
         get {
@@ -729,7 +813,7 @@ class Trip : NSManagedObject {
         
         let fetchedRequest = NSFetchRequest(entityName: "Trip")
         fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, Rating.Bad.rawValue)
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, RatingChoice.Bad.rawValue)
         
         if let count = try? context.countForFetchRequest(fetchedRequest) {
             return count
@@ -869,7 +953,7 @@ class Trip : NSManagedObject {
     
     func calculateAggregatePredictedActivityType() {
         // something for airplanes needs to go right here.
-        
+    
         if self.aggregateRoughtSpeed > 75.0 {
             // special case for air travel. just look at the speed.
             self.activityType = .Aviation
@@ -904,7 +988,7 @@ class Trip : NSManagedObject {
                         voteValue = 0
                     case .Walking where averageSpeed > 3:
                         voteValue = 0
-                    case .Stationary where averageSpeed > 1:
+                    case .Stationary where averageSpeed > 1 || self.length > 100: // don't include stationary unless the trip is essentially phantom
                         voteValue = 0
                     default:
                         break
@@ -1056,6 +1140,7 @@ class Trip : NSManagedObject {
     private func createRouteMapAttachement(handler: (attachment: UNNotificationAttachment?)->Void) {
         if let locations = self.simplifiedLocations?.array as? [Location] where locations.count > 0 {
             let width = UIScreen.mainScreen().bounds.width
+            let height = UIScreen.mainScreen().bounds.height - 370 // make sure that all three buttons fit on the screen without scrolling
             
             var coords = [CLLocationCoordinate2D]()
 
@@ -1069,9 +1154,9 @@ class Trip : NSManagedObject {
             )
             path.strokeWidth = 18
             path.strokeColor = {
-                if(self.rating.shortValue == Trip.Rating.Good.rawValue) {
+                if(self.rating.choice == RatingChoice.Good) {
                     return ColorPallete.sharedPallete.goodGreen
-                } else if(self.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                } else if(self.rating.choice == RatingChoice.Bad) {
                     return ColorPallete.sharedPallete.badRed
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
@@ -1100,7 +1185,7 @@ class Trip : NSManagedObject {
             
             let options = SnapshotOptions(
                 mapIdentifiers: ["quicklywilliam.2onj5igf"],
-                size: CGSize(width: width, height: width))
+                size: CGSize(width: width, height: height))
             options.centerCoordinate = nil
             options.overlays = [backingPath, path, startMarker, endMarker]
             let snapshot = Snapshot(

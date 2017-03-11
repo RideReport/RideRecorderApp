@@ -19,11 +19,19 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet var rewardDescriptionLabel: UILabel!
     @IBOutlet var rewardEmojiLabel: UILabel!
     @IBOutlet var bottomSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet var mapImageHeightConstraint: NSLayoutConstraint!
     
     var inUseSecurityScopedResource :NSURL? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.mapImageView.removeConstraint(mapImageHeightConstraint)
+        mapImageHeightConstraint = NSLayoutConstraint(item: self.mapImageView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant:UIScreen.mainScreen().bounds.height - 370) // hard coded because notification content is super crazy about autolayout
+        self.mapImageView.addConstraint(mapImageHeightConstraint)
+        mapImageHeightConstraint.active = true
+
+        self.mapImageView.translatesAutoresizingMaskIntoConstraints = false
     }
     
     deinit {
@@ -47,8 +55,9 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             var hasMap = false
             
             if let attachment = notification.request.content.attachments.first {
-                if attachment.URL.startAccessingSecurityScopedResource() {
-                    mapImageView.image = UIImage(contentsOfFile: attachment.URL.path!)
+                if attachment.URL.startAccessingSecurityScopedResource(),
+                let mapImage = UIImage(contentsOfFile: attachment.URL.path!) {
+                    mapImageView.image = mapImage
                     inUseSecurityScopedResource = attachment.URL
                     hasMap = true
                 }

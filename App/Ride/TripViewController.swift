@@ -56,26 +56,14 @@ class TripViewController: UIViewController {
             tripSummaryViewController.selectedTrip = self.selectedTrip
         }
         
-        if self.isInitialTripUpdate {
-            self.isInitialTripUpdate = false
-            
-            if let tripSummaryViewController = self.tripSummaryViewController {
-                
-                let peakUnrealtedY = self.view.frame.size.height - tripSummaryViewController.peakUnratedY
-                let peakY = self.view.frame.size.height - tripSummaryViewController.peakY
-                
-                if let trip = self.selectedTrip where trip.activityType == .Cycling && trip.rating == NSNumber(short: Trip.Rating.NotSet.rawValue) {
-                    self.tripSummaryContainerView.frame = CGRectMake(0, peakUnrealtedY, self.view.frame.width, self.view.frame.height)
-                } else {
-                    self.tripSummaryContainerView.frame = CGRectMake(0, peakY, self.view.frame.width, self.view.frame.height)
-                }
-            }
-        }
-        
+        self.updateMapViewDisplayBounds()
+    }
+    
+    private func updateMapViewDisplayBounds() {
         if let mapViewController = self.mapViewController {
             mapViewController.padFactorTop = 0.2
             mapViewController.padFactorBottom = 3 * Double((self.view.frame.size.height - self.tripSummaryContainerView.frame.origin.y) / (self.view.frame.size.height))
-
+            
             mapViewController.setSelectedTrip(self.selectedTrip)
         }
     }
@@ -150,6 +138,19 @@ class TripViewController: UIViewController {
             tripSummaryViewController.view.layer.cornerRadius = cornerRadius
             tripSummaryViewController.view.clipsToBounds = true
         }
+        
+        NSNotificationCenter.defaultCenter().addObserverForName("TripSummaryViewDidChangeHeight", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            if let tripSummaryVC = strongSelf.tripSummaryViewController {
+                tripSummaryVC.selectedTrip = strongSelf.selectedTrip
+                let peakY = strongSelf.view.frame.size.height - tripSummaryVC.peakY
+                strongSelf.tripSummaryContainerView.frame = CGRectMake(0, peakY, strongSelf.view.frame.width, strongSelf.view.frame.height)
+            } else {
+                return
+            }
+        }
     }
     
     func panGesture(recognizer: UIPanGestureRecognizer) {
@@ -192,6 +193,8 @@ class TripViewController: UIViewController {
                     self.tripSummaryContainerView.frame = CGRectMake(0, minY, self.tripSummaryContainerView.frame.width, self.tripSummaryContainerView.frame.height)
                 }
             }, completion: { (didComplete) in
+                self.updateMapViewDisplayBounds()
+                
                 if (didComplete && !self.hasGivenFeedbackForReachedThreshold) {
                     self.hasGivenFeedbackForReachedThreshold = true
                     if #available(iOS 10.0, *) {

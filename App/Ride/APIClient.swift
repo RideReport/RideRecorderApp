@@ -408,11 +408,12 @@ class APIClient {
                         trip.summaryIsSynced = true
                         
                         if let activityTypeNumber = tripJson["activityType"].number,
-                                rating = tripJson["rating"].number,
+                                ratingChoiceNumber = tripJson["rating"].number,
                                 length = tripJson["length"].number,
                                 activityType = ActivityType(rawValue: activityTypeNumber.shortValue) {
+                            let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
+                            trip.rating = Rating(rating: ratingChoiceNumber.shortValue, version: ratingVersionNumber.shortValue)
                             trip.activityType = activityType
-                            trip.rating = rating
                             trip.length = length.floatValue
                         }
                         
@@ -616,9 +617,10 @@ class APIClient {
         
         var method = Alamofire.Method.PUT
         var tripDict = [
-            "activityType": NSNumber(short: trip.activityType.rawValue),
+            "activityType": trip.activityType.numberValue,
             "creationDate": trip.creationDate.JSONString(),
-            "rating": trip.rating
+            "rating": trip.rating.choice.numberValue,
+            "ratingVersion": trip.rating.version.numberValue
         ]
 
         if (!trip.locationsAreSynced.boolValue && !includeLocations) {

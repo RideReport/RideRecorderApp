@@ -9,7 +9,15 @@
 import Foundation
 
 @IBDesignable class ModeSelectorView : UISegmentedControl {
+    private var feedbackGenerator: NSObject!
+    
     private var shownModes: [ActivityType] = [.Cycling, .Walking, .Running, .Automotive, .Bus, .Rail] {
+        didSet {
+            reloadUI()
+        }
+    }
+    
+    @IBInspectable var fontSize: CGFloat = 40.0 {
         didSet {
             reloadUI()
         }
@@ -33,12 +41,6 @@ import Foundation
             }
             
             return .Unknown
-        }
-    }
-    
-    @IBInspectable var fontSize: CGFloat = 40.0 {
-        didSet {
-            reloadUI()
         }
     }
 
@@ -192,7 +194,25 @@ import Foundation
         self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize)], forState: .Normal)
         self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize), NSForegroundColorAttributeName:UIColor.blackColor()], forState: .Selected)
         
+        self.addTarget(self, action: "valueChanged:", forControlEvents: .ValueChanged)
+        if #available(iOS 10.0, *) {
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Medium)
+            (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
+        }
+        
         reloadUI()
+    }
+    
+    func valueChanged(sender:UIButton)
+    {
+        if #available(iOS 10.0, *) {
+            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                feedbackGenerator.impactOccurred()
+            }
+        }
+        
+        // make the button "sticky"
+        sender.selected = !sender.selected
     }
     
     private func imageWithColor(color: UIColor) -> UIImage {

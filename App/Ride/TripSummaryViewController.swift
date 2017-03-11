@@ -16,25 +16,24 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     @IBOutlet weak var rideDescriptionLabel: UILabel!
     @IBOutlet weak var rewardEmojiLabel: UILabel!
     @IBOutlet weak var rewardDescriptionLabel: UILabel!
-    @IBOutlet weak var greatButton: UIButton!
-    @IBOutlet weak var notGreatButton: UIButton!
+    
     @IBOutlet weak var changeModeButton: UIButton!
+    @IBOutlet weak var changeModeLabel: UILabel!
     @IBOutlet weak var buttonsView: UIView!
-    @IBOutlet var buttonsViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var statsView: UIView!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
     
-    private var feedbackGenerator: NSObject!
-    
+    @IBOutlet weak var ratingChoiceSelector: RatingChoiceSelectorView!
+    @IBOutlet var ratingChoiceHeightConstraint: NSLayoutConstraint!
+    private var initialRatingChoiceHeight: CGFloat = 0
+
     private var blurEffect: UIBlurEffect!
     private var visualEffect: UIVisualEffectView!
     private var bluredView: UIVisualEffectView!
     
     private var timeFormatter : NSDateFormatter!
     private var dateFormatter : NSDateFormatter!
-    
-    private var initialButtonsViewHeight: CGFloat = 0
     
     var maxY: CGFloat {
         get {
@@ -46,40 +45,24 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
                 return statsView.frame.maxY
             }
             
-            return buttonsView.frame.maxY + 10
+            return buttonsView.frame.maxY
         }
     }
-    
-    var peakUnratedY: CGFloat {
-        get {
-            guard buttonsView != nil else {
-                return self.peakY
-            }
-            
-            if self.selectedTrip.activityType == .Cycling {
-                return buttonsView.frame.maxY + 10
-            }
-            
-            return self.peakY
-        }
-    }
-    
+
     var peakY: CGFloat {
         get {
             guard rewardDescriptionLabel != nil else {
                 return 0
             }
             
-            if let _ = self.selectedTrip.tripRewards.firstObject as? TripReward {
-                return max(rewardDescriptionLabel.frame.maxY, rewardEmojiLabel.frame.maxY) + 10
-            }
-            return max(rideDescriptionLabel.frame.maxY, rideEmojiLabel.frame.maxY) + 10
+            return buttonsView.frame.maxY
         }
     }
     
     var selectedTrip : Trip! {
         didSet {
             if (self.selectedTrip != nil) {
+                self.ratingChoiceSelector.selectedRating = self.selectedTrip.rating.choice
                 reloadUI()
             }
         }
@@ -100,20 +83,17 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         self.timeFormatter.dateFormat = "h:mm a"
         
         self.modeSelectorView.hidden = true
+        self.changeModeLabel.hidden = true
         
-        for button in [self.greatButton, self.notGreatButton] {
-            button.titleLabel?.numberOfLines = 1
-            button.titleLabel?.adjustsFontSizeToFitWidth = true
-            button.titleLabel?.minimumScaleFactor = 0.6
-        }
-        
-        if #available(iOS 10.0, *) {
-            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Medium)
-            (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
-        }
+        self.initialRatingChoiceHeight = self.ratingChoiceHeightConstraint.constant
     }
     
     func reloadUI() {
+        if (!modeSelectorView.hidden) {
+            // dont reload the UI if the user is currently picking a mode
+            return
+        }
+        
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             
@@ -135,19 +115,20 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
                     durationLabel.text = self.selectedTrip.duration().intervalString
                     avgSpeedLabel.text = self.selectedTrip.averageBikingSpeed.string
                     statsView.hidden = false
-                    greatButton.hidden = false
-                    notGreatButton.hidden = false
-                    let buttonsViewHeight = self.changeModeButton.frame.height + 8 + 14.0 + self.greatButton.frame.size.height
-                    buttonsView.frame.size.height = buttonsViewHeight
-                    buttonsViewHeightConstraint?.constant = buttonsViewHeight
+                    ratingChoiceSelector.hidden = false
+
+                    ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
                 } else {
                     statsView.hidden = true
-                    greatButton.hidden = true
-                    notGreatButton.hidden = true
-                    let buttonsViewHeight = self.changeModeButton.frame.height + 16
-                    buttonsView.frame.size.height = buttonsViewHeight
-                    buttonsViewHeightConstraint?.constant = buttonsViewHeight
+                    ratingChoiceSelector.hidden = true
+
+                    ratingChoiceHeightConstraint?.constant = 0
                 }
+                
+                ratingChoiceSelector.setNeedsUpdateConstraints()
+                UIView.animateWithDuration(0.25, animations: {
+                    self.ratingChoiceSelector.layoutIfNeeded()
+                })
                 
                 self.changeModeButton.setTitle("Not a " + trip.activityType.noun + "?", forState: .Normal)
 
@@ -190,11 +171,13 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     // MARK: - UIVIewController
     //
     
+    override func viewDidLayoutSubviews() {
+        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
-        
-        initialButtonsViewHeight = self.buttonsView.frame.height
         
         createBackgroundViewIfNeeded()
     }
@@ -235,6 +218,12 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     // MARK: - UI Actions
     //
     
+    @IBAction func changedRating(_: AnyObject) {
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(ratingChoiceSelector.selectedRating)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        self.reloadUI()
+    }
+    
     @IBAction func changeMode(_: AnyObject) {
         CATransaction.begin()
         let transition = CATransition()
@@ -242,20 +231,25 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromRight
+        
         self.buttonsView.layer.addAnimation(transition, forKey: "transition")
+        
+        ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
+        ratingChoiceSelector.setNeedsUpdateConstraints()
+        UIView.animateWithDuration(0.25, animations: {
+            self.ratingChoiceSelector.layoutIfNeeded()
+        })
+        self.modeSelectorView.selectedSegmentIndex = UISegmentedControlNoSegment
         self.modeSelectorView.hidden = false
-        self.buttonsView.hidden = true
+        self.ratingChoiceSelector.hidden = true
+        self.changeModeButton.hidden = true
+        self.changeModeLabel.hidden = false
         CATransaction.commit()
-    }
     
+        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
+    }
 
     @IBAction func selectedNewMode(_: AnyObject) {
-        if #available(iOS 10.0, *) {
-            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
-                feedbackGenerator.impactOccurred()
-            }
-        }
-        
         let mode = self.modeSelectorView.selectedMode
         
         CATransaction.begin()
@@ -265,8 +259,12 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromLeft
         self.modeSelectorView.layer.addAnimation(transition, forKey: "transition")
+        self.ratingChoiceSelector.layer.addAnimation(transition, forKey: "transition")
         self.modeSelectorView.hidden = true
-        self.buttonsView.hidden = false
+        self.ratingChoiceSelector.hidden = false
+        self.changeModeButton.hidden = false
+        self.changeModeLabel.hidden = true
+
         CATransaction.commit()
         
         if mode != self.selectedTrip.activityType {
@@ -277,7 +275,10 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             
             let alert = UIAlertView(title: "Ride Report was confused 😬", message: "Would you like to report this misclassification so that Ride Report can get better in the future?", delegate: self, cancelButtonTitle: "Nah", otherButtonTitles: "Sure")
             alert.show()
+        } else {
+            self.reloadUI()
         }
+        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
     }
     
     func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
@@ -296,26 +297,21 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     //
     
     @IBAction func tappedNotGreat(_: AnyObject) {
-        if #available(iOS 10.0, *) {
-            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
-                feedbackGenerator.impactOccurred()
-            }
-        }
-        
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Bad.rawValue)
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Bad)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedGreat(_: AnyObject) {
-        if #available(iOS 10.0, *) {
-            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
-                feedbackGenerator.impactOccurred()
-            }
-        }
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Good)
+        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
-        self.selectedTrip.rating = NSNumber(short: Trip.Rating.Good.rawValue)
+        self.reloadUI()
+    }
+    
+    @IBAction func tappedMixed(_: AnyObject) {
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Mixed)
         APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()

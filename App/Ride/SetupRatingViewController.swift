@@ -126,7 +126,8 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
     
     @IBAction func tappedNotGreat(_ sender: AnyObject) {
         self.moveOutIphone()
-        helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")    }
+        helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
+    }
     
     func didTapEditButton(view: RideSummaryView) {
         showTripRichNotification()

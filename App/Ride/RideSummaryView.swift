@@ -43,12 +43,12 @@ import AudioToolbox
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: String = "Not Great\n👎" {
+    @IBInspectable var desturctiveActionTitle: String = RatingChoice.Bad.emoji + "\n" + RatingChoice.Bad.noun {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: String = "Great!\n👍" {
+    @IBInspectable var actionTitle: String = RatingChoice.Good.emoji + "\n" + RatingChoice.Good.noun {
         didSet {
             reloadUI()
         }

@@ -69,43 +69,94 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             self.mapView.style?.addSource(self.selectedTripLineSource)
             
             let tripBackinglayer = MGLLineStyleLayer(identifier: "trip-backing", source: self.selectedTripLineSource!)
-            tripBackinglayer.lineWidth = MGLStyleValue(rawValue: 3)
-            tripBackinglayer.lineGapWidth = MGLStyleValue(rawValue: 6)
-            tripBackinglayer.lineOpacity = MGLStyleValue(rawValue: 0.6)
-            tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.notificationActionGrey)
+            tripBackinglayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            tripBackinglayer.lineWidth = MGLStyleValue(interpolationBase: 1.5, stops: [
+                14: MGLStyleValue(rawValue: 2),
+                18: MGLStyleValue(rawValue: 10),
+                ])
+            tripBackinglayer.lineOpacity = MGLStyleValue(rawValue: 1.0)
+            tripBackinglayer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
+            tripBackinglayer.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
+            tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.darkGrey)
+            mapView.style?.addLayer(tripBackinglayer)
             
             let goodBikelayer = MGLLineStyleLayer(identifier: "good-bike", source: self.selectedTripLineSource!)
-            goodBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.Good.numberValue)])
+            goodBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            goodBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Good.numberValue)])
+            goodBikelayer.lineCap = tripBackinglayer.lineCap
+            goodBikelayer.lineJoin = tripBackinglayer.lineJoin
+            goodBikelayer.lineWidth = MGLStyleValue(interpolationBase: 1.5, stops: [
+                14: MGLStyleValue(rawValue: 5),
+                18: MGLStyleValue(rawValue: 20),
+                ])
+            tripBackinglayer.lineGapWidth = goodBikelayer.lineWidth // set the backinglayer's line gap width to the front layers' width
+            goodBikelayer.lineOpacity = MGLStyleValue(rawValue: 0.9)
             goodBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.goodGreen)
+            mapView.style?.addLayer(goodBikelayer)
             
             let badBikelayer = MGLLineStyleLayer(identifier: "bad-bike", source: self.selectedTripLineSource!)
-            badBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.Bad.numberValue)])
+            badBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            badBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Bad.numberValue)])
+            badBikelayer.lineCap = tripBackinglayer.lineCap
+            badBikelayer.lineJoin = tripBackinglayer.lineJoin
+            badBikelayer.lineWidth = goodBikelayer.lineWidth
+            badBikelayer.lineOpacity = goodBikelayer.lineOpacity
             badBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.badRed)
+            mapView.style?.addLayer(badBikelayer)
+            
+            let mixedBikelayerGreen = MGLLineStyleLayer(identifier: "mixed-bike-green", source: self.selectedTripLineSource!)
+            mixedBikelayerGreen.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            mixedBikelayerGreen.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Mixed.numberValue)])
+            mixedBikelayerGreen.lineCap = tripBackinglayer.lineCap
+            mixedBikelayerGreen.lineJoin = tripBackinglayer.lineJoin
+            mixedBikelayerGreen.lineWidth = goodBikelayer.lineWidth
+            mixedBikelayerGreen.lineOpacity = goodBikelayer.lineOpacity
+            mixedBikelayerGreen.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.goodGreen)
+            mapView.style?.addLayer(mixedBikelayerGreen)
+            
+            let mixedBikelayerRed = MGLLineStyleLayer(identifier: "mixed-bike-red", source: self.selectedTripLineSource!)
+            mixedBikelayerRed.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            mixedBikelayerRed.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Mixed.numberValue)])
+            mixedBikelayerRed.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
+            mixedBikelayerRed.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
+            mixedBikelayerRed.lineWidth = MGLStyleValue(interpolationBase: 1.5, stops: [
+                14: MGLStyleValue(rawValue: 2.5),
+                18: MGLStyleValue(rawValue: 10),
+                ])
+            mixedBikelayerRed.lineOpacity = MGLStyleValue(rawValue: 1.0)
+            mixedBikelayerRed.lineDashPattern = MGLStyleValue(rawValue:[0, 1.8])
+            mixedBikelayerRed.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.badRed)
+            mapView.style?.addLayer(mixedBikelayerRed)
             
             let unratedBikelayer = MGLLineStyleLayer(identifier: "unrated-bike", source: self.selectedTripLineSource!)
-            unratedBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", Trip.Rating.NotSet.numberValue)])
+            unratedBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
+            unratedBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.NotSet.numberValue)])
+            unratedBikelayer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
+            unratedBikelayer.lineJoin = tripBackinglayer.lineJoin
+            unratedBikelayer.lineWidth = goodBikelayer.lineWidth
+            unratedBikelayer.lineOpacity = goodBikelayer.lineOpacity
             unratedBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.unknownGrey)
+            mapView.style?.addLayer(unratedBikelayer)
             
             let buslayer = MGLLineStyleLayer(identifier: "bus-trip", source: self.selectedTripLineSource!)
+            buslayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
             buslayer.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Bus.numberValue), NSPredicate(format: "%K == %@", "activityType", ActivityType.Rail.numberValue)])
+            buslayer.lineCap = tripBackinglayer.lineCap
+            buslayer.lineJoin = tripBackinglayer.lineJoin
+            buslayer.lineWidth = goodBikelayer.lineWidth
+            buslayer.lineOpacity = goodBikelayer.lineOpacity
             buslayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.transitBlue)
+            mapView.style?.addLayer(buslayer)
             
             let otherTriplayer = MGLLineStyleLayer(identifier: "other-trip", source: self.selectedTripLineSource!)
+            otherTriplayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
             otherTriplayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K != %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K != %@", "activityType", ActivityType.Bus.numberValue, NSPredicate(format: "%K != %@", "activityType", ActivityType.Rail.numberValue))])
+            otherTriplayer.lineCap = tripBackinglayer.lineCap
+            otherTriplayer.lineJoin = tripBackinglayer.lineJoin
+            otherTriplayer.lineWidth = goodBikelayer.lineWidth
+            otherTriplayer.lineOpacity = goodBikelayer.lineOpacity
             otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.autoBrown)
-
-            var count = 0
-            for layer in [tripBackinglayer, goodBikelayer, badBikelayer, unratedBikelayer, buslayer, otherTriplayer] {
-                layer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                if layer != tripBackinglayer {
-                    layer.lineWidth = MGLStyleValue(rawValue: 8)
-                    layer.lineOpacity = MGLStyleValue(rawValue: 0.9)
-                }
-                layer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
-                layer.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
-                mapView.style?.addLayer(layer)
-                count += 1
-            }
+            mapView.style?.addLayer(otherTriplayer)
         }
         
         if (needsTripLoad) {
@@ -241,7 +292,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         self.selectedTripLineFeature = MGLPolylineFeature(coordinates: &coordinates, count: count)
-        self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating]
+        self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue]
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
         
         let point0 = coordinates[0]

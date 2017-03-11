@@ -239,9 +239,9 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         
         if let trip = self.trip {
             if (trip.activityType == .Cycling) {
-                if(trip.rating.shortValue == Trip.Rating.Good.rawValue) {
+                if(trip.rating.choice == RatingChoice.Good) {
                     return ColorPallete.sharedPallete.goodGreen
-                } else if(trip.rating.shortValue == Trip.Rating.Bad.rawValue) {
+                } else if(trip.rating.choice == RatingChoice.Bad) {
                     return ColorPallete.sharedPallete.badRed
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
