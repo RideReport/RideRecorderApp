@@ -76,8 +76,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     var lastActiveTrackingActivityTypeQueryDate : Date?
     let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 8
+    let numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval = 20
     let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 15
-    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 120
+    let normalTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 60
+    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 180
     
     var lastMotionMonitoringActivityTypeQueryDate : Date?
     let timeIntervalBetweenMotionMonitoringActivityTypeQueries : TimeInterval = 10
@@ -317,6 +319,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSinceNow) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
+                (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSinceNow) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
                 abs(lastQueryDate.timeIntervalSinceNow) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
     }
     
