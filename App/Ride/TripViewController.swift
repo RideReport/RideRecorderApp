@@ -162,7 +162,7 @@ class TripViewController: UIViewController {
 
         let velocity = recognizer.velocity(in: tripSummaryContainerView)
         let minY = self.view.frame.size.height - tripSummaryViewController.maxY
-        let maxY = self.view.frame.size.height - tripSummaryViewController.peakY
+        let maxY = self.view.frame.size.height - tripSummaryViewController.minY
         
         let locY = (tripSummaryContainerView.center.y + translation.y) - tripSummaryContainerView.frame.height/2.0
         if (locY <= maxY) && (locY >= minY) {

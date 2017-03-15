@@ -48,6 +48,16 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             return buttonsView.frame.maxY
         }
     }
+    
+    var minY: CGFloat {
+        get {
+            guard rewardDescriptionLabel != nil else {
+                return 0
+            }
+            
+            return buttonsView.frame.minY
+        }
+    }
 
     var peakY: CGFloat {
         get {
