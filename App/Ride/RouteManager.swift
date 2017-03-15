@@ -75,7 +75,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var locationManager : CLLocationManager!
     
     var lastActiveTrackingActivityTypeQueryDate : Date?
-    let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 5
+    let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 8
     let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 15
     let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 120
     
