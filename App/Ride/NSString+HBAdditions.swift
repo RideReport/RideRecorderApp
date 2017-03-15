@@ -13,7 +13,7 @@ extension Character {
         let chars = Array(String(self).utf16)
         let size = chars.count
         let font = UIFont(name: "AppleColorEmoji", size: 64)!
-        var glyphs = Array<CGGlyph>(count: size, repeatedValue: 0)
+        var glyphs = Array<CGGlyph>(repeating: 0, count: size)
         let supported = CTFontGetGlyphsForCharacters(font, chars, &glyphs, size)
         
         return !supported

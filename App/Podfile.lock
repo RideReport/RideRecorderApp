@@ -1,110 +1,70 @@
 PODS:
-  - Alamofire (3.4.1)
-  - Bolts (1.7.0):
-    - Bolts/AppLinks (= 1.7.0)
-    - Bolts/Tasks (= 1.7.0)
-  - Bolts/AppLinks (1.7.0):
+  - Alamofire (4.4.0)
+  - Bolts (1.8.4):
+    - Bolts/AppLinks (= 1.8.4)
+    - Bolts/Tasks (= 1.8.4)
+  - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
-  - Bolts/Tasks (1.7.0)
-  - CocoaLumberjack/Core (2.0.1)
-  - CocoaLumberjack/Default (2.0.1):
-    - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.0.1):
+  - Bolts/Tasks (1.8.4)
+  - CocoaLumberjack/Default (3.1.0)
+  - CocoaLumberjack/Swift (3.1.0):
     - CocoaLumberjack/Default
-  - CocoaLumberjack/Swift (2.0.1):
-    - CocoaLumberjack/Extensions
-  - Crashlytics (3.7.1):
+  - Crashlytics (3.8.4):
     - Fabric (~> 1.6.3)
   - ECSlidingViewController (2.0.3)
-  - Fabric (1.6.7)
-  - FBSDKCoreKit (4.12.0):
+  - Fabric (1.6.11)
+  - FBSDKCoreKit (4.20.1):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.12.0):
+  - FBSDKLoginKit (4.20.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.12.0):
+  - FBSDKShareKit (4.20.1):
     - FBSDKCoreKit
-  - KeychainAccess (2.3.6)
-  - Kingfisher (2.4.2)
+  - GzipSwift (3.1.4)
+  - KeychainAccess (3.0.1)
+  - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.4.2)
-  - MapboxStatic.swift (0.6.0)
-  - Mixpanel (2.9.9):
-    - Mixpanel/Mixpanel (= 2.9.9)
-  - Mixpanel/Mixpanel (2.9.9)
-  - OAuthSwift (0.6.0)
-  - SwiftChart (0.2.1)
-  - SwiftyJSON (2.3.2)
+  - MapboxStatic.swift (0.7.0)
+  - Mixpanel (3.1.2)
+  - OAuthSwift (1.1.1)
+  - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
-  - Alamofire (from `git@github.com:Alamofire/Alamofire.git`, branch `swift2.3`)
-  - CocoaLumberjack/Swift (from `https://github.com/CocoaLumberjack/CocoaLumberjack.git`, branch `swift_2.0`)
+  - Alamofire
+  - CocoaLumberjack/Swift
   - Crashlytics
   - ECSlidingViewController (~> 2.0.3)
   - Fabric
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - KeychainAccess (from `git@github.com:kishikawakatsumi/KeychainAccess.git`, branch `swift-2.3`)
-  - Kingfisher (from `git@github.com:onevcat/Kingfisher.git`, branch `swift2.3`)
+  - GzipSwift
+  - KeychainAccess
+  - Kingfisher
   - Mapbox-iOS-SDK
-  - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`, tag `v0.6.0`)
+  - MapboxStatic.swift
   - Mixpanel
   - OAuthSwift
-  - SwiftChart
   - SwiftyJSON
 
-EXTERNAL SOURCES:
-  Alamofire:
-    :branch: swift2.3
-    :git: git@github.com:Alamofire/Alamofire.git
-  CocoaLumberjack:
-    :branch: swift_2.0
-    :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
-  KeychainAccess:
-    :branch: swift-2.3
-    :git: git@github.com:kishikawakatsumi/KeychainAccess.git
-  Kingfisher:
-    :branch: swift2.3
-    :git: git@github.com:onevcat/Kingfisher.git
-  MapboxStatic.swift:
-    :git: https://github.com/mapbox/MapboxStatic.swift.git
-    :tag: v0.6.0
-
-CHECKOUT OPTIONS:
-  Alamofire:
-    :commit: 1ac83593aaea0bb31c5d22c86d5a2cf90498ee71
-    :git: git@github.com:Alamofire/Alamofire.git
-  CocoaLumberjack:
-    :commit: 479279f102a8ab23084290697bafa77aac0d1bdf
-    :git: https://github.com/CocoaLumberjack/CocoaLumberjack.git
-  KeychainAccess:
-    :commit: 90f3e11fe37cdaea27ac4b82dcf4560b2c90ad07
-    :git: git@github.com:kishikawakatsumi/KeychainAccess.git
-  Kingfisher:
-    :commit: dfda5b03406b3b1bd098d2c21c64c9ef3925fe6e
-    :git: git@github.com:onevcat/Kingfisher.git
-  MapboxStatic.swift:
-    :git: https://github.com/mapbox/MapboxStatic.swift.git
-    :tag: v0.6.0
-
 SPEC CHECKSUMS:
-  Alamofire: 01a82e2f6c0f860ade35534c8dd88be61bdef40c
-  Bolts: a0058fa3b331c5a1e4402d534f2dae36dbff31e4
-  CocoaLumberjack: 3eefa3b3b4d42d4700fa4e9d9bbb33c4cc80aaae
-  Crashlytics: 3cdd4c9655be68032a0cf0379e0fb5ef6af22cad
+  Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
+  Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
-  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
-  FBSDKCoreKit: 6e56d5a2a64a755ad4efb5dbeee8f82fb1b99775
-  FBSDKLoginKit: 03f68a8d48c2c8bb81d7eb8097973d483543e1f6
-  FBSDKShareKit: df1491f064cffc8ebcc3fc8b71be94cc190c728e
-  KeychainAccess: 7f10e2ef998ddf954a64d5d608be08677774684d
-  Kingfisher: 05bf8d04408aaa70fcd2c8c81b9f1d0f1ad313dd
+  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
+  FBSDKCoreKit: 39a3569652983bf8666620dd334804c9057ae9b2
+  FBSDKLoginKit: 17092ff61a18c54ca423aebc18c5acc2e5a4a728
+  FBSDKShareKit: 4f37934d9ee9500d2d35752595816dc35f967478
+  GzipSwift: 11ddb2bf253b1cd7b60bb169da20f62ac4348769
+  KeychainAccess: 017ea25e313a49eda10bb19b0bb0760fb1edfe1a
+  Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
-  MapboxStatic.swift: 3185804edec6bea74be7d74fb3ca9a666009f7a2
-  Mixpanel: 818d1940c2d9402453b349545022a86968097f57
-  OAuthSwift: 8895267fbd6437a52aea26541572a617c7a8c7c1
-  SwiftChart: b76d4607022107a46473aa29a93c867872253d68
-  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+  MapboxStatic.swift: 4c5c7553ba47146de42a5f19928996797edfebc0
+  Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
+  OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
+  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 64a61a307ccf8ff0663c488049180e5dead0241b
+PODFILE CHECKSUM: c42d8f95ec4aa06df8d3d9dad8fb4f0fd9633792
 
 COCOAPODS: 1.0.1

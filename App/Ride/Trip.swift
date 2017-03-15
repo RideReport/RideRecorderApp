@@ -17,21 +17,21 @@ import UserNotifications
 import MapboxStatic
 
 @objc enum ActivityType : Int16 {
-    case Unknown = 0
-    case Running
-    case Cycling
-    case Automotive
-    case Walking
-    case Bus
-    case Rail
-    case Stationary
-    case Aviation
+    case unknown = 0
+    case running
+    case cycling
+    case automotive
+    case walking
+    case bus
+    case rail
+    case stationary
+    case aviation
     
-    static var count: Int { return Int(ActivityType.Stationary.rawValue) + 1}
+    static var count: Int { return Int(ActivityType.stationary.rawValue) + 1}
     
     var isMotorizedMode: Bool {
         get {
-            return (self == .Automotive || self == .Bus || self == .Rail)
+            return (self == .automotive || self == .bus || self == .rail)
         }
     }
     
@@ -39,23 +39,23 @@ import MapboxStatic
         get {
             var tripTypeString = ""
             switch self {
-            case .Unknown:
+            case .unknown:
                 tripTypeString = "❓"
-            case .Running:
+            case .running:
                 tripTypeString = "🏃"
-            case .Cycling:
+            case .cycling:
                 tripTypeString = "🚲"
-            case .Automotive:
+            case .automotive:
                 tripTypeString = "🚗"
-            case .Walking:
+            case .walking:
                 tripTypeString = "🚶"
-            case .Bus:
+            case .bus:
                 tripTypeString = "🚌"
-            case .Rail:
+            case .rail:
                 tripTypeString = "🚈"
-            case .Stationary:
+            case .stationary:
                 tripTypeString = "💤"
-            case .Aviation:
+            case .aviation:
                 tripTypeString = "✈️"
             }
             
@@ -64,30 +64,30 @@ import MapboxStatic
     }
     
     var numberValue: NSNumber {
-        return NSNumber(short: self.rawValue)
+        return NSNumber(value: self.rawValue as Int16)
     }
     
     var noun: String {
         get {
             var tripTypeString = ""
             switch self {
-            case .Unknown:
+            case .unknown:
                 tripTypeString = "Unknown"
-            case .Running:
+            case .running:
                 tripTypeString = "Run"
-            case .Cycling:
+            case .cycling:
                 tripTypeString = "Bike Ride"
-            case .Automotive:
+            case .automotive:
                 tripTypeString = "Drive"
-            case .Walking:
+            case .walking:
                 tripTypeString = "Walk"
-            case .Bus:
+            case .bus:
                 tripTypeString = "Bus Ride"
-            case .Rail:
+            case .rail:
                 tripTypeString = "Train Ride"
-            case .Stationary:
+            case .stationary:
                 tripTypeString = "Sitting"
-            case .Aviation:
+            case .aviation:
                 tripTypeString = "Flight"
             }
             
@@ -98,25 +98,25 @@ import MapboxStatic
 
 
 enum RatingChoice: Int16 {
-    case NotSet = 0
-    case Good
-    case Bad
-    case Mixed
+    case notSet = 0
+    case good
+    case bad
+    case mixed
     
     var numberValue: NSNumber {
-        return NSNumber(short: self.rawValue)
+        return NSNumber(value: self.rawValue as Int16)
     }
     
     var emoji: String {
         get {
             switch self {
-            case .Bad:
+            case .bad:
                 return "😡"
-            case .Mixed:
+            case .mixed:
                 return "😕"
-            case .Good:
+            case .good:
                 return "☺️"
-            case .NotSet:
+            case .notSet:
                 return ""
             }
         }
@@ -125,13 +125,13 @@ enum RatingChoice: Int16 {
     var noun: String {
         get {
             switch self {
-            case .Bad:
+            case .bad:
                 return "Stressful"
-            case .Mixed:
+            case .mixed:
                 return "Mixed"
-            case .Good:
+            case .good:
                 return "Chill"
-            case .NotSet:
+            case .notSet:
                 return ""
             }
         }
@@ -147,7 +147,7 @@ enum RatingVersion: Int16 {
     }
     
     var numberValue: NSNumber {
-        return NSNumber(short: self.rawValue)
+        return NSNumber(value: self.rawValue as Int16)
     }
 }
 
@@ -155,7 +155,7 @@ struct Rating {
     private(set) var choice: RatingChoice
     private(set) var version: RatingVersion
     
-    static func ratingWithCurrentVersion(choice: RatingChoice) -> Rating {
+    static func ratingWithCurrentVersion(_ choice: RatingChoice) -> Rating {
         return Rating(choice: choice, version: RatingVersion.currentRatingVersion)
     }
     
@@ -165,7 +165,7 @@ struct Rating {
     }
     
     init(rating: Int16, version: Int16) {
-        self.choice = RatingChoice(rawValue: rating) ?? RatingChoice.NotSet
+        self.choice = RatingChoice(rawValue: rating) ?? RatingChoice.notSet
         self.version = RatingVersion(rawValue: version) ?? RatingVersion.currentRatingVersion
     }
 }
@@ -174,15 +174,15 @@ class Trip : NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
     
     private struct Static {
-        static var timeFormatter : NSDateFormatter!
-        static var sectionDateFormatter : NSDateFormatter!
+        static var timeFormatter : DateFormatter!
+        static var sectionDateFormatter : DateFormatter!
     }
     
-    class var sectionDateFormatter : NSDateFormatter {
+    class var sectionDateFormatter : DateFormatter {
         get {
             if (Static.sectionDateFormatter == nil) {
-                Static.sectionDateFormatter = NSDateFormatter()
-                Static.sectionDateFormatter.locale = NSLocale.currentLocale()
+                Static.sectionDateFormatter = DateFormatter()
+                Static.sectionDateFormatter.locale = Locale.current
                 Static.sectionDateFormatter.dateFormat = "yyyy-MM-dd"
             }
             
@@ -190,14 +190,14 @@ class Trip : NSManagedObject {
         }
     }
     
-    class var timeDateFormatter : NSDateFormatter {
+    class var timeDateFormatter : DateFormatter {
         get {
             if (Static.timeFormatter == nil) {
-                Static.timeFormatter = NSDateFormatter()
-                Static.timeFormatter.locale = NSLocale.currentLocale()
+                Static.timeFormatter = DateFormatter()
+                Static.timeFormatter.locale = Locale.current
                 Static.timeFormatter.dateFormat = "h:mma"
-                Static.timeFormatter.AMSymbol = (Static.timeFormatter.AMSymbol as NSString).lowercaseString
-                Static.timeFormatter.PMSymbol = (Static.timeFormatter.PMSymbol as NSString).lowercaseString
+                Static.timeFormatter.amSymbol = (Static.timeFormatter.amSymbol as NSString).lowercased
+                Static.timeFormatter.pmSymbol = (Static.timeFormatter.pmSymbol as NSString).lowercased
             }
             
             return Static.timeFormatter
@@ -210,30 +210,30 @@ class Trip : NSManagedObject {
     @NSManaged var endingPlacemarkName : String?
     var activityType : ActivityType {
         get {
-            if let num = (self.primitiveValueForKey("activityType") as? NSNumber),
-            let activityType = ActivityType(rawValue: num.shortValue) {
+            if let num = (self.primitiveValue(forKey: "activityType") as? NSNumber),
+            let activityType = ActivityType(rawValue: num.int16Value) {
                 return activityType
             }
             
-            return .Unknown
+            return .unknown
         }
         set {
             let oldValue = self.activityType
             
-            self.willChangeValueForKey("activityType")
-            self.setPrimitiveValue(NSNumber(short: newValue.rawValue), forKey: "activityType")
-            self.didChangeValueForKey("activityType")
+            self.willChangeValue(forKey: "activityType")
+            self.setPrimitiveValue(NSNumber(value: newValue.rawValue as Int16), forKey: "activityType")
+            self.didChangeValue(forKey: "activityType")
             
             if oldValue != newValue {
                 if self.isClosed {
                     self.sectionIdentifier = self.sectionIdentifierString()
                 }
 
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     // newly closed trips should be synced to healthkit
-                    if (HealthKitManager.authorizationStatus == .Authorized) {
+                    if (HealthKitManager.hasStarted) {
                         self.isSavedToHealthKit = false
-                        HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                        HealthKitManager.shared.saveOrUpdateTrip(self)
                     }
                 }
             }
@@ -243,21 +243,21 @@ class Trip : NSManagedObject {
     @NSManaged var ratingVersion : NSNumber
     var rating: Rating {
         get {
-            if let numRating = (self.primitiveValueForKey("rating") as? NSNumber),
-                let numVersion = (self.primitiveValueForKey("ratingVersion") as? NSNumber) {
-                return  Rating(rating: numRating.shortValue, version: numVersion.shortValue)
+            if let numRating = (self.primitiveValue(forKey: "rating") as? NSNumber),
+                let numVersion = (self.primitiveValue(forKey: "ratingVersion") as? NSNumber) {
+                return  Rating(rating: numRating.int16Value, version: numVersion.int16Value)
             }
             
-            return Rating.ratingWithCurrentVersion(RatingChoice.NotSet)
+            return Rating.ratingWithCurrentVersion(RatingChoice.notSet)
         }
         set {
-            self.willChangeValueForKey("rating")
-            self.setPrimitiveValue(NSNumber(short: newValue.choice.rawValue), forKey: "rating")
-            self.didChangeValueForKey("rating")
+            self.willChangeValue(forKey: "rating")
+            self.setPrimitiveValue(NSNumber(value: newValue.choice.rawValue as Int16), forKey: "rating")
+            self.didChangeValue(forKey: "rating")
             
-            self.willChangeValueForKey("ratingVersion")
-            self.setPrimitiveValue(NSNumber(short: newValue.version.rawValue), forKey: "ratingVersion")
-            self.didChangeValueForKey("ratingVersion")
+            self.willChangeValue(forKey: "ratingVersion")
+            self.setPrimitiveValue(NSNumber(value: newValue.version.rawValue as Int16), forKey: "ratingVersion")
+            self.didChangeValue(forKey: "ratingVersion")
         }
     }
     
@@ -279,7 +279,7 @@ class Trip : NSManagedObject {
     
     var isClosed : Bool {
         get {
-            if let num = (self.primitiveValueForKey("isClosed") as? NSNumber) {
+            if let num = (self.primitiveValue(forKey: "isClosed") as? NSNumber) {
                 return num.boolValue
             }
             return false
@@ -287,18 +287,18 @@ class Trip : NSManagedObject {
         set {
             let oldValue = self.isClosed
             
-            self.willChangeValueForKey("isClosed")
+            self.willChangeValue(forKey: "isClosed")
             self.setPrimitiveValue(nil, forKey: "sectionIdentifier")
-            self.setPrimitiveValue(NSNumber(bool: newValue), forKey: "isClosed")
-            self.didChangeValueForKey("isClosed")
+            self.setPrimitiveValue(NSNumber(value: newValue as Bool), forKey: "isClosed")
+            self.didChangeValue(forKey: "isClosed")
             
             if newValue {
                 if !oldValue {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         // newly closed trips should be synced to healthkit
-                        if (HealthKitManager.authorizationStatus == .Authorized) {
+                        if (HealthKitManager.hasStarted) {
                             self.isSavedToHealthKit = false
-                            HealthKitManager.sharedManager.saveOrUpdateTrip(self)
+                            HealthKitManager.shared.saveOrUpdateTrip(self)
                         }
                     }
                 }
@@ -310,14 +310,14 @@ class Trip : NSManagedObject {
         }
     }
     @NSManaged var uuid : String!
-    @NSManaged var creationDate : NSDate!
+    @NSManaged var creationDate : Date!
     @NSManaged var length : Meters
     var inProgressLength : Meters = 0
     private var lastInProgressLocation : Location? = nil
     @NSManaged var climacon : String?
     var sectionIdentifier : String? {
         get {
-            return self.primitiveValueForKey("sectionIdentifier") as? String
+            return self.primitiveValue(forKey: "sectionIdentifier") as? String
         }
         set {
             if (newValue != self.sectionIdentifier) {
@@ -325,9 +325,9 @@ class Trip : NSManagedObject {
                 // https://developer.apple.com/library/prerelease/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
                 didChangeSection = true
             }
-            self.willChangeValueForKey("sectionIdentifier")
+            self.willChangeValue(forKey: "sectionIdentifier")
             self.setPrimitiveValue(newValue, forKey: "sectionIdentifier")
-            self.didChangeValueForKey("sectionIdentifier")
+            self.didChangeValue(forKey: "sectionIdentifier")
         }
     }
     var didChangeSection : Bool = false
@@ -342,12 +342,12 @@ class Trip : NSManagedObject {
     }
     
     private func sectionIdentifierString()->String {
-        return  Trip.sectionDateFormatter.stringFromDate(self.creationDate) + (self.activityType == .Cycling ? Trip.cyclingSectionIdentifierSuffix() : "")
+        return  Trip.sectionDateFormatter.string(from: self.creationDate) + (self.activityType == .cycling ? Trip.cyclingSectionIdentifierSuffix() : "")
     }
     
-    class func reloadSectionIdentifiers(exhaustively: Bool = false) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+    class func reloadSectionIdentifiers(_ exhaustively: Bool = false) {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         if !exhaustively {
             fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil")
         }
@@ -356,7 +356,7 @@ class Trip : NSManagedObject {
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -369,40 +369,40 @@ class Trip : NSManagedObject {
             trip.sectionIdentifier = trip.sectionIdentifierString()
         }
         
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
     convenience init() {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
     }
     
     convenience init(prototrip: Prototrip?) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Trip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
         
         if let thePrototrip = prototrip {
-            self.creationDate = thePrototrip.creationDate
+            self.creationDate = thePrototrip.creationDate as Date!
             self.batteryAtStart = thePrototrip.batteryAtStart
             thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
     }
     
     class func tripCount() -> Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
         return 0
     }
     
-    class func allBikeTrips(limit: Int = 0) -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+    class func allBikeTrips(_ limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.cycling.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
             fetchedRequest.fetchLimit = limit
@@ -410,7 +410,7 @@ class Trip : NSManagedObject {
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -422,9 +422,9 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class func allTrips(limit: Int = 0) -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+    class func allTrips(_ limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
             fetchedRequest.fetchLimit = limit
@@ -432,7 +432,7 @@ class Trip : NSManagedObject {
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -444,9 +444,9 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class func allTripsWithUUIDs(limit: Int = 0) -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+    class func allTripsWithUUIDs(_ limit: Int = 0) -> [AnyObject] {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "uuid != \"\" AND uuid != nil")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         if (limit != 0) {
@@ -455,7 +455,7 @@ class Trip : NSManagedObject {
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -468,14 +468,14 @@ class Trip : NSManagedObject {
     }
     
     class func weekTrips() -> [AnyObject]? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", NSDate().daysFrom(-7))
+        fetchedRequest.predicate = NSPredicate(format: "creationDate > %@", Date().daysFrom(-7) as CVarArg)
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -488,15 +488,15 @@ class Trip : NSManagedObject {
         return results!
     }
     
-    class func tripWithUUID(uuid: String) -> Trip! {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+    class func tripWithUUID(_ uuid: String) -> Trip! {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", uuid)
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -509,17 +509,17 @@ class Trip : NSManagedObject {
         return (results!.first as! Trip)
     }
     
-    class func tripWithCreationDate(creationDate: NSDate) -> Trip! {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+    class func tripWithCreationDate(_ creationDate: Date) -> Trip! {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         
         // fudge the creation date by a second, just in case
-        fetchedRequest.predicate = NSPredicate(format: "(creationDate >= %@) AND (creationDate =< %@)", creationDate.secondsFrom(-1), creationDate.secondsFrom(1))
+        fetchedRequest.predicate = NSPredicate(format: "(creationDate >= %@) AND (creationDate =< %@)", creationDate.secondsFrom(-1) as CVarArg, creationDate.secondsFrom(1) as CVarArg)
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -533,13 +533,13 @@ class Trip : NSManagedObject {
     }
     
     class func bikeTripsToday() -> [Trip]? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().beginingOfDay())
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.cycling.rawValue, Date().beginingOfDay() as CVarArg)
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -553,14 +553,14 @@ class Trip : NSManagedObject {
     }
     
     class func mostRecentTrip() -> Trip? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -574,15 +574,15 @@ class Trip : NSManagedObject {
     }
     
     class func leastRecentBikeTrip() -> Trip? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.cycling.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -596,14 +596,14 @@ class Trip : NSManagedObject {
     }
     
     class func openTrips() -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == NO")
         fetchedRequest.predicate = closedPredicate
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -617,14 +617,14 @@ class Trip : NSManagedObject {
     }
     
     class func unclassifiedTrips() -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        let predicate = NSPredicate(format: "activityType == %i", ActivityType.Unknown.rawValue)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        let predicate = NSPredicate(format: "activityType == %i", ActivityType.unknown.rawValue)
         fetchedRequest.predicate = predicate
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -638,14 +638,14 @@ class Trip : NSManagedObject {
     }
     
     class func unweatheredTrips() -> [AnyObject] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         let predicate = NSPredicate(format: "climacon == nil OR climacon == ''")
         fetchedRequest.predicate = predicate
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -659,20 +659,20 @@ class Trip : NSManagedObject {
     }
     
     class func nextClosedUnsyncedTrips() -> Trip? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == YES")
         let syncedPredicate = NSPredicate(format: "isSynced == NO")
         let locationsAreSyncedPredicate = NSPredicate(format: "locationsAreSynced == NO")
-        let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [locationsAreSyncedPredicate, syncedPredicate])
+        let syncedCompoundPredicate = NSCompoundPredicate(type: NSCompoundPredicate.LogicalType.or, subpredicates: [locationsAreSyncedPredicate, syncedPredicate])
 
-        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedCompoundPredicate])
+        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicate.LogicalType.and, subpredicates: [closedPredicate, syncedCompoundPredicate])
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -686,18 +686,18 @@ class Trip : NSManagedObject {
     }
     
     class func nextUnsyncedSummaryTrip() -> Trip? {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         let closedPredicate = NSPredicate(format: "isClosed == YES")
         let syncedPredicate = NSPredicate(format: "summaryIsSynced == NO")
         
-        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [closedPredicate, syncedPredicate])
+        fetchedRequest.predicate = NSCompoundPredicate(type: NSCompoundPredicate.LogicalType.and, subpredicates: [closedPredicate, syncedPredicate])
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -711,13 +711,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfCycledTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.cycling.rawValue)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -725,13 +725,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfAutomotiveTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Automotive.rawValue)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.automotive.rawValue)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -739,13 +739,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfBusTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Bus.rawValue)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.bus.rawValue)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -753,13 +753,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfCycledTripsLast30Days : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Cycling.rawValue, NSDate().daysFrom(-30))
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.cycling.rawValue, Date().daysFrom(-30) as CVarArg)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -767,13 +767,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfAutomotiveTripsLast30Days : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Automotive.rawValue, NSDate().daysFrom(-30))
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.automotive.rawValue, Date().daysFrom(-30) as CVarArg)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -781,13 +781,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfBusTripsLast30Days : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.Bus.rawValue, NSDate().daysFrom(-30))
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND creationDate > %@", ActivityType.bus.rawValue, Date().daysFrom(-30) as CVarArg)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -795,13 +795,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfRewardedTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
         fetchedRequest.predicate = NSPredicate(format: "tripRewards.@count > 0")
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -809,13 +809,13 @@ class Trip : NSManagedObject {
     }
     
     class var numberOfBadTrips : Int {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.CountResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.Cycling.rawValue, RatingChoice.Bad.rawValue)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND rating == %i", ActivityType.cycling.rawValue, RatingChoice.bad.rawValue)
         
-        if let count = try? context.countForFetchRequest(fetchedRequest) {
+        if let count = try? context.count(for: fetchedRequest) {
             return count
         }
         
@@ -824,7 +824,7 @@ class Trip : NSManagedObject {
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        self.creationDate = NSDate()
+        self.creationDate = Date()
         self.generateUUID()
         self.sectionIdentifier = "z" // has to be non-nil or it will not show up in the list
     }
@@ -839,7 +839,7 @@ class Trip : NSManagedObject {
     }
     
     func generateUUID() {
-        self.uuid = NSUUID().UUIDString
+        self.uuid = UUID().uuidString
     }
     
     func batteryLifeUsed() -> Int16 {
@@ -847,38 +847,38 @@ class Trip : NSManagedObject {
             return 0
         }
         
-        if (batteryAtStart.shortValue == 0 || batteryAtEnd.shortValue == 0) {
+        if (batteryAtStart.int16Value == 0 || batteryAtEnd.int16Value == 0) {
             return 0
         }
         
         
-        if (batteryAtStart.shortValue < batteryAtEnd.shortValue) {
+        if (batteryAtStart.int16Value < batteryAtEnd.int16Value) {
             DDLogVerbose("Negative battery life used?")
             return 0
         }
         
-        return (batteryAtStart.shortValue - batteryAtEnd.shortValue)
+        return (batteryAtStart.int16Value - batteryAtEnd.int16Value)
     }
     
-    func duration() -> NSTimeInterval {
-        return fabs(self.startDate.timeIntervalSinceDate(self.endDate))
+    func duration() -> TimeInterval {
+        return fabs(self.startDate.timeIntervalSince(self.endDate))
     }
     
-    func locationWithCoordinate(coordinate: CLLocationCoordinate2D) -> Location {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let location = Location.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+    func locationWithCoordinate(_ coordinate: CLLocationCoordinate2D) -> Location {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let location = Location.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
-        location.course = self.locations.firstObject!.course
-        location.horizontalAccuracy = NSNumber(double: 0.0)
-        location.latitude = NSNumber(double: coordinate.latitude)
-        location.longitude = NSNumber(double: coordinate.longitude)
-        location.speed = NSNumber(double: -1.0)
+        location.course = (self.locations.firstObject! as AnyObject).course
+        location.horizontalAccuracy = NSNumber(value: 0.0 as Double)
+        location.latitude = NSNumber(value: coordinate.latitude as Double)
+        location.longitude = NSNumber(value: coordinate.longitude as Double)
+        location.speed = NSNumber(value: -1.0 as Double)
         location.isSmoothedLocation = true
         
         return location
     }
     
-    func undoSmoothWithCompletionHandler(handler: ()->Void) {
+    func undoSmoothWithCompletionHandler(_ handler: ()->Void) {
         if (self.locations.count < 2 || !self.hasSmoothed) {
             return
         }
@@ -889,7 +889,7 @@ class Trip : NSManagedObject {
             let location = element as! Location
             if location.isSmoothedLocation {
                 location.trip = nil
-                location.managedObjectContext?.deleteObject(location)
+                location.managedObjectContext?.delete(location)
             }
         }
         
@@ -901,17 +901,17 @@ class Trip : NSManagedObject {
     }
     
     func cancel() {
-        CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(self)
-        CoreDataManager.sharedManager.saveContext()
-        NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+        CoreDataManager.shared.currentManagedObjectContext().delete(self)
+        CoreDataManager.shared.saveContext()
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
     }
     
     func saveAndMarkDirty() {
-        if (self.hasChanges && self.isSynced.boolValue) {
+        if (self.hasChanges && self.isSynced) {
             self.isSynced = false
         }
         
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
     private func calculateLength()-> Void {
@@ -923,7 +923,7 @@ class Trip : NSManagedObject {
                 lastLocation = cllocation
                 continue
             }
-            length += lastLocation!.distanceFromLocation(cllocation)
+            length += lastLocation!.distance(from: cllocation)
             lastLocation = cllocation
         }
         
@@ -939,7 +939,7 @@ class Trip : NSManagedObject {
                     let thiscllocation = thisLoc.clLocation()
                     let lastcllocation = lasLoc.clLocation()
 
-                    inProgressLength += Float(lastcllocation.distanceFromLocation(thiscllocation))
+                    inProgressLength += Float(lastcllocation.distance(from: thiscllocation))
                     lastInProgressLocation = thisLoc
                     return true
                 } else {
@@ -956,7 +956,7 @@ class Trip : NSManagedObject {
     
         if self.aggregateRoughtSpeed > 75.0 {
             // special case for air travel. just look at the speed.
-            self.activityType = .Aviation
+            self.activityType = .aviation
 
             return
         }
@@ -965,8 +965,8 @@ class Trip : NSManagedObject {
         for collection in self.sensorDataCollections {
             if let topPrediction = (collection as? SensorDataCollection)?.topActivityTypePrediction {
                 var voteValue = powf(topPrediction.confidence.floatValue, 1.5) // make the difference bigger
-                let averageMovingSpeed = collection.averageMovingSpeed
-                let averageSpeed = collection.averageSpeed
+                let averageMovingSpeed = (collection as AnyObject).averageMovingSpeed as Double
+                let averageSpeed = (collection as AnyObject).averageSpeed as Double
                 
                 if averageSpeed < 0 {
                     // negative speed means location data wasn't good. count these votes for half
@@ -974,21 +974,21 @@ class Trip : NSManagedObject {
                 } else {
                     // otherwise, we give zero or partial vote power depending on if the prediction had a reasonable speed
                     switch topPrediction.activityType {
-                    case .Automotive where averageSpeed < 1, .Cycling where averageSpeed < 1, .Rail where averageSpeed < 1, .Bus where averageSpeed < 1:
+                    case .automotive where averageSpeed < 1, .cycling where averageSpeed < 1, .rail where averageSpeed < 1, .bus where averageSpeed < 1:
                         voteValue = 0
-                    case .Automotive where averageMovingSpeed < 3.6:
+                    case .automotive where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
-                    case .Bus where averageMovingSpeed < 3.6:
+                    case .bus where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
-                    case .Rail where averageMovingSpeed < 3.6:
+                    case .rail where averageMovingSpeed < 3.6:
                         voteValue = voteValue/3
-                    case .Cycling where averageMovingSpeed < 3 || averageMovingSpeed > 13.4:
+                    case .cycling where averageMovingSpeed < 3 || averageMovingSpeed > 13.4:
                         voteValue = voteValue/3
-                    case .Running where averageMovingSpeed < 2.2:
+                    case .running where averageMovingSpeed < 2.2:
                         voteValue = 0
-                    case .Walking where averageSpeed > 3:
+                    case .walking where averageSpeed > 3:
                         voteValue = 0
-                    case .Stationary where averageSpeed > 1 || self.length > 100: // don't include stationary unless the trip is essentially phantom
+                    case .stationary where averageSpeed > 1 || self.length > 100: // don't include stationary unless the trip is essentially phantom
                         voteValue = 0
                     default:
                         break
@@ -1000,7 +1000,7 @@ class Trip : NSManagedObject {
             }
         }
         
-        var topActivityType = ActivityType.Unknown
+        var topActivityType = ActivityType.unknown
         var topVote: Float = 0
         for (activityType, vote) in activityClassTopConfidenceVotes {
             if vote > topVote {
@@ -1013,21 +1013,21 @@ class Trip : NSManagedObject {
             DDLogInfo("No sensor collections voted! Falling back on speed…")
             // if no one voted, fall back on speeds
             if (averageSpeed >= 8) {
-                topActivityType = .Automotive
+                topActivityType = .automotive
             } else if (averageSpeed >= 3) {
-                topActivityType = .Cycling
+                topActivityType = .cycling
             } else {
-                topActivityType = .Walking
+                topActivityType = .walking
             }
-        } else if topActivityType == .Cycling && self.averageMovingSpeed <= 2 && self.length < 800 && topVote < 0.7 {
+        } else if topActivityType == .cycling && self.averageMovingSpeed <= 2 && self.length < 800 && topVote < 0.7 {
             // https://github.com/KnockSoftware/Ride/issues/243
-            topActivityType = .Walking
+            topActivityType = .walking
         }
         
         self.activityType = topActivityType
     }
     
-    func close(handler: ()->Void = {}) {
+    func close(_ handler: ()->Void = {}) {
         if (self.isClosed == true) {
             handler()
             return
@@ -1037,7 +1037,7 @@ class Trip : NSManagedObject {
         self.calculateLength()
         self.isClosed = true
         
-        NSNotificationCenter.defaultCenter().postNotificationName("TripDidCloseOrCancelTrip", object: self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
         self.saveAndMarkDirty()
         handler()
     }
@@ -1051,10 +1051,10 @@ class Trip : NSManagedObject {
             thePrototrip.moveSensorDataAndLocationsToTrip(self)
         }
         
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
-    func loadSummaryFromAPNDictionary(summary: [NSObject: AnyObject]) {
+    func loadSummaryFromAPNDictionary(_ summary: [AnyHashable: Any]) {
         self.summaryIsSynced = true
 
         if let climacon = summary["weatherEmoji"] as? String {
@@ -1070,23 +1070,23 @@ class Trip : NSManagedObject {
         }
         
         for reward in self.tripRewards.array as! [TripReward] {
-            self.managedObjectContext?.deleteObject(reward)
+            self.managedObjectContext?.delete(reward)
         }
         
         if let rewardEmoji = summary["rewardEmoji"] as? String,
-            rewardDescription = summary["rewardDescription"] as? String where rewardDescription != "" && rewardEmoji != "" {
+            let rewardDescription = summary["rewardDescription"] as? String, rewardDescription != "" && rewardEmoji != "" {
             let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
         } else if let rewards = summary["rewards"] as? [AnyObject] {
             for reward in rewards {
                 if let description = reward["description"] as? String,
-                    emoji = reward["emoji"] as? String {
+                    let emoji = reward["emoji"] as? String {
                     let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
                 }
             }
         }
     }
     
-    func loadSummaryFromJSON(summary: [String: JSON]) {
+    func loadSummaryFromJSON(_ summary: [String: JSON]) {
         if let ready = summary["ready"]?.boolValue {
             self.summaryIsSynced = ready
         }
@@ -1104,29 +1104,29 @@ class Trip : NSManagedObject {
         }
         
         for reward in self.tripRewards.array as! [TripReward] {
-            self.managedObjectContext?.deleteObject(reward)
+            self.managedObjectContext?.delete(reward)
         }
         
         if let rewardEmoji = summary["rewardEmoji"]?.string,
-            rewardDescription = summary["rewardDescription"]?.string where rewardDescription != "" && rewardEmoji != "" {
+            let rewardDescription = summary["rewardDescription"]?.string, rewardDescription != "" && rewardEmoji != "" {
             let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
         } else if let rewards = summary["rewards"]?.array {
             for reward in rewards {
-                if let description = reward["description"].string, emoji = reward["emoji"].string {
+                if let description = reward["description"].string, let emoji = reward["emoji"].string {
                     let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
                 }
             }
         }
     }
 
-    func closestLocationToCoordinate(coordinate: CLLocationCoordinate2D)->Location! {
+    func closestLocationToCoordinate(_ coordinate: CLLocationCoordinate2D)->Location! {
         let targetLoc = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
     
         var closestLocation : Location? = nil
         var closestDisance = CLLocationDistanceMax
         for loc in self.locations {
             let location = loc as! Location
-            let locDistance = targetLoc.distanceFromLocation(location.clLocation())
+            let locDistance = targetLoc.distance(from: location.clLocation())
             if (locDistance < closestDisance) {
                 closestDisance = locDistance
                 closestLocation = location
@@ -1137,10 +1137,10 @@ class Trip : NSManagedObject {
     }
     
     @available(iOS 10.0, *)
-    private func createRouteMapAttachement(handler: (attachment: UNNotificationAttachment?)->Void) {
-        if let locations = self.simplifiedLocations?.array as? [Location] where locations.count > 0 {
-            let width = UIScreen.mainScreen().bounds.width
-            let height = UIScreen.mainScreen().bounds.height - 370 // make sure that all three buttons fit on the screen without scrolling
+    private func createRouteMapAttachement(_ handler: @escaping (_ attachment: UNNotificationAttachment?)->Void) {
+        if let locations = self.simplifiedLocations?.array as? [Location], locations.count > 0 {
+            let width = UIScreen.main.bounds.width
+            let height = UIScreen.main.bounds.height - 370 // make sure that all three buttons fit on the screen without scrolling
             
             var coords = [CLLocationCoordinate2D]()
 
@@ -1154,15 +1154,15 @@ class Trip : NSManagedObject {
             )
             path.strokeWidth = 18
             path.strokeColor = {
-                if(self.rating.choice == RatingChoice.Good) {
+                if(self.rating.choice == RatingChoice.good) {
                     return ColorPallete.sharedPallete.goodGreen
-                } else if(self.rating.choice == RatingChoice.Bad) {
+                } else if(self.rating.choice == RatingChoice.bad) {
                     return ColorPallete.sharedPallete.badRed
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
             }()
-            path.fillColor = UIColor.clearColor()
+            path.fillColor = UIColor.clear
             path.fillOpacity = 0.0
             
             let backingPath = Path(
@@ -1170,17 +1170,17 @@ class Trip : NSManagedObject {
             )
             backingPath.strokeWidth = 24
             backingPath.strokeColor = UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
-            backingPath.fillColor = UIColor.clearColor()
+            backingPath.fillColor = UIColor.clear
             backingPath.fillOpacity = 0.0
             
             let startMarker = CustomMarker(
                 coordinate: locations.first!.coordinate(),
-                URL: NSURL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinGreen%402x.png")!
+                url: URL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinGreen%402x.png")!
             )
             
             let endMarker = CustomMarker(
                 coordinate: locations.last!.coordinate(),
-                URL: NSURL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinRed%402x.png")!
+                url: URL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinRed%402x.png")!
             )
             
             let options = SnapshotOptions(
@@ -1192,7 +1192,7 @@ class Trip : NSManagedObject {
                 options: options,
                 accessToken: "pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
             
-            let filePath = NSTemporaryDirectory().stringByAppendingString(self.uuid + ".png")
+            let filePath = NSTemporaryDirectory() + (self.uuid + ".png")
             
             var taskFinished = false
             
@@ -1205,35 +1205,35 @@ class Trip : NSManagedObject {
                 
                 if let image = image {
                     let data = UIImagePNGRepresentation(image)
-                    data?.writeToURL(NSURL(fileURLWithPath: filePath), atomically: true)
-                    if let attachment = try? UNNotificationAttachment(identifier: "map", URL: NSURL(fileURLWithPath: filePath), options: [UNNotificationAttachmentOptionsThumbnailClippingRectKey:  CGRectCreateDictionaryRepresentation(CGRectMake(0.5, 0.5, 1, 1))]) {
-                        handler(attachment: attachment)
+                    try? data?.write(to: URL(fileURLWithPath: filePath), options: .atomic)
+                    if let attachment = try? UNNotificationAttachment(identifier: "map", url: NSURL(fileURLWithPath: filePath) as URL, options: [UNNotificationAttachmentOptionsThumbnailClippingRectKey:  CGRect(x: 0.5, y: 0.5, width: 1, height: 1).dictionaryRepresentation]) {
+                        handler(attachment)
                         return
                     }
                 }
                 
-                handler(attachment: nil)
+                handler(nil)
             })
             
             // timeout after two seconds, runs on same (main) thread as snapshot.image callback
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
                 if (!taskFinished) {
                     taskFinished = true
                     task.cancel()
-                    handler(attachment: nil)
+                    handler(nil)
                 }
             })
         } else {
-            handler(attachment: nil)
+            handler(nil)
         }
     }
     
-    func sendTripCompletionNotificationLocally(clearRemoteMessage: Bool = false, secondsFromNow: NSTimeInterval = 0) {
+    func sendTripCompletionNotificationLocally(_ clearRemoteMessage: Bool = false, secondsFromNow: TimeInterval = 0) {
         DDLogInfo("Sending notification…")
         
         self.cancelTripStateNotification(clearRemoteMessage)
         
-        if (self.activityType == .Cycling) {
+        if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
             
             var userInfo = ["uuid" : self.uuid, "rideDescription" : self.displayString(), "rideEmoji" : self.climacon ?? self.activityType.emoji]
@@ -1243,7 +1243,7 @@ class Trip : NSManagedObject {
             }
             
             if #available(iOS 10.0, *) {
-                let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     DDLogInfo("Schedule trip notification background task expired!")
                 })
                 
@@ -1264,17 +1264,17 @@ class Trip : NSManagedObject {
                                                         content: content,
                                                         trigger: trigger)
                     
-                    UNUserNotificationCenter.currentNotificationCenter().addNotificationRequest(request) { (error) in
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    UNUserNotificationCenter.current().add(request) { (error) in
+                        DispatchQueue.main.async {
                             if (backgroundTaskID != UIBackgroundTaskInvalid) {
                                 DDLogInfo("Ending trip notification background task!")
-                                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                                UIApplication.shared.endBackgroundTask(backgroundTaskID)
                             }
-                        })
+                        }
                     }
                 }
                 
-                guard let locs = self.simplifiedLocations where locs.count > 0 else {
+                guard let locs = self.simplifiedLocations, locs.count > 0 else {
                     self.simplify({
                         self.createRouteMapAttachement(attachmentCallbackHandler)
                     })
@@ -1291,12 +1291,12 @@ class Trip : NSManagedObject {
                 self.currentStateNotification?.userInfo = userInfo
                 
                 if secondsFromNow > 0 {
-                    self.currentStateNotification?.fireDate = NSDate().secondsFrom(Int(secondsFromNow))
-                    UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
+                    self.currentStateNotification?.fireDate = Date().secondsFrom(Int(secondsFromNow))
+                    UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
                 } else {
                     // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
-                    self.currentStateNotification?.fireDate = NSDate().secondsFrom(1)
-                    UIApplication.sharedApplication().scheduleLocalNotification(self.currentStateNotification!)
+                    self.currentStateNotification?.fireDate = Date().secondsFrom(1)
+                    UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
                 }
             }
         }
@@ -1306,7 +1306,7 @@ class Trip : NSManagedObject {
         get {
             var areaDescriptionString = ""
 
-            if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
+            if let startingPlacemarkName = self.startingPlacemarkName, let endingPlacemarkName = self.endingPlacemarkName {
                 if (self.startingPlacemarkName == self.endingPlacemarkName) {
                     areaDescriptionString = String(format: "in %@", startingPlacemarkName)
                 } else {
@@ -1338,7 +1338,7 @@ class Trip : NSManagedObject {
         var timeString = ""
 
         if (self.creationDate != nil) {
-            timeString = String(format: "%@", Trip.timeDateFormatter.stringFromDate(self.creationDate))
+            timeString = String(format: "%@", Trip.timeDateFormatter.string(from: self.creationDate))
         }
         
         return timeString
@@ -1346,14 +1346,14 @@ class Trip : NSManagedObject {
     
     func displayString()->String {
         let areaDescriptionString = self.areaDescriptionString
-        var description = String(format: "%@%@.", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        let description = String(format: "%@%@.", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
     
     func displayStringWithTime()->String {
         let areaDescriptionString = self.areaDescriptionString
-        var description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        let description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
@@ -1374,7 +1374,7 @@ class Trip : NSManagedObject {
     func shareString()->String {
         var message = ""
         
-        if let startingPlacemarkName = self.startingPlacemarkName, endingPlacemarkName = self.endingPlacemarkName {
+        if let startingPlacemarkName = self.startingPlacemarkName, let endingPlacemarkName = self.endingPlacemarkName {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
                 message = String(format: "%@ %@ Rode %@ in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
             } else {
@@ -1400,28 +1400,28 @@ class Trip : NSManagedObject {
         return false
     }
 
-    func cancelTripStateNotification(clearRemoteMessage: Bool = false) {
+    func cancelTripStateNotification(_ clearRemoteMessage: Bool = false) {
         // clear any remote push notifications
         if clearRemoteMessage {
-            UIApplication.sharedApplication().applicationIconBadgeNumber = 1
-            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+            UIApplication.shared.applicationIconBadgeNumber = 1
+            UIApplication.shared.applicationIconBadgeNumber = 0
         }
         
         if (self.currentStateNotification != nil) {
-            UIApplication.sharedApplication().cancelLocalNotification(self.currentStateNotification!)
+            UIApplication.shared.cancelLocalNotification(self.currentStateNotification!)
             self.currentStateNotification = nil
         }
     }
     
     private func usableLocationsForSimplification()->[Location] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "Location")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
         fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR isGeofencedLocation == YES)", self, Location.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -1433,7 +1433,7 @@ class Trip : NSManagedObject {
         return results as! [Location]
     }
     
-    func simplify(handler: ()->Void = {}) {
+    func simplify(_ handler: ()->Void = {}) {
         let accurateLocs = self.usableLocationsForSimplification()
         
         if (self.simplifiedLocations != nil) {
@@ -1448,12 +1448,12 @@ class Trip : NSManagedObject {
         }
         
         self.simplifyLocations(accurateLocs, episilon: simplificationEpisilon)
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
         handler()
     }
     
     // Ramer–Douglas–Peucker geometric simplication algorithm
-    func simplifyLocations(locations: [Location], episilon : CLLocationDegrees) {
+    func simplifyLocations(_ locations: [Location], episilon : CLLocationDegrees) {
         var maximumDistance : CLLocationDegrees = 0
         var indexOfMaximumDistance = 0
         
@@ -1486,7 +1486,7 @@ class Trip : NSManagedObject {
         }
     }
     
-    private func shortestDistanceFromLineToPoint(lineStartPoint: CLLocationCoordinate2D, lineEndPoint: CLLocationCoordinate2D, point: CLLocationCoordinate2D)->CLLocationDegrees {
+    private func shortestDistanceFromLineToPoint(_ lineStartPoint: CLLocationCoordinate2D, lineEndPoint: CLLocationCoordinate2D, point: CLLocationCoordinate2D)->CLLocationDegrees {
         // area of a triangle is given by a = .5 * |Ax(By-Cy) + Bx(Cy-Ay) + Cx(Ay-By)|
         let part1 = lineStartPoint.longitude * (lineEndPoint.latitude - point.latitude)
         let part2 = lineEndPoint.longitude * (point.latitude - lineStartPoint.latitude)
@@ -1503,7 +1503,7 @@ class Trip : NSManagedObject {
         return 2 * area / base
     }
     
-    func smoothIfNeeded(handler: ()->Void) {
+    func smoothIfNeeded(_ handler: @escaping ()->Void) {
         if (self.locations.count < 2 || self.hasSmoothed) {
             return
         }
@@ -1513,26 +1513,26 @@ class Trip : NSManagedObject {
         self.hasSmoothed = true
         
         let location0 = self.locations.firstObject as! Location
-        let location1 = self.locations.objectAtIndex(1) as! Location
+        let location1 = self.locations.object(at: 1) as! Location
         
         let request = MKDirectionsRequest()
         request.source = (location0 as Location).mapItem()
         request.destination = (location1 as Location).mapItem()
-        request.transportType = MKDirectionsTransportType.Walking
+        request.transportType = MKDirectionsTransportType.walking
         request.requestsAlternateRoutes = false
         let directions = MKDirections(request: request)
-        directions.calculateDirectionsWithCompletionHandler { (directionsResponse, error) -> Void in
+        directions.calculate { (directionsResponse, error) -> Void in
             if (error == nil) {
                 let route : MKRoute = directionsResponse!.routes.first!
                 let pointCount = route.polyline.pointCount
-                var coords = [CLLocationCoordinate2D](count: pointCount, repeatedValue: kCLLocationCoordinate2DInvalid)
+                var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid, count: pointCount)
                 route.polyline.getCoordinates(&coords, range: NSMakeRange(0, pointCount))
                 let mutableLocations = self.locations.mutableCopy() as! NSMutableOrderedSet
                 for index in 0..<pointCount {
                     let location = self.locationWithCoordinate(coords[index])
                     location.date = location0.date
                     location.trip = self
-                    mutableLocations.insertObject(location, atIndex: 1+index)
+                    mutableLocations.insert(location, at: 1+index)
                 }
                 self.locations = mutableLocations
             } else {
@@ -1552,7 +1552,7 @@ class Trip : NSManagedObject {
     
     func mostRecentLocation() -> Location? {
         let sortDescriptor = NSSortDescriptor(key: "date", ascending: false)
-        let loc = self.locations.sortedArrayUsingDescriptors([sortDescriptor]).first as! Location
+        let loc = self.locations.sortedArray(using: [sortDescriptor]).first as! Location
         return loc
     }
     
@@ -1562,7 +1562,7 @@ class Trip : NSManagedObject {
         }
         
         for loc in self.locations {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
+            if let location = loc as? Location, location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1575,8 +1575,8 @@ class Trip : NSManagedObject {
             return nil
         }
         
-        for loc in self.locations.reverse() {
-            if let location = loc as? Location where location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
+        for loc in self.locations.reversed() {
+            if let location = loc as? Location, location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy {
                 return location
             }
         }
@@ -1586,12 +1586,12 @@ class Trip : NSManagedObject {
     
     
     
-    var startDate : NSDate {
+    var startDate : Date {
         // don't use a geofenced location
         for loc in self.locations {
-            if let location = loc as? Location where !location.isGeofencedLocation {
+            if let location = loc as? Location, !location.isGeofencedLocation {
                 if let date = location.date {
-                    return date
+                    return date as Date
                 } else {
                     break
                 }
@@ -1601,23 +1601,23 @@ class Trip : NSManagedObject {
         return self.creationDate
     }
     
-    var endDate : NSDate {
+    var endDate : Date {
         guard let loc = self.locations.lastObject as? Location,
-            date = loc.date else {
+            let date = loc.date else {
             return self.creationDate
         }
         
-        return date
+        return date as Date
     }
     
     var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.locations.firstObject as? Location, endLoc = self.locations.lastObject as? Location,
-        startDate = startLoc.date, endDate = endLoc.date else {
+        guard let startLoc = self.locations.firstObject as? Location, let endLoc = self.locations.lastObject as? Location,
+        let startDate = startLoc.date, let endDate = endLoc.date else {
             return 0.0
         }
         
-        let distance = startLoc.clLocation().distanceFromLocation(endLoc.clLocation())
-        let time = endDate.timeIntervalSinceDate(startDate)
+        let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
+        let time = endDate.timeIntervalSince(startDate as Date)
         
         return distance/time
     }

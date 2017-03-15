@@ -15,8 +15,8 @@ import ECSlidingViewController
 import Mixpanel
 
 enum PushNotificationRegistrationStatus {
-    case Unregistered
-    case Registered
+    case unregistered
+    case registered
 }
 
 @UIApplicationMain
@@ -25,12 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     var window: UIWindow?
     var fileLogger : DDFileLogger!
     
-    var notificationRegistrationStatus : PushNotificationRegistrationStatus = .Unregistered
+    var notificationRegistrationStatus : PushNotificationRegistrationStatus = .unregistered
     
     class func appDelegate() -> AppDelegate! {
-        let delegate = UIApplication.sharedApplication().delegate
+        let delegate = UIApplication.shared.delegate
         
-        if (delegate!.isKindOfClass(AppDelegate)) {
+        if (delegate!.isKind(of: AppDelegate.self)) {
             return delegate as! AppDelegate
         }
         
@@ -38,32 +38,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
 
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        Crashlytics.startWithAPIKey("e04ad6106ec507d40d90a52437cc374949ab924e")
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        Crashlytics.start(withAPIKey: "e04ad6106ec507d40d90a52437cc374949ab924e")
 
 #if DEBUG
         // setup Ride Report to log to Xcode if available
-        DDLog.addLogger(DDTTYLogger.sharedInstance())
-        DDTTYLogger.sharedInstance().colorsEnabled = true
+        DDLog.add(DDTTYLogger.sharedInstance)
+        DDTTYLogger.sharedInstance.colorsEnabled = true
 #endif
         
         self.fileLogger = DDFileLogger()
-        self.fileLogger.rollingFrequency = 60 * 60 * 24
+        self.fileLogger.rollingFrequency = TimeInterval(60 * 60 * 24)
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.addLogger(self.fileLogger)
+        DDLog.add(self.fileLogger)
         
         UINavigationBar.appearance().barTintColor = ColorPallete.sharedPallete.darkGreen
         UINavigationBar.appearance().tintColor = ColorPallete.sharedPallete.almostWhite
         
-        let versionString = NSBundle.mainBundle().infoDictionary?["CFBundleVersion"] as! String
+        let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
         
-        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        self.window = UIWindow(frame: UIScreen.main.bounds)
         
         // start managers after returing
         
         // Start Managers. The order matters!
-        Mixpanel.sharedInstanceWithToken("30ec76ef2bd713e7672d39b5e718a3af")
+        Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         APIClient.startup()
         RandomForestManager.startup()
@@ -71,21 +71,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             WatchManager.startup()
         }
         
-        if (NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+        if (UserDefaults.standard.bool(forKey: "healthKitIsSetup")) {
             HealthKitManager.startup()
         }
         
-        if (NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
+        if (UserDefaults.standard.bool(forKey: "hasSeenSetup")) {
             // For new users, we wait to start permission-needing managers
             // This avoids immediately presenting the privacy permission dialogs.
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 // perform async
                 self.startupNotifications()
             }
             MotionManager.startup()
             
-            if launchOptions?[UIApplicationLaunchOptionsLocationKey] != nil {
+            if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
                 DDLogInfo("Launched in background due to location update")
                 RouteManager.startup(true)
             } else {
@@ -104,31 +104,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func startupNotifications() {
         let goodRideAction = UIMutableUserNotificationAction()
         goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = RatingChoice.Good.emoji + " " + RatingChoice.Good.noun
-        goodRideAction.activationMode = UIUserNotificationActivationMode.Background
-        goodRideAction.destructive = false
-        goodRideAction.authenticationRequired = false
+        goodRideAction.title = RatingChoice.good.emoji + " " + RatingChoice.good.noun
+        goodRideAction.activationMode = UIUserNotificationActivationMode.background
+        goodRideAction.isDestructive = false
+        goodRideAction.isAuthenticationRequired = false
         
         
         let mixedRideAction = UIMutableUserNotificationAction()
         mixedRideAction.identifier = "MIXED_RIDE_IDENTIFIER"
-        mixedRideAction.title =  RatingChoice.Mixed.emoji + " " + RatingChoice.Mixed.noun
-        mixedRideAction.activationMode = UIUserNotificationActivationMode.Background
-        mixedRideAction.destructive = false
-        mixedRideAction.authenticationRequired = false
+        mixedRideAction.title =  RatingChoice.mixed.emoji + " " + RatingChoice.mixed.noun
+        mixedRideAction.activationMode = UIUserNotificationActivationMode.background
+        mixedRideAction.isDestructive = false
+        mixedRideAction.isAuthenticationRequired = false
         
         let badRideAction = UIMutableUserNotificationAction()
         badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = RatingChoice.Bad.emoji + " " + RatingChoice.Bad.noun
-        badRideAction.activationMode = UIUserNotificationActivationMode.Background
-        badRideAction.destructive = false
-        badRideAction.authenticationRequired = false
+        badRideAction.title = RatingChoice.bad.emoji + " " + RatingChoice.bad.noun
+        badRideAction.activationMode = UIUserNotificationActivationMode.background
+        badRideAction.isDestructive = false
+        badRideAction.isAuthenticationRequired = false
 
         
         let rideCompleteCategory = UIMutableUserNotificationCategory()
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
-        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], forContext: UIUserNotificationActionContext.Minimal)
-        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], forContext: UIUserNotificationActionContext.Default)
+        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], for: UIUserNotificationActionContext.minimal)
+        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], for: UIUserNotificationActionContext.default)
    
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
@@ -141,36 +141,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         let resumeAction = UIMutableUserNotificationAction()
         resumeAction.identifier = "RESUME_IDENTIFIER"
         resumeAction.title = "Resume"
-        resumeAction.activationMode = UIUserNotificationActivationMode.Background
-        resumeAction.destructive = false
-        resumeAction.authenticationRequired = false
+        resumeAction.activationMode = UIUserNotificationActivationMode.background
+        resumeAction.isDestructive = false
+        resumeAction.isAuthenticationRequired = false
         
         let appPausedCategory = UIMutableUserNotificationCategory()
         appPausedCategory.identifier = "APP_PAUSED_CATEGORY"
-        appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Minimal)
-        appPausedCategory.setActions([resumeAction], forContext: UIUserNotificationActionContext.Default)
+        appPausedCategory.setActions([resumeAction], for: UIUserNotificationActionContext.minimal)
+        appPausedCategory.setActions([resumeAction], for: UIUserNotificationActionContext.default)
         
         var notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
         #if DEBUG
             notificationCategories.insert(debugCategory)
         #endif
         
-        let types: UIUserNotificationType = [UIUserNotificationType.Badge, UIUserNotificationType.Sound, UIUserNotificationType.Alert]
-        let settings = UIUserNotificationSettings(forTypes: types, categories: notificationCategories)
-        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        UIApplication.sharedApplication().registerForRemoteNotifications()
+        let types: UIUserNotificationType = [UIUserNotificationType.badge, UIUserNotificationType.sound, UIUserNotificationType.alert]
+        let settings = UIUserNotificationSettings(types: types, categories: notificationCategories)
+        UIApplication.shared.registerUserNotificationSettings(settings)
+        UIApplication.shared.registerForRemoteNotifications()
     }
     
     func transitionToSetup() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController
+        let setupVC : SetupViewController = storyBoard.instantiateViewController(withIdentifier: "setupViewController") as! SetupViewController
         
         setupVC.setupViewControllersForGettingStarted()
         
         let transition = CATransition()
         transition.duration = 0.6
         transition.type = kCATransitionFade
-        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        self.window?.rootViewController?.view.layer.add(transition, forKey: nil)
         
         self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
@@ -184,14 +184,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToCreatProfile() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let setupVC : SetupViewController = storyBoard.instantiateViewControllerWithIdentifier("setupViewController") as! SetupViewController
+        let setupVC : SetupViewController = storyBoard.instantiateViewController(withIdentifier: "setupViewController") as! SetupViewController
         
         setupVC.setupViewControllersForCreateProfile()
         
         let transition = CATransition()
         transition.duration = 0.6
         transition.type = kCATransitionFade
-        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        self.window?.rootViewController?.view.layer.add(transition, forKey: nil)
         
         self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
@@ -200,77 +200,77 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     
     func transitionToMainNavController() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController : UIViewController = storyBoard.instantiateViewControllerWithIdentifier("slidingViewController") as UIViewController!
+        let viewController : UIViewController = storyBoard.instantiateViewController(withIdentifier: "slidingViewController") as UIViewController!
         
         let transition = CATransition()
         transition.duration = 0.6
         transition.type = kCATransitionFade
-        self.window?.rootViewController?.view.layer.addAnimation(transition, forKey: nil)
+        self.window?.rootViewController?.view.layer.add(transition, forKey: nil)
         
         self.window?.rootViewController = viewController
         self.window?.makeKeyAndVisible()
     }
     
-    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-        if ((notificationSettings.types.intersect(UIUserNotificationType.Alert)) == []) {
+    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+        if ((notificationSettings.types.intersection(UIUserNotificationType.alert)) == []) {
             // can't send alerts, let the user know.
-            if (!NSUserDefaults.standardUserDefaults().boolForKey("UserKnowsNotificationsAreDisabled")) {
+            if (!UserDefaults.standard.bool(forKey: "UserKnowsNotificationsAreDisabled")) {
                 let alert = UIAlertView(title: "Notifications are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
                 alert.show()
             }
         }
     }
     
-    func applicationDidReceiveMemoryWarning(application: UIApplication) {
+    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
         DDLogInfo("Received Memory Warning!")
     }
     
-    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-        self.notificationRegistrationStatus = .Registered
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        self.notificationRegistrationStatus = .registered
         
-        APIClient.sharedClient.appDidReceiveNotificationDeviceToken(deviceToken)
+        APIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken)
     }
     
-    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-        APIClient.sharedClient.appDidReceiveNotificationDeviceToken(nil)
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        APIClient.shared.appDidReceiveNotificationDeviceToken(nil)
     }
     
-    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+    func alertView(_ alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         if (buttonIndex == 1) {
-            let url = NSURL(string: UIApplicationOpenSettingsURLString)
-            if url != nil && UIApplication.sharedApplication().canOpenURL(url!) {
-                UIApplication.sharedApplication().openURL(url!)
+            let url = URL(string: UIApplicationOpenSettingsURLString)
+            if url != nil && UIApplication.shared.canOpenURL(url!) {
+                UIApplication.shared.openURL(url!)
             }
         } else {
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "UserKnowsNotificationsAreDisabled")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(true, forKey: "UserKnowsNotificationsAreDisabled")
+            UserDefaults.standard.synchronize()
         }
     }
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         DDLogInfo("Beginning remote notification background task!")
-        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+        let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
             DDLogInfo("Received remote notification background task expired!")
-            completionHandler(.NewData)
+            completionHandler(.newData)
         })
         
         let completionBlock = {
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                completionHandler(.NewData)
+            DispatchQueue.main.async(execute: { () -> Void in
+                completionHandler(.newData)
                 
                 if (backgroundTaskID != UIBackgroundTaskInvalid) {
                     DDLogInfo("Ending remote notification background task!")
 
-                    UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                    UIApplication.shared.endBackgroundTask(backgroundTaskID)
                 }
             })
         }
         
-        if let syncTrips = userInfo["syncTrips"] as? Bool where syncTrips {
+        if let syncTrips = userInfo["syncTrips"] as? Bool, syncTrips {
             DDLogInfo("Received sync trips notification")
-            if UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Charging || UIDevice.currentDevice().batteryState == UIDeviceBatteryState.Full {
+            if UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
-                APIClient.sharedClient.syncUnsyncedTrips(true, completionBlock: completionBlock)
+                APIClient.shared.syncUnsyncedTrips(true, completionBlock: completionBlock)
             } else {
                 completionBlock()
             }
@@ -278,17 +278,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             let trip = Trip.tripWithUUID(uuid) {
             
             var clearRemoteMessage = false
-            if let aps = userInfo["aps"] as? NSDictionary, _ = aps["alert"] as? String {
+            if let aps = userInfo["aps"] as? NSDictionary, let _ = aps["alert"] as? String {
                 clearRemoteMessage = true
             }
             DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
             trip.loadSummaryFromAPNDictionary(userInfo)
-            CoreDataManager.sharedManager.saveContext()
+            CoreDataManager.shared.saveContext()
             trip.sendTripCompletionNotificationLocally(clearRemoteMessage)
-            if let statusText = userInfo["status_text"] as? String, statusEmoji = userInfo["status_emoji"] as? String {
+            if let statusText = userInfo["status_text"] as? String, let statusEmoji = userInfo["status_emoji"] as? String {
                 Profile.profile().statusText = statusText
                 Profile.profile().statusEmoji = statusEmoji
-                CoreDataManager.sharedManager.saveContext()
+                CoreDataManager.shared.saveContext()
             }
             completionBlock()
         } else {
@@ -296,55 +296,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
+    func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, for notification: UILocalNotification, completionHandler: @escaping () -> Void) {
         if let userInfo = notification.userInfo {
             self.handleNotificationAction(identifier, userInfo: userInfo, completionHandler: completionHandler)
         }
     }
     
-    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+    func application(_ application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
         self.handleNotificationAction(identifier, userInfo: userInfo, completionHandler: completionHandler)
     }
     
-    func handleNotificationAction(identifier: String?, userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+    func handleNotificationAction(_ identifier: String?, userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
         if let uuid = userInfo["uuid"] as? String,
-            trip = Trip.tripWithUUID(uuid) {
+            let trip = Trip.tripWithUUID(uuid) {
                 DDLogInfo(String(format: "Received trip rating notification action"))
                 if (identifier == "GOOD_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Good)
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.good)
                     self.postTripRatedThanksNotification(true)
 
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Bad)
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.bad)
                     
                     self.postTripRatedThanksNotification(false)
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "MIXED_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Mixed)
+                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.mixed)
                     
                     self.postTripRatedThanksNotification(false)
-                    APIClient.sharedClient.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                         completionHandler()
                     })
                 } else if (identifier == "FLAG_IDENTIFIER") {
                     _ = Incident(location: trip.mostRecentLocation()!, trip: trip)
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                     completionHandler()
                 }
         }
         
         if (identifier == "RESUME_IDENTIFIER") {
-            RouteManager.sharedManager.resumeTracking()
+            RouteManager.shared.resumeTracking()
             completionHandler()
         }
     }
     
-    func postTripRatedThanksNotification(wasGoodTrip: Bool) {
+    func postTripRatedThanksNotification(_ wasGoodTrip: Bool) {
         var emojicuteness : [Character] = []
         var thanksPhrases : [String] = []
         
@@ -362,32 +362,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         let notif = UILocalNotification()
         notif.alertBody = emoji1 + thanksPhrase + emoji2
-        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        UIApplication.shared.presentLocalNotificationNow(notif)
         
         DDLogInfo("Beginning post trip rating background task!")
-        let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+        let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
             DDLogInfo("Post trip notification background task expired!")
-            UIApplication.sharedApplication().cancelLocalNotification(notif)
+            UIApplication.shared.cancelLocalNotification(notif)
         })
 
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
-            UIApplication.sharedApplication().cancelLocalNotification(notif)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+            UIApplication.shared.cancelLocalNotification(notif)
             
             if (backgroundTaskID != UIBackgroundTaskInvalid) {
                 DDLogInfo("Ending post trip rating background task!")
 
-                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                UIApplication.shared.endBackgroundTask(backgroundTaskID)
             }
         })
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+    func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
         if (url.scheme == "ridereport") {
             if (url.host == "verify-email"){
-                if let queryItems = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems {
+                if let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems {
                     for item in queryItems {
-                        if let result = item.value where item.name == "result" {
+                        if let result = item.value, item.name == "result" {
                             if result == "success" {
                                 //
                             } else if result == "failure" {
@@ -397,48 +397,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                     }
                 }
             } else if (url.host == "authcode-callback") {
-                NSNotificationCenter.defaultCenter().postNotificationName("RideReportAuthCodeCallBackNotification", object: url)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: url)
             } else if (url.host == "authorize-application") {
-                if let uuid = NSURLComponents(URL: url, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "uuid" }).first?.value {
+                if let uuid = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "uuid" }).first?.value {
                     let app = ConnectedApp.createOrUpdate(uuid)
                     
-                    APIClient.sharedClient.getApplication(app).apiResponse({ (response) in
+                    APIClient.shared.getApplication(app).apiResponse({ (response) in
                         switch response.result {
-                        case .Success(let json):
+                        case .success(_):
                             app.isHiddenApp = true
-                            CoreDataManager.sharedManager.saveContext()
-                        case .Failure(let error):
-                            DDLogWarn(String(format: "Error getting third party app from URL scheme: %@", error))
+                            CoreDataManager.shared.saveContext()
+                        case .failure(let error):
+                            DDLogWarn(String(format: "Error getting third party app from URL scheme: %@", error as CVarArg))
                         }
                     })
                 }
             }
         } else if (url.host == "oauth-callback") {
-            if ( url.path!.hasPrefix("/facebook" )){
-                OAuth2Swift.handleOpenURL(url)
+            if ( url.path.hasPrefix("/facebook" )){
+                OAuth2Swift.handle(url: url)
             }
         }
         
-        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         FBSDKAppEvents.activateApp()
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         let notif = UILocalNotification()
         notif.alertBody = "Hey, you quit Ride Report! That's cool, but if you want to pause it you can use the compass button in the app."
-        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+        UIApplication.shared.presentLocalNotificationNow(notif)
     }
 
 }

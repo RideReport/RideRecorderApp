@@ -9,15 +9,16 @@
 import Foundation
 
 class ColorPallete : NSObject {
+    private static var __once: () = {
+            Static.sharedPallete = ColorPallete()
+        }()
     struct Static {
-        static var onceToken : dispatch_once_t = 0
+        static var onceToken : Int = 0
         static var sharedPallete : ColorPallete?
     }
     
     class var sharedPallete: ColorPallete {
-        dispatch_once(&Static.onceToken) {
-            Static.sharedPallete = ColorPallete()
-        }
+        _ = ColorPallete.__once
         
         return Static.sharedPallete!
     }

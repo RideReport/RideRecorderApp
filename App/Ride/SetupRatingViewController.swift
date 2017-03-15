@@ -24,14 +24,14 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         self.pushSimulationView.delegate = self
         self.pushSimulationView.appIcon = UIImage(named: "AppIcon40x40")
         
-        self.buttonContainerView.hidden = true
+        self.buttonContainerView.isHidden = true
         self.buttonContainerView.backgroundColor = pushSimulationView.contentView.backgroundColor
         self.buttonContainerView.layer.cornerRadius = pushSimulationView.contentView.layer.cornerRadius
         
         if #available(iOS 10.0, *) {
             pushSimulationView.showsActionButon = false
             pushSimulationView.showsDestructiveActionButon = false
-            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
                 helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Press it firmly** to rate your ride."
                 pushSimulationView.showsEditButton = false
                 pushSimulationView.allowsScrolling = false
@@ -46,25 +46,25 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
             helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Slide it left** to rate your ride."
         }
         
-        self.notificationHelperTextLabel.hidden = true
+        self.notificationHelperTextLabel.isHidden = true
         self.notificationHelperTextLabel.delay(4) {
             if !self.didFigureOutNotificationview {
                 let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
                 opacityAnimation.duration = 1.0;
-                opacityAnimation.fromValue = NSNumber(float: 0.0)
-                opacityAnimation.toValue =   NSNumber(float: 1.0)
+                opacityAnimation.fromValue = NSNumber(value: 0.0)
+                opacityAnimation.toValue =   NSNumber(value: 1.0)
                 opacityAnimation.autoreverses = true
                 opacityAnimation.repeatCount = FLT_MAX
                 
-                self.pushSimulationView.layer.addAnimation(opacityAnimation, forKey: "shadowOpacity")
+                self.pushSimulationView.layer.add(opacityAnimation, forKey: "shadowOpacity")
 
                 self.pushSimulationView.layer.shadowOpacity = 1.0
                 self.pushSimulationView.layer.shadowRadius = 10.0
-                self.pushSimulationView.layer.shadowColor = ColorPallete.sharedPallete.brightBlue.CGColor
-                self.pushSimulationView.layer.shadowOffset = CGSizeMake(0,0);
+                self.pushSimulationView.layer.shadowColor = ColorPallete.sharedPallete.brightBlue.cgColor
+                self.pushSimulationView.layer.shadowOffset = CGSize(width: 0, height: 0);
                 
                 if #available(iOS 10.0, *) {
-                    if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+                    if self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
                         self.helperTextLabel.animatedSetMarkdownStringValue("Try **pressing firmly** on the notification down there on the pretend iPhone 👇")
                     } else {
                         self.helperTextLabel.animatedSetMarkdownStringValue("Try **sliding left** on the notification down there on the pretend iPhone 👇")
@@ -72,26 +72,26 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
                 } else {
                     self.helperTextLabel.animatedSetMarkdownStringValue("Try **sliding left** on the notification down there on the pretend iPhone 👇")
                 }
-                self.notificationHelperTextLabel.hidden = false
+                self.notificationHelperTextLabel.isHidden = false
             }
         }
     }
     
-    override func next(sender: AnyObject) {
+    override func next(_ sender: AnyObject) {
         super.next(sender)
     }
     
-    func didDeepTouchSummaryView(view: RideSummaryView) {
+    func didDeepTouchSummaryView(_ view: RideSummaryView) {
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
         
         self.pushSimulationView.layer.removeAllAnimations()
         let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
         opacityAnimation.duration = 0.8;
-        opacityAnimation.fromValue = NSNumber(float: 1.0)
-        opacityAnimation.toValue =   NSNumber(float: 0.0)
+        opacityAnimation.fromValue = NSNumber(value: 1.0 as Float)
+        opacityAnimation.toValue =   NSNumber(value: 0.0 as Float)
         
-        self.pushSimulationView.layer.addAnimation(opacityAnimation, forKey: "shadowOpacity")
+        self.pushSimulationView.layer.add(opacityAnimation, forKey: "shadowOpacity")
         self.pushSimulationView.layer.shadowOpacity = 0.0
 
         if #available(iOS 10.0, *) {
@@ -99,16 +99,16 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         }
     }
     
-    func didOpenControls(view: RideSummaryView) {
+    func didOpenControls(_ view: RideSummaryView) {
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
         self.pushSimulationView.layer.removeAllAnimations()
         let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
         opacityAnimation.duration = 0.8;
-        opacityAnimation.fromValue = NSNumber(float: 1.0)
-        opacityAnimation.toValue =   NSNumber(float: 0.0)
+        opacityAnimation.fromValue = NSNumber(value: 1.0 as Float)
+        opacityAnimation.toValue =   NSNumber(value: 0.0 as Float)
         
-        self.pushSimulationView.layer.addAnimation(opacityAnimation, forKey: "shadowOpacity")
+        self.pushSimulationView.layer.add(opacityAnimation, forKey: "shadowOpacity")
         self.pushSimulationView.layer.shadowOpacity = 0.0
         
         if #available(iOS 10.0, *) {
@@ -129,7 +129,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
     }
     
-    func didTapEditButton(view: RideSummaryView) {
+    func didTapEditButton(_ view: RideSummaryView) {
         showTripRichNotification()
     }
     
@@ -138,18 +138,18 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
     }
     
-    func didTapActionButton(view: RideSummaryView) {
+    func didTapActionButton(_ view: RideSummaryView) {
         self.tappedGreat(self)
     }
     
-    func didTapDestructiveButton(view: RideSummaryView) {
+    func didTapDestructiveButton(_ view: RideSummaryView) {
         self.tappedNotGreat(self)
     }
     
     func moveOutIphone() {
         self.iPhoneContainerViewTopConstraint.constant += (self.view.frame.size.height/2.0)/self.iPhoneContainerViewTopConstraint.multiplier
         
-        UIView.animateWithDuration(1,  animations: {
+        UIView.animate(withDuration: 1,  animations: {
             self.view.layoutSubviews()
         }, completion: { (_) in
             self.nextButton.delay(0.5) {

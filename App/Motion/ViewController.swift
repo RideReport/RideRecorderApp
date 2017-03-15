@@ -99,7 +99,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     
     @IBAction func tappedUploadButton(sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
-            var metadata: [String: AnyObject] = [:]
+            var metadata: [String: Any] = [:]
             if let notes = self.notesTextField.text where notes.characters.count > 0 {
                 metadata["notes"] = notes
             }
@@ -110,9 +110,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             
             metadata["reportedActivityType"] = NSNumber(short: self.modeSelectorView.selectedMode.rawValue)
             
-            CoreDataManager.sharedManager.saveContext()
+            CoreDataManager.shared.saveContext()
 
-            APIClient.sharedClient.uploadSensorDataCollection(collection, withMetadata: metadata)
+            APIClient.shared.uploadSensorDataCollection(collection, withMetadata: metadata)
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
             self.sensorDataCollection = nil
@@ -220,16 +220,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.synth.speakUtterance(utterance)
 
             
-            MotionManager.sharedManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
+            MotionManager.shared.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
         } else {
             // tapped pause
             self.isRecording = false
-            CoreDataManager.sharedManager.saveContext()
+            CoreDataManager.shared.saveContext()
             
-            MotionManager.sharedManager.stopGatheringSensorData()
+            MotionManager.shared.stopGatheringSensorData()
             if (self.sensorDataCollectionForQuery == nil) {
                 self.locationManager.stopUpdatingLocation()
             }
@@ -259,7 +259,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             }
         }
         
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
     func runPredictionIfEnabled() {
@@ -277,7 +277,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
         
-        MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
+        MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
             guard let strongSelf = self else {
             return
             }

@@ -13,70 +13,69 @@ import OAuthSwift
 import Mixpanel
 
 private enum HKBiologicalSex : Int {
-    case NotSet
-    case Female
-    case Male
+    case notSet
+    case female
+    case male
     @available(iOS 8.2, *)
-    case Other
+    case other
 }
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
 
-extension Request {
-    public static func SwiftyJSONResponseSerializer(
-        options options: NSJSONReadingOptions = .AllowFragments)
-        -> ResponseSerializer<JSON, NSError>
-    {
-        return ResponseSerializer { _, _, data, error in
-            if let theError = error {
-                if let validData = data, jsonDict = SwiftyJSON.JSON(data: validData).dictionaryObject {
-                    return .Failure(NSError(domain: theError.domain, code: theError.code, userInfo: jsonDict))
-                } else {
-                    return .Failure(theError)
-                }
-            }
-            
-            guard let validData = data where validData.length > 0 else {
-                let failureReason = "JSON could not be serialized. Input data was nil or zero length."
-                let error = Error.errorWithCode(.JSONSerializationFailed, failureReason: failureReason)
-                return .Failure(error)
-            }
-            
-            let json:JSON = SwiftyJSON.JSON(data: validData)
-            if let jsonError = json.error {
-                return Result.Failure(jsonError)
-            }
-            
-            return Result.Success(json)
-        }
-    }
+extension DataRequest {
     
+    /// Adds a handler to be called once the request has finished.
+    ///
+    /// - parameter options:           The JSON serialization reading options. Defaults to `.allowFragments`.
+    /// - parameter completionHandler: A closure to be executed once the request has finished.
+    ///
+    /// - returns: The request.
+    @discardableResult
     public func responseSwiftyJSON(
-        options options: NSJSONReadingOptions = .AllowFragments,
-        completionHandler: Response<JSON, NSError> -> Void)
-        -> Self
-    {
+        queue: DispatchQueue? = nil,
+        options: JSONSerialization.ReadingOptions = .allowFragments,
+        completionHandler: @escaping (DataResponse<JSON>) -> Void) -> Self {
         return response(
-            responseSerializer: Request.SwiftyJSONResponseSerializer(options: options),
+            queue: queue,
+            responseSerializer: DataRequest.swiftyJSONResponseSerializer(options: options),
             completionHandler: completionHandler
         )
+    }
+    
+    /// Creates a response serializer that returns a SwiftyJSON instance result type constructed from the response data using
+    /// `JSONSerialization` with the specified reading options.
+    ///
+    /// - parameter options: The JSON serialization reading options. Defaults to `.allowFragments`.
+    ///
+    /// - returns: A SwiftyJSON response serializer.
+    public static func swiftyJSONResponseSerializer(
+        options: JSONSerialization.ReadingOptions = .allowFragments) -> DataResponseSerializer<JSON> {
+        return DataResponseSerializer { _, response, data, error in
+            let result = Request.serializeResponseJSON(options: options, response: response, data: data, error: error)
+            switch result {
+            case .success(let value):
+                return .success(JSON(value))
+            case .failure(let error):
+                return .failure(error)
+            }
+        }
     }
 }
 
 class AuthenticatedAPIRequest {
-    typealias APIResponseBlock = Response<JSON, NSError> -> Void
+    typealias APIResponseBlock = (DataResponse<JSON>) -> Void
 
     // a block that fires once at completion, unlike APIResponseBlocks which are appended
     var requestCompletetionBlock: ()->Void = {}
     
-    var request: Request? = nil
+    var request: DataRequest? = nil
     private var authToken: String?
     
     enum AuthenticatedAPIRequestErrorCode: Int {
-        case Unauthenticated = 1
-        case DuplicateRequest
-        case ClientAborted
+        case unauthenticated = 1
+        case duplicateRequest
+        case clientAborted
     }
     
     #if (arch(i386) || arch(x86_64)) && os(iOS)
@@ -85,31 +84,31 @@ class AuthenticatedAPIRequest {
     static var serverAddress = "https://api.ride.report/api/v2/"
     #endif
     
-    class func unauthenticatedResponse() -> Response<JSON, NSError> {
-        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.Unauthenticated.rawValue, userInfo: nil)
+    class func unauthenticatedResponse() -> DataResponse<JSON> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.unauthenticated.rawValue, userInfo: nil)
         
-        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
+        return DataResponse(request: nil, response: nil, data: nil, result: .failure(error))
     }
     
-    class func duplicateRequestResponse() -> Response<JSON, NSError> {
-        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.DuplicateRequest.rawValue, userInfo: nil)
+    class func duplicateRequestResponse() -> DataResponse<JSON> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.duplicateRequest.rawValue, userInfo: nil)
         
-        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
+        return DataResponse(request: nil, response: nil, data: nil, result: .failure(error))
     }
     
-    class func clientAbortedResponse() -> Response<JSON, NSError> {
-        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.ClientAborted.rawValue, userInfo: nil)
+    class func clientAbortedResponse() -> DataResponse<JSON> {
+        let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.clientAborted.rawValue, userInfo: nil)
         
-        return Response(request: nil, response: nil, data: nil, result: .Failure(error))
+        return DataResponse(request: nil, response: nil, data: nil, result: .failure(error))
     }
     
-    convenience init(clientAbortedWithResponse response: Response<JSON, NSError>, completionHandler: APIResponseBlock = {(_) in }) {
+    convenience init(clientAbortedWithResponse response: DataResponse<JSON>, completionHandler: APIResponseBlock = {(_) in }) {
         self.init()
 
         completionHandler(response)
     }
     
-    convenience init(client: APIClient, method: Alamofire.Method, route: String, parameters: [String: AnyObject]? = nil, encoding: ParameterEncoding = ParameterEncoding.JSON.gzipped, idempotencyKey: String? = nil, authenticated: Bool = true, completionHandler: APIResponseBlock) {
+    convenience init(client: APIClient, method: Alamofire.HTTPMethod, route: String, parameters: [String: Any]? = nil, encoding: ParameterEncoding = GZipEncoding.default, idempotencyKey: String? = nil, authenticated: Bool = true, completionHandler: @escaping APIResponseBlock) {
         self.init()
         
         if (authenticated && !client.authenticated) {
@@ -122,45 +121,45 @@ class AuthenticatedAPIRequest {
         var headers = APIRequestBaseHeaders
         
         // for some reason configuring headers on the session fails.
-        for (key,value) in Manager.defaultHTTPHeaders {
+        for (key,value) in SessionManager.defaultHTTPHeaders {
             headers[key] = value
         }
         
-        if let token = Profile.profile().accessToken where authenticated {
+        if let token = Profile.profile().accessToken, authenticated {
             self.authToken = token
             headers["Authorization"] =  "Bearer \(token)"
         }
         if let theIdempotencyKey = idempotencyKey {
             headers["Idempotence-Key"] = theIdempotencyKey
         }
+
+        self.request = client.sessionManager.request(AuthenticatedAPIRequest.serverAddress + route, method: method, parameters: parameters, encoding: encoding, headers: headers)
         
-        self.request = client.manager.request(method, AuthenticatedAPIRequest.serverAddress + route, parameters: parameters, encoding: encoding, headers: headers)
-        
-        let handleHTTPResonseErrors = { (response: NSHTTPURLResponse?) in
+        let handleHTTPResonseErrors = { (response: HTTPURLResponse?) in
             if (response?.statusCode == 401) {
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async {
                     if (self.authToken == Profile.profile().accessToken) {
                         // make sure the token that generated the 401 is still current
                         // since it is possible we've already reauthenciated
                         client.reauthenticate()
                     }
-                })
+                }
             } else if (response?.statusCode == 500) {
-                dispatch_async(dispatch_get_main_queue(), {
+                DispatchQueue.main.async {
                     let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
                     alert.show()
-                })
+                }
             }
         }
         
-        if (method == .DELETE) {
+        if (method == .delete) {
             // delete does not return JSON https://github.com/KnockSoftware/rideserver/issues/48
-            request!.validate().responseString(encoding: NSASCIIStringEncoding, completionHandler: { (response) in
-                let jsonResponse: Response<JSON, NSError> = Response(request: response.request, response: response.response, data: response.data, result: Result.Success(JSON("")))
+            request!.validate().responseString(encoding: String.Encoding.ascii, completionHandler: { (response) in
+                let jsonResponse: DataResponse<JSON> = DataResponse(request: response.request, response: response.response, data: response.data, result: Result.success(JSON("")))
                 switch response.result {
-                case .Success(_):
+                case .success(_):
                     completionHandler(jsonResponse)
-                case .Failure(_):
+                case .failure(_):
                     handleHTTPResonseErrors(response.response)
                     completionHandler(jsonResponse)
                 }
@@ -171,9 +170,9 @@ class AuthenticatedAPIRequest {
         } else {
             request!.validate().responseSwiftyJSON { (response) in
                 switch response.result {
-                case .Success(_):
+                case .success(_):
                     completionHandler(response)
-                case .Failure(_):
+                case .failure(_):
                     handleHTTPResonseErrors(response.response)
                     completionHandler(response)
                 }
@@ -184,7 +183,7 @@ class AuthenticatedAPIRequest {
         }
     }
     
-    func apiResponse(completionHandler: APIResponseBlock)->AuthenticatedAPIRequest {
+    @discardableResult func apiResponse(_ completionHandler: @escaping APIResponseBlock)->AuthenticatedAPIRequest {
         if (self.request == nil) {
             completionHandler(AuthenticatedAPIRequest.unauthenticatedResponse())
             return self
@@ -192,9 +191,9 @@ class AuthenticatedAPIRequest {
         
         self.request!.responseSwiftyJSON { (response) in
             switch response.result {
-            case .Success(_):
+            case .success(_):
                 completionHandler(response)
-            case .Failure(_):
+            case .failure(_):
                 completionHandler(response)
             }
         }
@@ -205,67 +204,58 @@ class AuthenticatedAPIRequest {
 
 class APIClient {
     enum AccountVerificationStatus : Int16 { // has the user linked and verified an email to the account?
-        case Unknown = 0
-        case Unverified
-        case Verified
+        case unknown = 0
+        case unverified
+        case verified
     }
 
     enum Area {
-        case Unknown
-        case Area(name: String, count: UInt, countRatePerHour: UInt, launched: Bool)
-        case NonArea
+        case unknown
+        case area(name: String, count: UInt, countRatePerHour: UInt, launched: Bool)
+        case nonArea
     }
     
-    var area : Area = .Unknown
+    var area : Area = .unknown
     
     // Status
-    var accountVerificationStatus = AccountVerificationStatus.Unknown {
+    var accountVerificationStatus = AccountVerificationStatus.unknown {
         didSet {
-            NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidChange", object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil)
         }
     }
     
     var hasRegisteredForRemoteNotifications: Bool = false
-    var notificationDeviceToken: NSData?
+    var notificationDeviceToken: Data?
     
-    private var manager : Manager
     var isMigrating = false
-    private var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
-    private var didEncounterUnrecoverableErrorSyncronizingTrips = false
-    private var isRequestingAuthentication = false
+    fileprivate var sessionManager : SessionManager
+    fileprivate var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
+    fileprivate var didEncounterUnrecoverableErrorSyncronizingTrips = false
+    fileprivate var isRequestingAuthentication = false
     
-    struct Static {
-        static var onceToken : dispatch_once_t = 0
-        static var sharedClient : APIClient? = nil
-    }
+    static private(set) var shared : APIClient!
     
     //
     // MARK: - Initializers
     //
     
-    class var sharedClient:APIClient {
-        assert(Static.sharedClient != nil, "Manager was not started before being used!")
-        
-        return Static.sharedClient!
-    }
-    
-    class func startup(useDefaultConfiguration: Bool = false) {
-        if (Static.sharedClient == nil) {
-            Static.sharedClient = APIClient(useDefaultConfiguration: useDefaultConfiguration)
-            dispatch_async(dispatch_get_main_queue()) {
+    class func startup(_ useDefaultConfiguration: Bool = false) {
+        if (APIClient.shared == nil) {
+            APIClient.shared = APIClient(useDefaultConfiguration: useDefaultConfiguration)
+            DispatchQueue.main.async {
                 // run startup async
-                Static.sharedClient?.startup()
+                APIClient.shared.startup()
             }
         }
     }
     
     private func startup() {
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+        if (CoreDataManager.shared.isStartingUp) {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
-                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
                 strongSelf.authenticateIfNeeded().apiResponse() { (_) -> Void in
                     strongSelf.syncStatusAndTripsInForeground()
                 }
@@ -276,30 +266,30 @@ class APIClient {
             }
         }
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
             // avoid a bug that could have this called twice on app launch
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(APIClient.appDidBecomeActive), name: UIApplicationDidBecomeActiveNotification, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(APIClient.appDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         })
     }
     
     
     init (useDefaultConfiguration: Bool = false) {
-        var configuration = NSURLSessionConfiguration.backgroundSessionConfigurationWithIdentifier("com.Knock.RideReport.background")
+        var configuration = URLSessionConfiguration.background(withIdentifier: "com.Knock.RideReport.background")
         
         if useDefaultConfiguration {
             // used for testing
-            configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+            configuration = URLSessionConfiguration.default
         }
         configuration.timeoutIntervalForRequest = 4
         configuration.timeoutIntervalForResource = 10
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
-            "api.ride.report": ServerTrustPolicy.PinPublicKeys(publicKeys: ServerTrustPolicy.publicKeysInBundle(), validateCertificateChain: true, validateHost: true)
+            "api.ride.report": ServerTrustPolicy.pinPublicKeys(publicKeys: ServerTrustPolicy.publicKeys(), validateCertificateChain: true, validateHost: true)
         ]
-        self.manager = Alamofire.Manager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
+        self.sessionManager = Alamofire.SessionManager(configuration: configuration, serverTrustPolicyManager: ServerTrustPolicyManager(policies: serverTrustPolicies))
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     //
@@ -307,12 +297,12 @@ class APIClient {
     //
     
     @objc func appDidBecomeActive() {
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+        if (CoreDataManager.shared.isStartingUp) {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
-                NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "CoreDataManagerDidStartup", object: nil)
+                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
                 strongSelf.syncStatusAndTripsInForeground()
             }
         } else {
@@ -320,7 +310,7 @@ class APIClient {
         }
     }
     
-    func appDidReceiveNotificationDeviceToken(token: NSData?) {
+    func appDidReceiveNotificationDeviceToken(_ token: Data?) {
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
         self.updateAccountStatus()
@@ -331,7 +321,7 @@ class APIClient {
             // do account status even in the background
             self.updateAccountStatus()
 
-            if (UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
+            if (UIApplication.shared.applicationState == UIApplicationState.active) {
                 self.runMigrations()
                 
                 self.syncUnsyncedTrips()
@@ -345,28 +335,28 @@ class APIClient {
     //
     
     private func runMigrations() {
-        let hasRunTripsListOnSummaryAPIAtLeastOnce = NSUserDefaults.standardUserDefaults().boolForKey("hasRunTripRewardToTripRewardsMigration")
+        let hasRunTripsListOnSummaryAPIAtLeastOnce = UserDefaults.standard.bool(forKey: "hasRunTripRewardToTripRewardsMigration")
         if (!hasRunTripsListOnSummaryAPIAtLeastOnce) {
             self.isMigrating = true
 
-            let _ = AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
+            let _ = AuthenticatedAPIRequest(client: self, method: .get, route: "trips", completionHandler: { (response) -> Void in
                 switch response.result {
-                case .Success(let json):
+                case .success(let json):
                         for tripJson in json.array! {
                             // to make this not take forefver, only change the trips with rewards
-                            if let uuid = tripJson["uuid"].string, summary = tripJson["summary"].dictionary where (summary["rewards"] != nil || (summary["rewardEmoji"] != nil && summary["rewardEmoji"]?.string != "")) {
+                            if let uuid = tripJson["uuid"].string, let summary = tripJson["summary"].dictionary, (summary["rewards"] != nil || (summary["rewardEmoji"] != nil && summary["rewardEmoji"]?.string != "")) {
                                 if let trip = Trip.tripWithUUID(uuid) {
                                     trip.loadSummaryFromJSON(summary)
                                 }
                             }
                         }
                         
-                        CoreDataManager.sharedManager.saveContext()
+                        CoreDataManager.shared.saveContext()
                         
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasRunTripRewardToTripRewardsMigration")
-                        NSUserDefaults.standardUserDefaults().synchronize()
-                case .Failure(let error):
-                    DDLogWarn(String(format: "Error retriving getting trip data: %@", error))
+                        UserDefaults.standard.set(true, forKey: "hasRunTripRewardToTripRewardsMigration")
+                        UserDefaults.standard.synchronize()
+                case .failure(let error):
+                    DDLogWarn(String(format: "Error retriving getting trip data: %@", error as CVarArg))
                 }
                 
                 self.isMigrating = false
@@ -375,10 +365,10 @@ class APIClient {
     }
     
     private func runDataMigration(dataMigrationName name: String, handler: ()->Void) {
-        let migrationHasHappened = NSUserDefaults.standardUserDefaults().boolForKey(name)
+        let migrationHasHappened = UserDefaults.standard.bool(forKey: name)
         if (!migrationHasHappened) {
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: name)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(true, forKey: name)
+            UserDefaults.standard.synchronize()
             
             handler()
         }
@@ -388,13 +378,13 @@ class APIClient {
     // MARK: - Trip Synchronization
     //
     
-    func getAllTrips()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips", completionHandler: { (response) -> Void in
+    @discardableResult func getAllTrips()->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "trips", completionHandler: { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string, creationDateString = tripJson["creationDate"].string, creationDate = NSDate.dateFromJSONString(creationDateString) {
-                        var trip = Trip.tripWithUUID(uuid)
+                    if let uuid = tripJson["uuid"].string, let creationDateString = tripJson["creationDate"].string, let creationDate = Date.dateFromJSONString(creationDateString) {
+                        var trip: Trip! = Trip.tripWithUUID(uuid)
                         if (trip == nil) {
                             trip = Trip()
                             trip.uuid = uuid
@@ -408,11 +398,11 @@ class APIClient {
                         trip.summaryIsSynced = true
                         
                         if let activityTypeNumber = tripJson["activityType"].number,
-                                ratingChoiceNumber = tripJson["rating"].number,
-                                length = tripJson["length"].number,
-                                activityType = ActivityType(rawValue: activityTypeNumber.shortValue) {
+                                let ratingChoiceNumber = tripJson["rating"].number,
+                                let length = tripJson["length"].number,
+                                let activityType = ActivityType(rawValue: activityTypeNumber.int16Value) {
                             let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
-                            trip.rating = Rating(rating: ratingChoiceNumber.shortValue, version: ratingVersionNumber.shortValue)
+                            trip.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
                             trip.activityType = activityType
                             trip.length = length.floatValue
                         }
@@ -422,32 +412,32 @@ class APIClient {
                         }
                     }
                 }
-                CoreDataManager.sharedManager.saveContext()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error retriving getting trip data: %@", error))
+                CoreDataManager.shared.saveContext()
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving getting trip data: %@", error as CVarArg))
             }
         })
     }
     
-    func getTrip(trip: Trip)->AuthenticatedAPIRequest {
+    @discardableResult func getTrip(_ trip: Trip)->AuthenticatedAPIRequest {
         guard let uuid = trip.uuid else {
             // the server doesn't know about this trip yet
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 if trip.locationsNotYetDownloaded {
                     trip.locations = NSOrderedSet() // just in case
                     if let locations = json["locations"].array {
                         for locationJson in locations {
-                            if let dateString = locationJson["date"].string, date = NSDate.dateFromJSONString(dateString),
-                                    latitude = locationJson["latitude"].number,
-                                    longitude = locationJson["longitude"].number,
-                                    course = locationJson["course"].number,
-                                    speed = locationJson["speed"].number,
-                                    horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                            if let dateString = locationJson["date"].string, let date = Date.dateFromJSONString(dateString),
+                                    let latitude = locationJson["latitude"].number,
+                                    let longitude = locationJson["longitude"].number,
+                                    let course = locationJson["course"].number,
+                                    let speed = locationJson["speed"].number,
+                                    let horizontalAccuracy = locationJson["horizontalAccuracy"].number {
                                 let loc = Location(trip: trip)
                                 loc.date = date
                                 loc.latitude = latitude
@@ -473,59 +463,60 @@ class APIClient {
                     trip.loadSummaryFromJSON(summary)
                 }
 
-                CoreDataManager.sharedManager.saveContext()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error))
+                CoreDataManager.shared.saveContext()
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as CVarArg))
                 
-                if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                if let httpResponse = response.response, httpResponse.statusCode == 404 {
                     // unclear what to do in this case (probably we should try to upload the trip again?), but at a minimum we should never try to sync the summary again.
                     trip.summaryIsSynced = true
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                 }
             }
         })
     }
     
-    func deleteTrip(trip: Trip)->AuthenticatedAPIRequest {
+    @discardableResult func deleteTrip(_ trip: Trip)->AuthenticatedAPIRequest {
         guard let uuid = trip.uuid else {
             // the server doesn't know about this trip yet
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                trip.managedObjectContext?.deleteObject(trip)
-                CoreDataManager.sharedManager.saveContext()
+            DispatchQueue.main.async(execute: { () -> Void in
+                trip.managedObjectContext?.delete(trip)
+                CoreDataManager.shared.saveContext()
             })
             
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.DELETE, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+        return AuthenticatedAPIRequest(client: self, method: .delete, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
-            case .Success(_), .Failure(_) where response.response != nil && response.response!.statusCode == 404:
+            case .success(_), 
+                 .failure(_) where response.response != nil && response.response!.statusCode == 404:
                 // it's possible the server already deleted the object, in which case it will send a 404.
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    trip.managedObjectContext?.deleteObject(trip)
-                    CoreDataManager.sharedManager.saveContext()
-                })
-            case .Failure(let error):
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                DispatchQueue.main.async {
+                    trip.managedObjectContext?.delete(trip)
+                    CoreDataManager.shared.saveContext()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
                     let alert = UIAlertView(title:nil, message: "There was an error deleting that trip. Please try again later.", delegate: nil, cancelButtonTitle:"Darn")
                     alert.show()
-                })
-                DDLogWarn(String(format: "Error deleting trip data: %@", error))
+                }
+                DDLogWarn(String(format: "Error deleting trip data: %@", error as CVarArg))
             }
         })
         
     }
     
-    func syncUnsyncedTrips(syncInBackground: Bool = false, completionBlock: ()->Void = {}) {
+    func syncUnsyncedTrips(_ syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
         self.didEncounterUnrecoverableErrorSyncronizingTrips = false
         self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
     }
     
-    private func syncNextUnsyncedTrip(syncInBackground: Bool = false, completionBlock: ()->Void = {}) {
-        if (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active) {
-            if let trip = Trip.nextClosedUnsyncedTrips() where !self.didEncounterUnrecoverableErrorSyncronizingTrips {
+    private func syncNextUnsyncedTrip(_ syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
+        if (syncInBackground || UIApplication.shared.applicationState == UIApplicationState.active) {
+            if let trip = Trip.nextClosedUnsyncedTrips(), !self.didEncounterUnrecoverableErrorSyncronizingTrips {
                 self.syncTrip(trip).apiResponse({ (_) -> Void in
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.6 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.6 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
                         self.syncNextUnsyncedTrip(syncInBackground, completionBlock: completionBlock)
                     })
                 })
@@ -539,7 +530,7 @@ class APIClient {
         }
     }
     
-    func saveAndSyncTripIfNeeded(trip: Trip, syncInBackground: Bool = false, includeLocations: Bool = true)->AuthenticatedAPIRequest {
+    @discardableResult func saveAndSyncTripIfNeeded(_ trip: Trip, syncInBackground: Bool = false, includeLocations: Bool = true)->AuthenticatedAPIRequest {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -547,17 +538,17 @@ class APIClient {
         }
         trip.saveAndMarkDirty()
         
-        if (!trip.isSynced.boolValue && (syncInBackground || UIApplication.sharedApplication().applicationState == UIApplicationState.Active)) {
+        if (!trip.isSynced && (syncInBackground || UIApplication.shared.applicationState == UIApplicationState.active)) {
             return self.syncTrip(trip, includeLocations: includeLocations)
         }
         
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
-    func uploadSensorData(trip: Trip, withMetadata metadataDict:[String: AnyObject] = [:]) {
+    func uploadSensorData(_ trip: Trip, withMetadata metadataDict:[String: Any] = [:]) {
         let routeURL = "trips/" + trip.uuid + "/sensor_data"
         
-        var sensorDataJsonArray : [[String: AnyObject]] = []
+        var sensorDataJsonArray : [[String: Any]] = []
         for sensorDataCollection in trip.sensorDataCollections {
             sensorDataJsonArray.append((sensorDataCollection as! SensorDataCollection).jsonDictionary())
         }
@@ -565,33 +556,33 @@ class APIClient {
         var params = metadataDict
         params["data"] = sensorDataJsonArray
         
-        _ = AuthenticatedAPIRequest(client: self, method: .POST, route: routeURL, parameters:params , authenticated: true) { (response) in
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: true) { (response) in
             switch response.result {
-            case .Success(_):
+            case .success(_):
                 DDLogWarn("Yep")
-            case .Failure(_):
+            case .failure(_):
                 DDLogWarn("Nope!")
             }
         }
     }
     
-    func uploadSensorDataCollection(sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: AnyObject] = [:]) {
+    func uploadSensorDataCollection(_ sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: Any] = [:]) {
         let accelerometerRouteURL = "ios_accelerometer_data"
         var params = metadataDict
-        params["data"] = sensorDataCollection.jsonDictionary()
+        params["data"] = sensorDataCollection.jsonDictionary() as Any?
 
-        _ = AuthenticatedAPIRequest(client: self, method: .POST, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
             switch response.result {
-            case .Success(_):
+            case .success(_):
                 DDLogWarn("Yep")
-            case .Failure(_):
+            case .failure(_):
                 DDLogWarn("Nope!")
             }
         }
     }
     
-    func syncTrip(trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
-        guard (trip.isClosed.boolValue) else {
+    @discardableResult func syncTrip(_ trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
+        guard (trip.isClosed) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
             
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
@@ -615,21 +606,21 @@ class APIClient {
         
         let routeURL = "trips/" + trip.uuid
         
-        var method = Alamofire.Method.PUT
+        var method = Alamofire.HTTPMethod.put
         var tripDict = [
             "activityType": trip.activityType.numberValue,
             "creationDate": trip.creationDate.JSONString(),
             "rating": trip.rating.choice.numberValue,
             "ratingVersion": trip.rating.version.numberValue
-        ]
+        ] as [String : Any]
 
-        if (!trip.locationsAreSynced.boolValue && !includeLocations) {
+        if (!trip.locationsAreSynced && !includeLocations) {
             // initial synchronization of trip data - the server does not know about the locations yet
             // so we provide them in order to get back summary information. record may or may not exist so we PUT.
-            guard let startingLocation = trip.bestStartLocation(), endingLocation = trip.bestEndLocation() else {
+            guard let startingLocation = trip.bestStartLocation(), let endingLocation = trip.bestEndLocation() else {
                 DDLogWarn("No starting and/or ending location found when syncing trip locations!")
                 trip.locationsAreSynced = false
-                CoreDataManager.sharedManager.saveContext()
+                CoreDataManager.shared.saveContext()
 
                 return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
             }
@@ -637,24 +628,24 @@ class APIClient {
             tripDict["length"] = trip.length
             tripDict["startLocation"] = startingLocation.jsonDictionary()
             tripDict["endLocation"] = endingLocation.jsonDictionary()
-        } else if (!trip.locationsAreSynced.boolValue) {
+        } else if (!trip.locationsAreSynced) {
             // upload location data has not been synced, do it now.
             // record may or may not exist, so we PUT
             
-            var locations : [AnyObject!] = []
+            var locations : [Any?] = []
             for location in trip.locations.array {
                 locations.append((location as! Location).jsonDictionary())
             }
             tripDict["locations"] = locations
         } else {
             // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
-            method = Alamofire.Method.PATCH
+            method = .patch
         }
         
-        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict) { (response) in
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: tripDict as [String : Any]?) { (response) in
             self.tripRequests[trip] = nil
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 if let summary = json["summary"].dictionary {
                     trip.loadSummaryFromJSON(summary)
                 }
@@ -663,25 +654,25 @@ class APIClient {
                     trip.locationsAreSynced = true
                 }
                 
-                if let accountStatus = json["accountStatus"].dictionary, statusText = accountStatus["status_text"]?.string, statusEmoji = accountStatus["status_emoji"]?.string {
+                if let accountStatus = json["accountStatus"].dictionary, let statusText = accountStatus["status_text"]?.string, let statusEmoji = accountStatus["status_emoji"]?.string {
                     Profile.profile().statusText = statusText
                     Profile.profile().statusEmoji = statusEmoji
-                    CoreDataManager.sharedManager.saveContext()
-                    NSNotificationCenter.defaultCenter().postNotificationName("APIClientStatusTextDidChange", object: nil)
+                    CoreDataManager.shared.saveContext()
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil)
                 } else {
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                 }
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error syncing trip: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error syncing trip: %@", error as CVarArg))
 
-                if let httpResponse = response.response where httpResponse.statusCode == 409 {
+                if let httpResponse = response.response, httpResponse.statusCode == 409 {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
                     self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
-                } else if let httpResponse = response.response where httpResponse.statusCode == 404 {
+                } else if let httpResponse = response.response, httpResponse.statusCode == 404 {
                     // server doesn't know about trip, reset locationsAreSynced
                     trip.locationsAreSynced = false
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
                 }
@@ -697,67 +688,67 @@ class APIClient {
     
     
     func getAllApplications()-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications") { (response) -> Void in
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "applications") { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 if let apps = json.array {
                     var appsToDelete = ConnectedApp.allApps()
                     
                     for appDict in apps {
-                        if let app = ConnectedApp.createOrUpdate(withJson: appDict), index = appsToDelete.indexOf(app) {
-                            appsToDelete.removeAtIndex(index)
+                        if let app = ConnectedApp.createOrUpdate(withJson: appDict), let index = appsToDelete.index(of: app) {
+                            appsToDelete.remove(at: index)
                         }
                     }
                     
                     for app in appsToDelete {
                         // delete any app objects we did not receive
                         if !app.isHiddenApp {
-                            CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(app)
+                            CoreDataManager.shared.currentManagedObjectContext().delete(app)
                         }
                     }
                     
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                 }
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error as CVarArg))
             }
         }
     }
     
-    func getApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "applications/" + app.uuid) { (response) -> Void in
+    func getApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "applications/" + app.uuid) { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 app.updateWithJson(withJson: json)
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error getting third party app: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error getting third party app: %@", error as CVarArg))
             }
         }
     }
     
-    func connectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/connect", parameters: app.json().dictionaryObject) { (response) -> Void in
+    func connectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "applications/" + app.uuid + "/connect", parameters: app.json().dictionaryObject as [String : Any]?) { (response) -> Void in
             switch response.result {
-            case .Success(let json):
-                if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
-                    ConnectedApp.createOrUpdate(withJson: json)
+            case .success(let json):
+                if let httpsResponse = response.response, httpsResponse.statusCode == 200 {
+                    _ = ConnectedApp.createOrUpdate(withJson: json)
                     app.profile = Profile.profile()
-                    CoreDataManager.sharedManager.saveContext()
+                    CoreDataManager.shared.saveContext()
                 }
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error as CVarArg))
             }
         }
     }
     
-    func disconnectApplication(app: ConnectedApp)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
+    func disconnectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
             switch response.result {
-            case .Success(_):
+            case .success(_):
                 app.profile = nil
-                CoreDataManager.sharedManager.saveContext()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error getting third party apps: %@", error))
+                CoreDataManager.shared.saveContext()
+            case .failure(let error):
+                DDLogWarn(String(format: "Error getting third party apps: %@", error as CVarArg))
             }
         }
     }
@@ -767,16 +758,16 @@ class APIClient {
     // MARK: - Authenciatation API Methods
     //
     
-    func profileDictionary() -> [String: AnyObject] {
-        var profileDictionary = [String: AnyObject]()
+    func profileDictionary() -> [String: Any] {
+        var profileDictionary = [String: Any]()
         
         // iOS Data
-        var iosDictionary = [String: AnyObject]()
-        if let preferredLanguage = NSLocale.currentLocale().objectForKey(NSLocaleLanguageCode) as? String {
+        var iosDictionary = [String: Any]()
+        if let preferredLanguage = (Locale.current as NSLocale).object(forKey: NSLocale.Key.languageCode) as? String {
             iosDictionary["preferred_language"] = preferredLanguage
         }
         
-        if let model = UIDevice.currentDevice().deviceModel() {
+        if let model = UIDevice.current.deviceModel() {
             iosDictionary["device_model"] = model
         }
         
@@ -785,17 +776,17 @@ class APIClient {
         }
         
         // Health Kit Data
-        var healthKitDictionary = [String: AnyObject]()
+        var healthKitDictionary = [String: Any]()
         if let dob = Profile.profile().dateOfBirth {
             healthKitDictionary["date_of_birth"] = dob.JSONString()
         }
         
-        if let weight = Profile.profile().weightKilograms where weight.intValue > 0 {
+        if let weight = Profile.profile().weightKilograms, weight.int32Value > 0 {
             healthKitDictionary["weight_kilograms"] = weight
         }
         
         let gender = Profile.profile().gender
-        if  gender.integerValue != HKBiologicalSex.NotSet.rawValue {
+        if  gender.intValue != HKBiologicalSex.notSet.rawValue {
             healthKitDictionary["gender"] = gender
         }
         
@@ -806,12 +797,12 @@ class APIClient {
         return profileDictionary
     }
     
-    func updateAccountStatus()-> AuthenticatedAPIRequest {
+    @discardableResult func updateAccountStatus()-> AuthenticatedAPIRequest {
         guard self.hasRegisteredForRemoteNotifications else {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        var parameters: [String: AnyObject] = [:]
+        var parameters: [String: Any] = [:]
         if let deviceToken = self.notificationDeviceToken {
             parameters["device_token"] = deviceToken.hexadecimalString()
             #if DEBUG
@@ -822,28 +813,27 @@ class APIClient {
         parameters["profile"] = self.profileDictionary()
         
         
-        if (RouteManager.hasStarted()) {
-            if let loc = RouteManager.sharedManager.location {
+        if (RouteManager.hasStarted) {
+            if let loc = RouteManager.shared.location {
                 parameters["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
             }
         }
             
-        return AuthenticatedAPIRequest(client: self, method:Alamofire.Method.POST, route: "status", parameters: parameters) { (response) -> Void in
+        return AuthenticatedAPIRequest(client: self, method:.post, route: "status", parameters: parameters) { (response) -> Void in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 if let areaJson = json["area"].dictionary {
                     if let name = areaJson["name"]?.string, let count = areaJson["count_info"]?["count"].uInt, let countRatePerHour = areaJson["count_info"]?["per_hour"].uInt, let launched = areaJson["launched"]?.bool {
-                        self.area = .Area(name: name, count: count, countRatePerHour: countRatePerHour, launched: launched)
+                        self.area = .area(name: name, count: count, countRatePerHour: countRatePerHour, launched: launched)
                     } else {
-                        self.area = .NonArea
+                        self.area = .nonArea
                     }
-                    NSNotificationCenter.defaultCenter().postNotificationName("APIClientAccountStatusDidGetArea", object: nil)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientAccountStatusDidGetArea"), object: nil)
                 } else {
-                    self.area = .Unknown
+                    self.area = .unknown
                 }
                 
-                
-                if let statusText = json["status_text"].string, statusEmoji = json["status_emoji"].string {
+                if let statusText = json["status_text"].string, let statusEmoji = json["status_emoji"].string {
                     Profile.profile().statusText = statusText
                     Profile.profile().statusEmoji = statusEmoji
                 }
@@ -857,8 +847,8 @@ class APIClient {
                     
                     for appDict in connectedApps {
                         if let app = ConnectedApp.createOrUpdate(withJson: appDict) {
-                            if let index = appsToDelete.indexOf(app) {
-                                appsToDelete.removeAtIndex(index)
+                            if let index = appsToDelete.index(of: app) {
+                                appsToDelete.remove(at: index)
                             }
                             app.profile = Profile.profile()
                         }
@@ -870,8 +860,8 @@ class APIClient {
                     }
                 }
                 
-                CoreDataManager.sharedManager.saveContext()
-                NSNotificationCenter.defaultCenter().postNotificationName("APIClientStatusTextDidChange", object: nil)
+                CoreDataManager.shared.saveContext()
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil)
                 
                 if let mixPanelID = json["mixpanel_id"].string {
                     Mixpanel.sharedInstance().identify(mixPanelID)
@@ -879,17 +869,17 @@ class APIClient {
                 
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
-                        if (self.accountVerificationStatus == .Unverified) {
+                        if (self.accountVerificationStatus == .unverified) {
                             // if we are just moved to an authenticated account, get any trips on the server
                             self.getAllTrips()
                         }
-                        self.accountVerificationStatus = .Verified
+                        self.accountVerificationStatus = .verified
                     } else {
-                        self.accountVerificationStatus = .Unverified
+                        self.accountVerificationStatus = .unverified
                     }
                 }
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error retriving account status: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving account status: %@", error as CVarArg))
             }
         }
     }
@@ -897,73 +887,73 @@ class APIClient {
     func logout()-> AuthenticatedAPIRequest {
         Profile.resetProfile()
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "logout") { (response) in
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "logout") { (response) in
             switch response.result {
-            case .Success(_):
+            case .success(_):
                 self.reauthenticate()
                 DDLogInfo("Logged out!")
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error logging out: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error logging out: %@", error as CVarArg))
                 self.authenticateIfNeeded()
             }
         }
     }
     
-    func sendVerificationTokenForEmail(email: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "send_email_code", parameters: ["email": email]) { (response) in
+    func sendVerificationTokenForEmail(_ email: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "send_email_code", parameters: ["email": email]) { (response) in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error sending verification email: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error sending verification email: %@", error as CVarArg))
                 
-                if let httpResponse = response.response where httpResponse.statusCode == 400 {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                if let httpResponse = response.response, httpResponse.statusCode == 400 {
+                    DispatchQueue.main.async {
                         let alert = UIAlertView(title:nil, message: "That doesn't look like a valid email address. Please double-check your typing and try again.", delegate: nil, cancelButtonTitle:"On it")
                         alert.show()
-                    })
+                    }
                 }
             }
         }
     }
     
-    func verifyToken(token: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_email_code", parameters: ["code": token]) { (response) in
+    func verifyToken(_ token: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "verify_email_code", parameters: ["code": token]) { (response) in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error verifying email token: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error verifying email token: %@", error as CVarArg))
             }
         }
     }
     
-    func verifyFacebook(token: String)-> AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.POST, route: "verify_facebook_login", parameters: ["token": token]) { (response) in
+    func verifyFacebook(_ token: String)-> AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .post, route: "verify_facebook_login", parameters: ["token": token]) { (response) in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
                 self.updateAccountStatus()
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error verifying facebook token: %@", error))
-                if let httpResponse = response.response where httpResponse.statusCode == 400 {
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            case .failure(let error):
+                DDLogWarn(String(format: "Error verifying facebook token: %@", error as CVarArg))
+                if let httpResponse = response.response, httpResponse.statusCode == 400 {
+                    DispatchQueue.main.async {
                         let alert = UIAlertView(title:nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
                         alert.show()
-                    })
+                    }
                 }
             }
         }
     }
     
-    func testAuthID()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_info") { (response) in
+    @discardableResult func testAuthID()->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "oauth_info") { (response) in
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error retriving access token: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
             }
         }
     }
@@ -984,12 +974,12 @@ class APIClient {
         
         Profile.profile().accessToken = nil
         Profile.profile().accessTokenExpiresIn = nil
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
         
         self.authenticateIfNeeded()
     }
     
-    func authenticateIfNeeded()->AuthenticatedAPIRequest {
+    @discardableResult func authenticateIfNeeded()->AuthenticatedAPIRequest {
         if (self.authenticated || self.isRequestingAuthentication) {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
@@ -998,24 +988,24 @@ class APIClient {
         
         let parameters = ["client_id" : "1ARN1fJfH328K8XNWA48z6z5Ag09lWtSSVRHM9jw", "response_type" : "token"]
         
-        return AuthenticatedAPIRequest(client: self, method: Alamofire.Method.GET, route: "oauth_token", parameters: parameters, encoding: .URL, authenticated: false) { (response) in
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "oauth_token", parameters: parameters as [String : Any]?, encoding: URLEncoding.default, authenticated: false) { (response) in
             self.isRequestingAuthentication = false
             
             switch response.result {
-            case .Success(let json):
-                if let accessToken = json["access_token"].string, expiresInString = json["expires_in"].string, expiresInInt = Int(expiresInString) {
-                    let expiresIn = NSDate().secondsFrom(expiresInInt)
+            case .success(let json):
+                if let accessToken = json["access_token"].string, let expiresInString = json["expires_in"].string, let expiresInInt = Int(expiresInString) {
+                    let expiresIn = Date().secondsFrom(expiresInInt)
                     if (Profile.profile().accessToken == nil) {
                         Profile.profile().accessToken = accessToken
                         Profile.profile().accessTokenExpiresIn = expiresIn
-                        CoreDataManager.sharedManager.saveContext()
+                        CoreDataManager.shared.saveContext()
                         self.updateAccountStatus()
                     } else {
                         DDLogWarn("Got a new access token when one was already set!")
                     }
                 }
-            case .Failure(let error):
-                DDLogWarn(String(format: "Error retriving access token: %@", error))
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
                 let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
                 alert.show()
             }

@@ -12,34 +12,34 @@ import CoreLocation
 
 class Incident : NSManagedObject {
     enum IncidentType : Int {
-        case Unknown = 0
-        case RoadHazard
-        case UnsafeIntersection
-        case BikeLaneEnds
-        case UnsafeSpeeds
-        case AggressiveMotorist
-        case InsufficientParking
-        case SuspectedBikeTheif
+        case unknown = 0
+        case roadHazard
+        case unsafeIntersection
+        case bikeLaneEnds
+        case unsafeSpeeds
+        case aggressiveMotorist
+        case insufficientParking
+        case suspectedBikeTheif
         
-        static var count: Int { return IncidentType.SuspectedBikeTheif.rawValue + 1}
+        static var count: Int { return IncidentType.suspectedBikeTheif.rawValue + 1}
         
         var text: String {
             switch(self) {
-            case Unknown:
+            case .unknown:
                 return "Other"
-            case RoadHazard:
+            case .roadHazard:
                 return "Road Hazard"
-            case UnsafeIntersection:
+            case .unsafeIntersection:
                 return "Unsafe Intersection"
-            case BikeLaneEnds:
+            case .bikeLaneEnds:
                 return "Bike Lane Ends"
-            case UnsafeSpeeds:
+            case .unsafeSpeeds:
                 return "Unsafe Speeds"
-            case AggressiveMotorist:
+            case .aggressiveMotorist:
                 return "Aggressive Motorist"
-            case InsufficientParking:
+            case .insufficientParking:
                 return "Insufficient Parking"
-            case SuspectedBikeTheif:
+            case .suspectedBikeTheif:
                 return "Suspected Stolen Bikes"
             }
         }
@@ -52,27 +52,27 @@ class Incident : NSManagedObject {
             var pinIndex : CGFloat = 0
             
             switch(self) {
-                case Unknown:
+                case .unknown:
                     pinIndex = 17
-                case RoadHazard:
+                case .roadHazard:
                     pinIndex = 0
-                case UnsafeIntersection:
+                case .unsafeIntersection:
                     pinIndex = 0
-                case BikeLaneEnds:
+                case .bikeLaneEnds:
                     pinIndex = 0
-                case UnsafeSpeeds:
+                case .unsafeSpeeds:
                     pinIndex = 0
-                case AggressiveMotorist:
+                case .aggressiveMotorist:
                     pinIndex = 1
-                case InsufficientParking:
+                case .insufficientParking:
                     pinIndex = 8
-                case SuspectedBikeTheif:
+                case .suspectedBikeTheif:
                     pinIndex = 19
             }
             
             rect = CGRect(x: -pinIndex * pinWidth, y: 0.0, width: pinWidth, height: markersImage.size.height)
             UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-            markersImage.drawAtPoint(rect.origin)
+            markersImage.draw(at: rect.origin)
             let pinImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             
@@ -82,37 +82,37 @@ class Incident : NSManagedObject {
     
     @NSManaged var uuid : String
     @NSManaged var body : String!
-    @NSManaged var creationDate : NSDate!
+    @NSManaged var creationDate : Date!
     @NSManaged var type : NSNumber!
     
     @NSManaged var trip : Trip?
     @NSManaged var location : Location
     
     convenience init(location: Location, trip: Trip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Incident", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Incident", in: context)!, insertInto: context)
         
         self.trip = trip
         self.location = location
-        self.creationDate = NSDate()
+        self.creationDate = Date()
     }
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        self.creationDate = NSDate()
-        self.uuid = NSUUID().UUIDString
+        self.creationDate = Date()
+        self.uuid = UUID().uuidString
     }
     
     override func awakeFromFetch() {
         super.awakeFromFetch()
         if (self.uuid == "foo") {
-            self.uuid = NSUUID().UUIDString
+            self.uuid = UUID().uuidString
         }
     }
     
     var coordinate: CLLocationCoordinate2D  {
         get {
-            if (!self.fault) {
+            if (!self.isFault) {
                 return self.location.coordinate()
             } else {
                 // seems to happen when a pin is getting deleted
@@ -120,21 +120,21 @@ class Incident : NSManagedObject {
             }
         }
         set {
-            self.willChangeValueForKey("coordinate")
+            self.willChangeValue(forKey: "coordinate")
             let nearestLocation = self.trip!.closestLocationToCoordinate(newValue)
             if (nearestLocation == nil) {
                 self.location = self.trip!.mostRecentLocation()!
             } else {
-                self.location = nearestLocation
+                self.location = nearestLocation!
             }
-            self.didChangeValueForKey("coordinate")
+            self.didChangeValue(forKey: "coordinate")
         }
     }
     
     // Title and subtitle for use by selection UI.
     var title: String? {
         get {
-            return Incident.IncidentType(rawValue: self.type.integerValue)!.text
+            return Incident.IncidentType(rawValue: self.type.intValue)!.text
         }
     }
 }

@@ -24,27 +24,27 @@ class TripReward : NSManagedObject {
     }
     
     convenience init(trip: Trip, emoji: String, descriptionText: String) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("TripReward", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "TripReward", in: context)!, insertInto: context)
         self.emoji = emoji
         self.descriptionText = descriptionText
         
         self.trip = trip
     }
     
-    class func tripRewardCountsGroupedByAttribute(attribute: String, additionalAttributes: [String]? = nil) -> [[String: AnyObject]] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+    class func tripRewardCountsGroupedByAttribute(_ attribute: String, additionalAttributes: [String]? = nil) -> [[String: AnyObject]] {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         let  countExpression = NSExpressionDescription()
         countExpression.name = "count"
         countExpression.expression = NSExpression(forFunction: "count:", arguments: [NSExpression(forKeyPath: attribute)])
-        countExpression.expressionResultType = NSAttributeType.Integer32AttributeType
-        let entityDescription = NSEntityDescription.entityForName("TripReward", inManagedObjectContext: CoreDataManager.sharedManager.managedObjectContext!)!
+        countExpression.expressionResultType = NSAttributeType.integer32AttributeType
+        let entityDescription = NSEntityDescription.entity(forEntityName: "TripReward", in: CoreDataManager.shared.managedObjectContext!)!
         
         guard let attributeDescription = entityDescription.attributesByName[attribute] else {
             return []
         }
         
-        let fetchedRequest = NSFetchRequest(entityName: "TripReward")
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripReward")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "trip.creationDate", ascending: true)]
         var propertiesToFetch = [attributeDescription, countExpression]
         var propertiesToGroupBy = [attributeDescription]
@@ -59,13 +59,13 @@ class TripReward : NSManagedObject {
         
         fetchedRequest.propertiesToFetch = propertiesToFetch
         fetchedRequest.propertiesToGroupBy = propertiesToGroupBy
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        fetchedRequest.resultType = NSFetchRequestResultType.dictionaryResultType
         
         var error : NSError?
         let results: [AnyObject]?
         
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error1 as NSError {
             error = error1
             results = nil
@@ -76,7 +76,7 @@ class TripReward : NSManagedObject {
         
         let dictResults = results as! [[String: AnyObject]]
         
-        if (dictResults.count == 1 && (dictResults[0]["count"]! as? NSNumber)?.integerValue == 0) {
+        if (dictResults.count == 1 && (dictResults[0]["count"]! as? NSNumber)?.int32Value == 0) {
             return []
         }
         

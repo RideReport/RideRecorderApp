@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2015, Deusty, LLC
+// Copyright (c) 2010-2016, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -29,13 +29,15 @@
 // So we use primitive logging macros around NSLog.
 // We maintain the NS prefix on the macros to be explicit about the fact that we're using NSLog.
 
-#define LOG_LEVEL 2
+#ifndef DD_NSLOG_LEVEL
+    #define DD_NSLOG_LEVEL 2
+#endif
 
-#define NSLogError(frmt, ...)    do{ if(LOG_LEVEL >= 1) NSLog((frmt), ##__VA_ARGS__); } while(0)
-#define NSLogWarn(frmt, ...)     do{ if(LOG_LEVEL >= 2) NSLog((frmt), ##__VA_ARGS__); } while(0)
-#define NSLogInfo(frmt, ...)     do{ if(LOG_LEVEL >= 3) NSLog((frmt), ##__VA_ARGS__); } while(0)
-#define NSLogDebug(frmt, ...)    do{ if(LOG_LEVEL >= 4) NSLog((frmt), ##__VA_ARGS__); } while(0)
-#define NSLogVerbose(frmt, ...)  do{ if(LOG_LEVEL >= 5) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define NSLogError(frmt, ...)    do{ if(DD_NSLOG_LEVEL >= 1) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define NSLogWarn(frmt, ...)     do{ if(DD_NSLOG_LEVEL >= 2) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define NSLogInfo(frmt, ...)     do{ if(DD_NSLOG_LEVEL >= 3) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define NSLogDebug(frmt, ...)    do{ if(DD_NSLOG_LEVEL >= 4) NSLog((frmt), ##__VA_ARGS__); } while(0)
+#define NSLogVerbose(frmt, ...)  do{ if(DD_NSLOG_LEVEL >= 5) NSLog((frmt), ##__VA_ARGS__); } while(0)
 
 // Xcode does NOT natively support colors in the Xcode debugging console.
 // You'll need to install the XcodeColors plugin to see colors in the Xcode console.
@@ -76,6 +78,8 @@
 // map to standard xterm colors (0).
 
 #define MAP_TO_TERMINAL_APP_COLORS 1
+
+static void *const CalendarSpecificKey = (void *)&CalendarSpecificKey;
 
 
 @interface DDTTYLoggerColorProfile : NSObject {
@@ -714,20 +718,19 @@ static DDTTYLogger *sharedInstance;
         CGColorSpaceRelease(rgbColorSpace);
     }
 
-    #elif __has_include(<AppKit/NSColor.h>)
+    #elif defined(DD_CLI) || !__has_include(<AppKit/NSColor.h>)
+
+    // OS X without AppKit
+
+    [color getRed:rPtr green:gPtr blue:bPtr alpha:NULL];
+
+    #else /* if TARGET_OS_IPHONE */
 
     // OS X with AppKit
 
     NSColor *safeColor = [color colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
 
     [safeColor getRed:rPtr green:gPtr blue:bPtr alpha:NULL];
-
-    #else /* if TARGET_OS_IPHONE */
-
-    // OS X without AppKit
-
-    [color getRed:rPtr green:gPtr blue:bPtr alpha:NULL];
-
     #endif /* if TARGET_OS_IPHONE */
 }
 
@@ -821,11 +824,14 @@ static DDTTYLogger *sharedInstance;
 
     if ((self = [super init])) {
         _calendarUnitFlags = (NSCalendarUnitYear     |
-                             NSCalendarUnitMonth    |
-                             NSCalendarUnitDay      |
-                             NSCalendarUnitHour     |
-                             NSCalendarUnitMinute   |
-                             NSCalendarUnitSecond);
+                              NSCalendarUnitMonth    |
+                              NSCalendarUnitDay      |
+                              NSCalendarUnitHour     |
+                              NSCalendarUnitMinute   |
+                              NSCalendarUnitSecond);
+
+        NSCalendar* calendar = [NSCalendar autoupdatingCurrentCalendar];
+        dispatch_queue_set_specific(self.loggerQueue, CalendarSpecificKey, (__bridge_retained void*) calendar, (dispatch_function_t) CFRelease);
 
         // Initialze 'app' variable (char *)
 
@@ -1267,7 +1273,9 @@ static DDTTYLogger *sharedInstance;
             // Calculate timestamp.
             // The technique below is faster than using NSDateFormatter.
             if (logMessage->_timestamp) {
-                NSDateComponents *components = [[NSCalendar autoupdatingCurrentCalendar] components:_calendarUnitFlags fromDate:logMessage->_timestamp];
+                NSCalendar* calendar = (__bridge NSCalendar*) dispatch_get_specific(CalendarSpecificKey);
+                NSAssert(calendar != nil, @"Core architecture requirement failure");
+                NSDateComponents *components = [calendar components:_calendarUnitFlags fromDate:logMessage->_timestamp];
 
                 NSTimeInterval epoch = [logMessage->_timestamp timeIntervalSinceReferenceDate];
                 int milliseconds = (int)((epoch - floor(epoch)) * 1000);

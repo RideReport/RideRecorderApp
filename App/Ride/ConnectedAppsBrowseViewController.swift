@@ -20,33 +20,33 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     private var selectedConnectedApp: ConnectedApp? = nil
     private var safariViewController: UIViewController? = nil
     private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
-    private var fetchedResultsController : NSFetchedResultsController! = nil
+    private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
     
-    @IBAction func cancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancel(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.emptyTableView.hidden = true
+        self.emptyTableView.isHidden = true
         
         self.coreDataDidLoad()
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func coreDataDidLoad() {
         let cacheName = "ConnectedAppsBrowserFetchedResultsController"
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        NSFetchedResultsController.deleteCacheWithName(cacheName)
-        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ConnectedApp")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetchedRequest.predicate = NSPredicate(format: "profile == nil")
         
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
+        self.fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest:fetchedRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         do {
             try self.fetchedResultsController.performFetch()
@@ -60,19 +60,19 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         self.tableView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
-        APIClient.sharedClient.getAllApplications().apiResponse { _ in
+        APIClient.shared.getAllApplications().apiResponse { _ in
             self.refreshEmptyTableView()
         }
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            self.tableView.deselectRow(at: indexPath, animated: true)
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
     }
     
@@ -80,43 +80,43 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     // MARK: - Fetched Results Controller
     //
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
         
         self.refreshEmptyTableView()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch(type) {
             
-        case .Update:
-            if let path = newIndexPath, app = self.fetchedResultsController.objectAtIndexPath(path) as? ConnectedApp,
-                cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)) {
+        case .update:
+            if let path = newIndexPath, let app = self.fetchedResultsController.object(at: path) as? ConnectedApp,
+                let cell = self.tableView!.cellForRow(at: IndexPath(row: indexPath!.row, section: indexPath!.section + 1)) {
                 configureCell(cell, app:app)
             }
-        case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Move:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: indexPath!.section + 1)],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: newIndexPath!.section + 1)],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
+        case .insert:
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)], with: UITableViewRowAnimation.fade)
+        case .delete:
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)], with: UITableViewRowAnimation.fade)
+        case .move:
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
+                                                   with: UITableViewRowAnimation.fade)
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
+                                                   with: UITableViewRowAnimation.fade)
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup") ? 0 : 1
+            return UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 0 : 1
         }
         
         let sectionInfo = self.fetchedResultsController.sections![0]
@@ -130,94 +130,94 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     private func refreshEmptyTableView() {
         guard let _ = self.fetchedResultsController else {
             // Core Data hasn't loaded yet
-            self.emptyTableView.hidden = true
+            self.emptyTableView.isHidden = true
             return
         }
         
-        if self.tableView.numberOfRowsInSection(0) + self.tableView.numberOfRowsInSection(1) > 0 {
-            self.emptyTableView.hidden = true
+        if self.tableView.numberOfRows(inSection: 0) + self.tableView.numberOfRows(inSection: 1) > 0 {
+            self.emptyTableView.isHidden = true
         } else {
-            self.emptyTableView.hidden = false
+            self.emptyTableView.isHidden = false
         }
     }
     
     
-    func configureCell(tableCell: UITableViewCell, app: ConnectedApp) {
+    func configureCell(_ tableCell: UITableViewCell, app: ConnectedApp) {
         if let nameLabel = tableCell.viewWithTag(1) as? UILabel,
-            descriptionLabel = tableCell.viewWithTag(2) as? UILabel,
-            imageView = tableCell.viewWithTag(3) as? UIImageView {
+            let descriptionLabel = tableCell.viewWithTag(2) as? UILabel,
+            let imageView = tableCell.viewWithTag(3) as? UIImageView {
             nameLabel.text = app.name
             descriptionLabel.text = app.descriptionText
             
-            if let urlString = app.baseImageUrl, url = NSURL(string: urlString) {
-                imageView.kf_setImageWithURL(url)
+            if let urlString = app.baseImageUrl, let url = URL(string: urlString) {
+                imageView.kf.setImage(with: url)
             }
         }
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             // handled by storyboard
         } else {
-            guard let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp else {
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            guard let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp else {
+                self.tableView.deselectRow(at: indexPath, animated: true)
                 return
             }
 
-            guard let urlString = app.webAuthorizeUrl, url = NSURL(string: urlString) where url.host != nil else {
+            guard let urlString = app.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
                 // if there is no authorize url, go straight to permissions screen
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                self.tableView.deselectRow(at: indexPath, animated: true)
                 self.selectedConnectedApp = app
-                self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
+                self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
                 return
             }
             
             if url.scheme != "https" {
-                self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                self.tableView.deselectRow(at: indexPath, animated: true)
                 return
             }
             
             
             self.selectedConnectedApp = app
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: "RideReportAuthCodeCallBackNotification", object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: NSNotification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: nil)
             
             if #available(iOS 9.0, *) {
-                let sfvc = SFSafariViewController(URL: url)
+                let sfvc = SFSafariViewController(url: url)
                 self.safariViewController = sfvc
                 sfvc.delegate = self
                 self.navigationController?.pushViewController(sfvc, animated: true)
-                if let coordinator = transitionCoordinator() {
-                    coordinator.animateAlongsideTransition(nil, completion: { (context) in
+                if let coordinator = transitionCoordinator {
+                    coordinator.animate(alongsideTransition: nil, completion: { (context) in
                         let targetSubview = sfvc.view
-                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
                         loadingIndicator.color = ColorPallete.sharedPallete.darkGrey
                         self.safariViewControllerActivityIndicator = loadingIndicator
                         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-                        targetSubview.addSubview(loadingIndicator)
-                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterY, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterY, multiplier: 1, constant: 0).active = true
-                        NSLayoutConstraint(item: loadingIndicator, attribute: .CenterX, relatedBy: NSLayoutRelation.Equal, toItem: targetSubview, attribute: .CenterX, multiplier: 1, constant: 0).active = true
+                        targetSubview?.addSubview(loadingIndicator)
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerY, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerX, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
                         loadingIndicator.startAnimating()
                     })
                 }
             } else {
-                UIApplication.sharedApplication().openURL(url)
+                UIApplication.shared.openURL(url)
             }
         }
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
-        return CGFloat.min
+        return CGFloat.leastNormalMagnitude
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let tableCell = self.tableView.dequeueReusableCellWithIdentifier("HealthAppCell", forIndexPath: indexPath)
+            let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "HealthAppCell", for: indexPath)
             if #available(iOS 10.0, *) {
-                if WatchManager.sharedManager.paired {
+                if WatchManager.shared.paired {
                     // if a watch is paired
                     if let nameLabel = tableCell.viewWithTag(1) as? UILabel,
-                        descriptionLabel = tableCell.viewWithTag(2) as? UILabel {
+                        let descriptionLabel = tableCell.viewWithTag(2) as? UILabel {
                         nameLabel.text = "Apple Watch"
                         descriptionLabel.text = "Automatically save your rides to your Apple Watch."
                     }
@@ -226,18 +226,18 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             
             return tableCell
         } else {
-            let tableCell = self.tableView.dequeueReusableCellWithIdentifier("ConnectedAppCell", forIndexPath: indexPath)
-            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp {
+            let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "ConnectedAppCell", for: indexPath)
+            if let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp {
                 self.configureCell(tableCell, app: app)
             }
             return tableCell
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showConnectAppConfirmViewController") {
             if let app = self.selectedConnectedApp,
-                appVC = segue.destinationViewController as? ConnectedAppConfirmViewController {
+                let appVC = segue.destination as? ConnectedAppConfirmViewController {
                 appVC.connectingApp = app
                 
                 self.selectedConnectedApp = nil
@@ -245,12 +245,12 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
-    func authCodeCallbackNotificationReceived(notification: NSNotification) {
-        if let _ = self.safariViewController, callbackUrl = notification.object as? NSURL, app = self.selectedConnectedApp,
-            uuid = callbackUrl.lastPathComponent {
+    func authCodeCallbackNotificationReceived(_ notification: Notification) {
+        if let _ = self.safariViewController, let callbackUrl = notification.object as? URL, let app = self.selectedConnectedApp {
+            let uuid = callbackUrl.lastPathComponent
             if uuid == app.uuid {
-                if let code = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "code" }).first?.value {
-                    NSNotificationCenter.defaultCenter().removeObserver(self)
+                if let code = URLComponents(url: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "code" }).first?.value {
+                    NotificationCenter.default.removeObserver(self)
                     
                     app.authorizationCode = code
                     
@@ -259,15 +259,15 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                         // decided to callback early. This can happen if the user is already logged in.
                         // We delay showPageLoadError to give authCodeCallbackNotificationReceived a chance to callback
                         
-                        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(ConnectedAppsBrowseViewController.showPageLoadError), object: nil)
+                        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(ConnectedAppsBrowseViewController.showPageLoadError), object: nil)
                         if let sfc = self.safariViewController as? SFSafariViewController {
                             sfc.delegate = nil
                         }
                     }
 
-                    self.performSegueWithIdentifier("showConnectAppConfirmViewController", sender: self)
-                } else if let _ = NSURLComponents(URL: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
-                    self.navigationController?.popViewControllerAnimated(true)
+                    self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
+                } else if let _ = URLComponents(url: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
+                    self.navigationController?.popViewController(animated: true)
                 }
             } else {
                 // For now, ignore this edge case because we only have one app.
@@ -277,22 +277,22 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     }
     
     @objc private func showPageLoadError() {
-        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
-            self.navigationController?.popViewControllerAnimated(true)
+        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
+        alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
+            self.navigationController?.popViewController(animated: true)
         }))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
     
     @available(iOS 9.0, *)
-    func safariViewController(controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+    func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
         if let loadingIndicator = self.safariViewControllerActivityIndicator {
             loadingIndicator.removeFromSuperview()
             self.safariViewControllerActivityIndicator = nil
         }
         
         if !didLoadSuccessfully {
-            self.performSelector(#selector(ConnectedAppsBrowseViewController.showPageLoadError), withObject: nil, afterDelay: 1.0)
+            self.perform(#selector(ConnectedAppsBrowseViewController.showPageLoadError), with: nil, afterDelay: 1.0)
         }
     }
 }

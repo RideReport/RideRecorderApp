@@ -17,11 +17,11 @@ extension Float {
             let FEET_CUTOFF: Float = 1056.0
             
             let format:String
-            if (NSLocale.isMetric()) {
+            if (Locale.isMetric()) {
                 if (self < METERS_CUTOFF) {
                     format = "\(self.stringWithDecimals(0)) meters"
                 } else {
-                    if NSLocale.isGB() {
+                    if Locale.isGB() {
                         format = "\(self.miles.stringWithDecimals(1)) miles";
                     } else {
                         format = "\(self.kilometers.stringWithDecimals(1)) km";
@@ -58,7 +58,7 @@ extension Float {
         }
     }
     
-    private func stringWithDecimals(decimals:Int) -> String {
+    private func stringWithDecimals(_ decimals:Int) -> String {
         return String(format: "%.\(decimals)f", self)
     }
 }

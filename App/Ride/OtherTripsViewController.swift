@@ -14,9 +14,9 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     
-    var dateOfTripsToShow: NSDate? {
+    var dateOfTripsToShow: Date? {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 guard let strongSelf = self, let _ = strongSelf.dateOfTripsToShow else {
                     return
                 }
@@ -26,37 +26,37 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    private var fetchedResultsController : NSFetchedResultsController! = nil
+    private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
     
-    private var timeFormatter : NSDateFormatter!
-    private var dateFormatter : NSDateFormatter!
+    private var timeFormatter : DateFormatter!
+    private var dateFormatter : DateFormatter!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.timeFormatter = NSDateFormatter()
-        self.timeFormatter.locale = NSLocale.currentLocale()
+        self.timeFormatter = DateFormatter()
+        self.timeFormatter.locale = Locale.current
         self.timeFormatter.dateFormat = "h:mma"
-        self.timeFormatter.AMSymbol = (self.timeFormatter.AMSymbol as NSString).lowercaseString
-        self.timeFormatter.PMSymbol = (self.timeFormatter.PMSymbol as NSString).lowercaseString
+        self.timeFormatter.amSymbol = (self.timeFormatter.amSymbol as NSString).lowercased
+        self.timeFormatter.pmSymbol = (self.timeFormatter.pmSymbol as NSString).lowercased
         
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.locale = Locale.current
         self.dateFormatter.dateFormat = "MMM d"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Other Trips", style: .Plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Other Trips", style: .plain, target: nil, action: nil)
         
-        self.tableView.layoutMargins = UIEdgeInsetsZero
+        self.tableView.layoutMargins = UIEdgeInsets.zero
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 48
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
         
-        self.emptyTableView.hidden = true
+        self.emptyTableView.isHidden = true
         
         loadCoreData()
     }
@@ -75,11 +75,11 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         let cacheName = "OtherTripsViewControllerFetchedResultsController"
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        NSFetchedResultsController.deleteCacheWithName(cacheName)
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityType != %i AND creationDate > %@ AND creationDate < %@", ActivityType.Cycling.rawValue, date.beginingOfDay(), date.daysFrom(1).beginingOfDay())
+        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityType != %i AND creationDate > %@ AND creationDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -87,10 +87,10 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             try self.fetchedResultsController.performFetch()
         } catch let error {
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
-            self.navigationController?.popViewControllerAnimated(true)
+            _ = self.navigationController?.popViewController(animated: true)
         }
         
-        self.title = "Other trips on " + self.dateFormatter.stringFromDate(date)
+        self.title = "Other trips on " + self.dateFormatter.string(from: date)
                 
         self.tableView.dataSource = self
         self.tableView.delegate = self
@@ -98,7 +98,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         self.refreshEmptyTableView()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.refreshEmptyTableView()
@@ -107,14 +107,14 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     private func refreshEmptyTableView() {
         guard let frc = self.fetchedResultsController else {
             // Core Data hasn't loaded yet
-            self.emptyTableView.hidden = true
+            self.emptyTableView.isHidden = true
             return
         }
         
-        if let sections = frc.sections where sections.count > 0 && sections[0].numberOfObjects > 0 {
-            self.emptyTableView.hidden = true
+        if let sections = frc.sections, sections.count > 0 && sections[0].numberOfObjects > 0 {
+            self.emptyTableView.isHidden = true
         } else {
-            self.emptyTableView.hidden = false
+            self.emptyTableView.isHidden = false
         }
     }
     
@@ -123,21 +123,21 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         self.fetchedResultsController = nil
     }
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-        case .Insert:
-            self.tableView!.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Move, .Update:
+        case .insert:
+            self.tableView!.insertSections(IndexSet(integer: sectionIndex), with: UITableViewRowAnimation.fade)
+        case .delete:
+            self.tableView!.deleteSections(IndexSet(integer: sectionIndex), with: UITableViewRowAnimation.fade)
+        case .move, .update:
             // do nothing
             
             DDLogVerbose("Move/update section. Shouldn't happen?")
@@ -145,41 +145,41 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         guard let tableView = self.tableView else {
             return
         }
         
-        if (APIClient.sharedClient.isMigrating) {
+        if (APIClient.shared.isMigrating) {
             return
         }
         
         switch(type) {
             
-        case .Update:
-            let trip = self.fetchedResultsController.objectAtIndexPath(indexPath!) as! Trip
-            let cell = tableView.cellForRowAtIndexPath(indexPath!)
+        case .update:
+            let trip = self.fetchedResultsController.object(at: indexPath!) as! Trip
+            let cell = tableView.cellForRow(at: indexPath!)
             if (cell != nil) {
                 configureCell(cell!, trip:trip)
             }
             
-        case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Move:
-            self.tableView!.deleteRowsAtIndexPaths([indexPath!],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
-            self.tableView!.insertRowsAtIndexPaths([newIndexPath!],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
+        case .insert:
+            self.tableView!.insertRows(at: [newIndexPath!], with: UITableViewRowAnimation.fade)
+        case .delete:
+            self.tableView!.deleteRows(at: [indexPath!], with: UITableViewRowAnimation.fade)
+        case .move:
+            self.tableView!.deleteRows(at: [indexPath!],
+                                       with: UITableViewRowAnimation.fade)
+            self.tableView!.insertRows(at: [newIndexPath!],
+                                       with: UITableViewRowAnimation.fade)
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.fetchedResultsController.sections!.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.fetchedResultsController.sections!.count == 0 {
             return 0
         }
@@ -187,25 +187,25 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         return self.fetchedResultsController.sections![0].numberOfObjects
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseID = "OtherTripsViewControllerCell"
         
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier(reuseID, forIndexPath: indexPath)
+        let tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath)
         
-        let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+        let trip = self.fetchedResultsController.object(at: indexPath) as! Trip
         configureCell(tableCell, trip: trip)
         
         return tableCell
     }
     
-    func setDisclosureArrowColor(tableCell: UITableViewCell) {
+    func setDisclosureArrowColor(_ tableCell: UITableViewCell) {
         for case let button as UIButton in tableCell.subviews {
-            let image = button.backgroundImageForState(.Normal)?.imageWithRenderingMode(.AlwaysTemplate)
-            button.setBackgroundImage(image, forState: .Normal)
+            let image = button.backgroundImage(for: UIControlState())?.withRenderingMode(.alwaysTemplate)
+            button.setBackgroundImage(image, for: UIControlState())
         }
     }
     
-    func configureCell(tableCell: UITableViewCell, trip: Trip) {
+    func configureCell(_ tableCell: UITableViewCell, trip: Trip) {
         guard let textLabel = tableCell.viewWithTag(1) as? UILabel, let detailLabel = tableCell.viewWithTag(2) as? UILabel else {
             return
         }
@@ -214,7 +214,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         
         var dateTitle = ""
         if (trip.creationDate != nil) {
-            dateTitle = String(format: "%@", self.timeFormatter.stringFromDate(trip.creationDate))
+            dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.creationDate))
             
         }
         
@@ -222,7 +222,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         for reward in trip.tripRewards.array as! [TripReward] {
-            if let emoji = reward.displaySafeEmoji where reward.descriptionText.rangeOfString("day ride streak") == nil {
+            if let emoji = reward.displaySafeEmoji, reward.descriptionText.range(of: "day ride streak") == nil {
                 description += ("\n\n" + emoji + " " + reward.descriptionText)
             }
         }
@@ -231,70 +231,70 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         detailLabel.text = trip.activityType.emoji
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as? Trip {
-            self.performSegueWithIdentifier("showOtherTrip", sender: trip)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let trip = self.fetchedResultsController.object(at: indexPath) as? Trip {
+            self.performSegue(withIdentifier: "showOtherTrip", sender: trip)
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showOtherTrip") {
-            if let tripVC = segue.destinationViewController as? TripViewController,
-                trip = sender as? Trip {
+            if let tripVC = segue.destination as? TripViewController,
+                let trip = sender as? Trip {
                 tripVC.selectedTrip = trip
             }
         }
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
         if !trip.isClosed {
-            return [UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Cancel Trip") { (action, indexPath) -> Void in
-                RouteManager.sharedManager.abortTrip()
+            return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Cancel Trip") { (action, indexPath) -> Void in
+                RouteManager.shared.abortTrip()
                 }]
         }
         
-        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.Default, title: "Delete") { (action, indexPath) -> Void in
-            APIClient.sharedClient.deleteTrip(trip)
+        let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
+            APIClient.shared.deleteTrip(trip)
         }
         
         #if DEBUG
-            let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "🐞 Tools") { (action, indexPath) -> Void in
-                let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
+            let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal, title: "🐞 Tools") { (action, indexPath) -> Void in
+                let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
                 self.tableView.setEditing(false, animated: true)
                 
-                let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
+                let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
                 }))
-                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.Default, handler: { (_) in
+                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
                 }))
-                alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.Default, handler: { (_) in
+                alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
                     for sensorCollection in trip.sensorDataCollections {
-                        RandomForestManager.sharedForest.classify(sensorCollection as! SensorDataCollection)
+                        RandomForestManager.shared.classify(sensorCollection as! SensorDataCollection)
                     }
                     trip.calculateAggregatePredictedActivityType()
                 }))
-                alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.Default, handler: { (_) in
-                    let backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
+                    let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     })
                     
                     
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(30 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { () -> Void in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in
                         trip.isSavedToHealthKit = false
-                        CoreDataManager.sharedManager.saveContext()
-                        HealthKitManager.sharedManager.saveOrUpdateTrip(trip) {_ in
+                        CoreDataManager.shared.saveContext()
+                        HealthKitManager.shared.saveOrUpdateTrip(trip) {_ in
                             if (backgroundTaskID != UIBackgroundTaskInvalid) {
                                 
-                                UIApplication.sharedApplication().endBackgroundTask(backgroundTaskID)
+                                UIApplication.shared.endBackgroundTask(backgroundTaskID)
                             }
                         }
-                    })
+                    }
                 }))
                 
-                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Cancel, handler: nil))
-                self.presentViewController(alertController, animated: true, completion: nil)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel, handler: nil))
+                self.present(alertController, animated: true, completion: nil)
             }
             return [deleteAction, toolsAction]
         #else
@@ -302,14 +302,14 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         #endif
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.Delete) {
-            let trip : Trip = self.fetchedResultsController.objectAtIndexPath(indexPath) as! Trip
-            APIClient.sharedClient.deleteTrip(trip)
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == UITableViewCellEditingStyle.delete) {
+            let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
+            APIClient.shared.deleteTrip(trip)
         }
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 }

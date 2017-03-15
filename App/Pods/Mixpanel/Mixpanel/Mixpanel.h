@@ -1,9 +1,19 @@
 #import <Foundation/Foundation.h>
+#if !TARGET_OS_OSX
 #import <UIKit/UIKit.h>
-
-#if defined(MIXPANEL_WATCH_EXTENSION)
-#import <WatchConnectivity/WatchConnectivity.h>
+#else
+#import <Cocoa/Cocoa.h>
 #endif
+#import "MixpanelPeople.h"
+
+#define MIXPANEL_SURVEYS_DEPRECATED DEPRECATED_MSG_ATTRIBUTE("Mixpanel surveys are deprecated as of release 3.0.8")
+
+#define MIXPANEL_FLUSH_IMMEDIATELY (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_WATCHOS))
+#define MIXPANEL_NO_REACHABILITY_SUPPORT (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_TVOS) || defined(MIXPANEL_WATCHOS) || defined(MIXPANEL_MACOS))
+#define MIXPANEL_NO_AUTOMATIC_EVENTS_SUPPORT (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_TVOS) || defined(MIXPANEL_WATCHOS) || defined(MIXPANEL_MACOS))
+#define MIXPANEL_NO_NOTIFICATION_AB_TEST_SUPPORT (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_TVOS) || defined(MIXPANEL_WATCHOS) || defined(MIXPANEL_MACOS))
+#define MIXPANEL_NO_APP_LIFECYCLE_SUPPORT (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_WATCHOS))
+#define MIXPANEL_NO_UIAPPLICATION_ACCESS (defined(MIXPANEL_APP_EXTENSION) || defined(MIXPANEL_WATCHOS) || defined(MIXPANEL_MACOS))
 
 @class    MixpanelPeople, MPSurvey;
 @protocol MixpanelDelegate;
@@ -60,20 +70,27 @@ NS_ASSUME_NONNULL_BEGIN
  The distinct ID of the current user.
 
  @discussion
- A distinct ID is a string that uniquely identifies one of your users.
- Typically, this is the user ID from your database. By default, we'll use a
- hash of the MAC address of the device. To change the current distinct ID,
- use the <code>identify:</code> method.
+ A distinct ID is a string that uniquely identifies one of your users. By default, 
+ we'll use the device's advertisingIdentifier UUIDString, if that is not available
+ we'll use the device's identifierForVendor UUIDString, and finally if that
+ is not available we will generate a new random UUIDString. To change the
+ current distinct ID, use the <code>identify:</code> method.
  */
 @property (atomic, readonly, copy) NSString *distinctId;
 
 /*!
  @property
-
+ 
  @abstract
- Current user's name in Mixpanel Streams.
+ The alias of the current user.
+ 
+ @discussion
+ An alias is another string that uniquely identifies one of your users. Typically, 
+ this is the user ID from your database. By using an alias you can link pre- and
+ post-sign up activity as well as cross-platform activity under one distinct ID.
+ To set the alias use the <code>createAlias:forDistinctID:</code> method.
  */
-@property (nullable, atomic, copy) NSString *nameTag;
+@property (atomic, readonly, copy) NSString *alias;
 
 /*!
  @property
@@ -85,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
  Useful if you need to proxy Mixpanel requests. Defaults to
  https://api.mixpanel.com.
  */
-@property (atomic, copy) NSString *serverURL;
+@property (nonatomic, copy) NSString *serverURL;
 
 /*!
  @property
@@ -121,12 +138,13 @@ NS_ASSUME_NONNULL_BEGIN
  @discussion
  Defaults to YES.
  */
-@property (atomic) BOOL showNetworkActivityIndicator;
+@property (atomic) BOOL shouldManageNetworkActivityIndicator;
 
 /*!
  @property
 
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Controls whether to automatically check for surveys for the
  currently identified user when the application becomes active.
 
@@ -135,12 +153,13 @@ NS_ASSUME_NONNULL_BEGIN
  <code>applicationDidBecomeActive</code> to retrieve a list of valid surveys
  for the currently identified user.
  */
-@property (atomic) BOOL checkForSurveysOnActive;
+@property (atomic) BOOL checkForSurveysOnActive MIXPANEL_SURVEYS_DEPRECATED;
 
 /*!
  @property
 
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Controls whether to automatically show a survey for the
  currently identified user when the application becomes active.
 
@@ -150,31 +169,33 @@ NS_ASSUME_NONNULL_BEGIN
  survey check retrieves at least 1 valid survey for the currently
  identified user.
  */
-@property (atomic) BOOL showSurveyOnActive;
+@property (atomic) BOOL showSurveyOnActive MIXPANEL_SURVEYS_DEPRECATED;
 
 /*!
  @property
  
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Determines whether a valid survey is available to show to the user.
  
  @discussion
  If we haven't fetched the surveys yet, this will return NO. Otherwise
  it will return yes if there is at least one survey available.
  */
-@property (atomic, readonly) BOOL isSurveyAvailable;
+@property (atomic, readonly) BOOL isSurveyAvailable MIXPANEL_SURVEYS_DEPRECATED;
 
 /*!
  @property
  
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Returns a list of available surveys. You can then call <code>showSurveyWithID:</code>
  and pass in <code>survey.ID</code>
  
  @discussion
  If we haven't fetched the surveys yet, this will return nil.
  */
-@property (atomic, readonly) NSArray<MPSurvey *> *availableSurveys;
+@property (atomic, readonly) NSArray<MPSurvey *> *availableSurveys MIXPANEL_SURVEYS_DEPRECATED;
 
 /*!
  @property
@@ -233,6 +254,39 @@ NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @property
+ 
+ @abstract
+ Controls whether to enable the visual test designer for A/B testing and codeless on mixpanel.com. 
+ You will be unable to edit A/B tests and codeless events with this disabled, however *previously*
+ created A/B tests and codeless events will still be delivered.
+ 
+ @discussion
+ Defaults to YES.
+ */
+@property (atomic) BOOL enableVisualABTestAndCodeless;
+
+/*!
+ @property
+ 
+ @abstract
+ Controls whether to enable the run time debug logging at all levels. Note that the
+ Mixpanel SDK uses Apple System Logging to forward log messages to `STDERR`, this also
+ means that mixpanel logs are segmented by log level. Settings this to `YES` will enable 
+ Mixpanel logging at the following levels:
+ 
+   * Error - Something has failed 
+   * Warning - Something is amiss and might fail if not corrected
+   * Info - The lowest priority that is normally logged, purely informational in nature
+   * Debug - Information useful only to developers, and normally not logged.
+ 
+ 
+ @discussion
+ Defaults to NO.
+ */
+@property (atomic) BOOL enableLogging;
+
+/*!
+ @property
 
  @abstract
  Determines the time, in seconds, that a mini notification will remain on
@@ -242,19 +296,6 @@ NS_ASSUME_NONNULL_BEGIN
  Defaults to 6.0.
  */
 @property (atomic) CGFloat miniNotificationPresentationTime;
-
-/*!
- @property
- 
- @abstract
- If set, determines the background color of mini notifications.
-
- @discussion
- If this isn't set, we default to either the color of the UINavigationBar of the top 
- UINavigationController that is showing when the notification is presented, the 
- UINavigationBar default color for the app or the UITabBar default color.
- */
-@property (nullable, atomic) UIColor *miniNotificationBackgroundColor;
 
 /*!
  @property
@@ -275,14 +316,13 @@ NS_ASSUME_NONNULL_BEGIN
  @method
 
  @abstract
- Initializes and returns a singleton instance of the API.
+ Returns (and creates, if needed) a singleton instance of the API.
 
  @discussion
- If you are only going to send data to a single Mixpanel project from your app,
- as is the common case, then this is the easiest way to use the API. This
- method will set up a singleton instance of the <code>Mixpanel</code> class for
- you using the given project token. When you want to make calls to Mixpanel
- elsewhere in your code, you can use <code>sharedInstance</code>.
+ This method will return a singleton instance of the <code>Mixpanel</code> class for
+ you using the given project token. If an instance does not exist, this method will create
+ one using <code>initWithToken:launchOptions:andFlushInterval:</code>. If you only have one
+ instance in your project, you can use <code>sharedInstance</code> to retrieve it.
 
  <pre>
  [Mixpanel sharedInstance] track:@"Something Happened"]];
@@ -319,11 +359,14 @@ NS_ASSUME_NONNULL_BEGIN
  @method
 
  @abstract
- Returns the previously instantiated singleton instance of the API.
+ Returns a previously instantiated singleton instance of the API.
 
  @discussion
- The API must be initialized with <code>sharedInstanceWithToken:</code> before
- calling this class method.
+ The API must be initialized with <code>sharedInstanceWithToken:</code> or
+ <code>initWithToken:launchOptions:andFlushInterval</code> before calling this class method.
+ This method will return <code>nil</code> if there are no instances created. If there is more than 
+ one instace, it will return the first one that was created by using <code>sharedInstanceWithToken:</code> 
+ or <code>initWithToken:launchOptions:andFlushInterval:</code>.
  */
 + (Mixpanel *)sharedInstance;
 
@@ -334,10 +377,7 @@ NS_ASSUME_NONNULL_BEGIN
  Initializes an instance of the API with the given project token.
 
  @discussion
- Returns the a new API object. This allows you to create more than one instance
- of the API object, which is convenient if you'd like to send data to more than
- one Mixpanel project from a single app. If you only need to send data to one
- project, consider using <code>sharedInstanceWithToken:</code>.
+ Creates and initializes a new API object. See also <code>sharedInstanceWithToken:</code>.
 
  @param apiToken        your project token
  @param launchOptions   optional app delegate launchOptions
@@ -665,25 +705,27 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)libVersion;
 
 
-#if !defined(MIXPANEL_APP_EXTENSION)
+#if !MIXPANEL_NO_NOTIFICATION_AB_TEST_SUPPORT
 #pragma mark - Mixpanel Surveys
 
 /*!
  @method
 
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Shows the survey with the given name.
 
  @discussion
  This method allows you to explicitly show a named survey at the time of your choosing.
 
  */
-- (void)showSurveyWithID:(NSUInteger)ID;
+- (void)showSurveyWithID:(NSUInteger)ID MIXPANEL_SURVEYS_DEPRECATED;
 
 /*!
  @method
 
  @abstract
+ Mixpanel surveys are deprecated as of release 3.0.8
  Show a survey if one is available.
 
  @discussion
@@ -692,7 +734,7 @@ NS_ASSUME_NONNULL_BEGIN
  setting <code>showSurveyOnActive = NO;</code> so that the survey won't show automatically.
 
  */
-- (void)showSurvey;
+- (void)showSurvey MIXPANEL_SURVEYS_DEPRECATED;
 
 #pragma mark - Mixpanel Notifications
 
@@ -761,261 +803,16 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)joinExperimentsWithCallback:(nullable void (^)())experimentsLoadedCallback;
 
-#endif
+#endif // MIXPANEL_NO_NOTIFICATION_AB_TEST_SUPPORT
 
-@end
-
-
-/*!
- @class
- Mixpanel People API.
-
- @abstract
- Access to the Mixpanel People API, available as a property on the main
- Mixpanel API.
-
- @discussion
- <b>You should not instantiate this object yourself.</b> An instance of it will
- be available as a property of the main Mixpanel object. Calls to Mixpanel
- People methods will look like this:
-
- <pre>
- [mixpanel.people increment:@"App Opens" by:[NSNumber numberWithInt:1]];
- </pre>
-
- Please note that the core <code>Mixpanel</code> and
- <code>MixpanelPeople</code> classes share the <code>identify:</code> method.
- The <code>Mixpanel</code> <code>identify:</code> affects the
- <code>distinct_id</code> property of events sent by <code>track:</code> and
- <code>track:properties:</code> and determines which Mixpanel People user
- record will be updated by <code>set:</code>, <code>increment:</code> and other
- <code>MixpanelPeople</code> methods.
-
- <b>If you are going to set your own distinct IDs for core Mixpanel event
- tracking, make sure to use the same distinct IDs when using Mixpanel
- People</b>.
- */
-@interface MixpanelPeople : NSObject
+#pragma mark - Deprecated
 /*!
  @property
  
  @abstract
- controls the $ignore_time property in any subsequent MixpanelPeople operation.
- 
- If the $ignore_time property is present and true in your request,
- Mixpanel will not automatically update the "Last Seen" property of the profile.
- Otherwise, Mixpanel will add a "Last Seen" property associated with the
- current time for all $set, $append, and $add operations
- 
- @discussion
- Defaults to NO.
+ Current user's name in Mixpanel Streams.
  */
-@property (atomic) BOOL ignoreTime;
-
-/*!
- @method
-
- @abstract
- Register the given device to receive push notifications.
-
- @discussion
- This will associate the device token with the current user in Mixpanel People,
- which will allow you to send push notifications to the user from the Mixpanel
- People web interface. You should call this method with the <code>NSData</code>
- token passed to
- <code>application:didRegisterForRemoteNotificationsWithDeviceToken:</code>.
-
- @param deviceToken     device token as returned <code>application:didRegisterForRemoteNotificationsWithDeviceToken:</code>
- */
-- (void)addPushDeviceToken:(NSData *)deviceToken;
-
-/*!
- @method
- 
- @abstract
- Unregister the given device to receive push notifications.
- 
- @discussion
- This will unset all of the push tokens saved to this people profile. This is useful
- in conjunction with a call to `reset`, or when a user is logging out.
- */
-- (void)removePushDeviceToken;
-
-/*!
- @method
-
- @abstract
- Set properties on the current user in Mixpanel People.
-
- @discussion
- The properties will be set on the current user. The keys must be NSString
- objects and the values should be NSString, NSNumber, NSArray, NSDate, or
- NSNull objects. We use an NSAssert to enforce this type requirement. In
- release mode, the assert is stripped out and we will silently convert
- incorrect types to strings using [NSString stringWithFormat:@"%@", value]. You
- can override the default the current project token and distinct ID by
- including the special properties: $token and $distinct_id. If the existing
- user record on the server already has a value for a given property, the old
- value is overwritten. Other existing properties will not be affected.
-
- <pre>
- // applies to both Mixpanel Engagement track: AND Mixpanel People set: and
- // increment: calls
- [mixpanel identify:distinctId];
- </pre>
-
- @param properties       properties dictionary
-
- */
-- (void)set:(NSDictionary *)properties;
-
-/*!
- @method
-
- @abstract
- Convenience method for setting a single property in Mixpanel People.
-
- @discussion
- Property keys must be <code>NSString</code> objects and values must be
- <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
- <code>NSURL</code> objects.
-
- @param property        property name
- @param object          property value
- */
-- (void)set:(NSString *)property to:(id)object;
-
-/*!
- @method
-
- @abstract
- Set properties on the current user in Mixpanel People, but don't overwrite if
- there is an existing value.
-
- @discussion
- This method is identical to <code>set:</code> except it will only set
- properties that are not already set. It is particularly useful for collecting
- data about the user's initial experience and source, as well as dates
- representing the first time something happened.
-
- @param properties       properties dictionary
-
- */
-- (void)setOnce:(NSDictionary *)properties;
-
-/*!
- @method
- 
- @abstract
- Remove a list of properties and their values from the current user's profile 
- in Mixpanel People.
- 
- @discussion
- The properties array must ony contain NSString names of properties. For properties
- that don't exist there will be no effect.
- 
- @param properties       properties array
- 
- */
-- (void)unset:(NSArray *)properties;
-
-/*!
- @method
-
- @abstract
- Increment the given numeric properties by the given values.
-
- @discussion
- Property keys must be NSString names of numeric properties. A property is
- numeric if its current value is a number. If a property does not exist, it
- will be set to the increment amount. Property values must be NSNumber objects.
-
- @param properties      properties dictionary
- */
-- (void)increment:(NSDictionary *)properties;
-
-/*!
- @method
-
- @abstract
- Convenience method for incrementing a single numeric property by the specified
- amount.
-
- @param property        property name
- @param amount          amount to increment by
- */
-- (void)increment:(NSString *)property by:(NSNumber *)amount;
-
-/*!
- @method
-
- @abstract
- Append values to list properties.
-
- @discussion
- Property keys must be <code>NSString</code> objects and values must be
- <code>NSString</code>, <code>NSNumber</code>, <code>NSNull</code>,
- <code>NSArray</code>, <code>NSDictionary</code>, <code>NSDate</code> or
- <code>NSURL</code> objects.
-
- @param properties      mapping of list property names to values to append
- */
-- (void)append:(NSDictionary *)properties;
-
-/*!
- @method
-
- @abstract
- Union list properties.
-
- @discussion
- Property keys must be <code>NSArray</code> objects.
-
- @param properties      mapping of list property names to lists to union
- */
-- (void)union:(NSDictionary *)properties;
-
-/*!
- @method
-
- @abstract
- Track money spent by the current user for revenue analytics.
-
- @param amount          amount of revenue received
- */
-- (void)trackCharge:(NSNumber *)amount;
-
-/*!
- @method
-
- @abstract
- Track money spent by the current user for revenue analytics and associate
- properties with the charge.
-
- @discussion
- Charge properties allow you segment on types of revenue. For instance, you
- could record a product ID with each charge so that you could segment on it in
- revenue analytics to see which products are generating the most revenue.
- */
-- (void)trackCharge:(NSNumber *)amount withProperties:(nullable NSDictionary *)properties;
-
-
-/*!
- @method
-
- @abstract
- Delete current user's revenue history.
- */
-- (void)clearCharges;
-
-/*!
- @method
-
- @abstract
- Delete current user's record from Mixpanel People.
- */
-- (void)deleteUser;
+@property (nullable, atomic, copy) NSString *nameTag __deprecated; // Deprecated in v3.0.1
 
 @end
 
@@ -1031,9 +828,10 @@ NS_ASSUME_NONNULL_BEGIN
  beyond simply calling stop: and start: before and after a particular block of
  your code.
  */
-@protocol MixpanelDelegate <NSObject>
-@optional
 
+@protocol MixpanelDelegate <NSObject>
+
+@optional
 /*!
  @method
 

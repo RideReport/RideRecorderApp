@@ -14,30 +14,30 @@ class Prototrip : NSManagedObject {
     @NSManaged var batteryAtStart : NSNumber?
     @NSManaged var sensorDataCollections : NSOrderedSet!
     @NSManaged var locations : NSOrderedSet!
-    @NSManaged var creationDate : NSDate?
+    @NSManaged var creationDate : Date?
     
     convenience init() {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Prototrip", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Prototrip", in: context)!, insertInto: context)
     }
     
     override func awakeFromInsert() {
         super.awakeFromInsert()
-        self.creationDate = NSDate()
+        self.creationDate = Date()
     }
     
     func firstNonGeofencedLocation() -> Location? {
         let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
         
-        for loc in self.locations.sortedArrayUsingDescriptors([sortDescriptor]) {
-            if let location = loc as? Location where !location.isGeofencedLocation {
+        for loc in self.locations.sortedArray(using: [sortDescriptor]) {
+            if let location = loc as? Location, !location.isGeofencedLocation {
                 return location
             }
         }
         return nil
     }
     
-    func moveSensorDataAndLocationsToTrip(trip: Trip) {
+    func moveSensorDataAndLocationsToTrip(_ trip: Trip) {
         for loc in self.locations {
             let location = loc as! Location
             location.trip = trip

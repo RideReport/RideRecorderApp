@@ -13,18 +13,18 @@ import CoreLocation
 class Profile : NSManagedObject {
     @NSManaged var accessToken : String?
     @NSManaged var supportId : String?
-    @NSManaged var accessTokenExpiresIn : NSDate?
+    @NSManaged var accessTokenExpiresIn : Date?
     @NSManaged var statusText : String?
     @NSManaged var statusEmoji : String?
     @NSManaged private(set) var lastGeofencedLocation : Location?
     @NSManaged var connectedApps : NSOrderedSet!
     
-    @NSManaged var dateOfBirth : NSDate?
+    @NSManaged var dateOfBirth : Date?
     @NSManaged var weightKilograms : NSNumber?
     @NSManaged var gender : NSNumber
 
     struct Static {
-        static var onceToken : dispatch_once_t = 0
+        static var onceToken : Int = 0
         static var profile : Profile!
     }
     
@@ -34,22 +34,22 @@ class Profile : NSManagedObject {
     
     class func profile() -> Profile! {
         if (Static.profile == nil) {
-            let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-            let fetchedRequest = NSFetchRequest(entityName: "Profile")
+            let context = CoreDataManager.shared.currentManagedObjectContext()
+            let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Profile")
             fetchedRequest.fetchLimit = 1
             
             let results: [AnyObject]?
             do {
-                results = try context.executeFetchRequest(fetchedRequest)
+                results = try context.fetch(fetchedRequest)
             } catch let error {
                 DDLogWarn(String(format: "Error finding profile: %@", error as NSError))
                 results = nil
             }
             
             if (results!.count == 0) {
-                let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-                Static.profile = Profile(entity: NSEntityDescription.entityForName("Profile", inManagedObjectContext: context)!, insertIntoManagedObjectContext:context)
-                CoreDataManager.sharedManager.saveContext()
+                let context = CoreDataManager.shared.currentManagedObjectContext()
+                Static.profile = Profile(entity: NSEntityDescription.entity(forEntityName: "Profile", in: context)!, insertInto:context)
+                CoreDataManager.shared.saveContext()
             } else {
                 Static.profile = (results!.first as! Profile)
             }
@@ -58,43 +58,43 @@ class Profile : NSManagedObject {
         return Static.profile
     }
     
-    func setGeofencedLocation(location: CLLocation?) {
+    func setGeofencedLocation(_ location: CLLocation?) {
         if let loc = self.lastGeofencedLocation {
             self.lastGeofencedLocation = nil
-            loc.managedObjectContext?.deleteObject(loc)
+            loc.managedObjectContext?.delete(loc)
         }
         
         if let loc = location {
             self.lastGeofencedLocation = Location(location: loc, geofencedLocationOfProfile: self)
         }
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
-    var firstTripDate: NSDate? {
+    var firstTripDate: Date? {
         if let trip = Trip.leastRecentBikeTrip() {
-            return trip.creationDate
+            return trip.creationDate as Date?
         }
         
         return nil
     }
     
     var metersBiked : Meters {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
+        let context = CoreDataManager.shared.currentManagedObjectContext()
         
-        let fetchedRequest = NSFetchRequest(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.DictionaryResultType
-        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.Cycling.rawValue)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        fetchedRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+        fetchedRequest.predicate = NSPredicate(format: "activityType == %i", ActivityType.cycling.rawValue)
         
         let sumDescription = NSExpressionDescription()
         sumDescription.name = "sumOfLengths"
         sumDescription.expression = NSExpression(forKeyPath: "@sum.length")
-        sumDescription.expressionResultType = NSAttributeType.FloatAttributeType
+        sumDescription.expressionResultType = NSAttributeType.floatAttributeType
         fetchedRequest.propertiesToFetch = [sumDescription]
         
         var error : NSError?
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error1 as NSError {
             error = error1
             results = nil
@@ -102,7 +102,7 @@ class Profile : NSManagedObject {
         if (results == nil || error != nil) {
             return 0.0
         }
-        let totalLength = (results![0] as! NSDictionary).objectForKey("sumOfLengths") as! NSNumber
+        let totalLength = (results![0] as! NSDictionary).object(forKey: "sumOfLengths") as! NSNumber
         return totalLength.floatValue
     }
     
@@ -150,7 +150,7 @@ class Profile : NSManagedObject {
         }
     }
     
-    private func jewelForLength(length: Int)->String {
+    private func jewelForLength(_ length: Int)->String {
         if length >= 100 {
             return "🏆"
         } else if length >= 50 {

@@ -29,7 +29,7 @@ class Location : NSManagedObject {
     @NSManaged var simplifiedInTrip : Trip?
     @NSManaged var sensorDataCollection : SensorDataCollection?
     @NSManaged var incidents : NSOrderedSet!
-    @NSManaged var date : NSDate?
+    @NSManaged var date : Date?
     
     convenience init(location: CLLocation, trip: Trip) {
         self.init(location: location)
@@ -53,8 +53,8 @@ class Location : NSManagedObject {
     }
     
     convenience init(byCopyingLocation location: Location, prototrip: Prototrip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
         self.course = location.course
         self.horizontalAccuracy = location.horizontalAccuracy
@@ -78,34 +78,34 @@ class Location : NSManagedObject {
     }
     
     convenience init(location: CLLocation) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
-        self.course = NSNumber(double: location.course)
-        self.horizontalAccuracy = NSNumber(double: location.horizontalAccuracy)
-        self.latitude = NSNumber(double: location.coordinate.latitude)
-        self.longitude = NSNumber(double: location.coordinate.longitude)
-        self.speed = NSNumber(double: location.speed)
-        self.altitude = NSNumber(double: location.altitude)
-        self.verticalAccuracy = NSNumber(double: location.verticalAccuracy)
+        self.course = NSNumber(value: location.course as Double)
+        self.horizontalAccuracy = NSNumber(value: location.horizontalAccuracy as Double)
+        self.latitude = NSNumber(value: location.coordinate.latitude as Double)
+        self.longitude = NSNumber(value: location.coordinate.longitude as Double)
+        self.speed = NSNumber(value: location.speed as Double)
+        self.altitude = NSNumber(value: location.altitude as Double)
+        self.verticalAccuracy = NSNumber(value: location.verticalAccuracy as Double)
         self.date = location.timestamp
     }
     
     convenience init(trip: Trip) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("Location", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
         self.trip = trip
     }
     
-    class func locationsInCircle(circle:MKCircle) -> [AnyObject] {
-        let fetchedRequest = NSFetchRequest(entityName: "Location")
+    class func locationsInCircle(_ circle:MKCircle) -> [AnyObject] {
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
         
         let searchRadius : Double = circle.radius * 1.1 // pad it a bit to allow for error
         let radiusOfEarth : Double = 6371009
-        let meanLatitidue = circle.coordinate.latitude * M_PI / 180
-        let radiusLatitude = radiusOfEarth / searchRadius * 180 / M_PI
-        let radiusLongitude = radiusOfEarth / (searchRadius * cos(meanLatitidue)) * 180 / M_PI
+        let meanLatitidue = circle.coordinate.latitude * Double.pi / 180
+        let radiusLatitude = radiusOfEarth / searchRadius * 180 / Double.pi
+        let radiusLongitude = radiusOfEarth / (searchRadius * cos(meanLatitidue)) * 180 / Double.pi
         let minLatitude = circle.coordinate.latitude - radiusLatitude
         let maxLatitude = circle.coordinate.latitude + radiusLatitude
         let minLongitude = circle.coordinate.longitude - radiusLongitude
@@ -117,7 +117,7 @@ class Location : NSManagedObject {
         
         let results: [AnyObject]?
         do {
-            results = try CoreDataManager.sharedManager.currentManagedObjectContext().executeFetchRequest(fetchedRequest)
+            results = try CoreDataManager.shared.currentManagedObjectContext().fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error finding locations for circle: %@", error as NSError))
             results = nil
@@ -131,7 +131,7 @@ class Location : NSManagedObject {
         let centerLocation = CLLocation(latitude: circle.coordinate.latitude, longitude: circle.coordinate.longitude)
         for loc in results! {
             let aLocation = CLLocation(latitude: (loc as! Location).latitude!.doubleValue, longitude: (loc as! Location).longitude!.doubleValue)
-            let distanceFromCenter = centerLocation.distanceFromLocation(aLocation)
+            let distanceFromCenter = centerLocation.distance(from: aLocation)
             if (distanceFromCenter <= circle.radius) {
                 filteredResults.append(loc)
             }
@@ -140,9 +140,8 @@ class Location : NSManagedObject {
         return filteredResults
     }
     
-    func jsonDictionary() -> [String: AnyObject] {
-        var locDict = [
-            "course": self.course ?? 0,
+    func jsonDictionary() -> [String: Any] {
+        var locDict: [String: Any] = [
             "date": self.date!.JSONString(),
             "horizontalAccuracy": self.horizontalAccuracy!,
             "speed": self.speed!,
@@ -150,6 +149,9 @@ class Location : NSManagedObject {
             "latitude": self.latitude!,
             "isGeofencedLocation": self.isGeofencedLocation
         ]
+        if let course = self.course {
+            locDict["course"] = course
+        }
         if let altitude = self.altitude, let verticalAccuracy = self.verticalAccuracy {
             locDict["altitude"] = altitude
             locDict["verticalAccuracy"] = verticalAccuracy

@@ -32,37 +32,37 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.cancelButton.hidden = true
+        self.cancelButton.isHidden = true
         
-        self.disclaimerLabel.hidden = true
+        self.disclaimerLabel.isHidden = true
         
         ringsView = HKActivityRingView()
         ringsView.translatesAutoresizingMaskIntoConstraints = false
         self.ringsContainerView.addSubview(ringsView)
-        self.ringsContainerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[subview]-0-|", options: .DirectionLeadingToTrailing, metrics: nil, views: ["subview": ringsView]))
-        self.ringsContainerView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[subview]-0-|", options: .DirectionLeadingToTrailing, metrics: nil, views: ["subview": ringsView]))
+        self.ringsContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[subview]-0-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["subview": ringsView]))
+        self.ringsContainerView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[subview]-0-|", options: NSLayoutFormatOptions(), metrics: nil, views: ["subview": ringsView]))
 
         
-        self.progressView.hidden = true
-        self.doneButton.hidden = true
+        self.progressView.isHidden = true
+        self.doneButton.isHidden = true
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = true
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         let summary = HKActivitySummary()
-        summary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorieUnit(), doubleValue: 60)
-        summary.activeEnergyBurnedGoal = HKQuantity(unit: HKUnit.kilocalorieUnit(), doubleValue: 100)
-        summary.appleExerciseTime = HKQuantity(unit: HKUnit.minuteUnit(), doubleValue: 80)
-        summary.appleExerciseTimeGoal = HKQuantity(unit: HKUnit.minuteUnit(), doubleValue: 100)
-        summary.appleStandHours = HKQuantity(unit: HKUnit.countUnit(), doubleValue: 4)
-        summary.appleStandHoursGoal = HKQuantity(unit: HKUnit.countUnit(), doubleValue: 8)
+        summary.activeEnergyBurned = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 60)
+        summary.activeEnergyBurnedGoal = HKQuantity(unit: HKUnit.kilocalorie(), doubleValue: 100)
+        summary.appleExerciseTime = HKQuantity(unit: HKUnit.minute(), doubleValue: 80)
+        summary.appleExerciseTimeGoal = HKQuantity(unit: HKUnit.minute(), doubleValue: 100)
+        summary.appleStandHours = HKQuantity(unit: HKUnit.count(), doubleValue: 4)
+        summary.appleStandHoursGoal = HKQuantity(unit: HKUnit.count(), doubleValue: 8)
         self.ringsView.setActivitySummary(summary, animated: true)
     }
     
@@ -77,18 +77,18 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
         self.disclaimerLabel.fadeIn()
         
         self.disclaimerLabel.delay(2) {
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "healthKitIsSetup")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(true, forKey: "healthKitIsSetup")
+            UserDefaults.standard.synchronize()
             
             HealthKitManager.startup() { success in
-                let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-                let fetchedRequest = NSFetchRequest(entityName: "Trip")
-                fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.Cycling.rawValue)
+                let context = CoreDataManager.shared.currentManagedObjectContext()
+                let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+                fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.cycling.rawValue)
                 fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
                 
                 let results: [AnyObject]?
                 do {
-                    results = try context.executeFetchRequest(fetchedRequest)
+                    results = try context.fetch(fetchedRequest)
                 } catch let error {
                     DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
                     return
@@ -101,13 +101,13 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
                 self.totalTripsToSync = theTrips.count
                 if (theTrips.count > 0) {
                     self.progressView.progress = 0.0
-                    self.progressView.hidden = false
-                    self.detailLabel.hidden = false
-                    self.disclaimerLabel.hidden = true
+                    self.progressView.isHidden = false
+                    self.detailLabel.isHidden = false
+                    self.disclaimerLabel.isHidden = true
                     self.titleLabel.text = "Saving Existing Rides"
                     self.detailLabel.text = "We're saving all your rides to your Apple Watch. Future rides will be saved automatically."
                     
-                    self.cancelButton.hidden = false
+                    self.cancelButton.isHidden = false
 
                     
                     self.syncNextUnsyncedTrip()
@@ -119,17 +119,17 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
     }
     
     @IBAction func cancel(_ sender: AnyObject) {
-        let alertController = UIAlertController(title:nil, message: "Future rides will not be automatically saved to to your Apple Watch.", preferredStyle: UIAlertControllerStyle.ActionSheet)
-        alertController.addAction(UIAlertAction(title: "Cancel Saving", style: UIAlertActionStyle.Destructive, handler: { (_) in
+        let alertController = UIAlertController(title:nil, message: "Future rides will not be automatically saved to to your Apple Watch.", preferredStyle: UIAlertControllerStyle.actionSheet)
+        alertController.addAction(UIAlertAction(title: "Cancel Saving", style: UIAlertActionStyle.destructive, handler: { (_) in
             self.didCancel = true
             HealthKitManager.shutdown()
-            NSUserDefaults.standardUserDefaults().setBool(false, forKey: "healthKitIsSetup")
-            NSUserDefaults.standardUserDefaults().synchronize()
+            UserDefaults.standard.set(false, forKey: "healthKitIsSetup")
+            UserDefaults.standard.synchronize()
             
             self.next(sender)
         }))
-        alertController.addAction(UIAlertAction(title: "Keep Saving", style: UIAlertActionStyle.Cancel, handler: nil))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        alertController.addAction(UIAlertAction(title: "Keep Saving", style: UIAlertActionStyle.cancel, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func syncNextUnsyncedTrip() {
@@ -139,11 +139,11 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
         
         guard let nextTrip = self.tripsRemainingToSync?.first else {
             self.progressView.progress = 1.0
-            self.progressView.hidden = true
-            self.cancelButton.hidden = true
-            self.doneButton.hidden = false
-            self.detailLabel.hidden = false
-            self.disclaimerLabel.hidden = true
+            self.progressView.isHidden = true
+            self.cancelButton.isHidden = true
+            self.doneButton.isHidden = false
+            self.detailLabel.isHidden = false
+            self.disclaimerLabel.isHidden = true
             
             self.navigationItem.leftBarButtonItem = nil
             self.navigationItem.hidesBackButton = true
@@ -153,8 +153,8 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
             
             return
         }
-        HealthKitManager.sharedManager.saveOrUpdateTrip(nextTrip) { _ in
-            dispatch_async(dispatch_get_main_queue()) {
+        HealthKitManager.shared.saveOrUpdateTrip(nextTrip) { _ in
+            DispatchQueue.main.async {
                 self.tripsRemainingToSync!.removeFirst()
                 let progress = Float(self.totalTripsToSync - self.tripsRemainingToSync!.count) / Float(self.totalTripsToSync)
                 self.progressView.setProgress(progress, animated: true)

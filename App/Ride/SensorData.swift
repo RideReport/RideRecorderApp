@@ -12,12 +12,12 @@ import CoreMotion
 import MapKit
 
 class SensorData : NSManagedObject {
-    @NSManaged var date : NSDate
+    @NSManaged var date : Date
     @NSManaged var x : NSNumber
     @NSManaged var y : NSNumber
     @NSManaged var z : NSNumber
     
-    func jsonDictionary() -> [String: AnyObject] {
+    func jsonDictionary() -> [String: Any] {
         return [
             "date": self.date.MillisecondJSONString(),
             "x": self.x,

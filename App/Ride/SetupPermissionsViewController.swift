@@ -9,14 +9,14 @@
 import Foundation
 
 enum CurrentPermissionAsk {
-    case AskForNotifications
-    case AskedForNotifications
-    case AskForLocations
-    case AskedForLocations
-    case AskForMotion
-    case AskedForMotion
-    case SayFinished
-    case Finished
+    case askForNotifications
+    case askedForNotifications
+    case askForLocations
+    case askedForLocations
+    case askForMotion
+    case askedForMotion
+    case sayFinished
+    case finished
 }
 
 class SetupPermissionsViewController: SetupChildViewController {
@@ -27,44 +27,44 @@ class SetupPermissionsViewController: SetupChildViewController {
     @IBOutlet weak var batteryLifeLabel: UILabel!
     @IBOutlet weak var doneButton: UIButton!
     
-    private var currentPermissionsAsk: CurrentPermissionAsk = .AskForNotifications
+    private var currentPermissionsAsk: CurrentPermissionAsk = .askForNotifications
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     func nextPermission() {
-        if self.currentPermissionsAsk == .AskForNotifications {
+        if self.currentPermissionsAsk == .askForNotifications {
             self.batteryLifeLabel.fadeOut()
             self.helperTextLabel.fadeOut()
             self.nextButton.fadeOut()
             self.notificationDetailsLabel.popIn()
             
-            if (AppDelegate.appDelegate().notificationRegistrationStatus == .Unregistered) {
-                self.currentPermissionsAsk = .AskedForNotifications
+            if (AppDelegate.appDelegate().notificationRegistrationStatus == .unregistered) {
+                self.currentPermissionsAsk = .askedForNotifications
                 self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
 
                 var didShowShowPermissionDialog = false
-                NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillResignActiveNotification, object: nil, queue: nil) {[weak self] (_) -> Void in
+                NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil) {[weak self] (_) -> Void in
                     guard let strongSelf = self else {
                         return
                     }
                     
                     // this is the only way to know whether or not they've been asked for permission or not – wait for the dialog to make our app resign active =/
                     didShowShowPermissionDialog = true
-                    NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: UIApplicationWillResignActiveNotification, object: nil)
+                    NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
                     
-                    NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidBecomeActiveNotification, object: nil, queue: nil) { (_) -> Void in
+                    NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { (_) -> Void in
                         // they tapped a button and we are active again. advance!
-                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: UIApplicationDidBecomeActiveNotification, object: nil)
-                        strongSelf.currentPermissionsAsk = .AskForLocations
-                        dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+                        strongSelf.currentPermissionsAsk = .askForLocations
+                        DispatchQueue.main.async {
                             guard let strongSelf = self else {
                                 return
                             }
@@ -75,12 +75,12 @@ class SetupPermissionsViewController: SetupChildViewController {
                     }
                 }
                 
-                let delay: NSTimeInterval = 1
+                let delay: TimeInterval = 1
                 self.notificationDetailsLabel.delay(delay + 0.3, completionHandler: { () -> Void in
                     // timeout. this is for the case where they've already denied notification status.
                     if !didShowShowPermissionDialog {
-                        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
-                        self.currentPermissionsAsk = .AskForLocations
+                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+                        self.currentPermissionsAsk = .askForLocations
                         self.nextPermission()
                     }
                 })
@@ -90,12 +90,12 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
             } else {
                 // they've already granted it
-                self.currentPermissionsAsk = .AskForLocations
+                self.currentPermissionsAsk = .askForLocations
                 self.nextPermission()
             }
-        } else if self.currentPermissionsAsk == .AskForLocations {
-            if (RouteManager.authorizationStatus == .NotDetermined) {
-                self.currentPermissionsAsk = .AskedForLocations
+        } else if self.currentPermissionsAsk == .askForLocations {
+            if (RouteManager.authorizationStatus == .notDetermined) {
+                self.currentPermissionsAsk = .askedForLocations
                 self.notificationDetailsLabel.text = "✅ Send notifications after your ride"
                 self.notificationDetailsLabel.delay(0.5) {
                     self.notificationDetailsLabel.text = "2️⃣ Use your location during your ride"
@@ -103,14 +103,14 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 self.helperTextLabel.delay(1.5) {
-                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) {[weak self] (_) -> Void in
+                    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
                         guard let strongSelf = self else {
                             return
                         }
-                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "appDidChangeManagerAuthorizationStatus", object: nil)
-                        if RouteManager.authorizationStatus != .NotDetermined {
-                            strongSelf.currentPermissionsAsk = .AskForMotion
-                            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil)
+                        if RouteManager.authorizationStatus != .notDetermined {
+                            strongSelf.currentPermissionsAsk = .askForMotion
+                            DispatchQueue.main.async {
                                 guard let strongSelf = self else {
                                     return
                                 }
@@ -124,12 +124,12 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
             } else {
                 // they've already granted or denied it                
-                self.currentPermissionsAsk = .AskForMotion
+                self.currentPermissionsAsk = .askForMotion
                 self.nextPermission()
             }
-        } else if self.currentPermissionsAsk == .AskForMotion {
-            if (MotionManager.authorizationStatus == .NotDetermined) {
-                self.currentPermissionsAsk = .AskedForMotion
+        } else if self.currentPermissionsAsk == .askForMotion {
+            if (MotionManager.authorizationStatus == .notDetermined) {
+                self.currentPermissionsAsk = .askedForMotion
                 self.notificationDetailsLabel.text = "✅ Use your location during your ride"
                 self.notificationDetailsLabel.delay(0.5) {
                     self.notificationDetailsLabel.text = "3️⃣ Use your motion activity during your ride"
@@ -138,14 +138,14 @@ class SetupPermissionsViewController: SetupChildViewController {
                 
                 self.helperTextLabel.delay(1.5) {
                     MotionManager.startup()
-                    NSNotificationCenter.defaultCenter().addObserverForName("appDidChangeManagerAuthorizationStatus", object: nil, queue: nil) {[weak self] (_) -> Void in
+                    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
                         guard let strongSelf = self else {
                             return
                         }
-                        NSNotificationCenter.defaultCenter().removeObserver(strongSelf, name: "appDidChangeManagerAuthorizationStatus", object: nil)
-                        if MotionManager.authorizationStatus != .NotDetermined {
-                            strongSelf.currentPermissionsAsk = .SayFinished
-                            dispatch_async(dispatch_get_main_queue()) { [weak self] in
+                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil)
+                        if MotionManager.authorizationStatus != .notDetermined {
+                            strongSelf.currentPermissionsAsk = .sayFinished
+                            DispatchQueue.main.async {
                                 guard let strongSelf = self else {
                                     return
                                 }
@@ -158,11 +158,11 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
             } else {
                 // they've already granted or denied it
-                self.currentPermissionsAsk = .SayFinished
+                self.currentPermissionsAsk = .sayFinished
                 self.nextPermission()
             }
-        } else if self.currentPermissionsAsk == .SayFinished {
-            self.currentPermissionsAsk = .Finished
+        } else if self.currentPermissionsAsk == .sayFinished {
+            self.currentPermissionsAsk = .finished
             self.notificationDetailsLabel.text = "✅ Use your motion activity during your ride"
             self.notificationDetailsLabel.delay(0.5) {
                 self.notificationDetailsLabel.fadeOut()
@@ -177,11 +177,11 @@ class SetupPermissionsViewController: SetupChildViewController {
         }
     }
     
-    @IBAction func tappedDoneButton(sender: AnyObject) {
+    @IBAction func tappedDoneButton(_ sender: AnyObject) {
         self.next(self)
     }
     
-    @IBAction func tappedDoItButton(sender: AnyObject) {
+    @IBAction func tappedDoItButton(_ sender: AnyObject) {
         self.nextPermission()
     }
 }

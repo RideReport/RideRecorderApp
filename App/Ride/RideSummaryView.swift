@@ -10,14 +10,14 @@ import Foundation
 import AudioToolbox
 
 @objc protocol RideSummaryViewDelegate {
-    optional func didOpenControls(view: RideSummaryView)
-    optional func didCloseControls(view: RideSummaryView)
-    optional func didTapEditButton(view: RideSummaryView)
-    optional func didTapDestructiveButton(view: RideSummaryView)
-    optional func didTapActionButton(view: RideSummaryView)
-    optional func didTapClearButton(view: RideSummaryView)
-    optional func didTapShareButton(view: RideSummaryView)
-    optional func didDeepTouchSummaryView(view: RideSummaryView)
+    @objc optional func didOpenControls(_ view: RideSummaryView)
+    @objc optional func didCloseControls(_ view: RideSummaryView)
+    @objc optional func didTapEditButton(_ view: RideSummaryView)
+    @objc optional func didTapDestructiveButton(_ view: RideSummaryView)
+    @objc optional func didTapActionButton(_ view: RideSummaryView)
+    @objc optional func didTapClearButton(_ view: RideSummaryView)
+    @objc optional func didTapShareButton(_ view: RideSummaryView)
+    @objc optional func didDeepTouchSummaryView(_ view: RideSummaryView)
 }
 
 @IBDesignable class RideSummaryView : UIView, UIScrollViewDelegate {
@@ -43,12 +43,12 @@ import AudioToolbox
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: String = RatingChoice.Bad.emoji + "\n" + RatingChoice.Bad.noun {
+    @IBInspectable var desturctiveActionTitle: String = RatingChoice.bad.emoji + "\n" + RatingChoice.bad.noun {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: String = RatingChoice.Good.emoji + "\n" + RatingChoice.Good.noun {
+    @IBInspectable var actionTitle: String = RatingChoice.good.emoji + "\n" + RatingChoice.good.noun {
         didSet {
             reloadUI()
         }
@@ -61,9 +61,9 @@ import AudioToolbox
     }
     
     enum RideSummaryViewStyle : NSInteger {
-        case LockScreenStyle = 1
-        case AppStyle
-        case ShareStyle
+        case lockScreenStyle = 1
+        case appStyle
+        case shareStyle
     }
     
     @IBInspectable var interfaceStyle: NSInteger = 1 {
@@ -74,13 +74,13 @@ import AudioToolbox
         }
     }
     
-    var style: RideSummaryViewStyle = .LockScreenStyle {
+    var style: RideSummaryViewStyle = .lockScreenStyle {
         didSet {
             reloadUI()
         }
     }
     
-    override func canBecomeFocused() -> Bool {
+    override var canBecomeFocused : Bool {
         return !self.allowsScrolling
     }
     
@@ -107,10 +107,10 @@ import AudioToolbox
     
     var allowsScrolling : Bool = true {
         didSet {
-            self.scrollView.scrollEnabled = allowsScrolling
+            self.scrollView.isScrollEnabled = allowsScrolling
             self.scrollView.delaysContentTouches = allowsScrolling
-            self.scrollView.exclusiveTouch = allowsScrolling
-            self.scrollView.userInteractionEnabled = allowsScrolling
+            self.scrollView.isExclusiveTouch = allowsScrolling
+            self.scrollView.isUserInteractionEnabled = allowsScrolling
         }
     }
     
@@ -167,7 +167,7 @@ import AudioToolbox
         self.addSubview(scrollView)
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.01)
+        contentView.backgroundColor = UIColor.white.withAlphaComponent(0.01)
         scrollView.addSubview(contentView)
         
         self.titleBar = UIView()
@@ -176,7 +176,7 @@ import AudioToolbox
         appIconView = UIImageView()
         appIconView.layer.cornerRadius = 3
         appIconView.layer.masksToBounds = true
-        appIconView.backgroundColor = UIColor.clearColor()
+        appIconView.backgroundColor = UIColor.clear
         contentView.addSubview(appIconView)
         
         appNameLabel = UILabel()
@@ -199,43 +199,43 @@ import AudioToolbox
         slideLabel.text = "slide to rate"
         contentView.addSubview(slideLabel)
         
-        clearButton = ClearButton(frame: CGRectMake(0, 0, 18, 18))
-        clearButton.addTarget(self, action: #selector(RideSummaryView.pressedClearButton), forControlEvents: UIControlEvents.TouchUpInside)
+        clearButton = ClearButton(frame: CGRect(x: 0, y: 0, width: 18, height: 18))
+        clearButton.addTarget(self, action: #selector(RideSummaryView.pressedClearButton), for: UIControlEvents.touchUpInside)
         contentView.addSubview(clearButton)
         
-        let shareImage = UIImage(named: "Action.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        shareButton = UIButton(frame: CGRectMake(0,0,47,87))
-        shareButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.01)
-        shareButton.setImage(shareImage, forState: UIControlState.Normal)
-        shareButton.addTarget(self, action: #selector(RideSummaryView.pressedShareButton), forControlEvents: UIControlEvents.TouchUpInside)
+        let shareImage = UIImage(named: "Action.png")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        shareButton = UIButton(frame: CGRect(x: 0,y: 0,width: 47,height: 87))
+        shareButton.backgroundColor = UIColor.white.withAlphaComponent(0.01)
+        shareButton.setImage(shareImage, for: UIControlState())
+        shareButton.addTarget(self, action: #selector(RideSummaryView.pressedShareButton), for: UIControlEvents.touchUpInside)
         contentView.addSubview(shareButton)
         
         controlsView = UIView()
-        controlsView.backgroundColor = UIColor.clearColor()
+        controlsView.backgroundColor = UIColor.clear
         controlsView.clipsToBounds = true
         scrollView.addSubview(controlsView)
         
         editButton = UIButton()
-        editButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        editButton.titleLabel?.textAlignment = NSTextAlignment.Center
-        editButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        editButton.addTarget(self, action: #selector(RideSummaryView.pressedEditButton), forControlEvents: UIControlEvents.TouchUpInside)
+        editButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        editButton.titleLabel?.textAlignment = NSTextAlignment.center
+        editButton.setTitleColor(UIColor.white, for: UIControlState())
+        editButton.addTarget(self, action: #selector(RideSummaryView.pressedEditButton), for: UIControlEvents.touchUpInside)
         controlsView.addSubview(editButton)
         
         destructiveButton = UIButton()
-        destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        destructiveButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        destructiveButton.titleLabel?.textAlignment = NSTextAlignment.center
         destructiveButton.backgroundColor = ColorPallete.sharedPallete.badRed
-        destructiveButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        destructiveButton.addTarget(self, action: #selector(RideSummaryView.pressedDestructiveButton), forControlEvents: UIControlEvents.TouchUpInside)
+        destructiveButton.setTitleColor(UIColor.white, for: UIControlState())
+        destructiveButton.addTarget(self, action: #selector(RideSummaryView.pressedDestructiveButton), for: UIControlEvents.touchUpInside)
         controlsView.addSubview(destructiveButton)
         
         actionButton = UIButton()
-        actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        actionButton.titleLabel?.textAlignment = NSTextAlignment.Center
+        actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        actionButton.titleLabel?.textAlignment = NSTextAlignment.center
         actionButton.backgroundColor = ColorPallete.sharedPallete.transitBlue
-        actionButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        actionButton.addTarget(self, action: #selector(RideSummaryView.pressedActionButton), forControlEvents: UIControlEvents.TouchUpInside)
+        actionButton.setTitleColor(UIColor.white, for: UIControlState())
+        actionButton.addTarget(self, action: #selector(RideSummaryView.pressedActionButton), for: UIControlEvents.touchUpInside)
         controlsView.addSubview(actionButton)
         
         reloadUI()
@@ -270,7 +270,7 @@ import AudioToolbox
     }
     
     override func didMoveToSuperview() {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { [weak self] in
             guard let strongSelf = self else {
                 return
             }
@@ -282,10 +282,10 @@ import AudioToolbox
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        destructiveButton.hidden = !self.showsDestructiveActionButon
-        actionButton.hidden = !self.showsActionButon
-        editButton.hidden = !self.showsEditButton
-        shareButton.hidden = !self.showsShareButon || self.style != .AppStyle
+        destructiveButton.isHidden = !self.showsDestructiveActionButon
+        actionButton.isHidden = !self.showsActionButon
+        editButton.isHidden = !self.showsEditButton
+        shareButton.isHidden = !self.showsShareButon || self.style != .appStyle
         
         self.clearButton.frame = CGRect(x: self.bounds.width - self.clearButton.frame.size.width - 10, y: (self.bounds.height - self.clearButton.frame.size.height)/2.0, width: self.clearButton.frame.size.width, height: self.clearButton.frame.size.height)
 
@@ -295,13 +295,13 @@ import AudioToolbox
         self.destructiveButton.frame = CGRect(x: self.totalButtonWidth - 2 * buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
         self.actionButton.frame = CGRect(x: self.totalButtonWidth - buttonWidth, y: 0, width: buttonWidth, height: self.bounds.height)
         
-        self.lineViewTop.frame = CGRectMake(insetX, 0.0, self.bounds.width + self.totalButtonWidth, 1.0)
-        self.lineViewBottom.frame = CGRectMake(insetX, self.bounds.height - 1, self.bounds.width + self.totalButtonWidth, 1.0)
+        self.lineViewTop.frame = CGRect(x: insetX, y: 0.0, width: self.bounds.width + self.totalButtonWidth, height: 1.0)
+        self.lineViewBottom.frame = CGRect(x: insetX, y: self.bounds.height - 1, width: self.bounds.width + self.totalButtonWidth, height: 1.0)
         
-        self.titleBar.frame = CGRectMake(0, 0.0, self.bounds.width, 30)
+        self.titleBar.frame = CGRect(x: 0, y: 0.0, width: self.bounds.width, height: 30)
                 
         self.scrollView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        self.scrollView.contentSize = CGSizeMake(self.bounds.width + self.totalButtonWidth, self.bounds.height)
+        self.scrollView.contentSize = CGSize(width: self.bounds.width + self.totalButtonWidth, height: self.bounds.height)
         
         self.controlsView.frame = CGRect(x: scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, y: 0, width: self.isShowingControls ? self.totalButtonWidth : 0, height: self.bounds.height)
         self.contentView.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
@@ -335,21 +335,21 @@ import AudioToolbox
     func reloadUI() {
         var textColor = ColorPallete.sharedPallete.almostWhite
         if #available(iOS 10.0, *) {
-            textColor = UIColor.blackColor()
+            textColor = UIColor.black
         }
         
         appNameLabel.textColor = textColor
-        dateLabel.textColor = textColor.colorWithAlphaComponent(0.4)
+        dateLabel.textColor = textColor.withAlphaComponent(0.4)
         bodyLabel.textColor = textColor
-        self.lineViewTop.backgroundColor = textColor.colorWithAlphaComponent(0.2)
-        self.titleBar.hidden = true
-        self.lineViewBottom.backgroundColor = textColor.colorWithAlphaComponent(0.2)
-        slideLabel.textColor = textColor.colorWithAlphaComponent(0.4)
+        self.lineViewTop.backgroundColor = textColor.withAlphaComponent(0.2)
+        self.titleBar.isHidden = true
+        self.lineViewBottom.backgroundColor = textColor.withAlphaComponent(0.2)
+        slideLabel.textColor = textColor.withAlphaComponent(0.4)
         shareButton.tintColor = textColor
         
-        destructiveButton.setTitle(self.desturctiveActionTitle, forState: UIControlState.Normal)
-        actionButton.setTitle(self.actionTitle, forState: UIControlState.Normal)
-        editButton.setTitle(self.editTitle, forState: UIControlState.Normal)
+        destructiveButton.setTitle(self.desturctiveActionTitle, for: UIControlState())
+        actionButton.setTitle(self.actionTitle, for: UIControlState())
+        editButton.setTitle(self.editTitle, for: UIControlState())
         editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
         
         appNameLabel.text = self.appName
@@ -357,32 +357,32 @@ import AudioToolbox
         bodyLabel.text = self.body
         appIconView.image = self.appIcon
         
-        if self.style == .LockScreenStyle && self.bounds.height < 100 {
-            self.appNameLabel.font = UIFont.systemFontOfSize(15)
-            self.bodyLabel.font = UIFont.systemFontOfSize(12)
-            self.dateLabel.font = UIFont.systemFontOfSize(11)
-            self.slideLabel.font = UIFont.systemFontOfSize(11)
+        if self.style == .lockScreenStyle && self.bounds.height < 100 {
+            self.appNameLabel.font = UIFont.systemFont(ofSize: 15)
+            self.bodyLabel.font = UIFont.systemFont(ofSize: 12)
+            self.dateLabel.font = UIFont.systemFont(ofSize: 11)
+            self.slideLabel.font = UIFont.systemFont(ofSize: 11)
             
-            self.editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            self.actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            self.destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            self.editButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
+            self.actionButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
+            self.destructiveButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
             
             self.bodyLabel.minimumScaleFactor = 0.6
             self.bodyLabel.numberOfLines = 2
-            self.bodyLabel.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+            self.bodyLabel.lineBreakMode = NSLineBreakMode.byTruncatingTail
         } else {
-            appNameLabel.font = UIFont.boldSystemFontOfSize(18)
-            dateLabel.font = UIFont.systemFontOfSize(16)
-            bodyLabel.font = UIFont.systemFontOfSize(18)
-            slideLabel.font = UIFont.systemFontOfSize(14)
+            appNameLabel.font = UIFont.boldSystemFont(ofSize: 18)
+            dateLabel.font = UIFont.systemFont(ofSize: 16)
+            bodyLabel.font = UIFont.systemFont(ofSize: 18)
+            slideLabel.font = UIFont.systemFont(ofSize: 14)
             
-            editButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            actionButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
-            destructiveButton.titleLabel?.font = UIFont.systemFontOfSize(13.0)
+            editButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
+            actionButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
+            destructiveButton.titleLabel?.font = UIFont.systemFont(ofSize: 13.0)
             
             bodyLabel.minimumScaleFactor = 1.0
             bodyLabel.numberOfLines = 0
-            bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+            bodyLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
         }
 
         
@@ -392,102 +392,102 @@ import AudioToolbox
         var insetY : CGFloat = 8
         var bodySpacingY : CGFloat = 0
         
-        var appNameSize = appNameLabel.text!.sizeWithAttributes([NSFontAttributeName: appNameLabel.font])
+        var appNameSize = appNameLabel.text!.size(attributes: [NSFontAttributeName: appNameLabel.font])
         var bodySizeOffset: CGFloat = 0
         var dateLabelOffsetX: CGFloat = 0
         var dateLabelOffsetY: CGFloat = 0
         
         switch self.style {
-        case .AppStyle:
+        case .appStyle:
             insetLeft = 8
             insetLeftBody = 8
             insetY = 2
-            appNameSize = CGSizeMake(0, appNameSize.height + 2)
+            appNameSize = CGSize(width: 0, height: appNameSize.height + 2)
             
-            self.appNameLabel.hidden = true
-            self.appIconView.hidden = true
-            self.slideLabel.hidden = true
-            self.lineViewTop.hidden = true
-            self.lineViewBottom.hidden = true
-            self.clearButton.hidden = true
-            self.shareButton.hidden = false
+            self.appNameLabel.isHidden = true
+            self.appIconView.isHidden = true
+            self.slideLabel.isHidden = true
+            self.lineViewTop.isHidden = true
+            self.lineViewBottom.isHidden = true
+            self.clearButton.isHidden = true
+            self.shareButton.isHidden = false
             bodySizeOffset = 30
-        case .LockScreenStyle:
+        case .lockScreenStyle:
             if #available(iOS 10.0, *) {
                 insetX = 6
                 insetY = 6
                 insetLeft = 36
                 insetLeftBody = 8
                 bodySpacingY = 14
-                self.contentView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.55)
-                self.titleBar.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.6)
-                editButton.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.55)
+                self.contentView.backgroundColor = UIColor.white.withAlphaComponent(0.55)
+                self.titleBar.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+                editButton.backgroundColor = UIColor.white.withAlphaComponent(0.55)
                 self.editButton.layer.cornerRadius = 10
                 self.contentView.layer.cornerRadius = 10
                 self.contentView.clipsToBounds = true
-                self.lineViewTop.hidden = true
-                self.lineViewBottom.hidden = true
-                self.titleBar.hidden = false
-                self.slideLabel.hidden = true
+                self.lineViewTop.isHidden = true
+                self.lineViewBottom.isHidden = true
+                self.titleBar.isHidden = false
+                self.slideLabel.isHidden = true
             } else {
                 self.layer.cornerRadius = 0
-                self.lineViewTop.hidden = false
-                self.lineViewBottom.hidden = false
-                self.slideLabel.hidden = false
+                self.lineViewTop.isHidden = false
+                self.lineViewBottom.isHidden = false
+                self.slideLabel.isHidden = false
             }
-            self.appNameLabel.hidden = false
-            self.appIconView.hidden = false
-            self.clearButton.hidden = true
-            self.shareButton.hidden = true
+            self.appNameLabel.isHidden = false
+            self.appIconView.isHidden = false
+            self.clearButton.isHidden = true
+            self.shareButton.isHidden = true
             dateLabelOffsetX = 6
-        case .ShareStyle:
+        case .shareStyle:
             insetLeft = 8
             insetLeftBody = 8
             insetY = 4
             
-            self.appNameLabel.hidden = false
-            self.appIconView.hidden = true
-            self.slideLabel.hidden = true
-            self.lineViewTop.hidden = true
-            self.lineViewBottom.hidden = true
-            self.clearButton.hidden = true
-            self.shareButton.hidden = true
+            self.appNameLabel.isHidden = false
+            self.appIconView.isHidden = true
+            self.slideLabel.isHidden = true
+            self.lineViewTop.isHidden = true
+            self.lineViewBottom.isHidden = true
+            self.clearButton.isHidden = true
+            self.shareButton.isHidden = true
             dateLabelOffsetX = 8
             dateLabelOffsetY = 1
         }
         
-        let dateLabelSize = dateLabel.text!.sizeWithAttributes([NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRectWithSize(CGSizeMake(self.bounds.width - insetLeftBody - insetRight - bodySizeOffset, self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.UsesLineFragmentOrigin, NSStringDrawingOptions.TruncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let dateLabelSize = dateLabel.text!.size(attributes: [NSFontAttributeName: dateLabel.font])
+        let bodySize = bodyLabel.text!.boundingRect(with: CGSize(width: self.bounds.width - insetLeftBody - insetRight - bodySizeOffset, height: self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.truncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
         
-        appIconView.frame = CGRectMake(insetX, insetY, 20, 20)
-        appNameLabel.frame = CGRectMake(insetLeft, insetY, appNameSize.width, appNameSize.height)
-        dateLabel.frame = CGRectMake(appNameSize.width + insetLeft + dateLabelOffsetX, insetY + dateLabelOffsetY, dateLabelSize.width, appNameSize.height)
-        if self.style == .LockScreenStyle {
+        appIconView.frame = CGRect(x: insetX, y: insetY, width: 20, height: 20)
+        appNameLabel.frame = CGRect(x: insetLeft, y: insetY, width: appNameSize.width, height: appNameSize.height)
+        dateLabel.frame = CGRect(x: appNameSize.width + insetLeft + dateLabelOffsetX, y: insetY + dateLabelOffsetY, width: dateLabelSize.width, height: appNameSize.height)
+        if self.style == .lockScreenStyle {
             if #available(iOS 10.0, *) {
-                dateLabel.frame = CGRectMake(self.bounds.width - dateLabelSize.width - 8, insetY + dateLabelOffsetY, dateLabelSize.width, appNameSize.height)
+                dateLabel.frame = CGRect(x: self.bounds.width - dateLabelSize.width - 8, y: insetY + dateLabelOffsetY, width: dateLabelSize.width, height: appNameSize.height)
             }
         }
-        bodyLabel.frame = CGRectMake(insetLeftBody, insetY + bodySpacingY + appNameSize.height, bodySize.width, bodySize.height)
-        slideLabel.frame = CGRectMake(insetLeftBody, bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, self.bounds.width, 16)
+        bodyLabel.frame = CGRect(x: insetLeftBody, y: insetY + bodySpacingY + appNameSize.height, width: bodySize.width, height: bodySize.height)
+        slideLabel.frame = CGRect(x: insetLeftBody, y: bodyLabel.frame.origin.y + bodyLabel.frame.size.height + 2, width: self.bounds.width, height: 16)
         
         
         if (self.heightConstraint != nil) {
             self.removeConstraint(self.heightConstraint)
         }
         
-        if self.style != .LockScreenStyle || self.bounds.height > 100 {
+        if self.style != .lockScreenStyle || self.bounds.height > 100 {
             self.bodyLabel.sizeToFit()
             let newHeight = self.bodyLabel.frame.height + self.bodyLabel.frame.origin.y + 5
-            self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, newHeight)
+            self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.size.width, height: newHeight)
             
-            self.heightConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1.0, constant: newHeight)
+            self.heightConstraint = NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: newHeight)
             self.addConstraint(self.heightConstraint)
             self.setNeedsDisplay()
         }
     }
     
-    func showControls(animated: Bool = true) {
-        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+    func showControls(_ animated: Bool = true) {
+        DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {
                 return
             }
@@ -497,18 +497,18 @@ import AudioToolbox
             
             strongSelf.isShowingControls = true
             
-            strongSelf.scrollView.setContentOffset(CGPointMake(strongSelf.totalButtonWidth, 0), animated: animated)
+            strongSelf.scrollView.setContentOffset(CGPoint(x: strongSelf.totalButtonWidth, y: 0), animated: animated)
             strongSelf.delegate?.didOpenControls?(strongSelf)
         })
     }
     
-    func hideControls(animated: Bool = true) {
+    func hideControls(_ animated: Bool = true) {
         if (!self.isShowingControls) {
             return
         }
         
-        self.scrollView.setContentOffset(CGPointZero, animated: animated)
-        if (self.style == .AppStyle && self.showsShareButon) {
+        self.scrollView.setContentOffset(CGPoint.zero, animated: animated)
+        if (self.style == .appStyle && self.showsShareButon) {
             self.shareButton.fadeIn()
         }
         self.isShowingControls = false
@@ -516,7 +516,7 @@ import AudioToolbox
     }
 
     
-    func scrollViewWillEndDragging(scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         if (!allowsScrolling) {
             return
         }
@@ -528,44 +528,44 @@ import AudioToolbox
         }
         
         if scrollView.contentOffset.x > offsetXThreshold {
-            targetContentOffset.memory.x = self.totalButtonWidth
+            targetContentOffset.pointee.x = self.totalButtonWidth
         } else {
-            targetContentOffset.memory = CGPointZero;
+            targetContentOffset.pointee = CGPoint.zero;
             
-            dispatch_async(dispatch_get_main_queue(), { [weak self] in
+            DispatchQueue.main.async(execute: { [weak self] in
                 guard let strongSelf = self else {
                     return
                 }
                 
-                if (strongSelf.style == .AppStyle && strongSelf.showsShareButon) {
+                if (strongSelf.style == .appStyle && strongSelf.showsShareButon) {
                     strongSelf.shareButton.fadeIn()
                 }
                 
-                scrollView.setContentOffset(CGPointZero, animated: true)
+                scrollView.setContentOffset(CGPoint.zero, animated: true)
             })
         }
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (!allowsScrolling) {
             return
         }
         
         if (scrollView.contentOffset.x < 0) {
-            scrollView.contentOffset = CGPointZero
+            scrollView.contentOffset = CGPoint.zero
         }
         
         if (scrollView.contentOffset.x >= self.totalButtonWidth) {
-            self.controlsView.frame = CGRectMake(scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, 0, self.totalButtonWidth, self.bounds.height)
+            self.controlsView.frame = CGRect(x: scrollView.contentOffset.x + self.bounds.width - self.totalButtonWidth, y: 0, width: self.totalButtonWidth, height: self.bounds.height)
         } else {
-            self.controlsView.frame = CGRectMake(self.bounds.width, 0, scrollView.contentOffset.x, self.bounds.height)
+            self.controlsView.frame = CGRect(x: self.bounds.width, y: 0, width: scrollView.contentOffset.x, height: self.bounds.height)
         }
         
         if (scrollView.contentOffset.x >= self.totalButtonWidth) {
             if !self.isShowingControls {
                 self.isShowingControls = true
                 delegate?.didOpenControls?(self)
-                if (!self.shareButton.hidden) {
+                if (!self.shareButton.isHidden) {
                     self.shareButton.fadeOut()
                 }
             }
@@ -577,12 +577,12 @@ import AudioToolbox
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         didFireDeepTouchForTouchEvent = false
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        super.touchesMoved(touches, withEvent: event)
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
         
         if (didFireDeepTouchForTouchEvent) {
             return

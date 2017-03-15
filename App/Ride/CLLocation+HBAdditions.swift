@@ -9,9 +9,9 @@
 import CoreLocation
 
 extension CLLocation {
-    func calculatedSpeedFromLocation(location: CLLocation) -> CLLocationSpeed {
-        let distance = self.distanceFromLocation(location)
-        let time = abs(location.timestamp.timeIntervalSinceDate(self.timestamp))
+    func calculatedSpeedFromLocation(_ location: CLLocation) -> CLLocationSpeed {
+        let distance = self.distance(from: location)
+        let time = abs(location.timestamp.timeIntervalSince(self.timestamp))
         if (time == 0) {
             return -1.0
         }
@@ -24,11 +24,11 @@ extension CLLocationSpeed {
     var string: String {
         get {            
             let format:String
-            if (NSLocale.isMetric()) {
+            if (Locale.isMetric()) {
                 if (self.kilometersPerHour < 1) {
                     format = "\(self.stringWithDecimals(0)) mps"
                 } else {
-                    if NSLocale.isGB() {
+                    if Locale.isGB() {
                         format = "\(self.milesPerHour.stringWithDecimals(1)) mph";
                     } else {
                         format = "\(self.kilometersPerHour.stringWithDecimals(1)) kph";
@@ -63,7 +63,7 @@ extension CLLocationSpeed {
         }
     }
     
-    private func stringWithDecimals(decimals:Int) -> String {
+    private func stringWithDecimals(_ decimals:Int) -> String {
         return String(format: "%.\(decimals)f", self)
     }
 }

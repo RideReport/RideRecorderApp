@@ -10,13 +10,13 @@ import Foundation
 import WatchConnectivity
 
 class SetupChildViewController : UIViewController {
-    var parent : SetupViewController?
+    var parentSetupViewController : SetupViewController?
     
-    @IBAction func next(sender: AnyObject) {
-        self.parent?.nextPage(self)
+    @IBAction func next(_ sender: AnyObject) {
+        self.parentSetupViewController?.nextPage(sender: self)
     }
     
-    func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
+    func childViewControllerWillPresent(_ userInfo: [String: Any]? = nil) {
         // override to receive
     }
 }
@@ -28,36 +28,36 @@ class SetupViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationBarHidden = true
+        self.isNavigationBarHidden = true
     }
     
     func setupViewControllersForGettingStarted() {
-        let setupTermsVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupTerms") as! SetupChildViewController
-        self.setupVC(setupTermsVC)
+        let setupTermsVC = self.storyboard!.instantiateViewController(withIdentifier: "setupTerms") as! SetupChildViewController
+        self.setupVC(vc: setupTermsVC)
         
-        let setupRatingVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupRating") as! SetupChildViewController
-        self.setupVC(setupRatingVC)
+        let setupRatingVC = self.storyboard!.instantiateViewController(withIdentifier: "setupRating") as! SetupChildViewController
+        self.setupVC(vc: setupRatingVC)
         
-        let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
-        self.setupVC(setupFinished)
+        let setupFinished = self.storyboard!.instantiateViewController(withIdentifier: "setupFinished") as! SetupChildViewController
+        self.setupVC(vc: setupFinished)
         
         self.myViewControllers = [setupTermsVC, setupRatingVC]
         
-        if (!NSUserDefaults.standardUserDefaults().boolForKey("hasSeenSetup")) {
+        if (!UserDefaults.standard.bool(forKey: "hasSeenSetup")) {
             // if they haven't seen setup, ask for permissions
-            let setupPermissionVC = self.storyboard!.instantiateViewControllerWithIdentifier("setupPermissions") as! SetupChildViewController
-            self.setupVC(setupPermissionVC)
+            let setupPermissionVC = self.storyboard!.instantiateViewController(withIdentifier: "setupPermissions") as! SetupChildViewController
+            self.setupVC(vc: setupPermissionVC)
             self.myViewControllers.append(setupPermissionVC)
         }
         
-        if (APIClient.sharedClient.accountVerificationStatus != .Verified) {
-            let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
-            self.setupVC(setupCreateProfile)
+        if (APIClient.shared.accountVerificationStatus != .verified) {
+            let setupCreateProfile = self.storyboard!.instantiateViewController(withIdentifier: "setupCreateProfile") as! SetupChildViewController
+            self.setupVC(vc: setupCreateProfile)
             
-            let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
-            self.setupVC(setupConfirmEmail)
+            let setupConfirmEmail = self.storyboard!.instantiateViewController(withIdentifier: "setupConfirmEmail") as! SetupChildViewController
+            self.setupVC(vc: setupConfirmEmail)
 
-            self.myViewControllers.appendContentsOf([setupCreateProfile, setupConfirmEmail])
+            self.myViewControllers.append(contentsOf: [setupCreateProfile, setupConfirmEmail])
         }
         
         self.myViewControllers.append(setupFinished)
@@ -68,14 +68,14 @@ class SetupViewController: UINavigationController {
     }
     
     func setupViewControllersForCreateProfile() {
-        let setupCreateProfile = self.storyboard!.instantiateViewControllerWithIdentifier("setupCreateProfile") as! SetupChildViewController
-        self.setupVC(setupCreateProfile)
+        let setupCreateProfile = self.storyboard!.instantiateViewController(withIdentifier: "setupCreateProfile") as! SetupChildViewController
+        self.setupVC(vc: setupCreateProfile)
         
-        let setupConfirmEmail = self.storyboard!.instantiateViewControllerWithIdentifier("setupConfirmEmail") as! SetupChildViewController
-        self.setupVC(setupConfirmEmail)
+        let setupConfirmEmail = self.storyboard!.instantiateViewController(withIdentifier: "setupConfirmEmail") as! SetupChildViewController
+        self.setupVC(vc: setupConfirmEmail)
         
-        let setupFinished = self.storyboard!.instantiateViewControllerWithIdentifier("setupFinished") as! SetupChildViewController
-        self.setupVC(setupFinished)
+        let setupFinished = self.storyboard!.instantiateViewController(withIdentifier: "setupFinished") as! SetupChildViewController
+        self.setupVC(vc: setupFinished)
         
         self.myViewControllers = [setupCreateProfile, setupConfirmEmail, setupFinished]
         
@@ -85,26 +85,26 @@ class SetupViewController: UINavigationController {
     }
     
     private func setupVC(vc: SetupChildViewController) {
-        vc.parent = self
+        vc.parentSetupViewController = self
     }
     
-    func nextPage(sender: AnyObject, userInfo : [String: AnyObject]? = nil, skipNext: Bool = false) {
+    func nextPage(sender: AnyObject, userInfo : [String: Any]? = nil, skipNext: Bool = false) {
         if (!hasAddedWatchkitToSetup) {
             // defer this to allow the session to activate.
             hasAddedWatchkitToSetup = true
             if #available(iOS 10.0, *) {
-                if (WatchManager.sharedManager.paired && !NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup")) {
+                if (WatchManager.shared.paired && !UserDefaults.standard.bool(forKey: "healthKitIsSetup")) {
                     // if the user has an Apple Watch, prompt them to connect Health App if they haven't already
-                    let healthKitVC = self.storyboard!.instantiateViewControllerWithIdentifier("SetupWatchActivitySyncingViewController") as! SetupChildViewController
-                    self.setupVC(healthKitVC)
-                    self.myViewControllers.insert(healthKitVC, atIndex: (self.myViewControllers.count - 1))
+                    let healthKitVC = self.storyboard!.instantiateViewController(withIdentifier: "SetupWatchActivitySyncingViewController") as! SetupChildViewController
+                    self.setupVC(vc: healthKitVC)
+                    self.myViewControllers.insert(healthKitVC, at: (self.myViewControllers.count - 1))
                 }
             }
         }
         
-        if let button = sender as? UIControl { button.userInteractionEnabled = false }
+        if let button = sender as? UIControl { button.isUserInteractionEnabled = false }
         
-        let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
+        let pageNumber = (self.myViewControllers!).index(of: sender as! SetupChildViewController)
         let interval = skipNext ? 2 : 1
         
         if (pageNumber == nil || (pageNumber! + interval) >= (self.myViewControllers.count - 1)) {
@@ -115,16 +115,16 @@ class SetupViewController: UINavigationController {
             let transition = CATransition()
             transition.duration = 0.6
             transition.type = kCATransitionFade
-            self.view.layer.addAnimation(transition, forKey: nil)
+            self.view.layer.add(transition, forKey: nil)
             self.setViewControllers([nextPage], animated: false)
-            if let button = sender as? UIControl { button.userInteractionEnabled = true }
+            if let button = sender as? UIControl { button.isUserInteractionEnabled = true }
         }
     }
     
     func previousPage(sender: AnyObject) {
-        if let button = sender as? UIControl { button.userInteractionEnabled = false }
+        if let button = sender as? UIControl { button.isUserInteractionEnabled = false }
 
-        let pageNumber = (self.myViewControllers!).indexOf(sender as! SetupChildViewController)
+        let pageNumber = (self.myViewControllers!).index(of: sender as! SetupChildViewController)
         
         if (pageNumber == nil || (pageNumber! - 1) < 0) {
             // presumably we are already on the first page.
@@ -133,15 +133,15 @@ class SetupViewController: UINavigationController {
             let transition = CATransition()
             transition.duration = 0.6
             transition.type = kCATransitionFade
-            self.view.layer.addAnimation(transition, forKey: nil)
+            self.view.layer.add(transition, forKey: nil)
             self.setViewControllers([prevPage], animated: false)
-            if let button = sender as? UIControl { button.userInteractionEnabled = true }
+            if let button = sender as? UIControl { button.isUserInteractionEnabled = true }
         }
     }
     
-    func done(userInfo : [String: AnyObject]? = nil) {
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "hasSeenSetup")
-        NSUserDefaults.standardUserDefaults().synchronize()
+    func done(userInfo : [String: Any]? = nil) {
+        UserDefaults.standard.set(true, forKey: "hasSeenSetup")
+        UserDefaults.standard.synchronize()
         
         let lastPage = self.myViewControllers.last!
         lastPage.childViewControllerWillPresent(userInfo)
@@ -149,7 +149,7 @@ class SetupViewController: UINavigationController {
         let transition = CATransition()
         transition.duration = 0.6
         transition.type = kCATransitionFade
-        self.view.layer.addAnimation(transition, forKey: nil)
+        self.view.layer.add(transition, forKey: nil)
         self.setViewControllers([lastPage], animated: false)        
     }
 }

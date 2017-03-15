@@ -16,12 +16,12 @@
 
 + (instancetype)message
 {
-    return [[self alloc] initWithType:@"track_message"];
+    return [(MPDesignerTrackMessage *)[self alloc] initWithType:@"track_message"];
 }
 
 + (instancetype)messageWithPayload:(NSDictionary *)payload
 {
-    return[[self alloc] initWithType:@"track_message" andPayload:payload];
+    return [(MPDesignerTrackMessage *)[self alloc] initWithType:@"track_message" andPayload:payload];
 }
 
 - (instancetype)initWithType:(NSString *)type
@@ -39,7 +39,7 @@
 
 - (NSData *)JSONData
 {
-    NSDictionary *jsonObject = @{ @"type" : self.type, @"payload" : [_payload copy] };
+    NSDictionary *jsonObject = @{ @"type": self.type, @"payload": [_payload copy] };
 
     NSError *error = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonObject options:(NSJSONWritingOptions)0 error:&error];

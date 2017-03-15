@@ -1,16 +1,8 @@
-#if ! __has_feature(objc_arc)
-#error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag on this file.
-#endif
-
 #import "UIColor+MPColor.h"
 
 @implementation UIColor (MPColor)
 
-+ (UIColor *)mp_applicationPrimaryColor
-{
-
-    UIColor *color;
-
++ (UIColor *)mp_applicationPrimaryColor {
     // First try and find the color of the UINavigationBar of the top UINavigationController that is showing now.
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UINavigationController *topNavigationController = nil;
@@ -23,50 +15,61 @@
         }
     } while ((rootViewController = rootViewController.presentedViewController));
 
-    if (topNavigationController) {
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
-        if ([[topNavigationController navigationBar] respondsToSelector:@selector(barTintColor)]) {
-            color = [[topNavigationController navigationBar] barTintColor];
-        } else {
-            color = [topNavigationController navigationBar].tintColor;
-        }
-#else
-        color = [topNavigationController navigationBar].tintColor;
-#endif
-    }
+    UIColor *color = [topNavigationController navigationBar].barTintColor;
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
     // Then try and use the UINavigationBar default color for the app
-    if (!color && [[UINavigationBar appearance] respondsToSelector:@selector(barTintColor)]) {
-        color = [[UINavigationBar appearance] barTintColor];
+    if (!color) {
+        color = [UINavigationBar appearance].barTintColor;
     }
 
     // Or the UITabBar default color
-    if (!color && [[UITabBar appearance] respondsToSelector:@selector(barTintColor)]) {
-        color = [[UITabBar appearance] barTintColor];
+    if (!color) {
+        color = [UITabBar appearance].barTintColor;
     }
-#endif
 
     return color;
 }
 
-+ (UIColor *)mp_lightEffectColor
-{
++ (UIColor *)mp_lightEffectColor {
     return [UIColor colorWithWhite:1.0f alpha:0.3f];
 }
 
-+ (UIColor *)mp_extraLightEffectColor
-{
++ (UIColor *)mp_extraLightEffectColor {
     return [UIColor colorWithWhite:0.97f alpha:0.82f];
 }
 
-+ (UIColor *)mp_darkEffectColor
-{
++ (UIColor *)mp_darkEffectColor {
     return [UIColor colorWithWhite:0.11f alpha:0.73f];
 }
 
-- (UIColor *)colorWithSaturationComponent:(CGFloat) saturation
-{
++ (UIColor *)mp_colorFromRGB:(NSUInteger)rgbValue {
+    return [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:((float)((rgbValue & 0xFF000000) >> 24))/255.0];
+}
+
+- (UIColor *)mp_colorAddColor:(UIColor *)overlay {
+    CGFloat bgR = 0;
+    CGFloat bgG = 0;
+    CGFloat bgB = 0;
+    CGFloat bgA = 0;
+
+    CGFloat fgR = 0;
+    CGFloat fgG = 0;
+    CGFloat fgB = 0;
+    CGFloat fgA = 0;
+
+
+    [self getRed:&bgR green: &bgG blue: &bgB alpha: &bgA];
+    [overlay getRed:&fgR green: &fgG blue: &fgB alpha: &fgA];
+
+    CGFloat r = fgA * fgR + (1 - fgA) * bgR;
+    CGFloat g = fgA * fgG + (1 - fgA) * bgG;
+    CGFloat b = fgA * fgB + (1 - fgA) * bgB;
+
+    return [UIColor colorWithRed:r green:g blue:b alpha:1.0];
+
+}
+
+- (UIColor *)colorWithSaturationComponent:(CGFloat) saturation {
     UIColor *newColor;
     CGFloat h, s, b, a;
     if ([self getHue:&h saturation:&s brightness:&b alpha:&a]) {

@@ -24,16 +24,16 @@ class ConnectedApp: NSManagedObject {
     
     var authorizationCode: String?
     
-    class func allApps(limit: Int = 0) -> [ConnectedApp] {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+    class func allApps(_ limit: Int = 0) -> [ConnectedApp] {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ConnectedApp")
         if (limit != 0) {
             fetchedRequest.fetchLimit = limit
         }
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -45,15 +45,15 @@ class ConnectedApp: NSManagedObject {
         return apps
     }
     
-    class func createOrUpdate(uuid: String)->ConnectedApp {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+    class func createOrUpdate(_ uuid: String)->ConnectedApp {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ConnectedApp")
         fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", uuid)
         fetchedRequest.fetchLimit = 1
         
         let results: [AnyObject]?
         do {
-            results = try context.executeFetchRequest(fetchedRequest)
+            results = try context.fetch(fetchedRequest)
         } catch let error {
             DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
             results = nil
@@ -63,7 +63,7 @@ class ConnectedApp: NSManagedObject {
             return result
         }
         
-        let app = ConnectedApp(entity: NSEntityDescription.entityForName("ConnectedApp", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let app = ConnectedApp(entity: NSEntityDescription.entity(forEntityName: "ConnectedApp", in: context)!, insertInto: context)
         app.uuid = uuid
         
         return app
@@ -109,14 +109,14 @@ class ConnectedApp: NSManagedObject {
             var scopesToDelete = self.scopes
             
             for scope in scopes {
-                if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: self), index = scopesToDelete.indexOf(scope) {
-                    scopesToDelete.removeAtIndex(index)
+                if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: self), let index = scopesToDelete.index(of: scope) {
+                    scopesToDelete.remove(at: index)
                 }
             }
             
             for scope in scopesToDelete {
                 // delete any app objects we did not receive
-                CoreDataManager.sharedManager.currentManagedObjectContext().deleteObject(scope)
+                CoreDataManager.shared.currentManagedObjectContext().delete(scope)
             }
         }
     }

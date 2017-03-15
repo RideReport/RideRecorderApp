@@ -12,8 +12,8 @@ import Mixpanel
 class ReportModeClassificationViewController : UIViewController, MGLMapViewDelegate, UITextFieldDelegate {
     var trip: Trip! {
         didSet {
-            dispatch_async(dispatch_get_main_queue(), { [weak self] in
-                guard let strongSelf = self, _ = strongSelf.view else {
+            DispatchQueue.main.async(execute: { [weak self] in
+                guard let strongSelf = self, let _ = strongSelf.view else {
                     return
                 }
 
@@ -28,7 +28,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     private var startPoint: MGLPointAnnotation?
     private var endPoint: MGLPointAnnotation?
     
-    private var dateTimeFormatter: NSDateFormatter!
+    private var dateTimeFormatter: DateFormatter!
 
     @IBOutlet weak var notesTextField: UITextField!
     @IBOutlet weak var shareView: UIView!
@@ -41,20 +41,20 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         super.viewDidLoad()
         
         self.mapView.delegate = self
-        self.mapView.logoView.hidden = true
-        self.mapView.attributionButton.hidden = true
-        self.mapView.rotateEnabled = false
-        self.mapView.backgroundColor = UIColor.darkGrayColor()
+        self.mapView.logoView.isHidden = true
+        self.mapView.attributionButton.isHidden = true
+        self.mapView.isRotateEnabled = false
+        self.mapView.backgroundColor = UIColor.darkGray
         
         self.notesTextField.delegate = self
         
         self.mapView.showsUserLocation = false
         
-        self.dateTimeFormatter = NSDateFormatter()
-        self.dateTimeFormatter.locale = NSLocale.currentLocale()
+        self.dateTimeFormatter = DateFormatter()
+        self.dateTimeFormatter.locale = Locale.current
         self.dateTimeFormatter.dateFormat = "MMM d 'at' h:mm a"
         
-        let styleURL = NSURL(string: "https://tiles.ride.report/styles/v8/base-style.json")
+        let styleURL = URL(string: "https://tiles.ride.report/styles/v8/base-style.json")
         self.mapView.styleURL = styleURL
         
         self.updateTripPolylines()
@@ -66,19 +66,19 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     // MARK: - Actions
     //
     
-    @IBAction func cancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancel(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func upload(sender: AnyObject) {
-        var metadata: [String: AnyObject] = [:]
+    @IBAction func upload(_ sender: AnyObject) {
+        var metadata: [String: Any] = [:]
 
-        if let notes = self.notesTextField.text where notes.characters.count > 0 {
+        if let notes = self.notesTextField.text, notes.characters.count > 0 {
             metadata["notes"] = notes
         }
-        APIClient.sharedClient.uploadSensorData(trip, withMetadata: metadata)
+        APIClient.shared.uploadSensorData(trip, withMetadata: metadata)
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     //
@@ -93,7 +93,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             return
         }
         
-        self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(trip.startDate))
+        self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.string(from: trip.startDate as Date))
 
         self.rideSummaryView.body = trip.notificationString()
         self.rideSummaryView.hideControls(false)
@@ -122,7 +122,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         }
         
         if let startLoc = trip.simplifiedLocations.firstObject as? Location,
-        endLoc = trip.simplifiedLocations.lastObject as? Location {
+        let endLoc = trip.simplifiedLocations.lastObject as? Location {
             self.startPoint = MGLPointAnnotation()
             self.startPoint!.coordinate = startLoc.coordinate()
             mapView.addAnnotation(self.startPoint!)
@@ -150,8 +150,8 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         self.tripLine = MGLPolyline(coordinates: &coordinates, count: count)
         self.tripBackingLine = MGLPolyline(coordinates: &coordinates, count: count)
         
-        self.mapView.addOverlay(self.tripBackingLine!)
-        self.mapView.addOverlay(self.tripLine!)
+        self.mapView.add(self.tripBackingLine!)
+        self.mapView.add(self.tripLine!)
         
         
         let point0 = coordinates[0]
@@ -186,7 +186,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         let sizeLat = (maxLat - minLat)
         
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
-        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+        DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {
                 return
             }
@@ -200,16 +200,16 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     // MARK: - Map Kit
     //
     
-    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         var annotationImage: MGLAnnotationImage? = nil
-        if let startPoint = self.startPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == startPoint {
-            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("startMarker")
+        if let startPoint = self.startPoint, let pointAnnotation = annotation as? MGLPointAnnotation, pointAnnotation == startPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "startMarker")
             if (annotationImage == nil) {
                 let image = UIImage(named: "pinGreen.png")
                 annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "startMarker")
             }
-        } else if let endPoint = self.endPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == endPoint {
-            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("endMarker")
+        } else if let endPoint = self.endPoint, let pointAnnotation = annotation as? MGLPointAnnotation, pointAnnotation == endPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "endMarker")
             if (annotationImage == nil) {
                 let image = UIImage(named: "pinRed.png")
                 annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "endMarker")
@@ -220,7 +220,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         return annotationImage
     }
     
-    func mapView(mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
         if (annotation == self.tripBackingLine) {
             return 14
         } else {
@@ -228,35 +228,35 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         }
     }
     
-    func mapView(mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
+    func mapView(_ mapView: MGLMapView, alphaForShapeAnnotation annotation: MGLShape) -> CGFloat {
         return 1.0
     }
     
-    func mapView(mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if (annotation == self.tripBackingLine) {
             return ColorPallete.sharedPallete.almostWhite
         }
         
         if let trip = self.trip {
-            if (trip.activityType == .Cycling) {
-                if(trip.rating.choice == RatingChoice.Good) {
+            if (trip.activityType == .cycling) {
+                if(trip.rating.choice == RatingChoice.good) {
                     return ColorPallete.sharedPallete.goodGreen
-                } else if(trip.rating.choice == RatingChoice.Bad) {
+                } else if(trip.rating.choice == RatingChoice.bad) {
                     return ColorPallete.sharedPallete.badRed
                 } else {
                     return ColorPallete.sharedPallete.unknownGrey
                 }
-            } else if (trip.activityType == .Bus || trip.activityType == .Rail) {
+            } else if (trip.activityType == .bus || trip.activityType == .rail) {
                 return ColorPallete.sharedPallete.transitBlue
             }
             
             return ColorPallete.sharedPallete.autoBrown
         }
         
-        return UIColor.clearColor()
+        return UIColor.clear
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

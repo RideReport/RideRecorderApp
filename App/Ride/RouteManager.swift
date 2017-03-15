@@ -9,6 +9,30 @@
 import Foundation
 import CoreLocation
 import CoreMotion
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l <= r
+  default:
+    return !(rhs < lhs)
+  }
+}
+
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
@@ -16,7 +40,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     var minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
     
-    let locationTrackingDeferralTimeout : NSTimeInterval = 120
+    let locationTrackingDeferralTimeout : TimeInterval = 120
 
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
@@ -30,8 +54,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
-    let maximumTimeIntervalBetweenGPSBasedMovement : NSTimeInterval = 60
-    let maximumTimeIntervalBetweenUsuableSpeedReadings : NSTimeInterval = 60
+    let maximumTimeIntervalBetweenGPSBasedMovement : TimeInterval = 60
+    let maximumTimeIntervalBetweenUsuableSpeedReadings : TimeInterval = 60
     
     let minimumBatteryForTracking : Float = 0.2
     
@@ -40,7 +64,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var isDefferringLocationUpdates : Bool = false
     private var locationManagerIsUpdating : Bool = false
-    private var dateOfStoppingLastLocationManagerUpdates : NSDate?
+    private var dateOfStoppingLastLocationManagerUpdates : Date?
     
     private var lastMotionMonitoringLocation :  CLLocation?
     private var lastActiveMonitoringLocation :  CLLocation?
@@ -50,14 +74,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private var locationManager : CLLocationManager!
     
-    var lastActiveTrackingActivityTypeQueryDate : NSDate?
+    var lastActiveTrackingActivityTypeQueryDate : Date?
     let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 5
-    let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 15
-    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : NSTimeInterval = 120
+    let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 15
+    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 120
     
-    var lastMotionMonitoringActivityTypeQueryDate : NSDate?
-    let timeIntervalBetweenMotionMonitoringActivityTypeQueries : NSTimeInterval = 10
-    let timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery : NSTimeInterval = 30
+    var lastMotionMonitoringActivityTypeQueryDate : Date?
+    let timeIntervalBetweenMotionMonitoringActivityTypeQueries : TimeInterval = 10
+    let timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery : TimeInterval = 30
     var numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
     let maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange = 6 // ~60 seconds
     
@@ -66,43 +90,23 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var currentMotionMonitoringSensorDataCollection : SensorDataCollection?
     private var currentActiveMonitoringSensorDataCollection : SensorDataCollection?
     
-    struct Static {
-        static var onceToken : dispatch_once_t = 0
-        static var sharedManager : RouteManager?
-        static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.NotDetermined
-    }
+    
+    static private(set) var shared: RouteManager!
+    static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
     //
     // MARK: - Initializers
     //
     
-    class var sharedManager:RouteManager {
-        return Static.sharedManager!
-    }
-    
-    class var authorizationStatus: CLAuthorizationStatus {
-        get {
-        return Static.authorizationStatus
-        }
-        
-        set {
-            Static.authorizationStatus = newValue
-        }
-    }
-    
-    class func hasStarted()->Bool {
-        return (Static.sharedManager != nil)
-    }
-    
-    class func startup(fromBackground: Bool) {
-        if (Static.sharedManager == nil) {
+    class func startup(_ fromBackground: Bool) {
+        if (RouteManager.shared == nil) {
             let startupBlock = {
-                Static.sharedManager = RouteManager()
-                Static.sharedManager?.startup(fromBackground)
+                RouteManager.shared = RouteManager()
+                RouteManager.shared.startup(fromBackground)
             }
             
-            if !NSThread.currentThread().isMainThread {
-                dispatch_sync(dispatch_get_main_queue()) {
+            if !Thread.current.isMainThread {
+                DispatchQueue.main.sync {
                     // it is important to run initialization of CLLocationManager on the main thread
                     startupBlock()
                 }
@@ -113,24 +117,30 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    class var hasStarted: Bool {
+        get {
+            return (RouteManager.shared != nil)
+        }
+    }
+    
     override init () {
         super.init()
         
-        UIDevice.currentDevice().batteryMonitoringEnabled = true
+        UIDevice.current.isBatteryMonitoringEnabled = true
         
         self.locationManager = CLLocationManager()
-        self.locationManager.activityType = CLActivityType.Fitness
+        self.locationManager.activityType = CLActivityType.fitness
         self.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
-    private func startup(fromBackground: Bool) {
+    private func startup(_ fromBackground: Bool) {
         if (fromBackground) {
             self.didStartFromBackground = true
             
             // launch a background task to be sure we dont get killed until we get our first location update!
             if (self.startedInBackgroundBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Started in background Background task!")
-                self.startedInBackgroundBackgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                self.startedInBackgroundBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     DDLogInfo("Route Manager Started in background Background task!")
                 })
             }
@@ -151,7 +161,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     // If we see sufficient motion of the right kind, we keep tracking. Otherwise, we end the trip.
     //
     
-    private func tripQualifiesForResumptions(trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
+    private func tripQualifiesForResumptions(_ trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
         if (trip.activityType != activityType) {
             if (trip.activityType.isMotorizedMode && activityType.isMotorizedMode) {
                 // if both trips are motorized, allow resumption since our mode detection within motorized mode is not great
@@ -160,18 +170,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        var timeoutInterval: NSTimeInterval = 0
+        var timeoutInterval: TimeInterval = 0
         switch trip.activityType {
-        case .Cycling where trip.length.miles >= 12:
+        case .cycling where trip.length.miles >= 12:
             timeoutInterval = 1080
         default:
             timeoutInterval = 300
         }
         
-        return abs(trip.endDate.timeIntervalSinceDate(fromLocation.timestamp)) < timeoutInterval
+        return abs(trip.endDate.timeIntervalSince(fromLocation.timestamp)) < timeoutInterval
     }
     
-    private func startTripFromLocation(fromLocation: CLLocation, predictedActivityType activityType:ActivityType) {
+    private func startTripFromLocation(_ fromLocation: CLLocation, predictedActivityType activityType:ActivityType) {
         if (self.currentTrip != nil) {
             return
         }
@@ -186,20 +196,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         var firstLocationOfNewTrip = fromLocation
         if let prototrip = self.currentPrototrip,
-            firstLocation = prototrip.firstNonGeofencedLocation() {
+            let firstLocation = prototrip.firstNonGeofencedLocation() {
             // if there is a prototrip, use the first location of that to determine whether or not to resume the trip
             firstLocationOfNewTrip = firstLocation.clLocation()
         }
         
         // Resume the most recent trip if it was recent enough
-        if let mostRecentTrip = Trip.mostRecentTrip() where self.tripQualifiesForResumptions(mostRecentTrip, activityType: activityType, fromLocation: firstLocationOfNewTrip)  {
+        if let mostRecentTrip = Trip.mostRecentTrip(), self.tripQualifiesForResumptions(mostRecentTrip, activityType: activityType, fromLocation: firstLocationOfNewTrip)  {
             DDLogInfo("Resuming ride")
             #if DEBUG
-                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                     let notif = UILocalNotification()
                     notif.alertBody = "🐞 Resumed Ride Report!"
                     notif.category = "DEBUG_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    UIApplication.shared.presentLocalNotificationNow(notif)
                 }
             #endif
             self.currentTrip = mostRecentTrip
@@ -207,10 +217,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentTrip?.cancelTripStateNotification()
         } else {
             self.currentTrip = Trip(prototrip: self.currentPrototrip)
-            self.currentTrip?.batteryAtStart = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+            self.currentTrip?.batteryAtStart = NSNumber(value: Int16(UIDevice.current.batteryLevel * 100) as Int16)
         }
         if let prototrip = self.currentPrototrip {
-            prototrip.managedObjectContext?.deleteObject(prototrip)
+            prototrip.managedObjectContext?.delete(prototrip)
             
             self.currentPrototrip = nil
         }
@@ -240,7 +250,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.stopTrip(true)
     }
     
-    private func stopTrip(abort: Bool = false) {
+    private func stopTrip(_ abort: Bool = false) {
         guard let stoppedTrip = self.currentTrip else {
             return
         }
@@ -256,39 +266,39 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (abort || stoppedTrip.locations.count <= 6) {
             // if it is aborted or it doesn't more than 6 points, toss it.
             #if DEBUG
-                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                     let notif = UILocalNotification()
                     notif.alertBody = "🐞 Canceled Trip"
                     notif.category = "DEBUG_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    UIApplication.shared.presentLocalNotificationNow(notif)
                 }
             #endif
             stoppedTrip.cancel()
         } else {
-            stoppedTrip.batteryAtEnd = NSNumber(short: Int16(UIDevice.currentDevice().batteryLevel * 100))
+            stoppedTrip.batteryAtEnd = NSNumber(value: Int16(UIDevice.current.batteryLevel * 100) as Int16)
             DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
             
             if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Stop Trip Background task!")
-                self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     DDLogInfo("Route Manager Background task expired!")
                 })
             }
             
             stoppedTrip.close() {
                 stoppedTrip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
-                APIClient.sharedClient.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
+                APIClient.shared.syncTrip(stoppedTrip, includeLocations: false).apiResponse() { (response) -> Void in
                     switch response.result {
-                    case .Success(_):
+                    case .success(_):
                         DDLogInfo("Trip summary was successfully sync'd.")
-                    case .Failure(_):
+                    case .failure(_):
                         DDLogInfo("Trip summary failed to sync.")
                     }
 
                     if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
                         DDLogInfo("Ending Route Manager Stop Trip Background task!")
                         
-                        UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+                        UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
                         self.backgroundTaskID = UIBackgroundTaskInvalid
                     }
                }
@@ -310,7 +320,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 abs(lastQueryDate.timeIntervalSinceNow) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
     }
     
-    private func processActiveTrackingLocations(locations: [CLLocation]) {
+    private func processActiveTrackingLocations(_ locations: [CLLocation]) {
         var foundGPSSpeed = false
         
         for location in locations {
@@ -336,20 +346,20 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
                 // if we are moving sufficiently fast and havent taken a motion sample recently, do so
                 if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery()) {
-                    self.lastActiveTrackingActivityTypeQueryDate = NSDate()
+                    self.lastActiveTrackingActivityTypeQueryDate = Date()
                     self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
                     
-                    MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
+                    MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
                         self.currentActiveMonitoringSensorDataCollection = nil
                         
                         // Schedule deferal right after query returns to avoid the query preventing the app from backgrounding
                         self.beginDeferringUpdatesIfAppropriate()
                         #if DEBUG
-                            if let prediction = sensorDataCollection.topActivityTypePrediction where NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                            if let prediction = sensorDataCollection.topActivityTypePrediction, UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                                 let notif = UILocalNotification()
                                 notif.alertBody = "🐞 prediction: " + prediction.activityType.emoji + " confidence: " + String(prediction.confidence.floatValue)
                                 notif.category = "DEBUG_CATEGORY"
-                                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                                UIApplication.shared.presentLocalNotificationNow(notif)
                             }
                         #endif
                     }
@@ -366,7 +376,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
             let updatedInProgressLength = self.currentTrip!.updateInProgressLength()
             
-            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate where location.timestamp.timeIntervalSinceDate(sensorDataCollectionDate) > -0.1 {
+            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate, location.timestamp.timeIntervalSince(sensorDataCollectionDate) > -0.1 {
                 // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
                 loc.sensorDataCollection = collection
             }
@@ -377,7 +387,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
+        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
             if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
                 DDLogVerbose("Moving too slow for too long")
                 self.stopTrip()
@@ -385,7 +395,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Not enough slow locations to stop, waiting…")
             }
         } else if (foundGPSSpeed == false) {
-            let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSinceDate(self.lastActiveMonitoringLocation!.timestamp))
+            let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp))
             var maximumTimeIntervalBetweenGPSMovements = self.maximumTimeIntervalBetweenUsuableSpeedReadings
             if (self.isDefferringLocationUpdates) {
                 // if we are deferring, give extra time. this is because we will sometime get
@@ -401,7 +411,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         } else {
             if !self.isDefferringLocationUpdates {
                 self.currentTrip?.saveAndMarkDirty()
-                NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
+                NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidUpdatePoints"), object: nil)
             }
         }
     }
@@ -417,11 +427,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let pausedUntilDate = self.pausedUntilDate()
             if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
                 #if DEBUG
-                    if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                    if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                         let notif = UILocalNotification()
                         notif.alertBody = "🐞 Automatically unpausing Ride Report!"
                         notif.category = "DEBUG_CATEGORY"
-                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                        UIApplication.shared.presentLocalNotificationNow(notif)
                     }
                 #endif
                 DDLogInfo("Auto-resuming tracking!")
@@ -436,11 +446,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
         
         #if DEBUG
-            if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                 let notif = UILocalNotification()
                 notif.alertBody = "🐞 Entered Motion Monitoring state!"
                 notif.category = "DEBUG_CATEGORY"
-                UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                UIApplication.shared.presentLocalNotificationNow(notif)
             }
         #endif
         DDLogInfo("Entering Motion Monitoring state")
@@ -454,7 +464,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
                 let _ = Location(byCopyingLocation: currentGeofenceLocation, prototrip: self.currentPrototrip!)
             }
-            CoreDataManager.sharedManager.saveContext()
+            CoreDataManager.shared.saveContext()
         }
         
         self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
@@ -466,11 +476,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
         if let loc = location {
             #if DEBUG
-                if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                     let notif = UILocalNotification()
                     notif.alertBody = "🐞 Geofenced!"
                     notif.category = "DEBUG_CATEGORY"
-                    UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                    UIApplication.shared.presentLocalNotificationNow(notif)
                 }
             #endif
             self.disableAllGeofences() // first remove any existing geofences
@@ -480,8 +490,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         if let prototrip = self.currentPrototrip {
-            prototrip.managedObjectContext?.deleteObject(prototrip)
-            CoreDataManager.sharedManager.saveContext()
+            prototrip.managedObjectContext?.delete(prototrip)
+            CoreDataManager.shared.saveContext()
             
             self.currentPrototrip = nil
         }
@@ -490,19 +500,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.locationManagerIsUpdating = false
         self.locationManager.disallowDeferredLocationUpdates()
         self.locationManager.stopUpdatingLocation()
-        self.dateOfStoppingLastLocationManagerUpdates = NSDate()
+        self.dateOfStoppingLastLocationManagerUpdates = Date()
     }
     
-    private func processMotionMonitoringLocations(locations: [CLLocation]) {
+    private func processMotionMonitoringLocations(_ locations: [CLLocation]) {
         guard locations.count > 0 else {
             return
         }
         
         var locs = locations
 
-        if let loc = locations.first where abs(loc.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
+        if let loc = locations.first, abs(loc.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
             // https://github.com/KnockSoftware/Ride/issues/222
-            DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp))
+            DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp as CVarArg))
             if locations.count > 1 {
                 locs.removeFirst()
             } else {
@@ -526,12 +536,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 // the below OR clause is a work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
                 || (abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery)))) {
             
-            self.lastMotionMonitoringActivityTypeQueryDate = NSDate()
+            self.lastMotionMonitoringActivityTypeQueryDate = Date()
             
             self.currentMotionMonitoringSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
-            MotionManager.sharedManager.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
+            MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -550,11 +560,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 let confidence = prediction.confidence.floatValue
             
                 #if DEBUG
-                    if NSUserDefaults.standardUserDefaults().boolForKey("DebugVerbosityMode") {
+                    if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
                         let notif = UILocalNotification()
                         notif.alertBody = "🐞 prediction: " + activityType.emoji + " confidence: " + String(confidence) + " speed: " + String(averageSpeed)
                         notif.category = "DEBUG_CATEGORY"
-                        UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+                        UIApplication.shared.presentLocalNotificationNow(notif)
                     }
                 #endif
                 
@@ -562,59 +572,59 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 
                 switch activityType {
-                case .Automotive where confidence > 0.8 && averageMovingSpeed >= 4:
+                case .automotive where confidence > 0.8 && averageMovingSpeed >= 4:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
-                case .Automotive where confidence > 0.6 && averageMovingSpeed >= 6:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .automotive)
+                case .automotive where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting automotive trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Automotive)
-                case .Cycling where confidence > 0.8 && averageMovingSpeed >= 2:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .automotive)
+                case .cycling where confidence > 0.8 && averageMovingSpeed >= 2:
                     DDLogVerbose("Starting cycling trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
-                case .Cycling where confidence > 0.4 && averageMovingSpeed >= 2.5 && averageMovingSpeed < 9:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .cycling)
+                case .cycling where confidence > 0.4 && averageMovingSpeed >= 2.5 && averageMovingSpeed < 9:
                     DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Cycling)
-                case .Running where confidence < 0.8 && averageMovingSpeed >= 2 && averageMovingSpeed < 6.5:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .cycling)
+                case .running where confidence < 0.8 && averageMovingSpeed >= 2 && averageMovingSpeed < 6.5:
                     DDLogVerbose("Starting running trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Running)
-                case .Bus where confidence > 0.8 && averageMovingSpeed >= 3:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .running)
+                case .bus where confidence > 0.8 && averageMovingSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
-                case .Bus where confidence > 0.6 && averageMovingSpeed >= 6:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .bus)
+                case .bus where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Bus)
-                case .Rail where confidence > 0.8 && averageMovingSpeed >= 3:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .bus)
+                case .rail where confidence > 0.8 && averageMovingSpeed >= 3:
                     DDLogVerbose("Starting transit trip, high confidence")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
-                case .Rail where confidence > 0.6 && averageMovingSpeed >= 6:
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .rail)
+                case .rail where confidence > 0.6 && averageMovingSpeed >= 6:
                     DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
                     
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .Rail)
-                case .Walking where confidence > 0.9 && averageMovingSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
+                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .rail)
+                case .walking where confidence > 0.9 && averageMovingSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
                     DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Stationary where confidence > 0.9 && averageSpeed < 0:
+                case .stationary where confidence > 0.9 && averageSpeed < 0:
                     DDLogVerbose("Stationary, high confidence and no speed. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Walking where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
+                case .walking where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
                     DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 0.65:
+                case .stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 0.65:
                     DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
                     
                     strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .Unknown, .Automotive, .Cycling, .Running, .Bus, .Rail, .Stationary, .Walking, .Aviation:
+                case .unknown, .automotive, .cycling, .running, .bus, .rail, .stationary, .walking, .aviation:
                     if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
                         DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
                         strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
@@ -636,29 +646,29 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
     }
     
     //
     // MARK: - Helper methods
     //
     
-    private func setupGeofencesAroundCenter(center: CLLocation) {
+    private func setupGeofencesAroundCenter(_ center: CLLocation) {
         DDLogInfo("Setting up geofences!")
         
         Profile.profile().setGeofencedLocation(center)
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
         
         // first we put a geofence in the middle as a fallback (exit event)
         let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
         self.geofenceSleepRegions.append(region)
-        self.locationManager.startMonitoringForRegion(region)
+        self.locationManager.startMonitoring(for: region)
         
         // the rest of our geofences are for looking at enter events
         // our first geofence will be directly north of our center
         let locationOfFirstGeofenceCenter = CLLocationCoordinate2DMake(center.coordinate.latitude + self.geofenceSleepRegionDistanceToCenter, center.coordinate.longitude)
         
-        let theta = 2*M_PI/Double(self.numberOfGeofenceSleepRegions)
+        let theta = 2*Double.pi/Double(self.numberOfGeofenceSleepRegions)
         // after that, we go around in a circle, measuring an angles of index*theta away from the last geofence and then planting a geofence there
         for index in 0..<self.numberOfGeofenceSleepRegions {
             let dx = 2 * self.geofenceSleepRegionDistanceToCenter * sin(Double(index) * theta/2) * cos(Double(index) * theta/2)
@@ -667,18 +677,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
 
             let region = CLCircularRegion(center:locationOfNextGeofenceCenter, radius:self.geofenceSleepRegionRadius, identifier: String(format: "%@%i",self.geofenceIdentifierPrefix, index))
             self.geofenceSleepRegions.append(region)
-            self.locationManager.startMonitoringForRegion(region)
+            self.locationManager.startMonitoring(for: region)
         }
     }
     
     
     private func disableAllGeofences() {
         for region in self.locationManager.monitoredRegions {
-            self.locationManager.stopMonitoringForRegion(region )
+            self.locationManager.stopMonitoring(for: region )
         }
         
         Profile.profile().setGeofencedLocation(nil)
-        CoreDataManager.sharedManager.saveContext()
+        CoreDataManager.shared.saveContext()
 
         self.geofenceSleepRegions = []
     }
@@ -688,7 +698,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
             DDLogVerbose("Re-deferring updates")
             self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdatesUntilTraveled(CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+            self.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
     }
     
@@ -700,7 +710,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
 #if (arch(i386) || arch(x86_64)) && os(iOS)
     return false
 #endif
-        return UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking
+        return UIDevice.current.batteryLevel < self.minimumBatteryForTracking
     }
     
     func isPaused() -> Bool {
@@ -708,27 +718,27 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func isPausedByUser() -> Bool {
-        return NSUserDefaults.standardUserDefaults().boolForKey("RouteManagerIsPaused")
+        return UserDefaults.standard.bool(forKey: "RouteManagerIsPaused")
     }
     
     func isPausedDueToUnauthorized() -> Bool {
-        return (CLLocationManager.authorizationStatus() != CLAuthorizationStatus.AuthorizedAlways)
+        return (CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways)
     }
     
     private func cancelScheduledAppResumeReminderNotifications() {
-        for notif in UIApplication.sharedApplication().scheduledLocalNotifications! {
+        for notif in UIApplication.shared.scheduledLocalNotifications! {
             let notification = notif 
             if (notification.category == "APP_PAUSED_CATEGORY") {
-                UIApplication.sharedApplication().cancelLocalNotification(notification)
+                UIApplication.shared.cancelLocalNotification(notification)
             }
         }
     }
     
-    func pausedUntilDate() -> NSDate? {
-        return NSUserDefaults.standardUserDefaults().objectForKey("RouteManagerIsPausedUntilDate") as! NSDate?
+    func pausedUntilDate() -> Date? {
+        return UserDefaults.standard.object(forKey: "RouteManagerIsPausedUntilDate") as! Date?
     }
     
-    func pauseTracking(untilDate: NSDate! = nil) {
+    func pauseTracking(_ untilDate: Date! = nil) {
         if (isPaused()) {
             return
         }
@@ -736,16 +746,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.cancelScheduledAppResumeReminderNotifications()
         
         if (untilDate != nil) {
-            NSUserDefaults.standardUserDefaults().setObject(untilDate, forKey: "RouteManagerIsPausedUntilDate")
+            UserDefaults.standard.set(untilDate, forKey: "RouteManagerIsPausedUntilDate")
         } else {
             let reminderNotification = UILocalNotification()
             reminderNotification.alertBody = "Ride Report is paused! Would you like to resume logging your bike rides?"
             reminderNotification.category = "APP_PAUSED_CATEGORY"
-            reminderNotification.fireDate = NSDate.tomorrow()
-            UIApplication.sharedApplication().scheduleLocalNotification(reminderNotification)
+            reminderNotification.fireDate = Date.tomorrow()
+            UIApplication.shared.scheduleLocalNotification(reminderNotification)
         }
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "RouteManagerIsPaused")
-        NSUserDefaults.standardUserDefaults().synchronize()
+        UserDefaults.standard.set(true, forKey: "RouteManagerIsPaused")
+        UserDefaults.standard.synchronize()
         
         DDLogInfo("Paused Tracking")
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.locationManager.location)
@@ -757,7 +767,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // if we are currently updating, send the user a push and stop.
             let notif = UILocalNotification()
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            UIApplication.shared.presentLocalNotificationNow(notif)
             
             DDLogInfo("Paused Tracking due to battery life")
             
@@ -773,9 +783,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.cancelScheduledAppResumeReminderNotifications()
         
-        NSUserDefaults.standardUserDefaults().setBool(false, forKey: "RouteManagerIsPaused")
-        NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "RouteManagerIsPausedUntilDate")
-        NSUserDefaults.standardUserDefaults().synchronize()
+        UserDefaults.standard.set(false, forKey: "RouteManagerIsPaused")
+        UserDefaults.standard.set(nil, forKey: "RouteManagerIsPausedUntilDate")
+        UserDefaults.standard.synchronize()
         
         DDLogInfo("Resume Tracking")
         self.startTrackingMachine()
@@ -797,8 +807,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (!self.locationManagerIsUpdating) {
             self.locationManagerIsUpdating = true
             self.locationManager.startUpdatingLocation()
-            if (self.locationManager.respondsToSelector(Selector("allowsBackgroundLocationUpdates"))) {
-                self.locationManager.setValue(true, forKey: "allowsBackgroundLocationUpdates")
+            if #available(iOS 9.0, *) {
+                self.locationManager.allowsBackgroundLocationUpdates = true
             }
         }
     }
@@ -807,10 +817,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManger Delegate Methods
     //
     
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         DDLogVerbose("Did change authorization status")
         
-        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.AuthorizedAlways) {
+        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways) {
             self.startTrackingMachine()
         } else {
             // tell the user they need to give us access to the zion mainframes
@@ -818,41 +828,41 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         RouteManager.authorizationStatus = status
-        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
     }
     
-    func locationManagerDidPauseLocationUpdates(manager: CLLocationManager) {
+    func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
         // Should never happen
         DDLogWarn("Did Pause location updates!")
     }
     
-    func locationManagerDidResumeLocationUpdates(manager: CLLocationManager) {
+    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
         // Should never happen
         DDLogWarn("Did Resume location updates!")
     }
     
-    func locationManager(manager: CLLocationManager, monitoringDidFailForRegion region: CLRegion?, withError error: NSError) {
-        DDLogWarn(String(format: "Got location monitoring error! %@", error))
+    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        DDLogWarn(String(format: "Got location monitoring error! %@", error as CVarArg))
         
-        if (error.code == CLError.RegionMonitoringFailure.rawValue) {
+        if (error._code == CLError.Code.regionMonitoringFailure.rawValue) {
             // exceeded max number of geofences
         }
     }
     
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        DDLogWarn(String(format: "Got active tracking location error! %@", error))
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        DDLogWarn(String(format: "Got active tracking location error! %@", error as CVarArg))
         
-        if (error.code == CLError.Denied.rawValue) {
+        if (error._code == CLError.Code.denied.rawValue) {
             // alert the user and pause tracking.
         }
     }
     
-    func locationManager(manager: CLLocationManager, didFinishDeferredUpdatesWithError error: NSError?) {
+    func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
         self.isDefferringLocationUpdates = false
         
         if let err = error {
-            if err.code != CLError.DeferredCanceled.rawValue {
-                DDLogVerbose(String(format: "Error deferring updates: %@", err))
+            if err._code != CLError.Code.deferredCanceled.rawValue {
+                DDLogVerbose(String(format: "Error deferring updates: %@", err as CVarArg))
                 return
             } else {
                 DDLogVerbose("Deferred mode canceled, continuing…")
@@ -861,18 +871,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if let trip = self.currentTrip {
             trip.saveAndMarkDirty()
-            NSNotificationCenter.defaultCenter().postNotificationName("RouteManagerDidUpdatePoints", object: nil)
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidUpdatePoints"), object: nil)
         }
 
         DDLogVerbose("Finished deferring updates.")
      
-        if let date = self.lastActiveTrackingActivityTypeQueryDate where abs(date.timeIntervalSinceNow) < 5 {
+        if let date = self.lastActiveTrackingActivityTypeQueryDate, abs(date.timeIntervalSinceNow) < 5 {
             // if we've recently finished an activity query, go ahead and redefer as needed
             self.beginDeferringUpdatesIfAppropriate()
         }
     }
     
-    func locationManager(manager: CLLocationManager, didEnterRegion region: CLRegion) {
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if (!region.identifier.hasPrefix(self.geofenceIdentifierPrefix)) {
             DDLogVerbose("Got geofence enter for backup or other irrelevant geofence. Skipping.")
             return;
@@ -886,7 +896,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(manager: CLLocationManager, didExitRegion region: CLRegion) {
+    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if (region.identifier != self.backupGeofenceIdentifier) {
             DDLogVerbose("Got geofence exit for irrelevant geofence. Skipping.")
             return;
@@ -900,13 +910,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         DDLogVerbose("Received location updates.")
         
 #if (arch(i386) || arch(x86_64)) && os(iOS)
         // skip this check
 #else
-        if (UIDevice.currentDevice().batteryLevel < self.minimumBatteryForTracking)  {
+        if (UIDevice.current.batteryLevel < self.minimumBatteryForTracking)  {
             self.pauseTrackingDueToLowBatteryLife(withLastLocation: locations.first)
             return
         }
@@ -915,7 +925,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.startedInBackgroundBackgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending Route Manager Started in background Background task!")
             
-            UIApplication.sharedApplication().endBackgroundTask(self.startedInBackgroundBackgroundTaskID)
+            UIApplication.shared.endBackgroundTask(self.startedInBackgroundBackgroundTaskID)
             self.startedInBackgroundBackgroundTaskID = UIBackgroundTaskInvalid
         }
         

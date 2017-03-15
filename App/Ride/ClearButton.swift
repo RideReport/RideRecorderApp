@@ -23,43 +23,43 @@ import Foundation
     }
     
     func commonInit() {
-        effectsView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.ExtraLight))
-        let clearButtonRect = CGRectMake(0, 0, 18, 18)
+        effectsView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.extraLight))
+        let clearButtonRect = CGRect(x: 0, y: 0, width: 18, height: 18)
         UIGraphicsBeginImageContextWithOptions(clearButtonRect.size, false, 0.0)
-        let circle = UIBezierPath(ovalInRect: clearButtonRect)
+        let circle = UIBezierPath(ovalIn: clearButtonRect)
         let line1 = UIBezierPath()
-        line1.moveToPoint(CGPointMake(6, 6))
-        line1.addLineToPoint(CGPointMake(12, 12))
+        line1.move(to: CGPoint(x: 6, y: 6))
+        line1.addLine(to: CGPoint(x: 12, y: 12))
         line1.lineWidth = 1
         let line2 = UIBezierPath()
-        line2.moveToPoint(CGPointMake(6, 12))
-        line2.addLineToPoint(CGPointMake(12, 6))
+        line2.move(to: CGPoint(x: 6, y: 12))
+        line2.addLine(to: CGPoint(x: 12, y: 6))
         line2.lineWidth = 1
         
-        UIColor.blackColor().setFill()
+        UIColor.black.setFill()
         circle.fill()
         let ctx = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(ctx!, CGBlendMode.DestinationOut)
+        ctx!.setBlendMode(CGBlendMode.destinationOut)
         line1.stroke()
         line2.stroke()
-        let maskImage = UIGraphicsGetImageFromCurrentImageContext()!.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+        let maskImage = UIGraphicsGetImageFromCurrentImageContext()!.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         UIGraphicsEndImageContext()
         let maskLayer = CALayer()
         maskLayer.contentsScale = maskImage.scale
         maskLayer.frame = clearButtonRect
-        maskLayer.contents = maskImage.CGImage
+        maskLayer.contents = maskImage.cgImage
         effectsView.frame = clearButtonRect
         effectsView.layer.mask = maskLayer
         
         self.addSubview(effectsView)
     }
     
-    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-        if !self.hidden {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if !self.isHidden {
             return self
         }
         
-        return super.hitTest(point, withEvent: event)
+        return super.hitTest(point, with: event)
     }
     
 }

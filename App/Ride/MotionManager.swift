@@ -11,49 +11,32 @@ import CoreLocation
 import CoreMotion
 
 enum MotionManagerAuthorizationStatus {
-    case NotDetermined
-    case Denied
-    case Authorized
+    case notDetermined
+    case denied
+    case authorized
 }
 
 class MotionManager : NSObject, CLLocationManagerDelegate {
     private var motionActivityManager: CMMotionActivityManager!
     private var motionManager: CMMotionManager!
-    private var motionQueue: NSOperationQueue!
+    private var motionQueue: OperationQueue!
 
-    let motionStartTimeoutInterval: NSTimeInterval = 30
-    let motionContinueTimeoutInterval: NSTimeInterval = 60
+    let motionStartTimeoutInterval: TimeInterval = 30
+    let motionContinueTimeoutInterval: TimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
     private var isGatheringMotionData: Bool = false
     
-    struct Static {
-        static var onceToken : dispatch_once_t = 0
-        static var sharedManager : MotionManager?
-        static var authorizationStatus : MotionManagerAuthorizationStatus = .NotDetermined
-    }
     
-    class var authorizationStatus: MotionManagerAuthorizationStatus {
-        get {
-            return Static.authorizationStatus
-        }
-        
-        set {
-            Static.authorizationStatus = newValue
-        }
-    }
-    
-    
-    class var sharedManager:MotionManager {
-        return Static.sharedManager!
-    }
+    static private(set) var shared : MotionManager!
+    static var authorizationStatus : MotionManagerAuthorizationStatus = .notDetermined
     
     class func startup() {
-        if (Static.sharedManager == nil) {
-            Static.sharedManager = MotionManager()
-            dispatch_async(dispatch_get_main_queue()) {
+        if (MotionManager.shared == nil) {
+            MotionManager.shared = MotionManager()
+            DispatchQueue.main.async {
                 // start async
-                Static.sharedManager?.startup()
+                MotionManager.shared.startup()
             }
         }
     }
@@ -61,33 +44,33 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     override init () {
         super.init()
         
-        self.motionQueue = NSOperationQueue()
+        self.motionQueue = OperationQueue()
         self.motionActivityManager = CMMotionActivityManager()
         self.motionManager = CMMotionManager()
-        self.motionManager.accelerometerUpdateInterval = RandomForestManager.sharedForest.desiredSampleInterval/2.0
+        self.motionManager.accelerometerUpdateInterval = RandomForestManager.shared.desiredSampleInterval/2.0
     }
     
     private func startup() {
-        let hasBeenGrantedMotionAccess = NSUserDefaults.standardUserDefaults().boolForKey("MotionManagerHasRequestedMotionAccess")
+        let hasBeenGrantedMotionAccess = UserDefaults.standard.bool(forKey: "MotionManagerHasRequestedMotionAccess")
         if (!hasBeenGrantedMotionAccess) {
             // run a query so we can have the permission dialog come up when we want it to
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.motionActivityManager.queryActivityStartingFromDate(NSDate(timeIntervalSinceNow: -10), toDate: NSDate(), toQueue: self.motionQueue) { (actibity, error) -> Void in
-                    if let err = error where err.code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
-                        MotionManager.authorizationStatus = .Denied
-                        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
+            DispatchQueue.main.async(execute: { () -> Void in
+                self.motionActivityManager.queryActivityStarting(from: Date(timeIntervalSinceNow: -10), to: Date(), to: self.motionQueue) { (actibity, error) -> Void in
+                    if let err = error, err._code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
+                        MotionManager.authorizationStatus = .denied
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
                     } else {
-                        MotionManager.authorizationStatus = .Authorized
-                        NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)
+                        MotionManager.authorizationStatus = .authorized
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
                         
-                        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "MotionManagerHasRequestedMotionAccess")
-                        NSUserDefaults.standardUserDefaults().synchronize()
+                        UserDefaults.standard.set(true, forKey: "MotionManagerHasRequestedMotionAccess")
+                        UserDefaults.standard.synchronize()
                     }
                 }
             })
         } else {
-            MotionManager.authorizationStatus = .Authorized
-            NSNotificationCenter.defaultCenter().postNotificationName("appDidChangeManagerAuthorizationStatus", object: self)            
+            MotionManager.authorizationStatus = .authorized
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)            
         }
     }
     
@@ -98,7 +81,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending GatherSensorData background task!")
             
-            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
     }
@@ -106,7 +89,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
     func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection) {
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning GatherSensorData background task!")
-            self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("GatherSensorData Background task expired!")
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
@@ -114,12 +97,12 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         
         self.isGatheringMotionData = true
         
-        self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (data, error) in
+        self.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (data, error) in
             guard let accelerometerData = data else {
                 return
             }
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 sensorDataCollection.addAccelerometerData(accelerometerData)
             }
         }
@@ -131,31 +114,31 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending background task with Stop Motion Updates!")
             
-            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler: (sensorDataCollection: SensorDataCollection) -> Void!) {
-        if (!RandomForestManager.sharedForest.canPredict) {
+    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler:@escaping (_: SensorDataCollection) -> Void!) {
+        if (!RandomForestManager.shared.canPredict) {
             DDLogInfo("Random forest was not ready!")
             sensorDataCollection.addUnknownTypePrediction()
-            handler(sensorDataCollection: sensorDataCollection)
+            handler(sensorDataCollection)
             return
         }
         
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning Query Activity Type background task!")
-            self.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+            self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
     	        sensorDataCollection.addUnknownTypePrediction()
-	            handler(sensorDataCollection: sensorDataCollection)
+	            handler(sensorDataCollection)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
             DDLogInfo("Could not query activity type, background task already in process!")
             sensorDataCollection.addUnknownTypePrediction()
-            handler(sensorDataCollection: sensorDataCollection)
+            handler(sensorDataCollection)
             return
         }
 
@@ -171,23 +154,23 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 return
             }
             
-            if lastReadingDate.timeIntervalSinceDate(firstReadingDate) >= RandomForestManager.sharedForest.desiredSessionDuration {
+            if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= RandomForestManager.shared.desiredSessionDuration {
                 sensorDataCollection.isBeingCollected = false
                 self.stopMotionUpdates()
                 
-                RandomForestManager.sharedForest.classify(sensorDataCollection)
-                handler(sensorDataCollection: sensorDataCollection)
+                RandomForestManager.shared.classify(sensorDataCollection)
+                handler(sensorDataCollection)
             }
         }
             
-        self.motionManager.startAccelerometerUpdatesToQueue(self.motionQueue) { (motion, error) in
+        self.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
             guard error == nil else {
                 DDLogInfo("Error reading accelerometer data! Ending early…")
                 sensorDataCollection.isBeingCollected = false
                 self.stopMotionUpdates()
                 
                 sensorDataCollection.addUnknownTypePrediction()
-                handler(sensorDataCollection: sensorDataCollection)
+                handler(sensorDataCollection)
 
                 return
             }
@@ -196,7 +179,7 @@ class MotionManager : NSObject, CLLocationManagerDelegate {
                 return
             }
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 sensorDataCollection.addAccelerometerData(accelerometerAcceleration)
                 completionBlock()
             }

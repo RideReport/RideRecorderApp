@@ -11,7 +11,6 @@ import SwiftyJSON
 import FBSDKLoginKit
 
 class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDelegate, FBSDKLoginButtonDelegate {
-    
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var emailTextField : UITextField!
     @IBOutlet weak var haveAccountButton: UIButton!
@@ -29,84 +28,84 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.facebookButton.delegate = self
     }
     
-    override func childViewControllerWillPresent(userInfo: [String: AnyObject]? = nil) {
+    override func childViewControllerWillPresent(_ userInfo: [String: Any]? = nil) {
         super.childViewControllerWillPresent(userInfo)
         
-        if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool? where isCreatingProfileOutsideGettingStarted {
+        if let isCreatingProfileOutsideGettingStarted = userInfo?["isCreatingProfileOutsideGettingStarted"] as! Bool?, isCreatingProfileOutsideGettingStarted {
             self.isCreatingProfileOutsideGettingStarted = true
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Later", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
         } else {
             self.isCreatingProfileOutsideGettingStarted = false
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Skip", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SetupCreateProfileViewController.skip))
         }
     }
     
     func reloadUI() {
         if (isInAlreadyHaveAccountState) {
             self.helperTextLabel.markdownStringValue = "Log in to my Ride Report account"
-            self.haveAccountButton.setTitle("I don't have an account", forState: UIControlState.Normal)
+            self.haveAccountButton.setTitle("I don't have an account", for: UIControlState())
         } else {
-            if let parent = self.parent where parent.hasAddedWatchkitToSetup {
+            if let _ = self.parentSetupViewController, (parentSetupViewController?.hasAddedWatchkitToSetup)! {
                 // it's not the last step
                 self.helperTextLabel.markdownStringValue = "Ok, now let's create your **free Ride Report account**."
             } else {
                 self.helperTextLabel.markdownStringValue = "Ok, last step!\n Let's create your **free Ride Report account**."
             }
-            self.haveAccountButton.setTitle("I already have an account", forState: UIControlState.Normal)
+            self.haveAccountButton.setTitle("I already have an account", for: UIControlState())
         }
     }
     
     func skip() {
-        self.parent?.nextPage(self, userInfo: nil, skipNext: true)
+        self.parentSetupViewController?.nextPage(sender: self, userInfo: nil, skipNext: true)
     }
     
     func create() {
-        self.facebookButton.enabled = false
-        self.navigationItem.rightBarButtonItem?.enabled = false
-        self.emailTextField.enabled = false
+        self.facebookButton.isEnabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.emailTextField.isEnabled = false
         
-        APIClient.sharedClient.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response) -> Void in
-            self.facebookButton.enabled = true
-            self.navigationItem.rightBarButtonItem?.enabled = true
-            self.emailTextField.enabled = true
+        APIClient.shared.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response) -> Void in
+            self.facebookButton.isEnabled = true
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
+            self.emailTextField.isEnabled = true
             
             switch response.result {
-            case .Success(let json):
+            case .success(let json):
                 self.verifyEmailWithJson(json)
-            case .Failure:
+            case .failure:
                 self.emailTextField.becomeFirstResponder()
             }
         }
 
     }
     
-    func verifyEmailWithJson(json: JSON) {
+    func verifyEmailWithJson(_ json: JSON) {
         if let shortcodeLength = json["shortcode_length"].int {
-            self.parent?.nextPage(self, userInfo: ["shortcodeLength": shortcodeLength, "isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
+            self.parentSetupViewController?.nextPage(sender: self, userInfo: ["shortcodeLength": shortcodeLength, "isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
         } else {
-            self.parent?.nextPage(self, userInfo: ["isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
+            self.parentSetupViewController?.nextPage(sender: self, userInfo: ["isCreatingProfileOutsideGettingStarted" : self.isCreatingProfileOutsideGettingStarted])
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.reloadUI()
         
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
         self.navigationItem.rightBarButtonItem = nil
         
-        NSNotificationCenter.defaultCenter().addObserverForName(UITextFieldTextDidChangeNotification, object: nil, queue: nil) {[weak self] (notif) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UITextFieldTextDidChange, object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
                 return
             }
 
             if (strongSelf.textFieldHasValidEmail()) {
-                strongSelf.navigationItem.rightBarButtonItem?.enabled = true
-                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
+                strongSelf.navigationItem.rightBarButtonItem?.isEnabled = true
+                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.done
             } else {
-                strongSelf.navigationItem.rightBarButtonItem?.enabled = false
-                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.Done
+                strongSelf.navigationItem.rightBarButtonItem?.isEnabled = false
+                strongSelf.emailTextField.returnKeyType = UIReturnKeyType.done
             }
         }
     }
@@ -115,46 +114,46 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         
-        return emailPredicate.evaluateWithObject(self.emailTextField.text)
+        return emailPredicate.evaluate(with: self.emailTextField.text)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    @IBAction func tappedHaveAccount(sender: AnyObject) {
+    @IBAction func tappedHaveAccount(_ sender: AnyObject) {
         self.isInAlreadyHaveAccountState = !self.isInAlreadyHaveAccountState
         self.reloadUI()
     }
     
-    func didTap(tapGesture: UIGestureRecognizer) {
-        if tapGesture.state != UIGestureRecognizerState.Ended {
+    func didTap(_ tapGesture: UIGestureRecognizer) {
+        if tapGesture.state != UIGestureRecognizerState.ended {
             return
         }
         
-        let locInView = tapGesture.locationInView(tapGesture.view)
-        let tappedView = tapGesture.view?.hitTest(locInView, withEvent: nil)
-        if (tappedView != nil && !tappedView!.isDescendantOfView(self.emailTextField)) {
+        let locInView = tapGesture.location(in: tapGesture.view)
+        let tappedView = tapGesture.view?.hitTest(locInView, with: nil)
+        if (tappedView != nil && !tappedView!.isDescendant(of: self.emailTextField)) {
             self.emailTextField.resignFirstResponder()
         }
         
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
         if (isInAlreadyHaveAccountState) {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log in", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log in", style: UIBarButtonItemStyle.done, target: self, action: #selector(SetupCreateProfileViewController.create))
         } else {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SetupCreateProfileViewController.create))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Create", style: UIBarButtonItemStyle.done, target: self, action: #selector(SetupCreateProfileViewController.create))
         }
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         self.navigationItem.rightBarButtonItem = nil
     }
 
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if (!self.textFieldHasValidEmail()) {
             return false
         }
@@ -165,48 +164,50 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         return true
     }
     
-    func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
+    
+    public func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         if (result.isCancelled) {
             // don't do anything, i guess
         } else if let token = result.token?.tokenString {
             // submit token to zion mainframes.
-            self.facebookButton.enabled = false
-            self.navigationItem.rightBarButtonItem?.enabled = false
-            self.emailTextField.enabled = false
+            self.facebookButton.isEnabled = false
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
+            self.emailTextField.isEnabled = false
 
             
-            APIClient.sharedClient.verifyFacebook(token).apiResponse() { (response) -> Void in
+            APIClient.shared.verifyFacebook(token).apiResponse() { (response) -> Void in
                 switch response.result {
-                case .Success(let json):
-                    if let needsEmailVerification = json["needs_email_verification"].bool, let email = json["facebook"]["email"].string where needsEmailVerification {
-                        APIClient.sharedClient.sendVerificationTokenForEmail(email).apiResponse() { (response) -> Void in
+                case .success(let json):
+                    if let needsEmailVerification = json["needs_email_verification"].bool, let email = json["facebook"]["email"].string, needsEmailVerification {
+                        APIClient.shared.sendVerificationTokenForEmail(email).apiResponse() { (response) -> Void in
                             
-                            self.facebookButton.enabled = true
-                            self.navigationItem.rightBarButtonItem?.enabled = true
-                            self.emailTextField.enabled = true
+                            self.facebookButton.isEnabled = true
+                            self.navigationItem.rightBarButtonItem?.isEnabled = true
+                            self.emailTextField.isEnabled = true
                             
                             switch response.result {
-                            case .Success(let json):
+                            case .success(let json):
                                 self.verifyEmailWithJson(json)
-                            case .Failure:
+                            case .failure:
                                 let alert = UIAlertView(title:nil, message: "There was an error validating your email from Facebook. Please try signing up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
                                 alert.show()
                                 self.emailTextField.becomeFirstResponder()
                             }
                          }
                     } else {
-                        self.parent?.done(["finishType": self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"])
+                        let finishType = self.isCreatingProfileOutsideGettingStarted ? "CreatedAccountCreatedAccount" : "InitialSetupCreatedAccount"
+                        self.parentSetupViewController?.done(userInfo: ["finishType": finishType])
                     }
-                case .Failure:
-                    self.facebookButton.enabled = true
-                    self.navigationItem.rightBarButtonItem?.enabled = true
-                    self.emailTextField.enabled = true
+                case .failure:
+                    self.facebookButton.isEnabled = true
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.emailTextField.isEnabled = true
                 }
             }
         }
     }
     
-    func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
         // do something
     }
 }

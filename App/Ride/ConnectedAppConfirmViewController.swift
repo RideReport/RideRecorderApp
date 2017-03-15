@@ -24,14 +24,14 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.connectionActivityIndicatorView.hidden = true
+        self.connectionActivityIndicatorView.isHidden = true
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if self.connectingApp != nil {
@@ -41,26 +41,25 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             
             self.connectingAppDetailText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
             self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")
-            if let urlString = self.connectingApp.baseImageUrl, url = NSURL(string: urlString) {
-                self.connectingAppLogo.kf_setImageWithURL(url)
+            if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
+                self.connectingAppLogo.kf.setImage(with: url)
             }
             self.tableView.reloadData()
         }
     }
     
-    @IBAction func didFlipSwitch(sender: AnyObject) {
+    @IBAction func didFlipSwitch(_ sender: AnyObject) {
         if let view = sender as? UIView,
-            cellContent = view.superview,
-            cell = cellContent.superview as? UITableViewCell,
-            let indexPath = self.tableView.indexPathForCell(cell)
-            where indexPath.row < self.connectingApp.scopes.count {
+            let cellContent = view.superview,
+            let cell = cellContent.superview as? UITableViewCell,
+            let indexPath = self.tableView.indexPath(for: cell), indexPath.row < self.connectingApp.scopes.count {
                 let app = self.connectingApp.scopes[indexPath.row]
-                app.granted = sender.on
+                app.granted = sender.isOn
         }
     }
     
-    @IBAction func connect(sender: AnyObject) {
-        self.connectionActivityIndicatorView.hidden = false
+    @IBAction func connect(_ sender: AnyObject) {
+        self.connectionActivityIndicatorView.isHidden = false
         
         self.postConnectApplication()
     }
@@ -70,54 +69,54 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             return
         }
         
-        APIClient.sharedClient.connectApplication(self.connectingApp).apiResponse {[weak self] (response) in
+        APIClient.shared.connectApplication(self.connectingApp).apiResponse {[weak self] (response) in
             guard let strongSelf = self else {
                 return
             }
             
             switch response.result {
-            case .Success(_):
-                if let httpsResponse = response.response where httpsResponse.statusCode == 200 {
-                    strongSelf.dismissViewControllerAnimated(true, completion: nil)
+            case .success(_):
+                if let httpsResponse = response.response, httpsResponse.statusCode == 200 {
+                    strongSelf.dismiss(animated: true, completion: nil)
                 } else {
                     // otherwise, keep polling
-                    strongSelf.performSelector(#selector(ConnectedAppConfirmViewController.postConnectApplication), withObject: nil, afterDelay: 2.0)
+                    strongSelf.perform(#selector(ConnectedAppConfirmViewController.postConnectApplication), with: nil, afterDelay: 2.0)
                 }
-            case .Failure(_):
-                let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be connected to %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.ActionSheet)
-                alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.Destructive, handler: { (_) in
-                    strongSelf.dismissViewControllerAnimated(true, completion: nil)
+            case .failure(_):
+                let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be connected to %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
+                alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
+                    strongSelf.dismiss(animated: true, completion: nil)
                 }))
-                strongSelf.presentViewController(alertController, animated: true, completion: nil)
+                strongSelf.present(alertController, animated: true, completion: nil)
                 
-                strongSelf.connectionActivityIndicatorView.hidden = true
+                strongSelf.connectionActivityIndicatorView.isHidden = true
             }
         }
     }
     
-    @IBAction func cancel(sender: AnyObject) {
+    @IBAction func cancel(_ sender: AnyObject) {
         self.hasCanceled = true
-        APIClient.sharedClient.disconnectApplication(self.connectingApp)
-        self.dismissViewControllerAnimated(true, completion: nil)
+        APIClient.shared.disconnectApplication(self.connectingApp)
+        self.dismiss(animated: true, completion: nil)
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return connectingApp.scopes.count ?? 0
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return connectingApp.scopes.count 
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let tableCell = self.tableView.dequeueReusableCellWithIdentifier("AppConfirmPermisionTableCell", forIndexPath: indexPath)
-        if let permissionText = tableCell.viewWithTag(1) as? UILabel, permissionSwitch = tableCell.viewWithTag(2) as? UISwitch {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "AppConfirmPermisionTableCell", for: indexPath)
+        if let permissionText = tableCell.viewWithTag(1) as? UILabel, let permissionSwitch = tableCell.viewWithTag(2) as? UISwitch {
             // For now we assume that all scopes are of type Bool
             if  indexPath.row < connectingApp.scopes.count {
                 let scope = connectingApp.scopes[indexPath.row]
                 permissionText.text = scope.descriptionText ?? ""
-                permissionSwitch.enabled = !scope.required
-                permissionSwitch.on = scope.granted
+                permissionSwitch.isEnabled = !scope.required
+                permissionSwitch.isOn = scope.granted
             }
         }
         
-        tableCell.selectionStyle = .None
+        tableCell.selectionStyle = .none
         return tableCell
     }
 }

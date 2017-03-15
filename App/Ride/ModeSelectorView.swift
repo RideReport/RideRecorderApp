@@ -11,7 +11,7 @@ import Foundation
 @IBDesignable class ModeSelectorView : UISegmentedControl {
     private var feedbackGenerator: NSObject!
     
-    private var shownModes: [ActivityType] = [.Cycling, .Walking, .Running, .Automotive, .Bus, .Rail] {
+    private var shownModes: [ActivityType] = [.cycling, .walking, .running, .automotive, .bus, .rail] {
         didSet {
             reloadUI()
         }
@@ -27,139 +27,139 @@ import Foundation
         get {
             let selectedIndex = self.selectedSegmentIndex
             guard selectedIndex != -1 else {
-                return .Unknown
+                return .unknown
             }
             
-            guard let titleOfSelectedType = self.titleForSegmentAtIndex(selectedIndex) else {
-                return .Unknown
+            guard let titleOfSelectedType = self.titleForSegment(at: selectedIndex) else {
+                return .unknown
             }
             
             for i in 0...ActivityType.count {
-                if let type = ActivityType(rawValue: Int16(i)) where type.emoji == titleOfSelectedType {
+                if let type = ActivityType(rawValue: Int16(i)), type.emoji == titleOfSelectedType {
                     return type
                 }
             }
             
-            return .Unknown
+            return .unknown
         }
     }
 
     @IBInspectable var showsRunning: Bool {
         get {
-            return (shownModes.indexOf(.Running) != nil)
+            return (shownModes.index(of: .running) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Running) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .running) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Running)
+                self.shownModes.append(.running)
             }
         }
     }
     
     @IBInspectable var showsCycling: Bool {
         get {
-            return (shownModes.indexOf(.Cycling) != nil)
+            return (shownModes.index(of: .cycling) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Cycling) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .cycling) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Cycling)
+                self.shownModes.append(.cycling)
             }
         }
     }
     
     @IBInspectable var showsAutomotive: Bool {
         get {
-            return (shownModes.indexOf(.Automotive) != nil)
+            return (shownModes.index(of: .automotive) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Automotive) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .automotive) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Automotive)
+                self.shownModes.append(.automotive)
             }
         }
     }
     
     @IBInspectable var showsWalking: Bool {
         get {
-            return (shownModes.indexOf(.Walking) != nil)
+            return (shownModes.index(of: .walking) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Walking) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .walking) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Walking)
+                self.shownModes.append(.walking)
             }
         }
     }
     
     @IBInspectable var showsBus: Bool {
         get {
-            return (shownModes.indexOf(.Bus) != nil)
+            return (shownModes.index(of: .bus) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Bus) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .bus) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Bus)
+                self.shownModes.append(.bus)
             }
         }
     }
     
     @IBInspectable var showsRail: Bool {
         get {
-            return (shownModes.indexOf(.Rail) != nil)
+            return (shownModes.index(of: .rail) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Rail) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .rail) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Rail)
+                self.shownModes.append(.rail)
             }
         }
     }
     
     @IBInspectable var showsStationary: Bool {
         get {
-            return (shownModes.indexOf(.Stationary) != nil)
+            return (shownModes.index(of: .stationary) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Stationary) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .stationary) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Stationary)
+                self.shownModes.append(.stationary)
             }
         }
     }
     
     @IBInspectable var showsAviation: Bool {
         get {
-            return (shownModes.indexOf(.Aviation) != nil)
+            return (shownModes.index(of: .aviation) != nil)
         }
         set {
-            if let index = shownModes.indexOf(.Aviation) {
-                self.shownModes.removeAtIndex(index)
+            if let index = shownModes.index(of: .aviation) {
+                self.shownModes.remove(at: index)
             }
             
             if newValue {
-                self.shownModes.append(.Aviation)
+                self.shownModes.append(.aviation)
             }
         }
     }
@@ -176,34 +176,34 @@ import Foundation
     }
     
     func commonInit() {
-        self.backgroundColor = UIColor.clearColor()
-        self.setBackgroundImage(imageWithColor(UIColor.clearColor()), forState: .Normal, barMetrics: .Default)
-        self.setBackgroundImage(imageWithColor(ColorPallete.sharedPallete.unknownGrey), forState: .Selected, barMetrics: .Default)
-        self.setDividerImage(imageWithColor(UIColor.clearColor()), forLeftSegmentState: .Normal, rightSegmentState: .Normal, barMetrics: .Default)
+        self.backgroundColor = UIColor.clear
+        self.setBackgroundImage(imageWithColor(UIColor.clear), for: UIControlState(), barMetrics: .default)
+        self.setBackgroundImage(imageWithColor(ColorPallete.sharedPallete.unknownGrey), for: .selected, barMetrics: .default)
+        self.setDividerImage(imageWithColor(UIColor.clear), forLeftSegmentState: UIControlState(), rightSegmentState: UIControlState(), barMetrics: .default)
         
         self.apportionsSegmentWidthsByContent = true
         
         if #available(iOS 9.0, *) {
-            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).adjustsFontSizeToFitWidth = true
-            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).minimumScaleFactor = 0.4
-            UILabel.appearanceWhenContainedInInstancesOfClasses([UISegmentedControl.self]).numberOfLines = 0
+            UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).adjustsFontSizeToFitWidth = true
+            UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).minimumScaleFactor = 0.4
+            UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).numberOfLines = 0
         } else {
             self.fontSize = 30
         }
         
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize)], forState: .Normal)
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(self.fontSize), NSForegroundColorAttributeName:UIColor.blackColor()], forState: .Selected)
+        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
+        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: self.fontSize), NSForegroundColorAttributeName:UIColor.black], for: .selected)
         
-        self.addTarget(self, action: "valueChanged:", forControlEvents: .ValueChanged)
+        self.addTarget(self, action: #selector(ModeSelectorView.valueChanged(_:)), for: .valueChanged)
         if #available(iOS 10.0, *) {
-            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Medium)
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.medium)
             (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
         }
         
         reloadUI()
     }
     
-    func valueChanged(sender:UIButton)
+    func valueChanged(_ sender:UIButton)
     {
         if #available(iOS 10.0, *) {
             if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
@@ -212,15 +212,15 @@ import Foundation
         }
         
         // make the button "sticky"
-        sender.selected = !sender.selected
+        sender.isSelected = !sender.isSelected
     }
     
-    private func imageWithColor(color: UIColor) -> UIImage {
-        let rect = CGRectMake(0.0, 0.0, 1.0, 1.0)
+    private func imageWithColor(_ color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
         UIGraphicsBeginImageContext(rect.size)
         let context = UIGraphicsGetCurrentContext()!
-        CGContextSetFillColorWithColor(context, color.CGColor)
-        CGContextFillRect(context, rect)
+        context.setFillColor(color.cgColor)
+        context.fill(rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return image
@@ -233,8 +233,8 @@ import Foundation
     func reloadUI() {
         self.removeAllSegments()
         
-        for (i, mode) in self.shownModes.enumerate() {
-            self.insertSegmentWithTitle(mode.emoji, atIndex: i, animated: false)
+        for (i, mode) in self.shownModes.enumerated() {
+            self.insertSegment(withTitle: mode.emoji, at: i, animated: false)
         }
     }
 }

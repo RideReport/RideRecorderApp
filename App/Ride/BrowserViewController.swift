@@ -18,10 +18,10 @@ class BrowserViewController: UIViewController
     {
         super.viewDidLoad()
         
-        if let url = NSURL(string: self.urlString!)
+        if let url = URL(string: self.urlString!)
         {
             self.webView = UIWebView(frame: self.view.frame)
-            webView.loadRequest(NSURLRequest(URL: url))
+            webView.loadRequest(URLRequest(url: url))
             self.view.addSubview(webView)
         }
     }

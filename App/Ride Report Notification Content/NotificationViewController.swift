@@ -21,15 +21,15 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     @IBOutlet var bottomSpaceConstraint: NSLayoutConstraint!
     @IBOutlet var mapImageHeightConstraint: NSLayoutConstraint!
     
-    var inUseSecurityScopedResource :NSURL? = nil
+    var inUseSecurityScopedResource :URL? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.mapImageView.removeConstraint(mapImageHeightConstraint)
-        mapImageHeightConstraint = NSLayoutConstraint(item: self.mapImageView, attribute: .Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant:UIScreen.mainScreen().bounds.height - 370) // hard coded because notification content is super crazy about autolayout
+        mapImageHeightConstraint = NSLayoutConstraint(item: self.mapImageView, attribute: .height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant:UIScreen.main.bounds.height - 370) // hard coded because notification content is super crazy about autolayout
         self.mapImageView.addConstraint(mapImageHeightConstraint)
-        mapImageHeightConstraint.active = true
+        mapImageHeightConstraint.isActive = true
 
         self.mapImageView.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -42,7 +42,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
         }
     }
     
-    func didReceiveNotification(notification: UNNotification) {
+    func didReceive(_ notification: UNNotification) {
         rideDescriptionLabel.preferredMaxLayoutWidth = rideDescriptionLabel.frame.size.width
         rewardDescriptionLabel.preferredMaxLayoutWidth = rewardDescriptionLabel.frame.size.width
         
@@ -55,10 +55,10 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             var hasMap = false
             
             if let attachment = notification.request.content.attachments.first {
-                if attachment.URL.startAccessingSecurityScopedResource(),
-                let mapImage = UIImage(contentsOfFile: attachment.URL.path!) {
+                if attachment.url.startAccessingSecurityScopedResource(),
+                let mapImage = UIImage(contentsOfFile: attachment.url.path) {
                     mapImageView.image = mapImage
-                    inUseSecurityScopedResource = attachment.URL
+                    inUseSecurityScopedResource = attachment.url
                     hasMap = true
                 }
             }
@@ -66,10 +66,10 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             if let rewardDescription = notification.request.content.userInfo["rewardDescription"] as? String,
                 let rewardEmoji = notification.request.content.userInfo["rewardEmoji"] as? String {
                 rewardDescriptionLabel.text = rewardDescription
-                rewardDescriptionLabel.hidden = true
-                rewardEmojiLabel.hidden = true
+                rewardDescriptionLabel.isHidden = true
+                rewardEmojiLabel.isHidden = true
                 rewardDescriptionLabel.sizeToFit()
-                self.view.sparkle(ColorPallete.sharedPallete.notificationActionBlue, inRect: CGRectMake(rewardDescriptionLabel.frame.origin.x - 14 - rewardEmojiLabel.frame.size.width, rewardDescriptionLabel.frame.origin.y, rewardDescriptionLabel.frame.size.width + 28 + rewardEmojiLabel.frame.size.width, rewardDescriptionLabel.frame.size.height))
+                self.view.sparkle(ColorPallete.sharedPallete.notificationActionBlue, inRect: CGRect(x: rewardDescriptionLabel.frame.origin.x - 14 - rewardEmojiLabel.frame.size.width, y: rewardDescriptionLabel.frame.origin.y, width: rewardDescriptionLabel.frame.size.width + 28 + rewardEmojiLabel.frame.size.width, height: rewardDescriptionLabel.frame.size.height))
                 rewardDescriptionLabel.fadeIn()
                 rewardEmojiLabel.fadeIn()
                 

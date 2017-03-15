@@ -28,7 +28,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     private var inflateFeedbackGenerator: NSObject!
     
     var touchPoint: CGPoint = CGPoint()
-    var touchTime: NSTimeInterval = 0
+    var touchTime: TimeInterval = 0
     var touchedSprite: SKSpriteNode?
     var currentVelocity: CGVector? = nil
     
@@ -36,14 +36,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         super.viewDidLoad()
         
         if #available(iOS 10.0, *) {
-            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Light)
+            self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.light)
             (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()
             
-            self.inflateFeedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.Heavy)
+            self.inflateFeedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.heavy)
             (self.inflateFeedbackGenerator as! UIImpactFeedbackGenerator).prepare()
         }
         
-        self.rewardPopup.hidden = true
+        self.rewardPopup.isHidden = true
         
         let trophyCount = Trip.numberOfRewardedTrips
         if trophyCount > 1 {
@@ -64,9 +64,9 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
 
     override func viewWillLayoutSubviews()
@@ -74,21 +74,21 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         super.viewWillLayoutSubviews()
         
         if Trip.numberOfRewardedTrips == 0 {
-            self.emptyTrophiesView.hidden = false
+            self.emptyTrophiesView.isHidden = false
             
             return
         }
         
-        self.emptyTrophiesView.hidden = true
+        self.emptyTrophiesView.isHidden = true
         
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale.currentLocale()
-        dateFormatter.dateStyle = .ShortStyle
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateStyle = .short
         
         if let firstTripDate = Profile.profile().firstTripDate {
-            self.rewardsLabel1.text = String(format: "%@  %i rides since %@", Profile.profile().tripsBikedJewel, Trip.numberOfCycledTrips, dateFormatter.stringFromDate(firstTripDate))
+            self.rewardsLabel1.text = String(format: "%@  %i rides since %@", Profile.profile().tripsBikedJewel, Trip.numberOfCycledTrips, dateFormatter.string(from: firstTripDate as Date))
         } else {
-            self.rewardsLabel1.hidden = true
+            self.rewardsLabel1.isHidden = true
         }
         
         self.rewardsLabel2.text = String(format: "%@  %@", Profile.profile().distanceBikedImpressiveStat.emoji, Profile.profile().distanceBikedImpressiveStat.description)
@@ -101,30 +101,30 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         self.scene = SKScene(size: self.view.bounds.size)
         self.scene!.backgroundColor = self.spriteKitView.backgroundColor!
-        self.scene!.scaleMode = SKSceneScaleMode.ResizeFill
+        self.scene!.scaleMode = SKSceneScaleMode.resizeFill
         self.scene!.delegate = self
         
         self.spriteKitView.ignoresSiblingOrder = true
         
         let topSpace : CGFloat = 400.0
         
-        self.scene!.physicsBody = SKPhysicsBody(edgeLoopFromRect: CGRectMake(self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.size.height + topSpace))
+        self.scene!.physicsBody = SKPhysicsBody(edgeLoopFrom: CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height + topSpace))
         self.scene!.physicsBody!.friction = 0.8
         self.scene!.physicsBody!.restitution = 0.0
-        self.scene!.physicsWorld.gravity = CGVectorMake(0,-9.8)
+        self.scene!.physicsWorld.gravity = CGVector(dx: 0,dy: -9.8)
         self.scene!.physicsWorld.contactDelegate = self
         
         let bikeTripEmojiCounts = TripReward.tripRewardCountsGroupedByAttribute("emoji", additionalAttributes: ["descriptionText"])
         let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 48)!]
         
-        let imageSize = CGSizeMake(52.0, 52.0) // upscale so we can grow it
-        let emojiSpriteSize = CGSizeMake(30.0, 30.0)
+        let imageSize = CGSize(width: 52.0, height: 52.0) // upscale so we can grow it
+        let emojiSpriteSize = CGSize(width: 30.0, height: 30.0)
         for countData in bikeTripEmojiCounts {
             if let emoji = countData["emoji"] as? String {
-                let unicodeString = NSString(data: emoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
+                let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue)
                 if (imageDictionary[unicodeString as! String] == nil) {
                     UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
-                    (emoji as NSString).drawAtPoint(CGPointMake(0,0), withAttributes:fontAttributes)
+                    (emoji as NSString).draw(at: CGPoint(x: 0,y: 0), withAttributes:fontAttributes)
                     
                     let emojiImage = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
@@ -135,7 +135,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
         
         let textureAtlas = SKTextureAtlas(dictionary: imageDictionary)
-        textureAtlas.preloadWithCompletionHandler { () -> Void in
+        textureAtlas.preload { () -> Void in
             self.spriteKitView.presentScene(self.scene)
             
             var emojis : [SKSpriteNode] = []
@@ -145,16 +145,16 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                 if let emoji = countData["emoji"] as? String,
                     let descriptionText = countData["descriptionText"] as? String,
                     let count = countData["count"] as? NSNumber {
-                    let unicodeString = NSString(data: emoji.dataUsingEncoding(NSNonLossyASCIIStringEncoding)!, encoding: NSUTF8StringEncoding)
+                    let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue)
                     let texture = textureAtlas.textureNamed(unicodeString as! String)
                     
-                    let insetEmojiSize = CGSizeMake(emojiSpriteSize.width - 8, emojiSpriteSize.height - 8)
+                    let insetEmojiSize = CGSize(width: emojiSpriteSize.width - 8, height: emojiSpriteSize.height - 8)
                     texture.usesMipmaps = true
-                    texture.filteringMode = SKTextureFilteringMode.Nearest
-                    for _ in 0..<count.integerValue {
+                    texture.filteringMode = SKTextureFilteringMode.nearest
+                    for _ in 0..<count.intValue {
                         let emoji = SKSpriteNode(texture: texture, size: emojiSpriteSize)
                         emoji.name = descriptionText
-                        emoji.physicsBody = SKPhysicsBody(rectangleOfSize: insetEmojiSize)
+                        emoji.physicsBody = SKPhysicsBody(rectangleOf: insetEmojiSize)
                         emoji.physicsBody!.usesPreciseCollisionDetection = false
                         emoji.physicsBody!.restitution = 0.6
                         emoji.physicsBody!.friction = 1.0
@@ -162,7 +162,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                         emoji.physicsBody!.contactTestBitMask = 1
                         emoji.physicsBody!.linearDamping = 0.0
                         emoji.physicsBody!.angularDamping = 0.0
-                        emoji.physicsBody!.dynamic = false
+                        emoji.physicsBody!.isDynamic = false
                         
                         emojis.append(emoji)
                     }
@@ -172,7 +172,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             lastEmojiReceived = emojis.last
             emojis.removeLast()
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 var nodeCount = 0
                 
                 let emojiInitialPadding: CGFloat = -7.0
@@ -181,14 +181,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     self.scene!.addChild(emoji)
 
                     let nodePlacementX = emoji.size.width + (CGFloat(nodeCount) * (emoji.size.width + emojiInitialPadding))
-                    let nodePlacementXModuloWidth = nodePlacementX % (self.view.frame.size.width - emoji.size.width)
-                    let targetPoint = CGPointMake(nodePlacementXModuloWidth, emoji.size.height + (emoji.size.height + emojiInitialPadding) * (nodePlacementX - nodePlacementXModuloWidth) / self.view.frame.size.width)
+                    let nodePlacementXModuloWidth = nodePlacementX.truncatingRemainder(dividingBy: (self.view.frame.size.width - emoji.size.width))
+                    let targetPoint = CGPoint(x: nodePlacementXModuloWidth, y: emoji.size.height + (emoji.size.height + emojiInitialPadding) * (nodePlacementX - nodePlacementXModuloWidth) / self.view.frame.size.width)
                     
-                    emoji.runAction(SKAction.sequence([
-                        SKAction.rotateByAngle(CGFloat(2 * M_PI * Double(arc4random_uniform(360)) / 360.0), duration: 0.0),
-                        SKAction.moveTo(targetPoint, duration: 0.0),
-                        SKAction.runBlock({
-                            emoji.physicsBody!.dynamic = true
+                    emoji.run(SKAction.sequence([
+                        SKAction.rotate(byAngle: CGFloat(2 * Double.pi * Double(arc4random_uniform(360)) / 360.0), duration: 0.0),
+                        SKAction.move(to: targetPoint, duration: 0.0),
+                        SKAction.run({
+                            emoji.physicsBody!.isDynamic = true
                         })]))
                     nodeCount += 1
                 }
@@ -197,17 +197,17 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     return
                 }
                 
-                let delayBeforeDroppingInLastReward: NSTimeInterval = 1.0
-                let delayBeforeDescalingLastEmoji: NSTimeInterval = 4.5
+                let delayBeforeDroppingInLastReward: TimeInterval = 1.0
+                let delayBeforeDescalingLastEmoji: TimeInterval = 4.5
                 
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delayBeforeDroppingInLastReward * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { [weak self] in
-                    guard let strongSelf = self, scene = strongSelf.scene else {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delayBeforeDroppingInLastReward * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { [weak self] in
+                    guard let strongSelf = self, let scene = strongSelf.scene else {
                         return
                     }
                     
                     lastEmoji.physicsBody!.density = 100.0 // make it heavy so it can knock other emoji around easily
-                    lastEmoji.physicsBody!.dynamic = true
+                    lastEmoji.physicsBody!.isDynamic = true
 
                     scene.addChild(lastEmoji)
                     
@@ -222,26 +222,26 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                         }
                     }
                     
-                    lastEmoji.runAction(SKAction.sequence([
+                    lastEmoji.run(SKAction.sequence([
                         SKAction.unhide(),
-                        SKAction.scaleTo(4.0, duration: 0.0),
-                        SKAction.moveTo(CGPointMake((strongSelf.view.frame.size.width - lastEmoji.size.width) / 2.0, strongSelf.view.frame.size.height + topSpace - 40), duration: 0.001),
-                        SKAction.waitForDuration(delayBeforeDescalingLastEmoji),
-                        SKAction.scaleTo(1.0, duration: 0.2)]))
+                        SKAction.scale(to: 4.0, duration: 0.0),
+                        SKAction.move(to: CGPoint(x: (strongSelf.view.frame.size.width - lastEmoji.size.width) / 2.0, y: strongSelf.view.frame.size.height + topSpace - 40), duration: 0.001),
+                        SKAction.wait(forDuration: delayBeforeDescalingLastEmoji),
+                        SKAction.scale(to: 1.0, duration: 0.2)]))
                     
                 }
             }
         } //end of preloadWithCompletionHandler block        
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let scene = self.scene else {
             return
         }
         
         let touch = touches.first!
-        let point = touch.locationInNode(scene)
-        if let tappedSprite = scene.nodeAtPoint(point) as? SKSpriteNode {
+        let point = touch.location(in: scene)
+        if let tappedSprite = scene.atPoint(point) as? SKSpriteNode {
             if #available(iOS 10.0, *) {
                 if let feedbackGenerator = self.inflateFeedbackGenerator as? UIImpactFeedbackGenerator {
                     feedbackGenerator.impactOccurred()
@@ -253,7 +253,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
             self.touchedSprite!.physicsBody!.density = 100.0 // make it heavy so it can knock other emoji around easily
             self.currentVelocity = CGVector(dx: 0, dy: 0)
             if #available(iOS 9.0, *) {
-                self.touchedSprite?.runAction(SKAction.scaleTo(4.0, duration: 0.2))
+                self.touchedSprite?.run(SKAction.scale(to: 4.0, duration: 0.2))
             } else {
                 // Fallback on earlier versions
             }
@@ -266,14 +266,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let scene = self.scene else {
             return
         }
         
         if let touchedSprite = self.touchedSprite {
             let touch = touches.first!
-            var point = touch.locationInNode(scene)
+            var point = touch.location(in: scene)
             
             // avoid the crazy edge dragging thing by constraining point within the scene
             point.x = min(point.x, scene.size.width - touchedSprite.size.width/2)
@@ -289,14 +289,14 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let _ = self.scene else {
             return
         }
         
         if self.touchedSprite != nil {
             self.touchedSprite!.physicsBody!.density = 0.5
-            self.touchedSprite?.runAction(SKAction.scaleTo(1.0, duration: 0.2))
+            self.touchedSprite?.run(SKAction.scale(to: 1.0, duration: 0.2))
             
             self.touchedSprite = nil
             self.currentVelocity = nil
@@ -309,8 +309,8 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
     }
     
-    func didBeginContact(contact: SKPhysicsContact) {
-        if let selectedSprite = self.touchedSprite where contact.bodyB == selectedSprite.physicsBody {
+    func didBegin(_ contact: SKPhysicsContact) {
+        if let selectedSprite = self.touchedSprite, contact.bodyB == selectedSprite.physicsBody {
             if #available(iOS 10.0, *) {
                 if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
                     feedbackGenerator.impactOccurred()
@@ -319,7 +319,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
     }
     
-    func update(currentTime: NSTimeInterval, forScene scene: SKScene) {
+    func update(_ currentTime: TimeInterval, for scene: SKScene) {
         if let touchedSprite = self.touchedSprite,
             let velocity = self.currentVelocity {
             touchedSprite.physicsBody!.velocity = velocity
@@ -331,20 +331,20 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         
         let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
         
-        //let rotationOffsets = [M_PI, -M_PI_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+        //let rotationOffsets = [CGFloat.pi, -CGFloat.pi_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
         shakeAnimation.values = [
-            NSValue(CATransform3D:CATransform3DMakeRotation(10 * CGFloat(M_PI/180), 0, 0, -1)),
-            NSValue(CATransform3D: CATransform3DMakeRotation(-10 * CGFloat(M_PI/180), 0, 0, 1)),
-            NSValue(CATransform3D: CATransform3DMakeRotation(6 * CGFloat(M_PI/180), 0, 0, 1)),
-            NSValue(CATransform3D: CATransform3DMakeRotation(-6 * CGFloat(M_PI/180), 0, 0, 1)),
-            NSValue(CATransform3D: CATransform3DMakeRotation(2 * CGFloat(M_PI/180), 0, 0, 1)),
-            NSValue(CATransform3D: CATransform3DMakeRotation(-2 * CGFloat(M_PI/180), 0, 0, 1))
+            NSValue(caTransform3D:CATransform3DMakeRotation(10 * CGFloat(CGFloat.pi/180), 0, 0, -1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-10 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(6 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-6 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(2 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-2 * CGFloat(CGFloat.pi/180), 0, 0, 1))
         ]
         shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
-        shakeAnimation.additive = true
+        shakeAnimation.isAdditive = true
         shakeAnimation.duration = 0.6
         
-        self.bobbleChickView.layer.addAnimation(shakeAnimation, forKey:"transform")
+        self.bobbleChickView.layer.add(shakeAnimation, forKey:"transform")
         
         CATransaction.commit()
     }

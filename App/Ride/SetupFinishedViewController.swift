@@ -17,10 +17,10 @@ class SetupFinishedViewController: SetupChildViewController {
         self.helperTextLabel.markdownStringValue = "**You're ready to ride!**"
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(4 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(4 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
             AppDelegate.appDelegate().transitionToMainNavController()
             return
         }

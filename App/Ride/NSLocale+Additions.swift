@@ -8,14 +8,14 @@
 
 import Foundation
 
-extension NSLocale {
-    class func isMetric() -> Bool {
-        let locale = NSLocale.currentLocale()
-        return locale.objectForKey(NSLocaleUsesMetricSystem) as! Bool
+extension Locale {
+    static func isMetric() -> Bool {
+        let locale = Locale.current
+        return (locale as NSLocale).object(forKey: NSLocale.Key.usesMetricSystem) as! Bool
     }
     
-    class func isGB()-> Bool {
-        if let countryString = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as? String {
+    static func isGB()-> Bool {
+        if let countryString = (Locale.current as NSLocale).object(forKey: NSLocale.Key.countryCode) as? String {
             return countryString == "GB"
         }
         

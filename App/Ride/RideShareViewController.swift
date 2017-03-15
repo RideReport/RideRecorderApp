@@ -30,8 +30,8 @@ class RideShareViewController : UIViewController {
     private var startPoint: MGLPointAnnotation?
     private var endPoint: MGLPointAnnotation?
     
-    private var dateFormatter: NSDateFormatter!
-    private var dateTimeFormatter: NSDateFormatter!
+    private var dateFormatter: DateFormatter!
+    private var dateTimeFormatter: DateFormatter!
 
     @IBOutlet weak var shareView: UIView!
     @IBOutlet weak var rideSummaryView: RideSummaryView!
@@ -44,18 +44,18 @@ class RideShareViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.locale = Locale.current
         self.dateFormatter.dateFormat = "MMM d"
         
-        self.dateTimeFormatter = NSDateFormatter()
-        self.dateTimeFormatter.locale = NSLocale.currentLocale()
+        self.dateTimeFormatter = DateFormatter()
+        self.dateTimeFormatter.locale = Locale.current
         self.dateTimeFormatter.dateFormat = "MMM d 'at' h:mm a"
         
         self.updateRideSummaryView()
         
         for viewController in self.childViewControllers {
-            if (viewController.isKindOfClass(MapViewController)) {
+            if (viewController.isKind(of: MapViewController.self)) {
                 self.mapViewController = viewController as? MapViewController
                 self.mapViewController!.padFactorX = 0.1
                 self.mapViewController!.padFactorTop = 1.0
@@ -64,7 +64,7 @@ class RideShareViewController : UIViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
@@ -73,13 +73,13 @@ class RideShareViewController : UIViewController {
     // MARK: - Actions
     //
     
-    @IBAction func cancel(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func cancel(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func share(sender: AnyObject) {
+    @IBAction func share(_ sender: AnyObject) {
         UIGraphicsBeginImageContextWithOptions(self.shareView.bounds.size, true, 0.0);
-        self.shareView.drawViewHierarchyInRect(self.shareView.bounds, afterScreenUpdates: false)
+        self.shareView.drawHierarchy(in: self.shareView.bounds, afterScreenUpdates: false)
         let image = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
@@ -87,9 +87,9 @@ class RideShareViewController : UIViewController {
         instagramActivity.presentingView = self.view
         instagramActivity.includeURL = false
         
-        var excludedActivityTypes = [UIActivityTypePrint, UIActivityTypeAssignToContact, UIActivityTypeAirDrop, UIActivityTypeAddToReadingList]
+        var excludedActivityTypes = [UIActivityType.print, UIActivityType.assignToContact, UIActivityType.airDrop, UIActivityType.addToReadingList]
         if #available(iOS 9.0, *) {
-            excludedActivityTypes.append(UIActivityTypeOpenInIBooks)
+            excludedActivityTypes.append(UIActivityType.openInIBooks)
         }
         
         self.activityViewController = UIActivityViewController(activityItems: [image, trip.shareString()], applicationActivities: [instagramActivity])
@@ -98,13 +98,13 @@ class RideShareViewController : UIViewController {
             if completed {
                 Mixpanel.sharedInstance().track(
                     "sharedTrip",
-                    properties: ["Type": activityType ?? "Unknown"]
+                    properties: ["Type": "Unknown"]
                 )
-                self.dismissViewControllerAnimated(true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
             }
         }
         
-        self.presentViewController(self.activityViewController, animated: true, completion: nil)
+        self.present(self.activityViewController, animated: true, completion: nil)
     }
     
     //
@@ -119,7 +119,7 @@ class RideShareViewController : UIViewController {
             return
         }
         
-        self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.stringFromDate(trip.startDate))
+        self.rideSummaryView.dateString = String(format: "%@", self.dateTimeFormatter.string(from: trip.startDate as Date))
 
         self.rideSummaryView.body = trip.fullDisplayString()
         self.rideSummaryView.hideControls(false)

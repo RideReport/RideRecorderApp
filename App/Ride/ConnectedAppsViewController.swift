@@ -12,14 +12,14 @@ import ECSlidingViewController
 import WatchConnectivity
 
 class ConnectedAppsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-    private var fetchedResultsController : NSFetchedResultsController! = nil
+    private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if (CoreDataManager.sharedManager.isStartingUp) {
-            NSNotificationCenter.defaultCenter().addObserverForName("CoreDataManagerDidStartup", object: nil, queue: nil) {[weak self] (notification : NSNotification) -> Void in
+        if (CoreDataManager.shared.isStartingUp) {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -32,13 +32,13 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     
     func coreDataDidLoad() {
         let cacheName = "ConnectedAppsFetchedResultsController"
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        NSFetchedResultsController.deleteCacheWithName(cacheName)
-        let fetchedRequest = NSFetchRequest(entityName: "ConnectedApp")
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ConnectedApp")
         fetchedRequest.predicate = NSPredicate(format: "profile != nil")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
+        self.fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest:fetchedRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         do {
             try self.fetchedResultsController.performFetch()
@@ -52,7 +52,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
         self.tableView.reloadData()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
         self.tableView.reloadData()
@@ -62,42 +62,42 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     // MARK: - Fetched Results Controller
     //
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.beginUpdates()
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         self.tableView.endUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch(type) {
             
-        case .Update:
-            if let path = indexPath, app = self.fetchedResultsController.objectAtIndexPath(path) as? ConnectedApp,
-                cell = self.tableView!.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath!.row, inSection: 1)) {
+        case .update:
+            if let path = indexPath, let app = self.fetchedResultsController.object(at: path) as? ConnectedApp,
+                let cell = self.tableView!.cellForRow(at: IndexPath(row: indexPath!.row, section: 1)) {
                 configureCell(cell, app:app)
             }
-        case .Insert:
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Delete:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: 1)], withRowAnimation: UITableViewRowAnimation.Fade)
-        case .Move:
-            self.tableView!.deleteRowsAtIndexPaths([NSIndexPath(forRow: indexPath!.row, inSection: 1)],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
-            self.tableView!.insertRowsAtIndexPaths([NSIndexPath(forRow: newIndexPath!.row, inSection: 1)],
-                                                   withRowAnimation: UITableViewRowAnimation.Fade)
+        case .insert:
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 1)], with: UITableViewRowAnimation.fade)
+        case .delete:
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 1)], with: UITableViewRowAnimation.fade)
+        case .move:
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 1)],
+                                                   with: UITableViewRowAnimation.fade)
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 1)],
+                                                   with: UITableViewRowAnimation.fade)
         }
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             // health kit cell
-            return NSUserDefaults.standardUserDefaults().boolForKey("healthKitIsSetup") ? 1 : 0
+            return UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 1 : 0
         } else if section == 1 {
             let sectionInfo = self.fetchedResultsController.sections![0]
             return sectionInfo.numberOfObjects
@@ -111,23 +111,23 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     // MARK: - Table View
     //
     
-    func configureCell(tableCell: UITableViewCell, app: ConnectedApp) {
+    func configureCell(_ tableCell: UITableViewCell, app: ConnectedApp) {
         if let label = tableCell.textLabel {
             label.text = app.name
         }
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
         return 0
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             // health kit cell
-            let tableCell = self.tableView.dequeueReusableCellWithIdentifier("SyncWithHealthAppCell", forIndexPath: indexPath)
+            let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "SyncWithHealthAppCell", for: indexPath)
             if #available(iOS 10.0, *) {
-                if WatchManager.sharedManager.paired {
+                if WatchManager.shared.paired {
                     // if a watch is paired
                     if let nameLabel = tableCell.viewWithTag(1) as? UILabel {
                         nameLabel.text = "Apple Watch"
@@ -137,28 +137,28 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             
             return tableCell
         } else if indexPath.section == 1 {
-            let tableCell = self.tableView.dequeueReusableCellWithIdentifier("ConnectedAppCell", forIndexPath: indexPath)
-            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp {
+            let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "ConnectedAppCell", for: indexPath)
+            if let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp {
                 self.configureCell(tableCell, app: app)
             }
             
             return tableCell
         } else {
             // conect app cell
-            return self.tableView.dequeueReusableCellWithIdentifier("ConnectAppCell", forIndexPath: indexPath)
+            return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
         }
         
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let indexPath = self.tableView.indexPathForSelectedRow else {
             return
         }
         
         if (indexPath.section == 1) {
-            if let app = self.fetchedResultsController.objectAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? ConnectedApp,
-                let appNC = segue.destinationViewController as?  UINavigationController,
+            if let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp,
+                let appNC = segue.destination as?  UINavigationController,
                 let appVC = appNC.topViewController as? ConnectedAppSettingsViewController {
                 appVC.connectingApp = app
             }

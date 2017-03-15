@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 enum AnimatedGradientLabelDirection: NSInteger {
-    case LeftToRight = 1
-    case RightToLeft
+    case leftToRight = 1
+    case rightToLeft
 }
 
 class AnimatedGradientLabel : UILabel {
-    var direction = AnimatedGradientLabelDirection.RightToLeft {
+    var direction = AnimatedGradientLabelDirection.rightToLeft {
         didSet {
             self.reloadAnimations()
         }
@@ -29,7 +29,7 @@ class AnimatedGradientLabel : UILabel {
         }
     }
     
-    @IBInspectable var gradientColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var gradientColor: UIColor = UIColor.white {
         didSet {
             self.reloadAnimations()
         }
@@ -41,7 +41,7 @@ class AnimatedGradientLabel : UILabel {
         }
     }
     
-    @IBInspectable var duration: NSTimeInterval = 4.0 {
+    @IBInspectable var duration: TimeInterval = 4.0 {
         didSet {
             self.reloadAnimations()
         }
@@ -53,9 +53,9 @@ class AnimatedGradientLabel : UILabel {
         }
     }
     
-    override var hidden: Bool {
+    override var isHidden: Bool {
         didSet {
-            if self.hidden {
+            if self.isHidden {
                 self.stopAnimating()
             } else {
                 self.animate()
@@ -98,13 +98,13 @@ class AnimatedGradientLabel : UILabel {
         
         let textColor = self.textColor
         self.backgroundColor = textColor
-        self.textColor = UIColor.clearColor()
+        self.textColor = UIColor.clear
         
         self.maskinglabel = UILabel(frame: self.bounds)
         
         self.maskinglabel.attributedText = self.attributedText
         self.maskinglabel.textColor = textColor
-        self.maskView = self.maskinglabel
+        self.mask = self.maskinglabel
     }
     
     override func layoutSubviews() {
@@ -122,44 +122,44 @@ class AnimatedGradientLabel : UILabel {
     }
     
     func reloadAnimations() {
-        dispatch_async(dispatch_get_main_queue()) {
-            let proposedRect = CGRectMake(0.0, 0.0, self.lengthMultiplier*self.frame.size.width, self.frame.size.height)
+        DispatchQueue.main.async {
+            let proposedRect = CGRect(x: 0.0, y: 0.0, width: self.lengthMultiplier*self.frame.size.width, height: self.frame.size.height)
             
             if self.gradientTile1 == nil {
                 self.gradientTile1 = self.gradientLayer()
                 self.gradientTile1.frame = proposedRect
-                self.gradientTile1.anchorPoint = CGPointMake(0.5, 0.5)
+                self.gradientTile1.anchorPoint = CGPoint(x: 0.5, y: 0.5)
                 self.layer.addSublayer(self.gradientTile1)
             }
             
             if self.gradientTile2 == nil {
                 self.gradientTile2 = self.gradientLayer()
                 self.gradientTile2.frame = proposedRect
-                self.gradientTile2.anchorPoint = CGPointMake(0.5, 0.5)
+                self.gradientTile2.anchorPoint = CGPoint(x: 0.5, y: 0.5)
                 self.layer.addSublayer(self.gradientTile2)
             }
             
-            self.gradientTile1.removeAnimationForKey("position")
-            self.gradientTile2.removeAnimationForKey("position")
+            self.gradientTile1.removeAnimation(forKey: "position")
+            self.gradientTile2.removeAnimation(forKey: "position")
             
             if self.isAnimating {
                 let animation = CABasicAnimation(keyPath: "position")
                 animation.timingFunction = self.timingFunction
                 animation.duration = self.duration*2
-                animation.removedOnCompletion = false
+                animation.isRemovedOnCompletion = false
                 animation.repeatCount = Float.infinity
                 
-                if (self.direction == .LeftToRight) {
-                    animation.fromValue = NSValue(CGPoint:CGPointMake(-0.5 * proposedRect.size.width, CGRectGetMidY(proposedRect)))
-                    animation.toValue = NSValue(CGPoint:CGPointMake(1.5 * proposedRect.size.width, CGRectGetMidY(proposedRect)))
+                if (self.direction == .leftToRight) {
+                    animation.fromValue = NSValue(cgPoint:CGPoint(x: -0.5 * proposedRect.size.width, y: proposedRect.midY))
+                    animation.toValue = NSValue(cgPoint:CGPoint(x: 1.5 * proposedRect.size.width, y: proposedRect.midY))
                 } else {
-                    animation.fromValue = NSValue(CGPoint:CGPointMake(1.5 * proposedRect.size.width, CGRectGetMidY(proposedRect)))
-                    animation.toValue = NSValue(CGPoint:CGPointMake(-0.5 * proposedRect.size.width, CGRectGetMidY(proposedRect)))
+                    animation.fromValue = NSValue(cgPoint:CGPoint(x: 1.5 * proposedRect.size.width, y: proposedRect.midY))
+                    animation.toValue = NSValue(cgPoint:CGPoint(x: -0.5 * proposedRect.size.width, y: proposedRect.midY))
                 }
-                self.gradientTile1.addAnimation(animation, forKey: "position")
+                self.gradientTile1.add(animation, forKey: "position")
                 
                 animation.timeOffset = self.duration // the animation is copied in on addAnimation, so it is OK to re-use it
-                self.gradientTile2.addAnimation(animation, forKey: "position")
+                self.gradientTile2.add(animation, forKey: "position")
             }
         }
     }
@@ -176,10 +176,10 @@ class AnimatedGradientLabel : UILabel {
     
     private func gradientLayer()->CAGradientLayer {
         let layer = CAGradientLayer()
-        layer.colors = [UIColor.clearColor().CGColor, self.gradientColor.CGColor, UIColor.clearColor().CGColor]
-        layer.locations = self.locations
-        layer.startPoint = CGPointMake(0, 0.5)
-        layer.endPoint = CGPointMake(1, 0.5)
+        layer.colors = [UIColor.clear.cgColor, self.gradientColor.cgColor, UIColor.clear.cgColor]
+        layer.locations = self.locations as [NSNumber]?
+        layer.startPoint = CGPoint(x: 0, y: 0.5)
+        layer.endPoint = CGPoint(x: 1, y: 0.5)
         
         return layer
     }

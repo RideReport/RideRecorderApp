@@ -14,23 +14,23 @@ class HelpViewController: UITableViewController {
         super.viewDidLoad()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
         self.slidingViewController().viewDidLayoutSubviews()
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
-        return CGFloat.min
+        return CGFloat.leastNormalMagnitude
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
 
         if (indexPath.row == 0) {
             self.slidingViewController().anchorRightPeekAmount = 0.0
             self.slidingViewController().viewDidLayoutSubviews()
-            self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.Tapping, ECSlidingViewControllerAnchoredGesture.Panning]
+            self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.tapping, ECSlidingViewControllerAnchoredGesture.panning]
         } else if (indexPath.row == 1) {
             AppDelegate.appDelegate().transitionToSetup()
         } else if (indexPath.row == 2) {

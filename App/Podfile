@@ -5,39 +5,40 @@ target 'Ride Report' do
     pod 'ECSlidingViewController', '~> 2.0.3'
     pod 'Fabric'
     pod 'Crashlytics'
-    pod 'KeychainAccess', :git => 'git@github.com:kishikawakatsumi/KeychainAccess.git', :branch => 'swift-2.3'
-    pod 'Alamofire', :git => 'git@github.com:Alamofire/Alamofire.git', :branch => 'swift2.3'
+    pod 'KeychainAccess'
+    pod 'Alamofire'
+    pod 'SwiftyJSON'
     pod 'OAuthSwift'
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
     pod 'FBSDKShareKit'
     pod 'Mapbox-iOS-SDK'
-    pod 'MapboxStatic.swift', :git => 'https://github.com/mapbox/MapboxStatic.swift.git', :tag => 'v0.6.0'
+    pod 'MapboxStatic.swift'
     pod 'Mixpanel'
-    pod 'SwiftyJSON'
-    pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
-    pod 'Kingfisher', :git => 'git@github.com:onevcat/Kingfisher.git', :branch => 'swift2.3'
+    pod 'CocoaLumberjack/Swift'
+    pod 'GzipSwift'
+    pod 'Kingfisher'
 end
 
 target 'Motion' do
     pod 'Mixpanel'
-    pod 'Alamofire', :git => 'git@github.com:Alamofire/Alamofire.git', :branch => 'swift2.3'
+    pod 'Alamofire'
     pod 'OAuthSwift'
-    pod 'SwiftChart'
     pod 'SwiftyJSON'
-    pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'CocoaLumberjack/Swift'
 end
 
 target 'Ride Report Notification Content' do
     pod 'SwiftyJSON'
-    pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git', :branch => 'swift_2.0'
+    pod 'GzipSwift'
+    pod 'CocoaLumberjack/Swift'
 end
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
+            config.build_settings['SWIFT_VERSION'] = '3.0'
             config.build_settings['ENABLE_BITCODE'] = 'NO'
-            config.build_settings['SWIFT_VERSION'] = '2.3'
             config.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = 'Ride Report Dev'
         end
     end

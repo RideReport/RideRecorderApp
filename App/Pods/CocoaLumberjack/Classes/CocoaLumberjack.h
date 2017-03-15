@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2015, Deusty, LLC
+// Copyright (c) 2010-2016, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -79,3 +79,7 @@
 #import "DDASLLogger.h"
 #import "DDFileLogger.h"
 
+// CLI
+#if __has_include("CLIColor.h") && TARGET_OS_OSX
+#import "CLIColor.h"
+#endif

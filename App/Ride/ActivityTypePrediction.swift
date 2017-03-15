@@ -15,18 +15,18 @@ class ActivityTypePrediction : NSManagedObject {
     @NSManaged var sensorDataCollection : SensorDataCollection?
     
     convenience init(activityType: ActivityType, confidence: Float, sensorDataCollection: SensorDataCollection) {
-        let context = CoreDataManager.sharedManager.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entityForName("ActivityTypePrediction", inManagedObjectContext: context)!, insertIntoManagedObjectContext: context)
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "ActivityTypePrediction", in: context)!, insertInto: context)
         
         self.activityType = activityType
-        self.confidence = NSNumber(float: confidence)
+        self.confidence = NSNumber(value: confidence as Float)
         self.sensorDataCollection = sensorDataCollection
     }
     
-    func jsonDictionary() -> [String: AnyObject] {
+    func jsonDictionary() -> [String: Any] {
         return [
             "confidence": self.confidence,
-            "activityType": NSNumber(short: self.activityType.rawValue)
+            "activityType": self.activityType.numberValue
         ]
     }
     

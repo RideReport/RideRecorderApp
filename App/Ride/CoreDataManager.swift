@@ -14,21 +14,14 @@ class CoreDataManager {
     var isStartingUp : Bool = true
     private var usesInMemoryStore: Bool
 
-    struct Static {
-        static var sharedManager : CoreDataManager?
-    }
-
+    static private(set) var shared : CoreDataManager!
     
-    class var sharedManager:CoreDataManager {
-        return Static.sharedManager!
-    }
-    
-    class func startup(useInMemoryStore: Bool = false) {
-        if (Static.sharedManager == nil) {
-            Static.sharedManager = CoreDataManager(useInMemoryStore: useInMemoryStore)
-            dispatch_async(dispatch_get_main_queue()) {
+    class func startup(_ useInMemoryStore: Bool = false) {
+        if (CoreDataManager.shared == nil) {
+            CoreDataManager.shared = CoreDataManager(useInMemoryStore: useInMemoryStore)
+            DispatchQueue.main.async {
                 // run async
-                Static.sharedManager?.startup()
+                CoreDataManager.shared.startup()
             }
         }
     }
@@ -51,7 +44,7 @@ class CoreDataManager {
         
         self.saveContext()
         self.isStartingUp = false
-        NSNotificationCenter.defaultCenter().postNotificationName("CoreDataManagerDidStartup", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
     }
     
     func resetDatabase() {
@@ -62,9 +55,9 @@ class CoreDataManager {
         self.managedObjectContext?.reset()
         for store in coordinator.persistentStores {
             do {
-                try coordinator.removePersistentStore(store)
-                if let url = store.URL {
-                    try NSFileManager.defaultManager().removeItemAtURL(url)
+                try coordinator.remove(store)
+                if let url = store.url {
+                    try FileManager.default.removeItem(at: url)
                 }
             }
             catch let error {
@@ -81,46 +74,46 @@ class CoreDataManager {
         return self.managedObjectContext!
     }
     
-    lazy var applicationDocumentsDirectory: NSURL = {
-        let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+    lazy var applicationDocumentsDirectory: URL = {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1] 
     }()
     
-    lazy var sharedGroupContainerDirectory: NSURL = {
-        return NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier("group.com.Knock.RideReport")!
+    lazy var sharedGroupContainerDirectory: URL = {
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.Knock.RideReport")!
     }()
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = NSBundle.mainBundle().URLForResource("Ride", withExtension: "momd")!
-        return NSManagedObjectModel(contentsOfURL: modelURL)!
+        let modelURL = Bundle.main.url(forResource: "Ride", withExtension: "momd")!
+        return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
     private func generatePSC()->NSPersistentStoreCoordinator? {
         // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
-        let options: [NSObject : AnyObject]?  = [
+        let options: [AnyHashable: Any]?  = [
             NSMigratePersistentStoresAutomaticallyOption: true,
             NSInferMappingModelAutomaticallyOption: true,
-            NSPersistentStoreFileProtectionKey: NSFileProtectionCompleteUntilFirstUserAuthentication]
+            NSPersistentStoreFileProtectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
         
-        let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("HoneyBee.sqlite")!
+        let url = self.applicationDocumentsDirectory.appendingPathComponent("HoneyBee.sqlite")
         
         let failureReason = "There was an error creating or loading the application's saved data."
         do {
             if (self.usesInMemoryStore) {
                 // used for testing Core Data Stack
-                try coordinator!.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil)
+                try coordinator!.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
             } else {
-                try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: options)
+                try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
             }
         } catch let error {
             coordinator = nil
             // Report any error we got.
             var dict : [String : AnyObject] = [:]
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason
+            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
+            dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
             dict[NSUnderlyingErrorKey] = error as NSError
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -140,7 +133,7 @@ class CoreDataManager {
             return nil
         }
         let managedObjectContext = NSManagedObjectContext()
-        managedObjectContext.mergePolicy = NSMergePolicy(mergeType: NSMergePolicyType.MergeByPropertyObjectTrumpMergePolicyType)
+        managedObjectContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }

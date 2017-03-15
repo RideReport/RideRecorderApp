@@ -176,7 +176,7 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
         dispatch_async(dispatch_get_main_queue()) {
             weakSelf?.markerLabel.setAlpha(1)
             WKInterfaceDevice.currentDevice().playHaptic(.Notification)
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue()) { () -> Void in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { () -> Void in
                 weakSelf?.markerLabel.setAlpha(0)
             }
         }

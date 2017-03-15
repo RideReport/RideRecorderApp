@@ -32,8 +32,8 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     private var visualEffect: UIVisualEffectView!
     private var bluredView: UIVisualEffectView!
     
-    private var timeFormatter : NSDateFormatter!
-    private var dateFormatter : NSDateFormatter!
+    private var timeFormatter : DateFormatter!
+    private var dateFormatter : DateFormatter!
     
     var maxY: CGFloat {
         get {
@@ -41,7 +41,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
                 return 0
             }
             
-            if let trip = self.selectedTrip where trip.activityType == .Cycling {
+            if let trip = self.selectedTrip, trip.activityType == .cycling {
                 return statsView.frame.maxY
             }
             
@@ -74,22 +74,22 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         grabberBarView.layer.cornerRadius = 3
         grabberBarView.clipsToBounds = true
         
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.locale = Locale.current
         self.dateFormatter.dateFormat = "MMM d"
         
-        self.timeFormatter = NSDateFormatter()
-        self.timeFormatter.locale = NSLocale.currentLocale()
+        self.timeFormatter = DateFormatter()
+        self.timeFormatter.locale = Locale.current
         self.timeFormatter.dateFormat = "h:mm a"
         
-        self.modeSelectorView.hidden = true
-        self.changeModeLabel.hidden = true
+        self.modeSelectorView.isHidden = true
+        self.changeModeLabel.isHidden = true
         
         self.initialRatingChoiceHeight = self.ratingChoiceHeightConstraint.constant
     }
     
     func reloadUI() {
-        if (!modeSelectorView.hidden) {
+        if (!modeSelectorView.isHidden) {
             // dont reload the UI if the user is currently picking a mode
             return
         }
@@ -97,7 +97,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             
-            if (trip.locationsNotYetDownloaded) {
+            if (trip?.locationsNotYetDownloaded)! {
                 self.rideDescriptionLabel.text = "Downloading Trip Data…"
                 self.rideEmojiLabel.text = ""
                 self.rewardEmojiLabel.text = ""
@@ -107,30 +107,30 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             
             if !self.selectedTrip.isClosed {
                 rideEmojiLabel.text = "🏁"
-                rideDescriptionLabel.text = String(format: "%@ starting at %@.", trip.inProgressLength.distanceString, trip.timeString())
+                rideDescriptionLabel.text = String(format: "%@ starting at %@.", (trip?.inProgressLength.distanceString)!, (trip?.timeString())!)
                 rewardEmojiLabel.text = ""
                 rewardDescriptionLabel.text = ""
             } else {
-                if self.selectedTrip.activityType == .Cycling {
+                if self.selectedTrip.activityType == .cycling {
                     durationLabel.text = self.selectedTrip.duration().intervalString
                     avgSpeedLabel.text = self.selectedTrip.averageBikingSpeed.string
-                    statsView.hidden = false
-                    ratingChoiceSelector.hidden = false
+                    statsView.isHidden = false
+                    ratingChoiceSelector.isHidden = false
 
                     ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
                 } else {
-                    statsView.hidden = true
-                    ratingChoiceSelector.hidden = true
+                    statsView.isHidden = true
+                    ratingChoiceSelector.isHidden = true
 
                     ratingChoiceHeightConstraint?.constant = 0
                 }
                 
                 ratingChoiceSelector.setNeedsUpdateConstraints()
-                UIView.animateWithDuration(0.25, animations: {
+                UIView.animate(withDuration: 0.25, animations: {
                     self.ratingChoiceSelector.layoutIfNeeded()
                 })
                 
-                self.changeModeButton.setTitle("Not a " + trip.activityType.noun + "?", forState: .Normal)
+                self.changeModeButton.setTitle("Not a " + (trip?.activityType.noun)! + "?", for: UIControlState())
 
                 rideEmojiLabel.text = self.selectedTrip.climacon ?? ""
                 rideDescriptionLabel.text = self.selectedTrip.displayStringWithTime()
@@ -156,15 +156,15 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             return
         }
         
-        blurEffect = UIBlurEffect.init(style: .Light)
+        blurEffect = UIBlurEffect.init(style: .light)
         visualEffect = UIVisualEffectView.init(effect: blurEffect)
         bluredView = UIVisualEffectView.init(effect: blurEffect)
         bluredView.contentView.addSubview(visualEffect)
         
-        visualEffect.frame = UIScreen.mainScreen().bounds
-        bluredView.frame = UIScreen.mainScreen().bounds
+        visualEffect.frame = UIScreen.main.bounds
+        bluredView.frame = UIScreen.main.bounds
         
-        view.insertSubview(bluredView, atIndex: 0)
+        view.insertSubview(bluredView, at: 0)
     }
     
     //
@@ -172,18 +172,18 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     //
     
     override func viewDidLayoutSubviews() {
-        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         createBackgroundViewIfNeeded()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification, object: CoreDataManager.sharedManager.managedObjectContext, queue: nil) {[weak self] (notification) -> Void in
+    override func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.NSManagedObjectContextObjectsDidChange, object: CoreDataManager.shared.managedObjectContext, queue: nil) {[weak self] (notification) -> Void in
             guard let strongSelf = self else {
                 return
             }
@@ -193,24 +193,24 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
             }
             
             if let updatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? NSSet {
-                if updatedObjects.containsObject(strongSelf.selectedTrip) {
+                if updatedObjects.contains(strongSelf.selectedTrip) {
                     let trip = strongSelf.selectedTrip
                     strongSelf.selectedTrip = trip
                 }
             }
             
             if let deletedObjects = notification.userInfo?[NSDeletedObjectsKey] as? NSSet {
-                if deletedObjects.containsObject(strongSelf.selectedTrip) {
+                if deletedObjects.contains(strongSelf.selectedTrip) {
                     strongSelf.selectedTrip = nil
                 }
             }
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     
@@ -220,7 +220,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     
     @IBAction func changedRating(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(ratingChoiceSelector.selectedRating)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         self.reloadUI()
     }
     
@@ -232,21 +232,21 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         transition.type = kCATransitionReveal
         transition.subtype = kCATransitionFromRight
         
-        self.buttonsView.layer.addAnimation(transition, forKey: "transition")
+        self.buttonsView.layer.add(transition, forKey: "transition")
         
         ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
         ratingChoiceSelector.setNeedsUpdateConstraints()
-        UIView.animateWithDuration(0.25, animations: {
+        UIView.animate(withDuration: 0.25, animations: {
             self.ratingChoiceSelector.layoutIfNeeded()
         })
         self.modeSelectorView.selectedSegmentIndex = UISegmentedControlNoSegment
-        self.modeSelectorView.hidden = false
-        self.ratingChoiceSelector.hidden = true
-        self.changeModeButton.hidden = true
-        self.changeModeLabel.hidden = false
+        self.modeSelectorView.isHidden = false
+        self.ratingChoiceSelector.isHidden = true
+        self.changeModeButton.isHidden = true
+        self.changeModeLabel.isHidden = false
         CATransaction.commit()
     
-        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil)
     }
 
     @IBAction func selectedNewMode(_: AnyObject) {
@@ -258,18 +258,18 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromLeft
-        self.modeSelectorView.layer.addAnimation(transition, forKey: "transition")
-        self.ratingChoiceSelector.layer.addAnimation(transition, forKey: "transition")
-        self.modeSelectorView.hidden = true
-        self.ratingChoiceSelector.hidden = false
-        self.changeModeButton.hidden = false
-        self.changeModeLabel.hidden = true
+        self.modeSelectorView.layer.add(transition, forKey: "transition")
+        self.ratingChoiceSelector.layer.add(transition, forKey: "transition")
+        self.modeSelectorView.isHidden = true
+        self.ratingChoiceSelector.isHidden = false
+        self.changeModeButton.isHidden = false
+        self.changeModeLabel.isHidden = true
 
         CATransaction.commit()
         
         if mode != self.selectedTrip.activityType {
             self.selectedTrip.activityType = self.modeSelectorView.selectedMode
-            APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+            APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
             
             self.reloadUI()
             
@@ -278,17 +278,17 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
         } else {
             self.reloadUI()
         }
-        NSNotificationCenter.defaultCenter().postNotificationName("TripSummaryViewDidChangeHeight", object: nil)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil)
     }
     
-    func alertView(alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
+    func alertView(_ alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
         if (buttonIndex == 1) {
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewControllerWithIdentifier("ReportModeClassificationNavigationViewController") as! UINavigationController
+            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewController(withIdentifier: "ReportModeClassificationNavigationViewController") as! UINavigationController
             if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
                 reportModeClassificationViewController.trip = self.selectedTrip
             }
-            self.presentViewController(reportModeClassificationNavigationViewController, animated: true, completion: nil)
+            self.present(reportModeClassificationNavigationViewController, animated: true, completion: nil)
         }
     }
     
@@ -297,22 +297,22 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate, UIAl
     //
     
     @IBAction func tappedNotGreat(_: AnyObject) {
-        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Bad)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.bad)
+        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedGreat(_: AnyObject) {
-        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Good)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.good)
+        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedMixed(_: AnyObject) {
-        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.Mixed)
-        APIClient.sharedClient.saveAndSyncTripIfNeeded(self.selectedTrip)
+        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.mixed)
+        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }

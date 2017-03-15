@@ -34,24 +34,24 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     private var _selectedTrip : Trip? = nil
         
-    private var dateFormatter : NSDateFormatter!
+    private var dateFormatter : DateFormatter!
     
     private var tempBackgroundView : UIView?
     private var hasInsertedTempBackgroundView = false
     
     override func viewDidLoad() {
-        self.dateFormatter = NSDateFormatter()
-        self.dateFormatter.locale = NSLocale.currentLocale()
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.locale = Locale.current
         self.dateFormatter.dateFormat = "MM/dd"
         
         
         self.mapView.delegate = self
-        self.mapView.logoView.hidden = true
-        self.mapView.attributionButton.hidden = true
-        self.mapView.rotateEnabled = false
+        self.mapView.logoView.isHidden = true
+        self.mapView.attributionButton.isHidden = true
+        self.mapView.isRotateEnabled = false
         self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
 
-        let styleURL = showStressMap ? NSURL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json") : NSURL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")
+        let styleURL = showStressMap ? URL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json") : URL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")
         self.mapView.styleURL = styleURL
         
         self.mapView.tintColor = ColorPallete.sharedPallete.transitBlue
@@ -59,11 +59,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         // set the size of the url cache for tile caching.
         let memoryCapacity = 1 * 1024 * 1024
         let diskCapacity = 40 * 1024 * 1024
-        let urlCache = NSURLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
-        NSURLCache.setSharedURLCache(urlCache)
+        let urlCache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        URLCache.shared = urlCache
     }
     
-    func mapView(mapView: MGLMapView, didFinishLoadingStyle style: MGLStyle) {
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         if (self.selectedTripLineSource == nil) {
             self.selectedTripLineSource = MGLShapeSource(identifier: tripFeatureSourceIdentifier, shape: nil, options: nil)
             self.mapView.style?.addSource(self.selectedTripLineSource)
@@ -75,14 +75,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 18: MGLStyleValue(rawValue: 10),
                 ])
             tripBackinglayer.lineOpacity = MGLStyleValue(rawValue: 1.0)
-            tripBackinglayer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
-            tripBackinglayer.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
+            tripBackinglayer.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+            tripBackinglayer.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
             tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.darkGrey)
             mapView.style?.addLayer(tripBackinglayer)
             
             let goodBikelayer = MGLLineStyleLayer(identifier: "good-bike", source: self.selectedTripLineSource!)
             goodBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            goodBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Good.numberValue)])
+            goodBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.good.numberValue)])
             goodBikelayer.lineCap = tripBackinglayer.lineCap
             goodBikelayer.lineJoin = tripBackinglayer.lineJoin
             goodBikelayer.lineWidth = MGLStyleValue(interpolationBase: 1.5, stops: [
@@ -96,7 +96,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let badBikelayer = MGLLineStyleLayer(identifier: "bad-bike", source: self.selectedTripLineSource!)
             badBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            badBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Bad.numberValue)])
+            badBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.bad.numberValue)])
             badBikelayer.lineCap = tripBackinglayer.lineCap
             badBikelayer.lineJoin = tripBackinglayer.lineJoin
             badBikelayer.lineWidth = goodBikelayer.lineWidth
@@ -106,7 +106,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let mixedBikelayerGreen = MGLLineStyleLayer(identifier: "mixed-bike-green", source: self.selectedTripLineSource!)
             mixedBikelayerGreen.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            mixedBikelayerGreen.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Mixed.numberValue)])
+            mixedBikelayerGreen.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.mixed.numberValue)])
             mixedBikelayerGreen.lineCap = tripBackinglayer.lineCap
             mixedBikelayerGreen.lineJoin = tripBackinglayer.lineJoin
             mixedBikelayerGreen.lineWidth = goodBikelayer.lineWidth
@@ -116,9 +116,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let mixedBikelayerRed = MGLLineStyleLayer(identifier: "mixed-bike-red", source: self.selectedTripLineSource!)
             mixedBikelayerRed.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            mixedBikelayerRed.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.Mixed.numberValue)])
-            mixedBikelayerRed.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
-            mixedBikelayerRed.lineJoin = MGLStyleValue(rawValue: MGLLineJoin.Round.rawValue)
+            mixedBikelayerRed.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.mixed.numberValue)])
+            mixedBikelayerRed.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+            mixedBikelayerRed.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
             mixedBikelayerRed.lineWidth = MGLStyleValue(interpolationBase: 1.5, stops: [
                 14: MGLStyleValue(rawValue: 2.5),
                 18: MGLStyleValue(rawValue: 10),
@@ -130,8 +130,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let unratedBikelayer = MGLLineStyleLayer(identifier: "unrated-bike", source: self.selectedTripLineSource!)
             unratedBikelayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            unratedBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.NotSet.numberValue)])
-            unratedBikelayer.lineCap = MGLStyleValue(rawValue: MGLLineCap.Round.rawValue)
+            unratedBikelayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K == %@", "rating", RatingChoice.notSet.numberValue)])
+            unratedBikelayer.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
             unratedBikelayer.lineJoin = tripBackinglayer.lineJoin
             unratedBikelayer.lineWidth = goodBikelayer.lineWidth
             unratedBikelayer.lineOpacity = goodBikelayer.lineOpacity
@@ -140,7 +140,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let buslayer = MGLLineStyleLayer(identifier: "bus-trip", source: self.selectedTripLineSource!)
             buslayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            buslayer.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.Bus.numberValue), NSPredicate(format: "%K == %@", "activityType", ActivityType.Rail.numberValue)])
+            buslayer.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [NSPredicate(format: "%K == %@", "activityType", ActivityType.bus.numberValue), NSPredicate(format: "%K == %@", "activityType", ActivityType.rail.numberValue)])
             buslayer.lineCap = tripBackinglayer.lineCap
             buslayer.lineJoin = tripBackinglayer.lineJoin
             buslayer.lineWidth = goodBikelayer.lineWidth
@@ -150,7 +150,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             
             let otherTriplayer = MGLLineStyleLayer(identifier: "other-trip", source: self.selectedTripLineSource!)
             otherTriplayer.sourceLayerIdentifier = tripFeatureSourceIdentifier
-            otherTriplayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K != %@", "activityType", ActivityType.Cycling.numberValue), NSPredicate(format: "%K != %@", "activityType", ActivityType.Bus.numberValue, NSPredicate(format: "%K != %@", "activityType", ActivityType.Rail.numberValue))])
+            otherTriplayer.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [NSPredicate(format: "%K != %@", "activityType", ActivityType.cycling.numberValue), NSPredicate(format: "%K != %@", "activityType", ActivityType.bus.numberValue, NSPredicate(format: "%K != %@", "activityType", ActivityType.rail.numberValue))])
             otherTriplayer.lineCap = tripBackinglayer.lineCap
             otherTriplayer.lineJoin = tripBackinglayer.lineJoin
             otherTriplayer.lineWidth = goodBikelayer.lineWidth
@@ -167,7 +167,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     //
@@ -181,16 +181,16 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             self.hasInsertedTempBackgroundView = true
             self.tempBackgroundView = UIView(frame: self.view.bounds)
             self.tempBackgroundView!.backgroundColor = self.view.backgroundColor
-            self.mapView.insertSubview(self.tempBackgroundView!, atIndex: 0)
-            self.mapView.bringSubviewToFront(self.tempBackgroundView!)
+            self.mapView.insertSubview(self.tempBackgroundView!, at: 0)
+            self.mapView.bringSubview(toFront: self.tempBackgroundView!)
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         self.view.delay(0.2) { () -> Void in
@@ -207,7 +207,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - UI Methods
     //
     
-    @IBAction func addIncident(sender: AnyObject) {
+    @IBAction func addIncident(_ sender: AnyObject) {
         DDLogVerbose("Add incident")
     }
     
@@ -216,7 +216,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Update Map UI
     //
     
-    func setSelectedTrip(selectedTrip : Trip?) {
+    func setSelectedTrip(_ selectedTrip : Trip?) {
         _selectedTrip = selectedTrip
         
         if self.selectedTripLineSource == nil {
@@ -248,7 +248,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         // if the trip is closed, use the simplified locations for efficiency
         if trip.isClosed {
             guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
-                dispatch_async(dispatch_get_main_queue(), { [weak self] in
+                DispatchQueue.main.async(execute: { [weak self] in
                     guard let strongSelf = self else {
                         return
                     }
@@ -265,8 +265,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             locs = trip.simplifiedLocations
         }
         
-        if let startLoc = locs.firstObject as? Location,
-            endLoc = locs.lastObject as? Location {
+        if let startLoc = locs?.firstObject as? Location,
+            let endLoc = locs?.lastObject as? Location {
                 self.startPoint = MGLPointAnnotation()
                 self.startPoint!.coordinate = startLoc.coordinate()
                 mapView.addAnnotation(self.startPoint!)
@@ -278,7 +278,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-        for location in locs.array {
+        for location in (locs?.array)! {
             let location = (location as! Location)
             
             let coord = location.coordinate()
@@ -325,7 +325,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let sizeLat = (maxLat - minLat)
         
         let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
-        dispatch_async(dispatch_get_main_queue(), { [weak self] in
+        DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {
                 return
             }
@@ -338,16 +338,16 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Map Kit
     //
     
-    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         var annotationImage: MGLAnnotationImage? = nil
-        if let startPoint = self.startPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == startPoint {
-            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("startMarker")
+        if let startPoint = self.startPoint, let pointAnnotation = annotation as? MGLPointAnnotation, pointAnnotation == startPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "startMarker")
             if (annotationImage == nil) {
                 let image = UIImage(named: "pinGreen.png")
                 annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "startMarker")
             }
-        } else if let endPoint = self.endPoint, pointAnnotation = annotation as? MGLPointAnnotation where pointAnnotation == endPoint {
-            annotationImage = mapView.dequeueReusableAnnotationImageWithIdentifier("endMarker")
+        } else if let endPoint = self.endPoint, let pointAnnotation = annotation as? MGLPointAnnotation, pointAnnotation == endPoint {
+            annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "endMarker")
             if (annotationImage == nil) {
                 let image = UIImage(named: "pinRed.png")
                 annotationImage = MGLAnnotationImage(image: image!, reuseIdentifier: "endMarker")
@@ -357,26 +357,26 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         return annotationImage
     }
     
-    func mapView(mapView: MGLMapView, didUpdateUserLocation userLocation: MGLUserLocation?) {
+    func mapView(_ mapView: MGLMapView, didUpdate userLocation: MGLUserLocation?) {
         if (!self.hasCenteredMap && userLocation != nil) {
             if _selectedTrip == nil {
-                self.mapView.setCenterCoordinate(userLocation!.coordinate, zoomLevel: 14, animated: false)
+                self.mapView.setCenter(userLocation!.coordinate, zoomLevel: 14, animated: false)
             }
         
             self.hasCenteredMap = true
         }
     }
     
-    func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        if (annotation.isKindOfClass(Incident)) {
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        if annotation is Incident {
             return true
         }
         
         return false
     }
     
-    func mapView(mapView: MGLMapView, rightCalloutAccessoryViewForAnnotation annotation: MGLAnnotation) -> UIView? {
-        let view = UIButton(type: UIButtonType.DetailDisclosure)
+    func mapView(_ mapView: MGLMapView, rightCalloutAccessoryViewFor annotation: MGLAnnotation) -> UIView? {
+        let view = UIButton(type: UIButtonType.detailDisclosure)
         
         return view
     }

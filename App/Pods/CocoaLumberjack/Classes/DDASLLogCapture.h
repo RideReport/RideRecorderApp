@@ -1,6 +1,6 @@
 // Software License Agreement (BSD License)
 //
-// Copyright (c) 2010-2015, Deusty, LLC
+// Copyright (c) 2010-2016, Deusty, LLC
 // All rights reserved.
 //
 // Redistribution and use of this software in source and binary forms,
@@ -22,11 +22,20 @@
  */
 @interface DDASLLogCapture : NSObject
 
+/**
+ *  Start capturing logs
+ */
 + (void)start;
+
+/**
+ *  Stop capturing logs
+ */
 + (void)stop;
 
-// Default log level: DDLogLevelVerbose (i.e. capture all ASL messages).
-+ (DDLogLevel)captureLevel;
-+ (void)setCaptureLevel:(DDLogLevel)level;
+/**
+ *  The current capture level.
+ *  @note Default log level: DDLogLevelVerbose (i.e. capture all ASL messages).
+ */
+@property (class) DDLogLevel captureLevel;
 
 @end
