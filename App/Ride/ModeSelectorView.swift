@@ -178,7 +178,7 @@ import Foundation
     func commonInit() {
         self.backgroundColor = UIColor.clear
         self.setBackgroundImage(imageWithColor(UIColor.clear), for: UIControlState(), barMetrics: .default)
-        self.setBackgroundImage(imageWithColor(ColorPallete.sharedPallete.unknownGrey), for: .selected, barMetrics: .default)
+        self.setBackgroundImage(imageWithColor(ColorPallete.shared.unknownGrey), for: .selected, barMetrics: .default)
         self.setDividerImage(imageWithColor(UIColor.clear), forLeftSegmentState: UIControlState(), rightSegmentState: UIControlState(), barMetrics: .default)
         
         self.apportionsSegmentWidthsByContent = true

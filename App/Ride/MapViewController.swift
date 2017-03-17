@@ -54,7 +54,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         let styleURL = showStressMap ? URL(string: "https://tiles.ride.report/styles/v8/heatmap-style.json") : URL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")
         self.mapView.styleURL = styleURL
         
-        self.mapView.tintColor = ColorPallete.sharedPallete.transitBlue
+        self.mapView.tintColor = ColorPallete.shared.transitBlue
         
         // set the size of the url cache for tile caching.
         let memoryCapacity = 1 * 1024 * 1024
@@ -77,7 +77,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             tripBackinglayer.lineOpacity = MGLStyleValue(rawValue: 1.0)
             tripBackinglayer.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
             tripBackinglayer.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-            tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.darkGrey)
+            tripBackinglayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.darkGrey)
             mapView.style?.addLayer(tripBackinglayer)
             
             let goodBikelayer = MGLLineStyleLayer(identifier: "good-bike", source: self.selectedTripLineSource!)
@@ -91,7 +91,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 ])
             tripBackinglayer.lineGapWidth = goodBikelayer.lineWidth // set the backinglayer's line gap width to the front layers' width
             goodBikelayer.lineOpacity = MGLStyleValue(rawValue: 0.9)
-            goodBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.goodGreen)
+            goodBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.goodGreen)
             mapView.style?.addLayer(goodBikelayer)
             
             let badBikelayer = MGLLineStyleLayer(identifier: "bad-bike", source: self.selectedTripLineSource!)
@@ -101,7 +101,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             badBikelayer.lineJoin = tripBackinglayer.lineJoin
             badBikelayer.lineWidth = goodBikelayer.lineWidth
             badBikelayer.lineOpacity = goodBikelayer.lineOpacity
-            badBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.badRed)
+            badBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.badRed)
             mapView.style?.addLayer(badBikelayer)
             
             let mixedBikelayerGreen = MGLLineStyleLayer(identifier: "mixed-bike-green", source: self.selectedTripLineSource!)
@@ -111,7 +111,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             mixedBikelayerGreen.lineJoin = tripBackinglayer.lineJoin
             mixedBikelayerGreen.lineWidth = goodBikelayer.lineWidth
             mixedBikelayerGreen.lineOpacity = goodBikelayer.lineOpacity
-            mixedBikelayerGreen.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.goodGreen)
+            mixedBikelayerGreen.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.goodGreen)
             mapView.style?.addLayer(mixedBikelayerGreen)
             
             let mixedBikelayerRed = MGLLineStyleLayer(identifier: "mixed-bike-red", source: self.selectedTripLineSource!)
@@ -125,7 +125,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 ])
             mixedBikelayerRed.lineOpacity = MGLStyleValue(rawValue: 1.0)
             mixedBikelayerRed.lineDashPattern = MGLStyleValue(rawValue:[0, 1.8])
-            mixedBikelayerRed.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.badRed)
+            mixedBikelayerRed.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.badRed)
             mapView.style?.addLayer(mixedBikelayerRed)
             
             let unratedBikelayer = MGLLineStyleLayer(identifier: "unrated-bike", source: self.selectedTripLineSource!)
@@ -135,7 +135,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             unratedBikelayer.lineJoin = tripBackinglayer.lineJoin
             unratedBikelayer.lineWidth = goodBikelayer.lineWidth
             unratedBikelayer.lineOpacity = goodBikelayer.lineOpacity
-            unratedBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.unknownGrey)
+            unratedBikelayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.unknownGrey)
             mapView.style?.addLayer(unratedBikelayer)
             
             let buslayer = MGLLineStyleLayer(identifier: "bus-trip", source: self.selectedTripLineSource!)
@@ -145,7 +145,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             buslayer.lineJoin = tripBackinglayer.lineJoin
             buslayer.lineWidth = goodBikelayer.lineWidth
             buslayer.lineOpacity = goodBikelayer.lineOpacity
-            buslayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.transitBlue)
+            buslayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.transitBlue)
             mapView.style?.addLayer(buslayer)
             
             let otherTriplayer = MGLLineStyleLayer(identifier: "other-trip", source: self.selectedTripLineSource!)
@@ -155,7 +155,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             otherTriplayer.lineJoin = tripBackinglayer.lineJoin
             otherTriplayer.lineWidth = goodBikelayer.lineWidth
             otherTriplayer.lineOpacity = goodBikelayer.lineOpacity
-            otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.sharedPallete.autoBrown)
+            otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.autoBrown)
             mapView.style?.addLayer(otherTriplayer)
         }
         

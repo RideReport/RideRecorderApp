@@ -52,8 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(self.fileLogger)
         
-        UINavigationBar.appearance().barTintColor = ColorPallete.sharedPallete.darkGreen
-        UINavigationBar.appearance().tintColor = ColorPallete.sharedPallete.almostWhite
+        UINavigationBar.appearance().barTintColor = ColorPallete.shared.darkGreen
+        UINavigationBar.appearance().tintColor = ColorPallete.shared.almostWhite
         
         let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))

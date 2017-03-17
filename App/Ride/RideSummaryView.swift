@@ -225,7 +225,7 @@ import AudioToolbox
         destructiveButton = UIButton()
         destructiveButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         destructiveButton.titleLabel?.textAlignment = NSTextAlignment.center
-        destructiveButton.backgroundColor = ColorPallete.sharedPallete.badRed
+        destructiveButton.backgroundColor = ColorPallete.shared.badRed
         destructiveButton.setTitleColor(UIColor.white, for: UIControlState())
         destructiveButton.addTarget(self, action: #selector(RideSummaryView.pressedDestructiveButton), for: UIControlEvents.touchUpInside)
         controlsView.addSubview(destructiveButton)
@@ -233,7 +233,7 @@ import AudioToolbox
         actionButton = UIButton()
         actionButton.titleLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         actionButton.titleLabel?.textAlignment = NSTextAlignment.center
-        actionButton.backgroundColor = ColorPallete.sharedPallete.transitBlue
+        actionButton.backgroundColor = ColorPallete.shared.transitBlue
         actionButton.setTitleColor(UIColor.white, for: UIControlState())
         actionButton.addTarget(self, action: #selector(RideSummaryView.pressedActionButton), for: UIControlEvents.touchUpInside)
         controlsView.addSubview(actionButton)
@@ -333,7 +333,7 @@ import AudioToolbox
     }
     
     func reloadUI() {
-        var textColor = ColorPallete.sharedPallete.almostWhite
+        var textColor = ColorPallete.shared.almostWhite
         if #available(iOS 10.0, *) {
             textColor = UIColor.black
         }
@@ -350,7 +350,7 @@ import AudioToolbox
         destructiveButton.setTitle(self.desturctiveActionTitle, for: UIControlState())
         actionButton.setTitle(self.actionTitle, for: UIControlState())
         editButton.setTitle(self.editTitle, for: UIControlState())
-        editButton.backgroundColor = ColorPallete.sharedPallete.darkGrey
+        editButton.backgroundColor = ColorPallete.shared.darkGrey
         
         appNameLabel.text = self.appName
         dateLabel.text = self.dateString

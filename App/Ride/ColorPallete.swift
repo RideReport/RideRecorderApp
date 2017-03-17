@@ -9,19 +9,7 @@
 import Foundation
 
 class ColorPallete : NSObject {
-    private static var __once: () = {
-            Static.sharedPallete = ColorPallete()
-        }()
-    struct Static {
-        static var onceToken : Int = 0
-        static var sharedPallete : ColorPallete?
-    }
-    
-    class var sharedPallete: ColorPallete {
-        _ = ColorPallete.__once
-        
-        return Static.sharedPallete!
-    }
+    static let shared = ColorPallete()
     
     var autoBrown: UIColor {
         get {

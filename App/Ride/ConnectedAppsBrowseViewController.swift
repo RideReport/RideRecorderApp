@@ -190,7 +190,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                     coordinator.animate(alongsideTransition: nil, completion: { (context) in
                         let targetSubview = sfvc.view
                         let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-                        loadingIndicator.color = ColorPallete.sharedPallete.darkGrey
+                        loadingIndicator.color = ColorPallete.shared.darkGrey
                         self.safariViewControllerActivityIndicator = loadingIndicator
                         loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
                         targetSubview?.addSubview(loadingIndicator)

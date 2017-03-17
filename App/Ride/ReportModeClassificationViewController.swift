@@ -234,23 +234,23 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if (annotation == self.tripBackingLine) {
-            return ColorPallete.sharedPallete.almostWhite
+            return ColorPallete.shared.almostWhite
         }
         
         if let trip = self.trip {
             if (trip.activityType == .cycling) {
                 if(trip.rating.choice == RatingChoice.good) {
-                    return ColorPallete.sharedPallete.goodGreen
+                    return ColorPallete.shared.goodGreen
                 } else if(trip.rating.choice == RatingChoice.bad) {
-                    return ColorPallete.sharedPallete.badRed
+                    return ColorPallete.shared.badRed
                 } else {
-                    return ColorPallete.sharedPallete.unknownGrey
+                    return ColorPallete.shared.unknownGrey
                 }
             } else if (trip.activityType == .bus || trip.activityType == .rail) {
-                return ColorPallete.sharedPallete.transitBlue
+                return ColorPallete.shared.transitBlue
             }
             
-            return ColorPallete.sharedPallete.autoBrown
+            return ColorPallete.shared.autoBrown
         }
         
         return UIColor.clear

@@ -62,7 +62,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         var headerViewBackgroundViewFrame = self.tableView.bounds
         headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
-        headerViewBackgroundView.backgroundColor = ColorPallete.sharedPallete.almostWhite
+        headerViewBackgroundView.backgroundColor = ColorPallete.shared.almostWhite
         self.tableView.insertSubview(headerViewBackgroundView, at: 0)
         
         self.tableView.register(RoutesTableViewHeaderCell.self, forHeaderFooterViewReuseIdentifier: "RoutesViewTableSectionHeaderCell")
@@ -791,11 +791,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
             }
             
-            rideDescriptionLabel.textColor = ColorPallete.sharedPallete.darkGrey
+            rideDescriptionLabel.textColor = ColorPallete.shared.darkGrey
         } else {
             let otherTripsCount = self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects
             rideEmojiLabel.text = ""
-            rideDescriptionLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+            rideDescriptionLabel.textColor = ColorPallete.shared.unknownGrey
             
             rewardEmojiLabel.text = ""
             rewardDescriptionLabel.text = ""
@@ -969,7 +969,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         
         self.dateLabel = UILabel()
         self.dateLabel.font = UIFont.boldSystemFont(ofSize: 16.0)
-        self.dateLabel.textColor = ColorPallete.sharedPallete.darkGrey
+        self.dateLabel.textColor = ColorPallete.shared.darkGrey
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = false
         self.dateLabel.numberOfLines = 1
         self.contentView.addSubview(self.dateLabel)
@@ -978,7 +978,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         
         self.milesLabel = UILabel()
         self.milesLabel.font = UIFont.systemFont(ofSize: 16.0)
-        self.milesLabel.textColor = ColorPallete.sharedPallete.unknownGrey
+        self.milesLabel.textColor = ColorPallete.shared.unknownGrey
         self.milesLabel.translatesAutoresizingMaskIntoConstraints = false
         self.milesLabel.numberOfLines = 1
         self.milesLabel.textAlignment = .right
@@ -987,7 +987,7 @@ class RoutesTableViewHeaderCell: UITableViewHeaderFooterView {
         NSLayoutConstraint(item: self.milesLabel, attribute: .lastBaseline, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: .lastBaseline, multiplier: 1, constant: -4).isActive = true
         
         self.separatorView = UIView()
-        self.separatorView.backgroundColor = ColorPallete.sharedPallete.unknownGrey
+        self.separatorView.backgroundColor = ColorPallete.shared.unknownGrey
         self.separatorView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(self.separatorView)
         NSLayoutConstraint(item: self.separatorView, attribute: .width, relatedBy: NSLayoutRelation.equal, toItem: self.contentView, attribute: .width, multiplier: 1, constant: 0).isActive = true

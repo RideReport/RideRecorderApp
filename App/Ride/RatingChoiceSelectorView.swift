@@ -243,7 +243,7 @@ import Foundation
         paragraphStyle.alignment = .center
         
         let attributedEmojiString = NSAttributedString(string: ratingChoice.emoji, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.emojiFontSize), NSForegroundColorAttributeName: UIColor.black, NSParagraphStyleAttributeName: paragraphStyle])
-        let attributedDescriptionString = NSAttributedString(string: ratingChoice.noun, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.descriptionFontSize), NSForegroundColorAttributeName: (selected ? ColorPallete.sharedPallete.darkGrey : ColorPallete.sharedPallete.unknownGrey), NSParagraphStyleAttributeName: paragraphStyle])
+        let attributedDescriptionString = NSAttributedString(string: ratingChoice.noun, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.descriptionFontSize), NSForegroundColorAttributeName: (selected ? ColorPallete.shared.darkGrey : ColorPallete.shared.unknownGrey), NSParagraphStyleAttributeName: paragraphStyle])
         
         let emojiSize = attributedEmojiString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:[NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context:nil).size
         let descriptionSize = attributedDescriptionString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:(NSStringDrawingOptions.usesLineFragmentOrigin), context:nil).size

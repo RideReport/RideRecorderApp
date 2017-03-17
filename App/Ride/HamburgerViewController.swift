@@ -70,7 +70,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         switch APIClient.shared.accountVerificationStatus {
         case .unknown:
             self.accountTableViewCell.isUserInteractionEnabled = false
-            self.accountTableViewCell.textLabel?.textColor = ColorPallete.sharedPallete.unknownGrey
+            self.accountTableViewCell.textLabel?.textColor = ColorPallete.shared.unknownGrey
             self.accountTableViewCell.textLabel?.text = "Updating…"
         case .unverified:
             self.accountTableViewCell.isUserInteractionEnabled = true

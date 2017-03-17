@@ -69,7 +69,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
                 rewardDescriptionLabel.isHidden = true
                 rewardEmojiLabel.isHidden = true
                 rewardDescriptionLabel.sizeToFit()
-                self.view.sparkle(ColorPallete.sharedPallete.notificationActionBlue, inRect: CGRect(x: rewardDescriptionLabel.frame.origin.x - 14 - rewardEmojiLabel.frame.size.width, y: rewardDescriptionLabel.frame.origin.y, width: rewardDescriptionLabel.frame.size.width + 28 + rewardEmojiLabel.frame.size.width, height: rewardDescriptionLabel.frame.size.height))
+                self.view.sparkle(ColorPallete.shared.notificationActionBlue, inRect: CGRect(x: rewardDescriptionLabel.frame.origin.x - 14 - rewardEmojiLabel.frame.size.width, y: rewardDescriptionLabel.frame.origin.y, width: rewardDescriptionLabel.frame.size.width + 28 + rewardEmojiLabel.frame.size.width, height: rewardDescriptionLabel.frame.size.height))
                 rewardDescriptionLabel.fadeIn()
                 rewardEmojiLabel.fadeIn()
                 

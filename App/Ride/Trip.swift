@@ -1155,11 +1155,11 @@ class Trip : NSManagedObject {
             path.strokeWidth = 18
             path.strokeColor = {
                 if(self.rating.choice == RatingChoice.good) {
-                    return ColorPallete.sharedPallete.goodGreen
+                    return ColorPallete.shared.goodGreen
                 } else if(self.rating.choice == RatingChoice.bad) {
-                    return ColorPallete.sharedPallete.badRed
+                    return ColorPallete.shared.badRed
                 } else {
-                    return ColorPallete.sharedPallete.unknownGrey
+                    return ColorPallete.shared.unknownGrey
                 }
             }()
             path.fillColor = UIColor.clear

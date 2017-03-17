@@ -60,7 +60,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
 
                 self.pushSimulationView.layer.shadowOpacity = 1.0
                 self.pushSimulationView.layer.shadowRadius = 10.0
-                self.pushSimulationView.layer.shadowColor = ColorPallete.sharedPallete.brightBlue.cgColor
+                self.pushSimulationView.layer.shadowColor = ColorPallete.shared.brightBlue.cgColor
                 self.pushSimulationView.layer.shadowOffset = CGSize(width: 0, height: 0);
                 
                 if #available(iOS 10.0, *) {
