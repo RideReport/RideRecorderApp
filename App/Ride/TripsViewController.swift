@@ -812,13 +812,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.section == 0) {
-            if #available(iOS 9.0, *) {
-                // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
-                self.performSegue(withIdentifier: "showRewardsView", sender: self)
-            } else {
-                self.tableView.deselectRow(at: indexPath, animated: true)
-            }
-            
+            self.performSegue(withIdentifier: "showStatsView", sender: self)
             return
         }
         

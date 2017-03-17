@@ -18,6 +18,7 @@ target 'Ride Report' do
     pod 'CocoaLumberjack/Swift'
     pod 'GzipSwift'
     pod 'Kingfisher'
+    pod 'Charts'
 end
 
 target 'Motion' do

@@ -86,6 +86,7 @@
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D493C421E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
 		3D493C431E79BC7300BB7B34 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
+		3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */; };
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
@@ -338,7 +339,7 @@
 		3D029A7F1E6F8ABA0030397D /* json-forwards.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "json-forwards.h"; sourceTree = "<group>"; };
 		3D029A801E6F8ABA0030397D /* json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json.h; sourceTree = "<group>"; };
 		3D029A891E6F91610030397D /* jsoncpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jsoncpp.cpp; sourceTree = "<group>"; };
-		3D029A8B1E70CBAD0030397D /* RatingChoiceSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RatingChoiceSelectorView.swift; sourceTree = "<group>"; };
+		3D029A8B1E70CBAD0030397D /* RatingChoiceSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RatingChoiceSelectorView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D02B5F01C7D079700F9A64B /* Ride 38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 38.xcdatamodel"; sourceTree = "<group>"; };
 		3D02B5F11C7D083400F9A64B /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Ride/SensorData.swift; sourceTree = "<group>"; };
 		3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectedAppsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -370,12 +371,12 @@
 		3D2AB3841CA4A75C00582A5D /* RandomForestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RandomForestManager.h; sourceTree = "<group>"; };
 		3D2AB3851CA4A75C00582A5D /* RandomForestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomForestManager.swift; sourceTree = "<group>"; };
 		3D2AB38F1CA4A76400582A5D /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = Frameworks/opencv2.framework; sourceTree = "<group>"; };
-		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectorView.swift; sourceTree = "<group>"; };
+		3D2DBC081CAC7CB800016982 /* ModeSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ModeSelectorView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSString+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Ride Report Notification Content.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D3306061D7774E900B7E56A /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		3D3306081D7774E900B7E56A /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
-		3D33060B1D7774E900B7E56A /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		3D33060B1D7774E900B7E56A /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D33060E1D7774E900B7E56A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		3D3306101D7774E900B7E56A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D3C3E161E68D4C3004C719E /* Ride 50.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 50.xcdatamodel"; sourceTree = "<group>"; };
@@ -386,6 +387,8 @@
 		3D493C3D1E79B40E00BB7B34 /* Ride 51.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 51.xcdatamodel"; sourceTree = "<group>"; };
 		3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv; sourceTree = "<group>"; };
 		3D493C401E79BC7300BB7B34 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
+		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		3D493C4C1E7C7ED700BB7B34 /* Scrappaper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Scrappaper.playground; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
@@ -910,6 +913,7 @@
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
 				3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */,
+				3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1021,6 +1025,7 @@
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
+				3D493C4C1E7C7ED700BB7B34 /* Scrappaper.playground */,
 				841D87111BFD4E3000CE28CD /* Ride Report.entitlements */,
 				8445317919FEEC8C0096F26E /* CoreLocation.framework */,
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,
@@ -1743,6 +1748,7 @@
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */,
 				3D7FFA8C1D061F260077E591 /* TripReward.swift in Sources */,
+				3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
 				3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
