@@ -1325,7 +1325,7 @@ class Trip : NSManagedObject {
     func notificationString()->String {
         var message = ""
         
-        message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         if let reward = self.tripRewards.firstObject as? TripReward {
                 message += (" " + reward.emoji + " " + reward.descriptionText)
@@ -1346,21 +1346,21 @@ class Trip : NSManagedObject {
     
     func displayString()->String {
         let areaDescriptionString = self.areaDescriptionString
-        let description = String(format: "%@%@.", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        let description = String(format: "%@%@.", self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
     
     func displayStringWithTime()->String {
         let areaDescriptionString = self.areaDescriptionString
-        let description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        let description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
     
     func fullDisplayString()->String {
         let areaDescriptionString = self.areaDescriptionString
-        var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         for reward in self.tripRewards.array as! [TripReward] {
             if let emoji = reward.displaySafeEmoji {
@@ -1376,16 +1376,16 @@ class Trip : NSManagedObject {
         
         if let startingPlacemarkName = self.startingPlacemarkName, let endingPlacemarkName = self.endingPlacemarkName {
             if (self.startingPlacemarkName == self.endingPlacemarkName) {
-                message = String(format: "%@ %@ Rode %@ in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
+                message = String(format: "%@ %@ Rode %@ in %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), startingPlacemarkName)
             } else {
-                message = String(format: "%@ %@ Rode %@ from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName, endingPlacemarkName)
+                message = String(format: "%@ %@ Rode %@ from %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), startingPlacemarkName, endingPlacemarkName)
             }
         } else if let startingPlacemarkName = self.startingPlacemarkName {
-            message = String(format: "%@ %@ Rode %@ from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, startingPlacemarkName)
+            message = String(format: "%@ %@ Rode %@ from %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), startingPlacemarkName)
         } else if let endingPlacemarkName = self.endingPlacemarkName {
-            message = String(format: "%@ %@ Rode %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString, endingPlacemarkName)
+            message = String(format: "%@ %@ Rode %@ to %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), endingPlacemarkName)
         } else {
-            message = String(format: "%@ %@ Rode %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString)
+            message = String(format: "%@ %@ Rode %@ with @RideReportApp!", self.climacon ?? "", self.activityType.emoji, self.length.distanceString())
         }
         
         

@@ -139,7 +139,7 @@ class InterfaceController: WKInterfaceController, HKWorkoutSessionDelegate, iPho
        if iPhoneManager.sharedManager.tripState == .InProgress {
             markerLabel.setText("Ride In Progress")
             caloriesLabel.setText(String(format: "%.1f Calories", totalEnergyBurned.doubleValueForUnit(HKUnit.kilocalorieUnit())))
-            distanceLabel.setText(iPhoneManager.sharedManager.tripDistance.distanceString)
+            distanceLabel.setText(iPhoneManager.sharedManager.tripDistance.distanceString())
             
             let duration = computeDurationOfWorkout(withEvents: workoutEvents, startDate: workoutStartDate, endDate: workoutEndDate)
             durationLabel.setText(timeFormat(duration))

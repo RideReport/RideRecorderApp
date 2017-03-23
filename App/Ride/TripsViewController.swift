@@ -556,7 +556,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         view.dateLabel.text = "  " + title
         if totalLength > 0 {
-            view.milesLabel.text = totalLength.distanceString
+            view.milesLabel.text = totalLength.distanceString()
         } else {
             view.milesLabel.text = "no rides"
         }
@@ -772,7 +772,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             if !trip.isClosed {
                 rideEmojiLabel.text = "🏁"
-                rideDescriptionLabel.text = String(format: "%@ starting at %@.", trip.inProgressLength.distanceString, trip.timeString())
+                rideDescriptionLabel.text = String(format: "%@ starting at %@.", trip.inProgressLength.distanceString(), trip.timeString())
                 rewardEmojiLabel.text = ""
                 rewardDescriptionLabel.text = ""
                 bottomSpaceConstraint?.constant = 0

@@ -229,7 +229,7 @@ class StatsViewController: UIViewController {
             }
             
             if let meters = statsDict["meters"]?.float {
-                let components = meters.distanceString.components(separatedBy: " ")
+                let components = meters.distanceString(suppressFractionalUnits: true).components(separatedBy: " ")
                 if components.count == 2 {
                     rollupsString.append(NSAttributedString(string: components[0], attributes: valueAttributes))
                     rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
@@ -325,15 +325,15 @@ class StatsViewController: UIViewController {
         
         piechart2.data = data2
         
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
     }
     
     @IBAction func showTrophies(sender: Any?) {

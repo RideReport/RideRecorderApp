@@ -154,7 +154,7 @@ open class BalloonMarker: MarkerImage
         }
         
         if let meters = data["meters"].float, meters > 0 {
-            let components = meters.distanceString.components(separatedBy: " ")
+            let components = meters.distanceString().components(separatedBy: " ")
             if components.count == 2 {
                 labelns.append(NSAttributedString(string: ", ", attributes: valueAttributes))
                 labelns.append(NSAttributedString(string: components[0], attributes: valueAttributes))

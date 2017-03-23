@@ -132,19 +132,19 @@ class Profile : NSManagedObject {
     var distanceBikedImpressiveStat: (emoji: String, description: String) {
         let totalMiles = self.metersBiked.miles
         if totalMiles > 20000 {
-            return ("🌍", String(format: "%@ (around the world %.1f times)!", self.metersBiked.distanceString, totalMiles/24901))
+            return ("🌍", String(format: "%@ (around the world %.1f times)!", self.metersBiked.distanceString(), totalMiles/24901))
         } else if totalMiles > 6000 {
-            return ("🌘", String(format: "%@ (around the moon %.1f times)!", self.metersBiked.distanceString, totalMiles/6786))
+            return ("🌘", String(format: "%@ (around the moon %.1f times)!", self.metersBiked.distanceString(), totalMiles/6786))
         } else if totalMiles > 1700 {
-            return ("🇺🇸", String(format: "%@ (across the US %.1f times)!", self.metersBiked.distanceString, totalMiles/2680))
+            return ("🇺🇸", String(format: "%@ (across the US %.1f times)!", self.metersBiked.distanceString(), totalMiles/2680))
         } else if totalMiles > 810 {
-            return ("🏔", String(format: "%@ (across Alaska %.1f times)!", self.metersBiked.distanceString, totalMiles/770))
+            return ("🏔", String(format: "%@ (across Alaska %.1f times)!", self.metersBiked.distanceString(), totalMiles/770))
         } else if totalMiles > 400 {
-            return ("🌲", String(format: "%@ (across Oregon %.1f times)!", self.metersBiked.distanceString, totalMiles/400))
+            return ("🌲", String(format: "%@ (across Oregon %.1f times)!", self.metersBiked.distanceString(), totalMiles/400))
         } else if totalMiles > 250 {
-            return ("🌅", String(format: "%@ (across California %.1f times)!", self.metersBiked.distanceString, totalMiles/250))
+            return ("🌅", String(format: "%@ (across California %.1f times)!", self.metersBiked.distanceString(), totalMiles/250))
         } else if totalMiles > 37 {
-            return ("🐄", String(format: "%@ (across Vermont %.1f times)!", self.metersBiked.distanceString, totalMiles/37))
+            return ("🐄", String(format: "%@ (across Vermont %.1f times)!", self.metersBiked.distanceString(), totalMiles/37))
         } else {
             return ("🐣", String(format: "%.1f", totalMiles))
         }

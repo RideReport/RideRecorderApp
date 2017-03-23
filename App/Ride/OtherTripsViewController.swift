@@ -219,7 +219,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         let areaDescriptionString = trip.areaDescriptionString
-        var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString, (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         for reward in trip.tripRewards.array as! [TripReward] {
             if let emoji = reward.displaySafeEmoji, reward.descriptionText.range(of: "day ride streak") == nil {
