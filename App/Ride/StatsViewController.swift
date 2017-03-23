@@ -32,20 +32,7 @@ class StatsViewController: UIViewController {
         lineChartView.pinchZoomEnabled = false
         lineChartView.dragEnabled = true
         lineChartView.autoScaleMinMaxEnabled = true
-        lineChartView.marker = BalloonMarker(color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
         lineChartView.gridBackgroundColor = UIColor.white
-        
-        for axis in [lineChartView.xAxis, lineChartView.leftAxis, lineChartView.rightAxis, barChartView.xAxis, barChartView.leftAxis, barChartView.rightAxis] {
-            axis.drawAxisLineEnabled = false
-            axis.drawGridLinesEnabled = false
-        }
-        lineChartView.xAxis.drawLabelsEnabled = true
-        lineChartView.rightAxis.drawLabelsEnabled = true
-        lineChartView.leftAxis.drawLabelsEnabled = false
-        
-        barChartView.rightAxis.drawLabelsEnabled = true
-        barChartView.xAxis.drawLabelsEnabled = true
-        barChartView.leftAxis.drawLabelsEnabled = false
         
         barChartView.drawBordersEnabled = false
         barChartView.legend.enabled = false
@@ -53,15 +40,45 @@ class StatsViewController: UIViewController {
         barChartView.pinchZoomEnabled = false
         barChartView.dragEnabled = true
         barChartView.autoScaleMinMaxEnabled = true
-        barChartView.marker = BalloonMarker(color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
         barChartView.gridBackgroundColor = UIColor.white
+
+        for axis in [lineChartView.xAxis, barChartView.xAxis] {
+            axis.drawAxisLineEnabled = false
+            axis.drawGridLinesEnabled = false
+            axis.drawLabelsEnabled = true
+            axis.labelFont = UIFont.systemFont(ofSize: 12)
+            axis.labelPosition = .bottom
+            axis.labelTextColor = ColorPallete.shared.unknownGrey
+        }
+        for axis in [lineChartView.leftAxis, barChartView.leftAxis] {
+            axis.drawAxisLineEnabled = false
+            axis.drawGridLinesEnabled = false
+            axis.drawLabelsEnabled = false
+            axis.spaceBottom = 0
+        }
+        for axis in [lineChartView.rightAxis, barChartView.rightAxis] {
+            axis.drawAxisLineEnabled = false
+            axis.drawGridLinesEnabled = true
+            axis.spaceBottom = 0
+            
+            axis.gridColor = ColorPallete.shared.unknownGrey
+            axis.gridLineDashLengths = [3, 2]
+            axis.drawLabelsEnabled = true
+            axis.labelCount = 5
+            axis.labelFont = UIFont.boldSystemFont(ofSize: 12)
+            axis.labelTextColor = ColorPallete.shared.unknownGrey
+        }
         
         piechart1.legend.enabled = false
         piechart1.chartDescription = nil
         piechart1.holeRadiusPercent = 0.3
+        piechart1.extraLeftOffset = 10
+        piechart1.extraRightOffset = 10
         piechart2.legend.enabled = false
         piechart2.chartDescription = nil
         piechart2.holeRadiusPercent = 0.3
+        piechart2.extraLeftOffset = 10
+        piechart2.extraRightOffset = 10
         
         reloadData()
         
@@ -106,19 +123,24 @@ class StatsViewController: UIViewController {
     func reloadSeriesChartData() {
         var seriesKey = ""
         var timePeriod: Double = 0
+        var timeInterval: Double = 0
         switch seriesSegment.selectedSegmentIndex {
             case 0:
             seriesKey = "day"
-            timePeriod = Double(30)
+            timePeriod = Double(20)
+            timeInterval = Double(24*3600.0)
             case 1:
             seriesKey = "week"
-            timePeriod = Double(20*7)
+            timePeriod = Double(20)
+            timeInterval = Double(7*24*3600.0)
             case 2:
             seriesKey = "month"
-            timePeriod = Double(18*30)
+            timePeriod = Double(12)
+            timeInterval = Double(30*24*3600.0)
             default:
             seriesKey = "day"
-            timePeriod = 30
+            timePeriod = Double(30)
+            timeInterval = Double(24*3600.0)
         }
         
         if seriesKey == "month" {
@@ -130,7 +152,7 @@ class StatsViewController: UIViewController {
                     if let entryDict = entry.dictionary, let meters = entry["meters"].float,
                         let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
                         colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
-                        entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/(24*3600), y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
+                        entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
                     }
                 }
             }
@@ -139,18 +161,21 @@ class StatsViewController: UIViewController {
             ds1.colors = [ColorPallete.shared.goodGreen]
             ds1.circleColors = colors
             ds1.drawValuesEnabled = false
-            ds1.drawHorizontalHighlightIndicatorEnabled = false
+            ds1.drawVerticalHighlightIndicatorEnabled = false
             ds1.highlightColor = ColorPallete.shared.goodGreen
             ds1.highlightLineWidth = 2.0
             let data = LineChartData(dataSet: ds1)
             
             lineChartView.data = data
-            lineChartView.xAxis.valueFormatter = DateValueFormatter(showsDate: false)
             lineChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
             lineChartView.moveViewToX(entryData.last?.x ?? 0)
             lineChartView.animate(xAxisDuration: 0.5, yAxisDuration: 0.0)
             lineChartView.isHidden = false
             barChartView.isHidden = true
+            
+            lineChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM")
+            lineChartView.xAxis.granularityEnabled = true
+            lineChartView.marker = BalloonMarker(chartView: lineChartView, dateFormat: "MMM", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
         } else {
             var entryData: [BarChartDataEntry] = []
             
@@ -158,7 +183,7 @@ class StatsViewController: UIViewController {
                 for entry in period {
                     if let entryDict = entry.dictionary, let meters = entry["meters"].float,
                         let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
-                        entryData.append(BarChartDataEntry(x: date.timeIntervalSinceReferenceDate/(24*3600), y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
+                        entryData.append(BarChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
                     }
                 }
             }
@@ -171,12 +196,22 @@ class StatsViewController: UIViewController {
             let data = BarChartData(dataSet: ds1)
             
             barChartView.data = data
-            barChartView.xAxis.valueFormatter = DateValueFormatter(showsDate: true)
             barChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
             barChartView.moveViewToX(entryData.last?.x ?? 0)
             barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
             barChartView.isHidden = false
             lineChartView.isHidden = true
+            if seriesKey == "week" {
+                barChartView.xAxis.granularityEnabled = true
+                barChartView.xAxis.granularity = 4 // at most a label every 4 weeks
+                barChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM")
+                barChartView.marker = BalloonMarker(chartView: barChartView, dateFormat: "'Week of' MMM d", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
+            } else {
+                barChartView.xAxis.granularityEnabled = true
+                barChartView.xAxis.granularity = 5 // at most a label every 5 days. For some reason >5 rounds up to 10 =/.
+                barChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM d")
+                barChartView.marker = BalloonMarker(chartView: barChartView, dateFormat: "MMM d", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
+            }
         }
     }
     
@@ -224,7 +259,7 @@ class StatsViewController: UIViewController {
             if let rides = statsDict["rides"]?.int, let ridesString = integerFormatter.string(from: NSNumber(value: rides)) {
                 rollupsString.append(NSAttributedString(string: ridesString, attributes: valueAttributes))
                 rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: "rides", attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: rides == 1 ? "ride" : "rides", attributes: unitAttributes))
                 rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
             }
             
@@ -241,7 +276,7 @@ class StatsViewController: UIViewController {
             if let trophiesCount = statsDict["trophies"]?.int, let trophiesString = integerFormatter.string(from: NSNumber(value: trophiesCount)) {
                 rollupsString.append(NSAttributedString(string: trophiesString, attributes: valueAttributes))
                 rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: "trophies", attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: trophiesCount == 1 ? "trophy" : "trophies", attributes: unitAttributes))
                 rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
 
             }
@@ -273,7 +308,7 @@ class StatsViewController: UIViewController {
         
         let percentFormatter = NumberFormatter()
         percentFormatter.numberStyle = .percent
-        percentFormatter.maximumFractionDigits = 1
+        percentFormatter.maximumFractionDigits = 0
         percentFormatter.multiplier = 100.0
         percentFormatter.percentSymbol = "%"
         
@@ -293,9 +328,14 @@ class StatsViewController: UIViewController {
         dataSet1.sliceSpace = 2.0
         dataSet1.automaticallyDisableSliceSpacing = true
         dataSet1.colors = colors1
+        dataSet1.valueLinePart1OffsetPercentage = 0.65
+        dataSet1.valueLineColor = ColorPallete.shared.darkGrey
+        dataSet1.valueLinePart1Length = 0.3
+        dataSet1.valueLinePart2Length = 0.5
+        dataSet1.yValuePosition = .outsideSlice
         
         let data1 = PieChartData(dataSet: dataSet1)
-        data1.setValueTextColor(ColorPallete.shared.almostWhite)
+        data1.setValueTextColor(ColorPallete.shared.darkGrey)
         data1.setValueFont(font)
         data1.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
         
@@ -317,23 +357,28 @@ class StatsViewController: UIViewController {
         dataSet2.sliceSpace = 2.0
         dataSet2.automaticallyDisableSliceSpacing = true
         dataSet2.colors = colors2
+        dataSet2.valueLinePart1OffsetPercentage = 0.65
+        dataSet2.valueLineColor = ColorPallete.shared.darkGrey
+        dataSet2.valueLinePart1Length = 0.5
+        dataSet2.valueLinePart2Length = 0.7
+        dataSet2.yValuePosition = .outsideSlice
         
         let data2 = PieChartData(dataSet: dataSet2)
-        data2.setValueTextColor(ColorPallete.shared.almostWhite)
+        data2.setValueTextColor(ColorPallete.shared.darkGrey)
         data2.setValueFont(font)
         data2.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
         
         piechart2.data = data2
         
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeInOutBack)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
     }
     
     @IBAction func showTrophies(sender: Any?) {

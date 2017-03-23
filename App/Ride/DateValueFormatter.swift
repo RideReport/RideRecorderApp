@@ -11,21 +11,29 @@ import Charts
 
 class DateValueFormatter: NSObject, IAxisValueFormatter {
     private var dateFormatter: DateFormatter!
+    private var yearDateFormatter: DateFormatter!
+    private var timeInterval: Double!
     
-    init(showsDate: DarwinBoolean) {
+    init(timeInterval: Double, dateFormat: String) {
         super.init()
+        
+        self.timeInterval = timeInterval
 
-        dateFormatter = DateFormatter()
-        if (showsDate.boolValue) {
-            dateFormatter.dateFormat = "MMM dd"
-        } else {
-            dateFormatter.dateFormat = "MMM"
-        }
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.dateFormat = dateFormat
+        
+        self.yearDateFormatter = DateFormatter()
+        self.yearDateFormatter.locale = Locale.current
+        self.yearDateFormatter.dateFormat = dateFormat + " ''yy"
     }
     
     func stringForValue(_ value: Double, axis: AxisBase?) -> String {
-        let date = Date(timeIntervalSinceReferenceDate: value*24*3600)
+        let date = Date(timeIntervalSinceReferenceDate: value*self.timeInterval)
         
-        return dateFormatter.string(from: date)
+        if (date.isThisYear()) {
+            return self.dateFormatter.string(from: date)
+        } else {
+            return self.yearDateFormatter.string(from: date)
+        }
     }
 }
