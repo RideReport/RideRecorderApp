@@ -139,25 +139,24 @@ open class BalloonMarker: MarkerImage
         if let dateString = data["date"].string, let date = Date.dateFromJSONString(dateString) {
             let dateString = NSAttributedString(string: dateAsString(date: date), attributes: unitAttributes)
             labelns.insert(dateString, at: 0)
-            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
         }
         
         if let weatherEmoji = data["weather_emoji"].string{
-            labelns.append(NSAttributedString(string: weatherEmoji, attributes: valueAttributes))
-            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+            labelns.append(NSAttributedString(string: " " + weatherEmoji, attributes: valueAttributes))
         }
+        labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
         
         if let num = data["rides"].int {
             let numString = num == 0 ? "no" : String(num)
             labelns.append(NSAttributedString(string: numString, attributes: valueAttributes))
             labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
             labelns.append(NSAttributedString(string: "rides", attributes: unitAttributes))
-            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
         }
         
         if let meters = data["meters"].float, meters > 0 {
             let components = meters.distanceString.components(separatedBy: " ")
             if components.count == 2 {
+                labelns.append(NSAttributedString(string: ", ", attributes: valueAttributes))
                 labelns.append(NSAttributedString(string: components[0], attributes: valueAttributes))
                 labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
                 labelns.append(NSAttributedString(string: components[1], attributes: unitAttributes))

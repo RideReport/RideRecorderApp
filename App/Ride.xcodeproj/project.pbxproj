@@ -258,6 +258,7 @@
 		84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BE01A6DE84900C71F53 /* SetupViewController.swift */; };
 		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
 		84EA5BEE1A6F226400C71F53 /* SetupPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */; };
+		84EC8D771E839B53008D79F6 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC8D761E839B53008D79F6 /* DateValueFormatter.swift */; };
 		84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137521B5DADD30023EC82 /* CoreTelephony.framework */; };
 		84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137541B5DADD80023EC82 /* GLKit.framework */; };
 		84F137571B5DADDF0023EC82 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137561B5DADDF0023EC82 /* ImageIO.framework */; };
@@ -568,6 +569,7 @@
 		84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupPermissionsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		84EAFD561AA128180057282C /* Ride 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 15.xcdatamodel"; sourceTree = "<group>"; };
 		84EAFD571AA128960057282C /* Ride 16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 16.xcdatamodel"; sourceTree = "<group>"; };
+		84EC8D761E839B53008D79F6 /* DateValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
 		84F137521B5DADD30023EC82 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		84F137541B5DADD80023EC82 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		84F137561B5DADDF0023EC82 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -1061,6 +1063,7 @@
 			children = (
 				3D2AB3801CA4A75C00582A5D /* ActivityPredictor */,
 				8453BD541A424FEE00FE2645 /* Categories */,
+				84EC8D751E839B40008D79F6 /* Helpers */,
 				843C1C821A36704B0005CE1D /* Views */,
 				84D1555419D2733500316995 /* AppDelegate.swift */,
 				84F1F8E41B66A3D400EA0B6E /* Reachability.h */,
@@ -1107,6 +1110,14 @@
 				8435A0651A5DC3BC00BDB7A4 /* ContentInfo.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		84EC8D751E839B40008D79F6 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				84EC8D761E839B53008D79F6 /* DateValueFormatter.swift */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		E6A5322F1E904223508D00FB /* Pods */ = {
@@ -1458,7 +1469,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		3D0D8B211CE0F8D20059AC6B /* ShellScript */ = {
@@ -1544,7 +1555,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E2D39A7B257F68829AFC7DB5 /* [CP] Copy Pods Resources */ = {
@@ -1589,7 +1600,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1720,6 +1731,7 @@
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
+				84EC8D771E839B53008D79F6 /* DateValueFormatter.swift in Sources */,
 				3DA2B0041D9B463700F7D448 /* WatchManager.swift in Sources */,
 				3D029A8C1E70CBAD0030397D /* RatingChoiceSelectorView.swift in Sources */,
 				84B223A91A881C3900CA27EB /* UIDevice+HBAdditions.m in Sources */,

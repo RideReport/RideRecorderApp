@@ -12,6 +12,7 @@ import SwiftyJSON
 
 class StatsViewController: UIViewController {
     @IBOutlet weak var seriesSegment: UISegmentedControl!
+    @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var lineChartView: LineChartView!
     
     @IBOutlet weak var rollupsSegment: UISegmentedControl!
@@ -22,24 +23,38 @@ class StatsViewController: UIViewController {
     
     private var chartJson: JSON!
     
-    
     override func viewDidLoad() {
-        for axis in [lineChartView.xAxis, lineChartView.leftAxis, lineChartView.rightAxis] {
-            axis.drawLabelsEnabled = false
-            axis.drawAxisLineEnabled = false
-            axis.drawGridLinesEnabled = false
-            axis.drawLabelsEnabled = false
-            axis.drawAxisLineEnabled = false
-            axis.drawGridLinesEnabled = false
-        }
+        self.title = "Ride Statistics"
         
         lineChartView.drawBordersEnabled = false
         lineChartView.legend.enabled = false
         lineChartView.chartDescription = nil
         lineChartView.pinchZoomEnabled = false
-        lineChartView.dragEnabled = false
+        lineChartView.dragEnabled = true
+        lineChartView.autoScaleMinMaxEnabled = true
         lineChartView.marker = BalloonMarker(color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
         lineChartView.gridBackgroundColor = UIColor.white
+        
+        for axis in [lineChartView.xAxis, lineChartView.leftAxis, lineChartView.rightAxis, barChartView.xAxis, barChartView.leftAxis, barChartView.rightAxis] {
+            axis.drawAxisLineEnabled = false
+            axis.drawGridLinesEnabled = false
+        }
+        lineChartView.xAxis.drawLabelsEnabled = true
+        lineChartView.rightAxis.drawLabelsEnabled = true
+        lineChartView.leftAxis.drawLabelsEnabled = false
+        
+        barChartView.rightAxis.drawLabelsEnabled = true
+        barChartView.xAxis.drawLabelsEnabled = true
+        barChartView.leftAxis.drawLabelsEnabled = false
+        
+        barChartView.drawBordersEnabled = false
+        barChartView.legend.enabled = false
+        barChartView.chartDescription = nil
+        barChartView.pinchZoomEnabled = false
+        barChartView.dragEnabled = true
+        barChartView.autoScaleMinMaxEnabled = true
+        barChartView.marker = BalloonMarker(color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
+        barChartView.gridBackgroundColor = UIColor.white
         
         piechart1.legend.enabled = false
         piechart1.chartDescription = nil
@@ -90,48 +105,79 @@ class StatsViewController: UIViewController {
     
     func reloadSeriesChartData() {
         var seriesKey = ""
-        var timePeriod = 0
+        var timePeriod: Double = 0
         switch seriesSegment.selectedSegmentIndex {
             case 0:
             seriesKey = "day"
-            timePeriod = 30
+            timePeriod = Double(30)
             case 1:
             seriesKey = "week"
-            timePeriod = 20
+            timePeriod = Double(20*7)
             case 2:
             seriesKey = "month"
-            timePeriod = 18
+            timePeriod = Double(18*30)
             default:
             seriesKey = "day"
             timePeriod = 30
         }
         
-        var entryData: [ChartDataEntry] = []
-        var colors: [UIColor] = []
-        
-        if let seriesJson = chartJson["series"].dictionary, let period = seriesJson[seriesKey]?.array {
-            var i = 0
+        if seriesKey == "month" {
+            var entryData: [ChartDataEntry] = []
+            var colors: [UIColor] = []
             
-            for entry in period.suffix(timePeriod) {
-                if let entryDict = entry.dictionary, let meters = entry["meters"].double {
-                    colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
-                    entryData.append(ChartDataEntry(x: Double(i), y: meters, data: entryDict as NSDictionary))
-                    i += 1
+            if let seriesJson = chartJson["series"].dictionary, let period = seriesJson[seriesKey]?.array {
+                for entry in period {
+                    if let entryDict = entry.dictionary, let meters = entry["meters"].float,
+                        let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
+                        colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
+                        entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/(24*3600), y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
+                    }
                 }
             }
+
+            let ds1 = LineChartDataSet(values: entryData, label: "Rides")
+            ds1.colors = [ColorPallete.shared.goodGreen]
+            ds1.circleColors = colors
+            ds1.drawValuesEnabled = false
+            ds1.drawHorizontalHighlightIndicatorEnabled = false
+            ds1.highlightColor = ColorPallete.shared.goodGreen
+            ds1.highlightLineWidth = 2.0
+            let data = LineChartData(dataSet: ds1)
+            
+            lineChartView.data = data
+            lineChartView.xAxis.valueFormatter = DateValueFormatter(showsDate: false)
+            lineChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
+            lineChartView.moveViewToX(entryData.last?.x ?? 0)
+            lineChartView.animate(xAxisDuration: 0.5, yAxisDuration: 0.0)
+            lineChartView.isHidden = false
+            barChartView.isHidden = true
+        } else {
+            var entryData: [BarChartDataEntry] = []
+            
+            if let seriesJson = chartJson["series"].dictionary, let period = seriesJson[seriesKey]?.array {
+                for entry in period {
+                    if let entryDict = entry.dictionary, let meters = entry["meters"].float,
+                        let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
+                        entryData.append(BarChartDataEntry(x: date.timeIntervalSinceReferenceDate/(24*3600), y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
+                    }
+                }
+            }
+            
+            let ds1 = BarChartDataSet(values: entryData, label: "Rides")
+            ds1.colors = [ColorPallete.shared.goodGreen]
+            ds1.drawValuesEnabled = false
+            ds1.highlightColor = ColorPallete.shared.goodGreen
+            ds1.highlightLineWidth = 2.0
+            let data = BarChartData(dataSet: ds1)
+            
+            barChartView.data = data
+            barChartView.xAxis.valueFormatter = DateValueFormatter(showsDate: true)
+            barChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
+            barChartView.moveViewToX(entryData.last?.x ?? 0)
+            barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
+            barChartView.isHidden = false
+            lineChartView.isHidden = true
         }
-        
-        let data = LineChartData()
-        let ds1 = LineChartDataSet(values: entryData, label: "Rides")
-        ds1.colors = [ColorPallete.shared.goodGreen]
-        ds1.circleColors = colors
-        ds1.drawValuesEnabled = false
-        ds1.drawHorizontalHighlightIndicatorEnabled = false
-        ds1.highlightColor = ColorPallete.shared.goodGreen
-        ds1.highlightLineWidth = 2.0
-        data.addDataSet(ds1)
-        
-        lineChartView.data = data
     }
     
     func reloadRollups() {
@@ -279,13 +325,15 @@ class StatsViewController: UIViewController {
         
         piechart2.data = data2
         
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        lineChartView.animate(xAxisDuration: 0.0, yAxisDuration: 1.0)
-        piechart1.animate(xAxisDuration: 1.0, easingOption: .easeOutBounce)
-        piechart2.animate(xAxisDuration: 1.0, easingOption: .easeOutBounce)
+        barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
     }
     
     @IBAction func showTrophies(sender: Any?) {

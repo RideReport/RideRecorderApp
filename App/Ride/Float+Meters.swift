@@ -22,19 +22,33 @@ extension Float {
                     format = "\(self.stringWithDecimals(0)) meters"
                 } else {
                     if Locale.isGB() {
-                        format = "\(self.miles.stringWithDecimals(1)) miles";
+                        format = "\(self.miles.stringWithDecimals(1)) miles"
                     } else {
-                        format = "\(self.kilometers.stringWithDecimals(1)) km";
+                        format = "\(self.kilometers.stringWithDecimals(1)) km"
                     }
                 }
             } else { // assume Imperial / U.S.
                 if (feet < FEET_CUTOFF) {
-                    format = "\(self.feet.stringWithDecimals(0)) feet";
+                    format = "\(self.feet.stringWithDecimals(0)) feet"
                 } else {
-                    format = "\(self.miles.stringWithDecimals(1)) miles";
+                    format = "\(self.miles.stringWithDecimals(1)) miles"
                 }
             }
             return format
+        }
+    }
+    
+    var localizedMajorUnit: Float {
+        get {
+            if (Locale.isMetric()) {
+                if Locale.isGB() {
+                    return self.miles
+                } else {
+                    return self.kilometers
+                }
+            } else { // assume Imperial / U.S.
+                return self.miles
+            }
         }
     }
     
