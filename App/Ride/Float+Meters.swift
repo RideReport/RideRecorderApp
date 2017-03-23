@@ -77,7 +77,7 @@ extension Float {
         integerFormatter.locale = Locale.current
         integerFormatter.numberStyle = .decimal
         integerFormatter.usesGroupingSeparator = true
-        integerFormatter.maximumFractionDigits = 0
+        integerFormatter.maximumFractionDigits = decimals
         return integerFormatter.string(for: self) ?? "0"
     }
 }
