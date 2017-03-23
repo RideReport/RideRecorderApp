@@ -2,6 +2,7 @@
 import UIKit
 import PlaygroundSupport
 import Charts
+import SwiftyJSON
 
 class foo: ChartViewDelegate {
     func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
@@ -14,20 +15,29 @@ class foo: ChartViewDelegate {
     }
 }
 
+let url = Bundle.main.url(forResource: "stats", withExtension: "json")
+let jsonData = try? Data(contentsOf: url!)
+let json = JSON(data: jsonData!)
+
+var dailyData: [ChartDataEntry] = []
+
+if let seriesJson = json["series"].dictionary, let days = seriesJson["day"]?.array {
+    var i = 0
+    for day in days {
+        if let dayDict = day.dictionary, let rides = day["rides"].double {
+            dailyData.append(ChartDataEntry(x: Double(i), y: rides, data: dayDict as NSDictionary))
+        }
+        i += 1
+    }
+}
+
 //
 let view = LineChartView(frame: CGRect(x: 0, y: 0, width: 600, height: 600))
 let lineChartView = LineChartView(frame: CGRect(x: 0, y: 200, width: 600, height: 400))
 view.addSubview(lineChartView)
 
-// Do any additional setup after loading the view.
-let ys1 = Array(1..<10).map { x in return sin(Double(x) / 2.0 / 3.141 * 1.5) }
-
-let date = Date()
-let dataDict: [String: Any] = ["miles": 3.0, "rides": 13, "calories": 10, "date": date]
-let yse1 = ys1.enumerated().map { x, y in return ChartDataEntry(x: Double(x), y: y, data: dataDict as NSDictionary) }
-
 let data = LineChartData()
-let ds1 = LineChartDataSet(values: yse1, label: "Rides")
+let ds1 = LineChartDataSet(values: dailyData, label: "Rides")
 ds1.colors = [ColorPallete.shared.goodGreen]
 ds1.circleColors = [ColorPallete.shared.goodGreen]
 ds1.drawValuesEnabled = false
@@ -37,6 +47,8 @@ ds1.highlightLineWidth = 2.0
 data.addDataSet(ds1)
 
 lineChartView.data = data
+lineChartView.xAxis.axisMaximum = Double(dailyData.count)
+lineChartView.xAxis.axisMaximum = Double(dailyData.count - 30) // last 30 days
 
 for axis in [lineChartView.xAxis, lineChartView.leftAxis, lineChartView.rightAxis] {
     axis.drawLabelsEnabled = false
@@ -45,7 +57,6 @@ for axis in [lineChartView.xAxis, lineChartView.leftAxis, lineChartView.rightAxi
     axis.drawLabelsEnabled = false
     axis.drawAxisLineEnabled = false
     axis.drawGridLinesEnabled = false
-    
 }
 
 lineChartView.drawBordersEnabled = false

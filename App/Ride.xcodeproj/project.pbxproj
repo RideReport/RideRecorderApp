@@ -117,6 +117,7 @@
 		3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 3DA1EFE41C8F94EB002B12DB /* silence.mp3 */; };
 		3DA2B0041D9B463700F7D448 /* WatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709D1D5022C300862545 /* WatchManager.swift */; };
 		3DA379541E6750B9009D3737 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA379531E6750B9009D3737 /* Utility.cpp */; };
+		3DA687B31E82086400483741 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA687B21E82086400483741 /* BalloonMarker.swift */; };
 		3DB9BD141CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3DB9BD151CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
@@ -388,7 +389,6 @@
 		3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv; sourceTree = "<group>"; };
 		3D493C401E79BC7300BB7B34 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
-		3D493C4C1E7C7ED700BB7B34 /* Scrappaper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Scrappaper.playground; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
@@ -409,6 +409,7 @@
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
 		3DA379531E6750B9009D3737 /* Utility.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utility.cpp; sourceTree = "<group>"; };
 		3DA379581E677FB5009D3737 /* Utility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
+		3DA687B21E82086400483741 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		3DACFF751D5FB8210011FE9E /* Ride Report Watch App Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ride Report Watch App Extension.entitlements"; sourceTree = "<group>"; };
 		3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Float+Meters.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AnimatedGradientLabel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -871,6 +872,7 @@
 			children = (
 				844B949A1B8BE1A3009F4E27 /* BKPasscodeView */,
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
+				3DA687B21E82086400483741 /* BalloonMarker.swift */,
 				3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
 				84C29F6C1BDEDD070003A26B /* ClearButton.swift */,
@@ -1025,7 +1027,6 @@
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
-				3D493C4C1E7C7ED700BB7B34 /* Scrappaper.playground */,
 				841D87111BFD4E3000CE28CD /* Ride Report.entitlements */,
 				8445317919FEEC8C0096F26E /* CoreLocation.framework */,
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,
@@ -1732,6 +1733,7 @@
 				8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */,
 				8453BD561A42500500FE2645 /* Date+HBAdditions.swift in Sources */,
 				842141A71C407CEE009DA851 /* TripViewController.swift in Sources */,
+				3DA687B31E82086400483741 /* BalloonMarker.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,

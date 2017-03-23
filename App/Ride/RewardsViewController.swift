@@ -12,9 +12,6 @@ import SpriteKit
 class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKSceneDelegate
 {
     @IBOutlet weak var spriteKitView: SKView!
-    @IBOutlet weak var rewardsLabel1: UILabel!
-    @IBOutlet weak var rewardsLabel2: UILabel!
-    @IBOutlet weak var footerView: UIView!
     @IBOutlet weak var emptyTrophiesView: UIView!
     @IBOutlet weak var bobbleChickView: UIView!
     @IBOutlet weak var rewardPopup: PopupView!
@@ -84,15 +81,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current
         dateFormatter.dateStyle = .short
-        
-        if let firstTripDate = Profile.profile().firstTripDate {
-            self.rewardsLabel1.text = String(format: "%@  %i rides since %@", Profile.profile().tripsBikedJewel, Trip.numberOfCycledTrips, dateFormatter.string(from: firstTripDate as Date))
-        } else {
-            self.rewardsLabel1.isHidden = true
-        }
-        
-        self.rewardsLabel2.text = String(format: "%@  %@", Profile.profile().distanceBikedImpressiveStat.emoji, Profile.profile().distanceBikedImpressiveStat.description)
-        
         
         guard self.scene == nil else {
             // make sure we haven't already loaded the scene

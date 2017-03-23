@@ -545,6 +545,20 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
+    @discardableResult func getStatistics()->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "statistics", completionHandler: { (response) -> Void in
+            switch response.result {
+            case .success(let json):
+                let url = CoreDataManager.shared.applicationDocumentsDirectory.appendingPathComponent("stats.json")
+                if let data = try? json.rawData() {
+                    try? data.write(to: url)
+                }
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as CVarArg))
+            }
+        })
+    }
+    
     func uploadSensorData(_ trip: Trip, withMetadata metadataDict:[String: Any] = [:]) {
         let routeURL = "trips/" + trip.uuid + "/sensor_data"
         

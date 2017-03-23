@@ -135,24 +135,32 @@ open class BalloonMarker: MarkerImage
         let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.font, NSParagraphStyleAttributeName: _paragraphStyle]
         let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.unitsFont, NSParagraphStyleAttributeName: _paragraphStyle]
         
-        var i = 0
-        if let data = entry.data as? JSON {
-            for (key, value) in data {
-             if key == "date" {
-                if let dateString = value.string,
-                    let date = Date.dateFromJSONString(dateString) {
-                    let dateString = NSAttributedString(string: dateAsString(date: date) + "\n", attributes: unitAttributes)
-                    labelns.insert(dateString, at: 0)
-                }
-            } else if let num = value.string {
-                    labelns.append(NSAttributedString(string: num, attributes: valueAttributes))
-                    labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                    labelns.append(NSAttributedString(string: key, attributes: unitAttributes))
-                    if i < (data.count - 1) {
-                        labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
-                    }
-                }
-                i+=1
+        let data = JSON(entry.data as? Any)
+        if let dateString = data["date"].string, let date = Date.dateFromJSONString(dateString) {
+            let dateString = NSAttributedString(string: dateAsString(date: date), attributes: unitAttributes)
+            labelns.insert(dateString, at: 0)
+            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+        }
+        
+        if let weatherEmoji = data["weather_emoji"].string{
+            labelns.append(NSAttributedString(string: weatherEmoji, attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+        }
+        
+        if let num = data["rides"].int {
+            let numString = num == 0 ? "no" : String(num)
+            labelns.append(NSAttributedString(string: numString, attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: "rides", attributes: unitAttributes))
+            labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+        }
+        
+        if let meters = data["meters"].float, meters > 0 {
+            let components = meters.distanceString.components(separatedBy: " ")
+            if components.count == 2 {
+                labelns.append(NSAttributedString(string: components[0], attributes: valueAttributes))
+                labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
+                labelns.append(NSAttributedString(string: components[1], attributes: unitAttributes))
             }
         }
         

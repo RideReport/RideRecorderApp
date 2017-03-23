@@ -49,8 +49,21 @@ extension Date {
         }
     }
     
+    static var zonelessJsonDateFormatter: DateFormatter {
+        get {
+            let zonelessJsonDateFormatter = DateFormatter()
+            zonelessJsonDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            zonelessJsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            
+            return zonelessJsonDateFormatter
+        }
+    }
+    
     static func dateFromJSONString(_ string: String)->Date? {
-        return Date.jsonDateFormatter.date(from: string)
+        if let date = Date.jsonDateFormatter.date(from: string) {
+            return date
+        }
+        return Date.zonelessJsonDateFormatter.date(from: string)
     }
     
     func JSONString() -> String {

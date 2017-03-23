@@ -59,6 +59,11 @@ extension Float {
     }
     
     private func stringWithDecimals(_ decimals:Int) -> String {
-        return String(format: "%.\(decimals)f", self)
+        let integerFormatter = NumberFormatter()
+        integerFormatter.locale = Locale.current
+        integerFormatter.numberStyle = .decimal
+        integerFormatter.usesGroupingSeparator = true
+        integerFormatter.maximumFractionDigits = 0
+        return integerFormatter.string(for: self) ?? "0"
     }
 }
