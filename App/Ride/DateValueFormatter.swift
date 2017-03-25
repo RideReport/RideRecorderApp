@@ -23,7 +23,6 @@ class DateValueFormatter: NSObject, IAxisValueFormatter {
         self.dateFormatter.dateFormat = dateFormat
         
         self.yearDateFormatter = DateFormatter()
-        self.yearDateFormatter.locale = Locale.current
         self.yearDateFormatter.dateFormat = dateFormat + " ''yy"
     }
     

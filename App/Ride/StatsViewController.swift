@@ -9,6 +9,7 @@
 import Foundation
 import Charts
 import SwiftyJSON
+import Alamofire
 
 class StatsViewController: UIViewController {
     @IBOutlet weak var seriesSegment: UISegmentedControl!
@@ -21,11 +22,13 @@ class StatsViewController: UIViewController {
     @IBOutlet weak var piechart1: PieChartView!
     @IBOutlet weak var piechart2: PieChartView!
     
+    private var reachabilityManager: NetworkReachabilityManager?
+    
     private var chartJson: JSON!
     
     override func viewDidLoad() {
         self.title = "Ride Statistics"
-        
+                
         lineChartView.drawBordersEnabled = false
         lineChartView.legend.enabled = false
         lineChartView.chartDescription = nil
@@ -33,6 +36,7 @@ class StatsViewController: UIViewController {
         lineChartView.dragEnabled = true
         lineChartView.autoScaleMinMaxEnabled = true
         lineChartView.gridBackgroundColor = UIColor.white
+        lineChartView.noDataText = ""
         
         barChartView.drawBordersEnabled = false
         barChartView.legend.enabled = false
@@ -41,6 +45,9 @@ class StatsViewController: UIViewController {
         barChartView.dragEnabled = true
         barChartView.autoScaleMinMaxEnabled = true
         barChartView.gridBackgroundColor = UIColor.white
+        barChartView.noDataText = ""
+        
+        rollupsLabel.text = ""
 
         for axis in [lineChartView.xAxis, barChartView.xAxis] {
             axis.drawAxisLineEnabled = false
@@ -74,16 +81,37 @@ class StatsViewController: UIViewController {
         piechart1.holeRadiusPercent = 0.3
         piechart1.extraLeftOffset = 10
         piechart1.extraRightOffset = 10
+        piechart1.noDataText = ""
+        
         piechart2.legend.enabled = false
         piechart2.chartDescription = nil
         piechart2.holeRadiusPercent = 0.3
         piechart2.extraLeftOffset = 10
         piechart2.extraRightOffset = 10
+        piechart2.noDataText = ""
         
-        reloadData()
+        reachabilityManager = NetworkReachabilityManager()
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
+        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
         
-        APIClient.shared.getStatistics().apiResponse { (response) in
-            self.reloadData()
+        if let manager = reachabilityManager  {
+            if  manager.isReachable {
+                APIClient.shared.getStatistics().apiResponse { (response) in
+                    self.reloadData()
+                }
+            }
+            else {
+                self.reloadData()
+            }
+        } else {
+            APIClient.shared.getStatistics().apiResponse { (response) in
+                self.reloadData()
+            }
         }
     }
     
@@ -309,6 +337,7 @@ class StatsViewController: UIViewController {
         let percentFormatter = NumberFormatter()
         percentFormatter.numberStyle = .percent
         percentFormatter.maximumFractionDigits = 0
+        percentFormatter.roundingMode = .up
         percentFormatter.multiplier = 100.0
         percentFormatter.percentSymbol = "%"
         
@@ -330,8 +359,8 @@ class StatsViewController: UIViewController {
         dataSet1.colors = colors1
         dataSet1.valueLinePart1OffsetPercentage = 0.65
         dataSet1.valueLineColor = ColorPallete.shared.darkGrey
-        dataSet1.valueLinePart1Length = 0.3
-        dataSet1.valueLinePart2Length = 0.5
+        dataSet1.valueLinePart1Length = 0.8
+        dataSet1.valueLinePart2Length = 0.4
         dataSet1.yValuePosition = .outsideSlice
         
         let data1 = PieChartData(dataSet: dataSet1)
@@ -359,8 +388,8 @@ class StatsViewController: UIViewController {
         dataSet2.colors = colors2
         dataSet2.valueLinePart1OffsetPercentage = 0.65
         dataSet2.valueLineColor = ColorPallete.shared.darkGrey
-        dataSet2.valueLinePart1Length = 0.5
-        dataSet2.valueLinePart2Length = 0.7
+        dataSet2.valueLinePart1Length = 0.8
+        dataSet2.valueLinePart2Length = 0.4
         dataSet2.yValuePosition = .outsideSlice
         
         let data2 = PieChartData(dataSet: dataSet2)
@@ -372,13 +401,6 @@ class StatsViewController: UIViewController {
         
         piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
         piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
-    }
-    
-    
-    override func viewWillAppear(_ animated: Bool) {
-        barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
     }
     
     @IBAction func showTrophies(sender: Any?) {

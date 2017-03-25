@@ -351,6 +351,7 @@
 		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectedAppScope.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthAppSettingsViewController.swift; sourceTree = "<group>"; };
+		3D1AA6AA1E85938200D91948 /* Scrappaper.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Scrappaper.playground; sourceTree = "<group>"; };
 		3D1B5CDF1D4932D000045388 /* Ride 47.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 47.xcdatamodel"; sourceTree = "<group>"; };
 		3D1CB3981CA5AD3B008B6BBD /* Ride 41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 41.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
@@ -1029,6 +1030,7 @@
 		84D1554619D2733500316995 = {
 			isa = PBXGroup;
 			children = (
+				3D1AA6AA1E85938200D91948 /* Scrappaper.playground */,
 				841D87111BFD4E3000CE28CD /* Ride Report.entitlements */,
 				8445317919FEEC8C0096F26E /* CoreLocation.framework */,
 				84D1557B19D274EB00316995 /* CoreMotion.framework */,

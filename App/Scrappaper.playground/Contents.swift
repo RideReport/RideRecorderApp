@@ -17,58 +17,57 @@ class foo: ChartViewDelegate {
 
 let url = Bundle.main.url(forResource: "stats", withExtension: "json")
 let jsonData = try? Data(contentsOf: url!)
-let json = JSON(data: jsonData!)
+let chartJson = JSON(data: jsonData!)
 
 var dailyData: [BarChartDataEntry] = []
 
-if let seriesJson = json["series"].dictionary, let days = seriesJson["week"]?.array {
-    var i = 0
-    for day in days {
-        if let dayDict = day.dictionary, let rides = day["rides"].double {
-            dailyData.append(BarChartDataEntry(x: Double(i), y: rides, data: dayDict as NSDictionary))
+var entryData1: [PieChartDataEntry] = []
+let colors1: [UIColor] = [UIColor.red, UIColor.green, UIColor.blue, UIColor.orange]
+
+if let statsDict = chartJson["rollups"].dictionary, let conditionsJson = statsDict["conditions"]?.array {
+    for entry in conditionsJson {
+        if let fraction = entry["fraction"].double, let label = entry["label"].string, fraction > 0 {
+            let data = PieChartDataEntry(value: fraction, label: label)
+            entryData1.append(data)
         }
-        i += 1
     }
 }
 
 //
-let barChartView = BarChartView(frame: CGRect(x: 0, y: 0, width: 600, height: 340))
+let piechart1 = PieChartView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+piechart1.legend.enabled = false
+piechart1.chartDescription = nil
+piechart1.holeRadiusPercent = 0.4
+//piechart1.transparentCircleRadiusPercent = 0.5
+piechart1.centerTextRadiusPercent = 80
+piechart1.extraLeftOffset = 10
+piechart1.centerTextRadiusPercent = 0.1
+piechart1.extraRightOffset = 10
+piechart1.noDataText = ""
+
 let view = UIView(frame: CGRect(x: 0, y: 0, width: 600, height: 400))
-view.backgroundColor = UIColor.red
-view.addSubview(barChartView)
+view.backgroundColor = UIColor.white
+view.addSubview(piechart1)
 
-barChartView.drawBarShadowEnabled = false
-barChartView.xAxis.drawLabelsEnabled = true
-barChartView.chartDescription?.enabled = false
-barChartView.xAxis.drawAxisLineEnabled = false
-barChartView.xAxis.drawGridLinesEnabled = false
-barChartView.xAxis.labelPosition = .bottom
-barChartView.rightAxis.spaceBottom = 0
-barChartView.leftAxis.spaceBottom = 0
-barChartView.leftAxis.enabled = false
-barChartView.rightAxis.axisMinimum = 0
-barChartView.rightAxis.drawAxisLineEnabled = false
-barChartView.rightAxis.drawLabelsEnabled = true
-barChartView.rightAxis.labelCount = 5
-barChartView.rightAxis.labelFont = UIFont.systemFont(ofSize: 8)
-barChartView.rightAxis.labelTextColor = UIColor.white
-barChartView.leftAxis.drawLabelsEnabled = false
 
-barChartView.drawBordersEnabled = false
-barChartView.legend.enabled = false
-barChartView.chartDescription = nil
-barChartView.gridBackgroundColor = UIColor.white
+let dataSet1 = PieChartDataSet(values: entryData1, label: "Weather")
+dataSet1.sliceSpace = 2.0
+dataSet1.automaticallyDisableSliceSpacing = true
+dataSet1.colors = colors1
+dataSet1.valueLinePart1OffsetPercentage = 0.65
+dataSet1.valueLineColor = UIColor.black
+dataSet1.valueLinePart1Length = 0.8
+dataSet1.valueLinePart2Length = 0.4
+dataSet1.yValuePosition = .outsideSlice
 
-let data = BarChartData()
-let ds1 = BarChartDataSet(values: dailyData, label: "Rides")
-ds1.colors = [UIColor.white]
-ds1.drawValuesEnabled = false
-ds1.highlightColor = UIColor.green
-ds1.highlightLineWidth = 2.0
-data.addDataSet(ds1)
+let data1 = PieChartData(dataSet: dataSet1)
+data1.setValueTextColor(UIColor.blue)
 
-barChartView.data = data
+piechart1.data = data1
+
+
+
 PlaygroundPage.current.liveView = view
 
 //
-barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 1.0)
+piechart1.animate(xAxisDuration: 0.0, yAxisDuration: 1.0)
