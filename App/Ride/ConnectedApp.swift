@@ -74,7 +74,9 @@ class ConnectedApp: NSManagedObject {
             return nil
         }
         
-        let connectedApp = ConnectedApp.createOrUpdate(uuid)
+        let normalizedUUID = uuid.lowercased().replacingOccurrences(of: "-", with: "") // get rid of dashes and upercases
+        
+        let connectedApp = ConnectedApp.createOrUpdate(normalizedUUID)
         connectedApp.updateWithJson(withJson: json)
         
         return connectedApp

@@ -407,6 +407,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                         case .success(_):
                             app.isHiddenApp = true
                             CoreDataManager.shared.saveContext()
+                            
+                            DispatchQueue.main.async {
+                                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                                let navVC : UINavigationController = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
+                                
+                                guard let connectVC = navVC.topViewController as? ConnectedAppsBrowseViewController else {
+                                    return
+                                }
+                                
+                                connectVC.didSelectApp(app: app)
+                                
+                                if let rootVC = self.window?.rootViewController {
+                                    if let presentedVC = rootVC.presentedViewController {
+                                        // dismiss anything in the way first
+                                        presentedVC.dismiss(animated: false, completion: nil)
+                                    }
+                                    
+                                    rootVC.present(navVC, animated: true, completion: nil)
+                                }
+                            }
                         case .failure(let error):
                             DDLogWarn(String(format: "Error getting third party app from URL scheme: %@", error as CVarArg))
                         }

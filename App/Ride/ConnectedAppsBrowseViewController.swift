@@ -164,44 +164,47 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                 return
             }
 
-            guard let urlString = app.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
-                // if there is no authorize url, go straight to permissions screen
-                self.tableView.deselectRow(at: indexPath, animated: true)
-                self.selectedConnectedApp = app
-                self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
-                return
-            }
-            
-            if url.scheme != "https" {
-                self.tableView.deselectRow(at: indexPath, animated: true)
-                return
-            }
-            
-            
+            self.tableView.deselectRow(at: indexPath, animated: true)
+            self.didSelectApp(app: app)
+        }
+    }
+    
+    public func didSelectApp(app: ConnectedApp) {
+        guard let urlString = app.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
+            // if there is no authorize url, go straight to permissions screen
             self.selectedConnectedApp = app
-            NotificationCenter.default.addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: NSNotification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: nil)
-            
-            if #available(iOS 9.0, *) {
-                let sfvc = SFSafariViewController(url: url)
-                self.safariViewController = sfvc
-                sfvc.delegate = self
-                self.navigationController?.pushViewController(sfvc, animated: true)
-                if let coordinator = transitionCoordinator {
-                    coordinator.animate(alongsideTransition: nil, completion: { (context) in
-                        let targetSubview = sfvc.view
-                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-                        loadingIndicator.color = ColorPallete.shared.darkGrey
-                        self.safariViewControllerActivityIndicator = loadingIndicator
-                        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-                        targetSubview?.addSubview(loadingIndicator)
-                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerY, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
-                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerX, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
-                        loadingIndicator.startAnimating()
-                    })
-                }
-            } else {
-                UIApplication.shared.openURL(url)
+            self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
+            return
+        }
+        
+        if url.scheme != "https" {
+            return
+        }
+        
+        
+        self.selectedConnectedApp = app
+        NotificationCenter.default.addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: NSNotification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: nil)
+        
+        if #available(iOS 9.0, *) {
+            let sfvc = SFSafariViewController(url: url)
+            self.safariViewController = sfvc
+            sfvc.delegate = self
+            self.navigationController?.pushViewController(sfvc, animated: true)
+            if let coordinator = transitionCoordinator {
+                coordinator.animate(alongsideTransition: nil, completion: { (context) in
+                    let targetSubview = sfvc.view
+                    let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+                    loadingIndicator.color = ColorPallete.shared.darkGrey
+                    self.safariViewControllerActivityIndicator = loadingIndicator
+                    loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+                    targetSubview?.addSubview(loadingIndicator)
+                    NSLayoutConstraint(item: loadingIndicator, attribute: .centerY, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
+                    NSLayoutConstraint(item: loadingIndicator, attribute: .centerX, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
+                    loadingIndicator.startAnimating()
+                })
             }
+        } else {
+            UIApplication.shared.openURL(url)
         }
     }
     
