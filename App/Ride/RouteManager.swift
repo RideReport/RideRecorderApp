@@ -738,7 +738,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func pausedUntilDate() -> Date? {
-        return UserDefaults.standard.object(forKey: "RouteManagerIsPausedUntilDate") as! Date?
+        return UserDefaults.standard.object(forKey: "RouteManagerIsPausedUntilDate") as? Date
     }
     
     func pauseTracking(_ untilDate: Date! = nil) {
