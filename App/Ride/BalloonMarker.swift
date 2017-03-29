@@ -20,8 +20,8 @@ open class BalloonMarker: MarkerImage
     open var strokeWidth: CGFloat = 2
     open var cornerRadius: CGFloat = 10
     open var strokeColor: UIColor = UIColor.darkGray
+    open var valuesFont: UIFont = UIFont.boldSystemFont(ofSize: 18)
     open var font: UIFont = UIFont.systemFont(ofSize: 18)
-    open var unitsFont: UIFont = UIFont.boldSystemFont(ofSize: 18)
     open var textColor: UIColor = UIColor.white
     open var insets = UIEdgeInsets()
     open var minimumSize = CGSize()
@@ -161,19 +161,19 @@ open class BalloonMarker: MarkerImage
     {
         labelns = NSMutableAttributedString(string: "")
         
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.font, NSParagraphStyleAttributeName: _paragraphStyle]
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.unitsFont, NSParagraphStyleAttributeName: _paragraphStyle]
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.valuesFont, NSParagraphStyleAttributeName: _paragraphStyle]
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.font, NSParagraphStyleAttributeName: _paragraphStyle]
         
         let data = JSON(entry.data as? Any)
         if let weatherEmoji = data["weather_emoji"].string{
-            labelns.append(NSAttributedString(string: weatherEmoji + " ", attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: weatherEmoji + " ", attributes: unitAttributes))
         }
         
         if let dateString = data["date"].string, let date = Date.dateFromJSONString(dateString) {
-            labelns.append(NSAttributedString(string: dateAsString(date: date), attributes: unitAttributes))
+            labelns.append(NSAttributedString(string: dateAsString(date: date), attributes: valueAttributes))
         }
         
-        labelns.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+        labelns.append(NSAttributedString(string: "\n", attributes: valueAttributes))
         
         if let num = data["rides"].int {
             let numString = num == 0 ? "no" : String(num)

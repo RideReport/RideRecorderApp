@@ -22,9 +22,13 @@ class StatsViewController: UIViewController {
     @IBOutlet weak var piechart1: PieChartView!
     @IBOutlet weak var piechart2: PieChartView!
     
+    @IBOutlet weak var emptyTripsView: UIView!
+    @IBOutlet weak var bobbleChickView: UIView!
+    @IBOutlet weak var emptyTripsLabel: UILabel!
+    
     private var reachabilityManager: NetworkReachabilityManager?
     
-    private var chartJson: JSON!
+    private var chartJson: JSON?
     
     override func viewDidLoad() {
         self.title = "Ride Statistics"
@@ -79,18 +83,21 @@ class StatsViewController: UIViewController {
         piechart1.legend.enabled = false
         piechart1.chartDescription = nil
         piechart1.holeRadiusPercent = 0.3
-        piechart1.extraLeftOffset = 10
-        piechart1.extraRightOffset = 10
+        piechart1.extraLeftOffset = 12
+        piechart1.extraRightOffset = 20
         piechart1.noDataText = ""
         
         piechart2.legend.enabled = false
         piechart2.chartDescription = nil
         piechart2.holeRadiusPercent = 0.3
-        piechart2.extraLeftOffset = 10
-        piechart2.extraRightOffset = 10
+        piechart2.extraLeftOffset = 20
+        piechart2.extraRightOffset = 12
         piechart2.noDataText = ""
         
         reachabilityManager = NetworkReachabilityManager()
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(StatsViewController.bobbleChick))
+        self.bobbleChickView.addGestureRecognizer(tapRecognizer)
     }
     
     
@@ -99,6 +106,15 @@ class StatsViewController: UIViewController {
         piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
         piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
         
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+            // avoid a bug that could have this called twice on app launch
+            NotificationCenter.default.addObserver(self, selector: #selector(StatsViewController.updateData), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        })
+        
+        updateData()
+    }
+    
+    @objc fileprivate func updateData() {
         if let manager = reachabilityManager  {
             if  manager.isReachable {
                 APIClient.shared.getStatistics().apiResponse { (response) in
@@ -113,6 +129,10 @@ class StatsViewController: UIViewController {
                 self.reloadData()
             }
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func reloadData() {
@@ -171,20 +191,28 @@ class StatsViewController: UIViewController {
             timeInterval = Double(24*3600.0)
         }
         
+        guard let json = chartJson, let seriesJson = json["series"].dictionary, let period = seriesJson[seriesKey]?.array else {
+            barChartView.data = nil
+            lineChartView.data = nil
+            
+            return
+        }
+        
+        seriesSegment.setEnabled(true, forSegmentAt: 1)
+        seriesSegment.setEnabled(true, forSegmentAt: 2)
+        
         if seriesKey == "month" {
             var entryData: [ChartDataEntry] = []
             var colors: [UIColor] = []
-            
-            if let seriesJson = chartJson["series"].dictionary, let period = seriesJson[seriesKey]?.array {
-                for entry in period {
-                    if let entryDict = entry.dictionary, let meters = entry["meters"].float,
-                        let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
-                        colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
-                        entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
-                    }
+          
+            for entry in period {
+                if let entryDict = entry.dictionary, let meters = entry["meters"].float,
+                    let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
+                    colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
+                    entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
                 }
             }
-
+            
             let ds1 = LineChartDataSet(values: entryData, label: "Rides")
             ds1.colors = [ColorPallete.shared.goodGreen]
             ds1.circleColors = colors
@@ -193,6 +221,16 @@ class StatsViewController: UIViewController {
             ds1.highlightColor = ColorPallete.shared.goodGreen
             ds1.highlightLineWidth = 2.0
             let data = LineChartData(dataSet: ds1)
+            
+            if (entryData.count == 0) {
+                lineChartView.xAxis.axisMinimum = Date().addingTimeInterval(-1 * timeInterval*timePeriod).timeIntervalSinceReferenceDate/timeInterval
+                lineChartView.xAxis.axisMaximum = Date().timeIntervalSinceReferenceDate/timeInterval
+                
+                lineChartView.leftAxis.axisMinimum = 0
+                lineChartView.leftAxis.axisMaximum = 10
+                lineChartView.rightAxis.axisMinimum = 0
+                lineChartView.rightAxis.axisMaximum = 10
+            }
             
             lineChartView.data = data
             lineChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
@@ -207,12 +245,10 @@ class StatsViewController: UIViewController {
         } else {
             var entryData: [BarChartDataEntry] = []
             
-            if let seriesJson = chartJson["series"].dictionary, let period = seriesJson[seriesKey]?.array {
-                for entry in period {
-                    if let entryDict = entry.dictionary, let meters = entry["meters"].float,
-                        let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
-                        entryData.append(BarChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
-                    }
+            for entry in period {
+                if let entryDict = entry.dictionary, let meters = entry["meters"].float,
+                    let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
+                    entryData.append(BarChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
                 }
             }
             
@@ -222,6 +258,19 @@ class StatsViewController: UIViewController {
             ds1.highlightColor = ColorPallete.shared.goodGreen
             ds1.highlightLineWidth = 2.0
             let data = BarChartData(dataSet: ds1)
+            
+            if (entryData.count == 0) {
+                barChartView.xAxis.axisMinimum = Date().addingTimeInterval(-1 * timeInterval*timePeriod).timeIntervalSinceReferenceDate/timeInterval
+                barChartView.xAxis.axisMaximum = Date().timeIntervalSinceReferenceDate/timeInterval
+                
+                barChartView.leftAxis.axisMinimum = 0
+                barChartView.leftAxis.axisMaximum = 10
+                barChartView.rightAxis.axisMinimum = 0
+                barChartView.rightAxis.axisMaximum = 10
+                
+                seriesSegment.setEnabled(false, forSegmentAt: 1)
+                seriesSegment.setEnabled(false, forSegmentAt: 2)
+            }
             
             barChartView.data = data
             barChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
@@ -240,7 +289,32 @@ class StatsViewController: UIViewController {
                 barChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM d")
                 barChartView.marker = BalloonMarker(chartView: barChartView, dateFormat: "MMM d", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
             }
+
         }
+    }
+    
+    func bobbleChick() {
+        CATransaction.begin()
+        
+        let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
+        
+        //let rotationOffsets = [CGFloat.pi, -CGFloat.pi_2, -0.2, 0.2, -0.2, 0.2, -0.2, 0.2, 0.0]
+        shakeAnimation.values = [
+            NSValue(caTransform3D:CATransform3DMakeRotation(10 * CGFloat(CGFloat.pi/180), 0, 0, -1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-10 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(6 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-6 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(2 * CGFloat(CGFloat.pi/180), 0, 0, 1)),
+            NSValue(caTransform3D: CATransform3DMakeRotation(-2 * CGFloat(CGFloat.pi/180), 0, 0, 1))
+        ]
+        shakeAnimation.keyTimes = [0, 0.2, 0.4, 0.65, 0.8, 1]
+        shakeAnimation.isAdditive = true
+        shakeAnimation.duration = 0.6
+        
+        
+        self.bobbleChickView.layer.add(shakeAnimation, forKey:"transform")
+        
+        CATransaction.commit()
     }
     
     func reloadRollups() {
@@ -255,6 +329,41 @@ class StatsViewController: UIViewController {
         default:
             rollupsKey = "thisyear"
         }
+        
+        guard let json = chartJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
+            self.bobbleChickView.delay(0.2) {
+                self.bobbleChick()
+            }
+            emptyTripsView.isHidden = false
+            emptyTripsLabel.text = "How about this? We'll give you a baby chick trophy for your first ride."
+            
+            rollupsLabel.text = ""
+            return
+        }
+        
+        guard let rides = statsDict["rides"]?.int, rides > 0 else {
+            rollupsLabel.text = ""
+            emptyTripsView.isHidden = false
+            self.bobbleChickView.delay(0.2) {
+                self.bobbleChick()
+            }
+
+            if let lastyearStatsDict = rollupsJson["lastyear"]?.dictionary, let lastYearRides = lastyearStatsDict["rides"]?.int, lastYearRides == 0 {
+                rollupsSegment.setEnabled(false, forSegmentAt: 1)
+            }
+            
+            if let lifeStatsDict = rollupsJson["lifetime"]?.dictionary, let lifetimeRides = lifeStatsDict["rides"]?.int, lifetimeRides == 0 {
+                rollupsSegment.setEnabled(false, forSegmentAt: 2)
+                emptyTripsLabel.text = "How about this? We'll give you a baby chick trophy for your first ride."
+            } else if rollupsKey == "thisyear" {
+                emptyTripsLabel.text = "You haven't taken any rides yet this year. What are you waiting for?"
+            }
+            
+            return
+        }
+        emptyTripsView.isHidden = true
+        rollupsSegment.setEnabled(true, forSegmentAt: 1)
+        rollupsSegment.setEnabled(true, forSegmentAt: 2)
         
         let rollupsString = NSMutableAttributedString(string: "")
         
@@ -274,46 +383,44 @@ class StatsViewController: UIViewController {
         let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: ColorPallete.shared.darkGrey, NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle]
         let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: ColorPallete.shared.darkGrey, NSFontAttributeName: unitsFont, NSParagraphStyleAttributeName: paragraphStyle]
         
-        if let rollupsJson = chartJson["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary {
-            if let impressiveArray = statsDict["impressive"]?.array, impressiveArray.count == 2 {
-                if let emoji = impressiveArray[0].string, let stat = impressiveArray[1].string {
-                    rollupsString.append(NSAttributedString(string: emoji, attributes: unitAttributes))
-                    rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                    rollupsString.append(NSAttributedString(string: stat, attributes: unitAttributes))
-                    rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
-                }
-            }
-            
-            if let rides = statsDict["rides"]?.int, let ridesString = integerFormatter.string(from: NSNumber(value: rides)) {
-                rollupsString.append(NSAttributedString(string: ridesString, attributes: valueAttributes))
+        if let impressiveArray = statsDict["impressive"]?.array, impressiveArray.count == 2 {
+            if let emoji = impressiveArray[0].string, let stat = impressiveArray[1].string {
+                rollupsString.append(NSAttributedString(string: emoji, attributes: unitAttributes))
                 rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: rides == 1 ? "ride" : "rides", attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: stat, attributes: unitAttributes))
                 rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
             }
-            
-            if let meters = statsDict["meters"]?.float {
-                let components = meters.distanceString(suppressFractionalUnits: true).components(separatedBy: " ")
-                if components.count == 2 {
-                    rollupsString.append(NSAttributedString(string: components[0], attributes: valueAttributes))
-                    rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                    rollupsString.append(NSAttributedString(string: components[1], attributes: unitAttributes))
-                    rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
-                }
-            }
-            
-            if let trophiesCount = statsDict["trophies"]?.int, let trophiesString = integerFormatter.string(from: NSNumber(value: trophiesCount)) {
-                rollupsString.append(NSAttributedString(string: trophiesString, attributes: valueAttributes))
+        }
+        
+        if let rides = statsDict["rides"]?.int, let ridesString = integerFormatter.string(from: NSNumber(value: rides)) {
+            rollupsString.append(NSAttributedString(string: ridesString, attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: rides == 1 ? "ride" : "rides", attributes: unitAttributes))
+            rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+        }
+        
+        if let meters = statsDict["meters"]?.float {
+            let components = meters.distanceString(suppressFractionalUnits: true).components(separatedBy: " ")
+            if components.count == 2 {
+                rollupsString.append(NSAttributedString(string: components[0], attributes: valueAttributes))
                 rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: trophiesCount == 1 ? "trophy" : "trophies", attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: components[1], attributes: unitAttributes))
                 rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
-
             }
+        }
+        
+        if let trophiesCount = statsDict["trophies"]?.int, let trophiesString = integerFormatter.string(from: NSNumber(value: trophiesCount)) {
+            rollupsString.append(NSAttributedString(string: trophiesString, attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: trophiesCount == 1 ? "trophy" : "trophies", attributes: unitAttributes))
+            rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
             
-            if let grams = statsDict["co2_saved_grams"]?.float, let co2String = integerFormatter.string(from: NSNumber(value: grams/1000.0)) {
-                rollupsString.append(NSAttributedString(string: co2String, attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: "kg CO2 saved", attributes: unitAttributes))
-            }
+        }
+        
+        if let grams = statsDict["co2_saved_grams"]?.float, let co2String = integerFormatter.string(from: NSNumber(value: grams/1000.0)) {
+            rollupsString.append(NSAttributedString(string: co2String, attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: "kg CO2 saved", attributes: unitAttributes))
         }
     
         rollupsLabel.attributedText = rollupsString
@@ -332,6 +439,12 @@ class StatsViewController: UIViewController {
             rollupsKey = "thisyear"
         }
         
+        guard let json = chartJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
+            piechart1.data = nil
+            piechart2.data = nil
+            return
+        }
+        
         let font  = UIFont.boldSystemFont(ofSize: 14)
         
         let percentFormatter = NumberFormatter()
@@ -344,63 +457,87 @@ class StatsViewController: UIViewController {
         var entryData1: [PieChartDataEntry] = []
         let colors1: [UIColor] = [ColorPallete.shared.goodGreen, ColorPallete.shared.transitBlue, ColorPallete.shared.badRed, ColorPallete.shared.darkGrey]
         
-        if let rollupsJson = chartJson["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary, let conditionsJson = statsDict["conditions"]?.array {
+        var otherConditionsEntry: Double = 0
+        if let conditionsJson = statsDict["conditions"]?.array {
             for entry in conditionsJson {
                 if let fraction = entry["fraction"].double, let label = entry["label"].string, fraction > 0 {
-                    let data = PieChartDataEntry(value: fraction, label: label)
-                    entryData1.append(data)
+                    if fraction > 0.06 {
+                        let data = PieChartDataEntry(value: fraction, label: label)
+                        entryData1.append(data)
+                    } else {
+                        otherConditionsEntry += fraction
+                    }
                 }
             }
         }
         
-        let dataSet1 = PieChartDataSet(values: entryData1, label: "Weather")
-        dataSet1.sliceSpace = 2.0
-        dataSet1.automaticallyDisableSliceSpacing = true
-        dataSet1.colors = colors1
-        dataSet1.valueLinePart1OffsetPercentage = 0.65
-        dataSet1.valueLineColor = ColorPallete.shared.darkGrey
-        dataSet1.valueLinePart1Length = 0.8
-        dataSet1.valueLinePart2Length = 0.4
-        dataSet1.yValuePosition = .outsideSlice
+        if (otherConditionsEntry > 0) {
+            let data = PieChartDataEntry(value: otherConditionsEntry, label: "")
+            entryData1.append(data)
+        }
         
-        let data1 = PieChartData(dataSet: dataSet1)
-        data1.setValueTextColor(ColorPallete.shared.darkGrey)
-        data1.setValueFont(font)
-        data1.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
-        
-        piechart1.data = data1
+        if (entryData1.count > 0) {
+            let dataSet1 = PieChartDataSet(values: entryData1, label: "Weather")
+            dataSet1.sliceSpace = 2.0
+            dataSet1.automaticallyDisableSliceSpacing = true
+            dataSet1.colors = colors1
+            dataSet1.valueLinePart1OffsetPercentage = 0.65
+            dataSet1.valueLineColor = ColorPallete.shared.darkGrey
+            dataSet1.valueLinePart1Length = 0.8
+            dataSet1.valueLinePart2Length = 0.4
+            dataSet1.yValuePosition = .outsideSlice
+            
+            let data1 = PieChartData(dataSet: dataSet1)
+            data1.setValueTextColor(ColorPallete.shared.darkGrey)
+            data1.setValueFont(font)
+            data1.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
+            
+            piechart1.data = data1
+        }
         
         var entryData2: [PieChartDataEntry] = []
         let colors2: [UIColor] = [ColorPallete.shared.autoBrown, ColorPallete.shared.goodGreen]
         
-        if let rollupsJson = chartJson["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary, let modeJson = statsDict["mode"]?.array {
+        var otherModesEntry: Double = 0
+        if let modeJson = statsDict["mode"]?.array {
             for entry in modeJson {
                 if let fraction = entry["fraction"].double, let label = entry["label"].string, fraction > 0 {
-                    let data = PieChartDataEntry(value: fraction, label: label)
-                    entryData2.append(data)
+                    if fraction > 0.06 {
+                        let data = PieChartDataEntry(value: fraction, label: label)
+                        entryData2.append(data)
+                    } else {
+                        otherModesEntry += fraction
+                    }
                 }
             }
         }
         
-        let dataSet2 = PieChartDataSet(values: entryData2, label: "Mode-Share")
-        dataSet2.sliceSpace = 2.0
-        dataSet2.automaticallyDisableSliceSpacing = true
-        dataSet2.colors = colors2
-        dataSet2.valueLinePart1OffsetPercentage = 0.65
-        dataSet2.valueLineColor = ColorPallete.shared.darkGrey
-        dataSet2.valueLinePart1Length = 0.8
-        dataSet2.valueLinePart2Length = 0.4
-        dataSet2.yValuePosition = .outsideSlice
+        if (otherModesEntry > 0) {
+            let data = PieChartDataEntry(value: otherModesEntry, label: "")
+            entryData2.append(data)
+        }
         
-        let data2 = PieChartData(dataSet: dataSet2)
-        data2.setValueTextColor(ColorPallete.shared.darkGrey)
-        data2.setValueFont(font)
-        data2.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
-        
-        piechart2.data = data2
-        
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
+        if (entryData2.count > 0) {
+            let dataSet2 = PieChartDataSet(values: entryData2, label: "Mode-Share")
+            dataSet2.sliceSpace = 2.0
+            dataSet2.automaticallyDisableSliceSpacing = true
+            dataSet2.colors = colors2
+            dataSet2.valueLinePart1OffsetPercentage = 0.65
+            dataSet2.valueLineColor = ColorPallete.shared.darkGrey
+            dataSet2.valueLinePart1Length = 0.8
+            dataSet2.valueLinePart2Length = 0.4
+            dataSet2.yValuePosition = .outsideSlice
+            
+            let data2 = PieChartData(dataSet: dataSet2)
+            data2.setValueTextColor(ColorPallete.shared.darkGrey)
+            data2.setValueFont(font)
+            data2.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
+            
+            piechart2.data = data2
+            
+            piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
+            piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
+        }
     }
     
     @IBAction func showTrophies(sender: Any?) {
