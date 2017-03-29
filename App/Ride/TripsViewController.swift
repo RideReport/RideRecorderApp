@@ -427,7 +427,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             rewardSectionNeedsReload = true
         case .delete:
-            if isOtherTripsSection(indexPath!.section) && self.fetchedResultsController.sections![indexPath!.section].numberOfObjects > 0 {
+            if isOtherTripsSection(indexPath!.section) && self.fetchedResultsController.sections!.count > 0 && self.fetchedResultsController.sections![indexPath!.section].numberOfObjects > 0 {
                 // don't delete the row unless it is the last
                 return
             }
