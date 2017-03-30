@@ -400,7 +400,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 NotificationCenter.default.post(name: Notification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: url)
             } else if (url.host == "authorize-application") {
                 if let uuid = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "uuid" }).first?.value {
-                    let app = ConnectedApp.createOrUpdate(uuid)
+                    var fixedUUID = uuid
+                    if (!uuid.contains("-") && uuid.characters.count == 32) {
+                        // work around an absurd issue where we sometimes have URL's out there with dashless uuids.
+                        fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 8))
+                        fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 13))
+                        fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 18))
+                        fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 23))
+                    }
+                    let app = ConnectedApp.createOrUpdate(fixedUUID)
                     
                     APIClient.shared.getApplication(app).apiResponse({ (response) in
                         switch response.result {
