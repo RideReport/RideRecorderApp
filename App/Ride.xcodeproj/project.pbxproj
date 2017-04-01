@@ -142,6 +142,7 @@
 		3DF07A741DA5BCE40015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A751DA5BCE60015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DFC71691E785DBF00F1567B /* Data+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC71681E785DBF00F1567B /* Data+HBAdditions.swift */; };
+		3DFF4D901E8DCD1000496ED4 /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */; };
 		840042631C1B774700368A82 /* RideShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840042621C1B774700368A82 /* RideShareViewController.swift */; };
 		84033D991A8BD26900339171 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* MotionManager.swift */; };
 		84091CD91BD848A400264652 /* RCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 84091CD81BD848A400264652 /* RCounter.m */; };
@@ -438,6 +439,8 @@
 		3DF146E41E29854B00A25C7A /* Ride 48.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 48.xcdatamodel"; sourceTree = "<group>"; };
 		3DF146E51E29955900A25C7A /* Ride 49.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 49.xcdatamodel"; sourceTree = "<group>"; };
 		3DFC71681E785DBF00F1567B /* Data+HBAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+HBAdditions.swift"; sourceTree = "<group>"; };
+		3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Promotion.swift; path = Ride/Promotion.swift; sourceTree = "<group>"; };
+		3DFF4D911E8DD1F500496ED4 /* Ride 52.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 52.xcdatamodel"; sourceTree = "<group>"; };
 		70CEB8FEAF7CB8497CC761B7 /* Pods-Ride Report Notification Content.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Ride Report Notification Content.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Ride Report Notification Content/Pods-Ride Report Notification Content.debug.xcconfig"; sourceTree = "<group>"; };
 		840042621C1B774700368A82 /* RideShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideShareViewController.swift; sourceTree = "<group>"; };
 		84033D981A8BD26900339171 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MotionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -930,6 +933,7 @@
 				3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */,
 				84AEAF091AF2A30D00C04E7D /* Profile.swift */,
 				847A05661A01B2FE008F5371 /* Location.swift */,
+				3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */,
 				8421418F1C3C8E19009DA851 /* Prototrip.swift */,
 				847A05641A01B2F1008F5371 /* Trip.swift */,
 				3D7FFA8B1D061F260077E591 /* TripReward.swift */,
@@ -1730,6 +1734,7 @@
 				3DB9BD1A1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
 				847ED0911A40DA0D00CAA396 /* DirectionsViewController.swift in Sources */,
 				8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */,
+				3DFF4D901E8DCD1000496ED4 /* Promotion.swift in Sources */,
 				8421419D1C3F06EE009DA851 /* CollectionTypeAdditions.swift in Sources */,
 				848777B71A6834C300B59B06 /* UIView+HBadditions.swift in Sources */,
 				3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */,
@@ -2378,6 +2383,7 @@
 		84D1555619D2733500316995 /* Ride.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3DFF4D911E8DD1F500496ED4 /* Ride 52.xcdatamodel */,
 				3D493C3D1E79B40E00BB7B34 /* Ride 51.xcdatamodel */,
 				3D3C3E161E68D4C3004C719E /* Ride 50.xcdatamodel */,
 				3DF146E51E29955900A25C7A /* Ride 49.xcdatamodel */,
@@ -2430,7 +2436,7 @@
 				844497281A3A6CD70009F889 /* Ride 5.xcdatamodel */,
 				84B6D9B31A3BBA3B001E2DF1 /* Ride 6.xcdatamodel */,
 			);
-			currentVersion = 3D493C3D1E79B40E00BB7B34 /* Ride 51.xcdatamodel */;
+			currentVersion = 3DFF4D911E8DD1F500496ED4 /* Ride 52.xcdatamodel */;
 			name = Ride.xcdatamodeld;
 			path = Ride/Ride.xcdatamodeld;
 			sourceTree = "<group>";

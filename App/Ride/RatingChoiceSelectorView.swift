@@ -17,8 +17,6 @@
 import Foundation
 
 @IBDesignable class RatingChoiceSelectorView : UIControl {
-    let displayedRatingChoices = [RatingChoice.bad, RatingChoice.mixed, RatingChoice.good]
-    
     private var feedbackGenerator: NSObject!
     
     private var ratingButtons: [UIButton]! = []
@@ -40,11 +38,11 @@ import Foundation
                 return .notSet
             }
             
-            guard selectedIndex < displayedRatingChoices.count else {
+            guard selectedIndex < RatingVersion.currentRatingVersion.availableRatingChoices.count else {
                 return .notSet
             }
             
-            return displayedRatingChoices[selectedIndex]
+            return RatingVersion.currentRatingVersion.availableRatingChoices[selectedIndex]
         }
         
         set {
@@ -56,7 +54,7 @@ import Foundation
                 return
             }
             
-            guard let choiceIndex = displayedRatingChoices.index(of: newValue) else {
+            guard let choiceIndex = RatingVersion.currentRatingVersion.availableRatingChoices.index(of: newValue) else {
                 return
             }
             
@@ -111,7 +109,7 @@ import Foundation
         self.backgroundColor = UIColor.clear
 
         
-        for (i, _) in self.displayedRatingChoices.enumerated() {
+        for (i, _) in RatingVersion.currentRatingVersion.availableRatingChoices.enumerated() {
             let choiceButton = UIButton(type: UIButtonType.custom)
             
             choiceButton.addTarget(self, action: #selector(RatingChoiceSelectorView.buttonTapped(_:)), for: UIControlEvents.touchUpInside)
@@ -129,7 +127,7 @@ import Foundation
             self.addConstraint(yConstraint)
             yConstraint.isActive = true
             
-            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(self.displayedRatingChoices.count), constant: 0)
+            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(RatingVersion.currentRatingVersion.availableRatingChoices.count), constant: 0)
             self.addConstraint(widthConstraint)
             widthConstraint.isActive = true
             
@@ -187,7 +185,7 @@ import Foundation
             return
         }
         
-        let ratingChoice = displayedRatingChoices[buttonIndex]
+        let ratingChoice = RatingVersion.currentRatingVersion.availableRatingChoices[buttonIndex]
         
         guard let selectedImage = image(forRatingChoice: ratingChoice, selected: true, imageWidth: button.frame.size.width, withDescription: false) else {
             return
@@ -288,10 +286,10 @@ import Foundation
     }
     
     func reloadUI() {
-        for (i, ratingChoice) in self.displayedRatingChoices.enumerated() {
+        for (i, ratingChoice) in RatingVersion.currentRatingVersion.availableRatingChoices.enumerated() {
             // leave room for the end caps
             let button = self.ratingButtons[i]
-            let imageWidth = self.frame.size.width/CGFloat(self.displayedRatingChoices.count)
+            let imageWidth = self.frame.size.width/CGFloat(RatingVersion.currentRatingVersion.availableRatingChoices.count)
             button.setImage(image(forRatingChoice: ratingChoice, selected: false, imageWidth: imageWidth), for: .normal)
             
             let selectedImage = image(forRatingChoice: ratingChoice, selected: true, imageWidth: imageWidth)

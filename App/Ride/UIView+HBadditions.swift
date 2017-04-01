@@ -17,7 +17,7 @@ enum AnimationDirection {
 
 extension UIView {
     
-    @discardableResult  func delay(_ delay: TimeInterval, completionHandler:@escaping () -> Void) -> Self {
+    @discardableResult func delay(_ delay: TimeInterval, completionHandler:@escaping () -> Void) -> Self {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: {
             completionHandler()
         })

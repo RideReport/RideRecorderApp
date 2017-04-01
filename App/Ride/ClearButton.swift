@@ -11,20 +11,36 @@ import Foundation
 @IBDesignable class ClearButton : UIButton {
     var effectsView : UIView!
     
+    private var style: UIBlurEffectStyle = UIBlurEffectStyle.extraLight
+    @IBInspectable var effectsStyle: NSInteger = UIBlurEffectStyle.extraLight.rawValue {
+        didSet {
+            if let newStyle = UIBlurEffectStyle(rawValue: self.effectsStyle) {
+                self.style = newStyle
+                reloadUI()
+            }
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit()
+        reloadUI()
     }
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit()
+        reloadUI()
     }
     
-    func commonInit() {
-        effectsView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.extraLight))
-        let clearButtonRect = CGRect(x: 0, y: 0, width: 18, height: 18)
+    func reloadUI() {
+        if let oldView = effectsView {
+            oldView.removeFromSuperview()
+        }
+        
+        let rect = CGRect(x: 0, y: 0, width: 18, height: 18)
+        effectsView = UIVisualEffectView(effect: UIBlurEffect(style: style))
+        effectsView.frame = rect
+        let clearButtonRect = rect
         UIGraphicsBeginImageContextWithOptions(clearButtonRect.size, false, 0.0)
         let circle = UIBezierPath(ovalIn: clearButtonRect)
         let line1 = UIBezierPath()
@@ -55,7 +71,8 @@ import Foundation
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if !self.isHidden {
+        if !self.isHidden && self.frame.insetBy(dx: -10, dy: -10).contains(point) {
+            // enlarge the hit target a bit.
             return self
         }
         

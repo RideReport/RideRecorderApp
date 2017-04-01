@@ -729,7 +729,7 @@ class APIClient {
         }
     }
     
-    func getApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+    @discardableResult func getApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: self, method: .get, route: "applications/" + app.uuid) { (response) -> Void in
             switch response.result {
             case .success(let json):
@@ -854,6 +854,24 @@ class APIClient {
                 
                 if let supportId = json["support_id"].string {
                     Profile.profile().supportId = supportId
+                }
+                
+                if let promotions = json["promotions"].array {
+                    var newPromotions: [Promotion] = []
+                    
+                    for promotionsDict in promotions {
+                        if let promo = Promotion.createOrUpdate(withJson: promotionsDict) {
+                            newPromotions.append(promo)
+                            promo.profile = Profile.profile()
+                        }
+                    }
+                    
+                    for promo in Profile.profile().promotions {
+                        let promotion = promo as! Promotion
+                        if !newPromotions.contains(promotion) {
+                            promotion.profile = nil
+                        }
+                    }
                 }
                 
                 if let connectedApps = json["connected_apps"].array {

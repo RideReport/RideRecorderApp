@@ -165,11 +165,11 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             }
 
             self.tableView.deselectRow(at: indexPath, animated: true)
-            self.didSelectApp(app: app)
+            self.didSelectApp(app: app, fromList: true)
         }
     }
     
-    public func didSelectApp(app: ConnectedApp) {
+    public func didSelectApp(app: ConnectedApp, fromList: Bool) {
         guard let urlString = app.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
             // if there is no authorize url, go straight to permissions screen
             self.selectedConnectedApp = app
@@ -189,7 +189,12 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             let sfvc = SFSafariViewController(url: url)
             self.safariViewController = sfvc
             sfvc.delegate = self
-            self.navigationController?.pushViewController(sfvc, animated: true)
+            if (fromList) {
+                self.navigationController?.pushViewController(sfvc, animated: true)
+            } else {
+                self.navigationController?.setViewControllers([sfvc], animated: false)
+                sfvc.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: AppDelegate.appDelegate(), action: #selector(AppDelegate.dismissCurrentPresentedViewController))
+            }
             if let coordinator = transitionCoordinator {
                 coordinator.animate(alongsideTransition: nil, completion: { (context) in
                     let targetSubview = sfvc.view

@@ -13,6 +13,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var connectingAppLogo: UIImageView!
     @IBOutlet weak var connectingAppDetailText: UILabel!
+    @IBOutlet weak var connectingAppScopesText: UILabel!
     @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var connectionActivityIndicatorView: UIView!
     @IBOutlet weak var connectionActivityIndicatorViewText: UILabel!
@@ -39,7 +40,8 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
                 scope.granted = true
             }
             
-            self.connectingAppDetailText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
+            self.connectingAppDetailText.text = self.connectingApp.descriptionText
+            self.connectingAppScopesText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
             self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")
             if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
                 self.connectingAppLogo.kf.setImage(with: url)
@@ -59,6 +61,9 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     }
     
     @IBAction func connect(_ sender: AnyObject) {
+        if let superview = self.connectionActivityIndicatorView.superview {
+            superview.bringSubview(toFront: self.connectionActivityIndicatorView)
+        }
         self.connectionActivityIndicatorView.isHidden = false
         
         self.postConnectApplication()

@@ -22,6 +22,8 @@ class Profile : NSManagedObject {
     @NSManaged var dateOfBirth : Date?
     @NSManaged var weightKilograms : NSNumber?
     @NSManaged var gender : NSNumber
+    
+    @NSManaged var promotions : NSSet!
 
     struct Static {
         static var onceToken : Int = 0
@@ -56,6 +58,18 @@ class Profile : NSManagedObject {
         }
         
         return Static.profile
+    }
+    
+    func eligibilePromotion()->Promotion? {
+        if let promo = self.promotions.allObjects.first as? Promotion, promo.userDismissed == false {
+            if let app = promo.connectedApp, app.profile != nil {
+                // if the app is already connected, skip it!
+                return nil
+            }
+            return promo
+        }
+        
+        return nil
     }
     
     func setGeofencedLocation(_ location: CLLocation?) {

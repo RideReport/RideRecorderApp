@@ -124,6 +124,11 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         helperTextLabel.animatedSetMarkdownStringValue("Nice! **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
     }
     
+    @IBAction func tappedMixed(_ sender: AnyObject) {
+        self.moveOutIphone()
+        helperTextLabel.animatedSetMarkdownStringValue("Oh well =/. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
+    }
+    
     @IBAction func tappedNotGreat(_ sender: AnyObject) {
         self.moveOutIphone()
         helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")

@@ -54,6 +54,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         UINavigationBar.appearance().barTintColor = ColorPallete.shared.darkGreen
         UINavigationBar.appearance().tintColor = ColorPallete.shared.almostWhite
+        UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
+        if #available(iOS 9.0, *) {
+            UIView.appearance(whenContainedInInstancesOf: [UIAlertView.self]).tintColor = ColorPallete.shared.darkGreen
+            UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.darkGreen
+        }
         
         let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as! String
         DDLogInfo(String(format: "========================STARTING RIDE REPORT APP v%@========================", versionString))
@@ -102,33 +107,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func startupNotifications() {
-        let goodRideAction = UIMutableUserNotificationAction()
-        goodRideAction.identifier = "GOOD_RIDE_IDENTIFIER"
-        goodRideAction.title = RatingChoice.good.emoji + " " + RatingChoice.good.noun
-        goodRideAction.activationMode = UIUserNotificationActivationMode.background
-        goodRideAction.isDestructive = false
-        goodRideAction.isAuthenticationRequired = false
+        var actions : [UIMutableUserNotificationAction] = []
         
-        
-        let mixedRideAction = UIMutableUserNotificationAction()
-        mixedRideAction.identifier = "MIXED_RIDE_IDENTIFIER"
-        mixedRideAction.title =  RatingChoice.mixed.emoji + " " + RatingChoice.mixed.noun
-        mixedRideAction.activationMode = UIUserNotificationActivationMode.background
-        mixedRideAction.isDestructive = false
-        mixedRideAction.isAuthenticationRequired = false
-        
-        let badRideAction = UIMutableUserNotificationAction()
-        badRideAction.identifier = "BAD_RIDE_IDENTIFIER"
-        badRideAction.title = RatingChoice.bad.emoji + " " + RatingChoice.bad.noun
-        badRideAction.activationMode = UIUserNotificationActivationMode.background
-        badRideAction.isDestructive = false
-        badRideAction.isAuthenticationRequired = false
-
+        for ratingChoice in RatingVersion.currentRatingVersion.availableRatingChoices {
+            let action = UIMutableUserNotificationAction()
+            action.identifier = ratingChoice.notificationActionIdentifier
+            action.title = ratingChoice.emoji + " " + ratingChoice.noun
+            action.activationMode = UIUserNotificationActivationMode.background
+            action.isDestructive = false
+            action.isAuthenticationRequired = false
+            actions.append(action)
+        }
         
         let rideCompleteCategory = UIMutableUserNotificationCategory()
         rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
-        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], for: UIUserNotificationActionContext.minimal)
-        rideCompleteCategory.setActions([goodRideAction, mixedRideAction, badRideAction], for: UIUserNotificationActionContext.default)
+        rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.minimal)
+        rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.default)
    
         let rideStartedCategory = UIMutableUserNotificationCategory()
         rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
@@ -195,6 +189,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
+    }
+    
+    func dismissCurrentPresentedViewController() {
+        if let rootVC = self.window?.rootViewController {
+            if let presentedVC = rootVC.presentedViewController {
+                // dismiss anything in the way first
+                presentedVC.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func transitionToConnectApp(_ app: ConnectedApp) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let navVC : UINavigationController = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
+        
+        guard let connectVC = navVC.topViewController as? ConnectedAppsBrowseViewController else {
+            return
+        }
+        
+        connectVC.didSelectApp(app: app, fromList: false)
+        
+        if let rootVC = self.window?.rootViewController {
+            if let presentedVC = rootVC.presentedViewController {
+                // dismiss anything in the way first
+                presentedVC.dismiss(animated: false, completion: nil)
+            }
+            
+            rootVC.present(navVC, animated: true, completion: nil)
+        }
     }
     
     
@@ -310,28 +333,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
                 DDLogInfo(String(format: "Received trip rating notification action"))
-                if (identifier == "GOOD_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.good)
-                    self.postTripRatedThanksNotification(true)
-
-                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
-                        completionHandler()
-                    })
-                } else if (identifier == "BAD_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.bad)
-                    
-                    self.postTripRatedThanksNotification(false)
-                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
-                        completionHandler()
-                    })
-                } else if (identifier == "MIXED_RIDE_IDENTIFIER") {
-                    trip.rating = Rating.ratingWithCurrentVersion(RatingChoice.mixed)
-                    
-                    self.postTripRatedThanksNotification(false)
-                    APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
-                        completionHandler()
-                    })
-                } else if (identifier == "FLAG_IDENTIFIER") {
+            
+                for ratingChoice in RatingVersion.currentRatingVersion.availableRatingChoices {
+                    if identifier == ratingChoice.notificationActionIdentifier {
+                        trip.rating = Rating.ratingWithCurrentVersion(ratingChoice)
+                        self.postTripRatedThanksNotification(ratingChoice: ratingChoice)
+                        
+                        APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                            completionHandler()
+                        })
+                        break
+                    }
+                }
+                if (identifier == "FLAG_IDENTIFIER") {
                     _ = Incident(location: trip.mostRecentLocation()!, trip: trip)
                     CoreDataManager.shared.saveContext()
                     completionHandler()
@@ -344,16 +358,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
-    func postTripRatedThanksNotification(_ wasGoodTrip: Bool) {
+    func postTripRatedThanksNotification(ratingChoice: RatingChoice) {
         var emojicuteness : [Character] = []
         var thanksPhrases : [String] = []
         
-        if (wasGoodTrip) {
+        if (ratingChoice == .good) {
             emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆".characters)
             thanksPhrases = ["Thanks!", "Sweet!", "YES!", "kewlll", "w00t =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
-        } else {
+        } else if (ratingChoice == .mixed){
+            emojicuteness = Array("🤔😬😶🤖🎲📊🗿🥉🌦🎭🃏".characters)
+            thanksPhrases = ["hmmm", "welp.", "interesting =/", "riiiiight", "k", "aight.", "gotcha.", "(・_・)ヾ"]
+        } else if (ratingChoice == .bad) {
             emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭".characters)
-            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/", "(・_・)ヾ"]
+            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/"]
         }
         
         let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(thanksPhrases.count)))]
@@ -417,23 +434,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                             CoreDataManager.shared.saveContext()
                             
                             DispatchQueue.main.async {
-                                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-                                let navVC : UINavigationController = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
-                                
-                                guard let connectVC = navVC.topViewController as? ConnectedAppsBrowseViewController else {
-                                    return
-                                }
-                                
-                                connectVC.didSelectApp(app: app)
-                                
-                                if let rootVC = self.window?.rootViewController {
-                                    if let presentedVC = rootVC.presentedViewController {
-                                        // dismiss anything in the way first
-                                        presentedVC.dismiss(animated: false, completion: nil)
-                                    }
-                                    
-                                    rootVC.present(navVC, animated: true, completion: nil)
-                                }
+                                self.transitionToConnectApp(app)
                             }
                         case .failure(let error):
                             DDLogWarn(String(format: "Error getting third party app from URL scheme: %@", error as CVarArg))

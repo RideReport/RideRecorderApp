@@ -112,10 +112,10 @@ enum RatingChoice: Int16 {
             switch self {
             case .bad:
                 return "😡"
-            case .mixed:
-                return "😕"
             case .good:
                 return "☺️"
+            case .mixed:
+                return "😕"
             case .notSet:
                 return ""
             }
@@ -127,10 +127,25 @@ enum RatingChoice: Int16 {
             switch self {
             case .bad:
                 return "Stressful"
-            case .mixed:
-                return "Mixed"
             case .good:
                 return "Chill"
+            case .mixed:
+                return "Mixed"
+            case .notSet:
+                return ""
+            }
+        }
+    }
+    
+    var notificationActionIdentifier: String {
+        get {
+            switch self {
+            case .bad:
+                return "BAD_RIDE_IDENTIFIER"
+            case .good:
+                return "GOOD_RIDE_IDENTIFIER"
+            case .mixed:
+                return "MIXED_RIDE_IDENTIFIER"
             case .notSet:
                 return ""
             }
@@ -144,6 +159,15 @@ enum RatingVersion: Int16 {
     
     static var currentRatingVersion: RatingVersion {
         return RatingVersion.v2beta
+    }
+    
+    var availableRatingChoices: [RatingChoice] {
+        switch self {
+        case .v1:
+            return [RatingChoice.bad, RatingChoice.good]
+        case .v2beta:
+            return [RatingChoice.bad, RatingChoice.mixed, RatingChoice.good]
+        }
     }
     
     var numberValue: NSNumber {

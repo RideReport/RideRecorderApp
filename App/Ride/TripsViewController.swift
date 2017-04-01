@@ -133,9 +133,31 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 guard let strongSelf = self else {
                     return
                 }
-                strongSelf.shouldShowStreakAnimation = true
-                if let rewardsCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
-                    strongSelf.configureRewardsCell(rewardsCell)
+                // only support one promo for now
+                if let promo = Profile.profile().eligibilePromotion() {
+                    strongSelf.shouldShowStreakAnimation = true
+                    if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
+                        // if we need to, fetch the app.
+                        APIClient.shared.getApplication(app)
+                    }
+                    
+                    if let promoCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
+                        if promoCell.reuseIdentifier == "PromoViewTableCell" {
+                            strongSelf.configurePromoCell(promoCell, promotion: promo)
+                        } else {
+                            strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
+                        }
+                    }
+                } else {
+                    strongSelf.shouldShowStreakAnimation = true
+                    if let rewardsCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
+                        if rewardsCell.reuseIdentifier == "RewardsViewTableCell" {
+                            strongSelf.configureRewardsCell(rewardsCell)
+                        }
+                        else {
+                            strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+                        }
+                    }
                 }
             }
             
@@ -605,17 +627,29 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let tableCell : UITableViewCell!
         
         if indexPath.section == 0 {
-            let reuseID = "RewardsViewTableCell"
-            
-            tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
-            tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
-            tableCell.layoutMargins = UIEdgeInsets.zero
-            if #available(iOS 9.0, *) {} else {
-                // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
-                tableCell.accessoryType = .none
+            // for now we only support a single promotion
+            if let promo = Profile.profile().eligibilePromotion() {
+                // do it
+                let reuseID = "PromoViewTableCell"
+                
+                tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
+                tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
+                tableCell.layoutMargins = UIEdgeInsets.zero
+                
+                configurePromoCell(tableCell, promotion: promo)
+            } else {
+                let reuseID = "RewardsViewTableCell"
+                
+                tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
+                tableCell.separatorInset = UIEdgeInsetsMake(0, -8, 0, -8)
+                tableCell.layoutMargins = UIEdgeInsets.zero
+                if #available(iOS 9.0, *) {} else {
+                    // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
+                    tableCell.accessoryType = .none
+                }
+                
+                configureRewardsCell(tableCell)
             }
-            
-            configureRewardsCell(tableCell)
         } else {
             let reuseID = "RoutesViewTableCell"
             
@@ -630,15 +664,59 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         return tableCell
     }
     
+    func configurePromoCell(_ tableCell: UITableViewCell, promotion: Promotion) {
+        guard let bannerImageView = tableCell.viewWithTag(3) as? UIImageView,
+            let titleLabel = tableCell.viewWithTag(1) as? UILabel,
+            let connectButton = tableCell.viewWithTag(2) as? UIButton else {
+                return
+        }
+        
+        
+        if let urlString = promotion.bannerImageUrl, let url = URL(string: urlString) {
+            if bannerImageView.image == nil {
+                tableCell.contentView.layer.opacity = 0.0
+                tableCell.contentView.isHidden = true
+            }
+            
+            bannerImageView.kf.setImage(with: url, placeholder: nil, options: [.keepCurrentImageWhileLoading], progressBlock: nil, completionHandler: { (image, error, _, _) in
+                if let image = image {
+                    for constraint in bannerImageView.constraints {
+                        let aspectRatio = image.size.height / image.size.width
+
+                        if constraint.firstAttribute == .height && fabs(aspectRatio - constraint.multiplier) > 0.001 { // if the aspect ratio needs change (minus any rounding error)
+                            bannerImageView.removeConstraint(constraint)
+                            let newConstraint = NSLayoutConstraint(item: bannerImageView, attribute: .height, relatedBy: NSLayoutRelation.equal, toItem: bannerImageView, attribute: .width, multiplier: aspectRatio, constant: 0)
+                            bannerImageView.addConstraint(newConstraint)
+                            newConstraint.isActive = true
+                            
+                            bannerImageView.setNeedsLayout()
+                            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+                        }
+                        
+                        if (tableCell.contentView.isHidden) {
+                            tableCell.contentView.isHidden = false
+                            tableCell.contentView.delay(0.3) { tableCell.contentView.fadeIn() }
+                        }
+                        break
+                    }
+                }
+            })
+        }
+        titleLabel.text = promotion.text
+        connectButton.setTitle(promotion.buttonTitle, for: .normal)
+    }
+    
     func configureRewardsCell(_ tableCell: UITableViewCell) {
+        guard let trophySummaryLabel = tableCell.viewWithTag(1) as? UILabel,
+            let streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
+            let streakJewelLabel = tableCell.viewWithTag(3) as? UILabel,
+            let trophyCountLabel = tableCell.viewWithTag(4) as? UILabel else {
+                return
+        }
+        
         setDisclosureArrowColor(tableCell)
         
-        guard let trophySummaryLabel = tableCell.viewWithTag(1) as? UILabel,
-        let streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
-        let streakJewelLabel = tableCell.viewWithTag(3) as? UILabel,
-        let trophyCountLabel = tableCell.viewWithTag(4) as? UILabel else {
-            return
-        }
+ 
         
         let trophyCount = Trip.numberOfRewardedTrips
         if trophyCount > 1 {
@@ -811,8 +889,12 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0) {
+        if let cell = self.tableView!.cellForRow(at: indexPath), cell.reuseIdentifier == "RewardsViewTableCell" {
             self.performSegue(withIdentifier: "showStatsView", sender: self)
+            return
+        }
+        if let cell = self.tableView!.cellForRow(at: indexPath), cell.reuseIdentifier == "PromoViewTableCell" {
+            self.tableView.deselectRow(at: indexPath, animated: true)
             return
         }
         
@@ -848,6 +930,43 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
                 directionsVC?.mapViewController.mapView.attributionButton.sendActions(for: UIControlEvents.touchUpInside)
             }
+        }
+    }
+    
+    @IBAction func actOnPromo(_ sender: AnyObject) {
+        // only support one promo for now
+        if let promo = Profile.profile().promotions.allObjects.first as? Promotion, let app = promo.connectedApp {
+            if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
+                // if we need to, fetch the app.
+                if let button = sender as? UIButton {
+                    button.isEnabled = false
+                }
+                APIClient.shared.getApplication(app).apiResponse({ (response) in
+                    switch response.result {
+                    case .success(_):
+                        if let button = sender as? UIButton {
+                            button.isEnabled = true
+                        }
+                        AppDelegate.appDelegate().transitionToConnectApp(app)
+                    case .failure(_):
+                        if let button = sender as? UIButton {
+                            button.isEnabled = true
+                        }
+                        DDLogInfo("Failed to load connected application!")
+                    }
+                })
+            } else {
+                AppDelegate.appDelegate().transitionToConnectApp(app)
+            }
+        }
+    }
+    
+    @IBAction func dismissPromo(_ sender: AnyObject) {
+        // only support one promo for now
+        if let promo = Profile.profile().promotions.allObjects.first as? Promotion {
+            promo.userDismissed = true
+            CoreDataManager.shared.saveContext()
+            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
     
