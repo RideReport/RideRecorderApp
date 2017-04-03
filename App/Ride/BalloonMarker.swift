@@ -15,6 +15,14 @@ import SwiftyJSON
 
 open class BalloonMarker: MarkerImage
 {
+    public enum Period {
+        case day
+        case week
+        case month
+    }
+    
+    private var period: Period = .day
+    
     open var color: UIColor = UIColor.darkGray
     open var arrowSize = CGSize(width: 15, height: 11)
     open var strokeWidth: CGFloat = 2
@@ -32,7 +40,7 @@ open class BalloonMarker: MarkerImage
     fileprivate var labelns: NSMutableAttributedString = NSMutableAttributedString()
     fileprivate var _paragraphStyle: NSMutableParagraphStyle!
     
-    public init(chartView: ChartViewBase, dateFormat: String, color: UIColor, font: UIFont, textColor: UIColor, insets: UIEdgeInsets)
+    public init(chartView: ChartViewBase, period: Period, color: UIColor, font: UIFont, textColor: UIColor, insets: UIEdgeInsets)
     {
         super.init()
         
@@ -47,13 +55,28 @@ open class BalloonMarker: MarkerImage
         _paragraphStyle.lineHeightMultiple = 1.2
         _paragraphStyle.alignment = .center
         
-        self.dateFormatter = DateFormatter()
-        self.dateFormatter.locale = Locale.current
-        self.dateFormatter.dateFormat = dateFormat
+        switch period {
+            case .day:
+                self.dateFormatter = DateFormatter()
+                self.dateFormatter.locale = Locale.current
+                self.dateFormatter.dateFormat = "MMM d"
+            case .week:
+                self.dateFormatter = DateFormatter()
+                self.dateFormatter.locale = Locale.current
+                self.dateFormatter.dateFormat = "'Week of' MMM d"
+            case .month:
+                self.dateFormatter = DateFormatter()
+                self.dateFormatter.locale = Locale.current
+                self.dateFormatter.dateFormat = "MMM"
+        }
+        
+        self.period = period
+        
         
         self.yearDateFormatter = DateFormatter()
         self.yearDateFormatter.locale = Locale.current
-        self.yearDateFormatter.dateFormat = dateFormat + " ''yy"
+        
+        self.yearDateFormatter.dateFormat = self.dateFormatter.dateFormat + " ''yy"
     }
     
     open override func offsetForDrawing(atPoint point: CGPoint) -> CGPoint
@@ -144,16 +167,23 @@ open class BalloonMarker: MarkerImage
     }
     
     private func dateAsString(date: Date)->String {
-        if (date.isToday()) {
+        switch period {
+        case .day where date.isToday():
             return "Today"
-        } else if (date.isYesterday()) {
+        case .day where date.isYesterday():
             return "Yesterday"
-        } else if (date.isInLastWeek()) {
+        case .day where date.isInLastWeek():
             return date.weekDay()
-        } else if (date.isThisYear()) {
-            return self.dateFormatter.string(from: date)
-        } else {
-            return self.yearDateFormatter.string(from: date)
+        case .week where date.isThisWeek():
+            return "This Week"
+        case .week where date.daysFrom(7).isThisWeek():
+            return "Last Week"
+        default:
+            if (date.isThisYear()) {
+                return self.dateFormatter.string(from: date)
+            } else {
+                return self.yearDateFormatter.string(from: date)
+            }
         }
     }
     

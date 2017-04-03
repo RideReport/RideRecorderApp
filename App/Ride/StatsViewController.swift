@@ -38,7 +38,6 @@ class StatsViewController: UIViewController {
         lineChartView.chartDescription = nil
         lineChartView.pinchZoomEnabled = false
         lineChartView.dragEnabled = true
-        lineChartView.autoScaleMinMaxEnabled = true
         lineChartView.gridBackgroundColor = UIColor.white
         lineChartView.noDataText = ""
         
@@ -213,6 +212,24 @@ class StatsViewController: UIViewController {
                 }
             }
             
+            let data = LineChartData()
+            
+            // a dotted line to the last value
+            if entryData.count >= 2 {
+                if let lastEntry = entryData.popLast(), let secondToLastEntry = entryData.last {
+                    // include the second to last entry in both data sets
+                    let dsLastValue = LineChartDataSet(values: [secondToLastEntry, lastEntry], label: "Last Ride")
+                    dsLastValue.colors = [ColorPallete.shared.unknownGrey]
+                    dsLastValue.circleColors = [lastEntry.y > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey]
+                    dsLastValue.drawValuesEnabled = false
+                    dsLastValue.drawVerticalHighlightIndicatorEnabled = false
+                    dsLastValue.highlightColor = ColorPallete.shared.goodGreen
+                    dsLastValue.highlightLineWidth = 2.0
+                    dsLastValue.lineDashLengths = [4, 3]
+                    data.addDataSet(dsLastValue)
+                }
+            }
+            
             let ds1 = LineChartDataSet(values: entryData, label: "Rides")
             ds1.colors = [ColorPallete.shared.goodGreen]
             ds1.circleColors = colors
@@ -220,7 +237,8 @@ class StatsViewController: UIViewController {
             ds1.drawVerticalHighlightIndicatorEnabled = false
             ds1.highlightColor = ColorPallete.shared.goodGreen
             ds1.highlightLineWidth = 2.0
-            let data = LineChartData(dataSet: ds1)
+            data.addDataSet(ds1)
+
             
             if (entryData.count == 0) {
                 lineChartView.xAxis.axisMinimum = Date().addingTimeInterval(-1 * timeInterval*timePeriod).timeIntervalSinceReferenceDate/timeInterval
@@ -241,7 +259,7 @@ class StatsViewController: UIViewController {
             
             lineChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM")
             lineChartView.xAxis.granularityEnabled = true
-            lineChartView.marker = BalloonMarker(chartView: lineChartView, dateFormat: "MMM", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
+            lineChartView.marker = BalloonMarker(chartView: lineChartView, period: .month, color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
         } else {
             var entryData: [BarChartDataEntry] = []
             
@@ -282,12 +300,12 @@ class StatsViewController: UIViewController {
                 barChartView.xAxis.granularityEnabled = true
                 barChartView.xAxis.granularity = 4 // at most a label every 4 weeks
                 barChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM")
-                barChartView.marker = BalloonMarker(chartView: barChartView, dateFormat: "'Week of' MMM d", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
+                barChartView.marker = BalloonMarker(chartView: barChartView, period: .week, color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 12.0, 14.0, 12.0))
             } else {
                 barChartView.xAxis.granularityEnabled = true
                 barChartView.xAxis.granularity = 5 // at most a label every 5 days. For some reason >5 rounds up to 10 =/.
                 barChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM d")
-                barChartView.marker = BalloonMarker(chartView: barChartView, dateFormat: "MMM d", color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
+                barChartView.marker = BalloonMarker(chartView: barChartView, period: .day, color: ColorPallete.shared.darkGrey, font: UIFont.systemFont(ofSize: 18), textColor: ColorPallete.shared.almostWhite, insets: UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0))
             }
 
         }
