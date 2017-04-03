@@ -126,41 +126,41 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.refreshHelperPopupUI()
         }
         
-        if APIClient.shared.accountVerificationStatus != .unknown {
-            self.runCreateAccountOfferIfNeeded()
-        } else {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
-                guard let strongSelf = self else {
-                    return
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            // only support one promo for now
+            if let promo = Profile.profile().eligibilePromotion() {
+                strongSelf.shouldShowStreakAnimation = true
+                if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
+                    // if we need to, fetch the app.
+                    APIClient.shared.getApplication(app)
                 }
-                // only support one promo for now
-                if let promo = Profile.profile().eligibilePromotion() {
-                    strongSelf.shouldShowStreakAnimation = true
-                    if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
-                        // if we need to, fetch the app.
-                        APIClient.shared.getApplication(app)
+                
+                if let promoCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
+                    if promoCell.reuseIdentifier == "PromoViewTableCell" {
+                        strongSelf.configurePromoCell(promoCell, promotion: promo)
+                    } else {
+                        strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
                     }
-                    
-                    if let promoCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
-                        if promoCell.reuseIdentifier == "PromoViewTableCell" {
-                            strongSelf.configurePromoCell(promoCell, promotion: promo)
-                        } else {
-                            strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
-                        }
+                }
+            } else {
+                strongSelf.shouldShowStreakAnimation = true
+                if let rewardsCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
+                    if rewardsCell.reuseIdentifier == "RewardsViewTableCell" {
+                        strongSelf.configureRewardsCell(rewardsCell)
                     }
-                } else {
-                    strongSelf.shouldShowStreakAnimation = true
-                    if let rewardsCell = strongSelf.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
-                        if rewardsCell.reuseIdentifier == "RewardsViewTableCell" {
-                            strongSelf.configureRewardsCell(rewardsCell)
-                        }
-                        else {
-                            strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-                        }
+                    else {
+                        strongSelf.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                     }
                 }
             }
-            
+        }
+        
+        if APIClient.shared.accountVerificationStatus != .unknown {
+            self.runCreateAccountOfferIfNeeded()
+        } else {
             NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
                     return
