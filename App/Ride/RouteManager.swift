@@ -164,7 +164,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     private func tripQualifiesForResumptions(_ trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
-        if (trip.activityType != activityType) {
+        if (trip.activityType != activityType && trip.rating.choice == .notSet) {
             if (trip.activityType.isMotorizedMode && activityType.isMotorizedMode) {
                 // if both trips are motorized, allow resumption since our mode detection within motorized mode is not great
             } else {
