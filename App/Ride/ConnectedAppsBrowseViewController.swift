@@ -17,7 +17,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     
-    private var selectedConnectedApp: ConnectedApp? = nil
+    var selectedConnectedApp: ConnectedApp? = nil
     private var safariViewController: UIViewController? = nil
     private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
@@ -69,6 +69,11 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         
         if let indexPath = tableView.indexPathForSelectedRow {
             self.tableView.deselectRow(at: indexPath, animated: true)
+        }
+        
+        if (self.selectedConnectedApp != nil) {
+            // if we've already been told to select an app
+            self.handleSelectedApp(fromList: false)
         }
     }
     
@@ -165,14 +170,15 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             }
 
             self.tableView.deselectRow(at: indexPath, animated: true)
-            self.didSelectApp(app: app, fromList: true)
+            
+            self.selectedConnectedApp = app
+            self.handleSelectedApp(fromList: true)
         }
     }
     
-    public func didSelectApp(app: ConnectedApp, fromList: Bool) {
-        guard let urlString = app.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
+    func handleSelectedApp(fromList: Bool) {
+        guard let urlString = self.selectedConnectedApp?.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
             // if there is no authorize url, go straight to permissions screen
-            self.selectedConnectedApp = app
             self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
             return
         }
@@ -181,8 +187,6 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             return
         }
         
-        
-        self.selectedConnectedApp = app
         NotificationCenter.default.addObserver(self, selector: #selector(ConnectedAppsBrowseViewController.authCodeCallbackNotificationReceived), name: NSNotification.Name(rawValue: "RideReportAuthCodeCallBackNotification"), object: nil)
         
         if #available(iOS 9.0, *) {
@@ -192,7 +196,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             if (fromList) {
                 self.navigationController?.pushViewController(sfvc, animated: true)
             } else {
-                self.navigationController?.setViewControllers([sfvc], animated: false)
+                self.navigationController?.pushViewController(sfvc, animated: false)
                 sfvc.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: AppDelegate.appDelegate(), action: #selector(AppDelegate.dismissCurrentPresentedViewController))
             }
             if let coordinator = transitionCoordinator {

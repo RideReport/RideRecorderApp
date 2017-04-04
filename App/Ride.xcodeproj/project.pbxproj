@@ -2247,7 +2247,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
 				);
 				INFOPLIST_FILE = Ride/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2292,7 +2292,7 @@
 					"/Users/admin/Developer/mapbox-gl-native/include/mbgl/**",
 				);
 				INFOPLIST_FILE = Ride/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

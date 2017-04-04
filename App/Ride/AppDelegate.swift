@@ -208,14 +208,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             return
         }
         
-        connectVC.didSelectApp(app: app, fromList: false)
-        
         if let rootVC = self.window?.rootViewController {
             if let presentedVC = rootVC.presentedViewController {
                 // dismiss anything in the way first
                 presentedVC.dismiss(animated: false, completion: nil)
             }
             
+            connectVC.selectedConnectedApp = app
             rootVC.present(navVC, animated: true, completion: nil)
         }
     }
