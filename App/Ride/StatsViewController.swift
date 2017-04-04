@@ -238,9 +238,9 @@ class StatsViewController: UIViewController {
             ds1.highlightColor = ColorPallete.shared.goodGreen
             ds1.highlightLineWidth = 2.0
             data.addDataSet(ds1)
-
             
-            if (entryData.count == 0) {
+            
+            if (entryData.count == 0 || (entryData.count == 1 && entryData.first?.y == 0)) {
                 lineChartView.xAxis.axisMinimum = Date().addingTimeInterval(-1 * timeInterval*timePeriod).timeIntervalSinceReferenceDate/timeInterval
                 lineChartView.xAxis.axisMaximum = Date().timeIntervalSinceReferenceDate/timeInterval
                 
@@ -277,7 +277,7 @@ class StatsViewController: UIViewController {
             ds1.highlightLineWidth = 2.0
             let data = BarChartData(dataSet: ds1)
             
-            if (entryData.count == 0) {
+            if (entryData.count == 0 || (entryData.count == 1 && entryData.first?.y == 0)) {
                 barChartView.xAxis.axisMinimum = Date().addingTimeInterval(-1 * timeInterval*timePeriod).timeIntervalSinceReferenceDate/timeInterval
                 barChartView.xAxis.axisMaximum = Date().timeIntervalSinceReferenceDate/timeInterval
                 
