@@ -34,6 +34,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.tapping, ECSlidingViewControllerAnchoredGesture.panning]
+        self.tableView.backgroundColor = ColorPallete.shared.darkGreen
         self.tableView.scrollsToTop = false // https://github.com/KnockSoftware/Ride/issues/204
     }
     
@@ -116,6 +117,14 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         }
     }
     #endif
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        for case let button as UIButton in cell.subviews {
+            let image = button.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            button.tintColor = ColorPallete.shared.almostWhite
+            button.setBackgroundImage(image, for: .normal)
+        }
+    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) else {

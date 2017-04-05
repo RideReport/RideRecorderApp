@@ -18,6 +18,8 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.tableView.backgroundColor = ColorPallete.shared.darkGreen
+        
         if (CoreDataManager.shared.isStartingUp) {
             NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {

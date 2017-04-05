@@ -55,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         UINavigationBar.appearance().barTintColor = ColorPallete.shared.darkGreen
         UINavigationBar.appearance().tintColor = ColorPallete.shared.almostWhite
         UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
+        UISegmentedControl.appearance().tintColor = ColorPallete.shared.darkGreen
         if #available(iOS 9.0, *) {
             UIView.appearance(whenContainedInInstancesOf: [UIAlertView.self]).tintColor = ColorPallete.shared.darkGreen
             UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.darkGreen

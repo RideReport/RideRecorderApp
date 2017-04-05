@@ -12,6 +12,8 @@ import ECSlidingViewController
 class HelpViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tableView.backgroundColor = ColorPallete.shared.darkGreen
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -22,6 +24,14 @@ class HelpViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
         return CGFloat.leastNormalMagnitude
+    }
+    
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        for case let button as UIButton in cell.subviews {
+            let image = button.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
+            button.tintColor = ColorPallete.shared.almostWhite
+            button.setBackgroundImage(image, for: .normal)
+        }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
