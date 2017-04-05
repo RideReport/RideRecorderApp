@@ -919,9 +919,9 @@
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* TripsViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
+				3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */,
 				8421419A1C3DDB86009DA851 /* RewardsViewController.swift */,
 				3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */,
-				3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";

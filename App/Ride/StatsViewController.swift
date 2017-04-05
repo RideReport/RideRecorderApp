@@ -558,10 +558,23 @@ class StatsViewController: UIViewController {
         }
     }
     
-    @IBAction func showTrophies(sender: Any?) {
-        if #available(iOS 9.0, *) {
-            // ios 8 devices crash the trophy room due to a bug in sprite kit, so we disable it.
-            self.performSegue(withIdentifier: "showRewardsView", sender: self)
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            if let navVC = self.navigationController, let rewardsVC = storyBoard.instantiateViewController(withIdentifier: "rewardsViewController") as? RewardsViewController {
+                let transition = CATransition()
+                transition.duration = 0.6
+                transition.type = kCATransitionFade
+                navVC.view.layer.add(transition, forKey: nil)
+                var newVCs = navVC.viewControllers
+                newVCs.popLast()
+                newVCs.append(rewardsVC)
+                navVC.setViewControllers(newVCs, animated: false)
+            }
         }
     }
 }
