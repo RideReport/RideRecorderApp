@@ -13,7 +13,7 @@ class HelpViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView.backgroundColor = ColorPallete.shared.darkGreen
+        self.tableView.backgroundColor = ColorPallete.shared.primary
     }
     
     override func viewWillAppear(_ animated: Bool) {

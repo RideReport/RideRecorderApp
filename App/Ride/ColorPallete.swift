@@ -5,6 +5,7 @@
 //  Created by William Henderson on 5/13/15.
 //  Copyright (c) 2015 Knock Softwae, Inc. All rights reserved.
 //
+// http://paletton.com/palette.php?uid=72E0u0kmeu%2BcyLHhWBtrksVtxm-
 
 import Foundation
 
@@ -35,9 +36,39 @@ class ColorPallete : NSObject {
         }
     }
     
-    var darkGreen: UIColor {
+    var primaryLight: UIColor {
+        get {
+            return UIColor(red: 123/255, green: 216/255, blue: 66/255, alpha: 1.0)
+        }
+    }
+    
+    var orange: UIColor {
+        get {
+            return UIColor(red: 247/255, green: 133/255, blue: 75/255, alpha: 1.0)
+        }
+    }
+    
+    var pink: UIColor {
+        get {
+            return UIColor(red: 227/255, green: 69/255, blue: 106/255, alpha: 1.0)
+        }
+    }
+    
+    var turquoise: UIColor {
+        get {
+            return UIColor(red: 50/255, green: 164/255, blue: 127/255, alpha: 1.0)
+        }
+    }
+    
+    var primary: UIColor {
         get {
             return UIColor(red: 71/255, green: 179/255, blue: 12/255, alpha: 1.0)
+        }
+    }
+    
+    var primaryDark: UIColor {
+        get {
+            return UIColor(red: 60/255, green: 154/255, blue: 17/255, alpha: 1.0)
         }
     }
 

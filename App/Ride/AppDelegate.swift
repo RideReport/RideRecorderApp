@@ -52,13 +52,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(self.fileLogger)
         
-        UINavigationBar.appearance().barTintColor = ColorPallete.shared.darkGreen
+        UINavigationBar.appearance().barTintColor = ColorPallete.shared.primary
         UINavigationBar.appearance().tintColor = ColorPallete.shared.almostWhite
         UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
-        UISegmentedControl.appearance().tintColor = ColorPallete.shared.darkGreen
+        UISegmentedControl.appearance().tintColor = ColorPallete.shared.primary
         if #available(iOS 9.0, *) {
-            UIView.appearance(whenContainedInInstancesOf: [UIAlertView.self]).tintColor = ColorPallete.shared.darkGreen
-            UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.darkGreen
+            UIView.appearance(whenContainedInInstancesOf: [UIAlertView.self]).tintColor = ColorPallete.shared.primary
+            UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.primary
         }
         
         let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as! String

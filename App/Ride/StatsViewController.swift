@@ -207,7 +207,7 @@ class StatsViewController: UIViewController {
             for entry in period {
                 if let entryDict = entry.dictionary, let meters = entry["meters"].float,
                     let dateString = entry["date"].string, let date = Date.dateFromJSONString(dateString) {
-                    colors.append(meters > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey)
+                    colors.append(meters > 0 ? ColorPallete.shared.primaryLight : ColorPallete.shared.unknownGrey)
                     entryData.append(ChartDataEntry(x: date.timeIntervalSinceReferenceDate/timeInterval, y: Double(meters.localizedMajorUnit), data: entryDict as NSDictionary))
                 }
             }
@@ -220,10 +220,10 @@ class StatsViewController: UIViewController {
                     // include the second to last entry in both data sets
                     let dsLastValue = LineChartDataSet(values: [secondToLastEntry, lastEntry], label: "Last Ride")
                     dsLastValue.colors = [ColorPallete.shared.unknownGrey]
-                    dsLastValue.circleColors = [lastEntry.y > 0 ? ColorPallete.shared.goodGreen : ColorPallete.shared.unknownGrey]
+                    dsLastValue.circleColors = [lastEntry.y > 0 ? ColorPallete.shared.primaryLight : ColorPallete.shared.unknownGrey]
                     dsLastValue.drawValuesEnabled = false
                     dsLastValue.drawVerticalHighlightIndicatorEnabled = false
-                    dsLastValue.highlightColor = ColorPallete.shared.goodGreen
+                    dsLastValue.highlightColor = ColorPallete.shared.primaryLight
                     dsLastValue.highlightLineWidth = 2.0
                     dsLastValue.lineDashLengths = [4, 3]
                     data.addDataSet(dsLastValue)
@@ -231,11 +231,11 @@ class StatsViewController: UIViewController {
             }
             
             let ds1 = LineChartDataSet(values: entryData, label: "Rides")
-            ds1.colors = [ColorPallete.shared.goodGreen]
+            ds1.colors = [ColorPallete.shared.primaryLight]
             ds1.circleColors = colors
             ds1.drawValuesEnabled = false
             ds1.drawVerticalHighlightIndicatorEnabled = false
-            ds1.highlightColor = ColorPallete.shared.goodGreen
+            ds1.highlightColor = ColorPallete.shared.primaryLight
             ds1.highlightLineWidth = 2.0
             data.addDataSet(ds1)
             
@@ -271,9 +271,9 @@ class StatsViewController: UIViewController {
             }
             
             let ds1 = BarChartDataSet(values: entryData, label: "Rides")
-            ds1.colors = [ColorPallete.shared.goodGreen]
+            ds1.colors = [ColorPallete.shared.primaryLight]
             ds1.drawValuesEnabled = false
-            ds1.highlightColor = ColorPallete.shared.goodGreen
+            ds1.highlightColor = ColorPallete.shared.primaryLight
             ds1.highlightLineWidth = 2.0
             let data = BarChartData(dataSet: ds1)
             
@@ -473,7 +473,7 @@ class StatsViewController: UIViewController {
         percentFormatter.percentSymbol = "%"
         
         var entryData1: [PieChartDataEntry] = []
-        let colors1: [UIColor] = [ColorPallete.shared.goodGreen, ColorPallete.shared.transitBlue, ColorPallete.shared.badRed, ColorPallete.shared.darkGrey]
+        let colors1: [UIColor] = [ColorPallete.shared.primaryLight, ColorPallete.shared.turquoise, ColorPallete.shared.pink, ColorPallete.shared.darkGrey, ColorPallete.shared.autoBrown]
         
         var otherConditionsEntry: Double = 0
         if let conditionsJson = statsDict["conditions"]?.array {
@@ -514,7 +514,7 @@ class StatsViewController: UIViewController {
         }
         
         var entryData2: [PieChartDataEntry] = []
-        let colors2: [UIColor] = [ColorPallete.shared.autoBrown, ColorPallete.shared.goodGreen]
+        let colors2: [UIColor] = [ColorPallete.shared.primaryLight, ColorPallete.shared.turquoise, ColorPallete.shared.pink, ColorPallete.shared.darkGrey,  ColorPallete.shared.autoBrown]
         
         var otherModesEntry: Double = 0
         if let modeJson = statsDict["mode"]?.array {

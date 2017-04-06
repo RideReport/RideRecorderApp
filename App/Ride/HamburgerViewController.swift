@@ -34,7 +34,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.tapping, ECSlidingViewControllerAnchoredGesture.panning]
-        self.tableView.backgroundColor = ColorPallete.shared.darkGreen
+        self.tableView.backgroundColor = ColorPallete.shared.primary
         self.tableView.scrollsToTop = false // https://github.com/KnockSoftware/Ride/issues/204
     }
     
