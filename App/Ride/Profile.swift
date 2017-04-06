@@ -23,18 +23,44 @@ class Profile : NSManagedObject {
     @NSManaged var weightKilograms : NSNumber?
     @NSManaged var gender : NSNumber
     
+    @NSManaged var currentRatingVersion : NSNumber
+    
     @NSManaged var promotions : NSSet!
+    
+    var featureFlags : [String] = [] {
+        didSet {
+            if featureFlags.contains("rating_version_2") {
+                DispatchQueue.main.async {
+                    self.ratingVersion = RatingVersion.v2beta
+                    CoreDataManager.shared.saveContext()
+                }
+            } else {
+                self.ratingVersion = RatingVersion.v1
+            }
+        }
+    }
 
     struct Static {
         static var onceToken : Int = 0
         static var profile : Profile!
     }
     
+    fileprivate(set) var ratingVersion: RatingVersion {
+        get {
+            return RatingVersion(rawValue: self.currentRatingVersion.int16Value) ?? RatingVersion.v1
+        }
+        set {
+            self.currentRatingVersion = NSNumber(value: newValue.rawValue)
+            // reregister for notifications
+            AppDelegate.appDelegate().registerNotifications()
+        }
+    }
+    
     class func resetProfile() {
         Static.profile = nil
     }
     
-    class func profile() -> Profile! {
+    class func profile() -> Profile {
         if (Static.profile == nil) {
             let context = CoreDataManager.shared.currentManagedObjectContext()
             let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Profile")

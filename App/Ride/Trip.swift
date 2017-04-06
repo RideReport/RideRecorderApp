@@ -127,10 +127,6 @@ enum RatingVersion: Int16 {
     case v1 = 0
     case v2beta
     
-    static var currentRatingVersion: RatingVersion {
-        return RatingVersion.v2beta
-    }
-    
     var availableRatings: [Rating] {
         switch self {
         case .v1:
@@ -155,7 +151,7 @@ struct Rating {
     private(set) var version: RatingVersion
     
     static func ratingWithCurrentVersion(_ choice: RatingChoice) -> Rating {
-        return Rating(choice: choice, version: RatingVersion.currentRatingVersion)
+        return Rating(choice: choice, version: Profile.profile().ratingVersion)
     }
     
     init(choice: RatingChoice, version: RatingVersion) {
@@ -165,7 +161,7 @@ struct Rating {
     
     init(rating: Int16, version: Int16) {
         self.choice = RatingChoice(rawValue: rating) ?? RatingChoice.notSet
-        self.version = RatingVersion(rawValue: version) ?? RatingVersion.currentRatingVersion
+        self.version = RatingVersion(rawValue: version) ?? Profile.profile().ratingVersion
     }
     
     var emoji: String {
@@ -189,9 +185,9 @@ struct Rating {
             case .v1:
                 switch self.choice {
                 case .bad:
-                    return "Stressful"
+                    return "Not Great"
                 case .good:
-                    return "Chill"
+                    return "Great"
                 case .mixed:
                     return "Mixed"
                 case .notSet:
@@ -200,9 +196,9 @@ struct Rating {
             case .v2beta:
                 switch self.choice {
                 case .bad:
-                    return "Not Great"
+                    return "Stressful"
                 case .good:
-                    return "Great!"
+                    return "Chill"
                 case .mixed:
                     return "Mixed"
                 case .notSet:

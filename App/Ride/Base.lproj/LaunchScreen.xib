@@ -42,6 +42,7 @@
                 </viewController>
             </viewControllers>
             <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" barStyle="black" id="r5L-SD-Fuz">
+                <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                 <autoresizingMask key="autoresizingMask"/>
             </toolbar>
             <point key="canvasLocation" x="412" y="421"/>

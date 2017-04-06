@@ -86,7 +86,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 })
                 
                 self.helperTextLabel.delay(delay) {
-                    AppDelegate.appDelegate().startupNotifications()
+                    AppDelegate.appDelegate().registerNotifications()
                 }
             } else {
                 // they've already granted it

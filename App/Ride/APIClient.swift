@@ -311,9 +311,12 @@ class APIClient {
     }
     
     func appDidReceiveNotificationDeviceToken(_ token: Data?) {
+        let oldToken = self.notificationDeviceToken
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
-        self.updateAccountStatus()
+        if (oldToken != token) {
+            self.updateAccountStatus()
+        }
     }
     
     private func syncStatusAndTripsInForeground() {
@@ -845,6 +848,12 @@ class APIClient {
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientAccountStatusDidGetArea"), object: nil)
                 } else {
                     self.area = .unknown
+                }
+                
+                if let featureFlags = json["feature_flags"].array?.map({$0.string}) as? [String] {
+                    Profile.profile().featureFlags = featureFlags
+                } else {
+                    Profile.profile().featureFlags = []
                 }
                 
                 if let statusText = json["status_text"].string, let statusEmoji = json["status_emoji"].string {

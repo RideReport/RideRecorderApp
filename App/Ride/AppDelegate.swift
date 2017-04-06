@@ -87,7 +87,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             
             DispatchQueue.main.async {
                 // perform async
-                self.startupNotifications()
+                self.registerNotifications()
             }
             MotionManager.startup()
             
@@ -107,10 +107,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func startupNotifications() {
+    func registerNotifications() {
         var actions : [UIMutableUserNotificationAction] = []
         
-        for rating in RatingVersion.currentRatingVersion.availableRatings {
+        for rating in Profile.profile().ratingVersion.availableRatings {
             let action = UIMutableUserNotificationAction()
             action.identifier = rating.choice.notificationActionIdentifier
             action.title = rating.emoji + " " + rating.noun
@@ -334,7 +334,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             let trip = Trip.tripWithUUID(uuid) {
                 DDLogInfo(String(format: "Received trip rating notification action"))
             
-                for rating in RatingVersion.currentRatingVersion.availableRatings {
+                for rating in Profile.profile().ratingVersion.availableRatings {
                     if identifier == rating.choice.notificationActionIdentifier {
                         trip.rating = rating
                         self.postTripRatedThanksNotification(ratingChoice: rating.choice)

@@ -17,6 +17,7 @@
 import Foundation
 
 @IBDesignable class RatingChoiceSelectorView : UIControl {
+    private var ratingVersion = Profile.profile().ratingVersion
     private var feedbackGenerator: NSObject!
     
     private var ratingButtons: [UIButton]! = []
@@ -35,14 +36,14 @@ import Foundation
         get {
             let selectedIndex = self.selectedRatingButtonIndex
             guard selectedIndex != -1 else {
-                return Rating(choice: .notSet, version: .currentRatingVersion)
+                return Rating(choice: .notSet, version: ratingVersion)
             }
             
-            guard selectedIndex < RatingVersion.currentRatingVersion.availableRatings.count else {
-                return Rating(choice: .notSet, version: .currentRatingVersion)
+            guard selectedIndex < ratingVersion.availableRatings.count else {
+                return Rating(choice: .notSet, version: ratingVersion)
             }
             
-            return RatingVersion.currentRatingVersion.availableRatings[selectedIndex]
+            return ratingVersion.availableRatings[selectedIndex]
         }
         
         set {
@@ -54,7 +55,7 @@ import Foundation
                 return
             }
             
-            guard let ratingIndex = RatingVersion.currentRatingVersion.availableRatings.index(of: newValue) else {
+            guard let ratingIndex = ratingVersion.availableRatings.index(of: newValue) else {
                 return
             }
             
@@ -109,7 +110,7 @@ import Foundation
         self.backgroundColor = UIColor.clear
 
         
-        for (i, _) in RatingVersion.currentRatingVersion.availableRatings.enumerated() {
+        for (i, _) in ratingVersion.availableRatings.enumerated() {
             let choiceButton = UIButton(type: UIButtonType.custom)
             
             choiceButton.addTarget(self, action: #selector(RatingChoiceSelectorView.buttonTapped(_:)), for: UIControlEvents.touchUpInside)
@@ -127,7 +128,7 @@ import Foundation
             self.addConstraint(yConstraint)
             yConstraint.isActive = true
             
-            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(RatingVersion.currentRatingVersion.availableRatings.count), constant: 0)
+            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(ratingVersion.availableRatings.count), constant: 0)
             self.addConstraint(widthConstraint)
             widthConstraint.isActive = true
             
@@ -185,7 +186,7 @@ import Foundation
             return
         }
         
-        let rating = RatingVersion.currentRatingVersion.availableRatings[buttonIndex]
+        let rating = ratingVersion.availableRatings[buttonIndex]
         
         guard let selectedImage = image(forRating: rating, selected: true, imageWidth: button.frame.size.width, withDescription: false) else {
             return
@@ -286,10 +287,10 @@ import Foundation
     }
     
     func reloadUI() {
-        for (i, rating) in RatingVersion.currentRatingVersion.availableRatings.enumerated() {
+        for (i, rating) in ratingVersion.availableRatings.enumerated() {
             // leave room for the end caps
             let button = self.ratingButtons[i]
-            let imageWidth = self.frame.size.width/CGFloat(RatingVersion.currentRatingVersion.availableRatings.count)
+            let imageWidth = self.frame.size.width/CGFloat(ratingVersion.availableRatings.count)
             button.setImage(image(forRating: rating, selected: false, imageWidth: imageWidth), for: .normal)
             
             let selectedImage = image(forRating: rating, selected: true, imageWidth: imageWidth)
