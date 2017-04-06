@@ -110,10 +110,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func startupNotifications() {
         var actions : [UIMutableUserNotificationAction] = []
         
-        for ratingChoice in RatingVersion.currentRatingVersion.availableRatingChoices {
+        for rating in RatingVersion.currentRatingVersion.availableRatings {
             let action = UIMutableUserNotificationAction()
-            action.identifier = ratingChoice.notificationActionIdentifier
-            action.title = ratingChoice.emoji + " " + ratingChoice.noun
+            action.identifier = rating.choice.notificationActionIdentifier
+            action.title = rating.emoji + " " + rating.noun
             action.activationMode = UIUserNotificationActivationMode.background
             action.isDestructive = false
             action.isAuthenticationRequired = false
@@ -334,10 +334,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             let trip = Trip.tripWithUUID(uuid) {
                 DDLogInfo(String(format: "Received trip rating notification action"))
             
-                for ratingChoice in RatingVersion.currentRatingVersion.availableRatingChoices {
-                    if identifier == ratingChoice.notificationActionIdentifier {
-                        trip.rating = Rating.ratingWithCurrentVersion(ratingChoice)
-                        self.postTripRatedThanksNotification(ratingChoice: ratingChoice)
+                for rating in RatingVersion.currentRatingVersion.availableRatings {
+                    if identifier == rating.choice.notificationActionIdentifier {
+                        trip.rating = rating
+                        self.postTripRatedThanksNotification(ratingChoice: rating.choice)
                         
                         APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
                             completionHandler()

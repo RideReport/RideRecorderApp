@@ -31,18 +31,18 @@ import Foundation
         return -1
     }
     
-    var selectedRating: RatingChoice {
+    var selectedRating: Rating {
         get {
             let selectedIndex = self.selectedRatingButtonIndex
             guard selectedIndex != -1 else {
-                return .notSet
+                return Rating(choice: .notSet, version: .currentRatingVersion)
             }
             
-            guard selectedIndex < RatingVersion.currentRatingVersion.availableRatingChoices.count else {
-                return .notSet
+            guard selectedIndex < RatingVersion.currentRatingVersion.availableRatings.count else {
+                return Rating(choice: .notSet, version: .currentRatingVersion)
             }
             
-            return RatingVersion.currentRatingVersion.availableRatingChoices[selectedIndex]
+            return RatingVersion.currentRatingVersion.availableRatings[selectedIndex]
         }
         
         set {
@@ -50,23 +50,23 @@ import Foundation
                 button.isSelected = false
             }
             
-            if (newValue == .notSet) {
+            if (newValue.choice == .notSet) {
                 return
             }
             
-            guard let choiceIndex = RatingVersion.currentRatingVersion.availableRatingChoices.index(of: newValue) else {
+            guard let ratingIndex = RatingVersion.currentRatingVersion.availableRatings.index(of: newValue) else {
                 return
             }
             
-            guard choiceIndex != -1 else {
+            guard ratingIndex != -1 else {
                 return
             }
             
-            guard choiceIndex < ratingButtons.count else {
+            guard ratingIndex < ratingButtons.count else {
                 return
             }
             
-            ratingButtons[choiceIndex].isSelected = true
+            ratingButtons[ratingIndex].isSelected = true
         }
     }
     
@@ -109,7 +109,7 @@ import Foundation
         self.backgroundColor = UIColor.clear
 
         
-        for (i, _) in RatingVersion.currentRatingVersion.availableRatingChoices.enumerated() {
+        for (i, _) in RatingVersion.currentRatingVersion.availableRatings.enumerated() {
             let choiceButton = UIButton(type: UIButtonType.custom)
             
             choiceButton.addTarget(self, action: #selector(RatingChoiceSelectorView.buttonTapped(_:)), for: UIControlEvents.touchUpInside)
@@ -127,7 +127,7 @@ import Foundation
             self.addConstraint(yConstraint)
             yConstraint.isActive = true
             
-            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(RatingVersion.currentRatingVersion.availableRatingChoices.count), constant: 0)
+            let widthConstraint = NSLayoutConstraint(item: choiceButton, attribute: .width, relatedBy: .equal, toItem: self, attribute: .width, multiplier: 1.0/CGFloat(RatingVersion.currentRatingVersion.availableRatings.count), constant: 0)
             self.addConstraint(widthConstraint)
             widthConstraint.isActive = true
             
@@ -185,9 +185,9 @@ import Foundation
             return
         }
         
-        let ratingChoice = RatingVersion.currentRatingVersion.availableRatingChoices[buttonIndex]
+        let rating = RatingVersion.currentRatingVersion.availableRatings[buttonIndex]
         
-        guard let selectedImage = image(forRatingChoice: ratingChoice, selected: true, imageWidth: button.frame.size.width, withDescription: false) else {
+        guard let selectedImage = image(forRating: rating, selected: true, imageWidth: button.frame.size.width, withDescription: false) else {
             return
         }
         
@@ -236,12 +236,12 @@ import Foundation
         reloadUI()
     }
     
-    private func image(forRatingChoice ratingChoice:RatingChoice, selected:Bool, imageWidth: CGFloat, withDescription: Bool = true) -> UIImage? {
+    private func image(forRating rating:Rating, selected:Bool, imageWidth: CGFloat, withDescription: Bool = true) -> UIImage? {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
-        let attributedEmojiString = NSAttributedString(string: ratingChoice.emoji, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.emojiFontSize), NSForegroundColorAttributeName: UIColor.black, NSParagraphStyleAttributeName: paragraphStyle])
-        let attributedDescriptionString = NSAttributedString(string: ratingChoice.noun, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.descriptionFontSize), NSForegroundColorAttributeName: (selected ? ColorPallete.shared.darkGrey : ColorPallete.shared.unknownGrey), NSParagraphStyleAttributeName: paragraphStyle])
+        let attributedEmojiString = NSAttributedString(string: rating.emoji, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.emojiFontSize), NSForegroundColorAttributeName: UIColor.black, NSParagraphStyleAttributeName: paragraphStyle])
+        let attributedDescriptionString = NSAttributedString(string: rating.noun, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.descriptionFontSize), NSForegroundColorAttributeName: (selected ? ColorPallete.shared.darkGrey : ColorPallete.shared.unknownGrey), NSParagraphStyleAttributeName: paragraphStyle])
         
         let emojiSize = attributedEmojiString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:[NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context:nil).size
         let descriptionSize = attributedDescriptionString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:(NSStringDrawingOptions.usesLineFragmentOrigin), context:nil).size
@@ -250,7 +250,7 @@ import Foundation
         let emojiOffset: CGFloat = 2 // dont know why, but emoji refuse to draw centered
         UIGraphicsBeginImageContextWithOptions(CGSize(width: imageWidth, height: self.frame.size.height), false , 0.0)
         let emojiDrawRect = CGRect(x: emojiOffset + (imageWidth - emojiSize.width)/2.0, y: verticalMargin, width: emojiSize.width, height: emojiSize.height)
-        if let context = UIGraphicsGetCurrentContext(), selected == false && ratingChoice == .bad {
+        if let context = UIGraphicsGetCurrentContext(), selected == false && rating.choice == .bad {
             // the bad emoji is red and darker, so we draw it slightly lighter in deselected state to even things out
             context.setAlpha(0.7)
             attributedEmojiString.draw(in: emojiDrawRect)
@@ -286,13 +286,13 @@ import Foundation
     }
     
     func reloadUI() {
-        for (i, ratingChoice) in RatingVersion.currentRatingVersion.availableRatingChoices.enumerated() {
+        for (i, rating) in RatingVersion.currentRatingVersion.availableRatings.enumerated() {
             // leave room for the end caps
             let button = self.ratingButtons[i]
-            let imageWidth = self.frame.size.width/CGFloat(RatingVersion.currentRatingVersion.availableRatingChoices.count)
-            button.setImage(image(forRatingChoice: ratingChoice, selected: false, imageWidth: imageWidth), for: .normal)
+            let imageWidth = self.frame.size.width/CGFloat(RatingVersion.currentRatingVersion.availableRatings.count)
+            button.setImage(image(forRating: rating, selected: false, imageWidth: imageWidth), for: .normal)
             
-            let selectedImage = image(forRatingChoice: ratingChoice, selected: true, imageWidth: imageWidth)
+            let selectedImage = image(forRating: rating, selected: true, imageWidth: imageWidth)
             button.setImage(selectedImage, for: .selected)
             button.setImage(selectedImage, for: .highlighted)
         }

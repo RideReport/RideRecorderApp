@@ -107,36 +107,6 @@ enum RatingChoice: Int16 {
         return NSNumber(value: self.rawValue as Int16)
     }
     
-    var emoji: String {
-        get {
-            switch self {
-            case .bad:
-                return "😡"
-            case .good:
-                return "☺️"
-            case .mixed:
-                return "😕"
-            case .notSet:
-                return ""
-            }
-        }
-    }
-    
-    var noun: String {
-        get {
-            switch self {
-            case .bad:
-                return "Stressful"
-            case .good:
-                return "Chill"
-            case .mixed:
-                return "Mixed"
-            case .notSet:
-                return ""
-            }
-        }
-    }
-    
     var notificationActionIdentifier: String {
         get {
             switch self {
@@ -161,18 +131,23 @@ enum RatingVersion: Int16 {
         return RatingVersion.v2beta
     }
     
-    var availableRatingChoices: [RatingChoice] {
+    var availableRatings: [Rating] {
         switch self {
         case .v1:
-            return [RatingChoice.bad, RatingChoice.good]
+            return [Rating.init(choice: .bad, version: .v1), Rating.init(choice: .good, version: .v1)]
         case .v2beta:
-            return [RatingChoice.bad, RatingChoice.mixed, RatingChoice.good]
+            return [Rating.init(choice: .bad, version: .v2beta), Rating.init(choice: .mixed, version: .v2beta), Rating.init(choice: .good, version: .v2beta)]
         }
     }
     
     var numberValue: NSNumber {
         return NSNumber(value: self.rawValue as Int16)
     }
+}
+
+extension Rating: Equatable {}
+func ==(lhs: Rating, rhs: Rating) -> Bool {
+    return lhs.choice == rhs.choice && lhs.version == rhs.version
 }
 
 struct Rating {
@@ -191,6 +166,50 @@ struct Rating {
     init(rating: Int16, version: Int16) {
         self.choice = RatingChoice(rawValue: rating) ?? RatingChoice.notSet
         self.version = RatingVersion(rawValue: version) ?? RatingVersion.currentRatingVersion
+    }
+    
+    var emoji: String {
+        get {
+            switch self.choice {
+            case .bad:
+                return "😡"
+            case .good:
+                return "☺️"
+            case .mixed:
+                return "😕"
+            case .notSet:
+                return ""
+            }
+        }
+    }
+    
+    var noun: String {
+        get {
+            switch self.version {
+            case .v1:
+                switch self.choice {
+                case .bad:
+                    return "Stressful"
+                case .good:
+                    return "Chill"
+                case .mixed:
+                    return "Mixed"
+                case .notSet:
+                    return ""
+                }
+            case .v2beta:
+                switch self.choice {
+                case .bad:
+                    return "Not Great"
+                case .good:
+                    return "Great!"
+                case .mixed:
+                    return "Mixed"
+                case .notSet:
+                    return ""
+                }
+            }
+        }
     }
 }
 

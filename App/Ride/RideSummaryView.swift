@@ -43,12 +43,12 @@ import AudioToolbox
             reloadUI()
         }
     }
-    @IBInspectable var desturctiveActionTitle: String = RatingChoice.bad.noun {
+    @IBInspectable var desturctiveActionTitle: String = Rating.ratingWithCurrentVersion(.bad).noun {
         didSet {
             reloadUI()
         }
     }
-    @IBInspectable var actionTitle: String = RatingChoice.good.noun {
+    @IBInspectable var actionTitle: String = Rating.ratingWithCurrentVersion(.good).noun {
         didSet {
             reloadUI()
         }

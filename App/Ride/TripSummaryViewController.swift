@@ -72,7 +72,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
     var selectedTrip : Trip! {
         didSet {
             if (self.selectedTrip != nil) {
-                self.ratingChoiceSelector.selectedRating = self.selectedTrip.rating.choice
+                self.ratingChoiceSelector.selectedRating = self.selectedTrip.rating
                 reloadUI()
             }
         }
@@ -229,7 +229,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
     //
     
     @IBAction func changedRating(_: AnyObject) {
-        self.selectedTrip.rating = Rating.ratingWithCurrentVersion(ratingChoiceSelector.selectedRating)
+        self.selectedTrip.rating = ratingChoiceSelector.selectedRating
         APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         self.reloadUI()
     }
