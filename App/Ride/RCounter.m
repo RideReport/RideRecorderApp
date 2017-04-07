@@ -80,12 +80,16 @@
     [self.counterCanvas.layer setMasksToBounds:YES];
     [self addSubview:self.counterCanvas];
     
-    // Add a shadow over top
-    UIImageView *shadowOverlay = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 10 + (self.numberOfDigits * 25), 70.0)];
-    [shadowOverlay setImage:[UIImage imageNamed:@"counter-shadow.png"]];
-    [self addSubview:shadowOverlay];
-    [self bringSubviewToFront:shadowOverlay];
     [self updateCounter:self.currentReading animate:NO];
+    
+    // make the numbers
+    CGRect maskRect = CGRectMake(0.0, 0.0, 10 + (self.numberOfDigits * 25), 70.0);
+    UIImage *maskImage = [UIImage imageNamed:@"counter-shadow.png"];
+
+    CALayer *maskLayer = [CALayer new];
+    maskLayer.frame = maskRect;
+    maskLayer.contents = (__bridge id _Nullable)(maskImage.CGImage);
+    self.layer.mask = maskLayer;
 }
 
 - (void)layoutSubviews;
