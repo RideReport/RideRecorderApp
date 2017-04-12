@@ -101,7 +101,6 @@ class CoreDataManager {
         
         let url = self.applicationDocumentsDirectory.appendingPathComponent("HoneyBee.sqlite")
         
-        let failureReason = "There was an error creating or loading the application's saved data."
         do {
             if (self.usesInMemoryStore) {
                 // used for testing Core Data Stack
@@ -110,41 +109,72 @@ class CoreDataManager {
                 try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
             }
         } catch let error {
-            //sqlite3 HoneyBee\ copy.sqlite ".dump ZPROFILE" "select ZACCESSTOKEN from ZPROFILE;"
-            var db: OpaquePointer? = nil
-            if sqlite3_open(url.path, &db) != SQLITE_OK {
-                print("error opening database")
-            } else {
-                if sqlite3_exec(db, "PRAGMA writable_schema=ON", nil, nil, nil) != SQLITE_OK {
-                    let errmsg = String(cString: sqlite3_errmsg(db))
-                    print("error creating table: \(errmsg)")
-                }
+            coordinator = nil
+            DDLogError("Error creating persistent store \(error as NSError), \((error as NSError).userInfo)")
+            
+            if let (accessToken, accessTokenExpiresIn) = recoverAccessToken(fromDatabaseAtURL: url) {
+                DDLogInfo("Recovered access token.")
                 
-                var statement: OpaquePointer? = nil
+                hardResetDatabase(url: url)
 
-                if sqlite3_prepare_v2(db, "select ZACCESSTOKEN from ZPROFILE;", -1, &statement, nil) != SQLITE_OK {
-                    let errmsg = String(cString: sqlite3_errmsg(db))
-                    print("error preparing select: \(errmsg)")
-                }
+                Profile.profile().accessToken = accessToken
+                Profile.profile().accessTokenExpiresIn = accessTokenExpiresIn
+                self.saveContext()
                 
-                while sqlite3_step(statement) == SQLITE_ROW {
-                    let id = sqlite3_column_int64(statement, 0)
-                    print("id = \(id); ", terminator: "")
-                    
-                    if let name = sqlite3_column_text(statement, 0) {
-                        let nameString = String(cString: name)
-                        print("name = \(nameString)")
-                    } else {
-                        print("name not found")
-                    }
-                }
+                UserDefaults.standard.set(true, forKey: "shouldGetTripsOnNextAppForeground")
+                UserDefaults.standard.synchronize()
                 
+                coordinator = self.persistentStoreCoordinator
+            } else {
+                DDLogInfo("Failed to recover access token!")
+                hardResetDatabase(url: url)
+                
+                AppDelegate.appDelegate().transitionToCreatProfile()
+                
+                coordinator = self.persistentStoreCoordinator
+            }
+        }
+        
+        return coordinator
+    }
+    
+    private func hardResetDatabase(url: URL) {
+        DDLogInfo("Hard reseting database!")
+
+        do {
+            try FileManager.default.removeItem(at: url)
+        }
+        catch let error {
+            DDLogError("Unresolved error reseting database! \(error as NSError), \((error as NSError).userInfo)")
+            abort()
+        }
+        self.persistentStoreCoordinator = self.generatePSC()
+        self.managedObjectContext = self.generateMOC()
+        Profile.resetProfile()
+    }
+    
+    private func recoverAccessToken(fromDatabaseAtURL url: URL)->(String, Date)? {
+        var db: OpaquePointer? = nil
+        if sqlite3_open(url.path, &db) != SQLITE_OK {
+            print("error opening database")
+        } else {
+            if sqlite3_exec(db, "PRAGMA writable_schema=ON", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("error creating table: \(errmsg)")
+            }
+            
+            var statement: OpaquePointer? = nil
+            
+            if sqlite3_prepare_v2(db, "select ZACCESSTOKEN, ZACCESSTOKENEXPIRESIN from ZPROFILE;", -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db))
+                print("error preparing select: \(errmsg)")
+            }
+            
+            defer {
                 if sqlite3_finalize(statement) != SQLITE_OK {
                     let errmsg = String(cString: sqlite3_errmsg(db))
                     print("error finalizing prepared statement: \(errmsg)")
                 }
-                
-                statement = nil
                 
                 if sqlite3_exec(db, "PRAGMA writable_schema=OFF;", nil, nil, nil) != SQLITE_OK {
                     let errmsg = String(cString: sqlite3_errmsg(db))
@@ -155,20 +185,25 @@ class CoreDataManager {
                     print("error closing database")
                 }
             }
-
-            coordinator = nil
-            // Report any error we got.
-            var dict : [String : AnyObject] = [:]
-            dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data" as AnyObject?
-            dict[NSLocalizedFailureReasonErrorKey] = failureReason as AnyObject?
-            dict[NSUnderlyingErrorKey] = error as NSError
-            // Replace this with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            DDLogError("Unresolved error \(error as NSError), \((error as NSError).userInfo)")
-            abort()
+            
+            while sqlite3_step(statement) == SQLITE_ROW {
+                if let tokenChars = sqlite3_column_text(statement, 0), let expiresInChars = sqlite3_column_text(statement, 1) {
+                    let tokenString = String(cString: tokenChars)
+                    let expiresInString = String(cString: expiresInChars)
+                    var expiresDate: Date = Date(timeIntervalSinceNow: 365*24*60*60) // if we can't extract the expires in, just use a year in the future
+        
+                    if let expiresInTimeInterval = Double(expiresInString) {
+                        expiresDate = Date(timeIntervalSinceReferenceDate: expiresInTimeInterval)
+                    }
+                    return (tokenString, expiresDate)
+                } else {
+                    print("token not found")
+                }
+            }
+            
         }
         
-        return coordinator
+        return nil
     }
 
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = self.generatePSC()
