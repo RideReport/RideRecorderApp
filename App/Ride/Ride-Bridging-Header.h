@@ -13,3 +13,4 @@
 #import "DMActivityInstagram.h"
 #import "Mixpanel/Mixpanel.h"
 #include <zlib.h>
+#import <sqlite3.h>
