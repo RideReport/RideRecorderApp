@@ -156,34 +156,18 @@ class CoreDataManager {
     private func recoverAccessToken(fromDatabaseAtURL url: URL)->(String, Date)? {
         var db: OpaquePointer? = nil
         if sqlite3_open(url.path, &db) != SQLITE_OK {
-            print("error opening database")
+            DDLogWarn("error opening database")
         } else {
-            if sqlite3_exec(db, "PRAGMA writable_schema=ON", nil, nil, nil) != SQLITE_OK {
-                let errmsg = String(cString: sqlite3_errmsg(db))
-                print("error creating table: \(errmsg)")
-            }
+            sqlite3_exec(db, "PRAGMA writable_schema=ON", nil, nil, nil)
             
             var statement: OpaquePointer? = nil
             
-            if sqlite3_prepare_v2(db, "select ZACCESSTOKEN, ZACCESSTOKENEXPIRESIN from ZPROFILE;", -1, &statement, nil) != SQLITE_OK {
-                let errmsg = String(cString: sqlite3_errmsg(db))
-                print("error preparing select: \(errmsg)")
-            }
+            sqlite3_prepare_v2(db, "select ZACCESSTOKEN, ZACCESSTOKENEXPIRESIN from ZPROFILE;", -1, &statement, nil)
             
             defer {
-                if sqlite3_finalize(statement) != SQLITE_OK {
-                    let errmsg = String(cString: sqlite3_errmsg(db))
-                    print("error finalizing prepared statement: \(errmsg)")
-                }
-                
-                if sqlite3_exec(db, "PRAGMA writable_schema=OFF;", nil, nil, nil) != SQLITE_OK {
-                    let errmsg = String(cString: sqlite3_errmsg(db))
-                    print("error creating table: \(errmsg)")
-                }
-                
-                if sqlite3_close(db) != SQLITE_OK {
-                    print("error closing database")
-                }
+                sqlite3_finalize(statement)
+                sqlite3_exec(db, "PRAGMA writable_schema=OFF;", nil, nil, nil)
+                sqlite3_close(db)
             }
             
             while sqlite3_step(statement) == SQLITE_ROW {
@@ -197,12 +181,13 @@ class CoreDataManager {
                     }
                     return (tokenString, expiresDate)
                 } else {
-                    print("token not found")
+                    DDLogWarn("Access token not found in results")
                 }
             }
             
         }
         
+        DDLogWarn("Failed to recover access token!")
         return nil
     }
 
