@@ -215,7 +215,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         // only support one promo for now
         if let promo = Profile.profile().eligibilePromotion() {
             self.shouldShowStreakAnimation = true
-            if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
+            if let app = promo.connectedApp {
                 // if we need to, fetch the app.
                 APIClient.shared.getApplication(app)
             }
