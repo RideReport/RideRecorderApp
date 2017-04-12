@@ -164,6 +164,17 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let shouldGetTripsOnNextAppForeground = UserDefaults.standard.bool(forKey: "shouldGetTripsOnNextAppForeground")
+        if shouldGetTripsOnNextAppForeground {
+            UserDefaults.standard.set(false, forKey: "shouldGetTripsOnNextAppForeground")
+            UserDefaults.standard.synchronize()
+            APIClient.shared.getAllTrips()
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
