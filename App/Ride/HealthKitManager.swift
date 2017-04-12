@@ -34,7 +34,7 @@ class HealthKitManager {
         if (HealthKitManager.shared == nil) {
             HealthKitManager.shared = HealthKitManager()
             DispatchQueue.main.async {
-                HealthKitManager.startup(authorizationHandler)
+                HealthKitManager.shared.startup(authorizationHandler)
             }
         }
     }
