@@ -280,8 +280,9 @@ class APIClient {
             // used for testing
             configuration = URLSessionConfiguration.default
         }
-        configuration.timeoutIntervalForRequest = 4
-        configuration.timeoutIntervalForResource = 10
+        configuration.timeoutIntervalForRequest = 5
+        configuration.timeoutIntervalForResource = 60
+    
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
             "api.ride.report": ServerTrustPolicy.pinPublicKeys(publicKeys: ServerTrustPolicy.publicKeys(), validateCertificateChain: true, validateHost: true)
         ]
