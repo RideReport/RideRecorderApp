@@ -12,6 +12,14 @@ import Foundation
 class ColorPallete : NSObject {
     static let shared = ColorPallete()
     
+    func random() -> UIColor {
+        let hue : CGFloat = CGFloat(arc4random() % 256) / 256
+        let saturation : CGFloat = CGFloat(arc4random() % 128) / 256 + 0.5
+        let brightness : CGFloat = CGFloat(arc4random() % 128) / 256 + 0.5
+        
+        return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1)
+    }
+    
     var autoBrown: UIColor {
         get {
             return UIColor(red: 254/255, green: 191/255, blue: 51/255, alpha: 1.0)

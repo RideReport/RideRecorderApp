@@ -9,6 +9,8 @@
 import Foundation
 import CoreData
 import SystemConfiguration
+import Presentr
+
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
 private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -24,7 +26,7 @@ private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 
-class TripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
+class TripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, RideSummaryViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var emptyTableChick: UIView!
@@ -733,7 +735,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 return
         }
         
-        setDisclosureArrowColor(tableCell)
+        if let chevronImage = getDisclosureArrow(tableCell) {
+            let accessoryImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: chevronImage.size.width + 8, height: chevronImage.size.height))
+            accessoryImageView.contentMode = .right
+            accessoryImageView.tintColor = ColorPallete.shared.goodGreen
+            accessoryImageView.image = chevronImage
+            tableCell.accessoryView = accessoryImageView
+        }
         
  
         
@@ -836,22 +844,27 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         CATransaction.commit()
     }
     
-    func setDisclosureArrowColor(_ tableCell: UITableViewCell) {
+    private var disclosureArrow: UIImage? = nil
+    func getDisclosureArrow(_ tableCell: UITableViewCell)->UIImage? {
+        if disclosureArrow != nil {
+            return disclosureArrow
+        }
+        
         for case let button as UIButton in tableCell.subviews {
             let image = button.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
-            button.setBackgroundImage(image, for: .normal)
+            disclosureArrow = image
+            return image
         }
+        
+        return nil
     }
     
     func configureCell(_ tableCell: UITableViewCell, indexPath: IndexPath) {
-        guard let rideEmojiLabel = tableCell.viewWithTag(1) as? UILabel,
-            let rideDescriptionLabel = tableCell.viewWithTag(2) as? UILabel,
-            let rewardEmojiLabel = tableCell.viewWithTag(3) as? UILabel,
-            let rewardDescriptionLabel = tableCell.viewWithTag(4) as? UILabel else {
+        guard let rideSummaryView = tableCell.viewWithTag(1) as? RideSummaryView,
+            let otherTripsLabel = tableCell.viewWithTag(2) as? UILabel else {
             return
         }
-        
-        setDisclosureArrowColor(tableCell)
+        rideSummaryView.delegate = self
         
         var bottomSpaceConstraint : NSLayoutConstraint? = nil
         var topSpaceConstraint : NSLayoutConstraint? = nil
@@ -864,45 +877,42 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         if !isOtherTripsSection(indexPath.section - 1) {
-        
-            let trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
+            otherTripsLabel.isHidden = true
+            rideSummaryView.isHidden = false
+            bottomSpaceConstraint?.constant = 0
             
-            if !trip.isClosed {
-                rideEmojiLabel.text = "🏁"
-                rideDescriptionLabel.text = String(format: "%@ starting at %@.", trip.inProgressLength.distanceString(), trip.timeString())
-                rewardEmojiLabel.text = ""
-                rewardDescriptionLabel.text = ""
-                bottomSpaceConstraint?.constant = 0
-            } else {
-                rideEmojiLabel.text = trip.climacon ?? ""
-                rideDescriptionLabel.text = trip.displayStringWithTime()
-                
-                if let reward = trip.tripRewards.firstObject as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
-                    rewardEmojiLabel.text = reward.displaySafeEmoji
-                    rewardDescriptionLabel.text = reward.descriptionText
-                    bottomSpaceConstraint?.constant = 14
-                } else {
-                    rewardEmojiLabel.text = ""
-                    rewardDescriptionLabel.text = ""
-                    bottomSpaceConstraint?.constant = 0
-                }
+            let trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
+            rideSummaryView.trip = trip
+            
+            if let chevronImage = getDisclosureArrow(tableCell) {
+                tableCell.accessoryView = nil
+                tableCell.accessoryType = .none
+                rideSummaryView.chevronImage = chevronImage
+            }
+        } else {
+            otherTripsLabel.isHidden = false
+            //rideSummaryView.isHidden = true
+            rideSummaryView.trip = nil
+            rideSummaryView.chevronImage = nil
+            
+            if let chevronImage = getDisclosureArrow(tableCell) {
+                tableCell.accessoryType = .none
+                let accessoryImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: chevronImage.size.width + 8, height: chevronImage.size.height))
+                accessoryImageView.contentMode = .right
+                accessoryImageView.tintColor = ColorPallete.shared.unknownGrey
+                accessoryImageView.image = chevronImage
+                tableCell.accessoryView = accessoryImageView
             }
             
-            rideDescriptionLabel.textColor = ColorPallete.shared.darkGrey
-        } else {
             let otherTripsCount = self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects
-            rideEmojiLabel.text = ""
-            rideDescriptionLabel.textColor = ColorPallete.shared.unknownGrey
             
-            rewardEmojiLabel.text = ""
-            rewardDescriptionLabel.text = ""
             bottomSpaceConstraint?.constant = 0
             topSpaceConstraint?.constant = 4
             
             if otherTripsCount == 1 {
-                rideDescriptionLabel.text = " 1 Other Trip"
+                otherTripsLabel.text = " 1 Other Trip"
             } else {
-                rideDescriptionLabel.text = String(otherTripsCount) + " Other Trips"
+                otherTripsLabel.text = String(otherTripsCount) + " Other Trips"
             }
         }
     }
@@ -938,6 +948,31 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 otherTripVC.dateOfTripsToShow = date
             }
         }
+    }
+    
+    func didTapReward(_ reward: TripReward) {
+        let presenter: Presentr = {
+            let width = ModalSize.fluid(percentage: 0.85)
+            let height = ModalSize.fluid(percentage: 0.85)
+            let center = ModalCenterPosition.center
+            let customType = PresentationType.custom(width: width, height: height, center: center)
+            
+            let customPresenter = Presentr(presentationType: customType)
+            customPresenter.transitionType = .coverVerticalFromTop
+            customPresenter.dismissTransitionType = .coverVerticalWithSpring
+            customPresenter.roundCorners = true
+            customPresenter.backgroundColor = ColorPallete.shared.darkGrey
+            customPresenter.backgroundOpacity = 0.8
+            customPresenter.dismissOnSwipe = true
+            return customPresenter
+        }()
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let redeemVC : RedeemRewardViewController = storyBoard.instantiateViewController(withIdentifier: "redeemRewardViewController") as! RedeemRewardViewController
+        redeemVC.tripReward = reward
+        customPresentViewController(presenter, viewController: redeemVC, animated: true, completion: nil)
+
+        return
     }
     
     func showMapInfo() {

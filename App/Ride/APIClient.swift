@@ -549,6 +549,10 @@ class APIClient {
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
     }
     
+    @discardableResult func getReward(uuid: String, completionHandler: @escaping AuthenticatedAPIRequest.APIResponseBlock)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "rewards/" + uuid, completionHandler: completionHandler)
+    }
+    
     @discardableResult func getStatistics()->AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: self, method: .get, route: "statistics", completionHandler: { (response) -> Void in
             switch response.result {

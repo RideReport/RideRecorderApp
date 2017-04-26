@@ -8,19 +8,65 @@
 
 import Foundation
 import CoreData
+import SwiftyJSON
 
 class TripReward : NSManagedObject {
     @NSManaged var descriptionText : String
-    @NSManaged var emoji : String
+    @NSManaged private var emoji : String
     @NSManaged var trip : Trip
     
-    var displaySafeEmoji: String? {
-        if self.emoji.containsUnsupportEmoji() {
+    var rewardUUID: String? {
+        get {
+            let components = self.emoji.components(separatedBy: "%%%")
+            if components.count == 2 {
+                return components[0]
+            }
+            
+            return nil
+        }
+    }
+    
+    var iconURL: URL? {
+        get {
+            let components = self.emoji.components(separatedBy: "%%%")
+            if components.count == 2 {
+                return URL(string: components[1])
+            }
+            
+            return nil
+        }
+    }
+    
+    private static var stupidHackDelimterString = "%%%"
+    var displaySafeEmoji: String {
+        let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
+        if components.count != 1 {
+            return "💵"
+        }
+        
+        if self.emoji == "" || self.emoji.containsUnsupportEmoji() {
             // support for older versions of iOS without a given emoji
             return "🏆"
         }
         
         return self.emoji
+    }
+    
+    class func reward(dictionary: [String: Any])->TripReward? {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        
+        if let description = dictionary["description"] as? String, let emoji = dictionary["emoji"] as? String {
+            let reward = TripReward.init(entity: NSEntityDescription.entity(forEntityName: "TripReward", in: context)!, insertInto: context)
+            reward.emoji = emoji
+            reward.descriptionText = description
+            if let rewardUUID = dictionary["reward_uuid"] as? String, let icon_url = dictionary["icon_url"] as? String {
+                reward.emoji = rewardUUID + TripReward.stupidHackDelimterString + icon_url
+            }
+            
+            return reward
+        }
+        
+        return nil
     }
     
     convenience init(trip: Trip, emoji: String, descriptionText: String) {

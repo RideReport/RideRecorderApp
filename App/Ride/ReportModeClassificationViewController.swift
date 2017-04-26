@@ -32,7 +32,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
 
     @IBOutlet weak var notesTextField: UITextField!
     @IBOutlet weak var shareView: UIView!
-    @IBOutlet weak var rideSummaryView: RideSummaryView!
+    @IBOutlet weak var rideSummaryView: RideNotificationView!
     @IBOutlet weak var mapView:  MGLMapView!
 
     private var activityViewController: UIActivityViewController!

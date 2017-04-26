@@ -34,7 +34,7 @@ class RideShareViewController : UIViewController {
     private var dateTimeFormatter: DateFormatter!
 
     @IBOutlet weak var shareView: UIView!
-    @IBOutlet weak var rideSummaryView: RideSummaryView!
+    @IBOutlet weak var rideSummaryView: RideNotificationView!
     @IBOutlet weak var mapView:  MGLMapView!
     
     weak var mapViewController: MapViewController? = nil

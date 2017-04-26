@@ -1066,6 +1066,10 @@ class Trip : NSManagedObject {
         self.activityType = topActivityType
     }
     
+    var debugPredictionsDescription: String {
+        return sensorDataCollections.reduce("", {sum, prediction in sum + (prediction as! SensorDataCollection).debugDescription + "\r"})
+    }
+    
     func close(_ handler: ()->Void = {}) {
         if (self.isClosed == true) {
             handler()
@@ -1117,9 +1121,8 @@ class Trip : NSManagedObject {
             let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
         } else if let rewards = summary["rewards"] as? [AnyObject] {
             for reward in rewards {
-                if let description = reward["description"] as? String,
-                    let emoji = reward["emoji"] as? String {
-                    let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
+                if let dict = reward as? [String: Any], let reward = TripReward.reward(dictionary: dict) {
+                    reward.trip = self
                 }
             }
         }
@@ -1151,8 +1154,8 @@ class Trip : NSManagedObject {
             let _ = TripReward(trip: self, emoji: rewardEmoji, descriptionText: rewardDescription)
         } else if let rewards = summary["rewards"]?.array {
             for reward in rewards {
-                if let description = reward["description"].string, let emoji = reward["emoji"].string {
-                    let _ = TripReward(trip: self, emoji: emoji, descriptionText: description)
+                if let dict = reward.dictionaryObject, let reward = TripReward.reward(dictionary: dict) {
+                    reward.trip = self
                 }
             }
         }
@@ -1367,7 +1370,7 @@ class Trip : NSManagedObject {
         message = String(format: "%@ %@ %@%@.", self.climacon ?? "", self.activityType.emoji, self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         if let reward = self.tripRewards.firstObject as? TripReward {
-                message += (" " + reward.emoji + " " + reward.descriptionText)
+                message += (" " + reward.displaySafeEmoji + " " + reward.descriptionText)
         }
         
         return message
@@ -1402,9 +1405,7 @@ class Trip : NSManagedObject {
         var description = String(format: "%@ %@%@.", self.climacon ?? "", self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         for reward in self.tripRewards.array as! [TripReward] {
-            if let emoji = reward.displaySafeEmoji {
-                description += ("\n\n" + emoji + " " + reward.descriptionText)
-            }
+            description += ("\n\n" + reward.displaySafeEmoji + " " + reward.descriptionText)
         }
         
         return description

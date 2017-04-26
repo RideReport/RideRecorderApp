@@ -8,9 +8,9 @@
 
 import Foundation
 
-class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelegate {
+class SetupRatingViewController: SetupChildViewController, RideNotificationViewDelegate {
     
-    weak var pushSimulationView : RideSummaryView!
+    weak var pushSimulationView : RideNotificationView!
     @IBOutlet weak var iPhoneContainerViewTopConstraint : NSLayoutConstraint!
     @IBOutlet weak var iPhoneContainerView : UIView!
     @IBOutlet weak var buttonContainerView : UIView!
@@ -81,7 +81,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         super.next(sender)
     }
     
-    func didDeepTouchSummaryView(_ view: RideSummaryView) {
+    func didDeepTouchSummaryView(_ view: RideNotificationView) {
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
         
@@ -99,7 +99,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         }
     }
     
-    func didOpenControls(_ view: RideSummaryView) {
+    func didOpenControls(_ view: RideNotificationView) {
         self.didFigureOutNotificationview = true
         self.notificationHelperTextLabel.fadeOut()
         self.pushSimulationView.layer.removeAllAnimations()
@@ -134,7 +134,7 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         helperTextLabel.animatedSetMarkdownStringValue("Shucks =(. **Your ratings help** other riders find good routes – and help your city fix the bad ones.")
     }
     
-    func didTapEditButton(_ view: RideSummaryView) {
+    func didTapEditButton(_ view: RideNotificationView) {
         showTripRichNotification()
     }
     
@@ -143,11 +143,11 @@ class SetupRatingViewController: SetupChildViewController, RideSummaryViewDelega
         helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
     }
     
-    func didTapActionButton(_ view: RideSummaryView) {
+    func didTapActionButton(_ view: RideNotificationView) {
         self.tappedGreat(self)
     }
     
-    func didTapDestructiveButton(_ view: RideSummaryView) {
+    func didTapDestructiveButton(_ view: RideNotificationView) {
         self.tappedNotGreat(self)
     }
     

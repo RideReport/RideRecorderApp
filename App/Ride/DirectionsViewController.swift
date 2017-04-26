@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class DirectionsViewController: UIViewController, RideSummaryViewDelegate {
+class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
     @IBOutlet weak var counter: RCounter!
     @IBOutlet weak var mapInfoToolBar: UIView!
     @IBOutlet weak var mapInfoText: UILabel!

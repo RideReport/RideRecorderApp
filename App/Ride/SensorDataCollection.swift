@@ -96,6 +96,10 @@ class SensorDataCollection : NSManagedObject {
         return sumSpeed/Double(count)
     }
     
+    override var debugDescription: String {
+        return "Readings: " + String(accelerometerAccelerations.count) + "Moving Speed: " + String(averageMovingSpeed) + ", " + activityTypePredictions.reduce("", {sum, prediction in sum + (prediction as! ActivityTypePrediction).debugDescription + ", "})
+    }
+    
     var averageSpeed : CLLocationSpeed {
         guard self.locations != nil && self.locations.count > 0 else {
             return -1.0
