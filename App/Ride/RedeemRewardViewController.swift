@@ -37,6 +37,30 @@ class RedeemRewardViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        let borderWidth: CGFloat = 4
+        
+        let borderLayer = CAShapeLayer()
+        borderLayer.fillColor = UIColor.clear.cgColor
+        borderLayer.strokeColor = ColorPallete.shared.goodGreen.cgColor
+        borderLayer.lineWidth = borderWidth
+        borderLayer.lineJoin = kCALineJoinRound
+        borderLayer.lineDashPattern = [10,6]
+        
+        self.view.clipsToBounds = false
+        var frame = self.view.frame
+        frame.origin.x = 0
+        frame.origin.y = 0
+        frame.size.width = frame.size.width * 0.85
+        frame.size.height = frame.size.height * 0.85
+        let borderRect = frame
+        
+        borderLayer.bounds = borderRect
+        borderLayer.position = CGPoint(x: frame.size.width/2, y: frame.size.height/2)
+        borderLayer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: 5).cgPath
+        
+        self.view.layer.addSublayer(borderLayer)
+
+        
         if let tripReward = self.tripReward, let uuid = tripReward.rewardUUID {
             APIClient.shared.getReward(uuid: uuid, completionHandler: {
                 [weak self] (response) in
