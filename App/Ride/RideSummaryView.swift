@@ -125,13 +125,13 @@ fileprivate class RideRewardComponentView : UIView {
 
 fileprivate class RideSummaryComponentView : UIView {
     static fileprivate let lengthFontSize: CGFloat = 26
-    static fileprivate let unitsFontSize: CGFloat = 13
+    static fileprivate let unitsFontSize: CGFloat = 10
     static fileprivate let textFontSize: CGFloat = 18
     static fileprivate let distanceViewDimensions = RideSummaryComponentView.lengthFontSize + RideSummaryComponentView.unitsFontSize + 10
 
     public var length: Meters = 0 {
         didSet {
-            let (distanceString, _, unitsString) = self.length.distanceStrings(suppressFractionalUnits: false)
+            let (distanceString, unitsString, _) = self.length.distanceStrings(suppressFractionalUnits: false)
             lengthLabel.text = distanceString
             unitsLabel.text = unitsString
         }
@@ -208,6 +208,7 @@ fileprivate class RideSummaryComponentView : UIView {
         unitsLabel = UILabel()
         unitsLabel.backgroundColor = UIColor.clear
         unitsLabel.adjustsFontSizeToFitWidth = true
+        unitsLabel.clipsToBounds = false
         unitsLabel.minimumScaleFactor = 0.6
         unitsLabel.textAlignment = .center
         unitsLabel.numberOfLines = 1
@@ -216,10 +217,12 @@ fileprivate class RideSummaryComponentView : UIView {
         unitsLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceView.addSubview(unitsLabel)
         
-        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=6)-[lengthLabel]-(>=6)-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel])
+        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=8)-[lengthLabel]-(>=8)-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel])
         NSLayoutConstraint.activate(xConstraints)
+        let xConstraints2 = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=8)-[unitsLabel]-(>=8)-|", options: [.alignAllCenterX], metrics: nil, views: ["unitsLabel": unitsLabel])
+        NSLayoutConstraint.activate(xConstraints2)
         NSLayoutConstraint(item: lengthLabel, attribute: .centerX, relatedBy: .equal, toItem: distanceView, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
-        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[lengthLabel]-(-10)-[unitsLabel]-4-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel, "unitsLabel": unitsLabel])
+        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[lengthLabel]-(-5)-[unitsLabel]-7-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel, "unitsLabel": unitsLabel])
         NSLayoutConstraint.activate(yConstraints)
         
         bodyLabel = UILabel()
@@ -262,8 +265,8 @@ fileprivate class RideSummaryComponentView : UIView {
     }
 }
 
-@objc protocol RideSummaryViewDelegate {
-    @objc func didTapReward(_ reward: TripReward)
+protocol RideSummaryViewDelegate: class {
+    func didTapReward(withAssociatedObject: Any)
 }
 
 @IBDesignable public class RideSummaryView : UIView {
@@ -277,12 +280,6 @@ fileprivate class RideSummaryComponentView : UIView {
     private var chevronImageView: UIImageView?
     private var tripSummaryView: RideSummaryComponentView?
     private var rewardViews: [RideRewardComponentView]!
-    
-    var trip: Trip? = nil {
-        didSet {
-            reloadUI()
-        }
-    }
     
     var chevronImage: UIImage? = nil {
         didSet {
@@ -358,7 +355,7 @@ fileprivate class RideSummaryComponentView : UIView {
             visualFormat += String(format: "-8-[%@]", stringI)
             i += 1
             
-            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-56-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
+            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
             currentConstraints.append(contentsOf: widthConstraints)
         }
         visualFormat += "-|"
@@ -366,8 +363,28 @@ fileprivate class RideSummaryComponentView : UIView {
         currentConstraints.append(contentsOf: heightConstraints)
     }
 
+    public func setTripSummary(tripLength: Float, description: String) {
+        if let summaryView = tripSummaryView {
+            summaryView.removeFromSuperview()
+            self.tripSummaryView = nil
+        }
+        
+        defer {
+            self.setNeedsUpdateConstraints()
+        }
+        
+        guard description != "" else {
+            return
+        }
+        
+        tripSummaryView = RideSummaryComponentView()
+        self.addSubview(tripSummaryView!)
+        
+        tripSummaryView?.length = tripLength
+        tripSummaryView?.bodyLabel.text = description
+    }
     
-    func reloadUI() {
+    public func setRewards(_ rewards: [[String: Any]], animated: Bool = false) {
         if let oldRewardViews = rewardViews {
             rewardViews = []
             
@@ -377,53 +394,49 @@ fileprivate class RideSummaryComponentView : UIView {
         } else {
             rewardViews = []
         }
-        if let summaryView = tripSummaryView {
-            summaryView.removeFromSuperview()
-            self.tripSummaryView = nil
-        }
 
         defer {
             self.setNeedsUpdateConstraints()
         }
+    
+        var i: Int = 0
+        var colors = [ColorPallete.shared.notificationActionBlue, ColorPallete.shared.pink, ColorPallete.shared.primary, ColorPallete.shared.turquoise]
         
-        guard let trip = self.trip else {
-            return
-        }
-        
-        tripSummaryView = RideSummaryComponentView()
-        self.addSubview(tripSummaryView!)
-        
-        if !trip.isClosed {
-            tripSummaryView?.length = trip.inProgressLength
-            tripSummaryView?.bodyLabel.text = String(format: "Trip starting at %@.", trip.timeString())
-        } else {
-            tripSummaryView?.length = trip.length
-            tripSummaryView?.bodyLabel.text = trip.displayStringWithTime()
-            
-            for element in trip.tripRewards {
-                if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
-                    let rewardView = RideRewardComponentView()
-                    rewardView.associatedObject = reward
-                    
-                    if let rewardUUID = reward.rewardUUID, !rewardUUID.isEmpty {
-                        rewardView.drawsDottedOutline = true
-                        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RideSummaryView.didTapReward(sender:)))
-                        rewardView.addGestureRecognizer(tapRecognizer)
-                    }
-                    
-                    self.addSubview(rewardView)
-                    
-                    rewardView.emojiLabel.text = reward.displaySafeEmoji
-                    rewardView.bodyLabel.text = reward.descriptionText
-                    rewardViews.append(rewardView)
+        for rewardDict in rewards {
+            if let displaySafeEmoji = rewardDict["displaySafeEmoji"] as? String,
+                let descriptionText = rewardDict["descriptionText"] as? String, descriptionText.range(of: "day ride streak") == nil {
+                let rewardView = RideRewardComponentView()
+                if let object = rewardDict["object"] {
+                    rewardView.associatedObject = object
                 }
+                
+                if let rewardUUID = rewardDict["rewardUUID"] as? String, !rewardUUID.isEmpty {
+                    rewardView.drawsDottedOutline = true
+                    let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RideSummaryView.didTapReward(sender:)))
+                    rewardView.addGestureRecognizer(tapRecognizer)
+                }
+                if (animated) {
+                    rewardView.isHidden = true
+                    let v = i // capture state in delayed scope
+                    self.delay(0.1 + Double(i) * 0.4, completionHandler: {
+                        self.sparkle(colors[v%colors.count], inRect: CGRect(x: rewardView.frame.origin.x - 8, y: rewardView.frame.origin.y, width: rewardView.frame.size.width + 10, height: rewardView.frame.size.height))
+                        rewardView.fadeIn()
+                    })
+                    i += 1
+                }
+                
+                self.addSubview(rewardView)
+                
+                rewardView.emojiLabel.text = displaySafeEmoji
+                rewardView.bodyLabel.text = descriptionText
+                rewardViews.append(rewardView)
             }
         }
     }
     
     func didTapReward(sender: AnyObject) {
-        if let reward = ((sender as? UITapGestureRecognizer)?.view as? RideRewardComponentView)?.associatedObject as? TripReward, let delegate = self.delegate {
-            delegate.didTapReward(reward)
+        if let reward = ((sender as? UITapGestureRecognizer)?.view as? RideRewardComponentView)?.associatedObject, let delegate = self.delegate {
+            delegate.didTapReward(withAssociatedObject: reward)
         }
     }
 }

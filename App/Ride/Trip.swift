@@ -1291,11 +1291,19 @@ class Trip : NSManagedObject {
         if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
             
-            var userInfo = ["uuid" : self.uuid, "rideDescription" : self.displayString(), "rideEmoji" : self.climacon ?? self.activityType.emoji]
-            if let reward = self.tripRewards.firstObject as? TripReward {
-                userInfo["rewardEmoji"] = reward.displaySafeEmoji
-                userInfo["rewardDescription"] = reward.descriptionText
+            var userInfo: [String: Any] = ["uuid" : self.uuid, "rideDescription" : self.displayStringWithTime(), "rideLength" : self.length]
+            
+            var rewardDicts: [[String: Any]] = []
+            for element in self.tripRewards {
+                if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
+                    var rewardDict: [String: Any] = [:]
+                    rewardDict["rewardUUID"] = reward.rewardUUID
+                    rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
+                    rewardDict["descriptionText"] = reward.descriptionText
+                    rewardDicts.append(rewardDict)
+                }
             }
+            userInfo["rewards"] = rewardDicts
             
             if #available(iOS 10.0, *) {
                 let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in

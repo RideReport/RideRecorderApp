@@ -13,12 +13,8 @@ import SpriteKit
 
 
 class NotificationViewController: UIViewController, UNNotificationContentExtension {
+    @IBOutlet weak var rideSummaryView: RideSummaryView!
     @IBOutlet var mapImageView: UIImageView!
-    @IBOutlet var rideEmojiLabel: UILabel!
-    @IBOutlet var rideDescriptionLabel: UILabel!
-    @IBOutlet var rewardDescriptionLabel: UILabel!
-    @IBOutlet var rewardEmojiLabel: UILabel!
-    @IBOutlet var bottomSpaceConstraint: NSLayoutConstraint!
     @IBOutlet var mapImageHeightConstraint: NSLayoutConstraint!
     
     var inUseSecurityScopedResource :URL? = nil
@@ -43,14 +39,9 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
     
     func didReceive(_ notification: UNNotification) {
-        rideDescriptionLabel.preferredMaxLayoutWidth = rideDescriptionLabel.frame.size.width
-        rewardDescriptionLabel.preferredMaxLayoutWidth = rewardDescriptionLabel.frame.size.width
-        
         if let rideDescription = notification.request.content.userInfo["rideDescription"] as? String,
-            let rideEmoji = notification.request.content.userInfo["rideEmoji"] as? String {
-            
-            rideEmojiLabel.text = rideEmoji ?? ""
-            rideDescriptionLabel.text = rideDescription
+            let rideLength = notification.request.content.userInfo["rideLength"] as? Float,
+            let rewardDicts = notification.request.content.userInfo["rewards"] as? [[String: Any]] {
             
             var hasMap = false
             
@@ -62,45 +53,23 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
                     hasMap = true
                 }
             }
+            rideSummaryView.setTripSummary(tripLength: rideLength, description: rideDescription)
+            rideSummaryView.setRewards(rewardDicts, animated: true)
             
-            if let rewardDescription = notification.request.content.userInfo["rewardDescription"] as? String,
-                let rewardEmoji = notification.request.content.userInfo["rewardEmoji"] as? String {
-                rewardDescriptionLabel.text = rewardDescription
-                rewardDescriptionLabel.isHidden = true
-                rewardEmojiLabel.isHidden = true
-                rewardDescriptionLabel.sizeToFit()
-                self.view.sparkle(ColorPallete.shared.notificationActionBlue, inRect: CGRect(x: rewardDescriptionLabel.frame.origin.x - 14 - rewardEmojiLabel.frame.size.width, y: rewardDescriptionLabel.frame.origin.y, width: rewardDescriptionLabel.frame.size.width + 28 + rewardEmojiLabel.frame.size.width, height: rewardDescriptionLabel.frame.size.height))
-                rewardDescriptionLabel.fadeIn()
-                rewardEmojiLabel.fadeIn()
-                
-                rewardEmojiLabel.text = rewardEmoji
-                if (hasMap) {
-                    self.preferredContentSize.height = mapImageView.frame.maxY
-                } else {
-                    mapImageView.removeConstraints(mapImageView.constraints)
-                    self.preferredContentSize.height = mapImageView.frame.minY
-                }
+            // force an update
+            rideSummaryView.updateConstraints()
+            rideSummaryView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
+            
+            if (hasMap) {
+                self.preferredContentSize.height = mapImageView.frame.maxY
             } else {
-                rewardDescriptionLabel.text = ""
-                rewardEmojiLabel.text = ""
-                
-                if (hasMap) {
-                    self.preferredContentSize.height = mapImageView.frame.maxY - (bottomSpaceConstraint?.constant ?? 0)
-                } else {
-                    mapImageView.removeConstraints(mapImageView.constraints)
-                    self.preferredContentSize.height = mapImageView.frame.minY - (bottomSpaceConstraint?.constant ?? 0)
-                }
-                
-                bottomSpaceConstraint?.constant = 0
+                self.mapImageView.removeConstraint(mapImageHeightConstraint)
+                self.preferredContentSize.height = mapImageView.frame.minY
             }
         } else {
-            self.rideDescriptionLabel.text = notification.request.content.body
-            rewardDescriptionLabel.text = ""
-            rewardDescriptionLabel.text = ""
-            rewardEmojiLabel.text = ""
-            mapImageView.removeConstraints(mapImageView.constraints)
-            self.preferredContentSize.height = mapImageView.frame.minY - (bottomSpaceConstraint?.constant ?? 0)
-            bottomSpaceConstraint?.constant = 0
+            self.mapImageView.removeConstraint(mapImageHeightConstraint)
+            self.preferredContentSize.height = mapImageView.frame.minY
         }
     }
 }

@@ -107,7 +107,19 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             return
         }
         
-        self.rideSummaryView.trip = self.selectedTrip
+        var rewardDicts: [[String: Any]] = []
+        for element in self.selectedTrip.tripRewards {
+            if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
+                var rewardDict: [String: Any] = [:]
+                rewardDict["object"] = reward
+                rewardDict["rewardUUID"] = reward.rewardUUID
+                rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
+                rewardDict["descriptionText"] = reward.descriptionText
+                rewardDicts.append(rewardDict)
+            }
+        }
+        rideSummaryView.setTripSummary(tripLength: self.selectedTrip.length, description: self.selectedTrip.displayStringWithTime())
+        rideSummaryView.setRewards(rewardDicts)
         
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
@@ -283,7 +295,11 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         }
     }
     
-    func didTapReward(_ reward: TripReward) {
+    func didTapReward(withAssociatedObject object: Any) {
+        guard let reward = object as? TripReward else {
+            return
+        }
+        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let redeemVC : RedeemRewardViewController = storyBoard.instantiateViewController(withIdentifier: "redeemRewardViewController") as! RedeemRewardViewController
         redeemVC.tripReward = reward

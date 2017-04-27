@@ -882,7 +882,24 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             bottomSpaceConstraint?.constant = 0
             
             let trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
-            rideSummaryView.trip = trip
+            if !trip.isClosed {
+                rideSummaryView.setTripSummary(tripLength: trip.inProgressLength, description: String(format: "Trip starting at %@.", trip.timeString()))
+                rideSummaryView.setRewards([])
+            } else {
+                var rewardDicts: [[String: Any]] = []
+                for element in trip.tripRewards {
+                    if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
+                        var rewardDict: [String: Any] = [:]
+                        rewardDict["object"] = reward
+                        rewardDict["rewardUUID"] = reward.rewardUUID
+                        rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
+                        rewardDict["descriptionText"] = reward.descriptionText
+                        rewardDicts.append(rewardDict)
+                    }
+                }
+                rideSummaryView.setTripSummary(tripLength: trip.length, description: trip.displayStringWithTime())
+                rideSummaryView.setRewards(rewardDicts)
+            }
             
             if let chevronImage = getDisclosureArrow(tableCell) {
                 tableCell.accessoryView = nil
@@ -892,7 +909,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         } else {
             otherTripsLabel.isHidden = false
             //rideSummaryView.isHidden = true
-            rideSummaryView.trip = nil
+            rideSummaryView.setTripSummary(tripLength: 0, description: "")
+            rideSummaryView.setRewards([])
             rideSummaryView.chevronImage = nil
             
             if let chevronImage = getDisclosureArrow(tableCell) {
@@ -950,7 +968,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func didTapReward(_ reward: TripReward) {
+    func didTapReward(withAssociatedObject object: Any) {
+        guard let reward = object as? TripReward else {
+            return
+        }
+        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let redeemVC : RedeemRewardViewController = storyBoard.instantiateViewController(withIdentifier: "redeemRewardViewController") as! RedeemRewardViewController
         redeemVC.tripReward = reward

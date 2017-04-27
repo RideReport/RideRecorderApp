@@ -87,13 +87,13 @@
       </BuildableProductRunnable>
       <AdditionalOptions>
          <AdditionalOption
-            key = "USERBREAK"
-            value = "1"
+            key = "NSZombieEnabled"
+            value = "YES"
             isEnabled = "YES">
          </AdditionalOption>
          <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
+            key = "USERBREAK"
+            value = "1"
             isEnabled = "YES">
          </AdditionalOption>
       </AdditionalOptions>
