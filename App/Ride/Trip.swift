@@ -1392,6 +1392,33 @@ class Trip : NSManagedObject {
         if let reward = self.tripRewards.firstObject as? TripReward {
                 message += (" " + reward.displaySafeEmoji + " " + reward.descriptionText)
         }
+        if self.tripRewards.count > 1 {
+            var countEmoji = ""
+            switch self.tripRewards.count {
+                case 2:
+                    countEmoji = "2️⃣"
+                case 3:
+                    countEmoji = "3️⃣"
+                case 4:
+                    countEmoji = "4️⃣"
+                case 5:
+                    countEmoji = "5️⃣"
+                case 6:
+                    countEmoji = "6️⃣"
+                case 7:
+                    countEmoji = "7️⃣"
+                case 8:
+                    countEmoji = "8️⃣"
+                case 9:
+                    countEmoji = "9️⃣"
+                case 10:
+                    countEmoji = "🔟"
+                default:
+                    countEmoji = String(self.tripRewards.count)
+            }
+            
+            message += (" ❎" + countEmoji + " combo!")
+        }
         
         return message
     }
