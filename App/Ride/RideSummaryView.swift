@@ -124,7 +124,7 @@ fileprivate class RideRewardComponentView : UIView {
 }
 
 fileprivate class RideSummaryComponentView : UIView {
-    static fileprivate let lengthFontSize: CGFloat = 28
+    static fileprivate let lengthFontSize: CGFloat = 26
     static fileprivate let unitsFontSize: CGFloat = 13
     static fileprivate let textFontSize: CGFloat = 18
     static fileprivate let distanceViewDimensions = RideSummaryComponentView.lengthFontSize + RideSummaryComponentView.unitsFontSize + 10
@@ -172,19 +172,26 @@ fileprivate class RideSummaryComponentView : UIView {
         distanceView = UIView()
         distanceView.backgroundColor = UIColor.clear
         distanceView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(distanceView)
-        
-        let borderWidth: CGFloat = 4
-        let borderLayer = CAShapeLayer()
-        borderLayer.fillColor = ColorPallete.shared.primaryDark.cgColor
-        borderLayer.lineWidth = borderWidth
         distanceView.clipsToBounds = false
 
+        self.addSubview(distanceView)
+        
         let borderFrame = CGRect(x: 0, y: 0, width: RideSummaryComponentView.distanceViewDimensions, height: RideSummaryComponentView.distanceViewDimensions)
-        borderLayer.bounds = borderFrame
-        borderLayer.position = CGPoint(x: borderFrame.size.width/2, y: borderFrame.size.height/2)
-        borderLayer.path = UIBezierPath(ovalIn: borderFrame).cgPath
-        distanceView.layer.addSublayer(borderLayer)
+        let maskLayer = CAShapeLayer()
+        maskLayer.fillColor = ColorPallete.shared.primary.cgColor
+        maskLayer.bounds = borderFrame
+        maskLayer.position = CGPoint(x: borderFrame.size.width/2, y: borderFrame.size.height/2)
+        maskLayer.path = UIBezierPath(ovalIn: borderFrame).cgPath
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [ColorPallete.shared.primary.cgColor, ColorPallete.shared.primaryDark.cgColor]
+        gradientLayer.locations = [0.6, 1.0]
+        gradientLayer.bounds = borderFrame
+        gradientLayer.position = CGPoint(x: borderFrame.size.width/2, y: borderFrame.size.height/2)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.mask = maskLayer
+        distanceView.layer.addSublayer(gradientLayer)
         
         lengthLabel = UILabel()
         lengthLabel.backgroundColor = UIColor.clear
@@ -194,7 +201,7 @@ fileprivate class RideSummaryComponentView : UIView {
         lengthLabel.minimumScaleFactor = 0.6
         lengthLabel.numberOfLines = 1
         lengthLabel.textColor = ColorPallete.shared.almostWhite
-        lengthLabel.font = UIFont.systemFont(ofSize: RideSummaryComponentView.lengthFontSize)
+        lengthLabel.font = UIFont.boldSystemFont(ofSize: RideSummaryComponentView.lengthFontSize)
         lengthLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceView.addSubview(lengthLabel)
         
@@ -209,6 +216,8 @@ fileprivate class RideSummaryComponentView : UIView {
         unitsLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceView.addSubview(unitsLabel)
         
+        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-(>=6)-[lengthLabel]-(>=6)-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel])
+        NSLayoutConstraint.activate(xConstraints)
         NSLayoutConstraint(item: lengthLabel, attribute: .centerX, relatedBy: .equal, toItem: distanceView, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
         let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[lengthLabel]-(-10)-[unitsLabel]-4-|", options: [.alignAllCenterX], metrics: nil, views: ["lengthLabel": lengthLabel, "unitsLabel": unitsLabel])
         NSLayoutConstraint.activate(yConstraints)
@@ -238,7 +247,7 @@ fileprivate class RideSummaryComponentView : UIView {
         }
         
         
-        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|[distanceView(%f)]-4-[bodyLabel]|", RideSummaryComponentView.distanceViewDimensions), options: [.alignAllTop], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
+        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|[distanceView(%f)]-6-[bodyLabel]|", RideSummaryComponentView.distanceViewDimensions), options: [.alignAllTop], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: widthConstraints)
         
         currentConstraints.append(NSLayoutConstraint(item: distanceView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: RideSummaryComponentView.distanceViewDimensions))
@@ -349,7 +358,7 @@ fileprivate class RideSummaryComponentView : UIView {
             visualFormat += String(format: "-8-[%@]", stringI)
             i += 1
             
-            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-58-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
+            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-56-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
             currentConstraints.append(contentsOf: widthConstraints)
         }
         visualFormat += "-|"
