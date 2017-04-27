@@ -400,11 +400,11 @@ protocol RideSummaryViewDelegate: class {
         }
     
         var i: Int = 0
-        var colors = [ColorPallete.shared.notificationActionBlue, ColorPallete.shared.pink, ColorPallete.shared.primary, ColorPallete.shared.turquoise]
+        var colors = [ColorPallete.shared.notificationActionBlue, ColorPallete.shared.pink, ColorPallete.shared.primary, ColorPallete.shared.orange, ColorPallete.shared.turquoise, ColorPallete.shared.badRed, ColorPallete.shared.brightBlue]
         
         for rewardDict in rewards {
             if let displaySafeEmoji = rewardDict["displaySafeEmoji"] as? String,
-                let descriptionText = rewardDict["descriptionText"] as? String, descriptionText.range(of: "day ride streak") == nil {
+                let descriptionText = rewardDict["descriptionText"] as? String {
                 let rewardView = RideRewardComponentView()
                 if let object = rewardDict["object"] {
                     rewardView.associatedObject = object
@@ -443,7 +443,7 @@ protocol RideSummaryViewDelegate: class {
     }
     
     private func animateMultiplierBonusBadge(multiplier: Int, color: UIColor, inRect: CGRect) {
-        let duration: TimeInterval = 0.6
+        let duration: TimeInterval = 0.1
         let badgeSize: CGFloat = 40
         
         let borderFrame = CGRect(x: 0, y: 0, width: badgeSize, height: badgeSize)
@@ -479,24 +479,14 @@ protocol RideSummaryViewDelegate: class {
         //scaleAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0.8, 1.01)
         scaleAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
         scaleAnimation.duration = duration
-        scaleAnimation.values = [NSValue(caTransform3D: CATransform3DMakeScale(1.8, 1.8, 1.0)),
+        scaleAnimation.values = [NSValue(caTransform3D: CATransform3DMakeScale(CGFloat(pow(Double(multiplier), 3)) * 2.0, CGFloat(pow(Double(multiplier), 3)) * 2.0, CGFloat(pow(Double(multiplier), 3)) * 2.0)),
                                  NSValue(caTransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0))]
         animationLayer.add(scaleAnimation, forKey:"scaleAnimation")
         
-        // we need to animate the position so the emoji stays centered about itself
-        let positonAnimation = CAKeyframeAnimation(keyPath: "position")
-        positonAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0.8, 1.01)
-        positonAnimation.duration = duration
-        positonAnimation.isRemovedOnCompletion = false
-        positonAnimation.values = [NSValue(cgPoint:animationLayer.position),
-                                   NSValue(cgPoint:CGPoint(x: animationLayer.position.x, y: animationLayer.position.y - 20))]
-        animationLayer.add(positonAnimation, forKey:"position")
-        
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        opacityAnimation.duration = duration*2
-        opacityAnimation.values = [NSNumber(value: 0.0 as Float),
-                                   NSNumber(value: 1.0 as Float),
+        opacityAnimation.duration = 1.5
+        opacityAnimation.values = [NSNumber(value: 1.0 as Float),
                                    NSNumber(value: 0.0 as Float)]
         animationLayer.add(opacityAnimation, forKey:"opacity")
         
