@@ -23,10 +23,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     private var startPoint: MGLPointAnnotation?
     private var endPoint: MGLPointAnnotation?
     
-    var padFactorX : Double = 0.1
-    var padFactorTop : Double = 0.1
-    var padFactorBottom : Double = 0.1
-    
+    var insets = UIEdgeInsetsMake(50, 20, 20, 20)
     
     private var hasCenteredMap : Bool = false
     
@@ -295,42 +292,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue]
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
         
-        let point0 = coordinates[0]
-        var minLong : Double = point0.longitude
-        var maxLong : Double = point0.longitude
-        var minLat : Double = point0.latitude
-        var maxLat : Double = point0.latitude
-        
-        var i = 1
-        let pointCount = (Int)(count)
-
-        while i < pointCount {
-            let point = coordinates[i]
-            if (point.longitude < minLong) {
-                minLong = point.longitude
-            } else if (point.longitude > maxLong) {
-                maxLong = point.longitude
-            }
-            
-            if (point.latitude < minLat) {
-                minLat = point.latitude
-            } else if (point.latitude > maxLat) {
-                maxLat = point.latitude
-            }
-            i += 1
-        }
-        
-        
-        let sizeLong = (maxLong - minLong)
-        let sizeLat = (maxLat - minLat)
-        
-        let bounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(minLat - (sizeLat * padFactorBottom), minLong - (sizeLong * padFactorX)), CLLocationCoordinate2DMake(maxLat + (sizeLat * padFactorTop),maxLong + (sizeLong * padFactorX)))
         DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {
                 return
             }
-            
-            strongSelf.mapView.setVisibleCoordinateBounds(bounds, animated: true)
+            strongSelf.mapView.setVisibleCoordinates(coordinates, count: count, edgePadding: strongSelf.insets, animated: true)
         })
     }
     

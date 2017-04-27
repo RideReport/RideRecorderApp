@@ -29,7 +29,7 @@ PODS:
   - MapboxStatic.swift (0.7.0)
   - Mixpanel (3.1.2)
   - OAuthSwift (1.1.1)
-  - Presentr (1.1.1)
+  - Presentr (1.2.3)
   - SwiftyJSON (3.1.4)
 
 DEPENDENCIES:
@@ -70,7 +70,7 @@ SPEC CHECKSUMS:
   MapboxStatic.swift: 4c5c7553ba47146de42a5f19928996797edfebc0
   Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
-  Presentr: 389acebf4361e0913d942232d70211e279e38645
+  Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
 PODFILE CHECKSUM: ca152a3a85622b8555592d126d5dc5d489defdcd

@@ -11,29 +11,33 @@ import Foundation
 typealias Meters = Float
 
 extension Float {
-    func distanceString(suppressFractionalUnits: Bool = false)-> String {
+    func distanceString(suppressFractionalUnits: Bool = false)->String {
+        let (distanceString, longUnits, _) = self.distanceStrings(suppressFractionalUnits: suppressFractionalUnits)
+        
+        return distanceString + " " + longUnits
+    }
+    
+    func distanceStrings(suppressFractionalUnits: Bool = false)-> (distance: String, unitsLong: String, unitsShort: String) {
         let METERS_CUTOFF: Float = 400.0
         let FEET_CUTOFF: Float = 1056.0
         
-        let format:String
         if (Locale.isMetric()) {
             if (self < METERS_CUTOFF) {
-                format = "\(self.stringWithDecimals(0)) meters"
+                return ("\(self.stringWithDecimals(0))", "meters", "m")
             } else {
                 if Locale.isGB() {
-                    format = "\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1)) miles"
+                    return ("\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "miles", "mi")
                 } else {
-                    format = "\(self.kilometers.stringWithDecimals(suppressFractionalUnits ? 0 : 1)) km"
+                    return ("\(self.kilometers.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "km", "k")
                 }
             }
         } else { // assume Imperial / U.S.
             if (feet < FEET_CUTOFF) {
-                format = "\(self.feet.stringWithDecimals(0)) feet"
+                return ("\(self.feet.stringWithDecimals(0))", "feet", "ft")
             } else {
-                format = "\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1)) miles"
+                return ("\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "miles", "mi")
             }
         }
-        return format
     }
     
     var localizedMajorUnit: Float {

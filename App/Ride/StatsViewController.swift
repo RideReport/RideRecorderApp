@@ -418,13 +418,11 @@ class StatsViewController: UIViewController {
         }
         
         if let meters = statsDict["meters"]?.float {
-            let components = meters.distanceString(suppressFractionalUnits: true).components(separatedBy: " ")
-            if components.count == 2 {
-                rollupsString.append(NSAttributedString(string: components[0], attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                rollupsString.append(NSAttributedString(string: components[1], attributes: unitAttributes))
-                rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
-            }
+            let (distanceString, longUnits, shortUnits) = meters.distanceStrings(suppressFractionalUnits: true)
+            rollupsString.append(NSAttributedString(string: distanceString, attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            rollupsString.append(NSAttributedString(string: longUnits, attributes: unitAttributes))
+            rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
         }
         
         if let trophiesCount = statsDict["trophies"]?.int, let trophiesString = integerFormatter.string(from: NSNumber(value: trophiesCount)) {

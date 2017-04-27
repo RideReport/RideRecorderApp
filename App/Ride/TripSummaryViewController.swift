@@ -9,18 +9,19 @@
 import Foundation
 import CoreData
 
-class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
+class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSummaryViewDelegate {
     @IBOutlet weak var grabberBarView: UIView!
     @IBOutlet weak var modeSelectorView: ModeSelectorView!
-    @IBOutlet weak var rideEmojiLabel: UILabel!
-    @IBOutlet weak var rideDescriptionLabel: UILabel!
-    @IBOutlet weak var rewardEmojiLabel: UILabel!
-    @IBOutlet weak var rewardDescriptionLabel: UILabel!
+    @IBOutlet weak var rideSummaryView: RideSummaryView!
     
     @IBOutlet weak var changeModeButton: UIButton!
     @IBOutlet weak var changeModeLabel: UILabel!
     @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var statsView: UIView!
+    @IBOutlet weak var statsView2: UIView!
+    
+    @IBOutlet weak var weatherLabel: UILabel!
+    @IBOutlet weak var calorieLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var avgSpeedLabel: UILabel!
     
@@ -42,7 +43,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
             }
             
             if let trip = self.selectedTrip, trip.activityType == .cycling {
-                return statsView.frame.maxY
+                return statsView2.frame.maxY
             }
             
             return buttonsView.frame.maxY
@@ -51,7 +52,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
     
     var minY: CGFloat {
         get {
-            guard rewardDescriptionLabel != nil else {
+            guard rideSummaryView != nil else {
                 return 0
             }
             
@@ -61,7 +62,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
 
     var peakY: CGFloat {
         get {
-            guard rewardDescriptionLabel != nil else {
+            guard rideSummaryView != nil else {
                 return 0
             }
             
@@ -80,6 +81,8 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.rideSummaryView.delegate = self
         
         grabberBarView.layer.cornerRadius = 3
         grabberBarView.clipsToBounds = true
@@ -104,32 +107,26 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
             return
         }
         
+        self.rideSummaryView.trip = self.selectedTrip
+        
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             
-            if (trip?.locationsNotYetDownloaded)! {
-                self.rideDescriptionLabel.text = "Downloading Trip Data…"
-                self.rideEmojiLabel.text = ""
-                self.rewardEmojiLabel.text = ""
-                self.rewardDescriptionLabel.text = ""
-                return
-            }
-            
-            if !self.selectedTrip.isClosed {
-                rideEmojiLabel.text = "🏁"
-                rideDescriptionLabel.text = String(format: "%@ starting at %@.", (trip?.inProgressLength.distanceString())!, (trip?.timeString())!)
-                rewardEmojiLabel.text = ""
-                rewardDescriptionLabel.text = ""
-            } else {
+            if self.selectedTrip.isClosed {
                 if self.selectedTrip.activityType == .cycling {
                     durationLabel.text = self.selectedTrip.duration().intervalString
-                    avgSpeedLabel.text = self.selectedTrip.averageBikingSpeed.string
+                    avgSpeedLabel.text = self.selectedTrip.aproximateAverageBikingSpeed.string
+                    weatherLabel.text = self.selectedTrip.weatherString()
+                    calorieLabel.text = self.selectedTrip.calorieString()
+                    
                     statsView.isHidden = false
+                    statsView2.isHidden = false
                     ratingChoiceSelector.isHidden = false
 
                     ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
                 } else {
                     statsView.isHidden = true
+                    statsView2.isHidden = true
                     ratingChoiceSelector.isHidden = true
 
                     ratingChoiceHeightConstraint?.constant = 0
@@ -141,23 +138,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
                 })
                 
                 self.changeModeButton.setTitle("Not a " + (trip?.activityType.noun)! + "?", for: UIControlState())
-
-                rideEmojiLabel.text = self.selectedTrip.climacon ?? ""
-                rideDescriptionLabel.text = self.selectedTrip.displayStringWithTime()
-                
-                if let reward = self.selectedTrip.tripRewards.firstObject as? TripReward {
-                    rewardEmojiLabel.text = reward.displaySafeEmoji
-                    rewardDescriptionLabel.text = reward.descriptionText
-                } else {
-                    rewardEmojiLabel.text = ""
-                    rewardDescriptionLabel.text = ""
-                }
             }
-        } else {
-            self.rideDescriptionLabel.text = ""
-            self.rideEmojiLabel.text = ""
-            self.rewardEmojiLabel.text = ""
-            self.rewardDescriptionLabel.text = ""
         }
     }
     
@@ -300,6 +281,15 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate {
             }
             self.present(reportModeClassificationNavigationViewController, animated: true, completion: nil)
         }
+    }
+    
+    func didTapReward(_ reward: TripReward) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let redeemVC : RedeemRewardViewController = storyBoard.instantiateViewController(withIdentifier: "redeemRewardViewController") as! RedeemRewardViewController
+        redeemVC.tripReward = reward
+        customPresentViewController(RedeemRewardViewController.presenter(), viewController: redeemVC, animated: true, completion: nil)
+        
+        return
     }
     
     //

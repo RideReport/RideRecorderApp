@@ -8,9 +8,12 @@
 
 import Foundation
 import SwiftyJSON
+import Presentr
 
 class RedeemRewardViewController: UIViewController {
     var tripReward: TripReward?
+    private static let viewSizePercentageWidth: CGFloat = 0.8
+    private static let viewSizePercentageHeight: CGFloat = 0.8
     
     private var rewardJSON: JSON?
 
@@ -24,6 +27,25 @@ class RedeemRewardViewController: UIViewController {
     @IBOutlet weak var expiresLabel: UILabel!
     
     private var dateFormatter : DateFormatter!
+    
+    static func presenter()-> Presentr {
+        let width = ModalSize.fluid(percentage: Float(RedeemRewardViewController.viewSizePercentageWidth))
+        let height = ModalSize.fluid(percentage: Float(RedeemRewardViewController.viewSizePercentageHeight))
+        let center = ModalCenterPosition.center
+        let customType = PresentationType.custom(width: width, height: height, center: center)
+        
+        let customPresenter = Presentr(presentationType: customType)
+        customPresenter.transitionType = .coverVertical
+        customPresenter.dismissTransitionType = .coverVertical
+        customPresenter.dismissOnSwipe = true
+        customPresenter.dismissOnSwipeDirection = .bottom
+        customPresenter.roundCorners = true
+        customPresenter.backgroundColor = ColorPallete.shared.darkGrey
+        customPresenter.backgroundOpacity = 0.8
+        
+        return customPresenter
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +72,8 @@ class RedeemRewardViewController: UIViewController {
         var frame = self.view.frame
         frame.origin.x = 0
         frame.origin.y = 0
-        frame.size.width = frame.size.width * 0.85
-        frame.size.height = frame.size.height * 0.85
+        frame.size.width = frame.size.width * RedeemRewardViewController.viewSizePercentageWidth
+        frame.size.height = frame.size.height * RedeemRewardViewController.viewSizePercentageHeight
         let borderRect = frame
         
         borderLayer.bounds = borderRect

@@ -61,8 +61,7 @@ class TripViewController: UIViewController {
     
     private func updateMapViewDisplayBounds() {
         if let mapViewController = self.mapViewController {
-            mapViewController.padFactorTop = 0.2
-            mapViewController.padFactorBottom = 3 * Double((self.view.frame.size.height - self.tripSummaryContainerView.frame.origin.y) / (self.view.frame.size.height))
+            mapViewController.insets.bottom = 20 + (self.view.frame.size.height - self.tripSummaryContainerView.frame.origin.y)
             
             mapViewController.setSelectedTrip(self.selectedTrip)
         }
@@ -70,6 +69,7 @@ class TripViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if #available(iOS 10.0, *) {
             self.feedbackGenerator = UIImpactFeedbackGenerator(style: UIImpactFeedbackStyle.medium)
             (self.feedbackGenerator as! UIImpactFeedbackGenerator).prepare()

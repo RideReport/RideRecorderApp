@@ -951,26 +951,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func didTapReward(_ reward: TripReward) {
-        let presenter: Presentr = {
-            let width = ModalSize.fluid(percentage: 0.85)
-            let height = ModalSize.fluid(percentage: 0.85)
-            let center = ModalCenterPosition.center
-            let customType = PresentationType.custom(width: width, height: height, center: center)
-            
-            let customPresenter = Presentr(presentationType: customType)
-            customPresenter.transitionType = .coverVerticalFromTop
-            customPresenter.dismissTransitionType = .coverVerticalWithSpring
-            customPresenter.roundCorners = true
-            customPresenter.backgroundColor = ColorPallete.shared.darkGrey
-            customPresenter.backgroundOpacity = 0.8
-            customPresenter.dismissOnSwipe = true
-            return customPresenter
-        }()
-        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let redeemVC : RedeemRewardViewController = storyBoard.instantiateViewController(withIdentifier: "redeemRewardViewController") as! RedeemRewardViewController
         redeemVC.tripReward = reward
-        customPresentViewController(presenter, viewController: redeemVC, animated: true, completion: nil)
+        customPresentViewController(RedeemRewardViewController.presenter(), viewController: redeemVC, animated: true, completion: nil)
 
         return
     }

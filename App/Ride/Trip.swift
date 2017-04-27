@@ -354,6 +354,7 @@ class Trip : NSManagedObject {
     var inProgressLength : Meters = 0
     private var lastInProgressLocation : Location? = nil
     @NSManaged var climacon : String?
+    @NSManaged var temperature : NSNumber?
     var sectionIdentifier : String? {
         get {
             return self.primitiveValue(forKey: "sectionIdentifier") as? String
@@ -1104,6 +1105,12 @@ class Trip : NSManagedObject {
             self.climacon = climacon
         }
         
+        if let temp = summary["temperature"] as? NSNumber {
+            self.temperature = temp
+        } else {
+            self.temperature = nil
+        }
+        
         if let startPlaceName = summary["startPlaceName"] as? String {
             self.startingPlacemarkName = startPlaceName
         }
@@ -1135,6 +1142,12 @@ class Trip : NSManagedObject {
         
         if let climacon = summary["weatherEmoji"]?.string {
             self.climacon = climacon
+        }
+        
+        if let temp = summary["temperature"]?.int {
+            self.temperature = NSNumber(value: temp)
+        } else {
+            self.temperature = nil
         }
         
         if let startPlaceName = summary["startPlaceName"]?.string {
@@ -1376,6 +1389,62 @@ class Trip : NSManagedObject {
         return message
     }
     
+    func weatherString()->String {
+        var tempString = ""
+        if let temp = self.temperature {
+            tempString = String(format: "%0.fº", temp.doubleValue)
+        }
+        return String(format: "%@%@", self.climacon ?? "", tempString)
+    }
+    
+    func calories()->Double {
+        var lastLoc : Location? = nil
+        var totalBurnDouble: Double = 0
+        for loc in self.simplifiedLocations {
+            guard let location = loc as? Location, let speed = location.speed, let date = location.date else {
+                continue
+            }
+            if location.isGeofencedLocation {
+                continue
+            }
+            
+            if (location.date != nil && speed.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
+                if let lastLocation = lastLoc, let lastDate = lastLocation.date, lastDate.compare(date as Date) != ComparisonResult.orderedDescending {
+                    let calPerKgMin : Double = {
+                        switch (speed.doubleValue) {
+                        case 0...1:
+                            // standing
+                            return 0.4
+                        case 1...4.47:
+                            //
+                            return 0.10
+                        case 4.47...5.37:
+                            //
+                            return 0.12
+                        case 5.37...6.26:
+                            return 0.14
+                        case 6.26...7.15:
+                            return 0.18
+                        default:
+                            return 0.21
+                        }
+                    }()
+                    
+                    let burnDouble = calPerKgMin * 62 * ((date.timeIntervalSinceReferenceDate - lastDate.timeIntervalSinceReferenceDate)/60)
+                    totalBurnDouble += burnDouble
+                }
+                
+                lastLoc = location
+            }
+        }
+        
+        return totalBurnDouble
+    }
+    
+    func calorieString()->String {
+        return String(format: "%0.fcal", self.calories())
+    }
+    
     func timeString()->String {
         var timeString = ""
 
@@ -1395,7 +1464,7 @@ class Trip : NSManagedObject {
     
     func displayStringWithTime()->String {
         let areaDescriptionString = self.areaDescriptionString
-        let description = String(format: "%@ for %@%@.", self.timeString(), self.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
+        let description = String(format: "%@%@.", self.timeString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
         return description
     }
@@ -1662,10 +1731,10 @@ class Trip : NSManagedObject {
         return distance/time
     }
     
-    var averageBikingSpeed : CLLocationSpeed {
+    var aproximateAverageBikingSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        for loc in self.locations.array {
+        for loc in self.simplifiedLocations.array {
             let location = loc as! Location
             if (location.speed!.doubleValue > 1.0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
                 count += 1

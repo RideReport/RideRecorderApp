@@ -213,13 +213,12 @@ open class BalloonMarker: MarkerImage
         }
         
         if let meters = data["meters"].float, meters > 0 {
-            let components = meters.distanceString(suppressFractionalUnits: true).components(separatedBy: " ")
-            if components.count == 2 {
-                labelns.append(NSAttributedString(string: "\n", attributes: valueAttributes))
-                labelns.append(NSAttributedString(string: components[0], attributes: valueAttributes))
-                labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
-                labelns.append(NSAttributedString(string: components[1], attributes: unitAttributes))
-            }
+            let (distanceString, longUnits, ShortUnits) = meters.distanceStrings(suppressFractionalUnits: true)
+            
+            labelns.append(NSAttributedString(string: "\n", attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: distanceString, attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: " ", attributes: valueAttributes))
+            labelns.append(NSAttributedString(string: ShortUnits, attributes: unitAttributes))
         }
         
         let labelSize = labelns.size()

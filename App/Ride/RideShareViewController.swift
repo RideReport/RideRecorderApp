@@ -57,9 +57,7 @@ class RideShareViewController : UIViewController {
         for viewController in self.childViewControllers {
             if (viewController.isKind(of: MapViewController.self)) {
                 self.mapViewController = viewController as? MapViewController
-                self.mapViewController!.padFactorX = 0.1
-                self.mapViewController!.padFactorTop = 1.0
-                self.mapViewController!.padFactorBottom = 0.2
+                self.mapViewController!.insets.top = 50 + (self.rideSummaryView.frame.size.height)
             }
         }
     }
