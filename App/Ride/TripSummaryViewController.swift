@@ -70,12 +70,14 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         }
     }
     
+    private var lastSelectedTrip: Trip?
     var selectedTrip : Trip! {
         didSet {
-            if (self.selectedTrip != nil) {
+            if (self.selectedTrip != nil && lastSelectedTrip != self.selectedTrip) {
                 self.ratingChoiceSelector.selectedRating = self.selectedTrip.rating
-                reloadUI()
+                reloadUI(true)
             }
+            lastSelectedTrip = self.selectedTrip
         }
     }
     
@@ -101,7 +103,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         self.initialRatingChoiceHeight = self.ratingChoiceHeightConstraint.constant
     }
     
-    func reloadUI() {
+    func reloadUI(_ animated: Bool = false) {
         if (!modeSelectorView.isHidden) {
             // dont reload the UI if the user is currently picking a mode
             return
@@ -119,7 +121,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             }
         }
         rideSummaryView.setTripSummary(tripLength: self.selectedTrip.length, description: self.selectedTrip.displayStringWithTime())
-        rideSummaryView.setRewards(rewardDicts)
+        rideSummaryView.setRewards(rewardDicts, animated: animated)
         
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip

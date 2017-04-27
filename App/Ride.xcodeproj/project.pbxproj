@@ -262,6 +262,10 @@
 		84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */; };
 		84EA5BEE1A6F226400C71F53 /* SetupPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */; };
 		84EA5FAA1EB19AF800964706 /* RideSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */; };
+		84EA5FB31EB1BC3700964706 /* tspark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EA5FB11EB1BC3700964706 /* tspark@2x.png */; };
+		84EA5FB41EB1BC3700964706 /* tspark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EA5FB11EB1BC3700964706 /* tspark@2x.png */; };
+		84EA5FB51EB1BC3700964706 /* tspark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EA5FB21EB1BC3700964706 /* tspark@3x.png */; };
+		84EA5FB61EB1BC3700964706 /* tspark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84EA5FB21EB1BC3700964706 /* tspark@3x.png */; };
 		84EC8D771E839B53008D79F6 /* DateValueFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC8D761E839B53008D79F6 /* DateValueFormatter.swift */; };
 		84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137521B5DADD30023EC82 /* CoreTelephony.framework */; };
 		84F137551B5DADD80023EC82 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137541B5DADD80023EC82 /* GLKit.framework */; };
@@ -576,6 +580,8 @@
 		84EA5BEA1A6F0BFF00C71F53 /* UILabel+HBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+HBAdditions.h"; sourceTree = "<group>"; };
 		84EA5BEB1A6F0BFF00C71F53 /* UILabel+HBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+HBAdditions.m"; sourceTree = "<group>"; };
 		84EA5BED1A6F226400C71F53 /* SetupPermissionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SetupPermissionsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		84EA5FB11EB1BC3700964706 /* tspark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tspark@2x.png"; sourceTree = "<group>"; };
+		84EA5FB21EB1BC3700964706 /* tspark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tspark@3x.png"; sourceTree = "<group>"; };
 		84EAFD561AA128180057282C /* Ride 15.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 15.xcdatamodel"; sourceTree = "<group>"; };
 		84EAFD571AA128960057282C /* Ride 16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 16.xcdatamodel"; sourceTree = "<group>"; };
 		84EC8D761E839B53008D79F6 /* DateValueFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateValueFormatter.swift; sourceTree = "<group>"; };
@@ -978,6 +984,8 @@
 				3DFC71681E785DBF00F1567B /* Data+HBAdditions.swift */,
 				848777B61A6834C300B59B06 /* UIView+HBadditions.swift */,
 				3D6D77931D7F8D8200A95602 /* tspark.png */,
+				84EA5FB11EB1BC3700964706 /* tspark@2x.png */,
+				84EA5FB21EB1BC3700964706 /* tspark@3x.png */,
 				84A08C6A1AA51E3C00CADC04 /* CLLocation+HBAdditions.swift */,
 				844B0B931BEAAB8B0004C1BF /* GZipEncoding.swift */,
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
@@ -1383,8 +1391,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84EA5FB61EB1BC3700964706 /* tspark@3x.png in Resources */,
 				3D6D77951D7F8D8200A95602 /* tspark.png in Resources */,
 				3D3C3E221E68E69B004C719E /* pinRed@3x.png in Resources */,
+				84EA5FB41EB1BC3700964706 /* tspark@2x.png in Resources */,
 				3D3C3E1E1E68E69B004C719E /* pinGreen@3x.png in Resources */,
 				3D3C3E201E68E69B004C719E /* pinRed@2x.png in Resources */,
 				3D33060F1D7774E900B7E56A /* MainInterface.storyboard in Resources */,
@@ -1447,6 +1457,7 @@
 				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
+				84EA5FB31EB1BC3700964706 /* tspark@2x.png in Resources */,
 				8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */,
 				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,
 				8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */,
@@ -1462,6 +1473,7 @@
 				84091CDE1BD848C000264652 /* counter-numbers.png in Resources */,
 				8492BCB41C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
 				3D3C3E1D1E68E69B004C719E /* pinGreen@3x.png in Resources */,
+				84EA5FB51EB1BC3700964706 /* tspark@3x.png in Resources */,
 				84091CDF1BD848C000264652 /* counter-numbers@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -418,7 +418,7 @@ protocol RideSummaryViewDelegate: class {
                 if (animated) {
                     rewardView.isHidden = true
                     let v = i // capture state in delayed scope
-                    self.delay(0.1 + Double(i) * 0.4, completionHandler: {
+                    self.delay(0.3 + Double(i) * 0.4, completionHandler: {
                         self.sparkle(colors[v%colors.count], inRect: CGRect(x: rewardView.frame.origin.x - 8, y: rewardView.frame.origin.y, width: rewardView.frame.size.width + 10, height: rewardView.frame.size.height))
                         rewardView.fadeIn()
                     })

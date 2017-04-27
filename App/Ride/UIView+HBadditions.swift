@@ -86,7 +86,7 @@ extension UIView {
         let emitterMaker = { (color: UIColor) -> CAEmitterCell in
             let cell = CAEmitterCell()
             cell.birthRate = 150
-            cell.scale = 0.7
+            cell.scale = 0.7 / UIScreen.main.scale
             cell.velocity = 40
             cell.lifetime = Float(lifetime)
             cell.lifetimeRange = 0.3
