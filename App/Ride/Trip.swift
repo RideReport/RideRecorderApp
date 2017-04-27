@@ -1426,7 +1426,14 @@ class Trip : NSManagedObject {
     func weatherString()->String {
         var tempString = ""
         if let temp = self.temperature {
-            tempString = String(format: "%0.fº", temp.doubleValue)
+            if #available(iOS 10.0, *) {
+                let formatter = MeasurementFormatter()
+                let measurement = Measurement(value: temp.doubleValue, unit: UnitTemperature.fahrenheit)
+                formatter.unitOptions = .temperatureWithoutUnit
+                tempString = formatter.string(from: measurement)
+            } else {
+                tempString = String(format: "%0.fºF", temp.doubleValue)
+            }
         }
         return String(format: "%@%@", self.climacon ?? "", tempString)
     }
