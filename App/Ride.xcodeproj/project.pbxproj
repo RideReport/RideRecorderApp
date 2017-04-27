@@ -974,6 +974,7 @@
 		8453BD541A424FEE00FE2645 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */,
 				84C28E0E1C125EFD0075DD7E /* NSObject+HBAdditions.h */,
 				84C28E0F1C125EFD0075DD7E /* NSObject+HBAdditions.m */,
 				84B223A71A881C3900CA27EB /* UIDevice+HBAdditions.h */,
@@ -991,7 +992,6 @@
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 				3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */,
-				3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";

@@ -38,6 +38,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var reachability : Reachability!
     
     private var shouldShowStreakAnimation = false
+    private var shouldHideRewardsForAnimation = false
+    private var shouldShowRewardsAnimation = true
     
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
 
@@ -126,6 +128,26 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
             strongSelf.reloadSectionIdentifiersIfNeeded()
             strongSelf.refreshHelperPopupUI()
+            
+            let firstTripIndex = IndexPath(row: 0, section: 1)
+            if (strongSelf.tableView.cellForRow(at: firstTripIndex) != nil) {
+                // force the animation to happen
+                strongSelf.shouldShowRewardsAnimation = true
+                strongSelf.tableView.reloadRows(at: [firstTripIndex], with: .none)
+            }
+        }
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] (_) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            let firstTripIndex = IndexPath(row: 0, section: 1)
+            if (strongSelf.tableView.cellForRow(at: firstTripIndex) != nil) {
+                // clear the rows for the animation coming up
+                strongSelf.shouldHideRewardsForAnimation = true
+                strongSelf.tableView.reloadRows(at: [firstTripIndex], with: .none)
+            }
         }
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
@@ -898,7 +920,20 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                     }
                 }
                 rideSummaryView.setTripSummary(tripLength: trip.length, description: trip.displayStringWithTime())
-                rideSummaryView.setRewards(rewardDicts)
+                
+                var shouldAnimate = false
+                var shouldHide = false
+                if (indexPath.row == 0 && indexPath.section == 1) {
+                    // animate only the most recent trip, and only once per viewWillAppear
+                    if (self.shouldShowRewardsAnimation) {
+                        self.shouldShowRewardsAnimation = false
+                        shouldAnimate = true
+                    } else if (self.shouldHideRewardsForAnimation) {
+                        self.shouldShowRewardsAnimation = false
+                        shouldHide = true
+                    }
+                }
+                rideSummaryView.setRewards(rewardDicts, animated: shouldAnimate, hidden: shouldHide)
             }
             
             if let chevronImage = getDisclosureArrow(tableCell) {

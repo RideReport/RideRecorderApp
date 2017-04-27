@@ -384,7 +384,7 @@ protocol RideSummaryViewDelegate: class {
         tripSummaryView?.bodyLabel.text = description
     }
     
-    public func setRewards(_ rewards: [[String: Any]], animated: Bool = false) {
+    public func setRewards(_ rewards: [[String: Any]], animated: Bool = false, hidden: Bool = false) {
         if let oldRewardViews = rewardViews {
             rewardViews = []
             
@@ -415,11 +415,19 @@ protocol RideSummaryViewDelegate: class {
                     let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RideSummaryView.didTapReward(sender:)))
                     rewardView.addGestureRecognizer(tapRecognizer)
                 }
-                if (animated) {
+                if (hidden) {
+                    rewardView.isHidden = true
+                } else if (animated) {
                     rewardView.isHidden = true
                     let v = i // capture state in delayed scope
-                    self.delay(0.3 + Double(i) * 0.4, completionHandler: {
-                        self.sparkle(colors[v%colors.count], inRect: CGRect(x: rewardView.frame.origin.x - 8, y: rewardView.frame.origin.y, width: rewardView.frame.size.width + 10, height: rewardView.frame.size.height))
+                    self.delay(0.3 + Double(i) * 0.5, completionHandler: {
+                        let animationRect = CGRect(x: rewardView.frame.origin.x - 8, y: rewardView.frame.origin.y, width: rewardView.frame.size.width + 10, height: rewardView.frame.size.height)
+                        let color = colors[v%colors.count]
+                        self.sparkle(color, inRect: animationRect)
+                        if v > 0 {
+                            // badges for combos!
+                            self.animateMultiplierBonusBadge(multiplier: v, color: color, inRect: animationRect)
+                        }
                         rewardView.fadeIn()
                     })
                     i += 1
@@ -432,6 +440,69 @@ protocol RideSummaryViewDelegate: class {
                 rewardViews.append(rewardView)
             }
         }
+    }
+    
+    private func animateMultiplierBonusBadge(multiplier: Int, color: UIColor, inRect: CGRect) {
+        let duration: TimeInterval = 0.6
+        let badgeSize: CGFloat = 40
+        
+        let borderFrame = CGRect(x: 0, y: 0, width: badgeSize, height: badgeSize)
+        let animationLayer = CAShapeLayer()
+        animationLayer.fillColor = color.cgColor
+        animationLayer.contentsScale = UIScreen.main.scale
+        animationLayer.lineWidth = 3
+        animationLayer.strokeColor = ColorPallete.shared.almostWhite.cgColor
+        animationLayer.bounds = borderFrame
+        animationLayer.position = CGPoint(x: inRect.origin.x + 2*inRect.size.width/3, y: inRect.origin.y + inRect.size.height/2)
+        animationLayer.path = UIBezierPath(ovalIn: borderFrame).cgPath
+        self.layer.addSublayer(animationLayer)
+        
+        let fontSize: CGFloat = 22
+        let textLayer = CATextLayer()
+        textLayer.contentsScale = UIScreen.main.scale
+        textLayer.foregroundColor = ColorPallete.shared.almostWhite.cgColor
+        textLayer.font = CTFontCreateWithName("Helvetica-Bold" as CFString, 18.0, nil)
+        textLayer.fontSize = fontSize
+        textLayer.alignmentMode = kCAAlignmentCenter
+        textLayer.bounds = CGRect(x: 0, y: 0, width: badgeSize, height: fontSize)
+        textLayer.position = CGPoint(x: borderFrame.size.width/2, y: borderFrame.size.height/2 - (fontSize - badgeSize/2))
+        textLayer.string = String(format: "%iX", multiplier + 1)
+        animationLayer.addSublayer(textLayer)
+        
+        CATransaction.begin()
+        
+        CATransaction.setCompletionBlock {
+            animationLayer.removeFromSuperlayer()
+        }
+        
+        let scaleAnimation = CAKeyframeAnimation(keyPath: "transform")
+        //scaleAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0.8, 1.01)
+        scaleAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        scaleAnimation.duration = duration
+        scaleAnimation.values = [NSValue(caTransform3D: CATransform3DMakeScale(1.8, 1.8, 1.0)),
+                                 NSValue(caTransform3D: CATransform3DMakeScale(1.0, 1.0, 1.0))]
+        animationLayer.add(scaleAnimation, forKey:"scaleAnimation")
+        
+        // we need to animate the position so the emoji stays centered about itself
+        let positonAnimation = CAKeyframeAnimation(keyPath: "position")
+        positonAnimation.timingFunction = CAMediaTimingFunction(controlPoints: 0.18, 0.71, 0.8, 1.01)
+        positonAnimation.duration = duration
+        positonAnimation.isRemovedOnCompletion = false
+        positonAnimation.values = [NSValue(cgPoint:animationLayer.position),
+                                   NSValue(cgPoint:CGPoint(x: animationLayer.position.x, y: animationLayer.position.y - 20))]
+        animationLayer.add(positonAnimation, forKey:"position")
+        
+        let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
+        opacityAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        opacityAnimation.duration = duration*2
+        opacityAnimation.values = [NSNumber(value: 0.0 as Float),
+                                   NSNumber(value: 1.0 as Float),
+                                   NSNumber(value: 0.0 as Float)]
+        animationLayer.add(opacityAnimation, forKey:"opacity")
+        
+        animationLayer.opacity = 0.0
+        
+        CATransaction.commit()
     }
     
     func didTapReward(sender: AnyObject) {
