@@ -13,7 +13,7 @@ target 'Ride Report' do
     pod 'FBSDKLoginKit'
     pod 'FBSDKShareKit'
     pod 'Mapbox-iOS-SDK'
-    pod 'MapboxStatic.swift'
+    pod 'MapboxStatic.swift', :git => "https://github.com/mapbox/MapboxStatic.swift.git"
     pod 'Mixpanel'
     pod 'CocoaLumberjack/Swift'
     pod 'GzipSwift'

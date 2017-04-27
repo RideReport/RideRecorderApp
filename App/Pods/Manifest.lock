@@ -26,7 +26,7 @@ PODS:
   - KeychainAccess (3.0.1)
   - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.4.2)
-  - MapboxStatic.swift (0.7.0)
+  - MapboxStatic.swift (0.8.0)
   - Mixpanel (3.1.2)
   - OAuthSwift (1.1.1)
   - Presentr (1.2.3)
@@ -46,11 +46,20 @@ DEPENDENCIES:
   - KeychainAccess
   - Kingfisher
   - Mapbox-iOS-SDK
-  - MapboxStatic.swift
+  - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`)
   - Mixpanel
   - OAuthSwift
   - Presentr
   - SwiftyJSON
+
+EXTERNAL SOURCES:
+  MapboxStatic.swift:
+    :git: https://github.com/mapbox/MapboxStatic.swift.git
+
+CHECKOUT OPTIONS:
+  MapboxStatic.swift:
+    :commit: 965daaf892e3f56ebd8c773a0daaebe33a89ceb5
+    :git: https://github.com/mapbox/MapboxStatic.swift.git
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
@@ -67,12 +76,12 @@ SPEC CHECKSUMS:
   KeychainAccess: 017ea25e313a49eda10bb19b0bb0760fb1edfe1a
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
-  MapboxStatic.swift: 4c5c7553ba47146de42a5f19928996797edfebc0
+  MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09
   Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
   Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: ca152a3a85622b8555592d126d5dc5d489defdcd
+PODFILE CHECKSUM: fbacad7d5d629d8e72b9a5afb8560a71b37d392e
 
 COCOAPODS: 1.2.1

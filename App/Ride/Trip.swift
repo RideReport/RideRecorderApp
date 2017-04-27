@@ -1207,7 +1207,7 @@ class Trip : NSManagedObject {
             let path = Path(
                 coordinates: coords
             )
-            path.strokeWidth = 18
+            path.strokeWidth = 8
             path.strokeColor = {
                 if(self.rating.choice == RatingChoice.good) {
                     return ColorPallete.shared.goodGreen
@@ -1218,15 +1218,13 @@ class Trip : NSManagedObject {
                 }
             }()
             path.fillColor = UIColor.clear
-            path.fillOpacity = 0.0
             
             let backingPath = Path(
                 coordinates: coords
             )
-            backingPath.strokeWidth = 24
+            backingPath.strokeWidth = 12
             backingPath.strokeColor = UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
             backingPath.fillColor = UIColor.clear
-            backingPath.fillOpacity = 0.0
             
             let startMarker = CustomMarker(
                 coordinate: locations.first!.coordinate(),
@@ -1239,9 +1237,10 @@ class Trip : NSManagedObject {
             )
             
             let options = SnapshotOptions(
-                mapIdentifiers: ["quicklywilliam.2onj5igf"],
+                styleURL: URL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")!,
                 size: CGSize(width: width, height: height))
-            options.centerCoordinate = nil
+            options.showsAttribution = false
+            
             options.overlays = [backingPath, path, startMarker, endMarker]
             let snapshot = Snapshot(
                 options: options,
