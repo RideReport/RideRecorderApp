@@ -384,7 +384,7 @@ protocol RideSummaryViewDelegate: class {
         tripSummaryView?.bodyLabel.text = description
     }
     
-    public func setRewards(_ rewards: [[String: Any]], animated: Bool = false, hidden: Bool = false) {
+    public func setRewards(_ rewards: [[String: Any]], animated: Bool = false) {
         if let oldRewardViews = rewardViews {
             rewardViews = []
             
@@ -415,9 +415,8 @@ protocol RideSummaryViewDelegate: class {
                     let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RideSummaryView.didTapReward(sender:)))
                     rewardView.addGestureRecognizer(tapRecognizer)
                 }
-                if (hidden) {
-                    rewardView.isHidden = true
-                } else if (animated) {
+               
+                if (animated) {
                     rewardView.isHidden = true
                     let v = i // capture state in delayed scope
                     self.delay(0.3 + Double(i) * 0.5, completionHandler: {
@@ -439,6 +438,18 @@ protocol RideSummaryViewDelegate: class {
                 rewardView.bodyLabel.text = descriptionText
                 rewardViews.append(rewardView)
             }
+        }
+    }
+    
+    public func hideRewards() {
+        for rewardView in self.rewardViews {
+            rewardView.fadeOut()
+        }
+    }
+    
+    public func showRewards() {
+        for rewardView in self.rewardViews {
+            rewardView.fadeIn()
         }
     }
     

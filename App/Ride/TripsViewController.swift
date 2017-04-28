@@ -37,8 +37,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     private var reachability : Reachability!
     
+    private var cellToReAnimateOnAppActivate: UITableViewCell?
     private var shouldShowStreakAnimation = false
-    private var shouldHideRewardsForAnimation = false
     private var shouldShowRewardsAnimation = true
     
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
@@ -130,8 +130,15 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.refreshHelperPopupUI()
             
             let firstTripIndex = IndexPath(row: 0, section: 1)
-            if (strongSelf.tableView.cellForRow(at: firstTripIndex) != nil) {
-                // force the animation to happen
+            if let currentTableCell = strongSelf.tableView.cellForRow(at: firstTripIndex) {
+                if let oldTableCell = strongSelf.cellToReAnimateOnAppActivate,
+                    let rideSummaryView = currentTableCell.viewWithTag(1) as? RideSummaryView, oldTableCell != currentTableCell {
+                    // if the old first cell is no longer first, we need to re-show the rewards in the old first cell
+                    rideSummaryView.showRewards()
+                    
+                }
+                strongSelf.cellToReAnimateOnAppActivate = nil
+                
                 strongSelf.shouldShowRewardsAnimation = true
                 strongSelf.tableView.reloadRows(at: [firstTripIndex], with: .none)
             }
@@ -143,10 +150,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
             
             let firstTripIndex = IndexPath(row: 0, section: 1)
-            if (strongSelf.tableView.cellForRow(at: firstTripIndex) != nil) {
-                // clear the rows for the animation coming up
-                strongSelf.shouldHideRewardsForAnimation = true
-                strongSelf.tableView.reloadRows(at: [firstTripIndex], with: .none)
+            if let tableCell = strongSelf.tableView.cellForRow(at: firstTripIndex),
+                let rideSummaryView = tableCell.viewWithTag(1) as? RideSummaryView {
+                rideSummaryView.hideRewards()
+                strongSelf.cellToReAnimateOnAppActivate = tableCell
             }
         }
         
@@ -922,18 +929,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 rideSummaryView.setTripSummary(tripLength: trip.length, description: trip.displayStringWithTime())
                 
                 var shouldAnimate = false
-                var shouldHide = false
                 if (indexPath.row == 0 && indexPath.section == 1) {
                     // animate only the most recent trip, and only once per viewWillAppear
                     if (self.shouldShowRewardsAnimation) {
                         self.shouldShowRewardsAnimation = false
                         shouldAnimate = true
-                    } else if (self.shouldHideRewardsForAnimation) {
-                        self.shouldShowRewardsAnimation = false
-                        shouldHide = true
                     }
                 }
-                rideSummaryView.setRewards(rewardDicts, animated: shouldAnimate, hidden: shouldHide)
+                rideSummaryView.setRewards(rewardDicts, animated: shouldAnimate)
             }
             
             if let chevronImage = getDisclosureArrow(tableCell) {
