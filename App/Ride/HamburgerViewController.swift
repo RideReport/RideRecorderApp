@@ -236,7 +236,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         let body = String(format: "Tell us briefly what happened.\n\n\n\n\n=====================\n Support Id: %@\nVersion:%@ (%@)\niOS Version: %@\niPhone Model: %@", supportId, versionNumber, buildNumber, osNumber, phoneModel!)
         
         let composer = MFMailComposeViewController()
-        composer.setSubject("Ride Report Bug Report")
+        composer.setSubject("Ride Report Bug Report " + supportId)
         composer.setToRecipients(["logs@ride.report"])
         composer.mailComposeDelegate = self
         composer.setMessageBody(body as String, isHTML: false)

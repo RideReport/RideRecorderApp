@@ -834,20 +834,6 @@ class Trip : NSManagedObject {
         return 0
     }
     
-    class var numberOfRewardedTrips : Int {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        
-        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
-        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
-        fetchedRequest.predicate = NSPredicate(format: "tripRewards.@count > 0")
-        
-        if let count = try? context.count(for: fetchedRequest) {
-            return count
-        }
-        
-        return 0
-    }
-    
     class var numberOfBadTrips : Int {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         

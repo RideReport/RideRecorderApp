@@ -15,6 +15,21 @@ class TripReward : NSManagedObject {
     @NSManaged private var emoji : String
     @NSManaged var trip : Trip
     
+    
+    class var numberOfRewards : Int {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripReward")
+        fetchedRequest.resultType = NSFetchRequestResultType.countResultType
+        fetchedRequest.predicate = NSPredicate(format: "trip != NULL")
+        
+        if let count = try? context.count(for: fetchedRequest) {
+            return count
+        }
+        
+        return 0
+    }
+    
     var rewardUUID: String? {
         get {
             let components = self.emoji.components(separatedBy: "%%%")

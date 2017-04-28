@@ -774,7 +774,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
  
         
-        let trophyCount = Trip.numberOfRewardedTrips
+        let trophyCount = TripReward.numberOfRewards
         if trophyCount > 1 {
             trophyCountLabel.text = String(trophyCount) + " Trophies"
         } else if trophyCount == 1 {
