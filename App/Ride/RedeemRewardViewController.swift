@@ -123,7 +123,7 @@ class RedeemRewardViewController: UIViewController {
         }
         
         if let expiresString = json["expires"].string, let expiresDate = Date.dateFromJSONString(expiresString) {
-            if expiresDate.compare(Date().daysFrom(14)) == .orderedAscending {
+            if expiresDate.compare(Date().daysFrom(7)) == .orderedAscending {
                 // if it's coming up in a week
                 expiresLabel.textColor = ColorPallete.shared.badRed
             }

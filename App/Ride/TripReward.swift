@@ -32,7 +32,7 @@ class TripReward : NSManagedObject {
     
     var rewardUUID: String? {
         get {
-            let components = self.emoji.components(separatedBy: "%%%")
+            let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
             if components.count == 2 {
                 return components[0]
             }
@@ -43,7 +43,7 @@ class TripReward : NSManagedObject {
     
     var iconURL: URL? {
         get {
-            let components = self.emoji.components(separatedBy: "%%%")
+            let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
             if components.count == 2 {
                 return URL(string: components[1])
             }
