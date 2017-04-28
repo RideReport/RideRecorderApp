@@ -280,7 +280,7 @@ class APIClient {
             // used for testing
             configuration = URLSessionConfiguration.default
         }
-        configuration.timeoutIntervalForRequest = 5
+        configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 60
     
         let serverTrustPolicies : [String: ServerTrustPolicy] = [
