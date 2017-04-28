@@ -124,7 +124,7 @@ fileprivate class RideRewardComponentView : UIView {
 }
 
 fileprivate class RideSummaryComponentView : UIView {
-    static fileprivate let lengthFontSize: CGFloat = 26
+    static fileprivate let lengthFontSize: CGFloat = 24
     static fileprivate let unitsFontSize: CGFloat = 10
     static fileprivate let textFontSize: CGFloat = 18
     static fileprivate let distanceViewDimensions = RideSummaryComponentView.lengthFontSize + RideSummaryComponentView.unitsFontSize + 10
@@ -198,7 +198,7 @@ fileprivate class RideSummaryComponentView : UIView {
         lengthLabel.adjustsFontSizeToFitWidth = true
         lengthLabel.clipsToBounds = false
         lengthLabel.textAlignment = .center
-        lengthLabel.minimumScaleFactor = 0.6
+        lengthLabel.minimumScaleFactor = 0.3
         lengthLabel.numberOfLines = 1
         lengthLabel.textColor = ColorPallete.shared.almostWhite
         lengthLabel.font = UIFont.boldSystemFont(ofSize: RideSummaryComponentView.lengthFontSize)

@@ -26,16 +26,28 @@ extension Float {
                 return ("\(self.stringWithDecimals(0))", "meters", "m")
             } else {
                 if Locale.isGB() {
-                    return ("\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "miles", "mi")
+                    var numberOfDecimals = 1
+                    if suppressFractionalUnits || self.miles > 10 {
+                        numberOfDecimals = 0
+                    }
+                    return ("\(self.miles.stringWithDecimals(numberOfDecimals))", "miles", "mi")
                 } else {
-                    return ("\(self.kilometers.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "km", "k")
+                    var numberOfDecimals = 1
+                    if suppressFractionalUnits || self.kilometers > 10 {
+                        numberOfDecimals = 0
+                    }
+                    return ("\(self.kilometers.stringWithDecimals(numberOfDecimals))", "km", "k")
                 }
             }
         } else { // assume Imperial / U.S.
             if (feet < FEET_CUTOFF) {
                 return ("\(self.feet.stringWithDecimals(0))", "feet", "ft")
             } else {
-                return ("\(self.miles.stringWithDecimals(suppressFractionalUnits ? 0 : 1))", "miles", "mi")
+                var numberOfDecimals = 1
+                if suppressFractionalUnits || self.miles > 10 {
+                    numberOfDecimals = 0
+                }
+                return ("\(self.miles.stringWithDecimals(numberOfDecimals))", "miles", "mi")
             }
         }
     }
