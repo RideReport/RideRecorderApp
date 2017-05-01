@@ -96,8 +96,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func coreDataDidLoad() {
-        self.reloadSectionIdentifiersIfNeeded()
+    private func loadFetchedResultsController() {
+        guard self.fetchedResultsController == nil else {
+            return
+        }
         
         let cacheName = "TripsViewControllerFetchedResultsController"
         let context = CoreDataManager.shared.currentManagedObjectContext()
@@ -105,7 +107,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.fetchBatchSize = 20
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
-        
+
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         do {
@@ -114,11 +116,17 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
             abort()
         }
+    }
+    
+    func coreDataDidLoad() {
+        self.reloadSectionIdentifiersIfNeeded()
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        
+        loadFetchedResultsController()
         
         self.refreshEmptyTableView()
         
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
         self.tableView.reloadData()
         self.dateOfLastTableRefresh = Date()
         
@@ -127,7 +135,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 return
             }
             strongSelf.reloadSectionIdentifiersIfNeeded()
+            strongSelf.loadFetchedResultsController()
+            
             strongSelf.refreshHelperPopupUI()
+            strongSelf.tableView.reloadData()
             
             let firstTripIndex = IndexPath(row: 0, section: 1)
             if let currentTableCell = strongSelf.tableView.cellForRow(at: firstTripIndex) {
@@ -155,6 +166,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 rideSummaryView.hideRewards()
                 strongSelf.cellToReAnimateOnAppActivate = tableCell
             }
+            
+            strongSelf.fetchedResultsController.delegate = nil
+            strongSelf.fetchedResultsController = nil
         }
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
@@ -369,7 +383,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             // if we haven't run the migration, do an exhaustive reload
             Trip.reloadSectionIdentifiers(!hasRunTripsSectionIdentifiersMigration)
-            self.tableView.reloadData()
         }
         
     }
