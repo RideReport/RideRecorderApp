@@ -23,14 +23,17 @@ extension Float {
         
         if (Locale.isMetric()) {
             if (self < METERS_CUTOFF) {
-                return ("\(self.stringWithDecimals(0))", "meters", "m")
+                let metersString = self.stringWithDecimals(0)
+
+                return ("\(metersString)", metersString == "1" ? "meter" : "meters", "m")
             } else {
                 if Locale.isGB() {
                     var numberOfDecimals = 1
                     if suppressFractionalUnits || self.miles > 10 {
                         numberOfDecimals = 0
                     }
-                    return ("\(self.miles.stringWithDecimals(numberOfDecimals))", "miles", "mi")
+                    let milesString = self.miles.stringWithDecimals(numberOfDecimals)
+                    return ("\(milesString)", milesString == "1" ? "mile" : "miles", "mi")
                 } else {
                     var numberOfDecimals = 1
                     if suppressFractionalUnits || self.kilometers > 10 {
@@ -41,13 +44,15 @@ extension Float {
             }
         } else { // assume Imperial / U.S.
             if (feet < FEET_CUTOFF) {
-                return ("\(self.feet.stringWithDecimals(0))", "feet", "ft")
+                let feetString = self.feet.stringWithDecimals(0)
+                return ("\(feetString)", feetString == "1" ? "foot" : "feet", "ft")
             } else {
                 var numberOfDecimals = 1
                 if suppressFractionalUnits || self.miles > 10 {
                     numberOfDecimals = 0
                 }
-                return ("\(self.miles.stringWithDecimals(numberOfDecimals))", "miles", "mi")
+                let milesString = self.miles.stringWithDecimals(numberOfDecimals)
+                return ("\(milesString)", milesString == "1" ? "mile" : "miles", "mi")
             }
         }
     }
