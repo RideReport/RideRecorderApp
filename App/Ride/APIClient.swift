@@ -658,6 +658,7 @@ class APIClient {
             for location in trip.locations.array {
                 locations.append((location as! Location).jsonDictionary())
             }
+            tripDict["length"] = trip.length
             tripDict["locations"] = locations
         } else {
             // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
