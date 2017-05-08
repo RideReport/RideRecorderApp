@@ -532,19 +532,21 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let theSection = self.fetchedResultsController.sections![indexPath!.section]
             let isInProgresstrip = theSection.name.contains(Trip.inProgressSectionIdentifierSuffix())
         
-            if isInProgresstrip || (trip.isClosed && trip.activityType != .cycling) ||  sectionChangeType == .delete {
-                // if the trip is moving to in progress, or if it is moving from the cycling trips to other trips, then delete a row
-                self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
-                                           with: .fade)
-            } else {
-                sectionNeedingReloadAfterUpdates = indexPath!.section + 1
-            }
-            if trip.activityType == .cycling ||  sectionChangeType == .insert {
-                // if the trip is a cycling trip, or we are inserting a new section
-                self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
-                                           with: .fade)
-            } else {
-                sectionNeedingReloadAfterUpdates = newIndexPath!.section + 1
+            if (newIndexPath != indexPath) {
+                if isInProgresstrip || (trip.isClosed && trip.activityType != .cycling) ||  sectionChangeType == .delete {
+                    // if the trip is moving to in progress, or if it is moving from the cycling trips to other trips, then delete a row
+                    self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
+                                               with: .fade)
+                } else {
+                    sectionNeedingReloadAfterUpdates = indexPath!.section + 1
+                }
+                if trip.activityType == .cycling ||  sectionChangeType == .insert {
+                    // if the trip is a cycling trip, or we are inserting a new section
+                    self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
+                                               with: .fade)
+                } else {
+                    sectionNeedingReloadAfterUpdates = newIndexPath!.section + 1
+                }
             }
         }
     }
