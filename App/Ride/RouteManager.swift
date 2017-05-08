@@ -751,6 +751,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
+        if self.currentTrip != nil {
+            self.stopTrip()
+        }
+        
         self.cancelScheduledAppResumeReminderNotifications()
         
         if (untilDate != nil) {
@@ -778,6 +782,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             UIApplication.shared.presentLocalNotificationNow(notif)
             
             DDLogInfo("Paused Tracking due to battery life")
+            
+            if self.currentTrip != nil {
+                self.stopTrip()
+            }
             
             self.stopMotionMonitoringAndSetupGeofences(aroundLocation: location)
             Profile.profile().setGeofencedLocation(nil)
