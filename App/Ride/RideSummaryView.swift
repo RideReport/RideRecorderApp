@@ -364,21 +364,22 @@ protocol RideSummaryViewDelegate: class {
     }
 
     public func setTripSummary(tripLength: Float, description: String) {
-        if let summaryView = tripSummaryView {
-            summaryView.removeFromSuperview()
-            self.tripSummaryView = nil
-        }
-        
-        defer {
-            self.setNeedsUpdateConstraints()
-        }
-        
         guard description != "" else {
+            if let summaryView = tripSummaryView {
+                summaryView.removeFromSuperview()
+                self.tripSummaryView = nil
+                self.setNeedsUpdateConstraints()
+            }
+
             return
         }
         
-        tripSummaryView = RideSummaryComponentView()
-        self.addSubview(tripSummaryView!)
+        if tripSummaryView == nil {
+            tripSummaryView = RideSummaryComponentView()
+            self.addSubview(tripSummaryView!)
+            self.setNeedsUpdateConstraints()
+
+        }
         
         tripSummaryView?.length = tripLength
         tripSummaryView?.bodyLabel.text = description

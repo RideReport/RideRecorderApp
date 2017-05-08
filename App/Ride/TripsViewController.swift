@@ -908,20 +908,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         rideSummaryView.delegate = self
         
-        var bottomSpaceConstraint : NSLayoutConstraint? = nil
-        var topSpaceConstraint : NSLayoutConstraint? = nil
-        for constraint in tableCell.contentView.constraints {
-            if constraint.identifier == "emojiBottomSpace" {
-                bottomSpaceConstraint = constraint
-            } else if constraint.identifier == "emojiTopSpace" {
-                topSpaceConstraint = constraint
-            }
-        }
-        
         if !isOtherTripsSection(indexPath.section - 1) {
             otherTripsLabel.isHidden = true
             rideSummaryView.isHidden = false
-            bottomSpaceConstraint?.constant = 0
             
             let trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
             if !trip.isClosed {
@@ -974,9 +963,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
             
             let otherTripsCount = self.fetchedResultsController.sections![indexPath.section - 1].numberOfObjects
-            
-            bottomSpaceConstraint?.constant = 0
-            topSpaceConstraint?.constant = 4
             
             if otherTripsCount == 1 {
                 otherTripsLabel.text = " 1 Other Trip"
