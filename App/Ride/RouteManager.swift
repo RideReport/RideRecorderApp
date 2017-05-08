@@ -323,6 +323,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return false
         }
         
+        if currentTrip.sensorDataCollections == nil {
+            return true
+        }
+        
         return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSinceNow) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
                 (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSinceNow) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
                 abs(lastQueryDate.timeIntervalSinceNow) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
