@@ -416,7 +416,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        self.tableView.beginUpdates()
+        UIView.performWithoutAnimation {
+            self.tableView.beginUpdates()
+        }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -424,7 +426,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        self.tableView.endUpdates()
+        UIView.performWithoutAnimation {
+            self.tableView.endUpdates()
+        }
         
         self.refreshEmptyTableView()
         self.refreshTitle()
