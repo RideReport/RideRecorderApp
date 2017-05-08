@@ -1280,7 +1280,7 @@ class Trip : NSManagedObject {
             
             var rewardDicts: [[String: Any]] = []
             for element in self.tripRewards {
-                if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
+                if let reward = element as? TripReward {
                     var rewardDict: [String: Any] = [:]
                     rewardDict["rewardUUID"] = reward.rewardUUID
                     rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji

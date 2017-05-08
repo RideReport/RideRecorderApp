@@ -109,7 +109,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         
         var rewardDicts: [[String: Any]] = []
         for element in self.selectedTrip.tripRewards {
-            if let reward = element as? TripReward, reward.descriptionText.range(of: "day ride streak") == nil {
+            if let reward = element as? TripReward {
                 var rewardDict: [String: Any] = [:]
                 rewardDict["object"] = reward
                 rewardDict["rewardUUID"] = reward.rewardUUID
