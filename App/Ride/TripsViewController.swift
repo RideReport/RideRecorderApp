@@ -912,6 +912,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let otherTripsLabel = tableCell.viewWithTag(2) as? UILabel else {
             return
         }
+        
+        guard self.fetchedResultsController != nil else {
+            return
+        }
+        
         rideSummaryView.delegate = self
         
         if !isOtherTripsSection(indexPath.section - 1) {
