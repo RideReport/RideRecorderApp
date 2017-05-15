@@ -563,6 +563,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         guard section >= 0 else {
             return false
         }
+        guard let sections = self.fetchedResultsController.sections, sections.count > section else {
+            return false
+        }
         
         let theSection = self.fetchedResultsController.sections![section]
         
