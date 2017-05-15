@@ -46,7 +46,6 @@ class StatsViewController: UIViewController {
         barChartView.chartDescription = nil
         barChartView.pinchZoomEnabled = false
         barChartView.dragEnabled = true
-        barChartView.autoScaleMinMaxEnabled = true
         barChartView.gridBackgroundColor = UIColor.white
         barChartView.noDataText = ""
         
@@ -61,6 +60,7 @@ class StatsViewController: UIViewController {
             axis.labelTextColor = ColorPallete.shared.unknownGrey
         }
         for axis in [lineChartView.leftAxis, barChartView.leftAxis] {
+            axis.enabled = false
             axis.drawAxisLineEnabled = false
             axis.drawGridLinesEnabled = false
             axis.drawLabelsEnabled = false
@@ -365,10 +365,6 @@ class StatsViewController: UIViewController {
             self.bobbleChickView.delay(0.2) {
                 self.bobbleChick()
             }
-
-            if let lastyearStatsDict = rollupsJson["lastyear"]?.dictionary, let lastYearRides = lastyearStatsDict["rides"]?.int, lastYearRides == 0 {
-                rollupsSegment.setEnabled(false, forSegmentAt: 1)
-            }
             
             if let lifeStatsDict = rollupsJson["lifetime"]?.dictionary, let lifetimeRides = lifeStatsDict["rides"]?.int, lifetimeRides == 0 {
                 rollupsSegment.setEnabled(false, forSegmentAt: 2)
@@ -379,9 +375,14 @@ class StatsViewController: UIViewController {
             
             return
         }
+        
         emptyTripsView.isHidden = true
         rollupsSegment.setEnabled(true, forSegmentAt: 1)
         rollupsSegment.setEnabled(true, forSegmentAt: 2)
+        
+        if let lastyearStatsDict = rollupsJson["lastyear"]?.dictionary, let lastYearRides = lastyearStatsDict["rides"]?.int, lastYearRides == 0 {
+            rollupsSegment.setEnabled(false, forSegmentAt: 1)
+        }
         
         let rollupsString = NSMutableAttributedString(string: "")
         

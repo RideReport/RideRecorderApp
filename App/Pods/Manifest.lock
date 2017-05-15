@@ -6,9 +6,9 @@ PODS:
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
-  - Charts (3.0.1):
-    - Charts/Core (= 3.0.1)
-  - Charts/Core (3.0.1)
+  - Charts (3.0.2):
+    - Charts/Core (= 3.0.2)
+  - Charts/Core (3.0.2)
   - CocoaLumberjack/Default (3.1.0)
   - CocoaLumberjack/Swift (3.1.0):
     - CocoaLumberjack/Default
@@ -64,7 +64,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
-  Charts: 0e84f4418e87dad6a9edde221fba37ebb51d3ba7
+  Charts: 236d6ccdd0ce6feae151d89e829a7397381a21fd
   CocoaLumberjack: 8311463ddf9ee86a06ef92a071dd656c89244500
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
