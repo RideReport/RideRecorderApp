@@ -199,7 +199,7 @@ class CoreDataManager {
         if coordinator == nil {
             return nil
         }
-        let managedObjectContext = NSManagedObjectContext()
+        let managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyObjectTrumpMergePolicyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
