@@ -306,7 +306,9 @@ protocol RideSummaryViewDelegate: class {
     }
     
     public override func updateConstraints() {
-        NSLayoutConstraint.deactivate(currentConstraints)
+        if (currentConstraints != nil ) {
+            NSLayoutConstraint.deactivate(currentConstraints)
+        }
         currentConstraints = []
         
         defer {
