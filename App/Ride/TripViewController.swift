@@ -102,43 +102,6 @@ class TripViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
-        if let tripSummaryViewController = self.tripSummaryViewController {
-            let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(TripViewController.panGesture))
-            tripSummaryViewController.view.addGestureRecognizer(gesture)
-            
-            let blurRadius: CGFloat = 2
-            let cornerRadius: CGFloat = 7
-            let yOffset: CGFloat = 0.5
-            
-            let shadowLayer = CALayer();
-            shadowLayer.shadowColor = UIColor.black.cgColor
-            shadowLayer.shadowOffset = CGSize(width: 0,height: yOffset)
-            shadowLayer.shadowOpacity = 0.6
-            shadowLayer.shadowRadius = blurRadius
-            shadowLayer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: cornerRadius).cgPath
-            
-            // Shadow mask frame
-            let frame = view.layer.frame.insetBy(dx: 0, dy: -2*blurRadius).offsetBy(dx: 0, dy: yOffset)
-            
-            let trans = CGAffineTransform(translationX: -view.frame.origin.x,
-                                                         y: -view.frame.origin.y - yOffset + 2*blurRadius)
-            
-            let path = CGMutablePath()
-            path.__addRoundedRect(transform: nil, rect: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height), cornerWidth: cornerRadius, cornerHeight: cornerRadius)
-            path.addPath(shadowLayer.shadowPath!, transform: trans)
-            path.closeSubpath()
-            
-            let maskLayer = CAShapeLayer()
-            maskLayer.frame = frame
-            maskLayer.fillRule = kCAFillRuleEvenOdd
-            maskLayer.path = path
-            
-            shadowLayer.mask = maskLayer
-            tripSummaryContainerView.layer.insertSublayer(shadowLayer, above: view.layer)
-            tripSummaryViewController.view.layer.cornerRadius = cornerRadius
-            tripSummaryViewController.view.clipsToBounds = true
-        }
-        
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
             guard let strongSelf = self else {
                 return
@@ -208,6 +171,49 @@ class TripViewController: UIViewController {
                 }
                 self.hasGivenFeedbackForReachedThreshold = true
             })
+        }
+    }
+    
+    private var hasLaidOutShadown = false
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        if let tripSummaryViewController = self.tripSummaryViewController, !hasLaidOutShadown {
+            hasLaidOutShadown = true
+            let gesture = UIPanGestureRecognizer.init(target: self, action: #selector(TripViewController.panGesture))
+            tripSummaryViewController.view.addGestureRecognizer(gesture)
+            
+            let blurRadius: CGFloat = 2
+            let cornerRadius: CGFloat = 7
+            let yOffset: CGFloat = 0.5
+            
+            let shadowLayer = CALayer();
+            shadowLayer.shadowColor = UIColor.black.cgColor
+            shadowLayer.shadowOffset = CGSize(width: 0,height: yOffset)
+            shadowLayer.shadowOpacity = 0.6
+            shadowLayer.shadowRadius = blurRadius
+            shadowLayer.shadowPath = UIBezierPath(roundedRect: view.bounds, cornerRadius: cornerRadius).cgPath
+            
+            // Shadow mask frame
+            let frame = view.layer.frame.insetBy(dx: 0, dy: -2*blurRadius).offsetBy(dx: 0, dy: yOffset)
+            
+            let trans = CGAffineTransform(translationX: -view.frame.origin.x,
+                                          y: -view.frame.origin.y - yOffset + 2*blurRadius)
+            
+            let path = CGMutablePath()
+            path.__addRoundedRect(transform: nil, rect: CGRect(x: 0, y: 0, width: frame.size.width, height: frame.size.height), cornerWidth: cornerRadius, cornerHeight: cornerRadius)
+            path.addPath(shadowLayer.shadowPath!, transform: trans)
+            path.closeSubpath()
+            
+            let maskLayer = CAShapeLayer()
+            maskLayer.frame = frame
+            maskLayer.fillRule = kCAFillRuleEvenOdd
+            maskLayer.path = path
+            
+            shadowLayer.mask = maskLayer
+            tripSummaryContainerView.layer.insertSublayer(shadowLayer, above: view.layer)
+            tripSummaryViewController.view.layer.cornerRadius = cornerRadius
+            tripSummaryViewController.view.clipsToBounds = true
         }
     }
     
