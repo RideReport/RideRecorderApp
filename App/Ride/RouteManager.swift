@@ -378,7 +378,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
                 
                 if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                    if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastMovingLocation!.timestamp.timeIntervalSinceNow)) {
+                    if (location.timestamp.timeIntervalSinceNow > self.lastMovingLocation!.timestamp.timeIntervalSinceNow) {
                         // if the event is more recent than the one we already have
                         self.lastMovingLocation = location
                     }
@@ -393,7 +393,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 loc.sensorDataCollection = collection
             }
             
-            if (abs(location.timestamp.timeIntervalSinceNow) < abs(self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow)) {
+            if (location.timestamp.timeIntervalSinceNow > self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow) {
                 // if the event is more recent than the one we already have
                 self.lastActiveMonitoringLocation = location
             }
