@@ -267,10 +267,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 self.startPoint = MGLPointAnnotation()
                 self.startPoint!.coordinate = startLoc.coordinate()
                 mapView.addAnnotation(self.startPoint!)
-                
+            
+            if (trip.isClosed) {
                 self.endPoint = MGLPointAnnotation()
                 self.endPoint!.coordinate = endLoc.coordinate()
                 mapView.addAnnotation(self.endPoint!)
+            }
         }
 
         var coordinates : [CLLocationCoordinate2D] = []
