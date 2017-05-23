@@ -29,7 +29,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         for viewController in self.childViewControllers {
             if (viewController.isKind(of: MapViewController.self)) {
                 self.mapViewController = viewController as! MapViewController
-                if let loc = RouteManager.shared.location {
+                if let loc = SensorManagerComponent.shared.locationManager.location {
                     self.mapViewController.mapView.setCenter(loc.coordinate, zoomLevel: 14, animated: false)
                 } else {
                     self.mapViewController.mapView.setCenter(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)

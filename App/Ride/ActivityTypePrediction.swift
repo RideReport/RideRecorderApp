@@ -14,7 +14,7 @@ class ActivityTypePrediction : NSManagedObject {
     @NSManaged var activityType : ActivityType
     @NSManaged var sensorDataCollection : SensorDataCollection?
     
-    convenience init(activityType: ActivityType, confidence: Float, sensorDataCollection: SensorDataCollection) {
+    convenience init(activityType: ActivityType, confidence: Float, sensorDataCollection: SensorDataCollection?) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "ActivityTypePrediction", in: context)!, insertInto: context)
         

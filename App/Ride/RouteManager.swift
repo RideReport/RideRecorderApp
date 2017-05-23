@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import CoreMotion
+
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
 private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -35,6 +36,8 @@ private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
+    var sensorComponent: SensorManagerComponent!
+    
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var startedInBackgroundBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
@@ -72,8 +75,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var numberOfNonMovingContiguousGPSLocations = 0
     private var minimumNumberOfNonMovingContiguousGPSLocations = 3
     
-    private var locationManager : CLLocationManager!
-    
     var lastActiveTrackingActivityTypeQueryDate : Date?
     let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 8
     let numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval = 20
@@ -91,51 +92,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     internal private(set) var currentTrip : Trip?
     private var currentMotionMonitoringSensorDataCollection : SensorDataCollection?
     private var currentActiveMonitoringSensorDataCollection : SensorDataCollection?
-    
-    
-    static private(set) var shared: RouteManager!
+        
     static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
     //
     // MARK: - Initializers
     //
     
-    class func startup(_ fromBackground: Bool) {
-        if (RouteManager.shared == nil) {
-            let startupBlock = {
-                RouteManager.shared = RouteManager()
-                RouteManager.shared.startup(fromBackground)
-            }
-            
-            if !Thread.current.isMainThread {
-                DispatchQueue.main.sync {
-                    // it is important to run initialization of CLLocationManager on the main thread
-                    startupBlock()
-                }
-            } else {
-                startupBlock()
-            }
-            
-        }
-    }
-    
-    class var hasStarted: Bool {
-        get {
-            return (RouteManager.shared != nil)
-        }
-    }
-    
-    override init () {
-        super.init()
-        
-        UIDevice.current.isBatteryMonitoringEnabled = true
-        
-        self.locationManager = CLLocationManager()
-        self.locationManager.activityType = CLActivityType.fitness
-        self.locationManager.pausesLocationUpdatesAutomatically = false
-    }
-    
-    private func startup(_ fromBackground: Bool) {
+    public func startup(_ fromBackground: Bool) {
         if (fromBackground) {
             self.didStartFromBackground = true
             
@@ -147,14 +111,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 })
             }
         }
-        self.locationManager.delegate = self
-        self.locationManager.requestAlwaysAuthorization()
-    }
-    
-    var location: CLLocation? {
-        get {
-            return self.locationManager.location
-        }
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        
+        self.sensorComponent.locationManager.delegate = self
+        self.sensorComponent.locationManager.requestAlwaysAuthorization()
+        self.sensorComponent.locationManager.activityType = CLActivityType.fitness
+        self.sensorComponent.locationManager.pausesLocationUpdatesAutomatically = false
     }
     
     //
@@ -243,13 +205,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         if (CLLocationManager.deferredLocationUpdatesAvailable()) {
             DDLogInfo("Deferring updates!")
-            self.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
+            self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         } else {
             // if we can't defer, try to use a distance filter and lower accuracy instead.
             DDLogInfo("Not deferring updates")
-            self.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
+            self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         }
     }
     
@@ -361,7 +323,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     self.lastActiveTrackingActivityTypeQueryDate = Date()
                     self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
                     
-                    MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
+                    sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
                         self.currentActiveMonitoringSensorDataCollection = nil
                         
                         // Schedule deferal right after query returns to avoid the query preventing the app from backgrounding
@@ -467,9 +429,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         #endif
         DDLogInfo("Entering Motion Monitoring state")
         
-        self.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.disallowDeferredLocationUpdates()
+        self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
+        self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
         
         if (self.currentPrototrip == nil) {
             self.currentPrototrip = Prototrip()
@@ -510,8 +472,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         self.lastMotionMonitoringActivityTypeQueryDate = nil
         self.locationManagerIsUpdating = false
-        self.locationManager.disallowDeferredLocationUpdates()
-        self.locationManager.stopUpdatingLocation()
+        self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
+        self.sensorComponent.locationManager.stopUpdatingLocation()
         self.dateOfStoppingLastLocationManagerUpdates = Date()
     }
     
@@ -553,7 +515,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.currentMotionMonitoringSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
             self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
         
-            MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
+            sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
@@ -674,7 +636,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         // first we put a geofence in the middle as a fallback (exit event)
         let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
         self.geofenceSleepRegions.append(region)
-        self.locationManager.startMonitoring(for: region)
+        self.sensorComponent.locationManager.startMonitoring(for: region)
         
         // the rest of our geofences are for looking at enter events
         // our first geofence will be directly north of our center
@@ -689,14 +651,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
 
             let region = CLCircularRegion(center:locationOfNextGeofenceCenter, radius:self.geofenceSleepRegionRadius, identifier: String(format: "%@%i",self.geofenceIdentifierPrefix, index))
             self.geofenceSleepRegions.append(region)
-            self.locationManager.startMonitoring(for: region)
+            self.sensorComponent.locationManager.startMonitoring(for: region)
         }
     }
     
     
     private func disableAllGeofences() {
-        for region in self.locationManager.monitoredRegions {
-            self.locationManager.stopMonitoring(for: region )
+        for region in self.sensorComponent.locationManager.monitoredRegions {
+            self.sensorComponent.locationManager.stopMonitoring(for: region )
         }
         
         Profile.profile().setGeofencedLocation(nil)
@@ -710,7 +672,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
             DDLogVerbose("Re-deferring updates")
             self.isDefferringLocationUpdates = true
-            self.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+            self.sensorComponent.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
         }
     }
     
@@ -734,7 +696,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func isPausedDueToUnauthorized() -> Bool {
-        return (CLLocationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways)
+        return (self.sensorComponent.locationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways)
     }
     
     private func cancelScheduledAppResumeReminderNotifications() {
@@ -774,7 +736,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.synchronize()
         
         DDLogInfo("Paused Tracking")
-        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.locationManager.location)
+        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.sensorComponent.locationManager.location)
         Profile.profile().setGeofencedLocation(nil)
     }
     
@@ -814,7 +776,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func startTrackingMachine() {
         DDLogVerbose("Starting Tracking Machine")
 
-        self.locationManager.startMonitoringSignificantLocationChanges()
+        self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
         
         if (!self.locationManagerIsUpdating) {
             // if we are not already getting location updates, get a single update for our geofence.
@@ -826,9 +788,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func startLocationTrackingIfNeeded() {
         if (!self.locationManagerIsUpdating) {
             self.locationManagerIsUpdating = true
-            self.locationManager.startUpdatingLocation()
+            self.sensorComponent.locationManager.startUpdatingLocation()
             if #available(iOS 9.0, *) {
-                self.locationManager.allowsBackgroundLocationUpdates = true
+                self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
             }
         }
     }
@@ -840,7 +802,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         DDLogVerbose("Did change authorization status")
         
-        if (CLLocationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways) {
+        if (self.sensorComponent.locationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways) {
             self.startTrackingMachine()
         } else {
             // tell the user they need to give us access to the zion mainframes

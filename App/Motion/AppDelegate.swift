@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
 
         CoreDataManager.startup()
-        MotionManager.startup()
+        SensorManagerComponent.shared.classificationManager.startup()
         APIClient.startup()
         
         startupNotifications()

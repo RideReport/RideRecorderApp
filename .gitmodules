@@ -13,3 +13,6 @@
 [submodule "App/Frameworks/ActivityPredictor"]
 	path = App/Frameworks/ActivityPredictor
 	url = git@github.com:quicklywilliam/ActivityPredictor.git
+[submodule "App/Frameworks/GpxLocationManager"]
+	path = App/Frameworks/GpxLocationManager
+	url = git@github.com:KnockSoftware/GpxLocationManager.git

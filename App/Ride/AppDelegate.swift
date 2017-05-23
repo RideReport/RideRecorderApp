@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CoreMotion
 import Crashlytics
 import OAuthSwift
 import FBSDKCoreKit
@@ -66,13 +67,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        // start managers after returing
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.transitionToCreatProfile), name: Notification.Name(rawValue:"CoreDataManagerDidHardResetWithReadError"), object: nil)
         
         // Start Managers. The order matters!
         Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         APIClient.startup()
-        RandomForestManager.startup()
+
+#if DEBUG
+    if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
+        UserDefaults.standard.set(true, forKey: "hasSeenSetup")
+        Profile.profile().accessToken = "TEST_TOKEN"
+        
+        SensorManagerComponent.inject(motionManager: CMMotionManager(),
+                                      motionActivityManager: CMMotionActivityManager(),
+                                      locationManager: LocationManager(type: .gpx),
+                                      routeManager: RouteManager(),
+                                      randomForestManager: RandomForestManager(),
+                                      classificationManager: TestClassificationManager())
+                
+        let predictionTemplate = ActivityTypePrediction(activityType: .cycling, confidence: 1.0, sensorDataCollection: nil)
+        let date = Date()
+        SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: Trip.mostRecentTrip()!, fromOffsetDate: date))
+        SensorManagerComponent.shared.locationManager.secondLength = 0.1
+        SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate])
+    }
+#endif
+        
+        if (!SensorManagerComponent.isInjected) {
+            // the SensorManagerComponent can be constructed by a test component
+            // to allow for dependency injection
+            
+            SensorManagerComponent.inject(motionManager: CMMotionManager(),
+                                       motionActivityManager: CMMotionActivityManager(),
+                                       locationManager: LocationManager(type: .coreLocation),
+                                       routeManager: RouteManager(),
+                                       randomForestManager: RandomForestManager(),
+                                       classificationManager: SensorClassificationManager())
+        }
+        
         if #available(iOS 10.0, *) {
             WatchManager.startup()
         }
@@ -87,15 +120,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             
             DispatchQueue.main.async {
                 // perform async
-                self.registerNotifications()
+                NotificationManager.startup()
             }
-            MotionManager.startup()
+            SensorManagerComponent.shared.randomForestManager.startup()
+            SensorManagerComponent.shared.classificationManager.startup()
             
             if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
                 DDLogInfo("Launched in background due to location update")
-                RouteManager.startup(true)
+                SensorManagerComponent.shared.routeManager.startup(true)
             } else {
-                RouteManager.startup(false)
+                SensorManagerComponent.shared.routeManager.startup(false)
             }
             
             self.transitionToMainNavController()
@@ -105,55 +139,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-    
-    func registerNotifications() {
-        var actions : [UIMutableUserNotificationAction] = []
-        
-        for rating in Profile.profile().ratingVersion.availableRatings {
-            let action = UIMutableUserNotificationAction()
-            action.identifier = rating.choice.notificationActionIdentifier
-            action.title = rating.emoji + " " + rating.noun
-            action.activationMode = UIUserNotificationActivationMode.background
-            action.isDestructive = false
-            action.isAuthenticationRequired = false
-            actions.append(action)
-        }
-        
-        let rideCompleteCategory = UIMutableUserNotificationCategory()
-        rideCompleteCategory.identifier = "RIDE_COMPLETION_CATEGORY"
-        rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.minimal)
-        rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.default)
-   
-        let rideStartedCategory = UIMutableUserNotificationCategory()
-        rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
-        
-        #if DEBUG
-            let debugCategory = UIMutableUserNotificationCategory()
-            debugCategory.identifier = "DEBUG_CATEGORY"
-        #endif
-        
-        let resumeAction = UIMutableUserNotificationAction()
-        resumeAction.identifier = "RESUME_IDENTIFIER"
-        resumeAction.title = "Resume"
-        resumeAction.activationMode = UIUserNotificationActivationMode.background
-        resumeAction.isDestructive = false
-        resumeAction.isAuthenticationRequired = false
-        
-        let appPausedCategory = UIMutableUserNotificationCategory()
-        appPausedCategory.identifier = "APP_PAUSED_CATEGORY"
-        appPausedCategory.setActions([resumeAction], for: UIUserNotificationActionContext.minimal)
-        appPausedCategory.setActions([resumeAction], for: UIUserNotificationActionContext.default)
-        
-        var notificationCategories : Set<UIUserNotificationCategory> = Set([rideCompleteCategory, rideStartedCategory, appPausedCategory])
-        #if DEBUG
-            notificationCategories.insert(debugCategory)
-        #endif
-        
-        let types: UIUserNotificationType = [UIUserNotificationType.badge, UIUserNotificationType.sound, UIUserNotificationType.alert]
-        let settings = UIUserNotificationSettings(types: types, categories: notificationCategories)
-        UIApplication.shared.registerUserNotificationSettings(settings)
-        UIApplication.shared.registerForRemoteNotifications()
     }
     
     func transitionToSetup() {
@@ -353,7 +338,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
         
         if (identifier == "RESUME_IDENTIFIER") {
-            RouteManager.shared.resumeTracking()
+            SensorManagerComponent.shared.routeManager.resumeTracking()
             completionHandler()
         }
     }

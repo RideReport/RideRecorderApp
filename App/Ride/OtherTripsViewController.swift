@@ -248,7 +248,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
         if !trip.isClosed {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Cancel Trip") { (action, indexPath) -> Void in
-                RouteManager.shared.abortTrip()
+                SensorManagerComponent.shared.routeManager.abortTrip()
                 }]
         }
         
@@ -270,7 +270,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                 }))
                 alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
                     for sensorCollection in trip.sensorDataCollections {
-                        RandomForestManager.shared.classify(sensorCollection as! SensorDataCollection)
+                        SensorManagerComponent.shared.randomForestManager.classify(sensorCollection as! SensorDataCollection)
                     }
                     trip.calculateAggregatePredictedActivityType()
                 }))

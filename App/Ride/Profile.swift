@@ -52,7 +52,7 @@ class Profile : NSManagedObject {
         set {
             self.currentRatingVersion = NSNumber(value: newValue.rawValue)
             // reregister for notifications
-            AppDelegate.appDelegate().registerNotifications()
+            NotificationManager.shared.registerNotifications()
         }
     }
     

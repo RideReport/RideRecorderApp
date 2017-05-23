@@ -86,7 +86,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     }
     
     func updatePauseResumeText() {
-        if (RouteManager.shared.isPaused()) {
+        if (SensorManagerComponent.shared.routeManager.isPaused()) {
             self.pauseResueTableViewCell.textLabel?.text = "Resume Ride Report"
         } else {
             self.pauseResueTableViewCell.textLabel?.text = "Pause Ride Report"
@@ -147,7 +147,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             } else if (APIClient.shared.accountVerificationStatus == .verified){
                 let alertController = UIAlertController(title: nil, message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.actionSheet)
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.destructive, handler: { (_) in
-                    RouteManager.shared.abortTrip()
+                    SensorManagerComponent.shared.routeManager.abortTrip()
                     CoreDataManager.shared.resetDatabase()
                     APIClient.shared.logout()
                     AppDelegate.appDelegate().transitionToCreatProfile()
@@ -157,11 +157,11 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 self.tableView.deselectRow(at: indexPath, animated: true)
             }
         } else if (cell == self.pauseResueTableViewCell) {
-            if (RouteManager.shared.isPaused()) {
+            if (SensorManagerComponent.shared.routeManager.isPaused()) {
                 Mixpanel.sharedInstance().track(
                     "resumedTracking"
                 )
-                RouteManager.shared.resumeTracking()
+                SensorManagerComponent.shared.routeManager.resumeTracking()
                 self.updatePauseResumeText()
                 if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
                     routesVC.refreshHelperPopupUI()
@@ -180,7 +180,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "hour"]
                     )
-                    RouteManager.shared.pauseTracking(Date().hoursFrom(1))
+                    SensorManagerComponent.shared.routeManager.pauseTracking(Date().hoursFrom(1))
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause Until Tomorrow", style: UIAlertActionStyle.default, handler: { (_) in
@@ -188,7 +188,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "day"]
                     )
-                    RouteManager.shared.pauseTracking(Date.tomorrow())
+                    SensorManagerComponent.shared.routeManager.pauseTracking(Date.tomorrow())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For a Week", style: UIAlertActionStyle.default, handler: { (_) in
@@ -196,7 +196,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "week"]
                     )
-                    RouteManager.shared.pauseTracking(Date.nextWeek())
+                    SensorManagerComponent.shared.routeManager.pauseTracking(Date.nextWeek())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For Now", style: UIAlertActionStyle.default, handler: { (_) in
@@ -204,7 +204,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "indefinite"]
                     )
-                    RouteManager.shared.pauseTracking()
+                    SensorManagerComponent.shared.routeManager.pauseTracking()
                     updateUIBlock()
                 }))
                 

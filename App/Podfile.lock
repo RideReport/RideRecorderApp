@@ -29,6 +29,19 @@ PODS:
   - MapboxStatic.swift (0.8.0)
   - Mixpanel (3.1.2)
   - OAuthSwift (1.1.1)
+  - OHHTTPStubs/Core (6.0.0)
+  - OHHTTPStubs/Default (6.0.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (6.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (6.0.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (6.0.0)
+  - OHHTTPStubs/Swift (6.0.0):
+    - OHHTTPStubs/Default
   - Presentr (1.2.3)
   - SwiftyJSON (3.1.4)
 
@@ -49,6 +62,7 @@ DEPENDENCIES:
   - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`)
   - Mixpanel
   - OAuthSwift
+  - OHHTTPStubs/Swift
   - Presentr
   - SwiftyJSON
 
@@ -79,9 +93,10 @@ SPEC CHECKSUMS:
   MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09
   Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
+  OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
   Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: fbacad7d5d629d8e72b9a5afb8560a71b37d392e
+PODFILE CHECKSUM: 64bf011e9fb6d3fa93fdb18ac3a657c0fc24bc0c
 
 COCOAPODS: 1.2.1

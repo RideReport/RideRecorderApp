@@ -86,7 +86,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 })
                 
                 self.helperTextLabel.delay(delay) {
-                    AppDelegate.appDelegate().registerNotifications()
+                    NotificationManager.startup()
                 }
             } else {
                 // they've already granted it
@@ -120,7 +120,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                             }
                         }
                     }
-                    RouteManager.startup(false)
+                    SensorManagerComponent.shared.routeManager.startup(false)
                 }
             } else {
                 // they've already granted or denied it                
@@ -128,7 +128,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 self.nextPermission()
             }
         } else if self.currentPermissionsAsk == .askForMotion {
-            if (MotionManager.authorizationStatus == .notDetermined) {
+            if (SensorManagerComponent.shared.classificationManager.authorizationStatus == .notDetermined) {
                 self.currentPermissionsAsk = .askedForMotion
                 self.notificationDetailsLabel.text = "✅ Use your location during your ride"
                 self.notificationDetailsLabel.delay(0.5) {
@@ -137,13 +137,13 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 self.helperTextLabel.delay(1.5) {
-                    MotionManager.startup()
+                    SensorManagerComponent.shared.classificationManager.startup()
                     NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
                         guard let strongSelf = self else {
                             return
                         }
                         NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil)
-                        if MotionManager.authorizationStatus != .notDetermined {
+                        if SensorManagerComponent.shared.classificationManager.authorizationStatus != .notDetermined {
                             strongSelf.currentPermissionsAsk = .sayFinished
                             DispatchQueue.main.async {
                                 guard let strongSelf = self else {

@@ -1,7 +1,7 @@
 platform :ios, '8.0'
 use_frameworks!
 
-target 'Ride Report' do
+def shared_pods
     pod 'ECSlidingViewController', '~> 2.0.3'
     pod 'Fabric'
     pod 'Crashlytics'
@@ -20,6 +20,20 @@ target 'Ride Report' do
     pod 'Kingfisher'
     pod 'Charts'
     pod 'Presentr'
+end
+
+target 'Ride Report' do
+    shared_pods
+end
+
+target 'Ride Report Tests' do
+    shared_pods
+    pod 'OHHTTPStubs/Swift'
+end
+
+target 'Ride Report UITests' do
+    shared_pods
+    pod 'OHHTTPStubs/Swift'
 end
 
 target 'Motion' do

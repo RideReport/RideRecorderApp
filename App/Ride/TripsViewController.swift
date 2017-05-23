@@ -322,7 +322,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func resumeRideReport() {
-        RouteManager.shared.resumeTracking()
+        SensorManagerComponent.shared.routeManager.resumeTracking()
         refreshHelperPopupUI()
     }
     
@@ -330,19 +330,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     func refreshHelperPopupUI() {
         popupView.removeTarget(self, action: nil, for: UIControlEvents.allEvents)
         
-        if (RouteManager.shared.isPaused()) {
+        if (SensorManagerComponent.shared.routeManager.isPaused()) {
             if (self.popupView.isHidden) {
                 self.popupView.popIn()
             }
-            if (RouteManager.shared.isPausedDueToUnauthorized()) {
+            if (SensorManagerComponent.shared.routeManager.isPausedDueToUnauthorized()) {
                 self.popupView.text = "Ride Report needs permission to run"
                 popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
-            } else if (RouteManager.shared.isPausedDueToBatteryLife()) {
+            } else if (SensorManagerComponent.shared.routeManager.isPausedDueToBatteryLife()) {
                 self.popupView.text = "Ride Report is paused until you charge your phone"
             } else {
                 popupView.addTarget(self, action: #selector(TripsViewController.resumeRideReport), for: UIControlEvents.touchUpInside)
                 
-                if let pausedUntilDate = RouteManager.shared.pausedUntilDate() {
+                if let pausedUntilDate = SensorManagerComponent.shared.routeManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
                         self.popupView.text = "Ride Report is paused until " + Trip.timeDateFormatter.string(from: pausedUntilDate)
                     } else if (pausedUntilDate.isTomorrow()) {
@@ -538,7 +538,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
             if (newIndexPath != indexPath) {
                 if isInProgresstrip || (trip.isClosed && trip.activityType != .cycling) ||  sectionChangeType == .delete {
-                    // if the trip is moving to in progress, or if it is moving from the cycling trips to other trips, then delete a row
+                    // if the trip is moving from the cycling trips to other trips, then delete a row
                     self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
                                                with: .fade)
                 } else {
@@ -1094,7 +1094,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let trip : Trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
         if !trip.isClosed {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Cancel Trip") { (action, indexPath) -> Void in
-                RouteManager.shared.abortTrip()
+                SensorManagerComponent.shared.routeManager.abortTrip()
             }]
         }
         
@@ -1113,7 +1113,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }))
             alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
                 for sensorCollection in trip.sensorDataCollections {
-                    RandomForestManager.shared.classify(sensorCollection as! SensorDataCollection)
+                    SensorManagerComponent.shared.randomForestManager.classify(sensorCollection as! SensorDataCollection)
                 }
                 trip.calculateAggregatePredictedActivityType()
             }))

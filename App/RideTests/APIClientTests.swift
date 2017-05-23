@@ -16,12 +16,12 @@ let baseAPIPath = "/api/v2/"
 class APIClientTests: XCTestCase {
     
     private func stubEndpoint(_ endpoint: String, filename: String) {
-        stub(isPath(baseAPIPath + endpoint)) { _ in
-            let filePath = NSBundle(forClass: type(of: self)).pathForResource(filename, ofType: "json")
+        stub(condition: isPath(baseAPIPath + endpoint)) { _ in
+            let filePath = Bundle(for: type(of: self)).path(forResource: filename, ofType: "json")
             let fileData = NSData(contentsOfFile: filePath!)
             
-            let jsonDict = try! NSJSONSerialization.JSONObjectWithData(fileData!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-            return OHHTTPStubsResponse(JSONObject: jsonDict["body"]!, statusCode: (jsonDict["status-code"]! as! NSNumber).intValue, headers: jsonDict["headers"]! as! [AnyHashable: Any])
+            let jsonDict = try! JSONSerialization.jsonObject(with: fileData! as Data, options: JSONSerialization.ReadingOptions.allowFragments) as! NSDictionary
+            return OHHTTPStubsResponse(jsonObject: jsonDict["body"]!, statusCode: Int32((jsonDict["status-code"]! as! NSNumber).intValue), headers: (jsonDict["headers"]! as! [AnyHashable: Any]))
         }
     }
     
@@ -51,7 +51,7 @@ class APIClientTests: XCTestCase {
     func createBikeRide()->Trip {
         let trip = Trip()
         trip.length = 4599 // in meters
-        trip.activityType = NSNumber(short: Trip.ActivityType.Cycling.rawValue)
+        trip.activityType = ActivityType.cycling
         
         let startLoc = Location(trip: trip)
         startLoc.verticalAccuracy = NSNumber(value: 5 as Int)
@@ -119,7 +119,7 @@ class APIClientTests: XCTestCase {
         createAuthorizedClient()
         
         testSyncTripSummaryNotReady()
-        let trip = Trip.mostRecentBikeTrip()!
+        let trip = Trip.mostRecentTrip()!
         
         let trip2 = createBikeRide()
         trip2.uuid = trip.uuid

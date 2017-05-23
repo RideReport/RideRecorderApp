@@ -836,12 +836,10 @@ class APIClient {
         parameters["profile"] = self.profileDictionary()
         
         
-        if (RouteManager.hasStarted) {
-            if let loc = RouteManager.shared.location {
-                parameters["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
-            }
+        if let locationManager = SensorManagerComponent.shared.locationManager, let loc = locationManager.location {
+            parameters["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
         }
-            
+        
         return AuthenticatedAPIRequest(client: self, method:.post, route: "status", parameters: parameters) { (response) -> Void in
             switch response.result {
             case .success(let json):
@@ -990,17 +988,6 @@ class APIClient {
                         alert.show()
                     }
                 }
-            }
-        }
-    }
-    
-    @discardableResult func testAuthID()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: .get, route: "oauth_info") { (response) in
-            switch response.result {
-            case .success(let json):
-                DDLogInfo(String(format: "Response: %@", json.stringValue))
-            case .failure(let error):
-                DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
             }
         }
     }
