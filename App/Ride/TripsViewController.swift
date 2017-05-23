@@ -1097,7 +1097,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        if (indexPath.section == 0) {
+        if (indexPath.section <= 0) {
             return nil
         }
         
@@ -1118,16 +1118,16 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.tableView.setEditing(false, animated: true)
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-            alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
+            alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
                 trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
             }))
-            alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
+            alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
                 for sensorCollection in trip.sensorDataCollections {
                     SensorManagerComponent.shared.randomForestManager.classify(sensorCollection as! SensorDataCollection)
                 }
                 trip.calculateAggregatePredictedActivityType()
             }))
-            alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
+            alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
                 let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 })
                 
@@ -1140,6 +1140,12 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                             UIApplication.shared.endBackgroundTask(backgroundTaskID)
                         }
                     }
+                }
+            }))
+            alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
+                if let trip : Trip = self.fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
+                    let date = Date()
+                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: Trip.mostRecentTrip()!, fromOffsetDate: date))
                 }
             }))
             

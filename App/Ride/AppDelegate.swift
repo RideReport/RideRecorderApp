@@ -76,20 +76,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
 #if DEBUG
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
-        UserDefaults.standard.set(true, forKey: "hasSeenSetup")
-        Profile.profile().accessToken = "TEST_TOKEN"
-        
         SensorManagerComponent.inject(motionManager: CMMotionManager(),
                                       motionActivityManager: CMMotionActivityManager(),
                                       locationManager: LocationManager(type: .gpx),
                                       routeManager: RouteManager(),
                                       randomForestManager: RandomForestManager(),
                                       classificationManager: TestClassificationManager())
-                
-        let predictionTemplate = ActivityTypePrediction(activityType: .cycling, confidence: 1.0, sensorDataCollection: nil)
-        let date = Date()
-        SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: Trip.mostRecentTrip()!, fromOffsetDate: date))
+        
         SensorManagerComponent.shared.locationManager.secondLength = 0.1
+        let predictionTemplate = ActivityTypePrediction(activityType: .cycling, confidence: 1.0, sensorDataCollection: nil)
+        SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
         SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate])
     }
 #endif
