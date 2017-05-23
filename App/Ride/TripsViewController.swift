@@ -551,6 +551,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 } else {
                     sectionNeedingReloadAfterUpdates = newIndexPath!.section + 1
                 }
+            } else if (sectionChangeType == .delete && indexPath?.section == 0 && newIndexPath == indexPath) {
+                // if an in progress trip is closeing, insert a row and reload the section
+                self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
+                                           with: .fade)
+            } else if isInProgresstrip && self.tableView.numberOfSections > 1 {
+                // if the trip is moving to in progress, remove it from the section following
+                self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
+                                           with: .fade)
             }
         }
     }
