@@ -936,8 +936,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             let trip = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
             if !trip.isClosed {
-                rideSummaryView.setTripSummary(tripLength: trip.inProgressLength, description: String(format: "Trip starting at %@.", trip.timeString()))
-                rideSummaryView.setRewards([])
+                if (rideSummaryView.tripLength != trip.inProgressLength) {
+                    rideSummaryView.setTripSummary(tripLength: trip.inProgressLength, description: String(format: "Trip started at %@.", trip.timeString()))
+                    rideSummaryView.setRewards([])
+                }
             } else {
                 var rewardDicts: [[String: Any]] = []
                 for element in trip.tripRewards {

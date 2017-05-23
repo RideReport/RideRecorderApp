@@ -280,6 +280,7 @@ protocol RideSummaryViewDelegate: class {
     private var chevronImageView: UIImageView?
     private var tripSummaryView: RideSummaryComponentView?
     private var rewardViews: [RideRewardComponentView]!
+    public var tripLength: Float = -1.0
     
     var chevronImage: UIImage? = nil {
         didSet {
@@ -370,6 +371,7 @@ protocol RideSummaryViewDelegate: class {
             if let summaryView = tripSummaryView {
                 summaryView.removeFromSuperview()
                 self.tripSummaryView = nil
+                self.tripLength = 0
                 self.setNeedsUpdateConstraints()
             }
 
@@ -383,6 +385,7 @@ protocol RideSummaryViewDelegate: class {
 
         }
         
+        self.tripLength = tripLength
         tripSummaryView?.length = tripLength
         tripSummaryView?.bodyLabel.text = description
     }
