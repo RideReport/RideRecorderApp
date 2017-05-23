@@ -483,8 +483,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         var locs = locations
-
-        if let loc = locations.first, abs(loc.timestamp.timeIntervalSinceNow) > (self.locationTrackingDeferralTimeout + 10) {
+        
+        if let loc = locations.first, Date().timeIntervalSince(loc.timestamp) > (self.locationTrackingDeferralTimeout + 10) {
             // https://github.com/KnockSoftware/Ride/issues/222
             DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp as CVarArg))
             if locations.count > 1 {
