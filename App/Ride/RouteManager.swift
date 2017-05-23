@@ -610,6 +610,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         if let protoTrip = self.currentPrototrip {
+            if protoTrip.locations.count == 1 {
+                // if this is our first location and it is geofenced, consider whether it is too far to include
+                if let newLocation = locs.first, let loc = protoTrip.locations.firstObject, let location = loc as? Location, location.isGeofencedLocation, location.clLocation().distance(from: newLocation) > 1600 {
+                    location.managedObjectContext?.delete(location)
+                }
+            }
+            
             for location in locs {
                 DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
                 
