@@ -107,19 +107,26 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             return
         }
         
-        var rewardDicts: [[String: Any]] = []
-        for element in self.selectedTrip.tripRewards {
-            if let reward = element as? TripReward {
-                var rewardDict: [String: Any] = [:]
-                rewardDict["object"] = reward
-                rewardDict["rewardUUID"] = reward.rewardUUID
-                rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
-                rewardDict["descriptionText"] = reward.descriptionText
-                rewardDicts.append(rewardDict)
+        if !self.selectedTrip.isClosed {
+            if (rideSummaryView.tripLength != self.selectedTrip.inProgressLength) {
+                rideSummaryView.setTripSummary(tripLength: self.selectedTrip.inProgressLength, description: String(format: "Trip started at %@.", self.selectedTrip.timeString()))
+                rideSummaryView.setRewards([])
             }
+        } else {
+            var rewardDicts: [[String: Any]] = []
+            for element in self.selectedTrip.tripRewards {
+                if let reward = element as? TripReward {
+                    var rewardDict: [String: Any] = [:]
+                    rewardDict["object"] = reward
+                    rewardDict["rewardUUID"] = reward.rewardUUID
+                    rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
+                    rewardDict["descriptionText"] = reward.descriptionText
+                    rewardDicts.append(rewardDict)
+                }
+            }
+            rideSummaryView.setTripSummary(tripLength: self.selectedTrip.length, description: self.selectedTrip.displayStringWithTime())
+            rideSummaryView.setRewards(rewardDicts, animated: false)
         }
-        rideSummaryView.setTripSummary(tripLength: self.selectedTrip.length, description: self.selectedTrip.displayStringWithTime())
-        rideSummaryView.setRewards(rewardDicts, animated: false)
         
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
