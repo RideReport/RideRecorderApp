@@ -564,7 +564,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections!.count + 1
+        guard let sections = self.fetchedResultsController.sections else {
+            return 0
+        }
+        
+        return sections.count + 1
     }
     
     private func isOtherTripsSection(_ section: Int)->Bool {
