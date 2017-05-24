@@ -31,7 +31,7 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
         if #available(iOS 10.0, *) {
             pushSimulationView.showsActionButon = false
             pushSimulationView.showsDestructiveActionButon = false
-            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
+            if TARGET_OS_SIMULATOR == 0 && self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
                 helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Press it firmly** to rate your ride."
                 pushSimulationView.showsEditButton = false
                 pushSimulationView.allowsScrolling = false
