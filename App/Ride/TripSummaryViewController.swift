@@ -66,6 +66,10 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
                 return 0
             }
             
+            if let trip = self.selectedTrip, !trip.isClosed {
+                return rideSummaryView.frame.maxY
+            }
+            
             return buttonsView.frame.maxY
         }
     }

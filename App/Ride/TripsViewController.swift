@@ -1145,7 +1145,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
                 if let trip : Trip = self.fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     let date = Date()
-                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: Trip.mostRecentTrip()!, fromOffsetDate: date))
+                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: trip, fromOffsetDate: date))
                 }
             }))
             
