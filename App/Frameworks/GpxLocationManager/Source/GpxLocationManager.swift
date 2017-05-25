@@ -87,6 +87,7 @@ open class GpxLocationManager {
     
     open func startMonitoring(for region: CLRegion) {
         self.monitoredRegions.insert(region)
+        startLocationUpdateMachineIfNeeded()
     }
     
     open func stopMonitoring(for region: CLRegion) {
