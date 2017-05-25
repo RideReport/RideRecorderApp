@@ -97,6 +97,7 @@ class CoreDataManager {
         let options: [AnyHashable: Any]?  = [
             NSMigratePersistentStoresAutomaticallyOption: true,
             NSInferMappingModelAutomaticallyOption: true,
+            NSPersistentStoreTimeoutOption: NSNumber(value: 15),
             NSPersistentStoreFileProtectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
         
         let url = self.applicationDocumentsDirectory.appendingPathComponent("HoneyBee.sqlite")
