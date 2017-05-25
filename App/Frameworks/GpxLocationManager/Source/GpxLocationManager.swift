@@ -107,6 +107,7 @@ open class GpxLocationManager {
         if let parser = GpxParser(file: gpxFile) {
             let (_, coordinates): (String, [CLLocation]) = parser.parse()
             self.locations = coordinates
+            self.shouldReset = true
         }
     }
     
