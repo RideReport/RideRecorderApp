@@ -143,7 +143,9 @@ open class GpxLocationManager {
                     }
                     var currentLocation = self.locations[currentIndex]
                     currentLocation = CLLocation(coordinate: currentLocation.coordinate, altitude: currentLocation.altitude, horizontalAccuracy: currentLocation.horizontalAccuracy, verticalAccuracy: currentLocation.verticalAccuracy, course: currentLocation.course, speed: currentLocation.speed, timestamp: currentLocation.timestamp.addingTimeInterval((routeDuration + TimeInterval(1.0)) * TimeInterval(loopsCompleted)))
-                    if abs(currentLocation.timestamp.timeIntervalSince(startDate.addingTimeInterval(timeIntervalSinceStart))) < GpxLocationManager.dateFudge {
+                    
+                    let timeIntervalBetweenExpectedUpdateAndNextLocation = currentLocation.timestamp.timeIntervalSince(startDate.addingTimeInterval(timeIntervalSinceStart))
+                    if abs(timeIntervalBetweenExpectedUpdateAndNextLocation) < GpxLocationManager.dateFudge {
                         if self.isUpdatingLocations {
                             self.callerQueue.async(execute: {
                                 self.delegate.locationManager?(self.dummyCLLocationManager, didUpdateLocations: [currentLocation])
@@ -184,7 +186,13 @@ open class GpxLocationManager {
                         
                         currentIndex += 1
                     }
-                    timeIntervalSinceStart += 1.0
+                    
+                    if (abs(timeIntervalBetweenExpectedUpdateAndNextLocation) >= GpxLocationManager.dateFudge && currentLocation.timestamp.timeIntervalSince(startDate.addingTimeInterval(timeIntervalSinceStart)) < 0) {
+                        // if our currentLocation is before startDate and too big to fudge, it's probably bad. skip over it without moving timeIntervalSinceStart.
+                        currentIndex += 1
+                    } else {
+                        timeIntervalSinceStart += 1.0
+                    }
                     if currentIndex == self.locations.count {
                         currentIndex = 0
                         loopsCompleted += 1
