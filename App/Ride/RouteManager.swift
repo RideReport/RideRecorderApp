@@ -41,7 +41,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var startedInBackgroundBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
-    var minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
+    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
+    let minimumSpeedForPostTripWalkingAround : CLLocationSpeed = 0.2
+    
+    let minimumTimeIntervalBeforeDeclaringWalkingSession : TimeInterval = 10
+    let timeIntervalForConsideringStoppedTrip : TimeInterval = 60
+    let timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings : TimeInterval = 60
+    let timeIntervalForStoppingTripWithoutSubsequentWalking : TimeInterval = 200
+    
+    var startTimeOfPossibleWalkingSession : Date? = nil
+    
     
     let locationTrackingDeferralTimeout : TimeInterval = 120
 
@@ -56,9 +65,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let geofenceSleepRegionRadius : CLLocationDistance = 90
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
-    
-    let maximumTimeIntervalBetweenGPSBasedMovement : TimeInterval = 60
-    let maximumTimeIntervalBetweenUsuableSpeedReadings : TimeInterval = 60
     
     let minimumBatteryForTracking : Float = 0.2
     
@@ -196,6 +202,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         // initialize lastMovingLocation to fromLocation, where the movement started
         self.lastMovingLocation = fromLocation
+        self.startTimeOfPossibleWalkingSession = nil
         self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveMonitoringLocation = fromLocation
         
@@ -229,6 +236,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.currentTrip = nil
         self.lastActiveMonitoringLocation = nil
         self.lastMovingLocation = nil
+        self.startTimeOfPossibleWalkingSession = nil
         self.numberOfNonMovingContiguousGPSLocations = 0
         self.lastActiveTrackingActivityTypeQueryDate = nil
         
@@ -318,6 +326,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if (location.speed >= self.minimumSpeedToContinueMonitoring ||
                 (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
+                self.startTimeOfPossibleWalkingSession = nil
+                
                 // if we are moving sufficiently fast and havent taken a motion sample recently, do so
                 if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery()) {
                     self.lastActiveTrackingActivityTypeQueryDate = Date()
@@ -345,6 +355,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         self.lastMovingLocation = location
                     }
                 }
+            } else if (location.speed < self.minimumSpeedToContinueMonitoring) {
+                if (location.speed >= self.minimumSpeedForPostTripWalkingAround) {
+                    if (self.startTimeOfPossibleWalkingSession == nil || self.startTimeOfPossibleWalkingSession!.compare(location.timestamp) == .orderedDescending) {
+                        self.startTimeOfPossibleWalkingSession = location.timestamp
+                    }
+                } else {
+                    if let startDate = self.startTimeOfPossibleWalkingSession, location.timestamp.timeIntervalSince(startDate) < minimumTimeIntervalBeforeDeclaringWalkingSession {
+                        self.startTimeOfPossibleWalkingSession = nil
+                    }
+                }
+            } else {
+                
             }
             
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
@@ -361,16 +383,21 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.maximumTimeIntervalBetweenGPSBasedMovement){
+        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.timeIntervalForConsideringStoppedTrip){
             if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
-                DDLogVerbose("Moving too slow for too long")
-                self.stopTrip()
+                if let startDate = self.startTimeOfPossibleWalkingSession, self.lastActiveMonitoringLocation!.timestamp.timeIntervalSince(startDate) >= minimumTimeIntervalBeforeDeclaringWalkingSession {
+                    DDLogVerbose("Started Walking after stopping")
+                    self.stopTrip()
+                } else if (abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
+                    DDLogVerbose("Moving too slow for too long")
+                    self.stopTrip()
+                }
             } else {
                 DDLogVerbose("Not enough slow locations to stop, waiting…")
             }
         } else if (foundGPSSpeed == false) {
             let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp))
-            var maximumTimeIntervalBetweenGPSMovements = self.maximumTimeIntervalBetweenUsuableSpeedReadings
+            var maximumTimeIntervalBetweenGPSMovements = self.timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings
             if (self.isDefferringLocationUpdates) {
                 // if we are deferring, give extra time. this is because we will sometime get
                 // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
