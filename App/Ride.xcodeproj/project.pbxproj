@@ -81,6 +81,7 @@
 		3D3C3E201E68E69B004C719E /* pinRed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E191E68E69B004C719E /* pinRed@2x.png */; };
 		3D3C3E211E68E69B004C719E /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */; };
 		3D3C3E221E68E69B004C719E /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */; };
+		3D3CB8DC1EDF7CD6003964CE /* 1.archive in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CB8DB1EDF7CD6003964CE /* 1.archive */; };
 		3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D493C421E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
@@ -494,6 +495,7 @@
 		3D3C3E181E68E69B004C719E /* pinGreen@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGreen@3x.png"; sourceTree = "<group>"; };
 		3D3C3E191E68E69B004C719E /* pinRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@2x.png"; sourceTree = "<group>"; };
 		3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@3x.png"; sourceTree = "<group>"; };
+		3D3CB8DB1EDF7CD6003964CE /* 1.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 1.archive; sourceTree = "<group>"; };
 		3D493C3D1E79B40E00BB7B34 /* Ride 51.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 51.xcdatamodel"; sourceTree = "<group>"; };
 		3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv; sourceTree = "<group>"; };
 		3D493C401E79BC7300BB7B34 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
@@ -1183,11 +1185,12 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		8467175B1A01729C00851AD5 /* GPX Files */ = {
+		8467175B1A01729C00851AD5 /* Location Files */ = {
 			isa = PBXGroup;
 			children = (
+				3D3CB8DB1EDF7CD6003964CE /* 1.archive */,
 			);
-			name = "GPX Files";
+			name = "Location Files";
 			sourceTree = "<group>";
 		};
 		8492BCA91C34A72E006BDDB8 /* ride_response_json */ = {
@@ -1275,7 +1278,7 @@
 				3DD08EE41ECCFB3000246B78 /* RouteManagerTests.swift */,
 				8478621F1A267BB600176500 /* Info.plist */,
 				8492BCA91C34A72E006BDDB8 /* ride_response_json */,
-				8467175B1A01729C00851AD5 /* GPX Files */,
+				8467175B1A01729C00851AD5 /* Location Files */,
 				842FDCA21BD56E020079AFCC /* APIClientTests.swift */,
 				84D1556B19D2733500316995 /* Supporting Files */,
 				849162A11ADC3FCB0035900B /* Ride Tests-Bridging-Header.h */,
@@ -1636,6 +1639,7 @@
 				3DD08EE71ECD0ECF00246B78 /* config.json in Resources */,
 				8492BCB91C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
 				3DD08EE61ECD0ECF00246B78 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
+				3D3CB8DC1EDF7CD6003964CE /* 1.archive in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

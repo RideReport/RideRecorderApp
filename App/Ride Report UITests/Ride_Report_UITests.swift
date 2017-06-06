@@ -25,15 +25,4 @@ class Ride_Report_UITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
-    func testStartBikeRide() {
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        
-        let expectation = self.expectation(description: "NewTripCreated")
-    
-        
-        waitForExpectations(timeout: 1000, handler: nil)
-    }
-    
 }

@@ -1148,8 +1148,38 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }))
             alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
                 if let trip : Trip = self.fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
+                    var cllocs: [CLLocation] = []
+                    for loc in trip.locations {
+                        if let location = loc as? Location, !location.isGeofencedLocation {
+                            cllocs.append(location.clLocation())
+                        }
+                    }
+                    
                     let date = Date()
-                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(trip: trip, fromOffsetDate: date))
+                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(locations: cllocs, fromOffsetDate: date))
+                }
+            }))
+            alertController.addAction(UIAlertAction(title: "📦 Export", style: .default, handler: { (_) in
+                let urls = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+                let url = urls.last!
+                
+                if let trip : Trip = self.fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
+                    var cllocs: [CLLocation] = []
+                    for loc in trip.locations {
+                        if let location = loc as? Location {
+                            cllocs.append(location.clLocation())
+                        }
+                    }
+                    
+                    let path = url + "/" + trip.uuid + ".archive"
+                    if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
+                        UIPasteboard.general.string = path
+                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
+                        alert.show()
+                    } else {
+                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
+                        alert.show()
+                    }
                 }
             }))
             
