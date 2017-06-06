@@ -52,7 +52,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     var startTimeOfPossibleWalkingSession : Date? = nil
     
     
-    let locationTrackingDeferralTimeout : TimeInterval = 120
+    let locationTrackingDeferralTimeoutTimeInterval : TimeInterval = 120
 
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
@@ -283,7 +283,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func isReadyForActiveTrackingActivityQuery()->Bool {
+    private func isReadyForActiveTrackingActivityQuery(atDate date: Date)->Bool {
         guard let lastQueryDate = self.lastActiveTrackingActivityTypeQueryDate else {
             // if we've never taken a query for this trip, do it now
             return true
@@ -297,9 +297,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return true
         }
         
-        return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSinceNow) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
-                (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSinceNow) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
-                abs(lastQueryDate.timeIntervalSinceNow) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
+        return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSince(date)) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
+                (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSince(date)) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
+                abs(lastQueryDate.timeIntervalSince(date)) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
     }
     
     private func processActiveTrackingLocations(_ locations: [CLLocation]) {
@@ -329,7 +329,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 self.startTimeOfPossibleWalkingSession = nil
                 
                 // if we are moving sufficiently fast and havent taken a motion sample recently, do so
-                if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery()) {
+                if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery(atDate: location.timestamp)) {
                     self.lastActiveTrackingActivityTypeQueryDate = Date()
                     self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
                     
@@ -401,7 +401,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (self.isDefferringLocationUpdates) {
                 // if we are deferring, give extra time. this is because we will sometime get
                 // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
-                maximumTimeIntervalBetweenGPSMovements += self.locationTrackingDeferralTimeout
+                maximumTimeIntervalBetweenGPSMovements += self.locationTrackingDeferralTimeoutTimeInterval
             }
             if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
                 DDLogVerbose("Went too long with unusable speeds.")
@@ -511,7 +511,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         var locs = locations
         
-        if let loc = locations.first, Date().timeIntervalSince(loc.timestamp) > (self.locationTrackingDeferralTimeout + 10) {
+        if let loc = locations.first, Date().timeIntervalSince(loc.timestamp) > (self.locationTrackingDeferralTimeoutTimeInterval + 10) {
             // https://github.com/KnockSoftware/Ride/issues/222
             DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp as CVarArg))
             if locations.count > 1 {
@@ -533,9 +533,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
 
         if (self.lastMotionMonitoringActivityTypeQueryDate == nil ||
-            ((abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) && (self.currentMotionMonitoringSensorDataCollection == nil
+            ((abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSince(self.lastMotionMonitoringLocation!.timestamp)) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) && (self.currentMotionMonitoringSensorDataCollection == nil
                 // the below OR clause is a work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
-                || (abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSinceNow) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery)))) {
+                || (abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSince(self.lastMotionMonitoringLocation!.timestamp)) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery)))) {
             
             self.lastMotionMonitoringActivityTypeQueryDate = Date()
             
@@ -706,7 +706,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
             DDLogVerbose("Re-deferring updates")
             self.isDefferringLocationUpdates = true
-            self.sensorComponent.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeout)
+            self.sensorComponent.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeoutTimeInterval)
         }
     }
     
