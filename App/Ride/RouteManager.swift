@@ -38,7 +38,8 @@ private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var sensorComponent: SensorManagerComponent!
     
-    var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var stopTripAndDeliverNotificationBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+    var locationUpdateBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var startedInBackgroundBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
     let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
@@ -113,6 +114,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             if (self.startedInBackgroundBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Started in background Background task!")
                 self.startedInBackgroundBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    self.startedInBackgroundBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Started in background Background task!")
                 })
             }
@@ -255,9 +257,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             stoppedTrip.batteryAtEnd = NSNumber(value: Int16(UIDevice.current.batteryLevel * 100) as Int16)
             DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
             
-            if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
+            if (self.stopTripAndDeliverNotificationBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Stop Trip Background task!")
-                self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                self.stopTripAndDeliverNotificationBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    self.stopTripAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Background task expired!")
                 })
             }
@@ -272,11 +275,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         DDLogInfo("Trip summary failed to sync.")
                     }
 
-                    if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+                    if (self.stopTripAndDeliverNotificationBackgroundTaskID != UIBackgroundTaskInvalid) {
                         DDLogInfo("Ending Route Manager Stop Trip Background task!")
                         
-                        UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
-                        self.backgroundTaskID = UIBackgroundTaskInvalid
+                        UIApplication.shared.endBackgroundTask(self.stopTripAndDeliverNotificationBackgroundTaskID)
+                        self.stopTripAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                     }
                }
             }
@@ -304,6 +307,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     private func processActiveTrackingLocations(_ locations: [CLLocation]) {
         var foundGPSSpeed = false
+
         
         for location in locations {
             DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
@@ -502,6 +506,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
         self.sensorComponent.locationManager.stopUpdatingLocation()
         self.dateOfStoppingLastLocationManagerUpdates = Date()
+        
+        if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending Route Manager Location Update Background task!")
+
+            UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+            self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+        }
     }
     
     private func processMotionMonitoringLocations(_ locations: [CLLocation]) {
@@ -827,6 +838,14 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
             }
         }
+        
+        if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
+            DDLogInfo("Beginning Route Manager Location Update Background task!")
+            self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+                DDLogInfo("Route Manager Location Update Background task expired!")
+            })
+        }
     }
 
     //
@@ -927,6 +946,24 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        defer {
+            if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+            }
+            
+            if (self.locationManagerIsUpdating) {
+                DDLogInfo("Re-registering Route Manager Location Update Background task!")
+                
+                self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+                    DDLogInfo("Route Manager Location Update Background task expired!")
+                })
+            } else {
+                DDLogInfo("Ended Route Manager Location Update Background task!")
+            }
+        }
+        
         DDLogVerbose("Received location updates.")
         
 #if (arch(i386) || arch(x86_64)) && os(iOS)
