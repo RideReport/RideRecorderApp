@@ -14,7 +14,6 @@
 		3D029A8C1E70CBAD0030397D /* RatingChoiceSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A8B1E70CBAD0030397D /* RatingChoiceSelectorView.swift */; };
 		3D02B5F21C7D083400F9A64B /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D02B5F11C7D083400F9A64B /* SensorData.swift */; };
 		3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
-		3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D035CC61CCEBDE500444DCF /* ConnectedAppsViewController.swift */; };
 		3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 3D0D8B231CE2560E0059AC6B /* bell.aiff */; };
 		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
 		3D125EB81EB012C200DA2E6E /* RedeemRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */; };
@@ -119,6 +118,27 @@
 		3D6D77941D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D6D77951D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D74E21C1DA2C0130079A7E6 /* TripSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */; };
+		3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */; };
+		3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE81ECD11DD00246B78 /* SensorManagerComponent.swift */; };
+		3D78EF441EE9FBB00042D7FD /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F631ECCE008008B1894 /* LocationManager.swift */; };
+		3D78EF451EE9FBBC0042D7FD /* GpxLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F611ECCE008008B1894 /* GpxLocationManager.swift */; };
+		3D78EF461EE9FBE30042D7FD /* TripReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFA8B1D061F260077E591 /* TripReward.swift */; };
+		3D78EF471EE9FBF30042D7FD /* TestClassificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EF01ECE0A9E00246B78 /* TestClassificationManager.swift */; };
+		3D78EF481EE9FBF30042D7FD /* GpxLocationGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */; };
+		3D78EF491EE9FBFD0042D7FD /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A891E6F91610030397D /* jsoncpp.cpp */; };
+		3D78EF4A1EE9FC070042D7FD /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
+		3D78EF4B1EE9FC070042D7FD /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
+		3D78EF4C1EE9FC650042D7FD /* WatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709D1D5022C300862545 /* WatchManager.swift */; };
+		3D78EF4D1EE9FC650042D7FD /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */; };
+		3D78EF4E1EE9FD1E0042D7FD /* Data+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC71681E785DBF00F1567B /* Data+HBAdditions.swift */; };
+		3D78EF4F1EE9FDD60042D7FD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC21BD56FC20079AFCC /* libsqlite3.tbd */; };
+		3D78EF501EE9FDD90042D7FD /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137601B5DAE0C0023EC82 /* libsqlite3.dylib */; };
+		3D78EF511EE9FDF90042D7FD /* GpxParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F621ECCE008008B1894 /* GpxParser.swift */; };
+		3D78EF521EE9FE680042D7FD /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
+		3D78EF531EE9FE760042D7FD /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137621B5DAE160023EC82 /* libz.dylib */; };
+		3D78EF541EE9FE7C0042D7FD /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F1375A1B5DADEF0023EC82 /* QuartzCore.framework */; };
+		3D78EF551EE9FE800042D7FD /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137561B5DADDF0023EC82 /* ImageIO.framework */; };
+		3D78EF561EE9FE9E0042D7FD /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA379531E6750B9009D3737 /* Utility.cpp */; };
 		3D79FE601CBD955400EF21C5 /* HealthKitSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */; };
 		3D7FFA8C1D061F260077E591 /* TripReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFA8B1D061F260077E591 /* TripReward.swift */; };
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
@@ -726,12 +746,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
+				3D78EF541EE9FE7C0042D7FD /* QuartzCore.framework in Frameworks */,
+				3D78EF551EE9FE800042D7FD /* ImageIO.framework in Frameworks */,
 				3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */,
+				3D78EF521EE9FE680042D7FD /* AVFoundation.framework in Frameworks */,
 				3D2AB3921CA4A76400582A5D /* opencv2.framework in Frameworks */,
+				3D78EF4F1EE9FDD60042D7FD /* libsqlite3.tbd in Frameworks */,
+				3D78EF531EE9FE760042D7FD /* libz.dylib in Frameworks */,
 				845369E01C8907490083F695 /* Accelerate.framework in Frameworks */,
 				3D2706001C878BCB00A96DE0 /* CoreLocation.framework in Frameworks */,
 				3D2705FD1C87898F00A96DE0 /* CoreMotion.framework in Frameworks */,
 				3D2705FC1C8787A900A96DE0 /* CoreData.framework in Frameworks */,
+				3D78EF501EE9FDD90042D7FD /* libsqlite3.dylib in Frameworks */,
 				1C98221F7CAACDDF6359D9BF /* Pods_Motion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1477,6 +1503,7 @@
 					3D2705D81C8785D400A96DE0 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = 9NRH28TN93;
+						LastSwiftMigration = 0830;
 					};
 					3D3306041D7774E900B7E56A = {
 						CreatedOnToolsVersion = 8.0;
@@ -1576,8 +1603,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D78EF4B1EE9FC070042D7FD /* config.json in Resources */,
 				3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */,
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
+				3D78EF4A1EE9FC070042D7FD /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
 				3D4951121C8E092300E216AA /* forest.cv in Resources */,
@@ -1933,7 +1962,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D035CC91CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				3D1A154A1CD7F47400F9BD8D /* ConnectedApp.swift in Sources */,
 				3D1A154E1CD7F51B00F9BD8D /* ConnectedAppScope.swift in Sources */,
 				3D2705EE1C8785E000A96DE0 /* Trip.swift in Sources */,
@@ -1942,29 +1970,42 @@
 				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
+				3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
+				3D78EF471EE9FBF30042D7FD /* TestClassificationManager.swift in Sources */,
 				3DA1EFDB1C8F871E002B12DB /* NSString+HBAdditions.swift in Sources */,
 				3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
+				3D78EF461EE9FBE30042D7FD /* TripReward.swift in Sources */,
 				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* Date+HBAdditions.swift in Sources */,
+				3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */,
+				3D78EF4D1EE9FC650042D7FD /* NotificationManager.swift in Sources */,
 				3D2705EF1C8785E000A96DE0 /* SensorData.swift in Sources */,
+				3D78EF441EE9FBB00042D7FD /* LocationManager.swift in Sources */,
 				3DA1EFE01C8F879E002B12DB /* UIDevice+HBAdditions.m in Sources */,
 				3D2705F11C8785E000A96DE0 /* ActivityTypePrediction.swift in Sources */,
 				3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */,
 				3DA1EFDC1C8F8724002B12DB /* GZipEncoding.swift in Sources */,
 				3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */,
+				3D78EF491EE9FBFD0042D7FD /* jsoncpp.cpp in Sources */,
+				3D78EF561EE9FE9E0042D7FD /* Utility.cpp in Sources */,
 				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				3D2AB38B1CA4A75C00582A5D /* RandomForestManager.cpp in Sources */,
 				3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */,
+				3D78EF481EE9FBF30042D7FD /* GpxLocationGenerator.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */,
+				3D78EF4C1EE9FC650042D7FD /* WatchManager.swift in Sources */,
 				3D2705F31C8785E400A96DE0 /* Ride.xcdatamodeld in Sources */,
 				3D2705F01C8785E000A96DE0 /* SensorDataCollection.swift in Sources */,
+				3D78EF511EE9FDF90042D7FD /* GpxParser.swift in Sources */,
 				3D2705F71C8785F200A96DE0 /* CoreDataManager.swift in Sources */,
 				3D2705F21C8785E000A96DE0 /* Incident.swift in Sources */,
+				3D78EF4E1EE9FD1E0042D7FD /* Data+HBAdditions.swift in Sources */,
+				3D78EF451EE9FBBC0042D7FD /* GpxLocationManager.swift in Sources */,
 				3DA1EFDA1C8F8554002B12DB /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2312,6 +2353,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Knock.Motion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Motion/Motion-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -2340,6 +2382,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Motion/Motion-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

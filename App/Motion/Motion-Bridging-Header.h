@@ -10,3 +10,4 @@
 #import "UIDevice+HBAdditions.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
 #import "RandomForestManager.h"
+#import <sqlite3.h>

@@ -8,22 +8,25 @@
 
 import UIKit
 import AVFoundation
-import SwiftChart
 import CoreLocation
+import CoreMotion
 import MediaPlayer
 import SwiftyJSON
 
 class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
-    private var backgroundTaskID = UIBackgroundTaskInvalid
-
-    private var isRecording: Bool = false
-    private var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
-    private var sensorDataCollection : SensorDataCollection?
-    private var sensorDataCollectionForQuery : SensorDataCollection?
-    private var sensorDataCollectionForUpload : SensorDataCollection?
+    fileprivate var backgroundTaskID = UIBackgroundTaskInvalid
     
-    private var locationManager : CLLocationManager!
-    private var player: AVAudioPlayer!
+    var sensorComponent: SensorManagerComponent!
+
+    fileprivate var isRecording: Bool = false
+    fileprivate var activityManager: CMMotionActivityManager!
+    fileprivate var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    fileprivate var sensorDataCollection : SensorDataCollection?
+    fileprivate var sensorDataCollectionForQuery : SensorDataCollection?
+    fileprivate var sensorDataCollectionForUpload : SensorDataCollection?
+    
+    fileprivate var locationManager : CLLocationManager!
+    fileprivate var player: AVAudioPlayer!
 
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var predictSwitch: UISwitch!
@@ -31,7 +34,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var activityLabel2: UILabel!
-    @IBOutlet weak var lineChart: Chart!
     
     @IBOutlet weak var uploadView: UIView!
     @IBOutlet weak var notesTextField: UITextField!
@@ -41,18 +43,22 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.predictSwitch.on = false
+        sensorComponent = SensorManagerComponent.shared
+        
+        self.predictSwitch.isOn = false
+        
+        self.activityManager = CMMotionActivityManager()
         
         self.locationManager = CLLocationManager()
-        self.locationManager.activityType = CLActivityType.Fitness
+        self.locationManager.activityType = CLActivityType.fitness
         self.locationManager.pausesLocationUpdatesAutomatically = false
         self.locationManager.delegate = self
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        let url = NSBundle.mainBundle().URLForResource("silence", withExtension: ".mp3")
-        try! self.player = AVAudioPlayer(contentsOfURL: url!)
+        let url = Bundle.main.url(forResource: "silence", withExtension: ".mp3")
+        try! self.player = AVAudioPlayer(contentsOf: url!)
         self.player.numberOfLoops = -1
         
         self.notesTextField.delegate = self
@@ -64,51 +70,51 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         try! AVAudioSession.sharedInstance().setActive(true)
         
-        MPRemoteCommandCenter.sharedCommandCenter().togglePlayPauseCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
+        MPRemoteCommandCenter.shared().togglePlayPauseCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
             self.tappedStartPause(self)
             
-            return MPRemoteCommandHandlerStatus.Success
-        }
+            return MPRemoteCommandHandlerStatus.success
+        })
         
-        MPRemoteCommandCenter.sharedCommandCenter().nextTrackCommand.addTargetWithHandler { (event) -> MPRemoteCommandHandlerStatus in
-            self.predictSwitch.on = !self.predictSwitch.on
+        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
+            self.predictSwitch.isOn = !self.predictSwitch.isOn
 
             var utteranceString = ""
-            if self.predictSwitch.on {
+            if self.predictSwitch.isOn {
                 utteranceString = "Prediction enabled"
             } else {
                 utteranceString = "Prediction disabled"
             }
             let utterance = AVSpeechUtterance(string: utteranceString)
             utterance.rate = 0.6
-            self.synth.speakUtterance(utterance)
+            self.synth.speak(utterance)
             
             self.runPredictionIfEnabled()
             
-            return MPRemoteCommandHandlerStatus.Success
-        }
+            return MPRemoteCommandHandlerStatus.success
+        })
         
         self.updateUI()
     }
     
-    @IBAction func switchedModeSelectorView(sender: AnyObject) {
+    @IBAction func switchedModeSelectorView(_ sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             updateUI()
         }
     }
     
-    @IBAction func tappedUploadButton(sender: AnyObject) {
+    @IBAction func tappedUploadButton(_ sender: AnyObject) {
         if let collection = self.sensorDataCollectionForUpload {
             var metadata: [String: Any] = [:]
-            if let notes = self.notesTextField.text where notes.characters.count > 0 {
+            if let notes = self.notesTextField.text, notes.characters.count > 0 {
                 metadata["notes"] = notes
             }
             
-            if let identifier = UIDevice.currentDevice().identifierForVendor {
-                metadata["identifier"] = identifier.UUIDString
+            if let identifier = UIDevice.current.identifierForVendor {
+                metadata["identifier"] = identifier.uuidString
             }
             
-            metadata["reportedActivityType"] = NSNumber(short: self.modeSelectorView.selectedMode.rawValue)
+            metadata["reportedActivityType"] = NSNumber(value: self.modeSelectorView.selectedMode.rawValue as Int16)
             
             CoreDataManager.shared.saveContext()
 
@@ -124,51 +130,51 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     func updateUI() {
         if (self.isRecording) {
 
-            self.startStopButton.setTitle("Pause", forState: UIControlState.Normal)
-            self.uploadView.hidden = true
+            self.startStopButton.setTitle("Pause", for: UIControlState())
+            self.uploadView.isHidden = true
             self.modeSelectorView.selectedSegmentIndex = -1
-            self.activityLabel.hidden = false
-            self.startStopButton.hidden = false
-            self.cancelButton.hidden = false
-            self.finishButton.hidden = false
-            self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+            self.activityLabel.isHidden = false
+            self.startStopButton.isHidden = false
+            self.cancelButton.isHidden = false
+            self.finishButton.isHidden = false
+            self.cancelButton.setTitle("Cancel", for: UIControlState())
         } else {
             if let collection = self.sensorDataCollectionForUpload {
                 // prep for upload
-                self.uploadView.hidden = false
-                self.startStopButton.hidden = true
-                self.activityLabel.hidden = true
-                self.cancelButton.hidden = false
-                self.finishButton.hidden = true
-                self.cancelButton.setTitle("Delete", forState: UIControlState.Normal)
+                self.uploadView.isHidden = false
+                self.startStopButton.isHidden = true
+                self.activityLabel.isHidden = true
+                self.cancelButton.isHidden = false
+                self.finishButton.isHidden = true
+                self.cancelButton.setTitle("Delete", for: UIControlState())
                 
-                guard self.modeSelectorView.selectedMode != .Unknown else {
-                    self.uploadButton.enabled = false
+                guard self.modeSelectorView.selectedMode != .unknown else {
+                    self.uploadButton.isEnabled = false
                     return
                 }
                 
-                self.uploadButton.enabled = true
+                self.uploadButton.isEnabled = true
             } else if (self.sensorDataCollection != nil){
                 // paused
-                self.uploadView.hidden = true
+                self.uploadView.isHidden = true
                 self.modeSelectorView.selectedSegmentIndex = -1
-                self.activityLabel.hidden = false
-                self.startStopButton.hidden = false
-                self.cancelButton.hidden = false
-                self.finishButton.hidden = false
+                self.activityLabel.isHidden = false
+                self.startStopButton.isHidden = false
+                self.cancelButton.isHidden = false
+                self.finishButton.isHidden = false
                 
-                self.startStopButton.setTitle("Resume", forState: UIControlState.Normal)
-                self.cancelButton.setTitle("Cancel", forState: UIControlState.Normal)
+                self.startStopButton.setTitle("Resume", for: UIControlState())
+                self.cancelButton.setTitle("Cancel", for: UIControlState())
             } else {
                 // init state
-                self.uploadView.hidden = true
+                self.uploadView.isHidden = true
                 self.modeSelectorView.selectedSegmentIndex = -1
-                self.activityLabel.hidden = false
-                self.startStopButton.hidden = false
-                self.cancelButton.hidden = true
-                self.finishButton.hidden = true
+                self.activityLabel.isHidden = false
+                self.startStopButton.isHidden = false
+                self.cancelButton.isHidden = true
+                self.finishButton.isHidden = true
                 
-                self.startStopButton.setTitle("Start", forState: UIControlState.Normal)
+                self.startStopButton.setTitle("Start", for: UIControlState())
             }
         }
     }
@@ -178,11 +184,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
     
-    @IBAction func tappedFinish(sender: AnyObject) {
+    @IBAction func tappedFinish(_ sender: AnyObject) {
         if (self.isRecording) {
             // stop recording first
             self.tappedStartPause(self)
@@ -194,7 +200,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func tappedCancelDelete(sender: AnyObject) {
+    @IBAction func tappedCancelDelete(_ sender: AnyObject) {
         if (self.isRecording) {
             // stop recording first
             self.tappedStartPause(self)
@@ -206,7 +212,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func tappedStartPause(sender: AnyObject) {
+    @IBAction func tappedStartPause(_ sender: AnyObject) {
         if (!self.isRecording) {
             // tapped start or resume
             self.isRecording = true
@@ -217,10 +223,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 utterance = AVSpeechUtterance(string: "Started")
             }
             utterance.rate = 0.6
-            self.synth.speakUtterance(utterance)
+            self.synth.speak(utterance)
 
             
-            MotionManager.shared.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
+            //sensorComponent.classificationManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
@@ -229,7 +235,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.isRecording = false
             CoreDataManager.shared.saveContext()
             
-            MotionManager.shared.stopGatheringSensorData()
+            //sensorComponent.classificationManager.stopGatheringSensorData()
             if (self.sensorDataCollectionForQuery == nil) {
                 self.locationManager.stopUpdatingLocation()
             }
@@ -237,17 +243,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             
             let utterance = AVSpeechUtterance(string: "Paused")
             utterance.rate = 0.6
-            self.synth.speakUtterance(utterance)
+            self.synth.speak(utterance)
         }
         
         self.updateUI()
     }
     
-    @IBAction func toggledPredictSwitch(sender: AnyObject) {
+    @IBAction func toggledPredictSwitch(_ sender: AnyObject) {
         self.runPredictionIfEnabled()
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let collection = self.sensorDataCollection {
             for loc in locations {
                 collection.addLocationIfSufficientlyAccurate(loc)
@@ -263,7 +269,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     }
     
     func runPredictionIfEnabled() {
-        if (!self.predictSwitch.on) {
+        if (!self.predictSwitch.isOn) {
             return
         }
         
@@ -273,11 +279,37 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending run prediction Background task!")
             
-            UIApplication.sharedApplication().endBackgroundTask(self.backgroundTaskID)
+            UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
         
-        MotionManager.shared.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
+        activityManager.queryActivityStarting(from: Date(), to: Date().secondsFrom(2), to: OperationQueue.main) { (activity, error) in
+            if let theActivity = activity?.first {
+                var activityString = ""
+                if theActivity.stationary {
+                    activityString += "Stationary "
+                }
+                if theActivity.walking {
+                    activityString += "Walking "
+                }
+                if theActivity.running {
+                    activityString += "Running "
+                }
+                if theActivity.automotive {
+                    activityString += "Automotive "
+                }
+                if theActivity.cycling {
+                    activityString += "Cycling "
+                }
+                if theActivity.unknown {
+                    activityString += "Unknown "
+                }
+                activityString += String(format: " %1f", theActivity.confidence.rawValue)
+                self.activityLabel2.text = activityString
+            }
+        }
+        
+        sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
             guard let strongSelf = self else {
             return
             }
@@ -296,60 +328,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 strongSelf.locationManager.stopUpdatingLocation()
             }
             
-            var activityString = ""
             
-            switch activityType {
-            case .Automotive:
-            activityString = "Driving"
-            case .Cycling:
-            activityString = "Biking"
-            case .Running:
-            activityString = "Running"
-            case .Bus:
-            activityString = "Bus"
-            case .Rail:
-            activityString = "Train"
-            case .Walking:
-            activityString = "Walking"
-            case .Stationary:
-            activityString = "Stationary"
-            case .Aviation:
-            activityString = "Flying"
-            case .Unknown:
-            activityString = "Unknown"
-            }
-            
-            activityString = activityString + " " + String(confidence)
+            let activityString = activityType.noun + " " + String(confidence)
             
             strongSelf.activityLabel.text = activityString
             
             let utterance = AVSpeechUtterance(string: activityString)
             utterance.rate = 0.6
-            strongSelf.synth.speakUtterance(utterance)
+            strongSelf.synth.speak(utterance)
             
             let notif = UILocalNotification()
             notif.alertBody = activityString
             notif.category = "generalCategory"
-            UIApplication.sharedApplication().presentLocalNotificationNow(notif)
+            UIApplication.shared.presentLocalNotificationNow(notif)
             
-            if (strongSelf.predictSwitch.on) {
+            if (strongSelf.predictSwitch.isOn) {
                 DDLogInfo("Beginning run prediction Background task!")
-                strongSelf.backgroundTaskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({ () -> Void in
+                strongSelf.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     strongSelf.backgroundTaskID = UIBackgroundTaskInvalid
                 })
                 
-                strongSelf.performSelector(Selector("runPredictionIfEnabled"), withObject: nil, afterDelay: 2.0)
+                strongSelf.perform(Selector("runPredictionIfEnabled"), with: nil, afterDelay: 2.0)
             }
-            
-//            let series = ChartSeries(debugData)
-//            series.color = ChartColors.greenColor()
-//            strongSelf.lineChart.removeSeries()
-//            strongSelf.lineChart.addSeries(series)
-            
         }
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }

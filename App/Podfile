@@ -37,11 +37,7 @@ target 'Ride Report UITests' do
 end
 
 target 'Motion' do
-    pod 'Mixpanel'
-    pod 'Alamofire'
-    pod 'OAuthSwift'
-    pod 'SwiftyJSON'
-    pod 'CocoaLumberjack/Swift'
+    shared_pods
 end
 
 target 'Ride Report Notification Content' do

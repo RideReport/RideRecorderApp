@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-import ECSlidingViewController
 import WatchConnectivity
 
 class ConnectedAppsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
