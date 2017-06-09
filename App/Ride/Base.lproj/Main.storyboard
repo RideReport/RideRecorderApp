@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aTE-dm-KG0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aTE-dm-KG0">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -210,7 +210,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ReportModeClassificationNavigationViewController" id="OMP-PP-PzA" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="dly-FU-scT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="dly-FU-scT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -402,11 +402,11 @@
                                         <include reference="OjU-pQ-Ua5"/>
                                     </mask>
                                     <mask key="constraints">
+                                        <include reference="jX7-vv-3or"/>
                                         <include reference="I3L-I3-EjW"/>
                                         <include reference="Ram-kp-aGD"/>
                                         <include reference="n4V-he-hhj"/>
                                         <include reference="t6J-cy-QEh"/>
-                                        <include reference="jX7-vv-3or"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -1209,7 +1209,7 @@
                 <navigationController storyboardIdentifier="mainNavController" automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="itw-fS-GQj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="itw-fS-GQj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2255,7 +2255,7 @@
             <objects>
                 <navigationController storyboardIdentifier="setupViewController" modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="SetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="aIy-Zm-fp3">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2580,12 +2580,12 @@
                                 <include reference="Y5r-bc-kIk"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="xEr-Za-eJf"/>
                                 <include reference="3wC-dV-JFU"/>
                                 <include reference="6lf-SD-DbD"/>
                                 <include reference="QXL-25-4zQ"/>
                                 <include reference="RA5-Am-CKf"/>
                                 <include reference="uPN-Te-O5K"/>
-                                <include reference="xEr-Za-eJf"/>
                                 <include reference="6in-Tv-XrR"/>
                                 <include reference="AMF-ef-Pvz"/>
                                 <include reference="GQv-qx-2Dz"/>
@@ -2595,10 +2595,10 @@
                                 <include reference="Mkm-xG-QKd"/>
                                 <include reference="orX-r0-Wr0"/>
                                 <include reference="wqQ-MS-cft"/>
+                                <include reference="178-Ux-8QU"/>
                                 <include reference="Fsf-xD-5CR"/>
                                 <exclude reference="Vk1-hr-zwe"/>
                                 <include reference="crj-Dn-PUf"/>
-                                <include reference="178-Ux-8QU"/>
                                 <include reference="ojS-q0-qQW"/>
                             </mask>
                         </variation>
@@ -2877,7 +2877,7 @@
             <objects>
                 <navigationController storyboardIdentifier="hamburgerNavController" automaticallyAdjustsScrollViewInsets="NO" id="CTm-Br-P8L" customClass="HamburgerNavController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="ZWp-cC-VxW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZWp-cC-VxW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2896,7 +2896,7 @@
                 <navigationController storyboardIdentifier="RideShareNavViewController" automaticallyAdjustsScrollViewInsets="NO" id="Bnt-ox-mTU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="cgk-4v-LE7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="cgk-4v-LE7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2915,7 +2915,7 @@
                 <navigationController storyboardIdentifier="DirectionsNavViewController" automaticallyAdjustsScrollViewInsets="NO" id="rYl-WJ-Gw5" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="h4X-JN-Qfj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="h4X-JN-Qfj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2934,7 +2934,7 @@
                 <navigationController storyboardIdentifier="ConnectedAppSetupNavController" automaticallyAdjustsScrollViewInsets="NO" id="Hnp-e8-Yyu" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="Wgm-TQ-5U2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Wgm-TQ-5U2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3677,7 +3677,7 @@ All the Apps</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fC1-1h-Vad" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="miM-Fr-gmr">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="miM-Fr-gmr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3774,9 +3774,9 @@ All the Apps</string>
                                 <exclude reference="mYx-gk-GgM"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="VkP-KU-N6Q"/>
                                 <exclude reference="dWo-Qn-WRA"/>
                                 <exclude reference="wcx-lp-A9H"/>
-                                <exclude reference="VkP-KU-N6Q"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -3784,8 +3784,8 @@ All the Apps</string>
                                 <include reference="mYx-gk-GgM"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="wcx-lp-A9H"/>
                                 <include reference="VkP-KU-N6Q"/>
+                                <include reference="wcx-lp-A9H"/>
                             </mask>
                         </variation>
                     </view>
@@ -3811,7 +3811,7 @@ All the Apps</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9QE-OU-mae" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="MPD-qM-pSo">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MPD-qM-pSo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3875,11 +3875,11 @@ All the Apps</string>
                                         <include reference="DUL-pa-0iw"/>
                                     </mask>
                                     <mask key="constraints">
+                                        <include reference="hiQ-qZ-rEq"/>
                                         <include reference="4JF-C4-afk"/>
                                         <include reference="E5V-Tu-Plq"/>
                                         <include reference="GIr-pa-h8w"/>
                                         <include reference="NwE-Zw-Y7i"/>
-                                        <include reference="hiQ-qZ-rEq"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -4180,8 +4180,8 @@ Label</string>
                                 <include reference="w3W-jU-gul"/>
                                 <include reference="W4l-nF-XlY"/>
                                 <include reference="xC6-kq-Hub"/>
-                                <include reference="KRl-DF-uHl"/>
                                 <include reference="7YD-6l-GVY"/>
+                                <include reference="KRl-DF-uHl"/>
                             </mask>
                         </variation>
                     </view>
@@ -4284,6 +4284,7 @@ Label</string>
                                     <constraint firstItem="R32-a4-deg" firstAttribute="top" secondItem="Fko-Bf-tCN" secondAttribute="bottom" constant="6.3333333333333286" id="b3z-lN-FrL"/>
                                     <constraint firstItem="2wJ-C3-dS6" firstAttribute="top" secondItem="NVA-yx-17l" secondAttribute="bottom" constant="10" id="ehI-18-chR"/>
                                     <constraint firstAttribute="bottom" secondItem="oe6-Ta-j2o" secondAttribute="bottom" constant="15.999999999999886" id="gVl-yK-V8s"/>
+                                    <constraint firstItem="oe6-Ta-j2o" firstAttribute="top" relation="greaterThanOrEqual" secondItem="2wJ-C3-dS6" secondAttribute="bottom" constant="10" id="sWS-uc-vOX"/>
                                     <constraint firstItem="NVA-yx-17l" firstAttribute="width" secondItem="R32-a4-deg" secondAttribute="width" id="sna-gB-JGM"/>
                                     <constraint firstItem="2wJ-C3-dS6" firstAttribute="centerX" secondItem="xaq-ew-S1D" secondAttribute="centerX" id="tcs-dX-Twg"/>
                                     <constraint firstItem="oe6-Ta-j2o" firstAttribute="centerX" secondItem="xaq-ew-S1D" secondAttribute="centerX" id="zq5-Eo-dyy"/>
