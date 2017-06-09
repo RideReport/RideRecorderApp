@@ -1413,9 +1413,13 @@ class Trip : NSManagedObject {
         var tempString = ""
         if let temp = self.temperature {
             if #available(iOS 10.0, *) {
-                let formatter = MeasurementFormatter()
+                // if we try to drop the units using the temperatureWithoutUnit unit option
+                // then we also end up always in fahrenheit.
+                // tracked by rdar://problem/32681781
                 let measurement = Measurement(value: temp.doubleValue, unit: UnitTemperature.fahrenheit)
-                formatter.unitOptions = .temperatureWithoutUnit
+                let formatter = MeasurementFormatter()
+                formatter.numberFormatter.maximumFractionDigits = 0
+                formatter.unitStyle = .short
                 tempString = formatter.string(from: measurement)
             } else {
                 tempString = String(format: "%0.fºF", temp.doubleValue)
