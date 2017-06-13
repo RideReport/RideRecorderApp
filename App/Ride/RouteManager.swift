@@ -526,12 +526,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return true
         }
         
-        guard abs(lastQueryDate.timeIntervalSince(date)) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery else {
+        guard abs(lastQueryDate.timeIntervalSince(date)) <= timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery else {
             // work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
             return true
         }
         
-        guard self.currentMotionMonitoringSensorDataCollection != nil else {
+        guard self.currentMotionMonitoringSensorDataCollection == nil else {
             return false
         }
         
