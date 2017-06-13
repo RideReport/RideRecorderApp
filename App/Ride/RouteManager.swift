@@ -567,7 +567,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.isGettingInitialLocationForGeofence = false
             if (!self.didStartFromBackground) {
                 DDLogVerbose("Got intial location for geofence. Stopping!")
-                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation!.timestamp)
+                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation!)
                 return
             }
         }
