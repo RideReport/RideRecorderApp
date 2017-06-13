@@ -154,6 +154,58 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             otherTriplayer.lineOpacity = goodBikelayer.lineOpacity
             otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.autoBrown)
             mapView.style?.addLayer(otherTriplayer)
+            
+            #if DEBUG
+                let predictBike = MGLLineStyleLayer(identifier: "predicted-bike", source: self.selectedTripLineSource!)
+                predictBike.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictBike.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.cycling.numberValue)
+                predictBike.lineCap = tripBackinglayer.lineCap
+                predictBike.lineJoin = tripBackinglayer.lineJoin
+                predictBike.lineWidth = goodBikelayer.lineWidth
+                predictBike.lineOpacity = goodBikelayer.lineOpacity
+                predictBike.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.goodGreen)
+                mapView.style?.addLayer(predictBike)
+                
+                let predictAuto = MGLLineStyleLayer(identifier: "predicted-auto", source: self.selectedTripLineSource!)
+                predictAuto.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictAuto.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.automotive.numberValue)
+                predictAuto.lineCap = tripBackinglayer.lineCap
+                predictAuto.lineJoin = tripBackinglayer.lineJoin
+                predictAuto.lineWidth = goodBikelayer.lineWidth
+                predictAuto.lineOpacity = goodBikelayer.lineOpacity
+                predictAuto.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.autoBrown)
+                mapView.style?.addLayer(predictAuto)
+                
+                let predictWalk = MGLLineStyleLayer(identifier: "predicted-walk", source: self.selectedTripLineSource!)
+                predictWalk.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictWalk.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.walking.numberValue)
+                predictWalk.lineCap = tripBackinglayer.lineCap
+                predictWalk.lineJoin = tripBackinglayer.lineJoin
+                predictWalk.lineWidth = goodBikelayer.lineWidth
+                predictWalk.lineOpacity = goodBikelayer.lineOpacity
+                predictWalk.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.almostWhite)
+                mapView.style?.addLayer(predictWalk)
+                
+                let predictBus = MGLLineStyleLayer(identifier: "predicted-bus", source: self.selectedTripLineSource!)
+                predictBus.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictBus.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.bus.numberValue)
+                predictBus.lineCap = tripBackinglayer.lineCap
+                predictBus.lineJoin = tripBackinglayer.lineJoin
+                predictBus.lineWidth = goodBikelayer.lineWidth
+                predictBus.lineOpacity = goodBikelayer.lineOpacity
+                predictBus.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.transitBlue)
+                mapView.style?.addLayer(predictBus)
+                
+                let predictTrain = MGLLineStyleLayer(identifier: "predicted-train", source: self.selectedTripLineSource!)
+                predictTrain.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictTrain.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.rail.numberValue)
+                predictTrain.lineCap = tripBackinglayer.lineCap
+                predictTrain.lineJoin = tripBackinglayer.lineJoin
+                predictTrain.lineWidth = goodBikelayer.lineWidth
+                predictTrain.lineOpacity = goodBikelayer.lineOpacity
+                predictTrain.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.turquoise)
+                mapView.style?.addLayer(predictTrain)
+            #endif
         }
         
         if (needsTripLoad) {
@@ -293,6 +345,40 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.selectedTripLineFeature = MGLPolylineFeature(coordinates: &coordinates, count: count)
         self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue]
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
+        
+        #if DEBUG
+            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+                var i = 0
+                var lines = [self.selectedTripLineFeature!]
+                for collec in trip.sensorDataCollections {
+                    if let collection = collec as? SensorDataCollection, let predict = collection.topActivityTypePrediction {
+                        var collectionLocsCoordinates : [CLLocationCoordinate2D] = []
+                        var collectionLocsCount : UInt = 0
+
+                        for loc in collection.locations {
+                            let location = (loc as! Location)
+                            
+                            let coord = location.coordinate()
+                            
+                            collectionLocsCoordinates.append(coord)
+                            collectionLocsCount += 1
+                        }
+                        
+                        guard collectionLocsCoordinates.count > 0 else {
+                            continue
+                        }
+                        
+                        let feature = MGLPolylineFeature(coordinates: &collectionLocsCoordinates, count: collectionLocsCount)
+                        feature.attributes = ["predictedActivityType": predict.activityType.numberValue]
+                        lines.append(feature)
+                    }
+                    i+=1
+                }
+                
+                let shape = MGLShapeCollectionFeature(shapes: lines)
+                self.selectedTripLineSource.shape = shape
+            }
+        #endif
         
         DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {

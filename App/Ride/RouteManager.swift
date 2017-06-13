@@ -596,15 +596,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 let activityType = prediction.activityType
                 let confidence = prediction.confidence.floatValue
-            
-                #if DEBUG
-                    if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                        let notif = UILocalNotification()
-                        notif.alertBody = "🐞 prediction: " + activityType.emoji + " confidence: " + String(confidence) + " speed: " + String(averageSpeed)
-                        notif.category = "DEBUG_CATEGORY"
-                        UIApplication.shared.presentLocalNotificationNow(notif)
-                    }
-                #endif
                 
                 DDLogVerbose(String(format: "Prediction: %i confidence: %f speed: %f", activityType.rawValue, confidence, averageSpeed))
                 
