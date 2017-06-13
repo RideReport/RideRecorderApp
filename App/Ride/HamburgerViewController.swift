@@ -100,7 +100,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         #if DEBUG
-            return 5
+            return 6
         #else
             return 5
         #endif

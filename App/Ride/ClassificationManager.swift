@@ -23,6 +23,9 @@ protocol ClassificationManager {
     func startup()
     func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler:@escaping (_: SensorDataCollection) -> Void!)
     func setTestPredictionsTemplates(testPredictions: [ActivityTypePrediction])
+    
+    func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection)
+    func stopGatheringSensorData()
 }
 
 extension ClassificationManager {
@@ -108,6 +111,10 @@ class SensorClassificationManager : ClassificationManager {
     }
     
     private func stopMotionUpdates() {
+        if (isGatheringMotionData) {
+            return
+        }
+        
         self.sensorComponent.motionManager.stopAccelerometerUpdates()
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {

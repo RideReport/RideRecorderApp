@@ -21,6 +21,14 @@ class TestClassificationManager : ClassificationManager {
         authorizationStatus = .authorized
     }
     
+    func gatherSensorData(toSensorDataCollection sensorDataCollection: SensorDataCollection) {
+        //
+    }
+    
+    func stopGatheringSensorData() {
+        //
+    }
+    
     func setTestPredictionsTemplates(testPredictions: [ActivityTypePrediction]) {
         self.testPredictionsTemplates = testPredictions
     }
