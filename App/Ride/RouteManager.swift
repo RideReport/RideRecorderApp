@@ -383,11 +383,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
-            let updatedInProgressLength = self.currentTrip!.updateInProgressLength()
+            let _ = self.currentTrip!.updateInProgressLength()
             
-            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate, location.timestamp.timeIntervalSince(sensorDataCollectionDate) > -0.1 {
-                // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
-                loc.sensorDataCollection = collection
+            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate {
+                if (location.timestamp.timeIntervalSince(sensorDataCollectionDate) > -0.1 ) {
+                    // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
+                    loc.sensorDataCollection = collection
+                } else {
+                    DDLogVerbose("Location is older than currentActiveMonitoringSensorDataCollection, skipping.")
+                }
             }
             
             if (location.timestamp.timeIntervalSinceNow > self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow) {
