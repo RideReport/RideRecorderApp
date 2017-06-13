@@ -348,14 +348,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         
                         // Schedule deferal right after query returns to avoid the query preventing the app from backgrounding
                         self.beginDeferringUpdatesIfAppropriate()
-                        #if DEBUG
-                            if let prediction = sensorDataCollection.topActivityTypePrediction, UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                                let notif = UILocalNotification()
-                                notif.alertBody = "🐞 prediction: " + prediction.activityType.emoji + " confidence: " + String(prediction.confidence.floatValue)
-                                notif.category = "DEBUG_CATEGORY"
-                                UIApplication.shared.presentLocalNotificationNow(notif)
-                            }
-                        #endif
+                        
+                        guard let prediction = sensorDataCollection.topActivityTypePrediction else {
+                            // this should not ever happen.
+                            DDLogVerbose("No activity type prediction found, continuing…")
+                            return
+                        }
+                        
+                        let activityType = prediction.activityType
+                        let confidence = prediction.confidence.floatValue
+                        
+                        DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))
                     }
                 }
                 
