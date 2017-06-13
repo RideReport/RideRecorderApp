@@ -11,6 +11,79 @@ import CoreData
 import CoreMotion
 import MapKit
 
+#if DEBUG
+    extension SensorDataCollection : MGLAnnotation {
+        var coordinate: CLLocationCoordinate2D  {
+            get {
+                if let firstLoc = self.locations.firstObject as? Location {
+                    return firstLoc.coordinate()
+                }
+                
+                return CLLocationCoordinate2DMake(0, 0)
+            }
+        }
+        
+        // Title and subtitle for use by selection UI.
+        var title: String? {
+            get {
+                if let predict = self.topActivityTypePrediction  {
+                    return predict.activityType.emoji
+                }
+                
+                return "None"
+            }
+        }
+        
+        var subtitle: String? {
+            get {
+                if let predict = self.topActivityTypePrediction  {
+                    return String(format: "Confidence: %f Speed: %f", predict.confidence.floatValue, averageSpeed)
+                }
+                
+                return "-"
+            }
+        }
+        
+        var pinImage: UIImage {
+            var rect : CGRect
+            let markersImage = UIImage(named: "markers-soft")!
+            let pinColorsCount : CGFloat = 20
+            let pinWidth = markersImage.size.width/pinColorsCount
+            var pinIndex : CGFloat = 0
+            
+            if let predict = self.topActivityTypePrediction  {
+                switch predict.activityType {
+                case .automotive:
+                    pinIndex = 1
+                case .cycling:
+                    pinIndex = 2
+                case .walking:
+                    pinIndex = 16
+                case .bus:
+                    pinIndex = 6
+                case .rail:
+                    pinIndex = 3
+                case .stationary:
+                    pinIndex = 10
+                default:
+                    pinIndex = 17
+                
+                }
+            } else {
+                pinIndex = 18
+            }
+            rect = CGRect(x: -pinIndex * pinWidth, y: 0.0, width: pinWidth, height: markersImage.size.height)
+            UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+            markersImage.draw(at: rect.origin)
+            let pinImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            return pinImage!
+        }
+
+    }
+#endif
+
 class SensorDataCollection : NSManagedObject {
     var isBeingCollected = false
     

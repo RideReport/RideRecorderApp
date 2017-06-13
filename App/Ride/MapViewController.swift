@@ -205,6 +205,16 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 predictTrain.lineOpacity = goodBikelayer.lineOpacity
                 predictTrain.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.turquoise)
                 mapView.style?.addLayer(predictTrain)
+                
+                let predictStationary = MGLLineStyleLayer(identifier: "predicted-stationary", source: self.selectedTripLineSource!)
+                predictStationary.sourceLayerIdentifier = tripFeatureSourceIdentifier
+                predictStationary.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.stationary.numberValue)
+                predictStationary.lineCap = tripBackinglayer.lineCap
+                predictStationary.lineJoin = tripBackinglayer.lineJoin
+                predictStationary.lineWidth = goodBikelayer.lineWidth
+                predictStationary.lineOpacity = goodBikelayer.lineOpacity
+                predictStationary.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.pink)
+                mapView.style?.addLayer(predictStationary)
             #endif
         }
         
@@ -364,6 +374,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                             collectionLocsCount += 1
                         }
                         
+                        self.mapView.addAnnotation(collection)
+                        
                         guard collectionLocsCoordinates.count > 0 else {
                             continue
                         }
@@ -408,6 +420,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             }
         }
         
+        #if DEBUG
+            if let incident = annotation as? SensorDataCollection {
+                return MGLAnnotationImage(image: incident.pinImage, reuseIdentifier: incident.title ?? "")
+            }
+        #endif
+        
         return annotationImage
     }
     
@@ -425,6 +443,12 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         if annotation is Incident {
             return true
         }
+        
+        #if DEBUG
+            if annotation is SensorDataCollection {
+                return true
+            }
+        #endif
         
         return false
     }
