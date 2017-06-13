@@ -300,6 +300,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return true
         }
         
+        #if DEBUG
+            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+                return true
+            }
+        #endif
+        
         return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSince(date)) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
                 (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSince(date)) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
                 abs(lastQueryDate.timeIntervalSince(date)) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
@@ -515,6 +521,29 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    private func isReadyForMotionMonitoringActivityQuery(atDate date: Date)->Bool {
+        guard let lastQueryDate = self.lastMotionMonitoringActivityTypeQueryDate else {
+            return true
+        }
+        
+        guard abs(lastQueryDate.timeIntervalSince(date)) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery else {
+            // work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
+            return true
+        }
+        
+        guard self.currentMotionMonitoringSensorDataCollection != nil else {
+            return false
+        }
+        
+        #if DEBUG
+            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+                return true
+            }
+        #endif
+        
+        return (abs(lastQueryDate.timeIntervalSince(date)) > timeIntervalBetweenMotionMonitoringActivityTypeQueries)
+    }
+    
     private func processMotionMonitoringLocations(_ locations: [CLLocation]) {
         guard locations.count > 0 else {
             return
@@ -538,15 +567,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.isGettingInitialLocationForGeofence = false
             if (!self.didStartFromBackground) {
                 DDLogVerbose("Got intial location for geofence. Stopping!")
-                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation)
+                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation!.timestamp)
                 return
             }
         }
 
-        if (self.lastMotionMonitoringActivityTypeQueryDate == nil ||
-            ((abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSince(self.lastMotionMonitoringLocation!.timestamp)) > timeIntervalBetweenMotionMonitoringActivityTypeQueries) && (self.currentMotionMonitoringSensorDataCollection == nil
-                // the below OR clause is a work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
-                || (abs(self.lastMotionMonitoringActivityTypeQueryDate!.timeIntervalSince(self.lastMotionMonitoringLocation!.timestamp)) > timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery)))) {
+        if (self.isReadyForMotionMonitoringActivityQuery(atDate: self.lastMotionMonitoringLocation!.timestamp)) {
             
             self.lastMotionMonitoringActivityTypeQueryDate = Date()
             
