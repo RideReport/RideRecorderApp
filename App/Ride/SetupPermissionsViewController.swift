@@ -137,7 +137,9 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 self.helperTextLabel.delay(1.5) {
+                    SensorManagerComponent.shared.randomForestManager.startup()
                     SensorManagerComponent.shared.classificationManager.startup()
+                    
                     NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
                         guard let strongSelf = self else {
                             return
