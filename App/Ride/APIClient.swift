@@ -534,7 +534,7 @@ class APIClient {
         }
     }
     
-    @discardableResult func saveAndSyncTripIfNeeded(_ trip: Trip, syncInBackground: Bool = false, includeLocations: Bool = true)->AuthenticatedAPIRequest {
+    @discardableResult func saveAndSyncTripIfNeeded(_ trip: Trip, syncInBackground: Bool = false, includeFullLocations: Bool = true)->AuthenticatedAPIRequest {
         for incident in trip.incidents {
             if ((incident as! Incident).hasChanges) {
                 trip.isSynced = false
@@ -543,7 +543,7 @@ class APIClient {
         trip.saveAndMarkDirty()
         
         if (!trip.isSynced && (syncInBackground || UIApplication.shared.applicationState == UIApplicationState.active)) {
-            return self.syncTrip(trip, includeLocations: includeLocations)
+            return self.syncTrip(trip, includeFullLocations: includeFullLocations)
         }
         
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
@@ -603,7 +603,7 @@ class APIClient {
         }
     }
     
-    @discardableResult func syncTrip(_ trip: Trip, includeLocations: Bool = true)->AuthenticatedAPIRequest {
+    @discardableResult func syncTrip(_ trip: Trip, includeFullLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed) else {
             DDLogWarn("Tried to sync trip info on unclosed trip!")
             
@@ -617,7 +617,7 @@ class APIClient {
                 existingRequest.requestCompletetionBlock = {
                     // we need to reset isSynced since the changes were made after the request went out.
                     trip.isSynced = false
-                    self.syncTrip(trip, includeLocations: includeLocations)
+                    self.syncTrip(trip, includeFullLocations: includeFullLocations)
                 }
                 return existingRequest
             } else {
@@ -636,30 +636,29 @@ class APIClient {
             "ratingVersion": trip.rating.version.numberValue
         ] as [String : Any]
 
-        if (!trip.locationsAreSynced && !includeLocations) {
-            // initial synchronization of trip data - the server does not know about the locations yet
-            // so we provide them in order to get back summary information. record may or may not exist so we PUT.
-            guard let startingLocation = trip.bestStartLocation(), let endingLocation = trip.bestEndLocation() else {
-                DDLogWarn("No starting and/or ending location found when syncing trip locations!")
+        if (!trip.locationsAreSynced) {
+            var locations : [Any?] = []
+            if !includeFullLocations {
+                for location in trip.simplifiedLocations.array {
+                    locations.append((location as! Location).jsonDictionary())
+                }
+                tripDict["summaryRoute"] = ["locations": locations]
+            } else {
+                for location in trip.locations.array {
+                    locations.append((location as! Location).jsonDictionary())
+                }
+                tripDict["locations"] = locations
+            }
+            
+            guard locations.count > 0 else {
+                DDLogWarn("No locations found when syncing trip locations!")
                 trip.locationsAreSynced = false
                 CoreDataManager.shared.saveContext()
-
+                
                 return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
             }
             
             tripDict["length"] = trip.length
-            tripDict["startLocation"] = startingLocation.jsonDictionary()
-            tripDict["endLocation"] = endingLocation.jsonDictionary()
-        } else if (!trip.locationsAreSynced) {
-            // upload location data has not been synced, do it now.
-            // record may or may not exist, so we PUT
-            
-            var locations : [Any?] = []
-            for location in trip.locations.array {
-                locations.append((location as! Location).jsonDictionary())
-            }
-            tripDict["length"] = trip.length
-            tripDict["locations"] = locations
         } else {
             // location data has been synced. Record exists and we are not uploading everything, so we PATCH.
             method = .patch
@@ -673,7 +672,7 @@ class APIClient {
                     trip.loadSummaryFromJSON(summary)
                 }
                 trip.isSynced = true
-                if includeLocations {
+                if includeFullLocations {
                     trip.locationsAreSynced = true
                 }
                 
@@ -691,7 +690,7 @@ class APIClient {
                 if let httpResponse = response.response, httpResponse.statusCode == 409 {
                     // a trip with that UUID exists. retry.
                     trip.generateUUID()
-                    self.saveAndSyncTripIfNeeded(trip, includeLocations: includeLocations)
+                    self.saveAndSyncTripIfNeeded(trip, includeFullLocations: includeFullLocations)
                 } else if let httpResponse = response.response, httpResponse.statusCode == 404 {
                     // server doesn't know about trip, reset locationsAreSynced
                     trip.locationsAreSynced = false
