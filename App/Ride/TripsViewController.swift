@@ -1131,6 +1131,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
                 trip.calculateAggregatePredictedActivityType()
             }))
+            alertController.addAction(UIAlertAction(title: "💩 Re-Simplify", style: UIAlertActionStyle.default, handler: { (_) in
+                trip.simplify()
+            }))
             alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
                 let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 })

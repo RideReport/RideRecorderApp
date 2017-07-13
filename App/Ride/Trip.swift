@@ -1568,7 +1568,7 @@ class Trip : NSManagedObject {
         return results as! [Location]
     }
     
-    private func simplify(_ handler: ()->Void = {}) {
+    func simplify(_ handler: ()->Void = {}) {
         let accurateLocs = self.usableLocationsForSimplification()
         
         if (self.simplifiedLocations != nil) {
@@ -1583,6 +1583,7 @@ class Trip : NSManagedObject {
         }
         
         self.simplifyLocations(accurateLocs, episilon: simplificationEpisilon)
+        
         CoreDataManager.shared.saveContext()
         handler()
     }
@@ -1617,6 +1618,23 @@ class Trip : NSManagedObject {
             self.simplifyLocations(Array(locations[indexOfMaximumDistance...(locations.count - 1)]), episilon: episilon)
         } else {
             startLoc!.simplifiedInTrip = self
+
+            var i = 0
+            for loc in locations {
+                // also include any geofence location, plus the first location following it
+                if loc.isGeofencedLocation {
+                    if loc.simplifiedInTrip == nil {
+                        loc.simplifiedInTrip = self
+                    }
+                    if (i + 1) < locations.count {
+                        if locations[i + 1].simplifiedInTrip == nil {
+                            locations[i + 1].simplifiedInTrip = self
+                        }
+                    }
+                }
+                i += 1
+            }
+            
             endLoc!.simplifiedInTrip = self
         }
     }
