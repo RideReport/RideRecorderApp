@@ -1063,13 +1063,15 @@ class Trip : NSManagedObject {
             return
         }
         
-        self.calculateAggregatePredictedActivityType()
-        self.calculateLength()
-        self.isClosed = true
-        
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
-        self.saveAndMarkDirty()
-        handler()
+        self.simplify({
+            self.calculateAggregatePredictedActivityType()
+            self.calculateLength()
+            self.isClosed = true
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
+            self.saveAndMarkDirty()
+            handler()
+        })
     }
     
     func reopen(withPrototrip prototrip: Prototrip?) {
@@ -1322,13 +1324,6 @@ class Trip : NSManagedObject {
                     }
                 }
                 
-                guard let locs = self.simplifiedLocations, locs.count > 0 else {
-                    self.simplify({
-                        self.createRouteMapAttachement(attachmentCallbackHandler)
-                    })
-                    return
-                }
-                
                 createRouteMapAttachement(attachmentCallbackHandler)
             } else {
                 self.currentStateNotification = UILocalNotification()
@@ -1573,7 +1568,7 @@ class Trip : NSManagedObject {
         return results as! [Location]
     }
     
-    func simplify(_ handler: ()->Void = {}) {
+    private func simplify(_ handler: ()->Void = {}) {
         let accurateLocs = self.usableLocationsForSimplification()
         
         if (self.simplifiedLocations != nil) {
@@ -1593,7 +1588,7 @@ class Trip : NSManagedObject {
     }
     
     // Ramer–Douglas–Peucker geometric simplication algorithm
-    func simplifyLocations(_ locations: [Location], episilon : CLLocationDegrees) {
+    private func simplifyLocations(_ locations: [Location], episilon : CLLocationDegrees) {
         var maximumDistance : CLLocationDegrees = 0
         var indexOfMaximumDistance = 0
         
@@ -1641,53 +1636,6 @@ class Trip : NSManagedObject {
         
         // height = 2* area / base
         return 2 * area / base
-    }
-    
-    func smoothIfNeeded(_ handler: @escaping ()->Void) {
-        if (self.locations.count < 2 || self.hasSmoothed) {
-            return
-        }
-        
-        DDLogVerbose("Smoothing route…")
-        
-        self.hasSmoothed = true
-        
-        let location0 = self.locations.firstObject as! Location
-        let location1 = self.locations.object(at: 1) as! Location
-        
-        let request = MKDirectionsRequest()
-        request.source = (location0 as Location).mapItem()
-        request.destination = (location1 as Location).mapItem()
-        request.transportType = MKDirectionsTransportType.walking
-        request.requestsAlternateRoutes = false
-        let directions = MKDirections(request: request)
-        directions.calculate { (directionsResponse, error) -> Void in
-            if (error == nil) {
-                let route : MKRoute = directionsResponse!.routes.first!
-                let pointCount = route.polyline.pointCount
-                var coords = [CLLocationCoordinate2D](repeating: kCLLocationCoordinate2DInvalid, count: pointCount)
-                route.polyline.getCoordinates(&coords, range: NSMakeRange(0, pointCount))
-                let mutableLocations = self.locations.mutableCopy() as! NSMutableOrderedSet
-                for index in 0..<pointCount {
-                    let location = self.locationWithCoordinate(coords[index])
-                    location.date = location0.date
-                    location.trip = self
-                    mutableLocations.insert(location, at: 1+index)
-                }
-                self.locations = mutableLocations
-            } else {
-                self.hasSmoothed = false
-            }
-            
-//            self.locations.removeObject(location0)
-//            location0.managedObjectContext.deleteObject(location0)
-//            self.locations.removeObject(location1)
-//            location1.managedObjectContext.deleteObject(location1)
-            
-            DDLogVerbose("Route smoothed!")
-            
-            handler()
-        }
     }
     
     func mostRecentLocation() -> Location? {

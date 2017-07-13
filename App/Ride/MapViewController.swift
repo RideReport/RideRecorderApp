@@ -305,21 +305,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         var locs = trip.locations
         
         // if the trip is closed, use the simplified locations for efficiency
-        if trip.isClosed {
-            guard trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 else {
-                DispatchQueue.main.async(execute: { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    
-                    trip.simplify() {
-                        if (trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0) {
-                            strongSelf.setSelectedTrip(trip)
-                        }
-                    }
-                    })
-                return
-            }
+        if trip.isClosed && trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 {
             
             locs = trip.simplifiedLocations
         }
