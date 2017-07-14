@@ -1578,7 +1578,7 @@ class Trip : NSManagedObject {
             }
         }
         
-        if (!self.isClosed || accurateLocs.count == 0) {
+        if (accurateLocs.count == 0) {
             handler()
             return
         }

@@ -957,8 +957,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             if (self.locationManagerIsUpdating) {
-                DDLogInfo("Re-registering Route Manager Location Update Background task!")
-                
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")
