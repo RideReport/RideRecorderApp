@@ -134,8 +134,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     private func tripQualifiesForResumptions(_ trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
-        if (trip.rating.choice != .notSet) {
-            // dont resume rated trips
+        if (trip.rating.choice != .notSet || trip.wasStoppedManually) {
+            // dont resume rated or manually stopped trips
             return false
         }
         
@@ -225,10 +225,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func abortTrip() {
-        self.stopTrip(true)
+        self.stopTrip(abort: true)
     }
     
-    private func stopTrip(_ abort: Bool = false) {
+    func stopTrip(abort: Bool = false, stoppedManually: Bool = false) {
         guard let stoppedTrip = self.currentTrip else {
             return
         }
@@ -263,6 +263,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     self.stopTripAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Background task expired!")
                 })
+            }
+            
+            if (stoppedManually) {
+                stoppedTrip.wasStoppedManually = true
             }
             
             stoppedTrip.close() {

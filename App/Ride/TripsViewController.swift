@@ -1148,8 +1148,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         let trip : Trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
         if !trip.isClosed {
-            return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Cancel Trip") { (action, indexPath) -> Void in
-                SensorManagerComponent.shared.routeManager.abortTrip()
+            return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
+                SensorManagerComponent.shared.routeManager.stopTrip(stoppedManually: true)
             }]
         }
         

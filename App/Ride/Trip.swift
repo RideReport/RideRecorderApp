@@ -315,6 +315,7 @@ class Trip : NSManagedObject {
     @NSManaged var healthKitUuid : String?
     var isBeingSavedToHealthKit: Bool = false
     var workoutObject: HKWorkout? = nil
+    var wasStoppedManually : Bool = false
     
     var isClosed : Bool {
         get {
