@@ -34,6 +34,10 @@ private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+private func DDLogStateChange(_ logMessage: String) {
+    DDLogInfo("## " + logMessage)
+}
+
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var sensorComponent: SensorManagerComponent!
@@ -169,7 +173,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        DDLogInfo("Starting Active Tracking")
+        DDLogStateChange("Starting Active Tracking")
         
         var firstLocationOfNewTrip = fromLocation
         if let prototrip = self.currentPrototrip,
@@ -462,7 +466,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 UIApplication.shared.presentLocalNotificationNow(notif)
             }
         #endif
-        DDLogInfo("Entering Motion Monitoring state")
+        DDLogStateChange("Entering Motion Monitoring state")
         
         self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
         self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -481,7 +485,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func stopMotionMonitoringAndSetupGeofences(aroundLocation location: CLLocation?) {
-        DDLogInfo("Stopping motion monitoring")
+        DDLogStateChange("Stopping motion monitoring")
                 
         if let loc = location {
             #if DEBUG
@@ -784,7 +788,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.set(true, forKey: "RouteManagerIsPaused")
         UserDefaults.standard.synchronize()
         
-        DDLogInfo("Paused Tracking")
+        DDLogStateChange("Paused Tracking")
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.sensorComponent.locationManager.location)
         Profile.profile().setGeofencedLocation(nil)
     }
@@ -796,7 +800,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
             UIApplication.shared.presentLocalNotificationNow(notif)
             
-            DDLogInfo("Paused Tracking due to battery life")
+            DDLogStateChange("Paused Tracking due to battery life")
             
             if self.currentTrip != nil {
                 self.stopTrip()
@@ -818,12 +822,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.set(nil, forKey: "RouteManagerIsPausedUntilDate")
         UserDefaults.standard.synchronize()
         
-        DDLogInfo("Resume Tracking")
+        DDLogStateChange("Resume Tracking")
         self.startTrackingMachine()
     }
     
     private func startTrackingMachine() {
-        DDLogVerbose("Starting Tracking Machine")
+        DDLogStateChange("Starting Tracking Machine")
 
         self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
         
