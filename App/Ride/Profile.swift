@@ -74,12 +74,12 @@ class Profile : NSManagedObject {
                 results = nil
             }
             
-            if (results!.count == 0) {
+            if let results = results, let profileResult = results.first as? Profile {
+                Static.profile = profileResult
+            } else {
                 let context = CoreDataManager.shared.currentManagedObjectContext()
                 Static.profile = Profile(entity: NSEntityDescription.entity(forEntityName: "Profile", in: context)!, insertInto:context)
                 CoreDataManager.shared.saveContext()
-            } else {
-                Static.profile = (results!.first as! Profile)
             }
         }
         
