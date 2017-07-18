@@ -117,8 +117,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             metadata["reportedActivityType"] = NSNumber(value: self.modeSelectorView.selectedMode.rawValue as Int16)
             
             CoreDataManager.shared.saveContext()
-
             APIClient.shared.uploadSensorDataCollection(collection, withMetadata: metadata)
+
             self.notesTextField.text = ""
             self.sensorDataCollectionForUpload = nil
             self.sensorDataCollection = nil
@@ -268,10 +268,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         CoreDataManager.shared.saveContext()
     }
     
+    fileprivate var isPredicting: Bool = false
+    
     func runPredictionIfEnabled() {
-        if (!self.predictSwitch.isOn) {
+        guard self.predictSwitch.isOn else {
             return
         }
+        guard !isPredicting else {
+            return
+        }
+        
+        isPredicting = true
         
         self.sensorDataCollectionForQuery = SensorDataCollection()
         self.locationManager.startUpdatingLocation()
@@ -304,15 +311,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
                 if theActivity.unknown {
                     activityString += "Unknown "
                 }
-                activityString += String(format: " %1f", theActivity.confidence.rawValue)
+                
+                switch theActivity.confidence {
+                case .high:
+                    activityString += "High"
+                case .medium:
+                    activityString += "Medium"
+                case .low:
+                    activityString += "Low"
+                }
+                
                 self.activityLabel2.text = activityString
             }
         }
         
         sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.sensorDataCollectionForQuery!) {[weak self] (sensorDataCollection) -> Void in
             guard let strongSelf = self else {
-            return
+                return
             }
+            strongSelf.isPredicting = false
             
             guard let prediction = sensorDataCollection.topActivityTypePrediction else {
                 // this should not ever happen.
@@ -329,7 +346,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             }
             
             
-            let activityString = activityType.noun + " " + String(confidence)
+            let activityString = String(format: "%@ %.1f", activityType.noun, confidence)
             
             strongSelf.activityLabel.text = activityString
             

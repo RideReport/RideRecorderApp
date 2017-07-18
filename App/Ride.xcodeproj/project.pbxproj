@@ -83,6 +83,7 @@
 		3D3CB8DC1EDF7CD6003964CE /* 1.archive in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CB8DB1EDF7CD6003964CE /* 1.archive */; };
 		3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
+		3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
 		3D493C421E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
 		3D493C431E79BC7300BB7B34 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
 		3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */; };
@@ -1608,6 +1609,7 @@
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
 				3D78EF4A1EE9FC070042D7FD /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
+				3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
 				3D4951121C8E092300E216AA /* forest.cv in Resources */,
 			);

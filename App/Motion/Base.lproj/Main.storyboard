@@ -30,8 +30,8 @@
                                     <action selector="tappedStartPause:" destination="BYZ-38-t0r" eventType="touchUpInside" id="59D-Wb-kld"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T3F-xJ-ySO">
-                                <rect key="frame" x="178.5" y="547" width="18" height="48"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="T3F-xJ-ySO">
+                                <rect key="frame" x="16" y="547" width="343" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="40"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -244,8 +244,8 @@
                                     <action selector="toggledPredictSwitch:" destination="BYZ-38-t0r" eventType="valueChanged" id="PVB-21-dgt"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Awz-9D-uge">
-                                <rect key="frame" x="178.5" y="492" width="18" height="48"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.45000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="Awz-9D-uge">
+                                <rect key="frame" x="16" y="492" width="343" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="xVp-ob-VmE"/>
                                 </constraints>
@@ -266,6 +266,7 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="leadingMargin" secondItem="Awz-9D-uge" secondAttribute="leading" id="37I-Ca-z7c"/>
                             <constraint firstItem="T3F-xJ-ySO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6OG-Ab-6aQ"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BIs-vG-Mx8"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="D8h-0L-Rse"/>
@@ -273,6 +274,7 @@
                             <constraint firstItem="Awz-9D-uge" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="EVE-vi-GPU"/>
                             <constraint firstItem="L92-uR-mv9" firstAttribute="leading" secondItem="soQ-1S-b5k" secondAttribute="trailing" constant="48" id="HCp-qr-cM9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="soQ-1S-b5k" secondAttribute="bottom" constant="20" id="Hg3-eX-0K0"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Awz-9D-uge" secondAttribute="trailing" id="L3e-DV-GgV"/>
                             <constraint firstAttribute="leadingMargin" secondItem="oQ8-Y6-xXc" secondAttribute="leading" id="N2k-RK-k3g"/>
                             <constraint firstItem="soQ-1S-b5k" firstAttribute="top" secondItem="T3F-xJ-ySO" secondAttribute="bottom" constant="22" id="RRE-rp-rMv"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="oQ8-Y6-xXc" secondAttribute="bottom" constant="19" id="bUj-Y8-dF9"/>
@@ -280,6 +282,7 @@
                             <constraint firstItem="82A-GJ-9qe" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ggS-IZ-ohS"/>
                             <constraint firstItem="82A-GJ-9qe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kH4-G6-l7X"/>
                             <constraint firstItem="W8N-3W-MDK" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="pZ6-EA-CCg"/>
+                            <constraint firstItem="T3F-xJ-ySO" firstAttribute="width" secondItem="Awz-9D-uge" secondAttribute="width" id="qsR-ZE-3Qq"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="L92-uR-mv9" secondAttribute="bottom" constant="20" id="yBf-Vb-5Gc"/>
                             <constraint firstItem="T3F-xJ-ySO" firstAttribute="top" secondItem="Awz-9D-uge" secondAttribute="bottom" constant="7" id="zzC-hg-79I"/>
                         </constraints>
@@ -292,18 +295,18 @@
                                 <exclude reference="Awz-9D-uge"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="c4c-By-qEe"/>
-                                <exclude reference="zzC-hg-79I"/>
-                                <exclude reference="bUj-Y8-dF9"/>
-                                <exclude reference="yBf-Vb-5Gc"/>
-                                <exclude reference="ggS-IZ-ohS"/>
-                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="BIs-vG-Mx8"/>
                                 <exclude reference="D8h-0L-Rse"/>
                                 <exclude reference="pZ6-EA-CCg"/>
+                                <exclude reference="ggS-IZ-ohS"/>
+                                <exclude reference="kH4-G6-l7X"/>
                                 <exclude reference="EVE-vi-GPU"/>
+                                <exclude reference="c4c-By-qEe"/>
+                                <exclude reference="zzC-hg-79I"/>
                                 <exclude reference="N2k-RK-k3g"/>
                                 <exclude reference="HCp-qr-cM9"/>
+                                <exclude reference="bUj-Y8-dF9"/>
+                                <exclude reference="yBf-Vb-5Gc"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -315,17 +318,17 @@
                                 <include reference="Awz-9D-uge"/>
                             </mask>
                             <mask key="constraints">
-                                <include reference="zzC-hg-79I"/>
-                                <include reference="bUj-Y8-dF9"/>
-                                <include reference="yBf-Vb-5Gc"/>
-                                <include reference="ggS-IZ-ohS"/>
-                                <include reference="kH4-G6-l7X"/>
                                 <include reference="BIs-vG-Mx8"/>
                                 <include reference="D8h-0L-Rse"/>
                                 <include reference="pZ6-EA-CCg"/>
+                                <include reference="ggS-IZ-ohS"/>
+                                <include reference="kH4-G6-l7X"/>
                                 <include reference="EVE-vi-GPU"/>
+                                <include reference="zzC-hg-79I"/>
                                 <include reference="N2k-RK-k3g"/>
                                 <include reference="HCp-qr-cM9"/>
+                                <include reference="bUj-Y8-dF9"/>
+                                <include reference="yBf-Vb-5Gc"/>
                             </mask>
                         </variation>
                     </view>
@@ -344,7 +347,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="319.5" y="345"/>
+            <point key="canvasLocation" x="319.19999999999999" y="344.97751124437787"/>
         </scene>
     </scenes>
 </document>
