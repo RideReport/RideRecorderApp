@@ -1272,7 +1272,7 @@ class Trip : NSManagedObject {
     }
     
     func sendTripCompletionNotificationLocally(_ clearRemoteMessage: Bool = false, secondsFromNow: TimeInterval = 0) {
-        DDLogInfo("Sending notification…")
+        DDLogInfo("Scheduling notification…")
         
         self.cancelTripStateNotification(clearRemoteMessage)
         

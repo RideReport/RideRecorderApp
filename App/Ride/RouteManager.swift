@@ -237,6 +237,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
+        DDLogStateChange("Stopping trip")
         
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastActiveMonitoringLocation)
         self.currentTrip = nil
