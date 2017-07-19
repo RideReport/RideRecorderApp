@@ -34,6 +34,10 @@ private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+private func DDLogStateChange(_ logMessage: String) {
+    DDLogInfo("## " + logMessage)
+}
+
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var sensorComponent: SensorManagerComponent!
@@ -134,8 +138,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     private func tripQualifiesForResumptions(_ trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
-        if (trip.rating.choice != .notSet) {
-            // dont resume rated trips
+        if (trip.rating.choice != .notSet || trip.wasStoppedManually) {
+            // dont resume rated or manually stopped trips
             return false
         }
         
@@ -169,7 +173,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
-        DDLogInfo("Starting Active Tracking")
+        DDLogStateChange("Starting Active Tracking")
         
         var firstLocationOfNewTrip = fromLocation
         if let prototrip = self.currentPrototrip,
@@ -225,14 +229,15 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func abortTrip() {
-        self.stopTrip(true)
+        self.stopTrip(abort: true)
     }
     
-    private func stopTrip(_ abort: Bool = false) {
+    func stopTrip(abort: Bool = false, stoppedManually: Bool = false) {
         guard let stoppedTrip = self.currentTrip else {
             return
         }
         
+        DDLogStateChange("Stopping trip")
         
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastActiveMonitoringLocation)
         self.currentTrip = nil
@@ -263,6 +268,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     self.stopTripAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Background task expired!")
                 })
+            }
+            
+            if (stoppedManually) {
+                stoppedTrip.wasStoppedManually = true
             }
             
             stoppedTrip.close() {
@@ -471,7 +480,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 UIApplication.shared.presentLocalNotificationNow(notif)
             }
         #endif
-        DDLogInfo("Entering Motion Monitoring state")
+        DDLogStateChange("Entering Motion Monitoring state")
         
         self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
         self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -490,7 +499,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func stopMotionMonitoringAndSetupGeofences(aroundLocation location: CLLocation?) {
-        DDLogInfo("Stopping motion monitoring")
+        DDLogStateChange("Stopping motion monitoring")
                 
         if let loc = location {
             #if DEBUG
@@ -804,7 +813,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.set(true, forKey: "RouteManagerIsPaused")
         UserDefaults.standard.synchronize()
         
-        DDLogInfo("Paused Tracking")
+        DDLogStateChange("Paused Tracking")
         self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.sensorComponent.locationManager.location)
         Profile.profile().setGeofencedLocation(nil)
     }
@@ -816,7 +825,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
             UIApplication.shared.presentLocalNotificationNow(notif)
             
-            DDLogInfo("Paused Tracking due to battery life")
+            DDLogStateChange("Paused Tracking due to battery life")
             
             if self.currentTrip != nil {
                 self.stopTrip()
@@ -838,12 +847,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.set(nil, forKey: "RouteManagerIsPausedUntilDate")
         UserDefaults.standard.synchronize()
         
-        DDLogInfo("Resume Tracking")
+        DDLogStateChange("Resume Tracking")
         self.startTrackingMachine()
     }
     
     private func startTrackingMachine() {
-        DDLogVerbose("Starting Tracking Machine")
+        DDLogStateChange("Starting Tracking Machine")
 
         self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
         
@@ -977,8 +986,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             if (self.locationManagerIsUpdating) {
-                DDLogInfo("Re-registering Route Manager Location Update Background task!")
-                
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")

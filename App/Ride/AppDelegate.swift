@@ -83,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                                       randomForestManager: RandomForestManager(),
                                       classificationManager: TestClassificationManager())
         
-        SensorManagerComponent.shared.locationManager.secondLength = 0.5
+        SensorManagerComponent.shared.locationManager.secondLength = 0.4
         let predictionTemplate = ActivityTypePrediction(activityType: .cycling, confidence: 1.0, sensorDataCollection: nil)
         SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
         SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate])

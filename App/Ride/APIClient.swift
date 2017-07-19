@@ -636,26 +636,35 @@ class APIClient {
             "ratingVersion": trip.rating.version.numberValue
         ] as [String : Any]
 
-        if (!trip.locationsAreSynced) {
+        if !trip.locationsAreSynced {
             var locations : [Any?] = []
             if !includeFullLocations {
+                if trip.simplifiedLocations.count == 0 {
+                    DDLogWarn("No simplified locations found when syncing trip locations!")
+                    if (trip.locations.count > 0) {
+                        trip.simplify()
+                    } else {
+                        return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+                    }
+                }
+                
                 for location in trip.simplifiedLocations.array {
                     locations.append((location as! Location).jsonDictionary())
                 }
                 tripDict["summaryRoute"] = ["locations": locations]
             } else {
+                guard trip.locations.count > 0 else {
+                    DDLogWarn("No locations found when syncing trip locations!")
+                    trip.locationsAreSynced = false
+                    CoreDataManager.shared.saveContext()
+                    
+                    return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+                }
+                
                 for location in trip.locations.array {
                     locations.append((location as! Location).jsonDictionary())
                 }
                 tripDict["locations"] = locations
-            }
-            
-            guard locations.count > 0 else {
-                DDLogWarn("No locations found when syncing trip locations!")
-                trip.locationsAreSynced = false
-                CoreDataManager.shared.saveContext()
-                
-                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
             }
             
             tripDict["length"] = trip.length

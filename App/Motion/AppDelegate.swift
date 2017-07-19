@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         CoreDataManager.startup()
         APIClient.startup()
-        
         SensorManagerComponent.inject(motionManager: CMMotionManager(),
                                       motionActivityManager: CMMotionActivityManager(),
                                       locationManager: LocationManager(type: .coreLocation),
