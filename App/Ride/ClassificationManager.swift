@@ -51,7 +51,7 @@ class SensorClassificationManager : ClassificationManager {
     }
     
     func startup() {
-        sensorComponent.motionManager.accelerometerUpdateInterval = sensorComponent.randomForestManager.desiredSampleInterval/2.0
+        sensorComponent.motionManager.accelerometerUpdateInterval = 1/50 // 50hz, the native rate for CMSensorRecorder
         
         let hasBeenGrantedMotionAccess = UserDefaults.standard.bool(forKey: "MotionManagerHasRequestedMotionAccess")
         if (!hasBeenGrantedMotionAccess) {
