@@ -17,6 +17,8 @@
 		3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 3D0D8B231CE2560E0059AC6B /* bell.aiff */; };
 		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
 		3D125EB81EB012C200DA2E6E /* RedeemRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */; };
+		3D158DB41F269DE1002210ED /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D158DB31F269DE1002210ED /* KeychainManager.swift */; };
+		3D158DB51F269FE8002210ED /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D158DB31F269DE1002210ED /* KeychainManager.swift */; };
 		3D19303B1EAE912200915813 /* RideNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D19303A1EAE912100915813 /* RideNotificationView.swift */; };
 		3D1A15481CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
 		3D1A15491CD7F47400F9BD8D /* ConnectedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */; };
@@ -477,6 +479,7 @@
 		3D0FD6041CDC019300632BFB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		3D1034EC1CD01FF400753BFC /* Ride 43.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 43.xcdatamodel"; sourceTree = "<group>"; };
 		3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RedeemRewardViewController.swift; sourceTree = "<group>"; };
+		3D158DB31F269DE1002210ED /* KeychainManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		3D19303A1EAE912100915813 /* RideNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideNotificationView.swift; sourceTree = "<group>"; };
 		3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ConnectedApp.swift; path = Ride/ConnectedApp.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D1A154B1CD7F51B00F9BD8D /* ConnectedAppScope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectedAppScope.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -1095,6 +1098,7 @@
 			children = (
 				8409C4A71C518B2400999446 /* HealthKitManager.swift */,
 				84D1557919D2743900316995 /* CoreDataManager.swift */,
+				3D158DB31F269DE1002210ED /* KeychainManager.swift */,
 				844497211A3A4EB40009F889 /* APIClient.swift */,
 				3DC7709D1D5022C300862545 /* WatchManager.swift */,
 				3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */,
@@ -1981,6 +1985,7 @@
 				3D78EF461EE9FBE30042D7FD /* TripReward.swift in Sources */,
 				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* Date+HBAdditions.swift in Sources */,
+				3D158DB51F269FE8002210ED /* KeychainManager.swift in Sources */,
 				3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */,
 				3D78EF4D1EE9FC650042D7FD /* NotificationManager.swift in Sources */,
 				3D2705EF1C8785E000A96DE0 /* SensorData.swift in Sources */,
@@ -2200,6 +2205,7 @@
 				84D1555819D2733500316995 /* Ride.xcdatamodeld in Sources */,
 				3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */,
 				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
+				3D158DB41F269DE1002210ED /* KeychainManager.swift in Sources */,
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
 				847A05671A01B2FE008F5371 /* Location.swift in Sources */,
