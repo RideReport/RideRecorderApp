@@ -11,9 +11,73 @@ import CoreData
 import CoreLocation
 
 class Profile : NSManagedObject {
-    @NSManaged var accessToken : String?
+    var accessToken : String? {
+        get {
+            do {
+                if let token = try KeychainManager.keychain.getString("accessToken") {
+                    return token
+                }
+            } catch let error {
+                DDLogError("Error accessing keychain: \(error)")
+            }
+            
+            if let token = (self.primitiveValue(forKey: "accessToken") as? String) {
+                #if DEBUG
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Fell back on Core Data access token!"
+                    notif.category = "DEBUG_CATEGORY"
+                    UIApplication.shared.presentLocalNotificationNow(notif)
+                #endif
+                return token
+            }
+            
+            return nil
+        }
+        set {
+            self.willChangeValue(forKey: "accessToken")
+            KeychainManager.keychain["accessToken"] = newValue
+            self.setPrimitiveValue(newValue, forKey: "accessToken")
+            self.didChangeValue(forKey: "accessToken")
+        }
+    }
+    var accessTokenExpiresIn : Date? {
+        get {
+            do {
+                if let expiresInData = try KeychainManager.keychain.getData("accessTokenExpiresIn"),
+                    let expiresIn = NSKeyedUnarchiver.unarchiveObject(with: expiresInData) as? Date {
+                    
+                    return expiresIn
+                }
+            } catch let error {
+                DDLogError("Error accessing keychain: \(error)")
+            }
+            
+            if let expiresIn = (self.primitiveValue(forKey: "accessTokenExpiresIn") as? Date) {
+                #if DEBUG
+                    let notif = UILocalNotification()
+                    notif.alertBody = "🐞 Fell back on Core Data access token expiration!"
+                    notif.category = "DEBUG_CATEGORY"
+                    UIApplication.shared.presentLocalNotificationNow(notif)
+                #endif
+                return expiresIn
+            }
+            
+            return nil
+        }
+        set {
+            self.willChangeValue(forKey: "accessTokenExpiresIn")
+            if let newExpiresIn = newValue {
+                KeychainManager.keychain[data: "accessTokenExpiresIn"] = NSKeyedArchiver.archivedData(withRootObject: newExpiresIn)
+            } else {
+                KeychainManager.keychain[data: "accessTokenExpiresIn"] = nil
+            }
+            self.setPrimitiveValue(newValue, forKey: "accessTokenExpiresIn")
+            self.didChangeValue(forKey: "accessTokenExpiresIn")
+        }
+    }
+
+    
     @NSManaged var supportId : String?
-    @NSManaged var accessTokenExpiresIn : Date?
     @NSManaged var statusText : String?
     @NSManaged var statusEmoji : String?
     @NSManaged private(set) var lastGeofencedLocation : Location?
@@ -26,7 +90,7 @@ class Profile : NSManagedObject {
     @NSManaged var currentRatingVersion : NSNumber
     
     @NSManaged var promotions : NSSet!
-    
+        
     var featureFlags : [String] = [] {
         didSet {
             if featureFlags.contains("rating_version_2") {

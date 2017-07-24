@@ -23,7 +23,7 @@ PODS:
   - FBSDKShareKit (4.20.1):
     - FBSDKCoreKit
   - GzipSwift (3.1.4)
-  - KeychainAccess (3.0.1)
+  - KeychainAccess (3.0.2)
   - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.4.2)
   - MapboxStatic.swift (0.8.0)
@@ -87,7 +87,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: 17092ff61a18c54ca423aebc18c5acc2e5a4a728
   FBSDKShareKit: 4f37934d9ee9500d2d35752595816dc35f967478
   GzipSwift: 11ddb2bf253b1cd7b60bb169da20f62ac4348769
-  KeychainAccess: 017ea25e313a49eda10bb19b0bb0760fb1edfe1a
+  KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
   MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09

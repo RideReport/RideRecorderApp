@@ -71,6 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         // Start Managers. The order matters!
         Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
+        KeychainManager.startup()
         CoreDataManager.startup()
         APIClient.startup()
 
