@@ -108,7 +108,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     #if DEBUG
     func updateDebugCrazyPersonModeCellText() {
-        if (UserDefaults.standard.bool(forKey: "DebugVerbosityMode")) {
+        if (UserDefaults.standard.bool(forKey: "DebugContinousMode")) {
             self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
             self.debugCrazyPersonTableViewCell.accessoryType = UITableViewCellAccessoryType.checkmark
         } else {
@@ -135,8 +135,8 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             self.sendLogFile()
         } else if (cell == self.debugCrazyPersonTableViewCell) {
             #if DEBUG
-                let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugVerbosityMode")
-                UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugVerbosityMode")
+                let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugContinousMode")
+                UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugContinousMode")
                 UserDefaults.standard.synchronize()
                 self.updateDebugCrazyPersonModeCellText()
                 self.tableView.deselectRow(at: indexPath, animated: true)

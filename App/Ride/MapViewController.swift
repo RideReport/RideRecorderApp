@@ -346,7 +346,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
         
         #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
                 var i = 0
                 var lines = [self.selectedTripLineFeature!]
                 for collec in trip.sensorDataCollections {

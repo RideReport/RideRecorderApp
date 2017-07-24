@@ -310,7 +310,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
                 return true
             }
         #endif
@@ -552,7 +552,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
                 return true
             }
         #endif
