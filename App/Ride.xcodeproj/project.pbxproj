@@ -145,6 +145,7 @@
 		3D818A121C938BD000B64403 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2705F91C8787A500A96DE0 /* AVFoundation.framework */; };
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
+		3D86F7DD1F1FD42500DC214C /* CMMotionActivityAnnotationWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D86F7DC1F1FD42500DC214C /* CMMotionActivityAnnotationWrapper.swift */; };
 		3D8969421D5FD21B0034578A /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */; };
 		3D8969441D5FDDCE0034578A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8969431D5FDDCE0034578A /* HealthKit.framework */; };
 		3D9021BF1C9A090B00FDF21D /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C4A71C518B2400999446 /* HealthKitManager.swift */; };
@@ -535,6 +536,7 @@
 		3D818A111C9389DC00B64403 /* Ride 40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 40.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		3D86F7DC1F1FD42500DC214C /* CMMotionActivityAnnotationWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CMMotionActivityAnnotationWrapper.swift; sourceTree = "<group>"; };
 		3D8969431D5FDDCE0034578A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
 		3D9471C71C861A7D00CF5D90 /* SensorDataCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorDataCollection.swift; path = Ride/SensorDataCollection.swift; sourceTree = "<group>"; };
 		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
@@ -1178,6 +1180,7 @@
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 				3DB9BD131CC6D410004A5BD0 /* Float+Meters.swift */,
+				3D86F7DC1F1FD42500DC214C /* CMMotionActivityAnnotationWrapper.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2241,6 +2244,7 @@
 				8421419B1C3DDB86009DA851 /* RewardsViewController.swift in Sources */,
 				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
+				3D86F7DD1F1FD42500DC214C /* CMMotionActivityAnnotationWrapper.swift in Sources */,
 				3D2AB38C1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
 				3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,

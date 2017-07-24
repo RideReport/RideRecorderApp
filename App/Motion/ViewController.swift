@@ -226,7 +226,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.synth.speak(utterance)
 
             
-            //sensorComponent.classificationManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
+            sensorComponent.classificationManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
@@ -235,7 +235,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             self.isRecording = false
             CoreDataManager.shared.saveContext()
             
-            //sensorComponent.classificationManager.stopGatheringSensorData()
+            sensorComponent.classificationManager.stopGatheringSensorData()
             if (self.sensorDataCollectionForQuery == nil) {
                 self.locationManager.stopUpdatingLocation()
             }

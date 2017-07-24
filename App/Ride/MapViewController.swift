@@ -9,6 +9,9 @@
 import UIKit
 import CoreLocation
 import CoreData
+#if DEBUG
+    import CoreMotion
+#endif
 
 class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecognizerDelegate {
     @IBOutlet weak var mapView:  MGLMapView!
@@ -375,6 +378,15 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 
                 let shape = MGLShapeCollectionFeature(shapes: lines)
                 self.selectedTripLineSource.shape = shape
+            } else {
+                CMMotionActivityManager().queryActivityStarting(from: trip.startDate, to: trip.endDate, to: OperationQueue.main) { (activities, error) in
+                        guard let activities = activities else {
+                            return
+                        }
+                        for activity in activities {
+                            self.mapView.addAnnotation(CMMotionActivityAnnotationWrapper(activity: activity, trip: trip))
+                        }
+                    }
             }
         #endif
         
@@ -407,8 +419,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         #if DEBUG
-            if let incident = annotation as? SensorDataCollection {
-                return MGLAnnotationImage(image: incident.pinImage, reuseIdentifier: incident.title ?? "")
+            if let sensorDataCollection = annotation as? SensorDataCollection {
+                return MGLAnnotationImage(image: sensorDataCollection.pinImage, reuseIdentifier: sensorDataCollection.title ?? "")
+            } else if let motionActivity = annotation as? CMMotionActivityAnnotationWrapper {
+                return MGLAnnotationImage(image: motionActivity.pinImage, reuseIdentifier: motionActivity.title ?? "")
             }
         #endif
         
@@ -432,6 +446,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         #if DEBUG
             if annotation is SensorDataCollection {
+                return true
+            } else if annotation is CMMotionActivityAnnotationWrapper {
                 return true
             }
         #endif
