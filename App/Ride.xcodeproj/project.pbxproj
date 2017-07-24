@@ -86,8 +86,6 @@
 		3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
-		3D493C421E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
-		3D493C431E79BC7300BB7B34 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
 		3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */; };
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
@@ -120,6 +118,14 @@
 		3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */; };
 		3D6D77941D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D6D77951D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
+		3D7330C71F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */; };
+		3D7330C81F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */; };
+		3D7330C91F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */; };
+		3D7330CA1F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */; };
+		3D7330CB1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
+		3D7330CC1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
+		3D7330CD1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
+		3D7330CE1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
 		3D74E21C1DA2C0130079A7E6 /* TripSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */; };
 		3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */; };
 		3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE81ECD11DD00246B78 /* SensorManagerComponent.swift */; };
@@ -129,8 +135,6 @@
 		3D78EF471EE9FBF30042D7FD /* TestClassificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EF01ECE0A9E00246B78 /* TestClassificationManager.swift */; };
 		3D78EF481EE9FBF30042D7FD /* GpxLocationGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */; };
 		3D78EF491EE9FBFD0042D7FD /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A891E6F91610030397D /* jsoncpp.cpp */; };
-		3D78EF4A1EE9FC070042D7FD /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
-		3D78EF4B1EE9FC070042D7FD /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
 		3D78EF4C1EE9FC650042D7FD /* WatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709D1D5022C300862545 /* WatchManager.swift */; };
 		3D78EF4D1EE9FC650042D7FD /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */; };
 		3D78EF4E1EE9FD1E0042D7FD /* Data+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFC71681E785DBF00F1567B /* Data+HBAdditions.swift */; };
@@ -189,8 +193,6 @@
 		3DD08EE21ECCF86300246B78 /* jsoncpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D029A891E6F91610030397D /* jsoncpp.cpp */; };
 		3DD08EE31ECCF8B900246B78 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845369DE1C8907440083F695 /* Accelerate.framework */; };
 		3DD08EE51ECCFB3000246B78 /* RouteManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE41ECCFB3000246B78 /* RouteManagerTests.swift */; };
-		3DD08EE61ECD0ECF00246B78 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
-		3DD08EE71ECD0ECF00246B78 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
 		3DD08EE91ECD11DD00246B78 /* SensorManagerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE81ECD11DD00246B78 /* SensorManagerComponent.swift */; };
 		3DD08EED1ECE06C200246B78 /* ClassificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84033D981A8BD26900339171 /* ClassificationManager.swift */; };
 		3DD08EF11ECE0A9E00246B78 /* TestClassificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EF01ECE0A9E00246B78 /* TestClassificationManager.swift */; };
@@ -198,8 +200,6 @@
 		3DD08F041ECE179100246B78 /* GpxLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F611ECCE008008B1894 /* GpxLocationManager.swift */; };
 		3DD08F051ECE179100246B78 /* GpxParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F621ECCE008008B1894 /* GpxParser.swift */; };
 		3DD08F061ECE179100246B78 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F631ECCE008008B1894 /* LocationManager.swift */; };
-		3DD08F081ECE17B200246B78 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */; };
-		3DD08F091ECE17B200246B78 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D493C401E79BC7300BB7B34 /* config.json */; };
 		3DD08F0A1ECE17C000246B78 /* Utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3DA379531E6750B9009D3737 /* Utility.cpp */; };
 		3DD08F0B1ECE17C000246B78 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */; };
 		3DD08F0C1ECE17C000246B78 /* RandomForestManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D2AB3831CA4A75C00582A5D /* RandomForestManager.cpp */; };
@@ -522,8 +522,6 @@
 		3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@3x.png"; sourceTree = "<group>"; };
 		3D3CB8DB1EDF7CD6003964CE /* 1.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 1.archive; sourceTree = "<group>"; };
 		3D493C3D1E79B40E00BB7B34 /* Ride 51.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 51.xcdatamodel"; sourceTree = "<group>"; };
-		3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv; sourceTree = "<group>"; };
-		3D493C401E79BC7300BB7B34 /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D634F611ECCE008008B1894 /* GpxLocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GpxLocationManager.swift; path = Frameworks/GpxLocationManager/Source/GpxLocationManager.swift; sourceTree = SOURCE_ROOT; };
@@ -532,6 +530,8 @@
 		3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
+		3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv; sourceTree = "<group>"; };
+		3D7330C51F26B04600C6AF9D /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripSummaryViewController.swift; sourceTree = "<group>"; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
 		3D7FFA8B1D061F260077E591 /* TripReward.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripReward.swift; path = Ride/TripReward.swift; sourceTree = "<group>"; };
@@ -932,7 +932,7 @@
 		3D2AB3801CA4A75C00582A5D /* ActivityPredictor */ = {
 			isa = PBXGroup;
 			children = (
-				3D493C3E1E79BC7300BB7B34 /* ios */,
+				3D7330C31F26B04600C6AF9D /* ios */,
 				3DA379581E677FB5009D3737 /* Utility.h */,
 				3DA379531E6750B9009D3737 /* Utility.cpp */,
 				3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */,
@@ -958,11 +958,11 @@
 			path = "Ride Report Notification Content";
 			sourceTree = "<group>";
 		};
-		3D493C3E1E79BC7300BB7B34 /* ios */ = {
+		3D7330C31F26B04600C6AF9D /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				3D493C3F1E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv */,
-				3D493C401E79BC7300BB7B34 /* config.json */,
+				3D7330C41F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv */,
+				3D7330C51F26B04600C6AF9D /* config.json */,
 			);
 			name = ios;
 			path = models/ios;
@@ -1611,11 +1611,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D78EF4B1EE9FC070042D7FD /* config.json in Resources */,
 				3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */,
+				3D7330CE1F26B04600C6AF9D /* config.json in Resources */,
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
-				3D78EF4A1EE9FC070042D7FD /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
+				3D7330CA1F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */,
 				3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
 				3D4951121C8E092300E216AA /* forest.cv in Resources */,
@@ -1658,8 +1658,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DD08F081ECE17B200246B78 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
-				3DD08F091ECE17B200246B78 /* config.json in Resources */,
+				3D7330C91F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */,
+				3D7330CD1F26B04600C6AF9D /* config.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1669,14 +1669,14 @@
 			files = (
 				8492BCAD1C34A72E006BDDB8 /* new_trip_201.json in Resources */,
 				842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
+				3D7330CC1F26B04600C6AF9D /* config.json in Resources */,
 				8492BCB71C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
 				3D4951111C8E092300E216AA /* forest.cv in Resources */,
 				8492BCBB1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				8492BCAF1C34A72E006BDDB8 /* new_trip_409.json in Resources */,
 				8492BCB51C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
-				3DD08EE71ECD0ECF00246B78 /* config.json in Resources */,
+				3D7330C81F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */,
 				8492BCB91C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
-				3DD08EE61ECD0ECF00246B78 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
 				3D3CB8DC1EDF7CD6003964CE /* 1.archive in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1685,6 +1685,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D7330CB1F26B04600C6AF9D /* config.json in Resources */,
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */,
 				842141A51C406A84009DA851 /* map@3x.png in Resources */,
@@ -1693,10 +1694,10 @@
 				3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */,
 				3D6D77941D7F8D8200A95602 /* tspark.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
-				3D493C421E79BC7300BB7B34 /* 615413bf2d47d0571a85758109eb8c63e0559a16192f701898de69c166c3fa18.cv in Resources */,
 				3D3C3E1B1E68E69B004C719E /* pinGreen@2x.png in Resources */,
 				3D4951101C8E092300E216AA /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
+				3D7330C71F26B04600C6AF9D /* 8f6da131b50d11013a6ede710810dd48ea14e08ee51429371264e53887876de8.cv in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				3D3C3E1F1E68E69B004C719E /* pinRed@2x.png in Resources */,
 				3D3C3E211E68E69B004C719E /* pinRed@3x.png in Resources */,
@@ -1714,7 +1715,6 @@
 				842141A41C406A84009DA851 /* map@2x.png in Resources */,
 				3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
-				3D493C431E79BC7300BB7B34 /* config.json in Resources */,
 				8492BCB61C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
 				8492BCB81C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
 				84091CDE1BD848C000264652 /* counter-numbers.png in Resources */,
