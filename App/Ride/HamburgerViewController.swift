@@ -30,6 +30,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
     @IBOutlet weak var sendReportTableViewCell: UITableViewCell!
     @IBOutlet weak var debugCrazyPersonTableViewCell: UITableViewCell!
+    @IBOutlet weak var debugContinousPredictionTableViewCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +43,10 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
         self.updatePauseResumeText()
+        #if DEBUG
+            self.updateDebugCrazyPersonModeCellText()
+            self.updateContinousPredictionsModeCellText()
+        #endif
         self.tableView.reloadData()
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
@@ -100,7 +105,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         #if DEBUG
-            return 6
+            return 7
         #else
             return 5
         #endif
@@ -108,12 +113,22 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     #if DEBUG
     func updateDebugCrazyPersonModeCellText() {
-        if (UserDefaults.standard.bool(forKey: "DebugContinousMode")) {
+        if (UserDefaults.standard.bool(forKey: "DebugVerbosityMode")) {
             self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
             self.debugCrazyPersonTableViewCell.accessoryType = UITableViewCellAccessoryType.checkmark
         } else {
             self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
             self.debugCrazyPersonTableViewCell.accessoryType = UITableViewCellAccessoryType.none
+        }
+    }
+
+    func updateContinousPredictionsModeCellText() {
+        if (UserDefaults.standard.bool(forKey: "DebugContinousMode")) {
+            self.debugContinousPredictionTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.debugContinousPredictionTableViewCell.accessoryType = UITableViewCellAccessoryType.checkmark
+        } else {
+            self.debugContinousPredictionTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
+            self.debugContinousPredictionTableViewCell.accessoryType = UITableViewCellAccessoryType.none
         }
     }
     #endif
@@ -135,10 +150,18 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             self.sendLogFile()
         } else if (cell == self.debugCrazyPersonTableViewCell) {
             #if DEBUG
+                let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugVerbosityMode")
+                UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugVerbosityMode")
+                UserDefaults.standard.synchronize()
+                self.updateDebugCrazyPersonModeCellText()
+                self.tableView.deselectRow(at: indexPath, animated: true)
+            #endif
+        } else if (cell == self.debugContinousPredictionTableViewCell) {
+            #if DEBUG
                 let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugContinousMode")
                 UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugContinousMode")
                 UserDefaults.standard.synchronize()
-                self.updateDebugCrazyPersonModeCellText()
+                self.updateContinousPredictionsModeCellText()
                 self.tableView.deselectRow(at: indexPath, animated: true)
             #endif
         }  else if (cell == self.accountTableViewCell) {
