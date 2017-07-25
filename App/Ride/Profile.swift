@@ -22,6 +22,7 @@ class Profile : NSManagedObject {
             }
             
             if let token = (self.primitiveValue(forKey: "accessToken") as? String) {
+                KeychainManager.keychain["accessToken"] = token
                 #if DEBUG
                     let notif = UILocalNotification()
                     notif.alertBody = "🐞 Fell back on Core Data access token!"
@@ -53,6 +54,7 @@ class Profile : NSManagedObject {
             }
             
             if let expiresIn = (self.primitiveValue(forKey: "accessTokenExpiresIn") as? Date) {
+                KeychainManager.keychain[data: "accessTokenExpiresIn"] = NSKeyedArchiver.archivedData(withRootObject: expiresIn)
                 #if DEBUG
                     let notif = UILocalNotification()
                     notif.alertBody = "🐞 Fell back on Core Data access token expiration!"
