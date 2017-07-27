@@ -210,7 +210,7 @@
             <objects>
                 <navigationController storyboardIdentifier="ReportModeClassificationNavigationViewController" id="OMP-PP-PzA" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="dly-FU-scT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="dly-FU-scT">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1209,7 +1209,7 @@
                 <navigationController storyboardIdentifier="mainNavController" automaticallyAdjustsScrollViewInsets="NO" id="JUD-7G-dxw" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="itw-fS-GQj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="itw-fS-GQj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2255,7 +2255,7 @@
             <objects>
                 <navigationController storyboardIdentifier="setupViewController" modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="SetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="aIy-Zm-fp3">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2897,7 +2897,7 @@
             <objects>
                 <navigationController storyboardIdentifier="hamburgerNavController" automaticallyAdjustsScrollViewInsets="NO" id="CTm-Br-P8L" customClass="HamburgerNavController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="ZWp-cC-VxW">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZWp-cC-VxW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2916,7 +2916,7 @@
                 <navigationController storyboardIdentifier="RideShareNavViewController" automaticallyAdjustsScrollViewInsets="NO" id="Bnt-ox-mTU" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" translucent="NO" id="cgk-4v-LE7">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="cgk-4v-LE7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2935,7 +2935,7 @@
                 <navigationController storyboardIdentifier="DirectionsNavViewController" automaticallyAdjustsScrollViewInsets="NO" id="rYl-WJ-Gw5" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="h4X-JN-Qfj">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="h4X-JN-Qfj">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2954,7 +2954,7 @@
                 <navigationController storyboardIdentifier="ConnectedAppSetupNavController" automaticallyAdjustsScrollViewInsets="NO" id="Hnp-e8-Yyu" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="Wgm-TQ-5U2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Wgm-TQ-5U2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3697,7 +3697,7 @@ All the Apps</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fC1-1h-Vad" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="miM-Fr-gmr">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="miM-Fr-gmr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -3831,7 +3831,7 @@ All the Apps</string>
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9QE-OU-mae" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" barStyle="black" id="MPD-qM-pSo">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MPD-qM-pSo">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

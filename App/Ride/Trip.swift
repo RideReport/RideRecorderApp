@@ -16,7 +16,7 @@ import HealthKit
 import UserNotifications
 import MapboxStatic
 
-@objc enum ActivityType : Int16 {
+@objc enum ActivityType : Int16, CustomStringConvertible {
     case unknown = 0
     case running
     case cycling
@@ -33,6 +33,10 @@ import MapboxStatic
         get {
             return (self == .automotive || self == .bus || self == .rail)
         }
+    }
+    
+    var description: String {
+        return emoji
     }
     
     var emoji: String {

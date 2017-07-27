@@ -38,6 +38,7 @@ end
 
 target 'Motion' do
     shared_pods
+    pod 'Eureka'
 end
 
 target 'Ride Report Notification Content' do

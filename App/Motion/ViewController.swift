@@ -13,7 +13,7 @@ import CoreMotion
 import MediaPlayer
 import SwiftyJSON
 
-class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
+class ViewController: UIViewController, CLLocationManagerDelegate {
     fileprivate var backgroundTaskID = UIBackgroundTaskInvalid
     
     var sensorComponent: SensorManagerComponent!
@@ -21,24 +21,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     fileprivate var isRecording: Bool = false
     fileprivate var activityManager: CMMotionActivityManager!
     fileprivate var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    fileprivate var sensorDataCollectionForUpload : SensorDataCollection?
     fileprivate var sensorDataCollection : SensorDataCollection?
     fileprivate var sensorDataCollectionForQuery : SensorDataCollection?
-    fileprivate var sensorDataCollectionForUpload : SensorDataCollection?
     
     fileprivate var locationManager : CLLocationManager!
     fileprivate var player: AVAudioPlayer!
 
+    @IBOutlet weak var doneButton: UIBarButtonItem!
     @IBOutlet weak var startStopButton: UIButton!
     @IBOutlet weak var predictSwitch: UISwitch!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var activityLabel2: UILabel!
-    
-    @IBOutlet weak var uploadView: UIView!
-    @IBOutlet weak var notesTextField: UITextField!
-    @IBOutlet weak var modeSelectorView: ModeSelectorView!
-    @IBOutlet weak var uploadButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +56,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         let url = Bundle.main.url(forResource: "silence", withExtension: ".mp3")
         try! self.player = AVAudioPlayer(contentsOf: url!)
         self.player.numberOfLoops = -1
-        
-        self.notesTextField.delegate = self
-        
+                
         // hack to take control of remote
         self.player.play()
         self.player.pause()
@@ -97,81 +91,36 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         self.updateUI()
     }
     
-    @IBAction func switchedModeSelectorView(_ sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            updateUI()
-        }
-    }
-    
-    @IBAction func tappedUploadButton(_ sender: AnyObject) {
-        if let collection = self.sensorDataCollectionForUpload {
-            var metadata: [String: Any] = [:]
-            if let notes = self.notesTextField.text, notes.characters.count > 0 {
-                metadata["notes"] = notes
-            }
-            
-            if let identifier = UIDevice.current.identifierForVendor {
-                metadata["identifier"] = identifier.uuidString
-            }
-            
-            metadata["reportedActivityType"] = NSNumber(value: self.modeSelectorView.selectedMode.rawValue as Int16)
-            
-            CoreDataManager.shared.saveContext()
-            APIClient.shared.uploadSensorDataCollection(collection, withMetadata: metadata)
-
-            self.notesTextField.text = ""
-            self.sensorDataCollectionForUpload = nil
-            self.sensorDataCollection = nil
-            self.notesTextField.resignFirstResponder()
-            self.updateUI()
-        }
-    }
-    
     func updateUI() {
         if (self.isRecording) {
 
             self.startStopButton.setTitle("Pause", for: UIControlState())
-            self.uploadView.isHidden = true
-            self.modeSelectorView.selectedSegmentIndex = -1
-            self.activityLabel.isHidden = false
             self.startStopButton.isHidden = false
             self.cancelButton.isHidden = false
             self.finishButton.isHidden = false
+            self.doneButton.isEnabled = false
             self.cancelButton.setTitle("Cancel", for: UIControlState())
         } else {
             if let collection = self.sensorDataCollectionForUpload {
                 // prep for upload
-                self.uploadView.isHidden = false
                 self.startStopButton.isHidden = true
-                self.activityLabel.isHidden = true
+                self.doneButton.isEnabled = true
                 self.cancelButton.isHidden = false
                 self.finishButton.isHidden = true
                 self.cancelButton.setTitle("Delete", for: UIControlState())
-                
-                guard self.modeSelectorView.selectedMode != .unknown else {
-                    self.uploadButton.isEnabled = false
-                    return
-                }
-                
-                self.uploadButton.isEnabled = true
             } else if (self.sensorDataCollection != nil){
                 // paused
-                self.uploadView.isHidden = true
-                self.modeSelectorView.selectedSegmentIndex = -1
-                self.activityLabel.isHidden = false
                 self.startStopButton.isHidden = false
                 self.cancelButton.isHidden = false
                 self.finishButton.isHidden = false
-                
+                self.doneButton.isEnabled = true
                 self.startStopButton.setTitle("Resume", for: UIControlState())
                 self.cancelButton.setTitle("Cancel", for: UIControlState())
             } else {
                 // init state
-                self.uploadView.isHidden = true
-                self.modeSelectorView.selectedSegmentIndex = -1
-                self.activityLabel.isHidden = false
                 self.startStopButton.isHidden = false
                 self.cancelButton.isHidden = true
+                self.doneButton.isEnabled = false
                 self.finishButton.isHidden = true
                 
                 self.startStopButton.setTitle("Start", for: UIControlState())
@@ -201,13 +150,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
     }
     
     @IBAction func tappedCancelDelete(_ sender: AnyObject) {
+        self.sensorDataCollectionForUpload = nil
+        self.sensorDataCollection = nil
+        
         if (self.isRecording) {
             // stop recording first
             self.tappedStartPause(self)
         }
-        
-        self.sensorDataCollectionForUpload = nil
-        self.sensorDataCollection = nil
         
         self.updateUI()
     }
@@ -241,7 +190,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
             }
             self.player.pause()
             
-            let utterance = AVSpeechUtterance(string: "Paused")
+            var utterance = AVSpeechUtterance(string: "Paused")
+            if self.sensorDataCollection == nil {
+                utterance = AVSpeechUtterance(string: "Canceled")
+            }
+            
             utterance.rate = 0.6
             self.synth.speak(utterance)
         }
@@ -370,9 +323,17 @@ class ViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDe
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "showUpload") {
+            self.sensorDataCollectionForUpload = nil
+            self.sensorDataCollection = nil
+            self.updateUI()
+            
+            if let vc = segue.destination as? UploadViewController,
+                let sensorData = self.sensorDataCollectionForUpload {
+                vc.sensorDataCollection = sensorData
+            }
+        }
     }
 }
 

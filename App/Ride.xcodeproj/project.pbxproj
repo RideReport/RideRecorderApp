@@ -252,6 +252,7 @@
 		3DD08F3F1ECE5B7600246B78 /* GpxLocationGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */; };
 		3DD08F401ECE5B7600246B78 /* GpxLocationGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */; };
 		3DD08F411ECE5B7600246B78 /* GpxLocationGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */; };
+		3DD544581F2A61200009876D /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD544571F2A61200009876D /* UploadViewController.swift */; };
 		3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A721DA5BCE20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
@@ -579,6 +580,7 @@
 		3DD08EFB1ECE167400246B78 /* Ride_Report_UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ride_Report_UITests.swift; sourceTree = "<group>"; };
 		3DD08EFD1ECE167400246B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpxLocationGenerator.swift; sourceTree = "<group>"; };
+		3DD544571F2A61200009876D /* UploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadViewController.swift; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
 		3DE23C031E96F67B00B47F83 /* Ride 53.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 53.xcdatamodel"; sourceTree = "<group>"; };
 		3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocale+Additions.swift"; sourceTree = "<group>"; };
@@ -925,6 +927,7 @@
 				3D2705E21C8785D400A96DE0 /* Assets.xcassets */,
 				3D2705E41C8785D400A96DE0 /* LaunchScreen.storyboard */,
 				3D2705E71C8785D400A96DE0 /* Info.plist */,
+				3DD544571F2A61200009876D /* UploadViewController.swift */,
 			);
 			path = Motion;
 			sourceTree = "<group>";
@@ -1979,6 +1982,7 @@
 				3DA1EFE11C8F87B7002B12DB /* CLLocation+HBAdditions.swift in Sources */,
 				3D2705EB1C8785E000A96DE0 /* Profile.swift in Sources */,
 				3D2705ED1C8785E000A96DE0 /* Prototrip.swift in Sources */,
+				3DD544581F2A61200009876D /* UploadViewController.swift in Sources */,
 				3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */,
 				3D2705EC1C8785E000A96DE0 /* Location.swift in Sources */,
 				3DB9BD161CC6D410004A5BD0 /* Float+Meters.swift in Sources */,
