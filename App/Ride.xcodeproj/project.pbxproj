@@ -118,10 +118,6 @@
 		3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */; };
 		3D6D77941D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D6D77951D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
-		3D7330CB1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
-		3D7330CC1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
-		3D7330CD1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
-		3D7330CE1F26B04600C6AF9D /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 3D7330C51F26B04600C6AF9D /* config.json */; };
 		3D74E21C1DA2C0130079A7E6 /* TripSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */; };
 		3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */; };
 		3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE81ECD11DD00246B78 /* SensorManagerComponent.swift */; };
@@ -177,6 +173,10 @@
 		3DBABFD41CCED49C00665646 /* ConnectedAppsBrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */; };
 		3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBABFD81CCEDCC900665646 /* ConnectedAppSettingsViewController.swift */; };
 		3DC770A01D502B0900862545 /* iPhoneManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7709F1D502B0900862545 /* iPhoneManager.swift */; };
+		3DCD872B1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
+		3DCD872C1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
+		3DCD872D1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
+		3DCD872E1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
 		3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7A1D50159E00A5D719 /* Interface.storyboard */; };
 		3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7D1D50159E00A5D719 /* Assets.xcassets */; };
 		3DD06C851D50159E00A5D719 /* Ride Report Watch App Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -251,10 +251,6 @@
 		3DD544581F2A61200009876D /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD544571F2A61200009876D /* UploadViewController.swift */; };
 		3DD5445A1F2ABA040009876D /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
 		3DD5445B1F2ABA040009876D /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
-		3DD5445D1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */; };
-		3DD5445E1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */; };
-		3DD5445F1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */; };
-		3DD544601F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */; };
 		3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A721DA5BCE20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
@@ -533,7 +529,6 @@
 		3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
-		3D7330C51F26B04600C6AF9D /* config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
 		3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripSummaryViewController.swift; sourceTree = "<group>"; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
 		3D7FFA8B1D061F260077E591 /* TripReward.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripReward.swift; path = Ride/TripReward.swift; sourceTree = "<group>"; };
@@ -562,6 +557,7 @@
 		3DC7709D1D5022C300862545 /* WatchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchManager.swift; sourceTree = "<group>"; };
 		3DC7709F1D502B0900862545 /* iPhoneManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iPhoneManager.swift; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
+		3DCD872A1F2BFCED006323EC /* ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ios; path = models/ios; sourceTree = "<group>"; };
 		3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DD06C7B1D50159E00A5D719 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		3DD06C7D1D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -582,7 +578,6 @@
 		3DD08EFD1ECE167400246B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DD08F3E1ECE5B7600246B78 /* GpxLocationGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GpxLocationGenerator.swift; sourceTree = "<group>"; };
 		3DD544571F2A61200009876D /* UploadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadViewController.swift; sourceTree = "<group>"; };
-		3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv; sourceTree = "<group>"; };
 		3DD9D1CA1CE644F500860663 /* Ride 45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 45.xcdatamodel"; sourceTree = "<group>"; };
 		3DE23C031E96F67B00B47F83 /* Ride 53.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 53.xcdatamodel"; sourceTree = "<group>"; };
 		3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLocale+Additions.swift"; sourceTree = "<group>"; };
@@ -937,7 +932,7 @@
 		3D2AB3801CA4A75C00582A5D /* ActivityPredictor */ = {
 			isa = PBXGroup;
 			children = (
-				3D7330C31F26B04600C6AF9D /* ios */,
+				3DCD872A1F2BFCED006323EC /* ios */,
 				3DA379581E677FB5009D3737 /* Utility.h */,
 				3DA379531E6750B9009D3737 /* Utility.cpp */,
 				3D2AB3811CA4A75C00582A5D /* FFTManager.cpp */,
@@ -961,16 +956,6 @@
 				3D3306101D7774E900B7E56A /* Info.plist */,
 			);
 			path = "Ride Report Notification Content";
-			sourceTree = "<group>";
-		};
-		3D7330C31F26B04600C6AF9D /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				3DD5445C1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv */,
-				3D7330C51F26B04600C6AF9D /* config.json */,
-			);
-			name = ios;
-			path = models/ios;
 			sourceTree = "<group>";
 		};
 		3DBABFD51CCEDB9F00665646 /* Connected Apps */ = {
@@ -1616,10 +1601,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DCD872E1F2BFCED006323EC /* ios in Resources */,
 				3DD5445A1F2ABA040009876D /* AppIcon40x40@2x.png in Resources */,
-				3DD544601F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */,
 				3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */,
-				3D7330CE1F26B04600C6AF9D /* config.json in Resources */,
 				3DD5445B1F2ABA040009876D /* AppIcon40x40@3x.png in Resources */,
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
@@ -1665,8 +1649,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D7330CD1F26B04600C6AF9D /* config.json in Resources */,
-				3DD5445F1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */,
+				3DCD872D1F2BFCED006323EC /* ios in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1676,10 +1659,9 @@
 			files = (
 				8492BCAD1C34A72E006BDDB8 /* new_trip_201.json in Resources */,
 				842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
-				3D7330CC1F26B04600C6AF9D /* config.json in Resources */,
 				8492BCB71C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
-				3DD5445E1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */,
 				3D4951111C8E092300E216AA /* forest.cv in Resources */,
+				3DCD872C1F2BFCED006323EC /* ios in Resources */,
 				8492BCBB1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				8492BCAF1C34A72E006BDDB8 /* new_trip_409.json in Resources */,
 				8492BCB51C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
@@ -1692,7 +1674,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3D7330CB1F26B04600C6AF9D /* config.json in Resources */,
 				84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */,
 				8411B0931C20EC20002E8E80 /* instagram@2x.png in Resources */,
 				842141A51C406A84009DA851 /* map@3x.png in Resources */,
@@ -1708,10 +1689,10 @@
 				3D3C3E1F1E68E69B004C719E /* pinRed@2x.png in Resources */,
 				3D3C3E211E68E69B004C719E /* pinRed@3x.png in Resources */,
 				3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */,
-				3DD5445D1F2ABA3E0009876D /* caba2accbb756e0be47424e0548491cb6d485a8746c636d4c0a7c838d17e6147.cv in Resources */,
 				8411B0951C20EC20002E8E80 /* instagram@3x.png in Resources */,
 				84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */,
 				84AFFEA91B03D773009ABC19 /* UITableNext@2x.png in Resources */,
+				3DCD872B1F2BFCED006323EC /* ios in Resources */,
 				84EA5FB31EB1BC3700964706 /* tspark@2x.png in Resources */,
 				8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */,
 				84091CE11BD848C000264652 /* counter-shadow@2x.png in Resources */,

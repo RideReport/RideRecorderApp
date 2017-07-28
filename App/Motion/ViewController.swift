@@ -28,11 +28,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     fileprivate var locationManager : CLLocationManager!
     fileprivate var player: AVAudioPlayer!
 
-    @IBOutlet weak var doneButton: UIBarButtonItem!
-    @IBOutlet weak var startStopButton: UIButton!
+    @IBOutlet weak var helperText: UILabel!
+    @IBOutlet weak var startStopButton: UIBarButtonItem!
+    @IBOutlet weak var pauseDeleteButton: UIBarButtonItem!
     @IBOutlet weak var predictSwitch: UISwitch!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var activityLabel2: UILabel!
     
@@ -65,7 +64,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         try! AVAudioSession.sharedInstance().setActive(true)
         
         MPRemoteCommandCenter.shared().togglePlayPauseCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
-            self.tappedStartPause(self)
+            if (self.isRecording) {
+                self.tappedPauseDelete(self)
+            } else {
+                self.tappedStartFinish(self)
+            }
             
             return MPRemoteCommandHandlerStatus.success
         })
@@ -93,37 +96,25 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func updateUI() {
         if (self.isRecording) {
-
-            self.startStopButton.setTitle("Pause", for: UIControlState())
-            self.startStopButton.isHidden = false
-            self.cancelButton.isHidden = false
-            self.finishButton.isHidden = false
-            self.doneButton.isEnabled = false
-            self.cancelButton.setTitle("Cancel", for: UIControlState())
+            self.startStopButton.title = "Finish"
+            self.helperText.text = "Tap 'Finish' when you end your trip, change modes or change the position of your phone (for example, taking it out of your bag)."
+            self.pauseDeleteButton.title = "Pause"
+            self.pauseDeleteButton.isEnabled = true
         } else {
-            if let collection = self.sensorDataCollectionForUpload {
-                // prep for upload
-                self.startStopButton.isHidden = true
-                self.doneButton.isEnabled = true
-                self.cancelButton.isHidden = false
-                self.finishButton.isHidden = true
-                self.cancelButton.setTitle("Delete", for: UIControlState())
-            } else if (self.sensorDataCollection != nil){
+            if (self.sensorDataCollection != nil){
                 // paused
-                self.startStopButton.isHidden = false
-                self.cancelButton.isHidden = false
-                self.finishButton.isHidden = false
-                self.doneButton.isEnabled = true
-                self.startStopButton.setTitle("Resume", for: UIControlState())
-                self.cancelButton.setTitle("Cancel", for: UIControlState())
+                self.pauseDeleteButton.title = "Delete"
+                self.pauseDeleteButton.tintColor = UIColor.red
+                self.startStopButton.title = "Resume"
+                self.helperText.text = "Tap 'Resume' to keep recording this trip, or 'Delete' to discard it."
+                self.pauseDeleteButton.isEnabled = true
             } else {
                 // init state
-                self.startStopButton.isHidden = false
-                self.cancelButton.isHidden = true
-                self.doneButton.isEnabled = false
-                self.finishButton.isHidden = true
-                
-                self.startStopButton.setTitle("Start", for: UIControlState())
+                self.pauseDeleteButton.title = "Pause"
+                self.pauseDeleteButton.tintColor = UIColor.gray
+                self.helperText.text = "Tap 'Start' when you begin your trip."
+                self.startStopButton.title = "Start"
+                self.pauseDeleteButton.isEnabled = false
             }
         }
     }
@@ -135,33 +126,38 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        updateUI()
     }
     
-    @IBAction func tappedFinish(_ sender: AnyObject) {
-        if (self.isRecording) {
-            // stop recording first
-            self.tappedStartPause(self)
-        }
+    private func stopRecording() {
+        self.isRecording = false
+        CoreDataManager.shared.saveContext()
         
-        self.sensorDataCollectionForUpload = self.sensorDataCollection
-        self.sensorDataCollection = nil
+        sensorComponent.classificationManager.stopGatheringSensorData()
+        if (self.sensorDataCollectionForQuery == nil) {
+            self.locationManager.stopUpdatingLocation()
+        }
+        self.player.pause()
+    }
+    
+    @IBAction func tappedPauseDelete(_ sender: AnyObject) {
+        if (self.isRecording) {
+            // tapped pause
+            stopRecording()
+            
+            let utterance = AVSpeechUtterance(string: "Paused")
+            utterance.rate = 0.6
+            self.synth.speak(utterance)
+        } else {
+            self.sensorDataCollectionForUpload = nil
+            self.sensorDataCollection = nil
+        }
         
         self.updateUI()
     }
     
-    @IBAction func tappedCancelDelete(_ sender: AnyObject) {
-        self.sensorDataCollectionForUpload = nil
-        self.sensorDataCollection = nil
-        
-        if (self.isRecording) {
-            // stop recording first
-            self.tappedStartPause(self)
-        }
-        
-        self.updateUI()
-    }
-    
-    @IBAction func tappedStartPause(_ sender: AnyObject) {
+    @IBAction func tappedStartFinish(_ sender: AnyObject) {
         if (!self.isRecording) {
             // tapped start or resume
             self.isRecording = true
@@ -174,29 +170,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             utterance.rate = 0.6
             self.synth.speak(utterance)
 
-            
             sensorComponent.classificationManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
             self.locationManager.startUpdatingLocation()
 
             self.player.play()
         } else {
-            // tapped pause
-            self.isRecording = false
-            CoreDataManager.shared.saveContext()
+            // tapped finish
+            stopRecording()
             
-            sensorComponent.classificationManager.stopGatheringSensorData()
-            if (self.sensorDataCollectionForQuery == nil) {
-                self.locationManager.stopUpdatingLocation()
-            }
-            self.player.pause()
-            
-            var utterance = AVSpeechUtterance(string: "Paused")
-            if self.sensorDataCollection == nil {
-                utterance = AVSpeechUtterance(string: "Canceled")
-            }
-            
+            self.sensorDataCollectionForUpload = self.sensorDataCollection
+            self.sensorDataCollection = nil
+            let utterance = AVSpeechUtterance(string: "Finished")
             utterance.rate = 0.6
             self.synth.speak(utterance)
+            self.performSegue(withIdentifier: "showUpload", sender: self)
         }
         
         self.updateUI()
@@ -329,7 +316,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 let sensorData = self.sensorDataCollectionForUpload {
                 vc.sensorDataCollection = sensorData
             }
-            
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: nil, action: nil)
             self.sensorDataCollectionForUpload = nil
             self.sensorDataCollection = nil
             self.updateUI()

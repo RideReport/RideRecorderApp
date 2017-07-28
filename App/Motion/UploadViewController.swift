@@ -17,10 +17,24 @@ class UploadViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let labelRow = LabelRow(){
+            $0.hidden = Condition.function(["mode"], { form in
+                return (form.rowBy(tag: "mode") as? SegmentedRow<ActivityType>)?.value == nil
+            })
+        }
         form +++ Section(header: "What mode of transportation was it?", footer: "Please be sure your trip includes only one mode! Submit major changes during a trip (such as changing how you are carrying the phone) as multiple trips.")
+        <<< labelRow
         <<< SegmentedRow<ActivityType>(){
                 $0.tag = "mode"
                 $0.options = availableModes
+                $0.onChange({ (row) in
+                    if let activity = row.value {
+                        labelRow.title = activity.noun
+                        labelRow.updateCell()
+                        row.section?.footer = nil
+                        row.section?.reload()
+                    }
+                })
         }
         
         form +++ Section("Tell us about your drive") {
