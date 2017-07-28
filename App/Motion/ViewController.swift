@@ -325,14 +325,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if (segue.identifier == "showUpload") {
-            self.sensorDataCollectionForUpload = nil
-            self.sensorDataCollection = nil
-            self.updateUI()
-            
             if let vc = segue.destination as? UploadViewController,
                 let sensorData = self.sensorDataCollectionForUpload {
                 vc.sensorDataCollection = sensorData
             }
+            
+            self.sensorDataCollectionForUpload = nil
+            self.sensorDataCollection = nil
+            self.updateUI()
         }
     }
 }
