@@ -177,6 +177,7 @@
 		3DCD872C1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
 		3DCD872D1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
 		3DCD872E1F2BFCED006323EC /* ios in Resources */ = {isa = PBXBuildFile; fileRef = 3DCD872A1F2BFCED006323EC /* ios */; };
+		3DCD87301F2FE4E2006323EC /* RecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DCD872F1F2FE4E2006323EC /* RecorderViewController.swift */; };
 		3DD06C7C1D50159E00A5D719 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7A1D50159E00A5D719 /* Interface.storyboard */; };
 		3DD06C7E1D50159E00A5D719 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DD06C7D1D50159E00A5D719 /* Assets.xcassets */; };
 		3DD06C851D50159E00A5D719 /* Ride Report Watch App Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3DD06C841D50159E00A5D719 /* Ride Report Watch App Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -558,6 +559,7 @@
 		3DC7709F1D502B0900862545 /* iPhoneManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iPhoneManager.swift; sourceTree = "<group>"; };
 		3DCA55A21C6AA95600C2F776 /* Ride 37.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 37.xcdatamodel"; sourceTree = "<group>"; };
 		3DCD872A1F2BFCED006323EC /* ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ios; path = models/ios; sourceTree = "<group>"; };
+		3DCD872F1F2FE4E2006323EC /* RecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderViewController.swift; sourceTree = "<group>"; };
 		3DD06C781D50159E00A5D719 /* Ride Report Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ride Report Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DD06C7B1D50159E00A5D719 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		3DD06C7D1D50159E00A5D719 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -920,6 +922,7 @@
 				3D2705DB1C8785D400A96DE0 /* AppDelegate.swift */,
 				3D2705FF1C878B6C00A96DE0 /* Motion-Bridging-Header.h */,
 				3D2705DD1C8785D400A96DE0 /* ViewController.swift */,
+				3DCD872F1F2FE4E2006323EC /* RecorderViewController.swift */,
 				3D2705DF1C8785D400A96DE0 /* Main.storyboard */,
 				3D2705E21C8785D400A96DE0 /* Assets.xcassets */,
 				3D2705E41C8785D400A96DE0 /* LaunchScreen.storyboard */,
@@ -1987,6 +1990,7 @@
 				3DF07A731DA5BCE30015005C /* NSLocale+Additions.swift in Sources */,
 				3DA1EFDC1C8F8724002B12DB /* GZipEncoding.swift in Sources */,
 				3D2AB3881CA4A75C00582A5D /* FFTManager.cpp in Sources */,
+				3DCD87301F2FE4E2006323EC /* RecorderViewController.swift in Sources */,
 				3D78EF491EE9FBFD0042D7FD /* jsoncpp.cpp in Sources */,
 				3D78EF561EE9FE9E0042D7FD /* Utility.cpp in Sources */,
 				3D2AB38E1CA4A75C00582A5D /* RandomForestManager.swift in Sources */,
