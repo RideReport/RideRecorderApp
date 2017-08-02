@@ -217,8 +217,6 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
                 collection.addLocationIfSufficientlyAccurate(loc)
             }
         }
-        
-        CoreDataManager.shared.saveContext()
     }
     
     fileprivate var isPredicting: Bool = false
