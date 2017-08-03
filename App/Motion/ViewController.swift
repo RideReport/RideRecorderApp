@@ -173,14 +173,14 @@ class ViewController: FormViewController {
             }
             <<< SegmentedRow<String>(){
                 $0.hidden = Condition.function(["walk-transit-phone-loc"], { form in
-                    return (form.rowBy(tag: "walk-transit-phone-loc") as? PushRow<String>)?.value != "Hand"
+                    return (form.rowBy(tag: "walk-transit-phone-loc") as? PushRow<String>)?.value != "In Hand"
                 })
                 $0.tag = "walk-transit-hand"
                 $0.options = ["Left", "Right"]
             }
             <<< SegmentedRow<String>(){
                 $0.hidden = Condition.function(["walk-transit-phone-loc"], { form in
-                    return (form.rowBy(tag: "walk-transit-phone-loc") as? PushRow<String>)?.value != "Hand"
+                    return (form.rowBy(tag: "walk-transit-phone-loc") as? PushRow<String>)?.value != "In Hand"
                 })
                 $0.title = "Were you using your phone?"
                 $0.tag = "walk-transit-using-phone"
@@ -204,7 +204,7 @@ class ViewController: FormViewController {
             <<< PushRow<String> {
                 $0.tag = "running-phone-loc"
                 $0.title = "Phone Location"
-                $0.options = ["Pants", "On Body", "On Arm", "Hand", "Other"]
+                $0.options = ["Pants", "On Body", "On Arm", "In Hand", "Other"]
             }
             <<< SegmentedRow<String>(){
                 $0.hidden = Condition.function(["running-phone-loc"], { form in
@@ -215,7 +215,7 @@ class ViewController: FormViewController {
             }
             <<< SegmentedRow<String>(){
                 $0.hidden = Condition.function(["running-phone-loc"], { form in
-                    return (form.rowBy(tag: "running-phone-loc") as? PushRow<String>)?.value != "Hand" &&
+                    return (form.rowBy(tag: "running-phone-loc") as? PushRow<String>)?.value != "In Hand" &&
                         (form.rowBy(tag: "running-phone-loc") as? PushRow<String>)?.value != "On Arm"
                 })
                 $0.tag = "running-hand-arm"

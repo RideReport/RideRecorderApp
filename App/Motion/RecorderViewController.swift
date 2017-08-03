@@ -27,7 +27,7 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
     fileprivate var sensorDataCollectionForQuery : SensorDataCollection?
     
     fileprivate var locationManager : CLLocationManager!
-    fileprivate var player: AVAudioPlayer!
+    fileprivate var player: AVAudioPlayer?
     
     @IBOutlet weak var helperText: UILabel!
     @IBOutlet weak var predictSwitch: UISwitch!
@@ -51,47 +51,52 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
         self.locationManager.distanceFilter = kCLDistanceFilterNone
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        let url = Bundle.main.url(forResource: "silence", withExtension: ".mp3")
-        try! self.player = AVAudioPlayer(contentsOf: url!)
-        self.player.numberOfLoops = -1
-        
-        // hack to take control of remote
-        self.player.play()
-        self.player.pause()
-        
-        try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
-        try! AVAudioSession.sharedInstance().setActive(true)
-        
-        MPRemoteCommandCenter.shared().togglePlayPauseCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
-            if (self.isRecording) {
-                self.tappedPauseCancel(self)
-            } else {
-                self.tappedResumeFinish(self)
-            }
-            
-            return MPRemoteCommandHandlerStatus.success
-        })
-        
-        MPRemoteCommandCenter.shared().nextTrackCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
-            self.predictSwitch.isOn = !self.predictSwitch.isOn
-            
-            var utteranceString = ""
-            if self.predictSwitch.isOn {
-                utteranceString = "Prediction enabled"
-            } else {
-                utteranceString = "Prediction disabled"
-            }
-            let utterance = AVSpeechUtterance(string: utteranceString)
-            utterance.rate = 0.6
-            self.synth.speak(utterance)
-            
-            self.runPredictionIfEnabled()
-            
-            return MPRemoteCommandHandlerStatus.success
-        })
-        
         self.startRecording()
         self.updateUI()
+        
+        if let activityNumber = formData["mode"] as? NSNumber, let activityType = ActivityType(rawValue: activityNumber.int16Value), activityType == ActivityType.walking {
+            // only enable headphone paddle for walking
+            
+            let url = Bundle.main.url(forResource: "silence", withExtension: ".mp3")
+            if let player = try? AVAudioPlayer(contentsOf: url!) {
+                 self.player = player
+                player.numberOfLoops = -1
+            
+                // hack to take control of remote
+                player.play()
+            }
+            
+            try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+            try! AVAudioSession.sharedInstance().setActive(true)
+            
+            MPRemoteCommandCenter.shared().togglePlayPauseCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
+                if (self.isRecording) {
+                    self.tappedPauseCancel(self)
+                } else {
+                    self.tappedResumeFinish(self)
+                }
+                
+                return MPRemoteCommandHandlerStatus.success
+            })
+            
+//            MPRemoteCommandCenter.shared().nextTrackCommand.addTarget (handler: { (event) -> MPRemoteCommandHandlerStatus in
+//                self.predictSwitch.isOn = !self.predictSwitch.isOn
+//                
+//                var utteranceString = ""
+//                if self.predictSwitch.isOn {
+//                    utteranceString = "Prediction enabled"
+//                } else {
+//                    utteranceString = "Prediction disabled"
+//                }
+//                let utterance = AVSpeechUtterance(string: utteranceString)
+//                utterance.rate = 0.6
+//                self.synth.speak(utterance)
+//                
+//                self.runPredictionIfEnabled()
+//                
+//                return MPRemoteCommandHandlerStatus.success
+//            })
+        }
     }
     
     func updateUI() {
@@ -125,8 +130,8 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
         if (self.sensorDataCollectionForQuery == nil) {
             self.locationManager.stopUpdatingLocation()
         }
-        if (self.player.isPlaying) {
-            self.player.pause()
+        if let player = self.player, player.isPlaying {
+            player.pause()
         }
     }
     
@@ -140,12 +145,6 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
         
         sensorComponent.classificationManager.gatherSensorData(toSensorDataCollection: self.sensorDataCollection!)
         self.locationManager.startUpdatingLocation()
-        
-        if let activityNumber = formData["mode"] as? NSNumber, let activityType = ActivityType(rawValue: activityNumber.int16Value), activityType == ActivityType.walking {
-            // only enable headphone paddle for walking
-            self.player.play()
-        }
-        
     }
     
     @IBAction func tappedPauseCancel(_ sender: AnyObject) {
