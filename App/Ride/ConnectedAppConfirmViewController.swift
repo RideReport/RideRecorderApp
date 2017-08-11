@@ -36,8 +36,10 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         super.viewWillAppear(animated)
         
         if self.connectingApp != nil {
-            for scope in self.connectingApp.scopes {
-                scope.granted = true
+            for s in self.connectingApp.scopes {
+                if let scope = s as? ConnectedAppScope {
+                    scope.isGranted = true
+                }
             }
             
             self.connectingAppDetailText.text = self.connectingApp.descriptionText
@@ -54,9 +56,8 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         if let view = sender as? UIView,
             let cellContent = view.superview,
             let cell = cellContent.superview as? UITableViewCell,
-            let indexPath = self.tableView.indexPath(for: cell), indexPath.row < self.connectingApp.scopes.count {
-                let app = self.connectingApp.scopes[indexPath.row]
-                app.granted = sender.isOn
+            let indexPath = self.tableView.indexPath(for: cell), indexPath.row < self.connectingApp.scopes.count, let scope = self.connectingApp.scopes[indexPath.row] as? ConnectedAppScope {
+                scope.isGranted = sender.isOn
         }
     }
     
@@ -113,11 +114,10 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "AppConfirmPermisionTableCell", for: indexPath)
         if let permissionText = tableCell.viewWithTag(1) as? UILabel, let permissionSwitch = tableCell.viewWithTag(2) as? UISwitch {
             // For now we assume that all scopes are of type Bool
-            if  indexPath.row < connectingApp.scopes.count {
-                let scope = connectingApp.scopes[indexPath.row]
+            if  indexPath.row < connectingApp.scopes.count, let scope = connectingApp.scopes[indexPath.row] as? ConnectedAppScope {
                 permissionText.text = scope.descriptionText ?? ""
-                permissionSwitch.isEnabled = !scope.required
-                permissionSwitch.isOn = scope.granted
+                permissionSwitch.isEnabled = !scope.isRequired
+                permissionSwitch.isOn = scope.isGranted
             }
         }
         

@@ -79,7 +79,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityType != %i AND creationDate > %@ AND creationDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
+        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityTypeInteger != %i AND creationDate > %@ AND creationDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -269,10 +269,10 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
                 }))
                 alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-                    for sensorCollection in trip.sensorDataCollections {
-                        SensorManagerComponent.shared.randomForestManager.classify(sensorCollection as! SensorDataCollection)
+                    for prediction in trip.predictions {
+                        SensorManagerComponent.shared.randomForestManager.classify(prediction)
                     }
-                    trip.calculateAggregatePredictedActivityType()
+                    //trip.calculateAggregatePredictedActivityType()
                 }))
                 alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
                     let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in

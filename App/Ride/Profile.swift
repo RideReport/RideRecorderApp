@@ -9,8 +9,38 @@
 import Foundation
 import CoreData
 import CoreLocation
+import HealthKit
 
-class Profile : NSManagedObject {
+public class  Profile: NSManagedObject {
+    public var weightKilograms: Double? {
+        get {
+            willAccessValue(forKey: "weightKilograms")
+            defer { didAccessValue(forKey: "weightKilograms") }
+            return (self.primitiveValue(forKey: "weightKilograms") as? NSNumber)?.doubleValue
+        }
+        set {
+            willChangeValue(forKey: "weightKilograms")
+            defer { didChangeValue(forKey: "weightKilograms") }
+            self.setPrimitiveValue(newValue.map({NSNumber(value: $0)}), forKey: "weightKilograms")
+        }
+    }
+    
+    public var gender: HKBiologicalSex {
+        get {
+            willAccessValue(forKey: "gender")
+            defer { didAccessValue(forKey: "gender") }
+            guard let genderRawValue = self.primitiveValue(forKey: "gender") as? Int else {
+                return HKBiologicalSex.notSet
+            }
+            return HKBiologicalSex(rawValue: genderRawValue) ?? HKBiologicalSex.notSet
+        }
+        set {
+            willChangeValue(forKey: "gender")
+            defer { didChangeValue(forKey: "gender") }
+            self.setPrimitiveValue(newValue.rawValue, forKey: "gender")
+        }
+    }
+    
     var accessToken : String? {
         get {
             do {
@@ -21,24 +51,10 @@ class Profile : NSManagedObject {
                 DDLogError("Error accessing keychain: \(error)")
             }
             
-            if let token = (self.primitiveValue(forKey: "accessToken") as? String) {
-                KeychainManager.keychain["accessToken"] = token
-                #if DEBUG
-                    let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Fell back on Core Data access token!"
-                    notif.category = "DEBUG_CATEGORY"
-                    UIApplication.shared.presentLocalNotificationNow(notif)
-                #endif
-                return token
-            }
-            
             return nil
         }
         set {
-            self.willChangeValue(forKey: "accessToken")
             KeychainManager.keychain["accessToken"] = newValue
-            self.setPrimitiveValue(newValue, forKey: "accessToken")
-            self.didChangeValue(forKey: "accessToken")
         }
     }
     var accessTokenExpiresIn : Date? {
@@ -53,46 +69,16 @@ class Profile : NSManagedObject {
                 DDLogError("Error accessing keychain: \(error)")
             }
             
-            if let expiresIn = (self.primitiveValue(forKey: "accessTokenExpiresIn") as? Date) {
-                KeychainManager.keychain[data: "accessTokenExpiresIn"] = NSKeyedArchiver.archivedData(withRootObject: expiresIn)
-                #if DEBUG
-                    let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Fell back on Core Data access token expiration!"
-                    notif.category = "DEBUG_CATEGORY"
-                    UIApplication.shared.presentLocalNotificationNow(notif)
-                #endif
-                return expiresIn
-            }
-            
             return nil
         }
         set {
-            self.willChangeValue(forKey: "accessTokenExpiresIn")
             if let newExpiresIn = newValue {
                 KeychainManager.keychain[data: "accessTokenExpiresIn"] = NSKeyedArchiver.archivedData(withRootObject: newExpiresIn)
             } else {
                 KeychainManager.keychain[data: "accessTokenExpiresIn"] = nil
             }
-            self.setPrimitiveValue(newValue, forKey: "accessTokenExpiresIn")
-            self.didChangeValue(forKey: "accessTokenExpiresIn")
         }
     }
-
-    
-    @NSManaged var supportId : String?
-    @NSManaged var statusText : String?
-    @NSManaged var statusEmoji : String?
-    @NSManaged private(set) var lastGeofencedLocation : Location?
-    @NSManaged var connectedApps : NSOrderedSet!
-    
-    @NSManaged var dateOfBirth : Date?
-    @NSManaged var weightKilograms : NSNumber?
-    @NSManaged var gender : NSNumber
-    
-    @NSManaged var currentRatingVersion : NSNumber
-    
-    @NSManaged var promotions : NSSet!
-        
     var featureFlags : [String] = [] {
         didSet {
             if featureFlags.contains("rating_version_2") {
@@ -113,10 +99,10 @@ class Profile : NSManagedObject {
     
     fileprivate(set) var ratingVersion: RatingVersion {
         get {
-            return RatingVersion(rawValue: self.currentRatingVersion.int16Value) ?? RatingVersion.v1
+            return RatingVersion(rawValue: self.currentRatingVersion) ?? RatingVersion.v1
         }
         set {
-            self.currentRatingVersion = NSNumber(value: newValue.rawValue)
+            self.currentRatingVersion = newValue.rawValue
             // reregister for notifications
             NotificationManager.shared.registerNotifications()
         }
@@ -153,7 +139,7 @@ class Profile : NSManagedObject {
     }
     
     func eligibilePromotion()->Promotion? {
-        if let promo = self.promotions.allObjects.first as? Promotion, promo.userDismissed == false {
+        if let promo = self.promotions.array.first as? Promotion, promo.isUserDismissed == false {
             if let app = promo.connectedApp, app.profile != nil {
                 // if the app is already connected, skip it!
                 return nil

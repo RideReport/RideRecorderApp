@@ -21,15 +21,15 @@ protocol ClassificationManager {
     var authorizationStatus : ClassificationManagerAuthorizationStatus { get }
     
     func startup()
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler:@escaping (_: SensorDataCollection) -> Void!)
-    func setTestPredictionsTemplates(testPredictions: [ActivityTypePrediction])
+    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void)
+    func setTestPredictionsTemplates(testPredictions: [PredictedActivity])
     
-    func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection)
+    func gatherSensorData(toTrip trip:Trip)
     func stopGatheringSensorData()
 }
 
 extension ClassificationManager {
-    func setTestPredictionsTemplates(testPredictions: [ActivityTypePrediction]) {
+    func setTestPredictionsTemplates(testPredictions: [PredictedActivity]) {
         
     }
 }
@@ -38,7 +38,8 @@ class SensorClassificationManager : ClassificationManager {
     var sensorComponent: SensorManagerComponent!
     
     private var motionQueue: OperationQueue!
-
+    private var referenceBootDate: Date!
+    
     let motionStartTimeoutInterval: TimeInterval = 30
     let motionContinueTimeoutInterval: TimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
@@ -88,7 +89,7 @@ class SensorClassificationManager : ClassificationManager {
         }
     }
     
-    func gatherSensorData(toSensorDataCollection sensorDataCollection:SensorDataCollection) {
+    func gatherSensorData(toTrip trip:Trip) {
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning GatherSensorData background task!")
             self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
@@ -105,9 +106,19 @@ class SensorClassificationManager : ClassificationManager {
             }
             
             DispatchQueue.main.async {
-                sensorDataCollection.addAccelerometerData(accelerometerData)
+                trip.accelerometerReadings.insert(self.accelerometerReading(forAccelerometerData: accelerometerData))
             }
         }
+    }
+    
+    private func accelerometerReading(forAccelerometerData accelerometerData:CMAccelerometerData)->AccelerometerReading {
+        let accelerometerReading = AccelerometerReading(accelerometerData: accelerometerData)
+        if self.referenceBootDate == nil {
+            self.referenceBootDate = Date(timeIntervalSinceNow: -1 * accelerometerData.timestamp)
+        }
+        
+        accelerometerReading.date =  Date(timeInterval: accelerometerData.timestamp, since: self.referenceBootDate)
+        return accelerometerReading
     }
     
     private func stopMotionUpdates() {
@@ -125,11 +136,11 @@ class SensorClassificationManager : ClassificationManager {
         }
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler:@escaping (_: SensorDataCollection) -> Void!) {
+    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void) {
         if (!self.sensorComponent.randomForestManager.canPredict) {
             DDLogInfo("Random forest was not ready!")
-            sensorDataCollection.addUnknownTypePrediction()
-            handler(sensorDataCollection)
+            prediction.addUnknownTypePrediction()
+            handler(prediction)
             return
         }
         
@@ -137,56 +148,63 @@ class SensorClassificationManager : ClassificationManager {
             DDLogInfo("Beginning Query Activity Type background task!")
             self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
-    	        sensorDataCollection.addUnknownTypePrediction()
-	            handler(sensorDataCollection)
+                prediction.addUnknownTypePrediction()
+                handler(prediction)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
             DDLogInfo("Could not query activity type, background task already in process!")
-            sensorDataCollection.addUnknownTypePrediction()
-            handler(sensorDataCollection)
+            prediction.addUnknownTypePrediction()
+            handler(prediction)
             return
         }
 
-        sensorDataCollection.isBeingCollected = true
+        prediction.isInProgress = true
         
         let completionBlock = {
-            guard sensorDataCollection.isBeingCollected else {
+            guard prediction.isInProgress else {
                 // avoid possible race condition where completion block could be called after we have already finished
                 return
             }
             
-            guard let firstReadingDate = (sensorDataCollection.accelerometerAccelerations.firstObject as? SensorData)?.date, let lastReadingDate = (sensorDataCollection.accelerometerAccelerations.lastObject as? SensorData)?.date else {
+            guard let firstReadingDate = prediction.fetchFirstReading()?.date, let lastReadingDate = prediction.fetchLastReading()?.date else {
                 return
             }
             
             if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= self.sensorComponent.randomForestManager.desiredSessionDuration {
-                sensorDataCollection.isBeingCollected = false
+                prediction.isInProgress = false
                 self.stopMotionUpdates()
+                CoreDataManager.shared.saveContext()
                 
-                self.sensorComponent.randomForestManager.classify(sensorDataCollection)
-                handler(sensorDataCollection)
+                self.sensorComponent.randomForestManager.classify(prediction)
+                handler(prediction)
             }
         }
             
         self.sensorComponent.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
             guard error == nil else {
                 DDLogInfo("Error reading accelerometer data! Ending early…")
-                sensorDataCollection.isBeingCollected = false
+                prediction.isInProgress = false
                 self.stopMotionUpdates()
                 
-                sensorDataCollection.addUnknownTypePrediction()
-                handler(sensorDataCollection)
+                prediction.addUnknownTypePrediction()
+                handler(prediction)
 
                 return
             }
             
-            guard let accelerometerAcceleration = motion else {
+            guard let accelerometerData = motion else {
                 return
             }
             
             DispatchQueue.main.async {
-                sensorDataCollection.addAccelerometerData(accelerometerAcceleration)
+                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                if let trip = prediction.trip {
+                    trip.accelerometerReadings.insert(reading)
+                }
+                prediction.accelerometerReadings.insert(reading)
+                CoreDataManager.shared.saveContext()
+                
                 completionBlock()
             }
         }

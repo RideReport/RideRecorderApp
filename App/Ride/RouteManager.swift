@@ -8,57 +8,38 @@
 
 import Foundation
 import CoreLocation
-import CoreMotion
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l < r
-  case (nil, _?):
-    return true
-  default:
-    return false
-  }
-}
-
-// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
-// Consider refactoring the code to use the non-optional operators.
-private func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
-  switch (lhs, rhs) {
-  case let (l?, r?):
-    return l <= r
-  default:
-    return !(rhs < lhs)
-  }
-}
 
 private func DDLogStateChange(_ logMessage: String) {
     DDLogInfo("## " + logMessage)
 }
-
 
 class RouteManager : NSObject, CLLocationManagerDelegate {
     var sensorComponent: SensorManagerComponent!
     
     var stopTripAndDeliverNotificationBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var locationUpdateBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
-    var startedInBackgroundBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+ 
+    // State
+    static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
-    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
-    let minimumSpeedForPostTripWalkingAround : CLLocationSpeed = 0.2
+    private var didStartFromBackground : Bool = false
+    private var isGettingInitialLocationForGeofence : Bool = false
+    private var isDefferringLocationUpdates : Bool = false
+    private var isLocationManagerUsingGPS : Bool = false
     
-    let minimumTimeIntervalBeforeDeclaringWalkingSession : TimeInterval = 10
-    let timeIntervalForConsideringStoppedTrip : TimeInterval = 60
-    let timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings : TimeInterval = 60
-    let timeIntervalForStoppingTripWithoutSubsequentWalking : TimeInterval = 200
+    private var startTimeOfPossibleWalkingSession : Date? = nil
+    private var dateOfStoppingLocationManagerGPS : Date?
+    private var numberOfNonMovingContiguousGPSLocations = 0
     
-    var startTimeOfPossibleWalkingSession : Date? = nil
+    private let minimumNumberOfNonMovingContiguousGPSLocations = 3
     
+    internal private(set) var currentTrip : Trip?
+    private var locationsPendingTripStart: [CLLocation] = []
+    private var predictionsPendingTripStart: [Prediction] = []
+    private var mostRecentGPSLocation: CLLocation?
+    private var mostRecentLocationWithSufficientSpeed: CLLocation?
+    private var currentPrediction: Prediction?
     
-    let locationTrackingDeferralTimeoutTimeInterval : TimeInterval = 120
-
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
     // surrounding our center, instead of an exit event on a geofence around our center.
@@ -71,40 +52,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
     var geofenceSleepRegions :  [CLCircularRegion] = []
     
+    // Constants
+    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
+    
+    let minimumSpeedForPostTripWalkingAround : CLLocationSpeed = 0.2
+    let minimumTimeIntervalBeforeDeclaringWalkingSession : TimeInterval = 10
+    let timeIntervalForConsideringStoppedTrip : TimeInterval = 60
+    
+    let timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings : TimeInterval = 60
+    let timeIntervalForStoppingTripWithoutSubsequentWalking : TimeInterval = 200
+    let timeIntervalForLocationTrackingDeferral : TimeInterval = 120
+    
     let minimumBatteryForTracking : Float = 0.2
-    
-    private var isGettingInitialLocationForGeofence : Bool = false
-    private var didStartFromBackground : Bool = false
-    
-    private var isDefferringLocationUpdates : Bool = false
-    private var locationManagerIsUpdating : Bool = false
-    private var dateOfStoppingLastLocationManagerUpdates : Date?
-    
-    private var lastMotionMonitoringLocation :  CLLocation?
-    private var lastActiveMonitoringLocation :  CLLocation?
-    private var lastMovingLocation :  CLLocation?
-    private var numberOfNonMovingContiguousGPSLocations = 0
-    private var minimumNumberOfNonMovingContiguousGPSLocations = 3
-    
-    var lastActiveTrackingActivityTypeQueryDate : Date?
-    let numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval = 8
-    let numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval = 20
-    let shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 15
-    let normalTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 60
-    let extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries : TimeInterval = 180
-    
-    var lastMotionMonitoringActivityTypeQueryDate : Date?
-    let timeIntervalBetweenMotionMonitoringActivityTypeQueries : TimeInterval = 10
-    let timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery : TimeInterval = 30
-    var numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
-    let maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange = 6 // ~60 seconds
-    
-    private var currentPrototrip : Prototrip?
-    internal private(set) var currentTrip : Trip?
-    private var currentMotionMonitoringSensorDataCollection : SensorDataCollection?
-    private var currentActiveMonitoringSensorDataCollection : SensorDataCollection?
-        
-    static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
     //
     // MARK: - Initializers
@@ -115,11 +74,11 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.didStartFromBackground = true
             
             // launch a background task to be sure we dont get killed until we get our first location update!
-            if (self.startedInBackgroundBackgroundTaskID == UIBackgroundTaskInvalid) {
-                DDLogInfo("Beginning Route Manager Started in background Background task!")
-                self.startedInBackgroundBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    self.startedInBackgroundBackgroundTaskID = UIBackgroundTaskInvalid
-                    DDLogInfo("Route Manager Started in background Background task!")
+            if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
+                DDLogInfo(String(format: "Launched in background, beginning Route Manager Location Update Background task! Time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+                self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+                    DDLogInfo("Route Manager Location Update Background task expired!")
                 })
             }
         }
@@ -132,104 +91,77 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     //
-    // MARK: - Active Trip Tracking methods
-    // We are in the active trip tracking while a route is ongoing.
-    // If we see sufficient motion of the right kind, we keep tracking. Otherwise, we end the trip.
+    // MARK: - State changes
     //
     
-    private func tripQualifiesForResumptions(_ trip: Trip, activityType: ActivityType, fromLocation: CLLocation)->Bool {
-        if (trip.rating.choice != .notSet || trip.wasStoppedManually) {
-            // dont resume rated or manually stopped trips
-            return false
-        }
+    
+    private func startTrackingMachine() {
+        DDLogStateChange("Starting Tracking Machine")
         
-        if (trip.activityType != activityType) {
-            if (trip.activityType.isMotorizedMode && activityType.isMotorizedMode) {
-                // if both trips are motorized, allow resumption since our mode detection within motorized mode is not great
-            } else {
-                return false
-            }
-        }
+        self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
         
-        var timeoutInterval: TimeInterval = 0
-        switch trip.activityType {
-        case .cycling where trip.length.miles >= 12:
-            timeoutInterval = 1080
-        default:
-            timeoutInterval = 300
+        if (!self.isLocationManagerUsingGPS) {
+            // if we are not already getting location updates, get a single update for our geofence.
+            self.isGettingInitialLocationForGeofence = true
+            self.startLocationTrackingUsingGPS()
         }
-        
-        return abs(trip.endDate.timeIntervalSince(fromLocation.timestamp)) < timeoutInterval
     }
     
-    private func startTripFromLocation(_ fromLocation: CLLocation, predictedActivityType activityType:ActivityType) {
-        if (self.currentTrip != nil) {
-            return
-        }
+    private func enterBackgroundState(lastLocation: CLLocation?) {
+        DDLogStateChange("Entering background state")
         
-        if (isPaused()) {
-            DDLogInfo("Tracking is Paused, not starting trip")
+        #if DEBUG
+            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+                let notif = UILocalNotification()
+                notif.alertBody = "🐞 Entered background state!"
+                notif.category = "DEBUG_CATEGORY"
+                UIApplication.shared.presentLocalNotificationNow(notif)
+            }
+        #endif
+        self.disableAllGeofences() // first remove any existing geofences
+        self.setupGeofencesAroundCenter(lastLocation ?? self.sensorComponent.locationManager.location)
+        
+        self.isLocationManagerUsingGPS = false
+        self.mostRecentLocationWithSufficientSpeed = nil
+        self.mostRecentGPSLocation = nil
+        
+        self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
+        self.sensorComponent.locationManager.stopUpdatingLocation()
+        self.dateOfStoppingLocationManagerGPS = Date()
+        
+        if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending Route Manager Location Update Background task!")
             
-            return
+            UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+            self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
         }
-        
-        DDLogStateChange("Starting Active Tracking")
-        
-        var firstLocationOfNewTrip = fromLocation
-        if let prototrip = self.currentPrototrip,
-            let firstLocation = prototrip.firstNonGeofencedLocation() {
-            // if there is a prototrip, use the first location of that to determine whether or not to resume the trip
-            firstLocationOfNewTrip = firstLocation.clLocation()
-        }
-        
-        // Resume the most recent trip if it was recent enough
-        if let mostRecentTrip = Trip.mostRecentTrip(), self.tripQualifiesForResumptions(mostRecentTrip, activityType: activityType, fromLocation: firstLocationOfNewTrip)  {
-            DDLogInfo("Resuming ride")
-            #if DEBUG
-                if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                    let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Resumed Ride Report!"
-                    notif.category = "DEBUG_CATEGORY"
-                    UIApplication.shared.presentLocalNotificationNow(notif)
-                }
-            #endif
-            self.currentTrip = mostRecentTrip
-            self.currentTrip?.reopen(withPrototrip: self.currentPrototrip)
-            self.currentTrip?.cancelTripStateNotification()
-        } else {
-            self.currentTrip = Trip(prototrip: self.currentPrototrip)
-            self.currentTrip?.batteryAtStart = NSNumber(value: Int16(UIDevice.current.batteryLevel * 100) as Int16)
-        }
-        if let prototrip = self.currentPrototrip {
-            prototrip.managedObjectContext?.delete(prototrip)
+    }
+    
+    private func startLocationTrackingUsingGPS() {
+        if (!self.isLocationManagerUsingGPS) {
+            self.isLocationManagerUsingGPS = true
+            self.sensorComponent.locationManager.startUpdatingLocation()
+            if #available(iOS 9.0, *) {
+                // needs to be done with every call to startUpdatingLocation!
+                self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
+            }
             
-            self.currentPrototrip = nil
-        }
-        
-        // initialize lastMovingLocation to fromLocation, where the movement started
-        self.lastMovingLocation = fromLocation
-        self.startTimeOfPossibleWalkingSession = nil
-        self.numberOfNonMovingContiguousGPSLocations = 0
-        self.lastActiveMonitoringLocation = fromLocation
-        
-        self.currentTrip?.saveAndMarkDirty()
-        
-        self.startLocationTrackingIfNeeded()
-        
-        if (CLLocationManager.deferredLocationUpdatesAvailable()) {
-            DDLogInfo("Deferring updates!")
             self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
             self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        } else {
-            // if we can't defer, try to use a distance filter and lower accuracy instead.
-            DDLogInfo("Not deferring updates")
-            self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        }
+        
+        if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
+            DDLogInfo(String(format: "Beginning Route Manager Location Update Background task! Time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+            self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
+                DDLogInfo("Route Manager Location Update Background task expired!")
+            })
         }
     }
     
     func abortTrip() {
         self.stopTrip(abort: true)
+        self.enterBackgroundState(lastLocation: self.mostRecentGPSLocation)
     }
     
     func stopTrip(abort: Bool = false, stoppedManually: Bool = false) {
@@ -237,17 +169,18 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         }
         
+        defer {
+            self.enterBackgroundState(lastLocation: self.mostRecentGPSLocation)
+        }
+        
+        self.currentTrip = nil
+        
         DDLogStateChange("Stopping trip")
         
-        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastActiveMonitoringLocation)
-        self.currentTrip = nil
-        self.lastActiveMonitoringLocation = nil
-        self.lastMovingLocation = nil
         self.startTimeOfPossibleWalkingSession = nil
         self.numberOfNonMovingContiguousGPSLocations = 0
-        self.lastActiveTrackingActivityTypeQueryDate = nil
         
-        if (abort || stoppedTrip.locations.count <= 6) {
+        if (abort || stoppedTrip.locationCount() <= 6) {
             // if it is aborted or it doesn't more than 6 points, toss it.
             #if DEBUG
                 if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
@@ -259,9 +192,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             #endif
             stoppedTrip.cancel()
         } else {
-            stoppedTrip.batteryAtEnd = NSNumber(value: Int16(UIDevice.current.batteryLevel * 100) as Int16)
-            DDLogInfo(String(format: "Battery Life Used: %d", stoppedTrip.batteryLifeUsed()))
-            
             if (self.stopTripAndDeliverNotificationBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Stop Trip Background task!")
                 self.stopTripAndDeliverNotificationBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
@@ -295,415 +225,222 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
-    private func isReadyForActiveTrackingActivityQuery(atDate date: Date)->Bool {
-        guard let lastQueryDate = self.lastActiveTrackingActivityTypeQueryDate else {
-            // if we've never taken a query for this trip, do it now
-            return true
-        }
-        
-        guard let currentTrip = self.currentTrip else {
-            return false
-        }
-        
-        if currentTrip.sensorDataCollections == nil {
-            return true
-        }
-        
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
-                return true
-            }
-        #endif
-        
-        return (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtShorterInterval && abs(lastQueryDate.timeIntervalSince(date)) > shortenedTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
-                (currentTrip.sensorDataCollections.count <= self.numberOfActiveTrackingActivityTypeQueriesToTakeAtNormalInterval && abs(lastQueryDate.timeIntervalSince(date)) > normalTimeIntervalBetweenActiveTrackingActivityTypeQueries) ||
-                abs(lastQueryDate.timeIntervalSince(date)) > extendedTimeIntervalBetweenActiveTrackingActivityTypeQueries
-    }
+    // MARK: Location Processing
     
-    private func processActiveTrackingLocations(_ locations: [CLLocation]) {
-        var foundGPSSpeed = false
-
-        
-        for location in locations {
-            DDLogVerbose(String(format: "Location found for trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-            
-            var manualSpeed : CLLocationSpeed = 0
-            if (location.speed >= 0) {
-                foundGPSSpeed = true
-                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
-                    self.numberOfNonMovingContiguousGPSLocations = 0
-                } else {
-                    self.numberOfNonMovingContiguousGPSLocations += 1
-                }
-            } else if (location.speed < 0 && self.lastActiveMonitoringLocation != nil) {
-                // Some times locations given will not have a speed (a negative speed).
-                // Hence, we also calculate a 'manual' speed from the current location to the last one
-                
-                manualSpeed = self.lastActiveMonitoringLocation!.calculatedSpeedFromLocation(location)
-                DDLogVerbose(String(format: "Manually found speed: %f", manualSpeed))
-            }
-            
-            if (location.speed >= self.minimumSpeedToContinueMonitoring ||
-                (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
-                self.startTimeOfPossibleWalkingSession = nil
-                
-                // if we are moving sufficiently fast and havent taken a motion sample recently, do so
-                if (self.currentActiveMonitoringSensorDataCollection == nil && self.isReadyForActiveTrackingActivityQuery(atDate: location.timestamp)) {
-                    self.lastActiveTrackingActivityTypeQueryDate = Date()
-                    self.currentActiveMonitoringSensorDataCollection = SensorDataCollection(trip: self.currentTrip!)
-                    
-                    sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.currentActiveMonitoringSensorDataCollection!) { (sensorDataCollection) -> Void in
-                        self.currentActiveMonitoringSensorDataCollection = nil
-                        
-                        // Schedule deferal right after query returns to avoid the query preventing the app from backgrounding
-                        self.beginDeferringUpdatesIfAppropriate()
-                        
-                        guard let prediction = sensorDataCollection.topActivityTypePrediction else {
-                            // this should not ever happen.
-                            DDLogVerbose("No activity type prediction found, continuing…")
-                            return
-                        }
-                        
-                        let activityType = prediction.activityType
-                        let confidence = prediction.confidence.floatValue
-                        
-                        DDLogVerbose(String(format: "Prediction: %i confidence: %f", activityType.rawValue, confidence))
-                    }
-                }
-                
-                if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                    if (location.timestamp.timeIntervalSinceNow > self.lastMovingLocation!.timestamp.timeIntervalSinceNow) {
-                        // if the event is more recent than the one we already have
-                        self.lastMovingLocation = location
-                    }
-                }
-            } else if (location.speed < self.minimumSpeedToContinueMonitoring) {
-                if (location.speed >= self.minimumSpeedForPostTripWalkingAround) {
-                    if (self.startTimeOfPossibleWalkingSession == nil || self.startTimeOfPossibleWalkingSession!.compare(location.timestamp) == .orderedDescending) {
-                        self.startTimeOfPossibleWalkingSession = location.timestamp
-                    }
-                } else {
-                    if let startDate = self.startTimeOfPossibleWalkingSession, location.timestamp.timeIntervalSince(startDate) < minimumTimeIntervalBeforeDeclaringWalkingSession {
-                        self.startTimeOfPossibleWalkingSession = nil
-                    }
-                }
-            } else {
-                
-            }
-            
-            let loc = Location(location: location as CLLocation, trip: self.currentTrip!)
-            let _ = self.currentTrip!.updateInProgressLength()
-            
-            if let collection = self.currentActiveMonitoringSensorDataCollection, let sensorDataCollectionDate = self.lastActiveTrackingActivityTypeQueryDate {
-                if (location.timestamp.timeIntervalSince(sensorDataCollectionDate) > -0.1 ) {
-                    // we check to make sure the time of the location is after (or within an acceptable amount before) we started the currentActiveMonitoringSensorDataCollection
-                    loc.sensorDataCollection = collection
-                } else {
-                    DDLogVerbose("Location is older than currentActiveMonitoringSensorDataCollection, skipping.")
-                }
-            }
-            
-            if (location.timestamp.timeIntervalSinceNow > self.lastActiveMonitoringLocation!.timestamp.timeIntervalSinceNow) {
-                // if the event is more recent than the one we already have
-                self.lastActiveMonitoringLocation = location
-            }
-        }
-        
-        if (foundGPSSpeed == true && abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.timeIntervalForConsideringStoppedTrip){
-            if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
-                if let startDate = self.startTimeOfPossibleWalkingSession, self.lastActiveMonitoringLocation!.timestamp.timeIntervalSince(startDate) >= minimumTimeIntervalBeforeDeclaringWalkingSession {
-                    DDLogVerbose("Started Walking after stopping")
-                    self.stopTrip()
-                } else if (abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
-                    DDLogVerbose("Moving too slow for too long")
-                    self.stopTrip()
-                }
-            } else {
-                DDLogVerbose("Not enough slow locations to stop, waiting…")
-            }
-        } else if (foundGPSSpeed == false) {
-            let timeIntervalSinceLastGPSMovement = abs(self.lastMovingLocation!.timestamp.timeIntervalSince(self.lastActiveMonitoringLocation!.timestamp))
-            var maximumTimeIntervalBetweenGPSMovements = self.timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings
-            if (self.isDefferringLocationUpdates) {
-                // if we are deferring, give extra time. this is because we will sometime get
-                // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
-                maximumTimeIntervalBetweenGPSMovements += self.locationTrackingDeferralTimeoutTimeInterval
-            }
-            if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
-                DDLogVerbose("Went too long with unusable speeds.")
-                self.stopTrip()
-            } else {
-                DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
-            }
-        } else {
-            if !self.isDefferringLocationUpdates {
-                self.currentTrip?.saveAndMarkDirty()
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidUpdatePoints"), object: nil)
-            }
-        }
-    }
-    
-    //
-    // MARK: - Intermediary Monitoring State methods
-    // We are in the monitoring state while considering starting a trip
-    // If we see sufficient motion of the right kind, we start it. Otherwise, we exit.
-    //
-    
-    private func startMotionMonitoring() {
-        if (isPaused()) {
-            let pausedUntilDate = self.pausedUntilDate()
-            if (pausedUntilDate != nil && pausedUntilDate?.timeIntervalSinceNow <= 0) {
-                #if DEBUG
-                    if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                        let notif = UILocalNotification()
-                        notif.alertBody = "🐞 Automatically unpausing Ride Report!"
-                        notif.category = "DEBUG_CATEGORY"
-                        UIApplication.shared.presentLocalNotificationNow(notif)
-                    }
-                #endif
-                DDLogInfo("Auto-resuming tracking!")
-                self.resumeTracking()
-            } else {
-                DDLogInfo("Tracking is Paused, not enterign Motion Monitoring state")
-                return
-            }
-        }
-        
-        self.startLocationTrackingIfNeeded()
-        self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange = 0
-        
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                let notif = UILocalNotification()
-                notif.alertBody = "🐞 Entered Motion Monitoring state!"
-                notif.category = "DEBUG_CATEGORY"
-                UIApplication.shared.presentLocalNotificationNow(notif)
-            }
-        #endif
-        DDLogStateChange("Entering Motion Monitoring state")
-        
-        self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
-        self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
-        
-        if (self.currentPrototrip == nil) {
-            self.currentPrototrip = Prototrip()
-            if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
-                let _ = Location(byCopyingLocation: currentGeofenceLocation, prototrip: self.currentPrototrip!)
-            }
-            CoreDataManager.shared.saveContext()
-        }
-        
-        self.disableAllGeofences() // will be re-enabled in stopMotionMonitoringAndSetupGeofences
-        self.lastMotionMonitoringLocation = nil
-    }
-    
-    private func stopMotionMonitoringAndSetupGeofences(aroundLocation location: CLLocation?) {
-        DDLogStateChange("Stopping motion monitoring")
-                
-        if let loc = location {
-            #if DEBUG
-                if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
-                    let notif = UILocalNotification()
-                    notif.alertBody = "🐞 Geofenced!"
-                    notif.category = "DEBUG_CATEGORY"
-                    UIApplication.shared.presentLocalNotificationNow(notif)
-                }
-            #endif
-            self.disableAllGeofences() // first remove any existing geofences
-            self.setupGeofencesAroundCenter(loc)
-        } else {
-            DDLogInfo("Did not setup new geofence!")
-        }
-        
-        if let prototrip = self.currentPrototrip {
-            prototrip.managedObjectContext?.delete(prototrip)
-            CoreDataManager.shared.saveContext()
-            
-            self.currentPrototrip = nil
-        }
-        
-        self.lastMotionMonitoringActivityTypeQueryDate = nil
-        self.locationManagerIsUpdating = false
-        self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
-        self.sensorComponent.locationManager.stopUpdatingLocation()
-        self.dateOfStoppingLastLocationManagerUpdates = Date()
-        
-        if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
-            DDLogInfo("Ending Route Manager Location Update Background task!")
-
-            UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
-            self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
-        }
-    }
-    
-    private func isReadyForMotionMonitoringActivityQuery(atDate date: Date)->Bool {
-        guard let lastQueryDate = self.lastMotionMonitoringActivityTypeQueryDate else {
-            return true
-        }
-        
-        guard abs(lastQueryDate.timeIntervalSince(date)) <= timeIntervalBeforeBailingOnStuckMotionMonitoringActivityTypeQuery else {
-            // work-around for https://github.com/KnockSoftware/Ride/issues/260 , whose root-cause is unknown
-            return true
-        }
-        
-        guard self.currentMotionMonitoringSensorDataCollection == nil else {
-            return false
-        }
-        
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
-                return true
-            }
-        #endif
-        
-        return (abs(lastQueryDate.timeIntervalSince(date)) > timeIntervalBetweenMotionMonitoringActivityTypeQueries)
-    }
-    
-    private func processMotionMonitoringLocations(_ locations: [CLLocation]) {
-        guard locations.count > 0 else {
+    private func processLocations(_ locations:[CLLocation]) {
+        guard let firstLocation = locations.first else {
             return
         }
         
-        var locs = locations
-        
-        if let loc = locations.first, Date().timeIntervalSince(loc.timestamp) > (self.locationTrackingDeferralTimeoutTimeInterval + 10) {
-            // https://github.com/KnockSoftware/Ride/issues/222
-            DDLogVerbose(String(format: "Skipping stale location! Date: %@", loc.timestamp as CVarArg))
-            if locations.count > 1 {
-                locs.removeFirst()
-            } else {
-                return
+        if let trip = self.currentTrip, self.isLocationManagerUsingGPS {
+            // if we are actively using GPS, we know the mode and can append to the current trip
+            
+            
+            // initialize state locations
+            if (self.mostRecentLocationWithSufficientSpeed == nil) {
+                self.mostRecentLocationWithSufficientSpeed = firstLocation
             }
-        }
-        
-        self.lastMotionMonitoringLocation = locs.first
-        
-        if (self.isGettingInitialLocationForGeofence == true && self.lastActiveMonitoringLocation?.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-            self.isGettingInitialLocationForGeofence = false
-            if (!self.didStartFromBackground) {
-                DDLogVerbose("Got intial location for geofence. Stopping!")
-                self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.lastMotionMonitoringLocation!)
-                return
+            if (self.mostRecentGPSLocation == nil) {
+                self.mostRecentGPSLocation = firstLocation
             }
-        }
+            
+            var gotGPSSpeed = false
+            
+            for location in locations {
+                DDLogVerbose(String(format: "Location found for bike trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
 
-        if (self.isReadyForMotionMonitoringActivityQuery(atDate: self.lastMotionMonitoringLocation!.timestamp)) {
-            
-            self.lastMotionMonitoringActivityTypeQueryDate = Date()
-            
-            self.currentMotionMonitoringSensorDataCollection = SensorDataCollection(prototrip: self.currentPrototrip!)
-            self.numberOfActivityTypeQueriesSinceLastSignificantLocationChange += 1
-        
-            sensorComponent.classificationManager.queryCurrentActivityType(forSensorDataCollection: self.currentMotionMonitoringSensorDataCollection!) {[weak self] (sensorDataCollection) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
+                _ = Location(location: location, trip: trip)
                 
-                let averageMovingSpeed = sensorDataCollection.averageMovingSpeed
-                let averageSpeed = sensorDataCollection.averageSpeed
-                strongSelf.currentMotionMonitoringSensorDataCollection = nil
-                
-                guard let prediction = sensorDataCollection.topActivityTypePrediction else {
-                    // this should not ever happen.
-                    DDLogVerbose("No activity type prediction found, continuing to monitor…")
-                    return
-                }
-                
-                let activityType = prediction.activityType
-                let confidence = prediction.confidence.floatValue
-                
-                DDLogVerbose(String(format: "Prediction: %i confidence: %f speed: %f", activityType.rawValue, confidence, averageSpeed))
-                
-                
-                switch activityType {
-                case .automotive where confidence > 0.8 && averageMovingSpeed >= 4:
-                    DDLogVerbose("Starting automotive trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .automotive)
-                case .automotive where confidence > 0.6 && averageMovingSpeed >= 6:
-                    DDLogVerbose("Starting automotive trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .automotive)
-                case .cycling where confidence > 0.8 && averageMovingSpeed >= 2:
-                    DDLogVerbose("Starting cycling trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .cycling)
-                case .cycling where confidence > 0.4 && averageMovingSpeed >= 2.5 && averageMovingSpeed < 9:
-                    DDLogVerbose("Starting cycling trip, low confidence and matched speed-range")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .cycling)
-                case .running where confidence < 0.8 && averageMovingSpeed >= 2 && averageMovingSpeed < 6.5:
-                    DDLogVerbose("Starting running trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .running)
-                case .bus where confidence > 0.8 && averageMovingSpeed >= 3:
-                    DDLogVerbose("Starting transit trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .bus)
-                case .bus where confidence > 0.6 && averageMovingSpeed >= 6:
-                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .bus)
-                case .rail where confidence > 0.8 && averageMovingSpeed >= 3:
-                    DDLogVerbose("Starting transit trip, high confidence")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .rail)
-                case .rail where confidence > 0.6 && averageMovingSpeed >= 6:
-                    DDLogVerbose("Starting transit trip, low confidence and matching speed-range")
-                    
-                    strongSelf.startTripFromLocation(locs.first!, predictedActivityType: .rail)
-                case .walking where confidence > 0.9 && averageMovingSpeed < 0: // negative speed indicates that we couldnt get a location with a speed
-                    DDLogVerbose("Walking, high confidence and no speed. stopping monitor…")
-                    
-                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .stationary where confidence > 0.9 && averageSpeed < 0:
-                    DDLogVerbose("Stationary, high confidence and no speed. stopping monitor…")
-                    
-                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .walking where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 2:
-                    DDLogVerbose("Walking, low confidence and matching speed-range. stopping monitor…")
-                    
-                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .stationary where confidence > 0.5 && averageSpeed >= 0 && averageSpeed < 0.65:
-                    DDLogVerbose("Stationary, low confidence and matching speed-range. stopping monitor…")
-                    
-                    strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
-                case .unknown, .automotive, .cycling, .running, .bus, .rail, .stationary, .walking, .aviation:
-                    if (strongSelf.numberOfActivityTypeQueriesSinceLastSignificantLocationChange >= strongSelf.maximumNumberOfActivityTypeQueriesSinceLastSignificantLocationChange) {
-                        DDLogVerbose("Unknown activity type or low confidence, we've hit maximum tries, stopping monitoring!")
-                        strongSelf.stopMotionMonitoringAndSetupGeofences(aroundLocation: strongSelf.lastMotionMonitoringLocation)
+                var manualSpeed : CLLocationSpeed = 0
+                if (location.speed >= 0) {
+                    gotGPSSpeed = true
+                    if (location.speed >= self.minimumSpeedToContinueMonitoring) {
+                        self.numberOfNonMovingContiguousGPSLocations = 0
                     } else {
-                        DDLogVerbose("Unknown activity type or low confidence, continuing to monitor…")
+                        self.numberOfNonMovingContiguousGPSLocations += 1
+                    }
+                } else if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.speed < 0 {
+                    // Some times locations given will not have a speed (a negative speed).
+                    // Hence, we also calculate a 'manual' speed from the current location to the last one
+                    
+                    manualSpeed = mostRecentGPSLocation.calculatedSpeedFromLocation(location)
+                    DDLogVerbose(String(format: "Manually found speed: %f", manualSpeed))
+                }
+                
+                if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.timestamp.timeIntervalSinceNow > mostRecentGPSLocation.timestamp.timeIntervalSinceNow {
+                    // if the event is more recent than the one we already have
+                    self.mostRecentGPSLocation = location
+                }
+                
+                //////////////////////
+                
+                if (location.speed >= self.minimumSpeedToContinueMonitoring ||
+                    (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
+                    // we are moving sufficiently fast, continue the trip
+                    self.startTimeOfPossibleWalkingSession = nil
+                    
+                    if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
+                        if (location.timestamp.timeIntervalSinceNow > self.mostRecentLocationWithSufficientSpeed!.timestamp.timeIntervalSinceNow) {
+                            // if the event is more recent than the one we already have
+                            self.mostRecentLocationWithSufficientSpeed = location
+                        }
+                    }
+                } else if (location.speed < self.minimumSpeedToContinueMonitoring) {
+                    if (location.speed >= self.minimumSpeedForPostTripWalkingAround) {
+                        if (self.startTimeOfPossibleWalkingSession == nil || self.startTimeOfPossibleWalkingSession!.compare(location.timestamp) == .orderedDescending) {
+                            self.startTimeOfPossibleWalkingSession = location.timestamp
+                        }
+                    } else {
+                        if let startDate = self.startTimeOfPossibleWalkingSession, location.timestamp.timeIntervalSince(startDate) < self.minimumTimeIntervalBeforeDeclaringWalkingSession {
+                            self.startTimeOfPossibleWalkingSession = nil
+                        }
+                    }
+                }                
+            }
+            
+            _ = trip.saveLocationsAndUpdateInProgressLength()
+            
+            if let mostRecentLocationWithSufficientSpeed = self.mostRecentLocationWithSufficientSpeed, let mostRecentGPSLocation = self.mostRecentGPSLocation {
+                if (gotGPSSpeed == true && abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForConsideringStoppedTrip){
+                    if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
+                        if let startDate = self.startTimeOfPossibleWalkingSession, mostRecentGPSLocation.timestamp.timeIntervalSince(startDate) >= self.minimumTimeIntervalBeforeDeclaringWalkingSession {
+                            DDLogVerbose("Started Walking after stopping")
+                            self.stopTrip()
+                        } else if (abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
+                            DDLogVerbose("Moving too slow for too long")
+                            self.stopTrip()
+                        }
+                    } else {
+                        DDLogVerbose("Not enough slow locations to stop, waiting…")
+                    }
+                } else if (gotGPSSpeed == false) {
+                    let timeIntervalSinceLastGPSMovement = abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp))
+                    var maximumTimeIntervalBetweenGPSMovements = self.timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings
+                    if (self.isDefferringLocationUpdates) {
+                        // if we are deferring, give extra time. this is because we will sometime get
+                        // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
+                        maximumTimeIntervalBetweenGPSMovements += self.timeIntervalForLocationTrackingDeferral
+                    }
+                    if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
+                        DDLogVerbose("Went too long with unusable speeds.")
+                        self.stopTrip()
+                    } else {
+                        DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
+                    }
+                }
+            }
+            
+            
+        } else if (self.dateOfStoppingLocationManagerGPS != nil && abs(self.dateOfStoppingLocationManagerGPS!.timeIntervalSinceNow) < 2) {
+            // sometimes calling stopUpdatingLocation will continue to delvier a few locations. thus, keep track of dateOfStoppingLocationManagerGPS to avoid
+            // considering these updates as significiation location changes.
+            return
+        } else {
+            // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentTrip.
+            locationsPendingTripStart.append(contentsOf: locations)
+            
+            if self.currentPrediction == nil {
+                let locationsToAppendToTrip = self.locationsPendingTripStart
+                self.locationsPendingTripStart = []
+                
+                let newPrediction = Prediction()
+                self.predictionsPendingTripStart.append(newPrediction)
+                self.currentPrediction = newPrediction
+                
+                sensorComponent.classificationManager.predictCurrentActivityType(prediction: newPrediction) {[weak self] (prediction) -> Void in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
+                    strongSelf.currentPrediction = nil
+                    
+                    guard let topPrediction = prediction.fetchTopPredictedActivity(), topPrediction.activityType != .unknown else {
+                        DDLogVerbose("No valid prediction found, continuing to monitor…")
+                        return
+                    }
+                    
+                    DDLogVerbose(String(format: "Prediction: %@ confidence: %f", topPrediction.activityType.emoji, topPrediction.confidence))
+                    
+                    if topPrediction.confidence > 0.9 {
+                        let priorTrip = strongSelf.currentTrip ?? Trip.mostRecentTrip()
+                        
+                        if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: topPrediction.activityType, fromLocation: firstLocation) {
+                            DDLogStateChange("Resuming trip")
+
+                            trip.reopen()
+                            strongSelf.currentTrip = trip
+                        } else {
+                            DDLogStateChange("Opening new trip")
+                            if let trip = strongSelf.currentTrip, !trip.isClosed {
+                                trip.close()
+                            }
+                            strongSelf.currentTrip = Trip()
+                            if topPrediction.activityType != .stationary {
+                                strongSelf.currentTrip!.activityType = topPrediction.activityType
+                            }
+                        }
+                        
+                        for prediction in strongSelf.predictionsPendingTripStart {
+                            prediction.addToTrip(strongSelf.currentTrip!)
+                        }
+                        
+                        strongSelf.predictionsPendingTripStart = []
+                        
+                        for location in locationsToAppendToTrip {
+                            _ = Location(location: location, trip: strongSelf.currentTrip!)
+                        }
+                        _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength()
+                        
+                        if (strongSelf.currentTrip!.activityType == .cycling) {
+                            strongSelf.startLocationTrackingUsingGPS()
+                        }
+                    } else {
+                        // lower confidence, keep trying
+                        strongSelf.locationsPendingTripStart.append(contentsOf: locationsToAppendToTrip)
                     }
                 }
             }
         }
-        
-        if let protoTrip = self.currentPrototrip {
-            if protoTrip.locations.count == 1 {
-                // if this is our first location and it is geofenced, consider whether it is too far to include
-                if let newLocation = locs.first, let loc = protoTrip.locations.firstObject, let location = loc as? Location, location.isGeofencedLocation, location.clLocation().distance(from: newLocation) > 1600 {
-                    location.managedObjectContext?.delete(location)
-                }
-            }
-            
-            for location in locs {
-                DDLogVerbose(String(format: "Location found in motion monitoring mode. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-                
-                let loc = Location(location: location, prototrip: protoTrip)
-                if let collection = self.currentMotionMonitoringSensorDataCollection {
-                    loc.sensorDataCollection = collection
-                }
-            }
-        }
-        
-        CoreDataManager.shared.saveContext()
     }
+
     
     //
     // MARK: - Helper methods
     //
+    
+    private func tripQualifiesForResumption(trip: Trip, fromActivityType activityType: ActivityType, fromLocation location: CLLocation)->Bool {
+        if Date().timeIntervalSince(location.timestamp) > (self.timeIntervalForLocationTrackingDeferral + 10) {
+            // https://github.com/KnockSoftware/Ride/issues/222
+            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", location.timestamp as CVarArg))
+            
+            return false
+        }
+        
+        if (trip.rating.choice != .notSet || trip.wasStoppedManually) {
+            // dont resume rated or manually stopped trips
+            return false
+        }
+        
+        if (trip.activityType != activityType) {
+            if (trip.activityType.isMotorizedMode && activityType.isMotorizedMode) {
+                // if both trips are motorized, allow resumption since our mode detection within motorized mode is not great
+            } else if (activityType == .stationary || trip.activityType == .unknown) {
+                // unknown and stationary activities could be a part of any mode
+            } else {
+                return false
+            }
+        }
+        
+        var timeoutInterval: TimeInterval = 0
+        switch trip.activityType {
+        case .cycling where trip.length.miles >= 12:
+            timeoutInterval = 1080
+        default:
+            timeoutInterval = 300
+        }
+        
+        return abs(trip.endDate.timeIntervalSince(location.timestamp)) < timeoutInterval
+    }
     
     private func setupGeofencesAroundCenter(_ center: CLLocation) {
         DDLogInfo("Setting up geofences!")
@@ -747,10 +484,19 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     
     private func beginDeferringUpdatesIfAppropriate() {
-        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates && self.currentPrototrip == nil && self.currentTrip != nil) {
+        if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates) {
             DDLogVerbose("Re-deferring updates")
             self.isDefferringLocationUpdates = true
-            self.sensorComponent.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.locationTrackingDeferralTimeoutTimeInterval)
+            self.sensorComponent.locationManager.allowDeferredLocationUpdates(untilTraveled: CLLocationDistanceMax, timeout: self.timeIntervalForLocationTrackingDeferral)
+        }
+    }
+    
+    private func cancelScheduledAppResumeReminderNotifications() {
+        for notif in UIApplication.shared.scheduledLocalNotifications! {
+            let notification = notif
+            if (notification.category == "APP_PAUSED_CATEGORY") {
+                UIApplication.shared.cancelLocalNotification(notification)
+            }
         }
     }
     
@@ -777,14 +523,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         return (self.sensorComponent.locationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways)
     }
     
-    private func cancelScheduledAppResumeReminderNotifications() {
-        for notif in UIApplication.shared.scheduledLocalNotifications! {
-            let notification = notif 
-            if (notification.category == "APP_PAUSED_CATEGORY") {
-                UIApplication.shared.cancelLocalNotification(notification)
-            }
-        }
-    }
     
     func pausedUntilDate() -> Date? {
         return UserDefaults.standard.object(forKey: "RouteManagerIsPausedUntilDate") as? Date
@@ -793,10 +531,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     func pauseTracking(_ untilDate: Date! = nil) {
         if (isPaused()) {
             return
-        }
-        
-        if self.currentTrip != nil {
-            self.stopTrip()
         }
         
         self.cancelScheduledAppResumeReminderNotifications()
@@ -814,12 +548,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         UserDefaults.standard.synchronize()
         
         DDLogStateChange("Paused Tracking")
-        self.stopMotionMonitoringAndSetupGeofences(aroundLocation: self.sensorComponent.locationManager.location)
-        Profile.profile().setGeofencedLocation(nil)
+        
+        self.stopTrip()
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
-        if (self.locationManagerIsUpdating) {
+        if (self.isLocationManagerUsingGPS) {
             // if we are currently updating, send the user a push and stop.
             let notif = UILocalNotification()
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
@@ -827,12 +561,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             DDLogStateChange("Paused Tracking due to battery life")
             
-            if self.currentTrip != nil {
-                self.stopTrip()
-            }
-            
-            self.stopMotionMonitoringAndSetupGeofences(aroundLocation: location)
-            Profile.profile().setGeofencedLocation(nil)
+            self.stopTrip()
         }
     }
     
@@ -851,36 +580,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.startTrackingMachine()
     }
     
-    private func startTrackingMachine() {
-        DDLogStateChange("Starting Tracking Machine")
-
-        self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
-        
-        if (!self.locationManagerIsUpdating) {
-            // if we are not already getting location updates, get a single update for our geofence.
-            self.isGettingInitialLocationForGeofence = true
-            self.startMotionMonitoring()
-        }
-    }
-    
-    private func startLocationTrackingIfNeeded() {
-        if (!self.locationManagerIsUpdating) {
-            self.locationManagerIsUpdating = true
-            self.sensorComponent.locationManager.startUpdatingLocation()
-            if #available(iOS 9.0, *) {
-                self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
-            }
-        }
-        
-        if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
-            DDLogInfo(String(format: "Beginning Route Manager Location Update Background task! Time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
-            self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
-                DDLogInfo("Route Manager Location Update Background task expired!")
-            })
-        }
-    }
-
     //
     // MARK: - CLLocationManger Delegate Methods
     //
@@ -901,12 +600,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
         // Should never happen
-        DDLogWarn("Did Pause location updates!")
+        DDLogWarn("Unexpectedly paused location updates!")
     }
     
     func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
         // Should never happen
-        DDLogWarn("Did Resume location updates!")
+        DDLogWarn("Unexpectedly resumed location updates!")
     }
     
     func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
@@ -936,49 +635,42 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 DDLogVerbose("Deferred mode canceled, continuing…")
             }
         }
-        
-        if let trip = self.currentTrip {
-            trip.saveAndMarkDirty()
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidUpdatePoints"), object: nil)
-        }
 
         DDLogVerbose("Finished deferring updates.")
      
-        if let date = self.lastActiveTrackingActivityTypeQueryDate, abs(date.timeIntervalSinceNow) < 5 {
-            // if we've recently finished an activity query, go ahead and redefer as needed
-            self.beginDeferringUpdatesIfAppropriate()
-        }
+        self.beginDeferringUpdatesIfAppropriate()
     }
     
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if (!region.identifier.hasPrefix(self.geofenceIdentifierPrefix)) {
             DDLogVerbose("Got geofence enter for backup or other irrelevant geofence. Skipping.")
-            return;
+            return
         }
         
-        if (self.currentTrip == nil && self.currentPrototrip == nil) {
-            DDLogVerbose("Got geofence enter, entering Motion Monitoring state.")
-            self.startMotionMonitoring()
-        } else {
-            DDLogVerbose("Got geofence enter but already in Motion Monitoring or active tracking state.")
+        var locs: [CLLocation] = []
+        if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
+            locs.append(currentGeofenceLocation.clLocation())
         }
+        
+        self.processLocations(locs)
     }
     
     func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
         if (region.identifier != self.backupGeofenceIdentifier) {
             DDLogVerbose("Got geofence exit for irrelevant geofence. Skipping.")
-            return;
+            return
         }
         
-        if (self.currentTrip == nil && self.currentPrototrip == nil) {
-            DDLogVerbose("Got geofence exit, entering Motion Monitoring state.")
-            self.startMotionMonitoring()
-        } else {
-            DDLogVerbose("Got geofence exit but already in Motion Monitoring or active tracking state.")
+        var locs: [CLLocation] = []
+        if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
+            locs.append(currentGeofenceLocation.clLocation())
         }
+        
+        self.processLocations(locs)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        DDLogVerbose("Received location updates.")
         defer {
             if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
                 UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
@@ -986,10 +678,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             #if DEBUG
-                DDLogInfo(String(format: "Beginning Route Manager, time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+                DDLogInfo(String(format: "Restarting route manager background task, time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
             #endif
-                
-            if (self.locationManagerIsUpdating) {
+            
+            if (self.isLocationManagerUsingGPS) {
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")
@@ -999,38 +691,24 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        DDLogVerbose("Received location updates.")
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+            // skip this check
+        #else
+            guard UIDevice.current.batteryLevel > self.minimumBatteryForTracking else  {
+                self.pauseTrackingDueToLowBatteryLife(withLastLocation: locations.first)
+                return
+            }
+        #endif
         
-#if (arch(i386) || arch(x86_64)) && os(iOS)
-        // skip this check
-#else
-        if (UIDevice.current.batteryLevel < self.minimumBatteryForTracking)  {
-            self.pauseTrackingDueToLowBatteryLife(withLastLocation: locations.first)
-            return
-        }
-#endif
-        
-        if (self.startedInBackgroundBackgroundTaskID != UIBackgroundTaskInvalid) {
-            DDLogInfo("Ending Route Manager Started in background Background task!")
-            
-            UIApplication.shared.endBackgroundTask(self.startedInBackgroundBackgroundTaskID)
-            self.startedInBackgroundBackgroundTaskID = UIBackgroundTaskInvalid
-        }
-        
-        if (self.currentTrip != nil) {
-            self.processActiveTrackingLocations(locations)
-        } else if (self.currentPrototrip != nil) {
-            self.processMotionMonitoringLocations(locations)
-        } else if (self.dateOfStoppingLastLocationManagerUpdates == nil || abs(self.dateOfStoppingLastLocationManagerUpdates!.timeIntervalSinceNow) > 2){
-            // sometimes calling stopUpdatingLocation will continue to delvier a few locations. thus, keep track of dateOfStoppingLastLocationManagerUpdates to avoid
-            // consider getting these updates as significiation location changes.
-            
-            if (self.currentTrip == nil && self.currentPrototrip == nil) {
-                DDLogVerbose("Got significant location, entering Motion Monitoring state.")
-                self.startMotionMonitoring()
-            } else {
-                DDLogVerbose("Got significant location but already in Motion Monitoring or active tracking state.")
+        if self.isGettingInitialLocationForGeofence == true {
+            for location in locations {
+                if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
+                    self.isGettingInitialLocationForGeofence = false
+                    self.enterBackgroundState(lastLocation: location)
+                }
             }
         }
+        
+        self.processLocations(locations)
     }
 }

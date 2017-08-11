@@ -83,7 +83,7 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
             HealthKitManager.startup() { success in
                 let context = CoreDataManager.shared.currentManagedObjectContext()
                 let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
-                fetchedRequest.predicate = NSPredicate(format: "activityType == %i AND healthKitUuid == nil", ActivityType.cycling.rawValue)
+                fetchedRequest.predicate = NSPredicate(format: "activityTypeInteger == %i AND healthKitUuid == nil", ActivityType.cycling.rawValue)
                 fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
                 
                 let results: [AnyObject]?

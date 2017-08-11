@@ -169,7 +169,7 @@ class HealthKitManager {
             self.currentGender = try self.healthStore.biologicalSex().biologicalSex
             if self.currentGender != .notSet {
                 DispatchQueue.main.async {
-                    Profile.profile().gender = NSNumber(value: self.currentGender.rawValue as Int)
+                    Profile.profile().gender = self.currentGender
                     CoreDataManager.shared.saveContext()
                 }
             }
@@ -190,7 +190,7 @@ class HealthKitManager {
                     self.currentWeightKilograms = (result.quantity.doubleValue(for: HKUnit.gram())) / 1000.0
                     if self.currentWeightKilograms > 0 {
                         DispatchQueue.main.async {
-                            Profile.profile().weightKilograms = NSNumber(value: self.currentWeightKilograms as Double)
+                            Profile.profile().weightKilograms = self.currentWeightKilograms
                             CoreDataManager.shared.saveContext()
                         }
                     }
@@ -266,7 +266,7 @@ class HealthKitManager {
                 return
         }
         
-        guard trip.startDate.compare(trip.endDate as Date) != .orderedDescending else {
+        guard trip.startDate.compare(trip.endDate) != .orderedDescending else {
             // https://github.com/KnockSoftware/Ride/issues/206
             DDLogInfo(String(format: "Workout start date is not before end date!"))
             handler(false)
@@ -315,7 +315,7 @@ class HealthKitManager {
         // first, we calculate our total burn plus burn samples
         var totalBurn :HKQuantity? = nil
         var burnSamples :[HKSample] = []
-        self.getHeartRateSamples(trip.startDate as Date, endDate: trip.endDate as Date) { (samples) -> Void in
+        self.getHeartRateSamples(trip.startDate, endDate: trip.endDate) { (samples) -> Void in
             if let heartRateSamples = samples, heartRateSamples.count > 0 {
                 // if we have heart rate samples, calculate using those based on:
                 // http://www.shapesense.com/fitness-exercise/calculators/heart-rate-based-calorie-burn-calculator.aspx
@@ -347,18 +347,17 @@ class HealthKitManager {
 
                 var lastLoc : Location? = nil
                 var totalBurnDouble : Double = 0
-                for loc in trip.locations {
-                    guard let location = loc as? Location, let speed = location.speed, let date = location.date else {
-                        continue
-                    }
+                let locs = trip.fetchOrderedLocations()
+
+                for location in locs {
                     if location.isGeofencedLocation {
                         continue
                     }
                     
-                    if (location.date != nil && speed.doubleValue > 0 && location.horizontalAccuracy!.doubleValue <= Location.acceptableLocationAccuracy) {
-                        if let lastLocation = lastLoc, let lastDate = lastLocation.date, lastDate.compare(date as Date) != ComparisonResult.orderedDescending {
+                    if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
+                        if let lastLocation = lastLoc, lastLocation.date.compare(location.date) != ComparisonResult.orderedDescending {
                             let calPerKgMin : Double = {
-                                switch (speed.doubleValue) {
+                                switch (location.speed) {
                                 case 0...1:
                                     // standing
                                     return 0.4
@@ -377,10 +376,10 @@ class HealthKitManager {
                                 }
                             }()
                             
-                            let burnDouble = calPerKgMin * self.currentWeightKilograms * ((date.timeIntervalSinceReferenceDate - lastDate.timeIntervalSinceReferenceDate)/60)
+                            let burnDouble = calPerKgMin * self.currentWeightKilograms * ((location.date.timeIntervalSinceReferenceDate - lastLocation.date.timeIntervalSinceReferenceDate)/60)
                             totalBurnDouble += burnDouble
                             let sample = HKQuantitySample(type: activeEnergyBurnedType, quantity: HKQuantity(unit: HKUnit.kilocalorie(),
-                                doubleValue: burnDouble), start: lastDate as Date, end: date as Date)
+                                doubleValue: burnDouble), start: lastLocation.date, end: location.date)
                             
                             
                             burnSamples.append(sample)
@@ -395,9 +394,9 @@ class HealthKitManager {
             }
             
             let distance = HKQuantity(unit: HKUnit.mile(), doubleValue: Double(trip.length.miles))
-            let cyclingDistanceSample = HKQuantitySample(type: cyclingDistanceType, quantity: distance, start: trip.startDate as Date, end: trip.endDate as Date)
+            let cyclingDistanceSample = HKQuantitySample(type: cyclingDistanceType, quantity: distance, start: trip.startDate, end: trip.endDate)
             
-            let ride = HKWorkout(activityType: HKWorkoutActivityType.cycling, start: trip.startDate as Date, end: trip.endDate as Date, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.local(), metadata: [HKMetadataKeyIndoorWorkout: false])
+            let ride = HKWorkout(activityType: HKWorkoutActivityType.cycling, start: trip.startDate, end: trip.endDate, duration: trip.duration(), totalEnergyBurned: totalBurn, totalDistance: distance, device:HKDevice.local(), metadata: [HKMetadataKeyIndoorWorkout: false])
             
             // Save the workout before adding detailed samples.
             self.healthStore.save(ride, withCompletion: { (success, error) -> Void in

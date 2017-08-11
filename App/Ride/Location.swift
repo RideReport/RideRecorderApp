@@ -12,25 +12,7 @@ import CoreLocation
 import CoreMotion
 import MapKit
 
-class Location : NSManagedObject {
-    
-    @NSManaged var altitude : NSNumber?
-    @NSManaged var verticalAccuracy : NSNumber?
-    @NSManaged var course : NSNumber?
-    @NSManaged var horizontalAccuracy : NSNumber?
-    @NSManaged var isSmoothedLocation : Bool
-    @NSManaged var isGeofencedLocation : Bool
-    @NSManaged var latitude : NSNumber?
-    @NSManaged var longitude : NSNumber?
-    @NSManaged var speed : NSNumber?
-    @NSManaged var trip : Trip?
-    @NSManaged var prototrip : Prototrip?
-    @NSManaged var lastGeofencedLocationOfProfile : Profile?
-    @NSManaged var simplifiedInTrip : Trip?
-    @NSManaged var sensorDataCollection : SensorDataCollection?
-    @NSManaged var incidents : NSOrderedSet!
-    @NSManaged var date : Date?
-    
+public class  Location: NSManagedObject {
     convenience init(location: CLLocation, trip: Trip) {
         self.init(location: location)
         
@@ -46,13 +28,14 @@ class Location : NSManagedObject {
         return kCLLocationAccuracyNearestTenMeters * 3
     }
     
-    convenience init(location: CLLocation, prototrip: Prototrip) {
+    convenience init(location: CLLocation, geofencedLocationOfProfile profile: Profile) {
         self.init(location: location)
         
-        self.prototrip = prototrip
+        self.isGeofencedLocation = true
+        self.lastGeofencedLocationOfProfile = profile
     }
     
-    convenience init(byCopyingLocation location: Location, prototrip: Prototrip) {
+    convenience init(copyingLocation location: Location) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
@@ -64,30 +47,19 @@ class Location : NSManagedObject {
         self.altitude = location.altitude
         self.verticalAccuracy = location.verticalAccuracy
         self.date = location.date
-        self.isGeofencedLocation = location.isGeofencedLocation
-        self.isSmoothedLocation = location.isSmoothedLocation
-        
-        self.prototrip = prototrip
-    }
-    
-    convenience init(location: CLLocation, geofencedLocationOfProfile profile: Profile) {
-        self.init(location: location)
-        
-        self.isGeofencedLocation = true
-        self.lastGeofencedLocationOfProfile = profile
     }
     
     convenience init(location: CLLocation) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
-        self.course = NSNumber(value: location.course as Double)
-        self.horizontalAccuracy = NSNumber(value: location.horizontalAccuracy as Double)
-        self.latitude = NSNumber(value: location.coordinate.latitude as Double)
-        self.longitude = NSNumber(value: location.coordinate.longitude as Double)
-        self.speed = NSNumber(value: location.speed as Double)
-        self.altitude = NSNumber(value: location.altitude as Double)
-        self.verticalAccuracy = NSNumber(value: location.verticalAccuracy as Double)
+        self.course = location.course
+        self.horizontalAccuracy = location.horizontalAccuracy
+        self.latitude = location.coordinate.latitude
+        self.longitude = location.coordinate.longitude
+        self.speed = location.speed
+        self.altitude = location.altitude
+        self.verticalAccuracy = location.verticalAccuracy
         self.date = location.timestamp
     }
     
@@ -130,7 +102,7 @@ class Location : NSManagedObject {
         var filteredResults : [AnyObject] = []
         let centerLocation = CLLocation(latitude: circle.coordinate.latitude, longitude: circle.coordinate.longitude)
         for loc in results! {
-            let aLocation = CLLocation(latitude: (loc as! Location).latitude!.doubleValue, longitude: (loc as! Location).longitude!.doubleValue)
+            let aLocation = CLLocation(latitude: (loc as! Location).latitude, longitude: (loc as! Location).longitude)
             let distanceFromCenter = centerLocation.distance(from: aLocation)
             if (distanceFromCenter <= circle.radius) {
                 filteredResults.append(loc)
@@ -142,26 +114,22 @@ class Location : NSManagedObject {
     
     func jsonDictionary() -> [String: Any] {
         var locDict: [String: Any] = [
-            "date": self.date!.JSONString(),
-            "horizontalAccuracy": self.horizontalAccuracy!,
-            "speed": self.speed!,
-            "longitude": self.longitude!,
-            "latitude": self.latitude!,
+            "date": self.date.JSONString(),
+            "horizontalAccuracy": self.horizontalAccuracy,
+            "speed": self.speed,
+            "longitude": self.longitude,
+            "latitude": self.latitude,
             "isGeofencedLocation": self.isGeofencedLocation
         ]
-        if let course = self.course {
-            locDict["course"] = course
-        }
-        if let altitude = self.altitude, let verticalAccuracy = self.verticalAccuracy {
-            locDict["altitude"] = altitude
-            locDict["verticalAccuracy"] = verticalAccuracy
-        }
+        locDict["course"] = course
+        locDict["altitude"] = altitude
+        locDict["verticalAccuracy"] = verticalAccuracy
         
         return locDict
     }
     
     func coordinate() -> CLLocationCoordinate2D {
-        return CLLocationCoordinate2DMake(self.latitude!.doubleValue, self.longitude!.doubleValue)
+        return CLLocationCoordinate2DMake(self.latitude, self.longitude)
     }
     
     func mapItem() -> MKMapItem {
@@ -170,6 +138,6 @@ class Location : NSManagedObject {
     }
     
     func clLocation() -> CLLocation {
-        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude!.doubleValue, longitude: self.longitude!.doubleValue), altitude: (self.altitude != nil) ? self.altitude!.doubleValue : 0.0, horizontalAccuracy: self.horizontalAccuracy!.doubleValue, verticalAccuracy: (self.verticalAccuracy != nil) ? self.verticalAccuracy!.doubleValue : 0.0, course: self.course!.doubleValue, speed: self.speed!.doubleValue, timestamp: self.date!)
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude), altitude: self.altitude, horizontalAccuracy: self.horizontalAccuracy, verticalAccuracy: self.verticalAccuracy, course: self.course, speed: self.speed, timestamp: self.date)
     }
 }

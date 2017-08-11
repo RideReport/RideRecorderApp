@@ -34,7 +34,7 @@ class CoreDataManager {
         // clean up open trips
         for aTrip in Trip.openTrips() {
             let trip = aTrip as! Trip
-            if (trip.locations.count <= 6) {
+            if (trip.locationCount() <= 6) {
                 // if it doesn't more than 6 points, toss it.
                 trip.cancel()
             } else if !trip.isClosed {
@@ -107,36 +107,43 @@ class CoreDataManager {
                 // used for testing Core Data Stack
                 try coordinator!.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
             } else {
-                try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
+                if  let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: url), let versions = metadata["NSStoreModelVersionIdentifiers"] as? NSArray, let firstVersionString = versions.firstObject as? String, let firstVersion = Int(firstVersionString), firstVersion >= 54 {
+                    try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
+                } else if !FileManager.default.fileExists(atPath: url.path) {
+                    try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
+                } else {
+                    attemptProfileRecoveryAndResetDatabase(atURL: url)
+                    coordinator = self.persistentStoreCoordinator
+                }
             }
         } catch let error {
-            coordinator = nil
             DDLogError("Error creating persistent store \(error as NSError), \((error as NSError).userInfo)")
             
-            if let (accessToken, accessTokenExpiresIn) = recoverAccessToken(fromDatabaseAtURL: url) {
-                DDLogInfo("Recovered access token.")
-                
-                hardResetDatabase(url: url)
-
-                Profile.profile().accessToken = accessToken
-                Profile.profile().accessTokenExpiresIn = accessTokenExpiresIn
-                self.saveContext()
-                
-                UserDefaults.standard.set(true, forKey: "shouldGetTripsOnNextAppForeground")
-                UserDefaults.standard.synchronize()
-                
-                coordinator = self.persistentStoreCoordinator
-            } else {
-                DDLogInfo("Failed to recover access token!")
-                hardResetDatabase(url: url)
-                
-                NotificationCenter.default.post(name: Notification.Name(rawValue: "CoreDataManagerDidHardResetWithReadError"), object: nil)
-                
-                coordinator = self.persistentStoreCoordinator
-            }
+            attemptProfileRecoveryAndResetDatabase(atURL: url)
+            coordinator = self.persistentStoreCoordinator
         }
         
         return coordinator
+    }
+    
+    private func attemptProfileRecoveryAndResetDatabase(atURL url: URL) {
+        if let (accessToken, accessTokenExpiresIn) = recoverAccessToken(fromDatabaseAtURL: url) {
+            DDLogInfo("Recovered access token.")
+            
+            hardResetDatabase(url: url)
+            
+            Profile.profile().accessToken = accessToken
+            Profile.profile().accessTokenExpiresIn = accessTokenExpiresIn
+            self.saveContext()
+            
+            UserDefaults.standard.set(true, forKey: "shouldGetTripsOnNextAppForeground")
+            UserDefaults.standard.synchronize()
+        } else {
+            DDLogInfo("Failed to recover access token!")
+            hardResetDatabase(url: url)
+            
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "CoreDataManagerDidHardResetWithReadError"), object: nil)
+        }
     }
     
     private func hardResetDatabase(url: URL) {

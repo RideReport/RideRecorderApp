@@ -121,8 +121,14 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             return
         }
         
-        if let startLoc = trip.simplifiedLocations.firstObject as? Location,
-        let endLoc = trip.simplifiedLocations.lastObject as? Location {
+        var locs = trip.fetchOrderedLocations(simplified: true)
+
+        if !trip.isClosed || locs.isEmpty {
+            locs = trip.fetchOrderedLocations(simplified: false)
+        }
+        
+        if let startLoc = locs.first,
+            let endLoc = locs.last {
             self.startPoint = MGLPointAnnotation()
             self.startPoint!.coordinate = startLoc.coordinate()
             mapView.addAnnotation(self.startPoint!)
@@ -134,9 +140,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
         
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-        for location in trip.simplifiedLocations.array {
-            let location = (location as! Location)
-            
+        for location in locs {            
             let coord = location.coordinate()
             
             coordinates.append(coord)

@@ -157,68 +157,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             otherTriplayer.lineOpacity = goodBikelayer.lineOpacity
             otherTriplayer.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.autoBrown)
             mapView.style?.addLayer(otherTriplayer)
-            
-            #if DEBUG
-                let predictBike = MGLLineStyleLayer(identifier: "predicted-bike", source: self.selectedTripLineSource!)
-                predictBike.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictBike.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.cycling.numberValue)
-                predictBike.lineCap = tripBackinglayer.lineCap
-                predictBike.lineJoin = tripBackinglayer.lineJoin
-                predictBike.lineWidth = goodBikelayer.lineWidth
-                predictBike.lineOpacity = goodBikelayer.lineOpacity
-                predictBike.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.goodGreen)
-                mapView.style?.addLayer(predictBike)
-                
-                let predictAuto = MGLLineStyleLayer(identifier: "predicted-auto", source: self.selectedTripLineSource!)
-                predictAuto.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictAuto.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.automotive.numberValue)
-                predictAuto.lineCap = tripBackinglayer.lineCap
-                predictAuto.lineJoin = tripBackinglayer.lineJoin
-                predictAuto.lineWidth = goodBikelayer.lineWidth
-                predictAuto.lineOpacity = goodBikelayer.lineOpacity
-                predictAuto.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.autoBrown)
-                mapView.style?.addLayer(predictAuto)
-                
-                let predictWalk = MGLLineStyleLayer(identifier: "predicted-walk", source: self.selectedTripLineSource!)
-                predictWalk.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictWalk.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.walking.numberValue)
-                predictWalk.lineCap = tripBackinglayer.lineCap
-                predictWalk.lineJoin = tripBackinglayer.lineJoin
-                predictWalk.lineWidth = goodBikelayer.lineWidth
-                predictWalk.lineOpacity = goodBikelayer.lineOpacity
-                predictWalk.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.almostWhite)
-                mapView.style?.addLayer(predictWalk)
-                
-                let predictBus = MGLLineStyleLayer(identifier: "predicted-bus", source: self.selectedTripLineSource!)
-                predictBus.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictBus.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.bus.numberValue)
-                predictBus.lineCap = tripBackinglayer.lineCap
-                predictBus.lineJoin = tripBackinglayer.lineJoin
-                predictBus.lineWidth = goodBikelayer.lineWidth
-                predictBus.lineOpacity = goodBikelayer.lineOpacity
-                predictBus.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.transitBlue)
-                mapView.style?.addLayer(predictBus)
-                
-                let predictTrain = MGLLineStyleLayer(identifier: "predicted-train", source: self.selectedTripLineSource!)
-                predictTrain.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictTrain.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.rail.numberValue)
-                predictTrain.lineCap = tripBackinglayer.lineCap
-                predictTrain.lineJoin = tripBackinglayer.lineJoin
-                predictTrain.lineWidth = goodBikelayer.lineWidth
-                predictTrain.lineOpacity = goodBikelayer.lineOpacity
-                predictTrain.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.turquoise)
-                mapView.style?.addLayer(predictTrain)
-                
-                let predictStationary = MGLLineStyleLayer(identifier: "predicted-stationary", source: self.selectedTripLineSource!)
-                predictStationary.sourceLayerIdentifier = tripFeatureSourceIdentifier
-                predictStationary.predicate = NSPredicate(format: "%K == %@", "predictedActivityType", ActivityType.stationary.numberValue)
-                predictStationary.lineCap = tripBackinglayer.lineCap
-                predictStationary.lineJoin = tripBackinglayer.lineJoin
-                predictStationary.lineWidth = goodBikelayer.lineWidth
-                predictStationary.lineOpacity = goodBikelayer.lineOpacity
-                predictStationary.lineColor = MGLStyleValue(rawValue: ColorPallete.shared.pink)
-                mapView.style?.addLayer(predictStationary)
-            #endif
         }
         
         if (needsTripLoad) {
@@ -305,16 +243,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        var locs = trip.locations
-        
-        // if the trip is closed, use the simplified locations for efficiency
-        if trip.isClosed && trip.simplifiedLocations != nil && trip.simplifiedLocations.count > 0 {
-            
-            locs = trip.simplifiedLocations
+        var locs = trip.fetchOrderedLocations(simplified: true)
+
+        if !trip.isClosed || locs.isEmpty {
+            locs = trip.fetchOrderedLocations(simplified: false)
         }
         
-        if let startLoc = locs?.firstObject as? Location,
-            let endLoc = locs?.lastObject as? Location {
+        if let startLoc = locs.first,
+            let endLoc = locs.last {
                 self.startPoint = MGLPointAnnotation()
                 self.startPoint!.coordinate = startLoc.coordinate()
                 mapView.addAnnotation(self.startPoint!)
@@ -328,9 +264,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
 
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-        for location in (locs?.array)! {
-            let location = (location as! Location)
-            
+        for location in locs {
             let coord = location.coordinate()
             
             coordinates.append(coord)
@@ -347,37 +281,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         #if DEBUG
             if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
-                var i = 0
-                var lines = [self.selectedTripLineFeature!]
-                for collec in trip.sensorDataCollections {
-                    if let collection = collec as? SensorDataCollection, let predict = collection.topActivityTypePrediction {
-                        var collectionLocsCoordinates : [CLLocationCoordinate2D] = []
-                        var collectionLocsCount : UInt = 0
-
-                        for loc in collection.locations {
-                            let location = (loc as! Location)
-                            
-                            let coord = location.coordinate()
-                            
-                            collectionLocsCoordinates.append(coord)
-                            collectionLocsCount += 1
-                        }
-                        
-                        self.mapView.addAnnotation(collection)
-                        
-                        guard collectionLocsCoordinates.count > 0 else {
-                            continue
-                        }
-                        
-                        let feature = MGLPolylineFeature(coordinates: &collectionLocsCoordinates, count: collectionLocsCount)
-                        feature.attributes = ["predictedActivityType": predict.activityType.numberValue]
-                        lines.append(feature)
-                    }
-                    i+=1
+                for prediction in trip.predictions {
+                    self.mapView.addAnnotation(prediction)
                 }
-                
-                let shape = MGLShapeCollectionFeature(shapes: lines)
-                self.selectedTripLineSource.shape = shape
             } else {
                 CMMotionActivityManager().queryActivityStarting(from: trip.startDate, to: trip.endDate, to: OperationQueue.main) { (activities, error) in
                         guard let activities = activities else {
@@ -419,8 +325,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         #if DEBUG
-            if let sensorDataCollection = annotation as? SensorDataCollection {
-                return MGLAnnotationImage(image: sensorDataCollection.pinImage, reuseIdentifier: sensorDataCollection.title ?? "")
+            if let prediction = annotation as? Prediction {
+                return MGLAnnotationImage(image: prediction.pinImage, reuseIdentifier: prediction.title ?? "")
             } else if let motionActivity = annotation as? CMMotionActivityAnnotationWrapper {
                 return MGLAnnotationImage(image: motionActivity.pinImage, reuseIdentifier: motionActivity.title ?? "")
             }
@@ -440,12 +346,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        if annotation is Incident {
-            return true
-        }
-        
         #if DEBUG
-            if annotation is SensorDataCollection {
+            if annotation is Prediction {
                 return true
             } else if annotation is CMMotionActivityAnnotationWrapper {
                 return true

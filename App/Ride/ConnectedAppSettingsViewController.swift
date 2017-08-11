@@ -31,8 +31,10 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
         super.viewWillAppear(animated)
         
         if self.connectingApp != nil {
-            for scope in self.connectingApp.scopes {
-                scope.granted = true
+            for s in self.connectingApp.scopes {
+                if let scope = s as? ConnectedAppScope {
+                    scope.isGranted = true
+                }
             }
             
             APIClient.shared.getApplication(self.connectingApp).apiResponse {[weak self] _ in

@@ -12,14 +12,6 @@ import Alamofire
 import OAuthSwift
 import Mixpanel
 
-private enum HKBiologicalSex : Int {
-    case notSet
-    case female
-    case male
-    @available(iOS 8.2, *)
-    case other
-}
-
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
 
@@ -392,14 +384,14 @@ class APIClient {
                         if (trip == nil) {
                             trip = Trip()
                             trip.uuid = uuid
-                            trip.locationsNotYetDownloaded = true
+                            trip.areLocationsNotYetDownloaded = true
                         }
                         
                         trip.creationDate = creationDate
                         trip.isClosed = true
                         trip.isSynced = true
-                        trip.locationsAreSynced = true
-                        trip.summaryIsSynced = true
+                        trip.areLocationsSynced = true
+                        trip.isSummarySynced = true
                         
                         if let activityTypeNumber = tripJson["activityType"].number,
                                 let ratingChoiceNumber = tripJson["rating"].number,
@@ -432,16 +424,16 @@ class APIClient {
         return AuthenticatedAPIRequest(client: self, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
-                if trip.locationsNotYetDownloaded {
-                    trip.locations = NSOrderedSet() // just in case
+                if trip.areLocationsNotYetDownloaded {
+                    trip.resetLocations()
                     if let locations = json["locations"].array {
                         for locationJson in locations {
                             if let dateString = locationJson["date"].string, let date = Date.dateFromJSONString(dateString),
-                                    let latitude = locationJson["latitude"].number,
-                                    let longitude = locationJson["longitude"].number,
-                                    let course = locationJson["course"].number,
-                                    let speed = locationJson["speed"].number,
-                                    let horizontalAccuracy = locationJson["horizontalAccuracy"].number {
+                                    let latitude = locationJson["latitude"].double,
+                                    let longitude = locationJson["longitude"].double,
+                                    let course = locationJson["course"].double,
+                                    let speed = locationJson["speed"].double,
+                                    let horizontalAccuracy = locationJson["horizontalAccuracy"].double {
                                 let loc = Location(trip: trip)
                                 loc.date = date
                                 loc.latitude = latitude
@@ -460,7 +452,7 @@ class APIClient {
                         DDLogWarn("Error parsing location dictionary when fetched trip data, no locations found.")
                     }
                     
-                    trip.locationsNotYetDownloaded = false
+                    trip.areLocationsNotYetDownloaded = false
                 }
                 
                 if let summary = json["summary"].dictionary {
@@ -473,7 +465,7 @@ class APIClient {
                 
                 if let httpResponse = response.response, httpResponse.statusCode == 404 {
                     // unclear what to do in this case (probably we should try to upload the trip again?), but at a minimum we should never try to sync the summary again.
-                    trip.summaryIsSynced = true
+                    trip.isSummarySynced = true
                     CoreDataManager.shared.saveContext()
                 }
             }
@@ -535,11 +527,6 @@ class APIClient {
     }
     
     @discardableResult func saveAndSyncTripIfNeeded(_ trip: Trip, syncInBackground: Bool = false, includeFullLocations: Bool = true)->AuthenticatedAPIRequest {
-        for incident in trip.incidents {
-            if ((incident as! Incident).hasChanges) {
-                trip.isSynced = false
-            }
-        }
         trip.saveAndMarkDirty()
         
         if (!trip.isSynced && (syncInBackground || UIApplication.shared.applicationState == UIApplicationState.active)) {
@@ -568,40 +555,44 @@ class APIClient {
     }
     
     func uploadSensorData(_ trip: Trip, withMetadata metadataDict:[String: Any] = [:]) {
-        let routeURL = "trips/" + trip.uuid + "/sensor_data"
+        // TODO
         
-        var sensorDataJsonArray : [[String: Any]] = []
-        for sensorDataCollection in trip.sensorDataCollections {
-            sensorDataJsonArray.append((sensorDataCollection as! SensorDataCollection).jsonDictionary())
-        }
-        
-        var params = metadataDict
-        params["data"] = sensorDataJsonArray
-        
-        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: true) { (response) in
-            switch response.result {
-            case .success(_):
-                DDLogWarn("Yep")
-            case .failure(_):
-                DDLogWarn("Nope!")
-            }
-        }
+//        let routeURL = "trips/" + trip.uuid + "/sensor_data"
+//        
+//        var sensorDataJsonArray : [[String: Any]] = []
+//        for sensorDataCollection in trip.sensorDataCollections {
+//            sensorDataJsonArray.append((sensorDataCollection as! SensorDataCollection).jsonDictionary())
+//        }
+//        
+//        var params = metadataDict
+//        params["data"] = sensorDataJsonArray
+//        
+//        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: true) { (response) in
+//            switch response.result {
+//            case .success(_):
+//                DDLogWarn("Yep")
+//            case .failure(_):
+//                DDLogWarn("Nope!")
+//            }
+//        }
     }
     
-    func uploadSensorDataCollection(_ sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: Any] = [:]) {
-        let accelerometerRouteURL = "ios_accelerometer_data"
-        var params = metadataDict
-        params["data"] = sensorDataCollection.jsonDictionary() as Any?
-
-        _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
-            switch response.result {
-            case .success(_):
-                DDLogWarn("Yep")
-            case .failure(_):
-                DDLogWarn("Nope!")
-            }
-        }
-    }
+  //  func uploadSensorDataCollection(_ sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: Any] = [:]) {
+        // TODO
+        
+//        let accelerometerRouteURL = "ios_accelerometer_data"
+//        var params = metadataDict
+//        params["data"] = sensorDataCollection.jsonDictionary() as Any?
+//
+//        _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+//            switch response.result {
+//            case .success(_):
+//                DDLogWarn("Yep")
+//            case .failure(_):
+//                DDLogWarn("Nope!")
+//            }
+//        }
+    // }
     
     @discardableResult func syncTrip(_ trip: Trip, includeFullLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed) else {
@@ -636,33 +627,37 @@ class APIClient {
             "ratingVersion": trip.rating.version.numberValue
         ] as [String : Any]
 
-        if !trip.locationsAreSynced {
+        if !trip.areLocationsSynced {
             var locations : [Any?] = []
             if !includeFullLocations {
-                if trip.simplifiedLocations.count == 0 {
+                var simplifiedLocs = trip.fetchOrderedLocations(simplified: true)
+                
+                if simplifiedLocs.count == 0 {
                     DDLogWarn("No simplified locations found when syncing trip locations!")
-                    if (trip.locations.count > 0) {
+                    if (trip.locationCount() > 0) {
                         trip.simplify()
+                        simplifiedLocs = trip.fetchOrderedLocations(simplified: true)
                     } else {
                         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
                     }
                 }
                 
-                for location in trip.simplifiedLocations.array {
-                    locations.append((location as! Location).jsonDictionary())
+                for location in simplifiedLocs {
+                    locations.append((location).jsonDictionary())
                 }
                 tripDict["summaryRoute"] = ["locations": locations]
             } else {
-                guard trip.locations.count > 0 else {
+                guard trip.locationCount() > 0 else {
                     DDLogWarn("No locations found when syncing trip locations!")
-                    trip.locationsAreSynced = false
+                    trip.areLocationsSynced = false
                     CoreDataManager.shared.saveContext()
                     
                     return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
                 }
                 
-                for location in trip.locations.array {
-                    locations.append((location as! Location).jsonDictionary())
+                let locs = trip.fetchOrderedLocations()
+                for location in locs {
+                    locations.append((location).jsonDictionary())
                 }
                 tripDict["locations"] = locations
             }
@@ -682,7 +677,7 @@ class APIClient {
                 }
                 trip.isSynced = true
                 if includeFullLocations {
-                    trip.locationsAreSynced = true
+                    trip.areLocationsSynced = true
                 }
                 
                 if let accountStatus = json["accountStatus"].dictionary, let statusText = accountStatus["status_text"]?.string, let statusEmoji = accountStatus["status_emoji"]?.string {
@@ -702,7 +697,7 @@ class APIClient {
                     self.saveAndSyncTripIfNeeded(trip, includeFullLocations: includeFullLocations)
                 } else if let httpResponse = response.response, httpResponse.statusCode == 404 {
                     // server doesn't know about trip, reset locationsAreSynced
-                    trip.locationsAreSynced = false
+                    trip.areLocationsSynced = false
                     CoreDataManager.shared.saveContext()
                 } else {
                     self.didEncounterUnrecoverableErrorSyncronizingTrips = true
@@ -812,13 +807,13 @@ class APIClient {
             healthKitDictionary["date_of_birth"] = dob.JSONString()
         }
         
-        if let weight = Profile.profile().weightKilograms, weight.int32Value > 0 {
+        if let weight = Profile.profile().weightKilograms, weight > 0 {
             healthKitDictionary["weight_kilograms"] = weight
         }
         
         let gender = Profile.profile().gender
-        if  gender.intValue != HKBiologicalSex.notSet.rawValue {
-            healthKitDictionary["gender"] = gender
+        if  gender.rawValue != 0 {
+            healthKitDictionary["gender"] = gender.rawValue
         }
         
         if !healthKitDictionary.isEmpty {

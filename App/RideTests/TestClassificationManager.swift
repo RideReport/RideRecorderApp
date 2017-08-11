@@ -15,13 +15,13 @@ class TestClassificationManager : ClassificationManager {
     var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
     private var testPredictionsIndex = 0
-    private var testPredictionsTemplates: [ActivityTypePrediction]!
+    private var testPredictionsTemplates: [PredictedActivity]!
     
     func startup() {
         authorizationStatus = .authorized
     }
     
-    func gatherSensorData(toSensorDataCollection sensorDataCollection: SensorDataCollection) {
+    func gatherSensorData(toTrip trip:Trip) {
         //
     }
     
@@ -29,17 +29,16 @@ class TestClassificationManager : ClassificationManager {
         //
     }
     
-    func setTestPredictionsTemplates(testPredictions: [ActivityTypePrediction]) {
+    func setTestPredictionsTemplates(testPredictions: [PredictedActivity]) {
         self.testPredictionsTemplates = testPredictions
     }
     
-    func queryCurrentActivityType(forSensorDataCollection sensorDataCollection:SensorDataCollection, withHandler handler:@escaping (_: SensorDataCollection) -> Void!) {
-        
+    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void) {
         let predictionTemplate = self.testPredictionsTemplates[testPredictionsIndex]
-        let _ = ActivityTypePrediction(activityType: predictionTemplate.activityType, confidence: predictionTemplate.confidence.floatValue, sensorDataCollection: sensorDataCollection)
+        let _ = PredictedActivity(activityType: predictionTemplate.activityType, confidence: predictionTemplate.confidence, prediction: prediction)
         
         DispatchQueue.main.async {
-            handler(sensorDataCollection)
+            handler(prediction)
         }
         
         testPredictionsIndex += 1

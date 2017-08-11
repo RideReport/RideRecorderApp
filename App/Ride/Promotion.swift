@@ -10,17 +10,7 @@ import Foundation
 import CoreData
 import SwiftyJSON
 
-class Promotion : NSManagedObject {
-    @NSManaged var uuid: String
-    @NSManaged var profile: Profile?
-    @NSManaged var text: String?
-    @NSManaged var buttonTitle: String?
-    @NSManaged var bannerImageUrl: String?
-    @NSManaged var connectedApp: ConnectedApp?
-    @NSManaged var startDate: Date?
-    @NSManaged var endDate: Date?
-    @NSManaged var userDismissed: DarwinBoolean
-    
+public class  Promotion: NSManagedObject {
     class func createOrUpdate(_ uuid: String)->Promotion {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Promotion")

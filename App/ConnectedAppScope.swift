@@ -10,14 +10,7 @@ import Foundation
 import CoreData
 import SwiftyJSON
 
-class ConnectedAppScope: NSManagedObject {
-    @NSManaged var descriptionText: String?
-    @NSManaged var granted: Bool
-    @NSManaged var machineName: String
-    @NSManaged var type: String
-    @NSManaged var required: Bool
-    @NSManaged var connectedApp: ConnectedApp
-    
+public class ConnectedAppScope: NSManagedObject {
     class func createOrUpdate(withJson json: JSON, connectedApp: ConnectedApp)->ConnectedAppScope? {
         guard let machineName = json["machine_name"].string, let type = json["type"].string else {
             return nil
@@ -48,7 +41,7 @@ class ConnectedAppScope: NSManagedObject {
         connectedAppScope.type = type
         
         if let required = json["required"].bool {
-            connectedAppScope.required = required
+            connectedAppScope.isRequired = required
         }
         if let descriptionText = json["description_text"].string {
             connectedAppScope.descriptionText = descriptionText
@@ -59,7 +52,7 @@ class ConnectedAppScope: NSManagedObject {
     
     func json()->JSON {
         var dict: JSON = ["machine_name": self.machineName]
-        dict["granted"].bool = self.granted
+        dict["granted"].bool = self.isGranted
         
         return dict
     }

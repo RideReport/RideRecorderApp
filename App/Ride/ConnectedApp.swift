@@ -10,18 +10,7 @@ import Foundation
 import CoreData
 import SwiftyJSON
 
-class ConnectedApp: NSManagedObject {
-    @NSManaged var baseImageUrl: String?
-    @NSManaged var descriptionText: String?
-    @NSManaged var webAuthorizeUrl: String?
-    @NSManaged var appSettingsUrl: String?
-    @NSManaged var appSettingsText: String?
-    @NSManaged var name: String?
-    @NSManaged var uuid: String
-    @NSManaged var profile: Profile?
-    @NSManaged var scopes: [ConnectedAppScope]
-    @NSManaged var isHiddenApp: Bool
-    
+public class ConnectedApp: NSManagedObject {
     var authorizationCode: String?
     
     class func allApps(_ limit: Int = 0) -> [ConnectedApp] {
@@ -106,7 +95,7 @@ class ConnectedApp: NSManagedObject {
         }
         
         if let scopes = json["scopes"].array {
-            var scopesToDelete = self.scopes
+            var scopesToDelete = self.scopes.array as? [ConnectedAppScope] ?? []
             
             for scope in scopes {
                 if let scope = ConnectedAppScope.createOrUpdate(withJson: scope, connectedApp: self), let index = scopesToDelete.index(of: scope) {
@@ -127,7 +116,10 @@ class ConnectedApp: NSManagedObject {
             dict["code"].string = code
         }
         
-        dict["scopes"].arrayObject = self.scopes.map {return $0.json().object}
+        let scopes = self.scopes.array as? [ConnectedAppScope] ?? []
+
+        
+        dict["scopes"].arrayObject = scopes.map {return $0.json().object}
         
         return dict
     }

@@ -1098,7 +1098,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBAction func actOnPromo(_ sender: AnyObject) {
         // only support one promo for now
-        if let promo = Profile.profile().promotions.allObjects.first as? Promotion, let app = promo.connectedApp {
+        if let promo = Profile.profile().promotions.array.first as? Promotion, let app = promo.connectedApp {
             if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
                 // if we need to, fetch the app.
                 if let button = sender as? UIButton {
@@ -1126,8 +1126,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBAction func dismissPromo(_ sender: AnyObject) {
         // only support one promo for now
-        if let promo = Profile.profile().promotions.allObjects.first as? Promotion {
-            promo.userDismissed = true
+        if let promo = Profile.profile().promotions.array.first as? Promotion {
+            promo.isUserDismissed = true
             CoreDataManager.shared.saveContext()
             self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
@@ -1167,10 +1167,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
             }))
             alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-                for sensorCollection in trip.sensorDataCollections {
-                    SensorManagerComponent.shared.randomForestManager.classify(sensorCollection as! SensorDataCollection)
+                for prediction in trip.predictions {
+                    SensorManagerComponent.shared.randomForestManager.classify(prediction)
                 }
-                trip.calculateAggregatePredictedActivityType()
+                //trip.calculateAggregatePredictedActivityType()
             }))
             alertController.addAction(UIAlertAction(title: "💩 Re-Simplify", style: UIAlertActionStyle.default, handler: { (_) in
                 trip.simplify()
@@ -1193,7 +1193,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
                 if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     var cllocs: [CLLocation] = []
-                    for loc in trip.locations {
+                    for loc in trip.fetchOrderedLocations() {
                         if let location = loc as? Location, !location.isGeofencedLocation {
                             cllocs.append(location.clLocation())
                         }
@@ -1209,7 +1209,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 
                 if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     var cllocs: [CLLocation] = []
-                    for loc in trip.locations {
+                    var locs = trip.fetchOrderedLocations(simplified: false)
+                    for loc in locs {
                         if let location = loc as? Location {
                             cllocs.append(location.clLocation())
                         }

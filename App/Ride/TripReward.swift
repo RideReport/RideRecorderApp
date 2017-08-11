@@ -10,12 +10,7 @@ import Foundation
 import CoreData
 import SwiftyJSON
 
-class TripReward : NSManagedObject {
-    @NSManaged var descriptionText : String
-    @NSManaged private var emoji : String
-    @NSManaged var trip : Trip
-    
-    
+public class  TripReward : NSManagedObject {
     class var numberOfRewards : Int {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         

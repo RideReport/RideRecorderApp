@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                                       classificationManager: TestClassificationManager())
         
         SensorManagerComponent.shared.locationManager.secondLength = 0.4
-        let predictionTemplate = ActivityTypePrediction(activityType: .cycling, confidence: 1.0, sensorDataCollection: nil)
+        let predictionTemplate = PredictedActivity(activityType: .bus, confidence: 1.0, prediction: nil)
         SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
         SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate])
     }
@@ -326,11 +326,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                         })
                         break
                     }
-                }
-                if (identifier == "FLAG_IDENTIFIER") {
-                    _ = Incident(location: trip.mostRecentLocation()!, trip: trip)
-                    CoreDataManager.shared.saveContext()
-                    completionHandler()
                 }
         }
         
