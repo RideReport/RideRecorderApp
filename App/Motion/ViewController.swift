@@ -9,14 +9,26 @@
 import UIKit
 import SwiftyJSON
 import Eureka
+import CoreMotion
+import AVFoundation
 
 class ViewController: FormViewController {
+    @IBOutlet weak var predictSwitch: UISwitch!
+    @IBOutlet weak var activityLabel: UILabel!
+    @IBOutlet weak var activityLabel2: UILabel!
+    
+    fileprivate var activityManager: CMMotionActivityManager!
+    fileprivate var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
+    fileprivate var aggregatorForQuery : PredictionAggregator?
+    
     private var formDataForUpload: [String: Any] = [:]
     private let availableModes = [ActivityType.automotive, ActivityType.bus, ActivityType.rail, ActivityType.walking, ActivityType.running, ActivityType.cycling]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.predictSwitch.isOn = false        
+        self.activityManager = CMMotionActivityManager()
+
         setupForm()
     }
     
@@ -260,6 +272,98 @@ class ViewController: FormViewController {
                 }
                 
                 strongSelf.performSegue(withIdentifier: "showRecording", sender: self)
+        }
+    }
+    
+    
+    @IBAction func toggledPredictSwitch(_ sender: AnyObject) {
+        self.runPredictionIfEnabled()
+    }
+
+    
+    fileprivate var isPredicting: Bool = false
+    
+    func runPredictionIfEnabled() {
+        guard self.predictSwitch.isOn else {
+            return
+        }
+        guard !isPredicting else {
+            return
+        }
+        
+        isPredicting = true
+        
+        self.aggregatorForQuery = PredictionAggregator()
+        
+        activityManager.queryActivityStarting(from: Date(), to: Date().secondsFrom(2), to: OperationQueue.main) { (activity, error) in
+            if let theActivity = activity?.first {
+                var activityString = ""
+                if theActivity.stationary {
+                    activityString += "Stationary "
+                }
+                if theActivity.walking {
+                    activityString += "Walking "
+                }
+                if theActivity.running {
+                    activityString += "Running "
+                }
+                if theActivity.automotive {
+                    activityString += "Automotive "
+                }
+                if theActivity.cycling {
+                    activityString += "Cycling "
+                }
+                if theActivity.unknown {
+                    activityString += "Unknown "
+                }
+                
+                switch theActivity.confidence {
+                case .high:
+                    activityString += "High"
+                case .medium:
+                    activityString += "Medium"
+                case .low:
+                    activityString += "Low"
+                }
+                
+                self.activityLabel2.text = activityString
+            }
+        }
+        
+        SensorManagerComponent.shared.classificationManager.predictCurrentActivityType(predictionAggregator: self.aggregatorForQuery!) {[weak self] (aggregator) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.isPredicting = false
+            
+            guard let predictedActivity = aggregator.aggregatePredictedActivity else {
+                // this should not ever happen.
+                DDLogVerbose("No activity type prediction found, continuing to monitor…")
+                return
+            }
+            
+            let activityType = predictedActivity.activityType
+            let confidence = predictedActivity.confidence
+            
+            strongSelf.aggregatorForQuery = nil
+            
+            
+            let activityString = String(format: "%@ %.1f", activityType.noun, confidence)
+            
+            strongSelf.activityLabel.text = activityString
+            
+            let utterance = AVSpeechUtterance(string: activityString)
+            utterance.rate = 0.6
+            strongSelf.synth.speak(utterance)
+            
+            let notif = UILocalNotification()
+            notif.alertBody = activityString
+            notif.category = "generalCategory"
+            UIApplication.shared.presentLocalNotificationNow(notif)
+            
+            if (strongSelf.predictSwitch.isOn) {
+                strongSelf.perform(Selector("runPredictionIfEnabled"), with: nil, afterDelay: 2.0)
+            }
         }
     }
     

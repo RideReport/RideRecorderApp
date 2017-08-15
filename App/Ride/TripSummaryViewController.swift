@@ -135,33 +135,33 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         if (self.selectedTrip != nil) {
             let trip = self.selectedTrip
             
-            if self.selectedTrip.isClosed {
-                if self.selectedTrip.activityType == .cycling {
-                    durationLabel.text = self.selectedTrip.duration().intervalString
-                    avgSpeedLabel.text = self.selectedTrip.aproximateAverageBikingSpeed.string
-                    weatherLabel.text = self.selectedTrip.weatherString()
-                    calorieLabel.text = self.selectedTrip.calorieString()
-                    
-                    statsView.isHidden = false
-                    statsView2.isHidden = false
-                    ratingChoiceSelector.isHidden = false
-
-                    ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
-                } else {
-                    statsView.isHidden = true
-                    statsView2.isHidden = true
-                    ratingChoiceSelector.isHidden = true
-
-                    ratingChoiceHeightConstraint?.constant = 0
-                }
+            self.changeModeButton.isHidden = false
+            
+            if self.selectedTrip.activityType == .cycling {
+                durationLabel.text = self.selectedTrip.duration().intervalString
+                avgSpeedLabel.text = self.selectedTrip.aproximateAverageBikingSpeed.string
+                weatherLabel.text = self.selectedTrip.weatherString()
+                calorieLabel.text = self.selectedTrip.calorieString()
                 
-                ratingChoiceSelector.setNeedsUpdateConstraints()
-                UIView.animate(withDuration: 0.25, animations: {
-                    self.ratingChoiceSelector.layoutIfNeeded()
-                })
+                statsView.isHidden = false
+                statsView2.isHidden = false
+                ratingChoiceSelector.isHidden = false
                 
-                self.changeModeButton.setTitle("Not a " + (trip?.activityType.noun)! + "?", for: UIControlState())
+                ratingChoiceHeightConstraint?.constant = initialRatingChoiceHeight
+            } else {
+                statsView.isHidden = true
+                statsView2.isHidden = true
+                ratingChoiceSelector.isHidden = true
+                
+                ratingChoiceHeightConstraint?.constant = 0
             }
+            
+            ratingChoiceSelector.setNeedsUpdateConstraints()
+            UIView.animate(withDuration: 0.25, animations: {
+                self.ratingChoiceSelector.layoutIfNeeded()
+            })
+            
+            self.changeModeButton.setTitle("Not a " + (trip?.activityType.noun)! + "?", for: UIControlState())
         }
     }
     

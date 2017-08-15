@@ -36,9 +36,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
     private var dateFormatter : DateFormatter!
     
-    private var tempBackgroundView : UIView?
-    private var hasInsertedTempBackgroundView = false
-    
     override func viewDidLoad() {
         self.dateFormatter = DateFormatter()
         self.dateFormatter.locale = Locale.current
@@ -171,48 +168,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     //
-    // MARK: - UIViewController
-    //
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        if !hasInsertedTempBackgroundView {
-            self.hasInsertedTempBackgroundView = true
-            self.tempBackgroundView = UIView(frame: self.view.bounds)
-            self.tempBackgroundView!.backgroundColor = self.view.backgroundColor
-            self.mapView.insertSubview(self.tempBackgroundView!, at: 0)
-            self.mapView.bringSubview(toFront: self.tempBackgroundView!)
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        self.view.delay(0.2) { () -> Void in
-            if let view = self.tempBackgroundView {
-                view.fadeOut({ () -> Void in
-                    view.removeFromSuperview()
-                    self.tempBackgroundView = nil                    
-                })
-            }
-        }
-    }
-    
-    //
-    // MARK: - UI Methods
-    //
-    
-    @IBAction func addIncident(_ sender: AnyObject) {
-        DDLogVerbose("Add incident")
-    }
-    
-    
-    //
     // MARK: - Update Map UI
     //
     
@@ -281,7 +236,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         #if DEBUG
             if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
-                for prediction in trip.predictions {
+                for prediction in trip.predictionAggregators{
+                    
                     self.mapView.addAnnotation(prediction)
                 }
             } else {
@@ -325,8 +281,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         }
         
         #if DEBUG
-            if let prediction = annotation as? Prediction {
-                return MGLAnnotationImage(image: prediction.pinImage, reuseIdentifier: prediction.title ?? "")
+            if let aggregator = annotation as? PredictionAggregator {
+                return MGLAnnotationImage(image: aggregator.pinImage, reuseIdentifier: aggregator.title ?? "")
             } else if let motionActivity = annotation as? CMMotionActivityAnnotationWrapper {
                 return MGLAnnotationImage(image: motionActivity.pinImage, reuseIdentifier: motionActivity.title ?? "")
             }
@@ -347,7 +303,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
         #if DEBUG
-            if annotation is Prediction {
+            if annotation is PredictionAggregator {
                 return true
             } else if annotation is CMMotionActivityAnnotationWrapper {
                 return true

@@ -9,38 +9,30 @@
 import Foundation
 import CoreData
 import CoreMotion
-import MapKit
 
-public class Prediction: NSManagedObject {
-    var isInProgress = false
-
-    convenience init(trip: Trip) {
-        self.init()
-        
-        self.trip = trip
-    }
-    
+public class Prediction: NSManagedObject {    
     convenience init() {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Prediction", in: context)!, insertInto: context)
         self.startDate = Date()
     }
     
-    public func addUnknownTypePrediction() {
+    public func addUnknownTypePredictedActivity() {
         _ = PredictedActivity(activityType: .unknown, confidence: 1.0, prediction: self)
     }
     
-    public func addToTrip(_ trip: Trip) {
-        self.trip = trip
-        for reading in self.accelerometerReadings {
-            reading.trip = trip
-        }
-    }
-    
     public func fetchAccelerometerReadings(timeInterval: TimeInterval)-> [AccelerometerReading] {
+        guard let predictionAggregator = self.predictionAggregator else {
+            return []
+        }
+        
+        guard let firstReading = predictionAggregator.fetchFirstReading(afterDate: self.startDate) else {
+            return []
+        }
+        
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccelerometerReading")
-        fetchedRequest.predicate = NSPredicate(format: "%@ IN includedPredictions", self)
+        fetchedRequest.predicate = NSPredicate(format: "predictionAggregator = %@ AND date >= %@ AND date <= %@", predictionAggregator, firstReading.date as CVarArg, firstReading.date.addingTimeInterval(timeInterval + 0.1) as CVarArg) // padd an extra 0.1
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -57,51 +49,6 @@ public class Prediction: NSManagedObject {
         
         return readings
     }
-    
-    public func fetchFirstReading()-> AccelerometerReading? {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccelerometerReading")
-        fetchedRequest.predicate = NSPredicate(format: "%@ IN includedPredictions", self)
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-        fetchedRequest.fetchLimit = 1
-        
-        let results: [AnyObject]?
-        do {
-            results = try context.fetch(fetchedRequest)
-        } catch let error {
-            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
-            results = nil
-        }
-        
-        guard let r = results, let reading = r.first as? AccelerometerReading else {
-            return nil
-        }
-        
-        return reading
-    }
-    
-    public func fetchLastReading()-> AccelerometerReading? {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "AccelerometerReading")
-        fetchedRequest.predicate = NSPredicate(format: "%@ IN includedPredictions", self)
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-        fetchedRequest.fetchLimit = 1
-        
-        let results: [AnyObject]?
-        do {
-            results = try context.fetch(fetchedRequest)
-        } catch let error {
-            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
-            results = nil
-        }
-        
-        guard let r = results, let reading = r.first as? AccelerometerReading else {
-            return nil
-        }
-        
-        return reading
-    }
-
     
     public func fetchTopPredictedActivity()-> PredictedActivity? {
         let context = CoreDataManager.shared.currentManagedObjectContext()
@@ -125,8 +72,27 @@ public class Prediction: NSManagedObject {
         return prediction
     }
     
+    func jsonDictionary() -> [String: Any] {
+        var dict:[String: Any] = [:]
+        
+        if let activityPredictionModelIdentifier = self.activityPredictionModelIdentifier {
+            dict["activityPredictionModelIdentifier"] = activityPredictionModelIdentifier
+        }
+        
+        dict["startDate"] = startDate.MillisecondJSONString()
+        
+        var predictionsArray : [Any] = []
+        for p in self.predictedActivities {
+            predictionsArray.append(p.jsonDictionary())
+        }
+        
+        dict["predictedActivities"] = predictionsArray
+        
+        return dict
+    }
+    
     override public var debugDescription: String {
-        return "Readings: " + String(accelerometerReadings.count) + ", " + predictedActivities.reduce("", {sum, prediction in sum + (prediction as! PredictedActivity).debugDescription + ", "})
+        return predictedActivities.reduce("", {sum, prediction in sum + prediction.debugDescription + ", "})
     }
     
     func setPredictedActivities(forClassConfidences classConfidences:[Int: Float]) {
@@ -137,102 +103,3 @@ public class Prediction: NSManagedObject {
         }
     }
 }
-
-#if DEBUG
-    extension Prediction : MGLAnnotation {
-        private func getFirstLocationAfterPrediction()->Location? {
-            guard let trip = self.trip else {
-                return nil
-            }
-            
-            let context = CoreDataManager.shared.currentManagedObjectContext()
-            let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-            fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (date >= %@)", [trip, self.startDate])
-            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
-            fetchedRequest.fetchLimit = 1
-            
-            let results: [AnyObject]?
-            do {
-                results = try context.fetch(fetchedRequest)
-            } catch let error {
-                DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
-                results = nil
-            }
-            
-            guard let r = results, let loc = r.first as? Location else {
-                return nil
-            }
-            
-            return loc
-        }
-        
-        public var coordinate: CLLocationCoordinate2D  {
-            get {
-                if let firstLoc = self.getFirstLocationAfterPrediction() {
-                    return firstLoc.coordinate()
-                }
-                
-                return CLLocationCoordinate2DMake(0, 0)
-            }
-        }
-        
-        // Title and subtitle for use by selection UI.
-        public var title: String? {
-            get {
-                if let predict = self.fetchTopPredictedActivity()  {
-                    return predict.activityType.emoji
-                }
-                
-                return "None"
-            }
-        }
-        
-        public var subtitle: String? {
-            get {
-                if let predict = self.fetchTopPredictedActivity()  {
-                    return String(format: "Confidence: %f", predict.confidence)
-                }
-                
-                return "-"
-            }
-        }
-        
-        var pinImage: UIImage {
-            var rect : CGRect
-            let markersImage = UIImage(named: "markers-soft")!
-            let pinColorsCount : CGFloat = 20
-            let pinWidth = markersImage.size.width/pinColorsCount
-            var pinIndex : CGFloat = 0
-            
-            if let predict = self.fetchTopPredictedActivity()  {
-                switch predict.activityType {
-                case .automotive:
-                    pinIndex = 1
-                case .cycling:
-                    pinIndex = 2
-                case .walking:
-                    pinIndex = 16
-                case .bus:
-                    pinIndex = 6
-                case .rail:
-                    pinIndex = 3
-                case .stationary:
-                    pinIndex = 10
-                default:
-                    pinIndex = 17
-                    
-                }
-            } else {
-                pinIndex = 18
-            }
-            rect = CGRect(x: -pinIndex * pinWidth, y: 0.0, width: pinWidth, height: markersImage.size.height)
-            UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-            markersImage.draw(at: rect.origin)
-            let pinImage = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            return pinImage!
-        }
-        
-    }
-#endif

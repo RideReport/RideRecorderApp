@@ -719,11 +719,11 @@ public class  Trip: NSManagedObject {
         self.length = Float(length)
     }
     
-    func saveLocationsAndUpdateInProgressLength()->Bool {
+    func saveLocationsAndUpdateInProgressLength(intermittently: Bool = true)->Bool {
         let locSize = self.locationCount()
-        if (lastLocationUpdateCount == -1 || abs(locSize - lastLocationUpdateCount) > 10) {
+        if (!intermittently || lastLocationUpdateCount == -1 || abs(locSize - lastLocationUpdateCount) > 10) {
             // every 10
-            if let thisLoc = self.fetchOrderedLocations().last {
+            if let thisLoc = self.mostRecentLocation() {
                 if let lasLoc = self.lastInProgressLocation {
                     let thiscllocation = thisLoc.clLocation()
                     let lastcllocation = lasLoc.clLocation()
@@ -745,7 +745,7 @@ public class  Trip: NSManagedObject {
     }
     
     var debugPredictionsDescription: String {
-        return predictions.reduce("", {sum, prediction in sum + prediction.debugDescription + "\r"})
+        return self.predictionAggregators.reduce("", {sum, prediction in sum + prediction.debugDescription + "\r"})
     }
     
     func close(_ handler: ()->Void = {}) {

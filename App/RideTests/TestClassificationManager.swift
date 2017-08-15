@@ -21,7 +21,7 @@ class TestClassificationManager : ClassificationManager {
         authorizationStatus = .authorized
     }
     
-    func gatherSensorData(toTrip trip:Trip) {
+    func gatherSensorData(predictionAggregator: PredictionAggregator) {
         //
     }
     
@@ -33,12 +33,14 @@ class TestClassificationManager : ClassificationManager {
         self.testPredictionsTemplates = testPredictions
     }
     
-    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void) {
+    func predictCurrentActivityType(predictionAggregator: PredictionAggregator, withHandler handler: @escaping (PredictionAggregator) -> Void) {
         let predictionTemplate = self.testPredictionsTemplates[testPredictionsIndex]
+        let prediction = Prediction()
         let _ = PredictedActivity(activityType: predictionTemplate.activityType, confidence: predictionTemplate.confidence, prediction: prediction)
+        predictionAggregator.predictions.insert(prediction)
         
         DispatchQueue.main.async {
-            handler(prediction)
+            handler(predictionAggregator)
         }
         
         testPredictionsIndex += 1

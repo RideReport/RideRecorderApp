@@ -21,10 +21,10 @@ protocol ClassificationManager {
     var authorizationStatus : ClassificationManagerAuthorizationStatus { get }
     
     func startup()
-    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void)
+    func predictCurrentActivityType(predictionAggregator:PredictionAggregator, withHandler handler:@escaping (_: PredictionAggregator) -> Void)
     func setTestPredictionsTemplates(testPredictions: [PredictedActivity])
     
-    func gatherSensorData(toTrip trip:Trip)
+    func gatherSensorData(predictionAggregator: PredictionAggregator)
     func stopGatheringSensorData()
 }
 
@@ -89,7 +89,7 @@ class SensorClassificationManager : ClassificationManager {
         }
     }
     
-    func gatherSensorData(toTrip trip:Trip) {
+    func gatherSensorData(predictionAggregator: PredictionAggregator) {
         if (self.backgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo("Beginning GatherSensorData background task!")
             self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
@@ -106,7 +106,7 @@ class SensorClassificationManager : ClassificationManager {
             }
             
             DispatchQueue.main.async {
-                trip.accelerometerReadings.insert(self.accelerometerReading(forAccelerometerData: accelerometerData))
+                predictionAggregator.accelerometerReadings.insert(self.accelerometerReading(forAccelerometerData: accelerometerData))
             }
         }
     }
@@ -135,12 +135,44 @@ class SensorClassificationManager : ClassificationManager {
             self.backgroundTaskID = UIBackgroundTaskInvalid
         }
     }
+
     
-    func predictCurrentActivityType(prediction:Prediction, withHandler handler:@escaping (_: Prediction) -> Void) {
+    private func runPredictionsAndFinishIfPossible(predictionAggregator: PredictionAggregator)->Bool {
+        guard let prediction = predictionAggregator.currentPrediction else {
+            return false
+        }
+ 
+        guard let firstReadingDate = predictionAggregator.fetchFirstReading(afterDate: prediction.startDate)?.date, let lastReadingDate = predictionAggregator.fetchLastReading()?.date else {
+            return false
+        }
+        
+        if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= self.sensorComponent.randomForestManager.desiredSessionDuration {
+            self.sensorComponent.randomForestManager.classify(prediction)
+            predictionAggregator.updateAggregatePredictedActivity()
+            
+            if predictionAggregator.aggregatePredictionIsComplete() {
+                predictionAggregator.currentPrediction = nil
+                self.stopMotionUpdates()
+                
+                return true
+            } else {
+                // start a new prediction and keep going
+                let newPrediction = Prediction()
+                newPrediction.startDate = prediction.startDate.addingTimeInterval(1.0)
+                predictionAggregator.currentPrediction = newPrediction
+                predictionAggregator.predictions.insert(newPrediction)
+                CoreDataManager.shared.saveContext()
+            }
+        }
+        
+        return false
+    }
+    
+    func predictCurrentActivityType(predictionAggregator: PredictionAggregator, withHandler handler:@escaping (_: PredictionAggregator) -> Void) {
         if (!self.sensorComponent.randomForestManager.canPredict) {
             DDLogInfo("Random forest was not ready!")
-            prediction.addUnknownTypePrediction()
-            handler(prediction)
+            predictionAggregator.addUnknownTypePrediction()
+            handler(predictionAggregator)
             return
         }
         
@@ -148,64 +180,57 @@ class SensorClassificationManager : ClassificationManager {
             DDLogInfo("Beginning Query Activity Type background task!")
             self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("Query Activity Type Background task expired!")
-                prediction.addUnknownTypePrediction()
-                handler(prediction)
+                predictionAggregator.addUnknownTypePrediction()
+                handler(predictionAggregator)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
             DDLogInfo("Could not query activity type, background task already in process!")
-            prediction.addUnknownTypePrediction()
-            handler(prediction)
+            predictionAggregator.addUnknownTypePrediction()
+            handler(predictionAggregator)
             return
         }
 
-        prediction.isInProgress = true
+        let prediction = Prediction()
+        predictionAggregator.currentPrediction = prediction
+        predictionAggregator.predictions.insert(prediction)
+        CoreDataManager.shared.saveContext()
         
-        let completionBlock = {
-            guard prediction.isInProgress else {
-                // avoid possible race condition where completion block could be called after we have already finished
-                return
-            }
-            
-            guard let firstReadingDate = prediction.fetchFirstReading()?.date, let lastReadingDate = prediction.fetchLastReading()?.date else {
-                return
-            }
-            
-            if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= self.sensorComponent.randomForestManager.desiredSessionDuration {
-                prediction.isInProgress = false
-                self.stopMotionUpdates()
-                CoreDataManager.shared.saveContext()
-                
-                self.sensorComponent.randomForestManager.classify(prediction)
-                handler(prediction)
+        var recordedSensorDataIsAvailable = false
+        if #available(iOS 9.0, *) {
+            if CMSensorRecorder.isAccelerometerRecordingAvailable() {
+                // go back N minutes and do predictions
+                // recordedSensorDataIsAvailable = true
             }
         }
-            
-        self.sensorComponent.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
-            guard error == nil else {
-                DDLogInfo("Error reading accelerometer data! Ending early…")
-                prediction.isInProgress = false
-                self.stopMotionUpdates()
-                
-                prediction.addUnknownTypePrediction()
-                handler(prediction)
-
-                return
-            }
-            
-            guard let accelerometerData = motion else {
-                return
-            }
-            
-            DispatchQueue.main.async {
-                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
-                if let trip = prediction.trip {
-                    trip.accelerometerReadings.insert(reading)
+        
+        if !recordedSensorDataIsAvailable { // else
+            self.sensorComponent.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
+                guard error == nil else {
+                    DDLogInfo("Error reading accelerometer data! Ending early…")
+                    predictionAggregator.currentPrediction = nil
+                    self.stopMotionUpdates()
+                    
+                    predictionAggregator.addUnknownTypePrediction()
+                    handler(predictionAggregator)
+                    
+                    return
                 }
-                prediction.accelerometerReadings.insert(reading)
-                CoreDataManager.shared.saveContext()
                 
-                completionBlock()
+                guard let accelerometerData = motion else {
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                    predictionAggregator.accelerometerReadings.insert(reading)
+                    
+                    CoreDataManager.shared.saveContext()
+                    
+                    if self.runPredictionsAndFinishIfPossible(predictionAggregator: predictionAggregator) {
+                        handler(predictionAggregator)
+                    }
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ import Foundation
 import Eureka
 
 class UploadViewController: FormViewController {
-    public var sensorDataCollection : SensorDataCollection!
+    public var aggregator : PredictionAggregator?
     public var formData : [String: Any]!
     
     override func viewDidLoad() {
@@ -31,7 +31,7 @@ class UploadViewController: FormViewController {
                 return
             }
             
-            if let collection = strongSelf.sensorDataCollection {
+            if let aggregator = strongSelf.aggregator {
                 var formDataForUPload: [String: Any] = strongSelf.formData
                 
                 if let notes = (strongSelf.form.rowBy(tag: "notes") as? TextRow)?.value,  notes != "" {
@@ -44,7 +44,7 @@ class UploadViewController: FormViewController {
                 }
                 
                 CoreDataManager.shared.saveContext()
-                APIClient.shared.uploadSensorDataCollection(collection, withMetadata: metadata)
+                APIClient.shared.upload(predictionAggregator: aggregator, withMetadata: metadata)
                 
                 strongSelf.navigationController?.popToRootViewController(animated: true)
             }

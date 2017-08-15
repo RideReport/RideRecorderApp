@@ -35,10 +35,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     internal private(set) var currentTrip : Trip?
     private var locationsPendingTripStart: [CLLocation] = []
-    private var predictionsPendingTripStart: [Prediction] = []
+    private var aggregatorsPendingTripStart: [PredictionAggregator] = []
     private var mostRecentGPSLocation: CLLocation?
     private var mostRecentLocationWithSufficientSpeed: CLLocation?
-    private var currentPrediction: Prediction?
+    private var currentPredictionAggregator: PredictionAggregator?
     
     // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
     // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
@@ -75,7 +75,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             // launch a background task to be sure we dont get killed until we get our first location update!
             if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
-                DDLogInfo(String(format: "Launched in background, beginning Route Manager Location Update Background task! Time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+                DDLogInfo(String(format: "Launched in background, beginning Route Manager Location Update Background task! Time remaining: %@", UIApplication.shared.backgroundTimeRemaining.debugDescription()))
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")
@@ -99,6 +99,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogStateChange("Starting Tracking Machine")
         
         self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
+        self.sensorComponent.locationManager.startUpdatingLocation()
+        if #available(iOS 9.0, *) {
+            self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
+        }
         
         if (!self.isLocationManagerUsingGPS) {
             // if we are not already getting location updates, get a single update for our geofence.
@@ -125,8 +129,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.mostRecentLocationWithSufficientSpeed = nil
         self.mostRecentGPSLocation = nil
         
+        self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        self.sensorComponent.locationManager.distanceFilter = 100
         self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
-        self.sensorComponent.locationManager.stopUpdatingLocation()
         self.dateOfStoppingLocationManagerGPS = Date()
         
         if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
@@ -138,20 +143,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func startLocationTrackingUsingGPS() {
-        if (!self.isLocationManagerUsingGPS) {
-            self.isLocationManagerUsingGPS = true
-            self.sensorComponent.locationManager.startUpdatingLocation()
-            if #available(iOS 9.0, *) {
-                // needs to be done with every call to startUpdatingLocation!
-                self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
-            }
-            
-            self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
-            self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        guard !self.isLocationManagerUsingGPS else {
+            return
         }
         
+        self.isLocationManagerUsingGPS = true
+        self.sensorComponent.locationManager.distanceFilter = kCLDistanceFilterNone
+        self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
         if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
-            DDLogInfo(String(format: "Beginning Route Manager Location Update Background task! Time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+            DDLogInfo(String(format: "Beginning Route Manager Location Update Background task! Time remaining: %@", UIApplication.shared.backgroundTimeRemaining.debugDescription()))
             self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                 DDLogInfo("Route Manager Location Update Background task expired!")
@@ -227,144 +228,145 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     // MARK: Location Processing
     
+    private func processGPSLocations(_ locations:[CLLocation], forTrip trip: Trip) {
+        guard let firstLocation = locations.first else {
+            return
+        }
+        
+        // initialize state locations
+        if (self.mostRecentLocationWithSufficientSpeed == nil) {
+            self.mostRecentLocationWithSufficientSpeed = firstLocation
+        }
+        if (self.mostRecentGPSLocation == nil) {
+            self.mostRecentGPSLocation = firstLocation
+        }
+        
+        var gotGPSSpeed = false
+        
+        for location in locations {
+            DDLogVerbose(String(format: "Location found for bike trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
+            
+            _ = Location(location: location, trip: trip)
+            
+            var manualSpeed : CLLocationSpeed = 0
+            if (location.speed >= 0) {
+                gotGPSSpeed = true
+                if (location.speed >= self.minimumSpeedToContinueMonitoring) {
+                    self.numberOfNonMovingContiguousGPSLocations = 0
+                } else {
+                    self.numberOfNonMovingContiguousGPSLocations += 1
+                }
+            } else if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.speed < 0 {
+                // Some times locations given will not have a speed (a negative speed).
+                // Hence, we also calculate a 'manual' speed from the current location to the last one
+                
+                manualSpeed = mostRecentGPSLocation.calculatedSpeedFromLocation(location)
+                DDLogVerbose(String(format: "Manually found speed: %f", manualSpeed))
+            }
+            
+            if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.timestamp.timeIntervalSinceNow > mostRecentGPSLocation.timestamp.timeIntervalSinceNow {
+                // if the event is more recent than the one we already have
+                self.mostRecentGPSLocation = location
+            }
+            
+            if (location.speed >= self.minimumSpeedToContinueMonitoring ||
+                (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
+                // we are moving sufficiently fast, continue the trip
+                self.startTimeOfPossibleWalkingSession = nil
+                
+                if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
+                    if (location.timestamp.timeIntervalSinceNow > self.mostRecentLocationWithSufficientSpeed!.timestamp.timeIntervalSinceNow) {
+                        // if the event is more recent than the one we already have
+                        self.mostRecentLocationWithSufficientSpeed = location
+                    }
+                }
+            } else if (location.speed < self.minimumSpeedToContinueMonitoring) {
+                if (location.speed >= self.minimumSpeedForPostTripWalkingAround) {
+                    if (self.startTimeOfPossibleWalkingSession == nil || self.startTimeOfPossibleWalkingSession!.compare(location.timestamp) == .orderedDescending) {
+                        self.startTimeOfPossibleWalkingSession = location.timestamp
+                    }
+                } else {
+                    if let startDate = self.startTimeOfPossibleWalkingSession, location.timestamp.timeIntervalSince(startDate) < self.minimumTimeIntervalBeforeDeclaringWalkingSession {
+                        self.startTimeOfPossibleWalkingSession = nil
+                    }
+                }
+            }
+        }
+        
+        _ = trip.saveLocationsAndUpdateInProgressLength()
+        
+        if let mostRecentLocationWithSufficientSpeed = self.mostRecentLocationWithSufficientSpeed, let mostRecentGPSLocation = self.mostRecentGPSLocation {
+            if (gotGPSSpeed == true && abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForConsideringStoppedTrip){
+                if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
+                    if let startDate = self.startTimeOfPossibleWalkingSession, mostRecentGPSLocation.timestamp.timeIntervalSince(startDate) >= self.minimumTimeIntervalBeforeDeclaringWalkingSession {
+                        DDLogVerbose("Started Walking after stopping")
+                        self.stopTrip()
+                    } else if (abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
+                        DDLogVerbose("Moving too slow for too long")
+                        self.stopTrip()
+                    }
+                } else {
+                    DDLogVerbose("Not enough slow locations to stop, waiting…")
+                }
+            } else if (gotGPSSpeed == false) {
+                let timeIntervalSinceLastGPSMovement = abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp))
+                var maximumTimeIntervalBetweenGPSMovements = self.timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings
+                if (self.isDefferringLocationUpdates) {
+                    // if we are deferring, give extra time. this is because we will sometime get
+                    // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
+                    maximumTimeIntervalBetweenGPSMovements += self.timeIntervalForLocationTrackingDeferral
+                }
+                if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
+                    DDLogVerbose("Went too long with unusable speeds.")
+                    self.stopTrip()
+                } else {
+                    DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
+                }
+            }
+        }
+    }
+    
     private func processLocations(_ locations:[CLLocation]) {
         guard let firstLocation = locations.first else {
             return
         }
         
         if let trip = self.currentTrip, self.isLocationManagerUsingGPS {
-            // if we are actively using GPS, we know the mode and can append to the current trip
-            
-            
-            // initialize state locations
-            if (self.mostRecentLocationWithSufficientSpeed == nil) {
-                self.mostRecentLocationWithSufficientSpeed = firstLocation
-            }
-            if (self.mostRecentGPSLocation == nil) {
-                self.mostRecentGPSLocation = firstLocation
-            }
-            
-            var gotGPSSpeed = false
-            
-            for location in locations {
-                DDLogVerbose(String(format: "Location found for bike trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
-
-                _ = Location(location: location, trip: trip)
-                
-                var manualSpeed : CLLocationSpeed = 0
-                if (location.speed >= 0) {
-                    gotGPSSpeed = true
-                    if (location.speed >= self.minimumSpeedToContinueMonitoring) {
-                        self.numberOfNonMovingContiguousGPSLocations = 0
-                    } else {
-                        self.numberOfNonMovingContiguousGPSLocations += 1
-                    }
-                } else if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.speed < 0 {
-                    // Some times locations given will not have a speed (a negative speed).
-                    // Hence, we also calculate a 'manual' speed from the current location to the last one
-                    
-                    manualSpeed = mostRecentGPSLocation.calculatedSpeedFromLocation(location)
-                    DDLogVerbose(String(format: "Manually found speed: %f", manualSpeed))
-                }
-                
-                if let mostRecentGPSLocation = self.mostRecentGPSLocation, location.timestamp.timeIntervalSinceNow > mostRecentGPSLocation.timestamp.timeIntervalSinceNow {
-                    // if the event is more recent than the one we already have
-                    self.mostRecentGPSLocation = location
-                }
-                
-                //////////////////////
-                
-                if (location.speed >= self.minimumSpeedToContinueMonitoring ||
-                    (manualSpeed >= self.minimumSpeedToContinueMonitoring && manualSpeed < 20.0)) {
-                    // we are moving sufficiently fast, continue the trip
-                    self.startTimeOfPossibleWalkingSession = nil
-                    
-                    if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                        if (location.timestamp.timeIntervalSinceNow > self.mostRecentLocationWithSufficientSpeed!.timestamp.timeIntervalSinceNow) {
-                            // if the event is more recent than the one we already have
-                            self.mostRecentLocationWithSufficientSpeed = location
-                        }
-                    }
-                } else if (location.speed < self.minimumSpeedToContinueMonitoring) {
-                    if (location.speed >= self.minimumSpeedForPostTripWalkingAround) {
-                        if (self.startTimeOfPossibleWalkingSession == nil || self.startTimeOfPossibleWalkingSession!.compare(location.timestamp) == .orderedDescending) {
-                            self.startTimeOfPossibleWalkingSession = location.timestamp
-                        }
-                    } else {
-                        if let startDate = self.startTimeOfPossibleWalkingSession, location.timestamp.timeIntervalSince(startDate) < self.minimumTimeIntervalBeforeDeclaringWalkingSession {
-                            self.startTimeOfPossibleWalkingSession = nil
-                        }
-                    }
-                }                
-            }
-            
-            _ = trip.saveLocationsAndUpdateInProgressLength()
-            
-            if let mostRecentLocationWithSufficientSpeed = self.mostRecentLocationWithSufficientSpeed, let mostRecentGPSLocation = self.mostRecentGPSLocation {
-                if (gotGPSSpeed == true && abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForConsideringStoppedTrip){
-                    if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
-                        if let startDate = self.startTimeOfPossibleWalkingSession, mostRecentGPSLocation.timestamp.timeIntervalSince(startDate) >= self.minimumTimeIntervalBeforeDeclaringWalkingSession {
-                            DDLogVerbose("Started Walking after stopping")
-                            self.stopTrip()
-                        } else if (abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
-                            DDLogVerbose("Moving too slow for too long")
-                            self.stopTrip()
-                        }
-                    } else {
-                        DDLogVerbose("Not enough slow locations to stop, waiting…")
-                    }
-                } else if (gotGPSSpeed == false) {
-                    let timeIntervalSinceLastGPSMovement = abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp))
-                    var maximumTimeIntervalBetweenGPSMovements = self.timeIntervalBeforeStoppedTripDueToUsuableSpeedReadings
-                    if (self.isDefferringLocationUpdates) {
-                        // if we are deferring, give extra time. this is because we will sometime get
-                        // bad locations (ie from startMonitoringSignificantLocationChanges) during our deferral period.
-                        maximumTimeIntervalBetweenGPSMovements += self.timeIntervalForLocationTrackingDeferral
-                    }
-                    if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
-                        DDLogVerbose("Went too long with unusable speeds.")
-                        self.stopTrip()
-                    } else {
-                        DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
-                    }
-                }
-            }
-            
-            
+            processGPSLocations(locations, forTrip: trip)
         } else if (self.dateOfStoppingLocationManagerGPS != nil && abs(self.dateOfStoppingLocationManagerGPS!.timeIntervalSinceNow) < 2) {
-            // sometimes calling stopUpdatingLocation will continue to delvier a few locations. thus, keep track of dateOfStoppingLocationManagerGPS to avoid
+            // sometimes turning off GPS will continue to delvier a few locations. thus, keep track of dateOfStoppingLocationManagerGPS to avoid
             // considering these updates as significiation location changes.
             return
         } else {
             // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentTrip.
             locationsPendingTripStart.append(contentsOf: locations)
             
-            if self.currentPrediction == nil {
+            if self.currentPredictionAggregator == nil {
                 let locationsToAppendToTrip = self.locationsPendingTripStart
                 self.locationsPendingTripStart = []
                 
-                let newPrediction = Prediction()
-                self.predictionsPendingTripStart.append(newPrediction)
-                self.currentPrediction = newPrediction
+                let newAggregator = PredictionAggregator()
+                self.aggregatorsPendingTripStart.append(newAggregator)
+                self.currentPredictionAggregator = newAggregator
                 
-                sensorComponent.classificationManager.predictCurrentActivityType(prediction: newPrediction) {[weak self] (prediction) -> Void in
+                sensorComponent.classificationManager.predictCurrentActivityType(predictionAggregator: newAggregator) {[weak self] (prediction) -> Void in
                     guard let strongSelf = self else {
                         return
                     }
                     
-                    strongSelf.currentPrediction = nil
+                    strongSelf.currentPredictionAggregator = nil
                     
-                    guard let topPrediction = prediction.fetchTopPredictedActivity(), topPrediction.activityType != .unknown else {
+                    guard let prediction = prediction.aggregatePredictedActivity, prediction.activityType != .unknown else {
                         DDLogVerbose("No valid prediction found, continuing to monitor…")
                         return
                     }
                     
-                    DDLogVerbose(String(format: "Prediction: %@ confidence: %f", topPrediction.activityType.emoji, topPrediction.confidence))
+                    DDLogVerbose(String(format: "Prediction: %@ confidence: %f", prediction.activityType.emoji, prediction.confidence))
                     
-                    if topPrediction.confidence > 0.9 {
+                    if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
                         let priorTrip = strongSelf.currentTrip ?? Trip.mostRecentTrip()
                         
-                        if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: topPrediction.activityType, fromLocation: firstLocation) {
+                        if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: prediction.activityType, fromLocation: firstLocation) {
                             DDLogStateChange("Resuming trip")
 
                             trip.reopen()
@@ -375,27 +377,27 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                                 trip.close()
                             }
                             strongSelf.currentTrip = Trip()
-                            if topPrediction.activityType != .stationary {
-                                strongSelf.currentTrip!.activityType = topPrediction.activityType
+                            if prediction.activityType != .stationary {
+                                strongSelf.currentTrip!.activityType = prediction.activityType
                             }
                         }
                         
-                        for prediction in strongSelf.predictionsPendingTripStart {
-                            prediction.addToTrip(strongSelf.currentTrip!)
+                        for aggregator in strongSelf.aggregatorsPendingTripStart {
+                            strongSelf.currentTrip!.predictionAggregators.insert(aggregator)
                         }
                         
-                        strongSelf.predictionsPendingTripStart = []
+                        strongSelf.aggregatorsPendingTripStart = []
                         
                         for location in locationsToAppendToTrip {
                             _ = Location(location: location, trip: strongSelf.currentTrip!)
                         }
-                        _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength()
+                        _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength(intermittently: false)
                         
                         if (strongSelf.currentTrip!.activityType == .cycling) {
                             strongSelf.startLocationTrackingUsingGPS()
                         }
                     } else {
-                        // lower confidence, keep trying
+                        // keep track of these locations
                         strongSelf.locationsPendingTripStart.append(contentsOf: locationsToAppendToTrip)
                     }
                 }
@@ -678,7 +680,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
             
             #if DEBUG
-                DDLogInfo(String(format: "Restarting route manager background task, time remaining: %.0f", UIApplication.shared.backgroundTimeRemaining))
+                DDLogInfo(String(format: "Restarting route manager background task, time remaining: %@", UIApplication.shared.backgroundTimeRemaining.debugDescription()))
             #endif
             
             if (self.isLocationManagerUsingGPS) {
@@ -705,6 +707,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
                     self.isGettingInitialLocationForGeofence = false
                     self.enterBackgroundState(lastLocation: location)
+                    break
                 }
             }
         }

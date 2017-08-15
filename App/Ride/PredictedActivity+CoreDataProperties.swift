@@ -11,13 +11,8 @@ import CoreData
 
 
 extension PredictedActivity {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<PredictedActivity> {
-        return NSFetchRequest<PredictedActivity>(entityName: "PredictedActivity")
-    }
-
     @NSManaged public var activityTypeInteger: Int16
     @NSManaged public var confidence: Float
     @NSManaged public var prediction: Prediction?
-
+    @NSManaged public var predictionAggregator: PredictionAggregator?
 }

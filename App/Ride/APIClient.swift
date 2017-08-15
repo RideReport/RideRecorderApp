@@ -577,22 +577,21 @@ class APIClient {
 //        }
     }
     
-  //  func uploadSensorDataCollection(_ sensorDataCollection: SensorDataCollection, withMetadata metadataDict:[String: Any] = [:]) {
-        // TODO
+    func upload(predictionAggregator: PredictionAggregator, withMetadata metadataDict:[String: Any] = [:]) {
         
-//        let accelerometerRouteURL = "ios_accelerometer_data"
-//        var params = metadataDict
-//        params["data"] = sensorDataCollection.jsonDictionary() as Any?
-//
-//        _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
-//            switch response.result {
-//            case .success(_):
-//                DDLogWarn("Yep")
-//            case .failure(_):
-//                DDLogWarn("Nope!")
-//            }
-//        }
-    // }
+        let accelerometerRouteURL = "ios_accelerometer_data"
+        var params = metadataDict
+        params["data"] = predictionAggregator.jsonDictionary() as Any?
+
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
+            switch response.result {
+            case .success(_):
+                DDLogWarn("Yep")
+            case .failure(_):
+                DDLogWarn("Nope!")
+            }
+        }
+     }
     
     @discardableResult func syncTrip(_ trip: Trip, includeFullLocations: Bool = true)->AuthenticatedAPIRequest {
         guard (trip.isClosed) else {

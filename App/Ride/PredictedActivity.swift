@@ -18,10 +18,14 @@ public class PredictedActivity: NSManagedObject {
             self.activityTypeInteger = newValue.rawValue
         }
     }
-
-    convenience init(activityType: ActivityType, confidence: Float, prediction: Prediction?) {
+    
+    convenience init() {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "PredictedActivity", in: context)!, insertInto: context)
+    }
+
+    convenience init(activityType: ActivityType, confidence: Float, prediction: Prediction?) {
+        self.init()
         
         self.activityType = activityType
         self.confidence = confidence

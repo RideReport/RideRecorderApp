@@ -11,11 +11,6 @@ import CoreData
 
 
 extension Promotion {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Promotion> {
-        return NSFetchRequest<Promotion>(entityName: "Promotion")
-    }
-
     @NSManaged public var bannerImageUrl: String?
     @NSManaged public var buttonTitle: String?
     @NSManaged public var endDate: Date?

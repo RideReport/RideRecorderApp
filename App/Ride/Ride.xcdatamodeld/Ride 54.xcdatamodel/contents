@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="54">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="54">
     <entity name="AccelerometerReading" representedClassName=".AccelerometerReading" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="x" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="y" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="z" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="includedPredictions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Prediction" inverseName="accelerometerReadings" inverseEntity="Prediction" syncable="YES"/>
-        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="accelerometerReadings" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="predictionAggregator" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="accelerometerReadings" inverseEntity="PredictionAggregator" syncable="YES"/>
     </entity>
     <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="appSettingsText" optional="YES" attributeType="String" syncable="YES"/>
@@ -48,13 +47,19 @@
         <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
         <attribute name="confidence" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
         <relationship name="prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prediction" inverseName="predictedActivities" inverseEntity="Prediction" syncable="YES"/>
+        <relationship name="predictionAggregator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="aggregatePredictedActivity" inverseEntity="PredictionAggregator" syncable="YES"/>
     </entity>
     <entity name="Prediction" representedClassName=".Prediction" syncable="YES">
         <attribute name="activityPredictionModelIdentifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="accelerometerReadings" toMany="YES" deletionRule="Nullify" destinationEntity="AccelerometerReading" inverseName="includedPredictions" inverseEntity="AccelerometerReading" syncable="YES"/>
         <relationship name="predictedActivities" toMany="YES" deletionRule="Cascade" destinationEntity="PredictedActivity" inverseName="prediction" inverseEntity="PredictedActivity" syncable="YES"/>
-        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="predictions" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="predictionAggregator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="predictions" inverseEntity="PredictionAggregator" syncable="YES"/>
+    </entity>
+    <entity name="PredictionAggregator" representedClassName=".PredictionAggregator" syncable="YES">
+        <relationship name="accelerometerReadings" toMany="YES" deletionRule="Cascade" destinationEntity="AccelerometerReading" inverseName="predictionAggregator" inverseEntity="AccelerometerReading" syncable="YES"/>
+        <relationship name="aggregatePredictedActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictedActivity" inverseName="predictionAggregator" inverseEntity="PredictedActivity" syncable="YES"/>
+        <relationship name="predictions" toMany="YES" deletionRule="Cascade" destinationEntity="Prediction" inverseName="predictionAggregator" inverseEntity="Prediction" syncable="YES"/>
+        <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="predictionAggregators" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="Profile" representedClassName=".Profile" syncable="YES">
         <attribute name="currentRatingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -100,9 +105,8 @@
         <attribute name="startingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="temperature" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="accelerometerReadings" toMany="YES" deletionRule="Cascade" destinationEntity="AccelerometerReading" inverseName="trip" inverseEntity="AccelerometerReading" syncable="YES"/>
         <relationship name="locations" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="trip" inverseEntity="Location" syncable="YES"/>
-        <relationship name="predictions" toMany="YES" deletionRule="Cascade" destinationEntity="Prediction" inverseName="trip" inverseEntity="Prediction" syncable="YES"/>
+        <relationship name="predictionAggregators" toMany="YES" deletionRule="Cascade" destinationEntity="PredictionAggregator" inverseName="trip" inverseEntity="PredictionAggregator" syncable="YES"/>
         <relationship name="simplifiedLocations" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="simplifiedInTrip" inverseEntity="Location" syncable="YES"/>
         <relationship name="tripRewards" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
     </entity>
@@ -112,15 +116,16 @@
         <relationship name="trip" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="tripRewards" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AccelerometerReading" positionX="-18" positionY="171" width="128" height="135"/>
+        <element name="AccelerometerReading" positionX="-18" positionY="171" width="128" height="120"/>
+        <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="105"/>
         <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="210"/>
         <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="135"/>
         <element name="Location" positionX="-63" positionY="-18" width="128" height="30"/>
-        <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="90"/>
-        <element name="Prediction" positionX="-45" positionY="135" width="128" height="120"/>
+        <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="105"/>
+        <element name="Prediction" positionX="-45" positionY="135" width="128" height="105"/>
         <element name="Profile" positionX="-45" positionY="144" width="128" height="30"/>
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
-        <element name="Trip" positionX="-63" positionY="36" width="128" height="405"/>
+        <element name="Trip" positionX="-63" positionY="36" width="128" height="390"/>
         <element name="TripReward" positionX="-36" positionY="144" width="128" height="90"/>
     </elements>
 </model>

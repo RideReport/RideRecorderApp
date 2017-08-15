@@ -269,8 +269,8 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
                 }))
                 alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-                    for prediction in trip.predictions {
-                        SensorManagerComponent.shared.randomForestManager.classify(prediction)
+                    for prediction in trip.predictionAggregators {
+                        //SensorManagerComponent.shared.randomForestManager.classify(prediction)
                     }
                     //trip.calculateAggregatePredictedActivityType()
                 }))

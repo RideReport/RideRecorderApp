@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 import CoreMotion
-import MapKit
 
 public class AccelerometerReading : NSManagedObject {    
     func jsonDictionary() -> [String: Any] {

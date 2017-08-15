@@ -13,7 +13,6 @@ import CoreData
 extension Prediction {
     @NSManaged public var startDate: Date
     @NSManaged public var activityPredictionModelIdentifier: String?
-    @NSManaged public var accelerometerReadings: Set<AccelerometerReading>
     @NSManaged public var predictedActivities: Set<PredictedActivity>
-    @NSManaged public var trip: Trip?
+    @NSManaged public var predictionAggregator: PredictionAggregator?
 }

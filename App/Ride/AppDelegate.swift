@@ -85,9 +85,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                                       classificationManager: TestClassificationManager())
         
         SensorManagerComponent.shared.locationManager.secondLength = 0.4
-        let predictionTemplate = PredictedActivity(activityType: .bus, confidence: 1.0, prediction: nil)
         SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
-        SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate])
+        
+        let predictionTemplate = PredictedActivity(activityType: .stationary, confidence: 0.4, prediction: nil)
+        let predictionTemplate2 = PredictedActivity(activityType: .stationary, confidence: 0.5, prediction: nil)
+        let predictionTemplate3 = PredictedActivity(activityType: .walking, confidence: 0.6, prediction: nil)
+        let predictionTemplate4 = PredictedActivity(activityType: .walking, confidence: 1.0, prediction: nil)
+        SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate, predictionTemplate2, predictionTemplate3, predictionTemplate4])
     }
 #endif
         

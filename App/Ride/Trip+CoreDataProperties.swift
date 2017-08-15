@@ -28,9 +28,8 @@ extension Trip {
     @NSManaged public var isSummarySynced: Bool
     @NSManaged public var temperature: NSNumber?
     @NSManaged public var uuid: String!
-    @NSManaged public var accelerometerReadings: Set<AccelerometerReading>
     @NSManaged internal var locations: Set<Location>
-    @NSManaged public var predictions: Set<Prediction>
+    @NSManaged public var predictionAggregators: Set<PredictionAggregator>
     @NSManaged internal var simplifiedLocations: Set<Location>
     @NSManaged public var tripRewards: NSOrderedSet
 
