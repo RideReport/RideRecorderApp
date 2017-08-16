@@ -715,6 +715,16 @@ public class  Trip: NSManagedObject {
     }
     
     private func calculateLength()-> Void {
+        guard self.activityType == .cycling else {
+            guard let startLoc = self.firstNonInferredLocation(), let endLoc = self.mostRecentLocation() else {
+                self.length = 0.0
+                return
+            }
+            
+            self.length = Float(startLoc.clLocation().distance(from: endLoc.clLocation()))
+            return
+        }
+        
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
         for location in self.usableLocationsForSimplification() {
