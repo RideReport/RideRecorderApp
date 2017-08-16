@@ -702,7 +702,7 @@ public class  Trip: NSManagedObject {
     
     private func calculateLength()-> Void {
         guard self.activityType == .cycling else {
-            guard let startLoc = self.firstNonInferredLocation(), let endLoc = self.mostRecentLocation() else {
+            guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
                 self.length = 0.0
                 return
             }
@@ -1131,10 +1131,6 @@ public class  Trip: NSManagedObject {
                 continue
             }
             
-            if location.isInferredLocation {
-                continue
-            }
-            
             if let lastLocation = lastLoc, lastLocation.date.compare(location.date as Date) != ComparisonResult.orderedDescending {
                 let calPerKgMin : Double = {
                     switch (location.speed) {
@@ -1372,10 +1368,10 @@ public class  Trip: NSManagedObject {
         return loc
     }
     
-    func firstNonInferredLocation() -> Location? {
+    func firstLocation() -> Location? {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND isInferredLocation == false", self)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@", self)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
@@ -1396,7 +1392,7 @@ public class  Trip: NSManagedObject {
     
     
     var startDate : Date {
-        if let firstLoc = self.firstNonInferredLocation() {
+        if let firstLoc = self.firstLocation() {
             return firstLoc.date
         }
         
@@ -1412,7 +1408,7 @@ public class  Trip: NSManagedObject {
     }
     
     var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.firstNonInferredLocation(), let endLoc = self.mostRecentLocation() else {
+        guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
             return 0.0
         }
         
