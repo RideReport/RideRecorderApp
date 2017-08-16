@@ -23,7 +23,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
     private var didStartFromBackground : Bool = false
-    private var isGettingInitialLocationForGeofence : Bool = false
     private var isDefferringLocationUpdates : Bool = false
     private var isLocationManagerUsingGPS : Bool = false
     
@@ -39,18 +38,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private var mostRecentGPSLocation: CLLocation?
     private var mostRecentLocationWithSufficientSpeed: CLLocation?
     private var currentPredictionAggregator: PredictionAggregator?
-    
-    // surround our center with [numberOfGeofenceSleepRegions] regions, each [geofenceSleepRegionDistanceToCenter] away from
-    // the center with a radius of [geofenceSleepRegionRadius]. In this way, we can watch entrance events the geofences
-    // surrounding our center, instead of an exit event on a geofence around our center.
-    // we do this because exit events tend to perform worse than enter events.
-    let numberOfGeofenceSleepRegions = 9
-    let geofenceSleepRegionDistanceToCenter : CLLocationDegrees = 0.0035
-    let backupGeofenceSleepRegionRadius : CLLocationDistance = 80
-    let backupGeofenceIdentifier = "com.Knock.RideReport.backupGeofence"
-    let geofenceSleepRegionRadius : CLLocationDistance = 90
-    let geofenceIdentifierPrefix = "com.Knock.RideReport.geofence"
-    var geofenceSleepRegions :  [CLCircularRegion] = []
     
     // Constants
     let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
@@ -104,14 +91,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
         }
         
-        if (!self.isLocationManagerUsingGPS) {
-            // if we are not already getting location updates, get a single update for our geofence.
-            self.isGettingInitialLocationForGeofence = true
-            self.startLocationTrackingUsingGPS()
-        }
+        self.enterBackgroundState()
     }
     
-    private func enterBackgroundState(lastLocation: CLLocation?) {
+    private func enterBackgroundState() {
         DDLogStateChange("Entering background state")
         
         #if DEBUG
@@ -122,8 +105,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 UIApplication.shared.presentLocalNotificationNow(notif)
             }
         #endif
-        self.disableAllGeofences() // first remove any existing geofences
-        self.setupGeofencesAroundCenter(lastLocation ?? self.sensorComponent.locationManager.location)
         
         self.isLocationManagerUsingGPS = false
         self.mostRecentLocationWithSufficientSpeed = nil
@@ -161,12 +142,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func abortTrip() {
-        self.stopTripAndEnterBackgroundState	(abort: true)
+        self.stopTripAndEnterBackgroundState(abort: true)
     }
     
     func stopTripAndEnterBackgroundState(abort: Bool = false, stoppedManually: Bool = false) {
         defer {
-            self.enterBackgroundState(lastLocation: self.mostRecentGPSLocation)
+            self.enterBackgroundState()
         }
         
         guard let stoppedTrip = self.currentTrip else {
@@ -375,7 +356,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                             if let trip = strongSelf.currentTrip, !trip.isClosed {
                                 trip.close()
                             }
-                            strongSelf.currentTrip = Trip()
+                            strongSelf.currentTrip = Trip(withPriorTrip: priorTrip)
                             if prediction.activityType != .stationary {
                                 strongSelf.currentTrip!.activityType = prediction.activityType
                             }
@@ -442,47 +423,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         return abs(trip.endDate.timeIntervalSince(location.timestamp)) < timeoutInterval
     }
-    
-    private func setupGeofencesAroundCenter(_ center: CLLocation) {
-        DDLogInfo("Setting up geofences!")
-        
-        Profile.profile().setGeofencedLocation(center)
-        CoreDataManager.shared.saveContext()
-        
-        // first we put a geofence in the middle as a fallback (exit event)
-        let region = CLCircularRegion(center:center.coordinate, radius:self.backupGeofenceSleepRegionRadius, identifier: self.backupGeofenceIdentifier)
-        self.geofenceSleepRegions.append(region)
-        self.sensorComponent.locationManager.startMonitoring(for: region)
-        
-        // the rest of our geofences are for looking at enter events
-        // our first geofence will be directly north of our center
-        let locationOfFirstGeofenceCenter = CLLocationCoordinate2DMake(center.coordinate.latitude + self.geofenceSleepRegionDistanceToCenter, center.coordinate.longitude)
-        
-        let theta = 2*Double.pi/Double(self.numberOfGeofenceSleepRegions)
-        // after that, we go around in a circle, measuring an angles of index*theta away from the last geofence and then planting a geofence there
-        for index in 0..<self.numberOfGeofenceSleepRegions {
-            let dx = 2 * self.geofenceSleepRegionDistanceToCenter * sin(Double(index) * theta/2) * cos(Double(index) * theta/2)
-            let dy = 2 * self.geofenceSleepRegionDistanceToCenter * sin(Double(index) * theta/2) * sin(Double(index) * theta/2)
-            let locationOfNextGeofenceCenter = CLLocationCoordinate2DMake(locationOfFirstGeofenceCenter.latitude - dy, locationOfFirstGeofenceCenter.longitude - dx)
-
-            let region = CLCircularRegion(center:locationOfNextGeofenceCenter, radius:self.geofenceSleepRegionRadius, identifier: String(format: "%@%i",self.geofenceIdentifierPrefix, index))
-            self.geofenceSleepRegions.append(region)
-            self.sensorComponent.locationManager.startMonitoring(for: region)
-        }
-    }
-    
-    
-    private func disableAllGeofences() {
-        for region in self.sensorComponent.locationManager.monitoredRegions {
-            self.sensorComponent.locationManager.stopMonitoring(for: region )
-        }
-        
-        Profile.profile().setGeofencedLocation(nil)
-        CoreDataManager.shared.saveContext()
-
-        self.geofenceSleepRegions = []
-    }
-    
     
     private func beginDeferringUpdatesIfAppropriate() {
         if (CLLocationManager.deferredLocationUpdatesAvailable() && !self.isDefferringLocationUpdates) {
@@ -609,14 +549,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogWarn("Unexpectedly resumed location updates!")
     }
     
-    func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        DDLogWarn(String(format: "Got location monitoring error! %@", error as CVarArg))
-        
-        if (error._code == CLError.Code.regionMonitoringFailure.rawValue) {
-            // exceeded max number of geofences
-        }
-    }
-    
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         DDLogWarn(String(format: "Got active tracking location error! %@", error as CVarArg))
         
@@ -640,34 +572,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogVerbose("Finished deferring updates.")
      
         self.beginDeferringUpdatesIfAppropriate()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        if (!region.identifier.hasPrefix(self.geofenceIdentifierPrefix)) {
-            DDLogVerbose("Got geofence enter for backup or other irrelevant geofence. Skipping.")
-            return
-        }
-        
-        var locs: [CLLocation] = []
-        if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
-            locs.append(currentGeofenceLocation.clLocation())
-        }
-        
-        self.processLocations(locs)
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        if (region.identifier != self.backupGeofenceIdentifier) {
-            DDLogVerbose("Got geofence exit for irrelevant geofence. Skipping.")
-            return
-        }
-        
-        var locs: [CLLocation] = []
-        if let currentGeofenceLocation = Profile.profile().lastGeofencedLocation {
-            locs.append(currentGeofenceLocation.clLocation())
-        }
-        
-        self.processLocations(locs)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -701,16 +605,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         #endif
         
-        if self.isGettingInitialLocationForGeofence == true {
-            for location in locations {
-                if (location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                    self.isGettingInitialLocationForGeofence = false
-                    self.enterBackgroundState(lastLocation: location)
-                    break
-                }
-            }
-        } else {
-            self.processLocations(locations)
-        }
+        self.processLocations(locations)
     }
 }

@@ -149,16 +149,4 @@ public class  Profile: NSManagedObject {
         
         return nil
     }
-    
-    func setGeofencedLocation(_ location: CLLocation?) {
-        if let loc = self.lastGeofencedLocation {
-            self.lastGeofencedLocation = nil
-            loc.managedObjectContext?.delete(loc)
-        }
-        
-        if let loc = location {
-            self.lastGeofencedLocation = Location(location: loc, geofencedLocationOfProfile: self)
-        }
-        CoreDataManager.shared.saveContext()
-    }
 }

@@ -442,7 +442,7 @@ class APIClient {
                                 loc.speed = speed
                                 loc.horizontalAccuracy = horizontalAccuracy
                                 if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
-                                    loc.isGeofencedLocation = isGeofencedLocation
+                                    loc.isInferredLocation = isGeofencedLocation
                                 }
                             } else {
                                 DDLogWarn("Error parsing location dictionary when fetched trip data!")

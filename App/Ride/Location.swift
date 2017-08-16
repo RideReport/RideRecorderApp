@@ -27,14 +27,7 @@ public class  Location: NSManagedObject {
     class var acceptableLocationAccuracy:CLLocationAccuracy {
         return kCLLocationAccuracyNearestTenMeters * 3
     }
-    
-    convenience init(location: CLLocation, geofencedLocationOfProfile profile: Profile) {
-        self.init(location: location)
-        
-        self.isGeofencedLocation = true
-        self.lastGeofencedLocationOfProfile = profile
-    }
-    
+
     convenience init(copyingLocation location: Location) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
@@ -119,7 +112,7 @@ public class  Location: NSManagedObject {
             "speed": self.speed,
             "longitude": self.longitude,
             "latitude": self.latitude,
-            "isGeofencedLocation": self.isGeofencedLocation
+            "isGeofencedLocation": self.isInferredLocation
         ]
         locDict["course"] = course
         locDict["altitude"] = altitude

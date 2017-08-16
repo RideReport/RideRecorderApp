@@ -33,13 +33,12 @@
         <attribute name="course" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="horizontalAccuracy" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="isGeofencedLocation" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isInferredLocation" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isSmoothedLocation" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="speed" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="verticalAccuracy" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="lastGeofencedLocationOfProfile" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Profile" inverseName="lastGeofencedLocation" inverseEntity="Profile" syncable="YES"/>
         <relationship name="simplifiedInTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="simplifiedLocations" inverseEntity="Trip" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip" syncable="YES"/>
     </entity>
@@ -71,7 +70,6 @@
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weightKilograms" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="connectedApps" toMany="YES" deletionRule="Nullify" destinationEntity="ConnectedApp" inverseName="profile" inverseEntity="ConnectedApp" syncable="YES"/>
-        <relationship name="lastGeofencedLocation" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Location" inverseName="lastGeofencedLocationOfProfile" inverseEntity="Location" syncable="YES"/>
         <relationship name="promotions" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Promotion" inverseName="profile" inverseEntity="Promotion" syncable="YES"/>
     </entity>
     <entity name="Promotion" representedClassName=".Promotion" syncable="YES">
@@ -120,10 +118,10 @@
         <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="105"/>
         <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="210"/>
         <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="135"/>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="30"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="225"/>
         <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="105"/>
         <element name="Prediction" positionX="-45" positionY="135" width="128" height="105"/>
-        <element name="Profile" positionX="-45" positionY="144" width="128" height="30"/>
+        <element name="Profile" positionX="-45" positionY="144" width="128" height="195"/>
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="390"/>
         <element name="TripReward" positionX="-36" positionY="144" width="128" height="90"/>

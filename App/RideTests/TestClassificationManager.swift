@@ -39,6 +39,8 @@ class TestClassificationManager : ClassificationManager {
         let _ = PredictedActivity(activityType: predictionTemplate.activityType, confidence: predictionTemplate.confidence, prediction: prediction)
         predictionAggregator.predictions.insert(prediction)
         
+        predictionAggregator.updateAggregatePredictedActivity()
+        
         DispatchQueue.main.async {
             handler(predictionAggregator)
         }

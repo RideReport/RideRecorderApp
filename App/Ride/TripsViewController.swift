@@ -1194,7 +1194,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     var cllocs: [CLLocation] = []
                     for loc in trip.fetchOrderedLocations() {
-                        if let location = loc as? Location, !location.isGeofencedLocation {
+                        if let location = loc as? Location, !location.isInferredLocation {
                             cllocs.append(location.clLocation())
                         }
                     }

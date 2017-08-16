@@ -190,6 +190,17 @@ public class  Trip: NSManagedObject {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
     }
     
+    convenience init(withPriorTrip priorTrip: Trip?) {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
+        
+        if let trip = priorTrip, let lastLocation = trip.mostRecentLocation() {
+            let inferredLoc = Location(copyingLocation: lastLocation)
+            inferredLoc.isInferredLocation = true
+            self.locations.insert(inferredLoc)
+        }
+    }
+    
     class func tripCount() -> Int {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
@@ -1124,7 +1135,7 @@ public class  Trip: NSManagedObject {
                 continue
             }
             
-            if location.isGeofencedLocation {
+            if location.isInferredLocation {
                 continue
             }
             
@@ -1239,7 +1250,7 @@ public class  Trip: NSManagedObject {
     private func usableLocationsForSimplification()->[Location] {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR isGeofencedLocation == YES)", self, Location.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR isInferredLocation == YES)", self, Location.acceptableLocationAccuracy)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -1309,7 +1320,7 @@ public class  Trip: NSManagedObject {
             var i = 0
             for loc in locations {
                 // also include any geofence location, plus the first location following it
-                if loc.isGeofencedLocation {
+                if loc.isInferredLocation {
                     if loc.simplifiedInTrip == nil {
                         loc.simplifiedInTrip = self
                     }
@@ -1365,10 +1376,10 @@ public class  Trip: NSManagedObject {
         return loc
     }
     
-    func firstNonGeofencedLocation() -> Location? {
+    func firstNonInferredLocation() -> Location? {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND isGeofencedLocation == false", self)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND isInferredLocation == false", self)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
@@ -1389,7 +1400,7 @@ public class  Trip: NSManagedObject {
     
     
     var startDate : Date {
-        if let firstLoc = self.firstNonGeofencedLocation() {
+        if let firstLoc = self.firstNonInferredLocation() {
             return firstLoc.date
         }
         
@@ -1405,7 +1416,7 @@ public class  Trip: NSManagedObject {
     }
     
     var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.firstNonGeofencedLocation(), let endLoc = self.mostRecentLocation() else {
+        guard let startLoc = self.firstNonInferredLocation(), let endLoc = self.mostRecentLocation() else {
             return 0.0
         }
         

@@ -350,7 +350,7 @@ class HealthKitManager {
                 let locs = trip.fetchOrderedLocations()
 
                 for location in locs {
-                    if location.isGeofencedLocation {
+                    if location.isInferredLocation {
                         continue
                     }
                     
