@@ -686,20 +686,6 @@ public class  Trip: NSManagedObject {
         return fabs(self.startDate.timeIntervalSince(self.endDate))
     }
     
-    func locationWithCoordinate(_ coordinate: CLLocationCoordinate2D) -> Location {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        let location = Location.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
-        
-        location.course = -1.0
-        location.horizontalAccuracy = -1.0
-        location.latitude = coordinate.latitude
-        location.longitude = coordinate.longitude
-        location.speed = -1.0
-        location.isSmoothedLocation = true
-        
-        return location
-    }
-    
     func cancel() {
         CoreDataManager.shared.currentManagedObjectContext().delete(self)
         CoreDataManager.shared.saveContext()

@@ -262,8 +262,9 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                 self.tableView.setEditing(false, animated: true)
                 
                 let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
-                    trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
+                alertController.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.default, handler: { (_) in
+                    trip.isClosed = false
+                    trip.close()
                 }))
                 alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)

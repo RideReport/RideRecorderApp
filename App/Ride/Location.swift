@@ -13,12 +13,6 @@ import CoreMotion
 import MapKit
 
 public class  Location: NSManagedObject {
-    convenience init(location: CLLocation, trip: Trip) {
-        self.init(location: location)
-        
-        self.trip = trip
-    }
-    
     class var minimumMovingSpeed: CLLocationSpeed {
         return 0.5
     }
@@ -26,6 +20,25 @@ public class  Location: NSManagedObject {
     
     class var acceptableLocationAccuracy:CLLocationAccuracy {
         return kCLLocationAccuracyNearestTenMeters * 3
+    }
+    
+    
+    convenience init(withVisit visit:CLVisit, isArriving: Bool) {
+        let context = CoreDataManager.shared.currentManagedObjectContext()
+        self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
+        
+        self.course = -1.0
+        self.horizontalAccuracy = visit.horizontalAccuracy
+        self.latitude = visit.coordinate.latitude
+        self.longitude = visit.coordinate.longitude
+        self.speed = -1.0
+        self.isInferredLocation = true
+        
+        if isArriving {
+            self.date = visit.arrivalDate
+        } else {
+            self.date = visit.departureDate
+        }
     }
 
     convenience init(copyingLocation location: Location) {
@@ -40,6 +53,12 @@ public class  Location: NSManagedObject {
         self.altitude = location.altitude
         self.verticalAccuracy = location.verticalAccuracy
         self.date = location.date
+    }
+    
+    convenience init(location: CLLocation, trip: Trip) {
+        self.init(location: location)
+        
+        self.trip = trip
     }
     
     convenience init(location: CLLocation) {

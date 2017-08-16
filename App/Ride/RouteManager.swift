@@ -33,7 +33,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private let minimumNumberOfNonMovingContiguousGPSLocations = 3
     
     internal private(set) var currentTrip : Trip?
-    private var locationsPendingTripStart: [CLLocation] = []
+    private var locationsPendingTripStart: [Location] = []
     private var aggregatorsPendingTripStart: [PredictionAggregator] = []
     private var mostRecentGPSLocation: CLLocation?
     private var mostRecentLocationWithSufficientSpeed: CLLocation?
@@ -86,6 +86,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogStateChange("Starting Tracking Machine")
         
         self.sensorComponent.locationManager.startMonitoringSignificantLocationChanges()
+        self.sensorComponent.locationManager.startMonitoringVisits()
         self.sensorComponent.locationManager.startUpdatingLocation()
         if #available(iOS 9.0, *) {
             self.sensorComponent.locationManager.allowsBackgroundLocationUpdates = true
@@ -307,10 +308,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func processLocations(_ locations:[CLLocation]) {
-        guard let firstLocation = locations.first else {
-            return
-        }
-        
         if let trip = self.currentTrip, self.isLocationManagerUsingGPS {
             processGPSLocations(locations, forTrip: trip)
         } else if (self.dateOfStoppingLocationManagerGPS != nil && abs(self.dateOfStoppingLocationManagerGPS!.timeIntervalSinceNow) < 2) {
@@ -319,67 +316,75 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         } else {
             // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentTrip.
-            locationsPendingTripStart.append(contentsOf: locations)
+            for location in locations {
+                let loc = Location(location: location)
+                locationsPendingTripStart.append(loc)
+            }
+            self.runPredictionAndStartTripIfNeeded()
+        }
+    }
+    
+    private func runPredictionAndStartTripIfNeeded() {
+        guard let firstLocation = self.locationsPendingTripStart.first else {
+            return
+        }
+        
+        if self.currentPredictionAggregator == nil {
+            let newAggregator = PredictionAggregator()
+            self.aggregatorsPendingTripStart.append(newAggregator)
+            self.currentPredictionAggregator = newAggregator
             
-            if self.currentPredictionAggregator == nil {
-                let locationsToAppendToTrip = self.locationsPendingTripStart
-                self.locationsPendingTripStart = []
+            sensorComponent.classificationManager.predictCurrentActivityType(predictionAggregator: newAggregator) {[weak self] (prediction) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
                 
-                let newAggregator = PredictionAggregator()
-                self.aggregatorsPendingTripStart.append(newAggregator)
-                self.currentPredictionAggregator = newAggregator
+                strongSelf.currentPredictionAggregator = nil
                 
-                sensorComponent.classificationManager.predictCurrentActivityType(predictionAggregator: newAggregator) {[weak self] (prediction) -> Void in
-                    guard let strongSelf = self else {
-                        return
-                    }
+                guard let prediction = prediction.aggregatePredictedActivity, prediction.activityType != .unknown else {
+                    DDLogVerbose("No valid prediction found, continuing to monitor…")
+                    return
+                }
+                
+                DDLogVerbose(String(format: "Prediction: %@ confidence: %f", prediction.activityType.emoji, prediction.confidence))
+                
+                if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
+                    let priorTrip = strongSelf.currentTrip ?? Trip.mostRecentTrip()
                     
-                    strongSelf.currentPredictionAggregator = nil
-                    
-                    guard let prediction = prediction.aggregatePredictedActivity, prediction.activityType != .unknown else {
-                        DDLogVerbose("No valid prediction found, continuing to monitor…")
-                        return
-                    }
-                    
-                    DDLogVerbose(String(format: "Prediction: %@ confidence: %f", prediction.activityType.emoji, prediction.confidence))
-                    
-                    if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
-                        let priorTrip = strongSelf.currentTrip ?? Trip.mostRecentTrip()
+                    if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: prediction.activityType, fromLocation: firstLocation) {
+                        DDLogStateChange("Resuming trip")
                         
-                        if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: prediction.activityType, fromLocation: firstLocation) {
-                            DDLogStateChange("Resuming trip")
-
-                            trip.reopen()
-                            strongSelf.currentTrip = trip
-                        } else {
-                            DDLogStateChange("Opening new trip")
-                            if let trip = strongSelf.currentTrip, !trip.isClosed {
-                                trip.close()
-                            }
-                            strongSelf.currentTrip = Trip(withPriorTrip: priorTrip)
-                            if prediction.activityType != .stationary {
-                                strongSelf.currentTrip!.activityType = prediction.activityType
-                            }
-                        }
-                        
-                        for aggregator in strongSelf.aggregatorsPendingTripStart {
-                            strongSelf.currentTrip!.predictionAggregators.insert(aggregator)
-                        }
-                        
-                        strongSelf.aggregatorsPendingTripStart = []
-                        
-                        for location in locationsToAppendToTrip {
-                            _ = Location(location: location, trip: strongSelf.currentTrip!)
-                        }
-                        _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength(intermittently: false)
-                        
-                        if (strongSelf.currentTrip!.activityType == .cycling) {
-                            strongSelf.startLocationTrackingUsingGPS()
-                        }
+                        trip.reopen()
+                        strongSelf.currentTrip = trip
                     } else {
-                        // keep track of these locations
-                        strongSelf.locationsPendingTripStart.append(contentsOf: locationsToAppendToTrip)
+                        DDLogStateChange("Opening new trip")
+                        if let trip = strongSelf.currentTrip, !trip.isClosed {
+                            trip.close()
+                        }
+                        strongSelf.currentTrip = Trip(withPriorTrip: priorTrip)
+                        if prediction.activityType != .stationary {
+                            strongSelf.currentTrip!.activityType = prediction.activityType
+                        }
                     }
+                    
+                    for aggregator in strongSelf.aggregatorsPendingTripStart {
+                        strongSelf.currentTrip!.predictionAggregators.insert(aggregator)
+                    }
+                    
+                    strongSelf.aggregatorsPendingTripStart = []
+                    
+                    for location in strongSelf.locationsPendingTripStart {
+                        location.trip = strongSelf.currentTrip!
+                    }
+                    strongSelf.locationsPendingTripStart = []
+                    
+                    _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength(intermittently: false)
+                    
+                    if (strongSelf.currentTrip!.activityType == .cycling) {
+                        strongSelf.startLocationTrackingUsingGPS()
+                    }
+                } else {
+                    // do nothing
                 }
             }
         }
@@ -390,10 +395,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     // MARK: - Helper methods
     //
     
-    private func tripQualifiesForResumption(trip: Trip, fromActivityType activityType: ActivityType, fromLocation location: CLLocation)->Bool {
-        if Date().timeIntervalSince(location.timestamp) > (self.timeIntervalForLocationTrackingDeferral + 10) {
+    private func tripQualifiesForResumption(trip: Trip, fromActivityType activityType: ActivityType, fromLocation location: Location)->Bool {
+        if Date().timeIntervalSince(location.date) > (self.timeIntervalForLocationTrackingDeferral + 10) {
             // https://github.com/KnockSoftware/Ride/issues/222
-            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", location.timestamp as CVarArg))
+            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", location.date as CVarArg))
             
             return false
         }
@@ -421,7 +426,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             timeoutInterval = 300
         }
         
-        return abs(trip.endDate.timeIntervalSince(location.timestamp)) < timeoutInterval
+        return abs(trip.endDate.timeIntervalSince(location.date)) < timeoutInterval
     }
     
     private func beginDeferringUpdatesIfAppropriate() {
@@ -606,5 +611,25 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         #endif
         
         self.processLocations(locations)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+        if (visit.departureDate == NSDate.distantFuture) {
+            // the user has arrived but not yet left
+            if !self.isLocationManagerUsingGPS {
+                // ignore arrivals that occur during GPS usage
+                
+                if let trip = self.currentTrip, !trip.isClosed {
+                    let loc = Location(withVisit: visit, isArriving: true)
+                    loc.trip = trip
+                    trip.close()
+                }
+            }
+        } else {
+            // the user has departed
+            let loc = Location(withVisit: visit, isArriving: false)
+            locationsPendingTripStart.append(loc)
+            self.runPredictionAndStartTripIfNeeded()
+        }
     }
 }
