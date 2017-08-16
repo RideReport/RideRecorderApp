@@ -200,7 +200,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         var locs = trip.fetchOrderedLocations(simplified: true)
 
-        if !trip.isClosed || locs.isEmpty {
+        if trip.activityType != .cycling || !trip.isClosed || locs.isEmpty {
             locs = trip.fetchOrderedLocations(simplified: false)
         }
         

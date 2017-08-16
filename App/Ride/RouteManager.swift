@@ -161,17 +161,16 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func abortTrip() {
-        self.stopTrip(abort: true)
-        self.enterBackgroundState(lastLocation: self.mostRecentGPSLocation)
+        self.stopTripAndEnterBackgroundState	(abort: true)
     }
     
-    func stopTrip(abort: Bool = false, stoppedManually: Bool = false) {
-        guard let stoppedTrip = self.currentTrip else {
-            return
-        }
-        
+    func stopTripAndEnterBackgroundState(abort: Bool = false, stoppedManually: Bool = false) {
         defer {
             self.enterBackgroundState(lastLocation: self.mostRecentGPSLocation)
+        }
+        
+        guard let stoppedTrip = self.currentTrip else {
+            return
         }
         
         self.currentTrip = nil
@@ -300,10 +299,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
                     if let startDate = self.startTimeOfPossibleWalkingSession, mostRecentGPSLocation.timestamp.timeIntervalSince(startDate) >= self.minimumTimeIntervalBeforeDeclaringWalkingSession {
                         DDLogVerbose("Started Walking after stopping")
-                        self.stopTrip()
+                        self.stopTripAndEnterBackgroundState()
                     } else if (abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
                         DDLogVerbose("Moving too slow for too long")
-                        self.stopTrip()
+                        self.stopTripAndEnterBackgroundState()
                     }
                 } else {
                     DDLogVerbose("Not enough slow locations to stop, waiting…")
@@ -318,7 +317,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
                 if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
                     DDLogVerbose("Went too long with unusable speeds.")
-                    self.stopTrip()
+                    self.stopTripAndEnterBackgroundState()
                 } else {
                     DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
                 }
@@ -551,7 +550,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogStateChange("Paused Tracking")
         
-        self.stopTrip()
+        self.stopTripAndEnterBackgroundState()
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
@@ -563,7 +562,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             DDLogStateChange("Paused Tracking due to battery life")
             
-            self.stopTrip()
+            self.stopTripAndEnterBackgroundState()
         }
     }
     
@@ -710,8 +709,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                     break
                 }
             }
+        } else {
+            self.processLocations(locations)
         }
-        
-        self.processLocations(locations)
     }
 }

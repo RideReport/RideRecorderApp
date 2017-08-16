@@ -110,64 +110,7 @@ class SensorClassificationManager : ClassificationManager {
             }
         }
     }
-    
-    private func accelerometerReading(forAccelerometerData accelerometerData:CMAccelerometerData)->AccelerometerReading {
-        let accelerometerReading = AccelerometerReading(accelerometerData: accelerometerData)
-        if self.referenceBootDate == nil {
-            self.referenceBootDate = Date(timeIntervalSinceNow: -1 * accelerometerData.timestamp)
-        }
-        
-        accelerometerReading.date =  Date(timeInterval: accelerometerData.timestamp, since: self.referenceBootDate)
-        return accelerometerReading
-    }
-    
-    private func stopMotionUpdates() {
-        if (isGatheringMotionData) {
-            return
-        }
-        
-        self.sensorComponent.motionManager.stopAccelerometerUpdates()
-        
-        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
-            DDLogInfo("Ending background task with Stop Motion Updates!")
-            
-            UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
-            self.backgroundTaskID = UIBackgroundTaskInvalid
-        }
-    }
 
-    
-    private func runPredictionsAndFinishIfPossible(predictionAggregator: PredictionAggregator)->Bool {
-        guard let prediction = predictionAggregator.currentPrediction else {
-            return false
-        }
- 
-        guard let firstReadingDate = predictionAggregator.fetchFirstReading(afterDate: prediction.startDate)?.date, let lastReadingDate = predictionAggregator.fetchLastReading()?.date else {
-            return false
-        }
-        
-        if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= self.sensorComponent.randomForestManager.desiredSessionDuration {
-            self.sensorComponent.randomForestManager.classify(prediction)
-            predictionAggregator.updateAggregatePredictedActivity()
-            
-            if predictionAggregator.aggregatePredictionIsComplete() {
-                predictionAggregator.currentPrediction = nil
-                self.stopMotionUpdates()
-                
-                return true
-            } else {
-                // start a new prediction and keep going
-                let newPrediction = Prediction()
-                newPrediction.startDate = prediction.startDate.addingTimeInterval(1.0)
-                predictionAggregator.currentPrediction = newPrediction
-                predictionAggregator.predictions.insert(newPrediction)
-                CoreDataManager.shared.saveContext()
-            }
-        }
-        
-        return false
-    }
-    
     func predictCurrentActivityType(predictionAggregator: PredictionAggregator, withHandler handler:@escaping (_: PredictionAggregator) -> Void) {
         if (!self.sensorComponent.randomForestManager.canPredict) {
             DDLogInfo("Random forest was not ready!")
@@ -204,32 +147,99 @@ class SensorClassificationManager : ClassificationManager {
             }
         }
         
-        if !recordedSensorDataIsAvailable { // else
-            self.sensorComponent.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
-                guard error == nil else {
-                    DDLogInfo("Error reading accelerometer data! Ending early…")
-                    predictionAggregator.currentPrediction = nil
-                    self.stopMotionUpdates()
-                    
-                    predictionAggregator.addUnknownTypePrediction()
+        if !recordedSensorDataIsAvailable {
+            beginMotionUpdates(predictionAggregator: predictionAggregator, withHandler: handler)
+        }
+    }
+    
+    //
+    // MARK: Helper Functions
+    //
+    
+    private func accelerometerReading(forAccelerometerData accelerometerData:CMAccelerometerData)->AccelerometerReading {
+        let accelerometerReading = AccelerometerReading(accelerometerData: accelerometerData)
+        if self.referenceBootDate == nil {
+            self.referenceBootDate = Date(timeIntervalSinceNow: -1 * accelerometerData.timestamp)
+        }
+        
+        accelerometerReading.date =  Date(timeInterval: accelerometerData.timestamp, since: self.referenceBootDate)
+        return accelerometerReading
+    }
+    
+    private func stopMotionUpdates() {
+        if (isGatheringMotionData) {
+            return
+        }
+        
+        self.sensorComponent.motionManager.stopAccelerometerUpdates()
+        
+        if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
+            DDLogInfo("Ending background task with Stop Motion Updates!")
+            
+            UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
+            self.backgroundTaskID = UIBackgroundTaskInvalid
+        }
+    }
+    
+    
+    
+    private func runPredictionsAndFinishIfPossible(predictionAggregator: PredictionAggregator)->Bool {
+        guard let prediction = predictionAggregator.currentPrediction else {
+            return false
+        }
+        
+        guard let firstReadingDate = predictionAggregator.fetchFirstReading(afterDate: prediction.startDate)?.date, let lastReadingDate = predictionAggregator.fetchLastReading()?.date else {
+            return false
+        }
+        
+        if lastReadingDate.timeIntervalSince(firstReadingDate as Date) >= self.sensorComponent.randomForestManager.desiredSessionDuration {
+            self.sensorComponent.randomForestManager.classify(prediction)
+            predictionAggregator.updateAggregatePredictedActivity()
+            
+            if predictionAggregator.aggregatePredictionIsComplete() {
+                predictionAggregator.currentPrediction = nil
+                self.stopMotionUpdates()
+                
+                return true
+            } else {
+                // start a new prediction and keep going
+                let newPrediction = Prediction()
+                newPrediction.startDate = prediction.startDate.addingTimeInterval(1.0)
+                predictionAggregator.currentPrediction = newPrediction
+                predictionAggregator.predictions.insert(newPrediction)
+                CoreDataManager.shared.saveContext()
+            }
+        }
+        
+        return false
+    }
+    
+    
+    private func beginMotionUpdates(predictionAggregator: PredictionAggregator, withHandler handler:@escaping (_: PredictionAggregator) -> Void) {
+        self.sensorComponent.motionManager.startAccelerometerUpdates(to: self.motionQueue) { (motion, error) in
+            guard error == nil else {
+                DDLogInfo("Error reading accelerometer data! Ending early…")
+                predictionAggregator.currentPrediction = nil
+                self.stopMotionUpdates()
+                
+                predictionAggregator.addUnknownTypePrediction()
+                handler(predictionAggregator)
+                
+                return
+            }
+            
+            guard let accelerometerData = motion else {
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                predictionAggregator.accelerometerReadings.insert(reading)
+                
+                CoreDataManager.shared.saveContext()
+                
+                if self.runPredictionsAndFinishIfPossible(predictionAggregator: predictionAggregator) {
                     handler(predictionAggregator)
-                    
-                    return
-                }
-                
-                guard let accelerometerData = motion else {
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
-                    predictionAggregator.accelerometerReadings.insert(reading)
-                    
-                    CoreDataManager.shared.saveContext()
-                    
-                    if self.runPredictionsAndFinishIfPossible(predictionAggregator: predictionAggregator) {
-                        handler(predictionAggregator)
-                    }
                 }
             }
         }
