@@ -12,7 +12,7 @@ def shared_pods
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
     pod 'FBSDKShareKit'
-#    pod 'Mapbox-iOS-SDK', :configurations => ['Release']
+    pod 'Mapbox-iOS-SDK', :configurations => ['Release']
     pod 'Mapbox-iOS-SDK-symbols', :podspec => "https://raw.githubusercontent.com/mapbox/mapbox-gl-native/master/platform/ios/Mapbox-iOS-SDK-symbols.podspec", :configurations => ['Debug']
     pod 'MapboxStatic.swift', :git => "https://github.com/mapbox/MapboxStatic.swift.git"
     pod 'Mixpanel'

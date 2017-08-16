@@ -26,6 +26,7 @@ PODS:
   - GzipSwift (3.1.4)
   - KeychainAccess (3.0.2)
   - Kingfisher (3.5.2)
+  - Mapbox-iOS-SDK (3.6.1)
   - Mapbox-iOS-SDK-symbols (3.6.0-symbols)
   - MapboxStatic.swift (0.8.0)
   - Mixpanel (3.1.2)
@@ -60,6 +61,7 @@ DEPENDENCIES:
   - GzipSwift
   - KeychainAccess
   - Kingfisher
+  - Mapbox-iOS-SDK
   - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/master/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
   - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`)
   - Mixpanel
@@ -94,6 +96,7 @@ SPEC CHECKSUMS:
   GzipSwift: 11ddb2bf253b1cd7b60bb169da20f62ac4348769
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
+  Mapbox-iOS-SDK: 7dd2a0fd08e9444b9c47f6e8fd1c32509bce3243
   Mapbox-iOS-SDK-symbols: 85c50b644f828371535c84a794df142ff1aa9b36
   MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09
   Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
@@ -102,6 +105,6 @@ SPEC CHECKSUMS:
   Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 4dd365d77e5205aeccdf34027b407e03bd8d90a2
+PODFILE CHECKSUM: bfbc1343883044ae67d06c9c014fe5445dd3cd96
 
 COCOAPODS: 1.2.1
