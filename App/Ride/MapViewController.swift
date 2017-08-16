@@ -240,7 +240,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                     
                     self.mapView.addAnnotation(prediction)
                 }
-            } else {
+            } else if UserDefaults.standard.bool(forKey: "DebugContinousMode2") {
                 CMMotionActivityManager().queryActivityStarting(from: trip.startDate, to: trip.endDate, to: OperationQueue.main) { (activities, error) in
                         guard let activities = activities else {
                             return
