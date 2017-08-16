@@ -361,7 +361,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         if let trip = strongSelf.currentTrip, !trip.isClosed {
                             trip.close()
                         }
-                        strongSelf.currentTrip = Trip(withPriorTrip: priorTrip)
+                        strongSelf.currentTrip = Trip()
                         if prediction.activityType != .stationary {
                             strongSelf.currentTrip!.activityType = prediction.activityType
                         }

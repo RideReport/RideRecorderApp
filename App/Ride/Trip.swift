@@ -190,17 +190,6 @@ public class  Trip: NSManagedObject {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
     }
     
-    convenience init(withPriorTrip priorTrip: Trip?) {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
-        
-        if let trip = priorTrip, let lastLocation = trip.mostRecentLocation() {
-            let inferredLoc = Location(copyingLocation: lastLocation)
-            inferredLoc.isInferredLocation = true
-            self.locations.insert(inferredLoc)
-        }
-    }
-    
     class func tripCount() -> Int {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
