@@ -316,16 +316,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             return
         } else {
             // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentTrip.
+            var locs: [Location] = []
             for location in locations {
                 let loc = Location(location: location)
-                locationsPendingTripStart.append(loc)
+                locs.append(loc)
             }
-            self.runPredictionAndStartTripIfNeeded()
+            self.runPredictionAndStartTripIfNeeded(withLocations: locs)
         }
     }
     
-    private func runPredictionAndStartTripIfNeeded() {
-        guard let firstLocation = self.locationsPendingTripStart.first else {
+    private func runPredictionAndStartTripIfNeeded(withLocations locations:[Location]) {
+        guard let firstLocation = locations.first else {
             return
         }
         
@@ -377,6 +378,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         location.trip = strongSelf.currentTrip!
                     }
                     strongSelf.locationsPendingTripStart = []
+                    for location in locations {
+                        location.trip = strongSelf.currentTrip!
+                    }
                     
                     _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength(intermittently: false)
                     
@@ -384,7 +388,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         strongSelf.startLocationTrackingUsingGPS()
                     }
                 } else {
-                    // do nothing
+                    if prediction.activityType == .stationary && strongSelf.currentTrip == nil {
+                        // don't include stationary samples in a trip when starting a new trip
+                        // if a trip is already underway, we do include them (for example if the user stops at a traffic light)
+                    } else {
+                        strongSelf.locationsPendingTripStart.append(contentsOf: locations)
+                    }
                 }
             }
         }
@@ -615,21 +624,31 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
         if (visit.departureDate == NSDate.distantFuture) {
+            DDLogInfo("User arrived")
             // the user has arrived but not yet left
             if !self.isLocationManagerUsingGPS {
                 // ignore arrivals that occur during GPS usage
                 
                 if let trip = self.currentTrip, !trip.isClosed {
+                    DDLogStateChange("Ending trip with arrival")
+
                     let loc = Location(withVisit: visit, isArriving: true)
                     loc.trip = trip
                     trip.close()
+                    self.currentTrip = nil
                 }
             }
         } else {
+            DDLogInfo("User departed")
             // the user has departed
             let loc = Location(withVisit: visit, isArriving: false)
-            locationsPendingTripStart.append(loc)
-            self.runPredictionAndStartTripIfNeeded()
+            
+            if let trip = self.currentTrip {
+                loc.trip = trip
+                CoreDataManager.shared.saveContext()
+            } else {
+                self.runPredictionAndStartTripIfNeeded(withLocations: [loc])
+            }
         }
     }
 }
