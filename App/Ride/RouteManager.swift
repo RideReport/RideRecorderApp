@@ -112,7 +112,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.mostRecentGPSLocation = nil
         
         self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        self.sensorComponent.locationManager.distanceFilter = 100
+        self.sensorComponent.locationManager.distanceFilter = 300
         self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
         self.dateOfStoppingLocationManagerGPS = Date()
         
