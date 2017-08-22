@@ -204,7 +204,7 @@ class SensorClassificationManager : ClassificationManager {
             } else {
                 // start a new prediction and keep going
                 let newPrediction = Prediction()
-                newPrediction.startDate = prediction.startDate.addingTimeInterval(1.0)
+                newPrediction.startDate = prediction.startDate.addingTimeInterval(PredictionAggregator.sampleOffsetTimeInterval)
                 predictionAggregator.currentPrediction = newPrediction
                 predictionAggregator.predictions.insert(newPrediction)
                 CoreDataManager.shared.saveContext()

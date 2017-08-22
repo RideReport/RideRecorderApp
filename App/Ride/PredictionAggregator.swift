@@ -13,6 +13,10 @@ import CoreMotion
 public class PredictionAggregator : NSManagedObject {
     public var currentPrediction: Prediction?
     public static let highConfidence: Float = 0.75
+    public static let sampleOffsetTimeInterval: TimeInterval = 0.5
+    public static let minimumSampleCountForSuccess = 8
+    public static let maximumSampleBeforeFailure = 15
+
     
     convenience init() {
         let context = CoreDataManager.shared.currentManagedObjectContext()
@@ -120,8 +124,7 @@ public class PredictionAggregator : NSManagedObject {
             return false
         }
         
-        if predictions.count <= 5 {
-            // get more than 5 samples
+        if predictions.count <= PredictionAggregator.minimumSampleCountForSuccess {
             return false
         }
             
@@ -129,8 +132,7 @@ public class PredictionAggregator : NSManagedObject {
             return true
         }
         
-        if predictions.count > 12 {
-            // don't go longer than 12 samples
+        if predictions.count > PredictionAggregator.maximumSampleBeforeFailure {
             return true
         }
         
