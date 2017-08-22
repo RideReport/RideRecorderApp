@@ -522,6 +522,31 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
     }
     
+    private func checkPausedAndResumeIfNeeded()->Bool {
+        if (isPaused()) {
+            let pausedUntilDate = self.pausedUntilDate()
+            if (pausedUntilDate != nil && pausedUntilDate!.timeIntervalSinceNow <= 0.0) {
+                #if DEBUG
+                    if UserDefaults.standard.bool(forKey: "DebugVerbosityMode") {
+                        let notif = UILocalNotification()
+                        notif.alertBody = "🐞 Automatically unpausing Ride Report!"
+                        notif.category = "DEBUG_CATEGORY"
+                        UIApplication.shared.presentLocalNotificationNow(notif)
+                    }
+                #endif
+                DDLogInfo("Auto-resuming tracking!")
+                self.resumeTracking()
+                
+                return true
+            } else {
+                DDLogInfo("Tracking is Paused, not enterign Motion Monitoring state")
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     func resumeTracking() {
         if (!isPaused()) {
             return
@@ -591,6 +616,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard checkPausedAndResumeIfNeeded() else {
+            return
+        }
+        
         DDLogVerbose("Received location updates.")
         defer {
             if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
@@ -625,6 +654,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didVisit visit: CLVisit) {
+        guard checkPausedAndResumeIfNeeded() else {
+            return
+        }
+        
         if (visit.departureDate == NSDate.distantFuture) {
             DDLogInfo("User arrived")
             // the user has arrived but not yet left
