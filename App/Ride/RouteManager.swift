@@ -326,8 +326,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func runPredictionAndStartTripIfNeeded(withLocations locations:[Location]) {
-        guard let firstLocation = locations.first else {
-            return
+        var firstLocation = locations.first
+        
+        if let loc = firstLocation, Date().timeIntervalSince(loc.date) > (self.timeIntervalForLocationTrackingDeferral + 10) {
+            // work around for https://github.com/KnockSoftware/Ride/issues/222
+            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", loc.date as CVarArg))
+            
+            if (locations.count > 1) {
+                firstLocation = locations[1]
+            } else {
+                firstLocation = nil
+            }
         }
         
         if self.currentPredictionAggregator == nil {
@@ -352,7 +361,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
                     let priorTrip = strongSelf.currentTrip ?? Trip.mostRecentTrip()
                     
-                    if let trip = priorTrip, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: prediction.activityType, fromLocation: firstLocation) {
+                    if let trip = priorTrip, let loc = firstLocation, strongSelf.tripQualifiesForResumption(trip: trip, fromActivityType: prediction.activityType, fromLocation: loc) {
                         DDLogStateChange("Resuming trip")
                         
                         trip.reopen()
@@ -405,13 +414,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     //
     
     private func tripQualifiesForResumption(trip: Trip, fromActivityType activityType: ActivityType, fromLocation location: Location)->Bool {
-        if Date().timeIntervalSince(location.date) > (self.timeIntervalForLocationTrackingDeferral + 10) {
-            // https://github.com/KnockSoftware/Ride/issues/222
-            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", location.date as CVarArg))
-            
-            return false
-        }
-        
         if (trip.rating.choice != .notSet || trip.wasStoppedManually) {
             // dont resume rated or manually stopped trips
             return false
