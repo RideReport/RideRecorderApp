@@ -328,17 +328,6 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private func runPredictionAndStartTripIfNeeded(withLocations locations:[Location]) {
         var firstLocation = locations.first
         
-        if let loc = firstLocation, Date().timeIntervalSince(loc.date) > (self.timeIntervalForLocationTrackingDeferral + 10) {
-            // work around for https://github.com/KnockSoftware/Ride/issues/222
-            DDLogVerbose(String(format: "Not resuming because of stale location! Date: %@", loc.date as CVarArg))
-            
-            if (locations.count > 1) {
-                firstLocation = locations[1]
-            } else {
-                firstLocation = nil
-            }
-        }
-        
         if self.currentPredictionAggregator == nil {
             let newAggregator = PredictionAggregator()
             self.aggregatorsPendingTripStart.append(newAggregator)
