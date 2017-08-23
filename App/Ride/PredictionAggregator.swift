@@ -13,7 +13,7 @@ import CoreMotion
 public class PredictionAggregator : NSManagedObject {
     public var currentPrediction: Prediction?
     public static let highConfidence: Float = 0.75
-    public static let sampleOffsetTimeInterval: TimeInterval = 0.5
+    public static let sampleOffsetTimeInterval: TimeInterval = 0.25
     public static let minimumSampleCountForSuccess = 8
     public static let maximumSampleBeforeFailure = 15
 
