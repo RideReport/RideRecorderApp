@@ -689,17 +689,7 @@ public class  Trip: NSManagedObject {
         CoreDataManager.shared.saveContext()
     }
     
-    private func calculateLength()-> Void {
-        guard self.activityType == .cycling else {
-            guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
-                self.length = 0.0
-                return
-            }
-            
-            self.length = Float(startLoc.clLocation().distance(from: endLoc.clLocation()))
-            return
-        }
-        
+    func calculateLength()-> Void {
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
         for location in self.usableLocationsForSimplification() {
@@ -744,19 +734,40 @@ public class  Trip: NSManagedObject {
         return self.predictionAggregators.reduce("", {sum, prediction in sum + prediction.debugDescription + "\r"})
     }
     
-    func close(_ handler: ()->Void = {}) {
-        if (self.isClosed == true) {
+    func close(_ handler: @escaping ()->Void = {}) {
+        let finalBlock = {
+            NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
+            self.saveAndMarkDirty()
             handler()
+        }
+        
+        guard self.isClosed != true else {
+            finalBlock()
+            return
+        }
+        
+        
+        guard self.locationCount() > 1 else {
+            DDLogInfo("Tossing trip with only one location")
+            
+            self.cancel()
+            finalBlock()
+            return
+        }
+        
+        self.calculateLength()
+        
+        guard !self.activityType.isMotorizedMode || self.length > 200.0 else {
+            DDLogInfo("Tossing motorized trip that was too short")
+            
+            self.cancel()
+            finalBlock()
             return
         }
         
         self.simplify({
-            self.calculateLength()
             self.isClosed = true
-            
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
-            self.saveAndMarkDirty()
-            handler()
+            finalBlock()
         })
     }
     

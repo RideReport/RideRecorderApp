@@ -248,7 +248,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
         if !trip.isClosed {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
-                SensorManagerComponent.shared.routeManager.stopTripAndEnterBackgroundState(stoppedManually: true)
+                SensorManagerComponent.shared.routeManager.stopGPSTripAndEnterBackgroundState(stoppedManually: true)
                 }]
         }
         

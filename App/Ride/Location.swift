@@ -140,6 +140,10 @@ public class  Location: NSManagedObject {
         return locDict
     }
     
+    override public var debugDescription: String {
+        return String(format:"%@ %0.5f, %0.5f %0.2f m/s", self.date.debugDescription, self.longitude, self.latitude, self.speed)
+    }
+    
     func coordinate() -> CLLocationCoordinate2D {
         return CLLocationCoordinate2DMake(self.latitude, self.longitude)
     }

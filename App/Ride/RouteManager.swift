@@ -143,10 +143,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     func abortTrip() {
-        self.stopTripAndEnterBackgroundState(abort: true)
+        self.stopGPSTripAndEnterBackgroundState(abort: true)
     }
     
-    func stopTripAndEnterBackgroundState(abort: Bool = false, stoppedManually: Bool = false) {
+    func stopGPSTripAndEnterBackgroundState(abort: Bool = false, stoppedManually: Bool = false) {
         defer {
             self.enterBackgroundState()
         }
@@ -281,10 +281,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if (self.numberOfNonMovingContiguousGPSLocations >= self.minimumNumberOfNonMovingContiguousGPSLocations) {
                     if let startDate = self.startTimeOfPossibleWalkingSession, mostRecentGPSLocation.timestamp.timeIntervalSince(startDate) >= self.minimumTimeIntervalBeforeDeclaringWalkingSession {
                         DDLogVerbose("Started Walking after stopping")
-                        self.stopTripAndEnterBackgroundState()
+                        self.stopGPSTripAndEnterBackgroundState()
                     } else if (abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForStoppingTripWithoutSubsequentWalking) {
                         DDLogVerbose("Moving too slow for too long")
-                        self.stopTripAndEnterBackgroundState()
+                        self.stopGPSTripAndEnterBackgroundState()
                     }
                 } else {
                     DDLogVerbose("Not enough slow locations to stop, waiting…")
@@ -299,7 +299,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 }
                 if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
                     DDLogVerbose("Went too long with unusable speeds.")
-                    self.stopTripAndEnterBackgroundState()
+                    self.stopGPSTripAndEnterBackgroundState()
                 } else {
                     DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
                 }
@@ -356,10 +356,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         trip.reopen()
                         strongSelf.currentTrip = trip
                     } else {
-                        DDLogStateChange("Opening new trip")
                         if let trip = strongSelf.currentTrip, !trip.isClosed {
                             trip.close()
                         }
+                        DDLogStateChange("Opening new trip")
                         strongSelf.currentTrip = Trip()
                         if prediction.activityType != .stationary {
                             strongSelf.currentTrip!.activityType = prediction.activityType
@@ -495,7 +495,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogStateChange("Paused Tracking")
         
-        self.stopTripAndEnterBackgroundState()
+        self.stopGPSTripAndEnterBackgroundState()
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
@@ -507,7 +507,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             DDLogStateChange("Paused Tracking due to battery life")
             
-            self.stopTripAndEnterBackgroundState()
+            self.stopGPSTripAndEnterBackgroundState()
         }
     }
     
