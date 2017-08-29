@@ -326,7 +326,13 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     private func runPredictionAndStartTripIfNeeded(withLocations locations:[Location]) {
-        var firstLocation = locations.first
+        let firstLocation = locations.first
+        
+        #if DEBUG
+        for location in locations {
+            DDLogVerbose(String(format: "Location found. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
+        }
+        #endif
         
         if self.currentPredictionAggregator == nil {
             let newAggregator = PredictionAggregator()
@@ -669,6 +675,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if let trip = self.currentTrip {
                 loc.trip = trip
+                CoreDataManager.shared.saveContext()
+            } else if let priorTrip = Trip.mostRecentTrip(), let priorLoc = priorTrip.mostRecentLocation(), loc.date < priorLoc.date {
+                // if the departure occured prior to the end of the last trip, prepend it in that trip
+                loc.trip = priorTrip
                 CoreDataManager.shared.saveContext()
             } else {
                 self.runPredictionAndStartTripIfNeeded(withLocations: [loc])
