@@ -755,9 +755,17 @@ public class  Trip: NSManagedObject {
             return
         }
         
+        if self.activityType.isMotorizedMode && self.locationCount() <= 2 {
+            DDLogInfo("Tossing motorized trip with only a couple locations")
+            
+            self.cancel()
+            finalBlock()
+            return
+        }
+        
         self.calculateLength()
         
-        guard !self.activityType.isMotorizedMode || self.length > 200.0 else {
+        if self.activityType.isMotorizedMode && self.length < 200.0 {
             DDLogInfo("Tossing motorized trip that was too short")
             
             self.cancel()
@@ -765,6 +773,8 @@ public class  Trip: NSManagedObject {
             return
         }
         
+        DDLogInfo("Closing trip")
+
         self.simplify({
             self.isClosed = true
             finalBlock()

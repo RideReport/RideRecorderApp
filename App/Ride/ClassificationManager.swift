@@ -106,7 +106,8 @@ class SensorClassificationManager : ClassificationManager {
             }
             
             DispatchQueue.main.async {
-                predictionAggregator.accelerometerReadings.insert(self.accelerometerReading(forAccelerometerData: accelerometerData))
+                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                reading.predictionAggregator = predictionAggregator
             }
         }
     }
@@ -135,8 +136,9 @@ class SensorClassificationManager : ClassificationManager {
         }
 
         let prediction = Prediction()
+        prediction.predictionAggregator = predictionAggregator
+        
         predictionAggregator.currentPrediction = prediction
-        predictionAggregator.predictions.insert(prediction)
         CoreDataManager.shared.saveContext()
         
         var recordedSensorDataIsAvailable = false
@@ -205,8 +207,9 @@ class SensorClassificationManager : ClassificationManager {
                 // start a new prediction and keep going
                 let newPrediction = Prediction()
                 newPrediction.startDate = prediction.startDate.addingTimeInterval(PredictionAggregator.sampleOffsetTimeInterval)
+                newPrediction.predictionAggregator = predictionAggregator
+                
                 predictionAggregator.currentPrediction = newPrediction
-                predictionAggregator.predictions.insert(newPrediction)
                 CoreDataManager.shared.saveContext()
             }
         }
@@ -234,7 +237,7 @@ class SensorClassificationManager : ClassificationManager {
             
             DispatchQueue.main.async {
                 let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
-                predictionAggregator.accelerometerReadings.insert(reading)
+                reading.predictionAggregator = predictionAggregator
                 
                 CoreDataManager.shared.saveContext()
                 

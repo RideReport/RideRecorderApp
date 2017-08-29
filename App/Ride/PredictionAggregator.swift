@@ -91,7 +91,7 @@ public class PredictionAggregator : NSManagedObject {
     
     public func addUnknownTypePrediction() {
         let prediction = Prediction()
-        self.predictions.insert(prediction)
+        prediction.predictionAggregator = self
         prediction.addUnknownTypePredictedActivity()
     }
     
