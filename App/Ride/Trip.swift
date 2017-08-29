@@ -690,8 +690,19 @@ public class  Trip: NSManagedObject {
     }
     
     func calculateLength()-> Void {
+        guard self.activityType == .cycling else {
+            guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
+                self.length = 0.0
+                return
+            }
+            
+            self.length = Float(startLoc.clLocation().distance(from: endLoc.clLocation()))
+            return
+        }
+        
         var length : CLLocationDistance = 0
         var lastLocation : CLLocation! = nil
+        
         for location in self.usableLocationsForSimplification() {
             let cllocation = location.clLocation()
             if (lastLocation == nil) {
@@ -765,7 +776,7 @@ public class  Trip: NSManagedObject {
         
         self.calculateLength()
         
-        if self.activityType.isMotorizedMode && self.length < 200.0 {
+        if self.activityType.isMotorizedMode && self.length < 150.0 {
             DDLogInfo("Tossing motorized trip that was too short")
             
             self.cancel()
