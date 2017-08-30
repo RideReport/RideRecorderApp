@@ -1193,8 +1193,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
                 if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     var cllocs: [CLLocation] = []
-                    for loc in trip.fetchOrderedLocations() {
-                        if let location = loc as? Location, !location.isInferredLocation {
+                    for loc in trip.fetchOrderedLocations(includingInferred: false) {
+                        if let location = loc as? Location {
                             cllocs.append(location.clLocation())
                         }
                     }
@@ -1209,7 +1209,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 
                 if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
                     var cllocs: [CLLocation] = []
-                    var locs = trip.fetchOrderedLocations(simplified: false)
+                    var locs = trip.fetchOrderedLocations(includingInferred: true)
                     for loc in locs {
                         if let location = loc as? Location {
                             cllocs.append(location.clLocation())

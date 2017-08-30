@@ -11,8 +11,18 @@ import CoreData
 import CoreLocation
 import CoreMotion
 import MapKit
+import SwiftyJSON
 
 public class  Location: NSManagedObject {
+    var source : LocationSource {
+        get {
+            return LocationSource(rawValue: self.sourceInteger) ?? LocationSource.unknown
+        }
+        set {
+            self.sourceInteger = newValue.rawValue
+        }
+    }
+    
     class var minimumMovingSpeed: CLLocationSpeed {
         return 0.5
     }
@@ -22,8 +32,40 @@ public class  Location: NSManagedObject {
         return kCLLocationAccuracyNearestTenMeters * 3
     }
     
+    convenience init?(JSON locationJson: JSON) {
+        if let dateString = locationJson["date"].string, let date = Date.dateFromJSONString(dateString),
+            let latitude = locationJson["latitude"].double,
+            let longitude = locationJson["longitude"].double,
+            let course = locationJson["course"].double,
+            let speed = locationJson["speed"].double,
+            let horizontalAccuracy = locationJson["horizontalAccuracy"].double {
+                let context = CoreDataManager.shared.currentManagedObjectContext()
+                self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
+                self.date = date
+                self.latitude = latitude
+                self.longitude = longitude
+                self.course = course
+                self.speed = speed
+                self.horizontalAccuracy = horizontalAccuracy
+                if let sourceInt = locationJson["source"].int16 {
+                    self.source = LocationSource(rawValue: sourceInt) ?? LocationSource.unknown
+                } else if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
+                    // support for legacy location data
+                    if isGeofencedLocation {
+                        self.source = .geofence
+                    } else {
+                        self.source = .activeGPS
+                    }
+                }
+        } else {
+            DDLogWarn("Error parsing location dictionary when fetched trip data!")
+            
+            return nil
+        }
+    }
     
-    convenience init(withVisit visit:CLVisit, isArriving: Bool) {
+    
+    convenience init(visit:CLVisit, isArriving: Bool) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
@@ -32,16 +74,17 @@ public class  Location: NSManagedObject {
         self.latitude = visit.coordinate.latitude
         self.longitude = visit.coordinate.longitude
         self.speed = -1.0
-        self.isInferredLocation = true
         
         if isArriving {
+            self.source = .visitArrival
             self.date = visit.arrivalDate
         } else {
+            self.source = .visitDeparture
             self.date = visit.departureDate
         }
     }
 
-    convenience init(copyingLocation location: Location) {
+    convenience init(lastArrivalLocation location: Location) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
@@ -53,15 +96,16 @@ public class  Location: NSManagedObject {
         self.altitude = location.altitude
         self.verticalAccuracy = location.verticalAccuracy
         self.date = location.date
+        self.source = .lastTripArrival
     }
     
-    convenience init(location: CLLocation, trip: Trip) {
-        self.init(location: location)
+    convenience init(recordedLocation location: CLLocation, isActiveGPS: Bool, trip: Trip) {
+        self.init(recordedLocation: location, isActiveGPS: isActiveGPS)
         
         self.trip = trip
     }
     
-    convenience init(location: CLLocation) {
+    convenience init(recordedLocation location: CLLocation, isActiveGPS: Bool) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
         
@@ -73,13 +117,7 @@ public class  Location: NSManagedObject {
         self.altitude = location.altitude
         self.verticalAccuracy = location.verticalAccuracy
         self.date = location.timestamp
-    }
-    
-    convenience init(trip: Trip) {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entity(forEntityName: "Location", in: context)!, insertInto: context)
-        
-        self.trip = trip
+        self.source = isActiveGPS ? .activeGPS : .passive
     }
     
     class func locationsInCircle(_ circle:MKCircle) -> [AnyObject] {
@@ -131,7 +169,7 @@ public class  Location: NSManagedObject {
             "speed": self.speed,
             "longitude": self.longitude,
             "latitude": self.latitude,
-            "isGeofencedLocation": self.isInferredLocation
+            "source": self.source.numberValue
         ]
         locDict["course"] = course
         locDict["altitude"] = altitude

@@ -428,24 +428,8 @@ class APIClient {
                     trip.resetLocations()
                     if let locations = json["locations"].array {
                         for locationJson in locations {
-                            if let dateString = locationJson["date"].string, let date = Date.dateFromJSONString(dateString),
-                                    let latitude = locationJson["latitude"].double,
-                                    let longitude = locationJson["longitude"].double,
-                                    let course = locationJson["course"].double,
-                                    let speed = locationJson["speed"].double,
-                                    let horizontalAccuracy = locationJson["horizontalAccuracy"].double {
-                                let loc = Location(trip: trip)
-                                loc.date = date
-                                loc.latitude = latitude
-                                loc.longitude = longitude
-                                loc.course = course
-                                loc.speed = speed
-                                loc.horizontalAccuracy = horizontalAccuracy
-                                if let isGeofencedLocation = locationJson["isGeofencedLocation"].bool {
-                                    loc.isInferredLocation = isGeofencedLocation
-                                }
-                            } else {
-                                DDLogWarn("Error parsing location dictionary when fetched trip data!")
+                            if let loc = Location(JSON: locationJson) {
+                                loc.trip = trip
                             }
                         }
                     } else {
@@ -629,19 +613,13 @@ class APIClient {
         if !trip.areLocationsSynced {
             var locations : [Any?] = []
             if !includeFullLocations {
-                var simplifiedLocs = trip.fetchOrderedLocations(simplified: true)
+                let summaryLocs = trip.generateSummaryLocations()
                 
-                if simplifiedLocs.count == 0 {
-                    DDLogWarn("No simplified locations found when syncing trip locations!")
-                    if (trip.locationCount() > 0) {
-                        trip.simplify()
-                        simplifiedLocs = trip.fetchOrderedLocations(simplified: true)
-                    } else {
-                        return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-                    }
+                if summaryLocs.count == 0 {
+                    return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
                 }
                 
-                for location in simplifiedLocs {
+                for location in summaryLocs {
                     locations.append((location).jsonDictionary())
                 }
                 tripDict["summaryRoute"] = ["locations": locations]
@@ -654,7 +632,7 @@ class APIClient {
                     return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
                 }
                 
-                let locs = trip.fetchOrderedLocations()
+                let locs = trip.fetchOrderedLocations(includingInferred: true)
                 for location in locs {
                     locations.append((location).jsonDictionary())
                 }

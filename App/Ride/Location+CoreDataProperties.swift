@@ -15,13 +15,12 @@ extension Location {
     @NSManaged public var course: Double
     @NSManaged public var date: Date
     @NSManaged public var horizontalAccuracy: Double
-    @NSManaged public var isInferredLocation: Bool
-    @NSManaged public var isSmoothedLocation: Bool
     @NSManaged public var latitude: Double
     @NSManaged public var longitude: Double
+    @NSManaged public var sourceInteger: Int16
     @NSManaged public var speed: Double
     @NSManaged public var verticalAccuracy: Double
     @NSManaged public var simplifiedInTrip: Trip?
     @NSManaged public var trip: Trip?
-
+    @NSManaged public var lastArrivalLocationOfProfile: Profile?
 }

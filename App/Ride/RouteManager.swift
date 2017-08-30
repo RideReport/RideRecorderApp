@@ -227,7 +227,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         for location in locations {
             DDLogVerbose(String(format: "Location found for bike trip. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
             
-            _ = Location(location: location, trip: trip)
+            _ = Location(recordedLocation: location, isActiveGPS: true, trip: trip)
             
             var manualSpeed : CLLocationSpeed = 0
             if (location.speed >= 0) {
@@ -318,7 +318,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentTrip.
             var locs: [Location] = []
             for location in locations {
-                let loc = Location(location: location)
+                let loc = Location(recordedLocation: location, isActiveGPS: false)
                 locs.append(loc)
             }
             self.runPredictionAndStartTripIfNeeded(withLocations: locs)
@@ -366,7 +366,10 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                             trip.close()
                         }
                         DDLogStateChange("Opening new trip")
+                        
                         strongSelf.currentTrip = Trip()
+                        strongSelf.currentTrip!.open()
+      
                         if prediction.activityType != .stationary {
                             strongSelf.currentTrip!.activityType = prediction.activityType
                         }
@@ -486,6 +489,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.cancelScheduledAppResumeReminderNotifications()
+        Profile.profile().lastArrivalLocation = nil
+        CoreDataManager.shared.saveContext()
         
         if (untilDate != nil) {
             UserDefaults.standard.set(untilDate, forKey: "RouteManagerIsPausedUntilDate")
@@ -510,6 +515,9 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
             let notif = UILocalNotification()
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
             UIApplication.shared.presentLocalNotificationNow(notif)
+            
+            Profile.profile().lastArrivalLocation = nil
+            CoreDataManager.shared.saveContext()
             
             DDLogStateChange("Paused Tracking due to battery life")
             
@@ -662,16 +670,17 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                 if let trip = self.currentTrip, !trip.isClosed {
                     DDLogStateChange("Ending trip with arrival")
 
-                    let loc = Location(withVisit: visit, isArriving: true)
+                    let loc = Location(visit: visit, isArriving: true)
                     loc.trip = trip
                     trip.close()
+                    
                     self.currentTrip = nil
                 }
             }
         } else {
             DDLogInfo("User departed")
             // the user has departed
-            let loc = Location(withVisit: visit, isArriving: false)
+            let loc = Location(visit: visit, isArriving: false)
             
             if let trip = self.currentTrip {
                 loc.trip = trip

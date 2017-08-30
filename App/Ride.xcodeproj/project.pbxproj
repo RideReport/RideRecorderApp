@@ -114,6 +114,10 @@
 		3D6D77941D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D6D77951D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D74E21C1DA2C0130079A7E6 /* TripSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */; };
+		3D7736021F574F1700155DB8 /* LocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7736011F574F1700155DB8 /* LocationSource.swift */; };
+		3D7736031F574F1700155DB8 /* LocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7736011F574F1700155DB8 /* LocationSource.swift */; };
+		3D7736041F574F1700155DB8 /* LocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7736011F574F1700155DB8 /* LocationSource.swift */; };
+		3D7736051F574F1700155DB8 /* LocationSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7736011F574F1700155DB8 /* LocationSource.swift */; };
 		3D78EF421EE9FB9B0042D7FD /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */; };
 		3D78EF431EE9FBA00042D7FD /* SensorManagerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD08EE81ECD11DD00246B78 /* SensorManagerComponent.swift */; };
 		3D78EF441EE9FBB00042D7FD /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F631ECCE008008B1894 /* LocationManager.swift */; };
@@ -582,6 +586,7 @@
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
 		3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripSummaryViewController.swift; sourceTree = "<group>"; };
+		3D7736011F574F1700155DB8 /* LocationSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LocationSource.swift; path = Ride/LocationSource.swift; sourceTree = "<group>"; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
 		3D7FFA8B1D061F260077E591 /* TripReward.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripReward.swift; path = Ride/TripReward.swift; sourceTree = "<group>"; };
 		3D7FFA8D1D061F5E0077E591 /* Ride 46.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Ride 46.xcdatamodel"; sourceTree = "<group>"; };
@@ -1218,6 +1223,7 @@
 				3D1A15471CD7F47400F9BD8D /* ConnectedApp.swift */,
 				3DA0B4871F4250ED0008F185 /* ConnectedAppScope.swift */,
 				847A05661A01B2FE008F5371 /* Location.swift */,
+				3D7736011F574F1700155DB8 /* LocationSource.swift */,
 				3DFF4D8F1E8DCD1000496ED4 /* Promotion.swift */,
 				3D9471C71C861A7D00CF5D90 /* Prediction.swift */,
 				8429E5D71A5DCBA000EB3E94 /* PredictedActivity.swift */,
@@ -2072,6 +2078,7 @@
 				3DA0B4AE1F42550B0008F185 /* Trip+CoreDataProperties.swift in Sources */,
 				3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
 				3DA0B49F1F4254EF0008F185 /* Profile+CoreDataProperties.swift in Sources */,
+				3D7736051F574F1700155DB8 /* LocationSource.swift in Sources */,
 				3D78EF461EE9FBE30042D7FD /* TripReward.swift in Sources */,
 				3DA1EFDF1C8F8792002B12DB /* RouteManager.swift in Sources */,
 				3D2705FE1C878ABE00A96DE0 /* Date+HBAdditions.swift in Sources */,
@@ -2167,6 +2174,7 @@
 				3DA0B4991F4254E30008F185 /* PredictedActivity+CoreDataProperties.swift in Sources */,
 				3DF8E4251F33D3F2009F6BFB /* Rating.swift in Sources */,
 				3DD08F061ECE179100246B78 /* LocationManager.swift in Sources */,
+				3D7736041F574F1700155DB8 /* LocationSource.swift in Sources */,
 				3DD08F411ECE5B7600246B78 /* GpxLocationGenerator.swift in Sources */,
 				3DD08F261ECE17EC00246B78 /* TripReward.swift in Sources */,
 				3DD08F181ECE17DB00246B78 /* CLLocation+HBAdditions.swift in Sources */,
@@ -2253,6 +2261,7 @@
 				3DD08EE11ECCF86300246B78 /* Utility.cpp in Sources */,
 				3DA0B4A21F4254F80008F185 /* Location+CoreDataProperties.swift in Sources */,
 				3D634F801ECCEECA008B1894 /* WatchManager.swift in Sources */,
+				3D7736031F574F1700155DB8 /* LocationSource.swift in Sources */,
 				842FDCAA1BD56EFD0079AFCC /* Ride.xcdatamodeld in Sources */,
 				3DA0B49D1F4254EF0008F185 /* Profile+CoreDataProperties.swift in Sources */,
 				3DA0B4891F4250ED0008F185 /* ConnectedAppScope.swift in Sources */,
@@ -2374,6 +2383,7 @@
 				3DA0B4971F4254E30008F185 /* PredictedActivity+CoreDataProperties.swift in Sources */,
 				847A05651A01B2F1008F5371 /* Trip.swift in Sources */,
 				3D634F681ECCE008008B1894 /* LocationManager.swift in Sources */,
+				3D7736021F574F1700155DB8 /* LocationSource.swift in Sources */,
 				3D125EB81EB012C200DA2E6E /* RedeemRewardViewController.swift in Sources */,
 				840042631C1B774700368A82 /* RideShareViewController.swift in Sources */,
 				84D1557A19D2743900316995 /* CoreDataManager.swift in Sources */,

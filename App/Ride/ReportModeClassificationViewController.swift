@@ -121,11 +121,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             return
         }
         
-        var locs = trip.fetchOrderedLocations(simplified: true)
-
-        if !trip.isClosed || locs.isEmpty {
-            locs = trip.fetchOrderedLocations(simplified: false)
-        }
+        let locs = trip.generateSummaryLocations()
         
         if let startLoc = locs.first,
             let endLoc = locs.last {

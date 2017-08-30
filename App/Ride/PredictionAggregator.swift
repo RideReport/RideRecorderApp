@@ -158,7 +158,7 @@ public class PredictionAggregator : NSManagedObject {
         var locsArray : [Any] = []
         
         if let trip = self.trip {
-            for l in trip.fetchOrderedLocations() {
+            for l in trip.fetchOrderedLocations(includingInferred: true) {
                 locsArray.append(l.jsonDictionary())
             }
         }

@@ -642,14 +642,40 @@ public class  Trip: NSManagedObject {
         return 0
     }
     
-    func fetchOrderedLocations(simplified: Bool = false)->[Location] {
+    func generateSummaryLocations()->[Location] {
+        var locs: [Location] = []
+        
+        if self.activityType != .cycling || !self.isClosed || locs.isEmpty {
+            locs = self.fetchOrderedLocations(simplified: false, includingInferred: true)
+        } else {
+            locs = self.fetchOrderedLocations(simplified: true, includingInferred: true)
+            if (locs.count == 0 && self.locationCount() > 0) {
+                self.simplify()
+                locs = self.fetchOrderedLocations(simplified: true, includingInferred: true)
+            }
+        }
+        
+        return locs
+    }
+    
+    func fetchOrderedLocations(simplified: Bool = false, includingInferred: Bool)->[Location] {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
+        
+        var andPredicates: [NSPredicate] = []
         if simplified == true {
-            fetchedRequest.predicate = NSPredicate(format: "simplifiedInTrip == %@", self)
+            andPredicates.append(NSPredicate(format: "simplifiedInTrip == %@", self))
         } else {
-            fetchedRequest.predicate = NSPredicate(format: "trip == %@", self)
+            andPredicates.append(NSPredicate(format: "trip == %@", self))
         }
+        
+        if !includingInferred {
+            for source in LocationSource.inferredSources {
+                andPredicates.append(NSPredicate(format: "sourceInteger != %i", source.rawValue))
+            }
+        }
+        
+        fetchedRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: andPredicates)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -691,7 +717,7 @@ public class  Trip: NSManagedObject {
     
     func calculateLength()-> Void {
         guard self.activityType == .cycling else {
-            guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
+            guard let startLoc = self.firstLocation(includeCopied: true), let endLoc = self.mostRecentLocation() else {
                 self.length = 0.0
                 return
             }
@@ -745,6 +771,13 @@ public class  Trip: NSManagedObject {
         return self.predictionAggregators.reduce("", {sum, prediction in sum + prediction.debugDescription + "\r"})
     }
     
+    func open() {
+        if let lastArrivalLocation = Profile.profile().lastArrivalLocation {
+            let inferredLoc = Location(lastArrivalLocation: lastArrivalLocation)
+            inferredLoc.trip = self
+        }
+    }
+    
     func close(_ handler: @escaping ()->Void = {}) {
         let finalBlock = {
             NotificationCenter.default.post(name: Notification.Name(rawValue: "TripDidCloseOrCancelTrip"), object: self)
@@ -785,6 +818,9 @@ public class  Trip: NSManagedObject {
         }
         
         DDLogInfo("Closing trip")
+        
+        Profile.profile().lastArrivalLocation = self.mostRecentLocation()
+        CoreDataManager.shared.saveContext()
 
         self.simplify({
             self.isClosed = true
@@ -882,7 +918,7 @@ public class  Trip: NSManagedObject {
     
         var closestLocation : Location? = nil
         var closestDisance = CLLocationDistanceMax
-        for location in self.fetchOrderedLocations() {
+        for location in self.fetchOrderedLocations(includingInferred: true) {
             let locDistance = targetLoc.distance(from: location.clLocation())
             if (locDistance < closestDisance) {
                 closestDisance = locDistance
@@ -895,7 +931,7 @@ public class  Trip: NSManagedObject {
     
     @available(iOS 10.0, *)
     private func createRouteMapAttachement(_ handler: @escaping (_ attachment: UNNotificationAttachment?)->Void) {
-        let locations = self.fetchOrderedLocations(simplified: true)
+        let locations = self.generateSummaryLocations()
         
         if locations.count > 0 {
             let width = UIScreen.main.bounds.width
@@ -1142,7 +1178,7 @@ public class  Trip: NSManagedObject {
     func calories()->Double {
         var lastLoc : Location? = nil
         var totalBurnDouble: Double = 0
-        let simplifiedLocs = self.fetchOrderedLocations(simplified: true)
+        let simplifiedLocs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
         for location in simplifiedLocs {
             guard location.speed > 0 else {
                 continue
@@ -1263,7 +1299,7 @@ public class  Trip: NSManagedObject {
     private func usableLocationsForSimplification()->[Location] {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR isInferredLocation == YES)", self, Location.acceptableLocationAccuracy)
+        fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND (horizontalAccuracy <= %f OR sourceInteger != %i)", self, Location.acceptableLocationAccuracy, LocationSource.activeGPS.rawValue)
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let results: [AnyObject]?
@@ -1283,7 +1319,7 @@ public class  Trip: NSManagedObject {
     func simplify(_ handler: ()->Void = {}) {
         let accurateLocs = self.usableLocationsForSimplification()
         
-        let currentSimplifiedLocs = self.fetchOrderedLocations(simplified: true)
+        let currentSimplifiedLocs = self.fetchOrderedLocations(simplified: true, includingInferred: true)
         for loc in currentSimplifiedLocs {
             loc.simplifiedInTrip = nil
         }
@@ -1332,8 +1368,8 @@ public class  Trip: NSManagedObject {
 
             var i = 0
             for loc in locations {
-                // also include any geofence location, plus the first location following it
-                if loc.isInferredLocation {
+                // also include any inferred location, plus the first location following it
+                if loc.source.isInferred {
                     if loc.simplifiedInTrip == nil {
                         loc.simplifiedInTrip = self
                     }
@@ -1389,10 +1425,14 @@ public class  Trip: NSManagedObject {
         return loc
     }
     
-    func firstLocation() -> Location? {
+    func firstLocation(includeCopied: Bool) -> Location? {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
-        fetchedRequest.predicate = NSPredicate(format: "trip == %@", self)
+        if includeCopied {
+            fetchedRequest.predicate = NSPredicate(format: "trip == %@", self)
+        } else {
+            fetchedRequest.predicate = NSPredicate(format: "trip == %@ AND sourceInteger != %i AND sourceInteger != %i", self, LocationSource.geofence.rawValue, LocationSource.lastTripArrival.rawValue)
+        }
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         fetchedRequest.fetchLimit = 1
         
@@ -1413,7 +1453,7 @@ public class  Trip: NSManagedObject {
     
     
     var startDate : Date {
-        if let firstLoc = self.firstLocation() {
+        if let firstLoc = self.firstLocation(includeCopied: false) {
             return firstLoc.date
         }
         
@@ -1429,7 +1469,7 @@ public class  Trip: NSManagedObject {
     }
     
     var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.firstLocation(), let endLoc = self.mostRecentLocation() else {
+        guard let startLoc = self.firstLocation(includeCopied: false), let endLoc = self.mostRecentLocation() else {
             return 0.0
         }
         
@@ -1442,7 +1482,7 @@ public class  Trip: NSManagedObject {
     var aproximateAverageBikingSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        let simplifiedLocs = self.fetchOrderedLocations(simplified: true)
+        let simplifiedLocs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
         for location in simplifiedLocs {
             if (location.speed > 1.0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
                 count += 1
@@ -1460,7 +1500,7 @@ public class  Trip: NSManagedObject {
     var averageMovingSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        let locs = self.fetchOrderedLocations(simplified: true)
+        let locs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
 
         for location in locs {
             if (location.speed > Location.minimumMovingSpeed && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
@@ -1479,7 +1519,7 @@ public class  Trip: NSManagedObject {
     var averageSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        let locs = self.fetchOrderedLocations(simplified: true)
+        let locs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
 
         for location in locs {
             if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {

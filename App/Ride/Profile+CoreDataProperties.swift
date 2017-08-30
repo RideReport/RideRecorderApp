@@ -19,5 +19,5 @@ extension Profile {
     @NSManaged public var uuid: String?
     @NSManaged public var connectedApps: Set<ConnectedApp>?
     @NSManaged public var promotions: NSOrderedSet
-
+    @NSManaged public var lastArrivalLocation: Location?
 }

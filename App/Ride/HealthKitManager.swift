@@ -347,13 +347,9 @@ class HealthKitManager {
 
                 var lastLoc : Location? = nil
                 var totalBurnDouble : Double = 0
-                let locs = trip.fetchOrderedLocations()
+                let locs = trip.fetchOrderedLocations(includingInferred: false)
 
                 for location in locs {
-                    if location.isInferredLocation {
-                        continue
-                    }
-                    
                     if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
                         if let lastLocation = lastLoc, lastLocation.date.compare(location.date) != ComparisonResult.orderedDescending {
                             let calPerKgMin : Double = {

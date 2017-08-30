@@ -17,9 +17,9 @@ import Foundation
     case bus
     case rail
     case stationary
-    case aviation
+    case aviation // be sure to update count if changing this
     
-    static var count: Int { return Int(ActivityType.stationary.rawValue) + 1}
+    static var count: Int { return Int(ActivityType.aviation.rawValue) + 1}
     
     var isMotorizedMode: Bool {
         get {
