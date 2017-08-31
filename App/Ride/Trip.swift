@@ -809,7 +809,7 @@ public class  Trip: NSManagedObject {
         
         self.calculateLength()
         
-        if self.activityType.isMotorizedMode && self.length < 150.0 {
+        if self.activityType.isMotorizedMode && self.length < 250.0 {
             DDLogInfo("Tossing motorized trip that was too short")
             
             self.cancel()

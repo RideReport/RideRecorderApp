@@ -111,8 +111,12 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         self.mostRecentLocationWithSufficientSpeed = nil
         self.mostRecentGPSLocation = nil
         
+        // Testing of accuracy and filter performance:
+        // https://stackoverflow.com/questions/3411629/decoding-the-cllocationaccuracy-consts
+        // http://evgenii.com/blog/power-consumption-of-location-services-in-ios/
         self.sensorComponent.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        self.sensorComponent.locationManager.distanceFilter = 200
+        self.sensorComponent.locationManager.distanceFilter = 300
+        
         self.sensorComponent.locationManager.disallowDeferredLocationUpdates()
         self.dateOfStoppingLocationManagerGPS = Date()
         
