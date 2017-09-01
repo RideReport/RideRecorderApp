@@ -84,7 +84,7 @@ class RedeemRewardViewController: UIViewController {
 
         
         if let tripReward = self.tripReward, let uuid = tripReward.rewardUUID {
-            APIClient.shared.getReward(uuid: uuid, completionHandler: {
+            RideReportAPIClient.shared.getReward(uuid: uuid, completionHandler: {
                 [weak self] (response) in
                 switch response.result {
                 case .success(let json):

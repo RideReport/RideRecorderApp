@@ -32,7 +32,7 @@ class TripViewController: UIViewController {
                 if (strongSelf.selectedTrip != nil) {
                     if (!strongSelf.hasRequestedTripInfo && (strongSelf.selectedTrip.areLocationsNotYetDownloaded || !strongSelf.selectedTrip.isSummarySynced)) {
                         strongSelf.hasRequestedTripInfo = true
-                        APIClient.shared.getTrip(strongSelf.selectedTrip).apiResponse({ [weak self] (_) -> Void in
+                        RideReportAPIClient.shared.getTrip(strongSelf.selectedTrip).apiResponse({ [weak self] (_) -> Void in
                             guard let reallyStrongSelf = self else {
                                 return
                             }

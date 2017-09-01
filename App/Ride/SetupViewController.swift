@@ -50,7 +50,7 @@ class SetupViewController: UINavigationController {
             self.myViewControllers.append(setupPermissionVC)
         }
         
-        if (APIClient.shared.accountVerificationStatus != .verified) {
+        if (RideReportAPIClient.shared.accountVerificationStatus != .verified) {
             let setupCreateProfile = self.storyboard!.instantiateViewController(withIdentifier: "setupCreateProfile") as! SetupChildViewController
             self.setupVC(vc: setupCreateProfile)
             

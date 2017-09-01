@@ -75,7 +75,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             return
         }
         
-        APIClient.shared.connectApplication(self.connectingApp).apiResponse {[weak self] (response) in
+        RideReportAPIClient.shared.connectApplication(self.connectingApp).apiResponse {[weak self] (response) in
             guard let strongSelf = self else {
                 return
             }
@@ -102,7 +102,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     
     @IBAction func cancel(_ sender: AnyObject) {
         self.hasCanceled = true
-        APIClient.shared.disconnectApplication(self.connectingApp)
+        RideReportAPIClient.shared.disconnectApplication(self.connectingApp)
         self.dismiss(animated: true, completion: nil)
     }
     

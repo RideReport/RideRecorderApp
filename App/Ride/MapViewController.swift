@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import CoreData
+import RouteRecorder
 #if DEBUG
     import CoreMotion
 #endif
@@ -198,29 +199,29 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        let locs = trip.generateSummaryLocations()
+        //let locs = trip.generateSummaryLocations()
         
-        if let startLoc = locs.first,
-            let endLoc = locs.last {
-                self.startPoint = MGLPointAnnotation()
-                self.startPoint!.coordinate = startLoc.coordinate()
-                mapView.addAnnotation(self.startPoint!)
-            
-            if (trip.isClosed) {
-                self.endPoint = MGLPointAnnotation()
-                self.endPoint!.coordinate = endLoc.coordinate()
-                mapView.addAnnotation(self.endPoint!)
-            }
-        }
+//        if let startLoc = locs.first,
+//            let endLoc = locs.last {
+//                self.startPoint = MGLPointAnnotation()
+//                self.startPoint!.coordinate = startLoc.coordinate()
+//                mapView.addAnnotation(self.startPoint!)
+//            
+//            if (!trip.isInProgress) {
+//                self.endPoint = MGLPointAnnotation()
+//                self.endPoint!.coordinate = endLoc.coordinate()
+//                mapView.addAnnotation(self.endPoint!)
+//            }
+//        }
 
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-        for location in locs {
-            let coord = location.coordinate()
-            
-            coordinates.append(coord)
-            count += 1
-        }
+//        for location in locs {
+//            let coord = location.coordinate()
+//            
+//            coordinates.append(coord)
+//            count += 1
+//        }
         
         guard coordinates.count > 0 else {
             return
@@ -229,24 +230,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.selectedTripLineFeature = MGLPolylineFeature(coordinates: &coordinates, count: count)
         self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue]
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
-        
-        #if DEBUG
-            if UserDefaults.standard.bool(forKey: "DebugContinousMode") {
-                for prediction in trip.predictionAggregators{
-                    
-                    self.mapView.addAnnotation(prediction)
-                }
-            } else if UserDefaults.standard.bool(forKey: "DebugContinousMode2") {
-                CMMotionActivityManager().queryActivityStarting(from: trip.startDate, to: trip.endDate, to: OperationQueue.main) { (activities, error) in
-                        guard let activities = activities else {
-                            return
-                        }
-                        for activity in activities {
-                            self.mapView.addAnnotation(CMMotionActivityAnnotationWrapper(activity: activity, trip: trip))
-                        }
-                    }
-            }
-        #endif
         
         DispatchQueue.main.async(execute: { [weak self] in
             guard let strongSelf = self else {
@@ -276,14 +259,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             }
         }
         
-        #if DEBUG
-            if let aggregator = annotation as? PredictionAggregator {
-                return MGLAnnotationImage(image: aggregator.pinImage, reuseIdentifier: aggregator.title ?? "")
-            } else if let motionActivity = annotation as? CMMotionActivityAnnotationWrapper {
-                return MGLAnnotationImage(image: motionActivity.pinImage, reuseIdentifier: motionActivity.title ?? "")
-            }
-        #endif
-        
         return annotationImage
     }
     
@@ -298,13 +273,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     }
     
     func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        #if DEBUG
-            if annotation is PredictionAggregator {
-                return true
-            } else if annotation is CMMotionActivityAnnotationWrapper {
-                return true
-            }
-        #endif
         
         return false
     }

@@ -64,7 +64,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.emailTextField.isEnabled = false
         
-        APIClient.shared.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response) -> Void in
+        RideReportAPIClient.shared.sendVerificationTokenForEmail(self.emailTextField.text!).apiResponse() { (response) -> Void in
             self.facebookButton.isEnabled = true
             self.navigationItem.rightBarButtonItem?.isEnabled = true
             self.emailTextField.isEnabled = true
@@ -175,11 +175,11 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
             self.emailTextField.isEnabled = false
 
             
-            APIClient.shared.verifyFacebook(token).apiResponse() { (response) -> Void in
+            RideReportAPIClient.shared.verifyFacebook(token).apiResponse() { (response) -> Void in
                 switch response.result {
                 case .success(let json):
                     if let needsEmailVerification = json["needs_email_verification"].bool, let email = json["facebook"]["email"].string, needsEmailVerification {
-                        APIClient.shared.sendVerificationTokenForEmail(email).apiResponse() { (response) -> Void in
+                        RideReportAPIClient.shared.sendVerificationTokenForEmail(email).apiResponse() { (response) -> Void in
                             
                             self.facebookButton.isEnabled = true
                             self.navigationItem.rightBarButtonItem?.isEnabled = true

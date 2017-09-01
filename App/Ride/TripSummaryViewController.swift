@@ -66,7 +66,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
                 return 0
             }
             
-            if let trip = self.selectedTrip, !trip.isClosed {
+            if let trip = self.selectedTrip, trip.isInProgress {
                 return rideSummaryView.frame.maxY
             }
             
@@ -111,9 +111,9 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             return
         }
         
-        if !self.selectedTrip.isClosed {
-            if (rideSummaryView.tripLength != self.selectedTrip.inProgressLength) {
-                rideSummaryView.setTripSummary(tripLength: self.selectedTrip.inProgressLength, description: String(format: "Trip started at %@.", self.selectedTrip.timeString()))
+        if self.selectedTrip.isInProgress {
+            if (rideSummaryView.tripLength != self.selectedTrip.length) {
+                rideSummaryView.setTripSummary(tripLength: self.selectedTrip.length, description: String(format: "Trip started at %@.", self.selectedTrip.timeString()))
                 rideSummaryView.setRewards([])
             }
         } else {
@@ -139,7 +139,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             
             if self.selectedTrip.activityType == .cycling {
                 durationLabel.text = self.selectedTrip.duration().intervalString
-                avgSpeedLabel.text = self.selectedTrip.aproximateAverageBikingSpeed.string
+                avgSpeedLabel.text = "MMMM"
                 weatherLabel.text = self.selectedTrip.weatherString()
                 calorieLabel.text = self.selectedTrip.calorieString()
                 
@@ -234,7 +234,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
     
     @IBAction func changedRating(_: AnyObject) {
         self.selectedTrip.rating = ratingChoiceSelector.selectedRating
-        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         self.reloadUI()
     }
     
@@ -283,7 +283,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         
         if mode != self.selectedTrip.activityType {
             self.selectedTrip.activityType = self.modeSelectorView.selectedMode
-            APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+            RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
             
             self.reloadUI()
             
@@ -325,21 +325,21 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
     
     @IBAction func tappedNotGreat(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.bad)
-        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedGreat(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.good)
-        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedMixed(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.mixed)
-        APIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }

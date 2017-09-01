@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import WatchConnectivity
+import RouteRecorder
 
 class HealthKitSetupViewController : UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
@@ -68,7 +69,7 @@ class HealthKitSetupViewController : UIViewController {
             let context = CoreDataManager.shared.currentManagedObjectContext()
             let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
             fetchedRequest.predicate = NSPredicate(format: "activityTypeInteger == %i AND healthKitUuid == nil", ActivityType.cycling.rawValue)
-            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+            fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
             
             let results: [AnyObject]?
             do {

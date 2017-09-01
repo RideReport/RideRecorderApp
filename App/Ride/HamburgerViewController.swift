@@ -10,6 +10,7 @@ import Foundation
 import ECSlidingViewController
 import Mixpanel
 import MessageUI
+import RouteRecorder
 
 class HamburgerNavController: UINavigationController {
     
@@ -49,7 +50,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         #endif
         self.tableView.reloadData()
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
             DispatchQueue.main.async(execute: { [weak self] in
                 guard let strongSelf = self else {
                     return
@@ -59,7 +60,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             })
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
                 return
             }
@@ -73,7 +74,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     }
     
     func updateAccountStatusText() {
-        switch APIClient.shared.accountVerificationStatus {
+        switch RideReportAPIClient.shared.accountVerificationStatus {
         case .unknown:
             self.accountTableViewCell.isUserInteractionEnabled = false
             self.accountTableViewCell.textLabel?.textColor = ColorPallete.shared.unknownGrey
@@ -91,7 +92,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     }
     
     func updatePauseResumeText() {
-        if (SensorManagerComponent.shared.routeManager.isPaused()) {
+        if (RouteRecorder.shared.routeManager.isPaused()) {
             self.pauseResueTableViewCell.textLabel?.text = "Resume Ride Report"
         } else {
             self.pauseResueTableViewCell.textLabel?.text = "Pause Ride Report"
@@ -165,14 +166,14 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 self.tableView.deselectRow(at: indexPath, animated: true)
             #endif
         }  else if (cell == self.accountTableViewCell) {
-            if (APIClient.shared.accountVerificationStatus == .unverified) {
+            if (RideReportAPIClient.shared.accountVerificationStatus == .unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()
-            } else if (APIClient.shared.accountVerificationStatus == .verified){
+            } else if (RideReportAPIClient.shared.accountVerificationStatus == .verified){
                 let alertController = UIAlertController(title: nil, message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.actionSheet)
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.destructive, handler: { (_) in
-                    SensorManagerComponent.shared.routeManager.abortTrip()
+                    RouteRecorder.shared.routeManager.abortRoute()
                     CoreDataManager.shared.resetDatabase()
-                    APIClient.shared.logout()
+                    RideReportAPIClient.shared.logout()
                     AppDelegate.appDelegate().transitionToCreatProfile()
                 }))
                 alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
@@ -180,11 +181,11 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 self.tableView.deselectRow(at: indexPath, animated: true)
             }
         } else if (cell == self.pauseResueTableViewCell) {
-            if (SensorManagerComponent.shared.routeManager.isPaused()) {
+            if (RouteRecorder.shared.routeManager.isPaused()) {
                 Mixpanel.sharedInstance().track(
                     "resumedTracking"
                 )
-                SensorManagerComponent.shared.routeManager.resumeTracking()
+                RouteRecorder.shared.routeManager.resumeTracking()
                 self.updatePauseResumeText()
                 if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
                     routesVC.refreshHelperPopupUI()
@@ -203,7 +204,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "hour"]
                     )
-                    SensorManagerComponent.shared.routeManager.pauseTracking(Date().hoursFrom(1))
+                    RouteRecorder.shared.routeManager.pauseTracking(Date().hoursFrom(1))
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause Until Tomorrow", style: UIAlertActionStyle.default, handler: { (_) in
@@ -211,7 +212,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "day"]
                     )
-                    SensorManagerComponent.shared.routeManager.pauseTracking(Date.tomorrow())
+                    RouteRecorder.shared.routeManager.pauseTracking(Date.tomorrow())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For a Week", style: UIAlertActionStyle.default, handler: { (_) in
@@ -219,7 +220,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "week"]
                     )
-                    SensorManagerComponent.shared.routeManager.pauseTracking(Date.nextWeek())
+                    RouteRecorder.shared.routeManager.pauseTracking(Date.nextWeek())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For Now", style: UIAlertActionStyle.default, handler: { (_) in
@@ -227,7 +228,7 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                         "pausedTracking",
                         properties: ["duration": "indefinite"]
                     )
-                    SensorManagerComponent.shared.routeManager.pauseTracking()
+                    RouteRecorder.shared.routeManager.pauseTracking()
                     updateUIBlock()
                 }))
                 

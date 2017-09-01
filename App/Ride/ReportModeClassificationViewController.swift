@@ -8,6 +8,7 @@
 
 import Foundation
 import Mixpanel
+import RouteRecorder
 
 class ReportModeClassificationViewController : UIViewController, MGLMapViewDelegate, UITextFieldDelegate {
     var trip: Trip! {

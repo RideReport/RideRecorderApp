@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RouteRecorder
 
 class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInputViewDelegate {
     @IBOutlet weak var helperTextLabel : UILabel!
@@ -90,8 +91,8 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func pollAccountStatus() {
-        APIClient.shared.updateAccountStatus().apiResponse() { (response) in
-            if (APIClient.shared.accountVerificationStatus == .verified) {
+        RideReportAPIClient.shared.updateAccountStatus().apiResponse() { (response) in
+            if (RideReportAPIClient.shared.accountVerificationStatus == .verified) {
                 self.parentSetupViewController?.nextPage(sender: self)
             }
         }
@@ -122,7 +123,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
     }
     
     func passcodeInputViewDidFinish(_ passcodeInputView: BKPasscodeInputView!) {
-        APIClient.shared.verifyToken(passcodeInputView.passcode).apiResponse() { (response) in
+        RideReportAPIClient.shared.verifyToken(passcodeInputView.passcode).apiResponse() { (response) in
             switch response.result {
             case .success:
                 self.parentSetupViewController?.nextPage(sender: self)

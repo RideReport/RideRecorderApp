@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
+        <attribute name="appSettingsText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="appSettingsUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="baseImageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isHiddenApp" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="webAuthorizeUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="profile" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Profile" inverseName="connectedApps" inverseEntity="Profile" syncable="YES"/>
+        <relationship name="promotions" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Promotion" inverseName="connectedApp" inverseEntity="Promotion" syncable="YES"/>
+        <relationship name="scopes" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="ConnectedAppScope" inverseName="connectedApp" inverseEntity="ConnectedAppScope" syncable="YES"/>
+    </entity>
+    <entity name="ConnectedAppScope" representedClassName=".ConnectedAppScope" syncable="YES">
+        <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isGranted" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isRequired" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="machineName" attributeType="String" syncable="YES"/>
+        <attribute name="type" attributeType="String" syncable="YES"/>
+        <relationship name="connectedApp" maxCount="1" deletionRule="No Action" destinationEntity="ConnectedApp" inverseName="scopes" inverseEntity="ConnectedApp" syncable="YES"/>
+    </entity>
+    <entity name="Profile" representedClassName=".Profile" syncable="YES">
+        <attribute name="currentRatingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="dateOfBirth" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="gender" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="statusEmoji" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="statusText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="supportId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weightKilograms" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="connectedApps" toMany="YES" deletionRule="No Action" destinationEntity="ConnectedApp" inverseName="profile" inverseEntity="ConnectedApp" syncable="YES"/>
+        <relationship name="promotions" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="Promotion" inverseName="profile" inverseEntity="Promotion" syncable="YES"/>
+    </entity>
+    <entity name="Promotion" representedClassName=".Promotion" syncable="YES">
+        <attribute name="bannerImageUrl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="buttonTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="isUserDismissed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
+        <relationship name="connectedApp" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="ConnectedApp" inverseName="promotions" inverseEntity="ConnectedApp" syncable="YES"/>
+        <relationship name="profile" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Profile" inverseName="promotions" inverseEntity="Profile" syncable="YES"/>
+    </entity>
+    <entity name="Trip" representedClassName=".Trip" syncable="YES">
+        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="areLocationsNotYetDownloaded" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="caloriesBurned" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="climacon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="endingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="healthKitUuid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isInProgress" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isSavedToHealthKit" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isSummarySynced" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="length" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ratingInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="ratingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="sectionIdentifier" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="startingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="temperature" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="tripRewards" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
+    </entity>
+    <entity name="TripReward" representedClassName=".TripReward" syncable="YES">
+        <attribute name="descriptionText" attributeType="String" syncable="YES"/>
+        <attribute name="emoji" attributeType="String" syncable="YES"/>
+        <relationship name="trip" maxCount="1" deletionRule="No Action" destinationEntity="Trip" inverseName="tripRewards" inverseEntity="Trip" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ConnectedApp" positionX="-54" positionY="72" width="128" height="210"/>
+        <element name="ConnectedAppScope" positionX="-45" positionY="81" width="128" height="135"/>
+        <element name="Profile" positionX="-63" positionY="-18" width="128" height="195"/>
+        <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
+        <element name="Trip" positionX="-9" positionY="99" width="128" height="345"/>
+        <element name="TripReward" positionX="-27" positionY="90" width="128" height="90"/>
+    </elements>
+</model>

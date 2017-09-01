@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import EventKit
+import RouteRecorder
 
 class CoreDataManager {
     var isStartingUp : Bool = true
@@ -31,19 +32,6 @@ class CoreDataManager {
     }
     
     private func startup () {
-        // clean up open trips
-        for aTrip in Trip.openTrips() {
-            let trip = aTrip as! Trip
-            if (trip.locationCount() <= 6) {
-                // if it doesn't more than 6 points, toss it.
-                trip.cancel()
-            } else if !trip.isClosed {
-                trip.close()
-            }
-        }
-        
-        self.saveContext()
-        self.isStartingUp = false
         NotificationCenter.default.post(name: Notification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
     }
     
@@ -85,7 +73,7 @@ class CoreDataManager {
 
     lazy var managedObjectModel: NSManagedObjectModel = {
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
-        let modelURL = Bundle(for: CoreDataManager.self).url(forResource: "Ride", withExtension: "momd")!
+        let modelURL = Bundle(for: CoreDataManager.self).url(forResource: "TripRecorder", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
@@ -107,7 +95,7 @@ class CoreDataManager {
                 // used for testing Core Data Stack
                 try coordinator!.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
             } else {
-                if  let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: url), let versions = metadata["NSStoreModelVersionIdentifiers"] as? NSArray, let firstVersionString = versions.firstObject as? String, let firstVersion = Int(firstVersionString), firstVersion >= 54 {
+                if  let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: url), let versions = metadata["NSStoreModelVersionIdentifiers"] as? NSArray, let firstVersionString = versions.firstObject as? String, let firstVersion = Int(firstVersionString), firstVersion >= 1 {
                     try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
                 } else if !FileManager.default.fileExists(atPath: url.path) {
                     try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
@@ -132,8 +120,8 @@ class CoreDataManager {
             
             hardResetDatabase(url: url)
             
-            Profile.profile().accessToken = accessToken
-            Profile.profile().accessTokenExpiresIn = accessTokenExpiresIn
+            KeychainManager.shared.accessToken = accessToken
+            KeychainManager.shared.accessTokenExpiresIn = accessTokenExpiresIn
             self.saveContext()
             
             UserDefaults.standard.set(true, forKey: "shouldGetTripsOnNextAppForeground")

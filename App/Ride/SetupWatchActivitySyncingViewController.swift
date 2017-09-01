@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import HealthKitUI
+import RouteRecorder
 
 @available(iOS 9.3, *)
 class SetupWatchActivitySyncingViewController : SetupChildViewController {
@@ -84,7 +85,7 @@ class SetupWatchActivitySyncingViewController : SetupChildViewController {
                 let context = CoreDataManager.shared.currentManagedObjectContext()
                 let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
                 fetchedRequest.predicate = NSPredicate(format: "activityTypeInteger == %i AND healthKitUuid == nil", ActivityType.cycling.rawValue)
-                fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
                 
                 let results: [AnyObject]?
                 do {

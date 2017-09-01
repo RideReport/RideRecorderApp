@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1">
+    <entity name="AccelerometerReading" representedClassName=".AccelerometerReading" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="x" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="y" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="z" attributeType="Double" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="predictionAggregator" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="accelerometerReadings" inverseEntity="PredictionAggregator" syncable="YES"/>
+    </entity>
+    <entity name="Location" representedClassName=".Location" syncable="YES">
+        <attribute name="altitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="course" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="horizontalAccuracy" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sourceInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="speed" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="verticalAccuracy" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="lastArrivalLocationOfRouteRecorderStore" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="RouteRecorderStore" inverseName="lastArrivalLocation" inverseEntity="RouteRecorderStore" syncable="YES"/>
+        <relationship name="route" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Route" inverseName="locations" inverseEntity="Route" syncable="YES"/>
+        <relationship name="simplifiedInRoute" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Route" inverseName="simplifiedLocations" inverseEntity="Route" syncable="YES"/>
+    </entity>
+    <entity name="PredictedActivity" representedClassName=".PredictedActivity" syncable="YES">
+        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="confidence" attributeType="Float" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <relationship name="prediction" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Prediction" inverseName="predictedActivities" inverseEntity="Prediction" syncable="YES"/>
+        <relationship name="predictionAggregator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="aggregatePredictedActivity" inverseEntity="PredictionAggregator" syncable="YES"/>
+    </entity>
+    <entity name="Prediction" representedClassName=".Prediction" syncable="YES">
+        <attribute name="activityPredictionModelIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="predictedActivities" toMany="YES" deletionRule="Cascade" destinationEntity="PredictedActivity" inverseName="prediction" inverseEntity="PredictedActivity" syncable="YES"/>
+        <relationship name="predictionAggregator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="predictions" inverseEntity="PredictionAggregator" syncable="YES"/>
+    </entity>
+    <entity name="PredictionAggregator" representedClassName=".PredictionAggregator" syncable="YES">
+        <relationship name="accelerometerReadings" toMany="YES" deletionRule="Cascade" destinationEntity="AccelerometerReading" inverseName="predictionAggregator" inverseEntity="AccelerometerReading" syncable="YES"/>
+        <relationship name="aggregatePredictedActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictedActivity" inverseName="predictionAggregator" inverseEntity="PredictedActivity" syncable="YES"/>
+        <relationship name="predictions" toMany="YES" deletionRule="Cascade" destinationEntity="Prediction" inverseName="predictionAggregator" inverseEntity="Prediction" syncable="YES"/>
+        <relationship name="route" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Route" inverseName="predictionAggregators" inverseEntity="Route" syncable="YES"/>
+    </entity>
+    <entity name="Route" representedClassName=".Route" syncable="YES">
+        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="isClosed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="isSummaryUploaded" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="isUploaded" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="length" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ratingInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="ratingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <relationship name="locations" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>
+        <relationship name="predictionAggregators" toMany="YES" deletionRule="Cascade" destinationEntity="PredictionAggregator" inverseName="route" inverseEntity="PredictionAggregator" syncable="YES"/>
+        <relationship name="simplifiedLocations" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="simplifiedInRoute" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <entity name="RouteRecorderStore" representedClassName=".RouteRecorderStore" syncable="YES">
+        <relationship name="lastArrivalLocation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Location" inverseName="lastArrivalLocationOfRouteRecorderStore" inverseEntity="Location" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AccelerometerReading" positionX="-18" positionY="171" width="128" height="120"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="225"/>
+        <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="105"/>
+        <element name="Prediction" positionX="-45" positionY="135" width="128" height="105"/>
+        <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="105"/>
+        <element name="Route" positionX="-63" positionY="36" width="128" height="225"/>
+        <element name="RouteRecorderStore" positionX="-45" positionY="144" width="128" height="60"/>
+    </elements>
+</model>

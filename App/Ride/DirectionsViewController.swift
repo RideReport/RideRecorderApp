@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RouteRecorder
 
 class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
     @IBOutlet weak var counter: RCounter!
@@ -29,7 +30,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         for viewController in self.childViewControllers {
             if (viewController.isKind(of: MapViewController.self)) {
                 self.mapViewController = viewController as! MapViewController
-                if let loc = SensorManagerComponent.shared.locationManager.location {
+                if let loc = RouteRecorder.shared.locationManager.location {
                     self.mapViewController.mapView.setCenter(loc.coordinate, zoomLevel: 14, animated: false)
                 } else {
                     self.mapViewController.mapView.setCenter(CLLocationCoordinate2DMake(45.5215907, -122.654937), zoomLevel: 14, animated: false)
@@ -61,7 +62,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         self.reloadMapInfoToolBar()
         self.counter.update(0, animate: false) // we're going to animate it instead.
 
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
                 return
             }
@@ -74,7 +75,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         super.viewDidAppear(animated)
         
         // animate the counter up to its current value
-        if case .area(_, let count, _, _) = APIClient.shared.area {
+        if case .area(_, let count, _, _) = RideReportAPIClient.shared.area {
             if !self.counter.isHidden {
                 var j = 0
                 var i = 0
@@ -137,7 +138,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         if (!self.mapInfoIsDismissed) {
             self.mapInfoToolBar.isHidden = false
             
-            switch APIClient.shared.area {
+            switch RideReportAPIClient.shared.area {
             case .unknown:
                 self.mapInfoToolBar.isHidden = true
             case .nonArea:

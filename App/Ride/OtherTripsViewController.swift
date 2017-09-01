@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-
+import RouteRecorder
 
 class OtherTripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -78,8 +78,8 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityTypeInteger != %i AND creationDate > %@ AND creationDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
+        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityTypeInteger != %i AND startDate > %@ AND startDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -150,10 +150,6 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
             return
         }
         
-        if (APIClient.shared.isMigrating) {
-            return
-        }
-        
         switch(type) {
             
         case .update:
@@ -213,8 +209,8 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         setDisclosureArrowColor(tableCell)
         
         var dateTitle = ""
-        if (trip.creationDate != nil) {
-            dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.creationDate))
+        if (trip.startDate != nil) {
+            dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.startDate))
             
         }
         
@@ -246,14 +242,14 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
-        if !trip.isClosed {
+        if trip.isInProgress {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
-                SensorManagerComponent.shared.routeManager.stopGPSTripAndEnterBackgroundState(stoppedManually: true)
+                RouteRecorder.shared.routeManager.stopRoute()
                 }]
         }
         
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
-            APIClient.shared.deleteTrip(trip)
+            RideReportAPIClient.shared.deleteTrip(trip)
         }
         
         #if DEBUG
@@ -262,19 +258,19 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
                 self.tableView.setEditing(false, animated: true)
                 
                 let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-                alertController.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.default, handler: { (_) in
-                    trip.isClosed = false
-                    trip.close()
-                }))
-                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
-                    trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
-                }))
-                alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-                    for prediction in trip.predictionAggregators {
-                        //SensorManagerComponent.shared.randomForestManager.classify(prediction)
-                    }
-                    //trip.calculateAggregatePredictedActivityType()
-                }))
+//                alertController.addAction(UIAlertAction(title: "Close", style: UIAlertActionStyle.default, handler: { (_) in
+//                    trip.isClosed = false
+//                    trip.close()
+//                }))
+//                alertController.addAction(UIAlertAction(title: "Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
+//                    trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
+//                }))
+//                alertController.addAction(UIAlertAction(title: "Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
+//                    for prediction in trip.predictionAggregators {
+//                        //RouteRecorder.shared.randomForestManager.classify(prediction)
+//                    }
+//                    //trip.calculateAggregatePredictedActivityType()
+//                }))
                 alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
                     let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                     })
@@ -304,7 +300,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == UITableViewCellEditingStyle.delete) {
             let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
-            APIClient.shared.deleteTrip(trip)
+            RideReportAPIClient.shared.deleteTrip(trip)
         }
     }
     

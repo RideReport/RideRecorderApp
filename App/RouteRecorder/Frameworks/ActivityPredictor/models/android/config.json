@@ -1,0 +1,32 @@
+{
+  "builder": {
+    "active_var_count": 25,
+    "epsilon": 1e-05,
+    "max_tree_count": 11,
+    "sample_count_multiple": 0.001
+  },
+  "code": {
+    "pipeline_commit_sha": "911a805284f54b903655270b6f47453f3b665cd0",
+    "pipeline_is_dirty": true,
+    "predictor_commit_sha": "0bd9a61d09f0e1964aad152cd4113ba33dbfa54b",
+    "predictor_is_dirty": true
+  },
+  "cv_sha256": "ab661117881a716d10d1f2c30c503688e826fffecd9d5891eb4891f3cb45f265",
+  "data": {
+    "sha256": "ae97cf8cdff01079dba3906d833a8beb98456e839edcecad7fcde1735a0d038b"
+  },
+  "extra": {
+    "include_crowd_data": false,
+    "platform": "android",
+    "split": false
+  },
+  "features": {
+    "config_sha256": "a3601b2717e4510d987682b4b9149aa789f03c8b4c0c95fe250a016fa59a1cfb",
+    "count": 398574
+  },
+  "model_metadata_version": 1,
+  "sampling": {
+    "sample_count": 128,
+    "sampling_rate_hz": 21.0
+  }
+}

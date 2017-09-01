@@ -116,7 +116,7 @@ class StatsViewController: UIViewController {
     @objc fileprivate func updateData() {
         if let manager = reachabilityManager  {
             if  manager.isReachable {
-                APIClient.shared.getStatistics().apiResponse { (response) in
+                RideReportAPIClient.shared.getStatistics().apiResponse { (response) in
                     self.reloadData()
                 }
             }
@@ -124,7 +124,7 @@ class StatsViewController: UIViewController {
                 self.reloadData()
             }
         } else {
-            APIClient.shared.getStatistics().apiResponse { (response) in
+            RideReportAPIClient.shared.getStatistics().apiResponse { (response) in
                 self.reloadData()
             }
         }

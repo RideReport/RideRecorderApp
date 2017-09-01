@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RouteRecorder
 import CoreData
 import CoreMotion
 import Crashlytics
@@ -71,41 +72,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         // Start Managers. The order matters!
         Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
-        KeychainManager.startup()
         CoreDataManager.startup()
-        APIClient.startup()
+        
+        RideReportAPIClient.shared.startup()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+            // avoid a bug that could have this called twice on app launch
+            NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.appDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        })
 
 #if DEBUG
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
-        SensorManagerComponent.inject(motionManager: CMMotionManager(),
+        RouteRecorder.inject(motionManager: CMMotionManager(),
                                       motionActivityManager: CMMotionActivityManager(),
                                       locationManager: LocationManager(type: .gpx),
                                       routeManager: RouteManager(),
                                       randomForestManager: RandomForestManager(),
                                       classificationManager: TestClassificationManager())
         
-        SensorManagerComponent.shared.locationManager.secondLength = 0.4
-        SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
+        RouteRecorder.shared.locationManager.secondLength = 0.4
+        RouteRecorder.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 5, startingCoordinate: CLLocationCoordinate2DMake(45.5231, -122.6765), startingDate: Date()))
         
         let predictionTemplate = PredictedActivity(activityType: .cycling, confidence: 0.4, prediction: nil)
         let predictionTemplate2 = PredictedActivity(activityType: .cycling, confidence: 0.5, prediction: nil)
         let predictionTemplate3 = PredictedActivity(activityType: .cycling, confidence: 0.6, prediction: nil)
         let predictionTemplate4 = PredictedActivity(activityType: .cycling, confidence: 1.0, prediction: nil)
-        SensorManagerComponent.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate, predictionTemplate2, predictionTemplate3, predictionTemplate4])
+        RouteRecorder.shared.classificationManager.setTestPredictionsTemplates(testPredictions: [predictionTemplate, predictionTemplate2, predictionTemplate3, predictionTemplate4])
     }
 #endif
         
-        if (!SensorManagerComponent.isInjected) {
-            // the SensorManagerComponent can be constructed by a test component
+        if (!RouteRecorder.isInjected) {
+            // the RouteRecorder can be constructed by a test component
             // to allow for dependency injection
             
-            SensorManagerComponent.inject(motionManager: CMMotionManager(),
+            RouteRecorder.inject(motionManager: CMMotionManager(),
                                        motionActivityManager: CMMotionActivityManager(),
                                        locationManager: LocationManager(type: .coreLocation),
                                        routeManager: RouteManager(),
                                        randomForestManager: RandomForestManager(),
                                        classificationManager: SensorClassificationManager())
         }
+        
+        TripsManager.startup()
         
         if #available(iOS 10.0, *) {
             WatchManager.startup()
@@ -123,14 +130,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 // perform async
                 NotificationManager.startup()
             }
-            SensorManagerComponent.shared.randomForestManager.startup()
-            SensorManagerComponent.shared.classificationManager.startup()
+            RouteRecorder.shared.randomForestManager.startup()
+            RouteRecorder.shared.classificationManager.startup()
             
             if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
                 DDLogInfo("Launched in background due to location update")
-                SensorManagerComponent.shared.routeManager.startup(true)
+                RouteRecorder.shared.routeManager.startup(true)
             } else {
-                SensorManagerComponent.shared.routeManager.startup(false)
+                RouteRecorder.shared.routeManager.startup(false)
             }
             
             self.transitionToMainNavController()
@@ -155,6 +162,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
+    }
+    
+    @objc func appDidBecomeActive() {
+        if (CoreDataManager.shared.isStartingUp) {
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+                guard let strongSelf = self else {
+                    return
+                }
+                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
+                RideReportAPIClient.shared.syncStatus()
+            }
+        } else {
+            RideReportAPIClient.shared.syncStatus()
+        }
     }
     
     func showMapAttribution() {
@@ -237,11 +258,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         self.notificationRegistrationStatus = .registered
         
-        APIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken)
+        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        APIClient.shared.appDidReceiveNotificationDeviceToken(nil)
+        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(nil)
     }
     
     func alertView(_ alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
@@ -279,7 +300,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             DDLogInfo("Received sync trips notification")
             if UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
-                APIClient.shared.syncUnsyncedTrips(true, completionBlock: completionBlock)
+                APIClient.shared.uploadTrips(true, completionBlock: completionBlock)
             } else {
                 completionBlock()
             }
@@ -325,7 +346,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                         trip.rating = rating
                         self.postTripRatedThanksNotification(ratingChoice: rating.choice)
                         
-                        APIClient.shared.saveAndSyncTripIfNeeded(trip, syncInBackground: true).apiResponse({ (_) -> Void in
+                        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(trip).apiResponse({ (_) -> Void in
                             completionHandler()
                         })
                         break
@@ -334,7 +355,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
         
         if (identifier == "RESUME_IDENTIFIER") {
-            SensorManagerComponent.shared.routeManager.resumeTracking()
+            RouteRecorder.shared.routeManager.resumeTracking()
             completionHandler()
         }
     }
@@ -408,7 +429,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                     }
                     let app = ConnectedApp.createOrUpdate(fixedUUID)
                     
-                    APIClient.shared.getApplication(app).apiResponse({ (response) in
+                    RideReportAPIClient.shared.getApplication(app).apiResponse({ (response) in
                         switch response.result {
                         case .success(_):
                             app.isHiddenApp = true

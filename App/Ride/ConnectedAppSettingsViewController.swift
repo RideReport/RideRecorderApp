@@ -37,7 +37,7 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
                 }
             }
             
-            APIClient.shared.getApplication(self.connectingApp).apiResponse {[weak self] _ in
+            RideReportAPIClient.shared.getApplication(self.connectingApp).apiResponse {[weak self] _ in
                 guard let strongSelf = self else {
                     return
                 }
@@ -96,7 +96,7 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     @IBAction func disconnect(_ sender: AnyObject) {
         let alertController = UIAlertController(title: "Disconnect?", message: String(format: "Your trips data will no longer be shared with %@.", self.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
         alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.destructive, handler: { (_) in
-            APIClient.shared.disconnectApplication(self.connectingApp).apiResponse{ [weak self] (response) in
+            RideReportAPIClient.shared.disconnectApplication(self.connectingApp).apiResponse{ [weak self] (response) in
                 guard let strongSelf = self else {
                     return
                 }

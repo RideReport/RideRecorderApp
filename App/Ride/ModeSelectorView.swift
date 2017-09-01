@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RouteRecorder
 
 @IBDesignable class ModeSelectorView : UISegmentedControl {
     private var feedbackGenerator: NSObject!

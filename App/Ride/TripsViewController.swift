@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RouteRecorder
 import CoreData
 import SystemConfiguration
 import Presentr
@@ -106,7 +107,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.fetchBatchSize = 20
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "startDate", ascending: false)]
 
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
         self.fetchedResultsController!.delegate = self
@@ -173,7 +174,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         }
         
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientStatusTextDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
             guard let strongSelf = self else {
                 return
             }
@@ -181,21 +182,21 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.refreshHeaderCells()
         }
         
-        if APIClient.shared.accountVerificationStatus != .unknown {
+        if RideReportAPIClient.shared.accountVerificationStatus != .unknown {
             self.runCreateAccountOfferIfNeeded()
         } else {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidChange"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
                     return
                 }
-                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "APIClientAccountStatusDidChange"), object: nil)
+                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidChange"), object: nil)
                 strongSelf.runCreateAccountOfferIfNeeded()
             }
         }
     }
     
     private func runCreateAccountOfferIfNeeded() {
-        if (APIClient.shared.accountVerificationStatus == .unverified) {
+        if (RideReportAPIClient.shared.accountVerificationStatus == .unverified) {
 
             if (Trip.numberOfCycledTrips > 10 && !UserDefaults.standard.bool(forKey: "hasBeenOfferedCreateAccountAfter10Trips")) {
                 UserDefaults.standard.set(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
@@ -218,7 +219,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if shouldGetTripsOnNextAppForeground {
             UserDefaults.standard.set(false, forKey: "shouldGetTripsOnNextAppForeground")
             UserDefaults.standard.synchronize()
-            APIClient.shared.getAllTrips()
+            RideReportAPIClient.shared.getAllTrips()
         }
     }
     
@@ -264,7 +265,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.shouldShowStreakAnimation = true
             if let app = promo.connectedApp {
                 // if we need to, fetch the app.
-                APIClient.shared.getApplication(app)
+                RideReportAPIClient.shared.getApplication(app)
             }
             
             if let promoCell = self.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
@@ -324,7 +325,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func resumeRideReport() {
-        SensorManagerComponent.shared.routeManager.resumeTracking()
+        RouteRecorder.shared.routeManager.resumeTracking()
         refreshHelperPopupUI()
     }
     
@@ -332,19 +333,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     func refreshHelperPopupUI() {
         popupView.removeTarget(self, action: nil, for: UIControlEvents.allEvents)
         
-        if (SensorManagerComponent.shared.routeManager.isPaused()) {
+        if (RouteRecorder.shared.routeManager.isPaused()) {
             if (self.popupView.isHidden) {
                 self.popupView.popIn()
             }
-            if (SensorManagerComponent.shared.routeManager.isPausedDueToUnauthorized()) {
+            if (RouteRecorder.shared.routeManager.isPausedDueToUnauthorized()) {
                 self.popupView.text = "Ride Report needs permission to run"
                 popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
-            } else if (SensorManagerComponent.shared.routeManager.isPausedDueToBatteryLife()) {
+            } else if (RouteRecorder.shared.routeManager.isPausedDueToBatteryLife()) {
                 self.popupView.text = "Ride Report is paused until you charge your phone"
             } else {
                 popupView.addTarget(self, action: #selector(TripsViewController.resumeRideReport), for: UIControlEvents.touchUpInside)
                 
-                if let pausedUntilDate = SensorManagerComponent.shared.routeManager.pausedUntilDate() {
+                if let pausedUntilDate = RouteRecorder.shared.routeManager.pausedUntilDate() {
                     if (pausedUntilDate.isToday()) {
                         self.popupView.text = "Ride Report is paused until " + Trip.timeDateFormatter.string(from: pausedUntilDate)
                     } else if (pausedUntilDate.isTomorrow()) {
@@ -418,10 +419,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        if (APIClient.shared.isMigrating) {
-            return
-        }
-        
         UIView.performWithoutAnimation {
             self.tableView.beginUpdates()
         }
@@ -429,10 +426,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard let fetchedResultsController = self.fetchedResultsController else {
-            return
-        }
-        
-        if (APIClient.shared.isMigrating) {
             return
         }
         
@@ -485,10 +478,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        if (APIClient.shared.isMigrating) {
-            return
-        }
-        
         guard let fetchedResultsController = self.fetchedResultsController else {
             return
         }
@@ -551,7 +540,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let isInProgresstrip = theSection.name.contains(Trip.inProgressSectionIdentifierSuffix())
         
             if (newIndexPath != indexPath) {
-                if isInProgresstrip || (trip.isClosed && trip.activityType != .cycling) ||  sectionChangeType == .delete {
+                if isInProgresstrip || (!trip.isInProgress && trip.activityType != .cycling) ||  sectionChangeType == .delete {
                     // if the trip is moving from the cycling trips to other trips, then delete a row
                     self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
                                                with: .fade)
@@ -973,9 +962,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             rideSummaryView.isHidden = false
             
             let trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
-            if !trip.isClosed {
-                if (rideSummaryView.tripLength != trip.inProgressLength) {
-                    rideSummaryView.setTripSummary(tripLength: trip.inProgressLength, description: String(format: "Trip started at %@.", trip.timeString()))
+            if trip.isInProgress {
+                if (rideSummaryView.tripLength != trip.length) {
+                    rideSummaryView.setTripSummary(tripLength: trip.length, description: String(format: "Trip started at %@.", trip.timeString()))
                     rideSummaryView.setRewards([])
                 }
             } else {
@@ -1049,10 +1038,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         if let trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? Trip {
-            if trip.activityType == .cycling || trip.isClosed == false {
+            if trip.activityType == .cycling || !trip.isInProgress == false {
                 self.performSegue(withIdentifier: "showTrip", sender: trip)
             } else {
-                self.performSegue(withIdentifier: "showOtherTripsView", sender: trip.creationDate)
+                self.performSegue(withIdentifier: "showOtherTripsView", sender: trip.startDate)
             }
         }
     }
@@ -1104,7 +1093,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 if let button = sender as? UIButton {
                     button.isEnabled = false
                 }
-                APIClient.shared.getApplication(app).apiResponse({ (response) in
+                RideReportAPIClient.shared.getApplication(app).apiResponse({ (response) in
                     switch response.result {
                     case .success(_):
                         if let button = sender as? UIButton {
@@ -1147,14 +1136,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         let trip : Trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
-        if !trip.isClosed {
+        if trip.isInProgress {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
-                SensorManagerComponent.shared.routeManager.stopGPSTripAndEnterBackgroundState(stoppedManually: true)
+                RouteRecorder.shared.routeManager.stopRoute()
             }]
         }
         
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
-            APIClient.shared.deleteTrip(trip)
+            RideReportAPIClient.shared.deleteTrip(trip)
         }
         
     #if DEBUG
@@ -1163,70 +1152,68 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.tableView.setEditing(false, animated: true)
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-            alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
-                trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
-            }))
-            alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-                for prediction in trip.predictionAggregators {
-                   // SensorManagerComponent.shared.randomForestManager.classify(prediction)
-                }
-                //trip.calculateAggregatePredictedActivityType()
-            }))
-            alertController.addAction(UIAlertAction(title: "💩 Re-Simplify", style: UIAlertActionStyle.default, handler: { (_) in
-                trip.simplify()
-            }))
-            alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
-                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                })
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in
-                    trip.isSavedToHealthKit = false
-                    CoreDataManager.shared.saveContext()
-                    HealthKitManager.shared.saveOrUpdateTrip(trip) {_ in
-                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                            
-                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-                        }
-                    }
-                }
-            }))
-            alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
-                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
-                    var cllocs: [CLLocation] = []
-                    for loc in trip.fetchOrderedLocations(includingInferred: false) {
-                        if let location = loc as? Location {
-                            cllocs.append(location.clLocation())
-                        }
-                    }
-                    
-                    let date = Date()
-                    SensorManagerComponent.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(locations: cllocs, fromOffsetDate: date))
-                }
-            }))
-            alertController.addAction(UIAlertAction(title: "📦 Export", style: .default, handler: { (_) in
-                let urls = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-                let url = urls.last!
-                
-                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
-                    var cllocs: [CLLocation] = []
-                    var locs = trip.fetchOrderedLocations(includingInferred: true)
-                    for loc in locs {
-                        if let location = loc as? Location {
-                            cllocs.append(location.clLocation())
-                        }
-                    }
-                    
-                    let path = url + "/" + trip.uuid + ".archive"
-                    if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
-                        UIPasteboard.general.string = path
-                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
-                        alert.show()
-                    } else {
-                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
-                        alert.show()
-                    }
-                }
-            }))
+//            alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
+//                trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
+//            }))
+//            alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
+//                for prediction in trip.predictionAggregators {
+//                   // RouteRecorder.shared.randomForestManager.classify(prediction)
+//                }
+//                //trip.calculateAggregatePredictedActivityType()
+//            }))
+//            
+//            alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
+//                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+//                })
+//                
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in
+//                    trip.isSavedToHealthKit = false
+//                    CoreDataManager.shared.saveContext()
+//                    HealthKitManager.shared.saveOrUpdateTrip(trip) {_ in
+//                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
+//                            
+//                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+//                        }
+//                    }
+//                }
+//            }))
+//            alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
+//                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
+//                    var cllocs: [CLLocation] = []
+//                    for loc in trip.fetchOrderedLocations(includingInferred: false) {
+//                        if let location = loc as? Location {
+//                            cllocs.append(location.clLocation())
+//                        }
+//                    }
+//                    
+//                    let date = Date()
+//                    RouteRecorder.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(locations: cllocs, fromOffsetDate: date))
+//                }
+//            }))
+//            alertController.addAction(UIAlertAction(title: "📦 Export", style: .default, handler: { (_) in
+//                let urls = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+//                let url = urls.last!
+//                
+//                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
+//                    var cllocs: [CLLocation] = []
+//                    var locs = trip.fetchOrderedLocations(includingInferred: true)
+//                    for loc in locs {
+//                        if let location = loc as? Location {
+//                            cllocs.append(location.clLocation())
+//                        }
+//                    }
+//                    
+//                    let path = url + "/" + trip.uuid + ".archive"
+//                    if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
+//                        UIPasteboard.general.string = path
+//                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
+//                        alert.show()
+//                    } else {
+//                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
+//                        alert.show()
+//                    }
+//                }
+//            }))
             
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel, handler: nil))
             self.present(alertController, animated: true, completion: nil)
@@ -1248,7 +1235,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         if (editingStyle == UITableViewCellEditingStyle.delete) {
             let trip : Trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
-            APIClient.shared.deleteTrip(trip)
+            RideReportAPIClient.shared.deleteTrip(trip)
         }
     }
     

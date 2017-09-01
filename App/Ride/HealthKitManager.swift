@@ -103,7 +103,7 @@ class HealthKitManager {
                 let context = CoreDataManager.shared.currentManagedObjectContext()
                 let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
                 fetchedRequest.predicate = NSPredicate(format: "isSavedToHealthKit == false")
-                fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
                 
                 let results: [AnyObject]?
                 do {
@@ -302,7 +302,7 @@ class HealthKitManager {
         }
         
         // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
-        guard trip.activityType == .cycling && trip.isClosed else {
+        guard trip.activityType == .cycling && !trip.isInProgress else {
             DDLogInfo(String(format: "Trip not closed or not a cycling trip. Skipping workout save…"))
             trip.isBeingSavedToHealthKit = false
             trip.isSavedToHealthKit = true
@@ -342,51 +342,9 @@ class HealthKitManager {
                 
                 
             } else {
-                // otherwise, calculate using speed based on:
-                // http://www.acefitness.org/updateable/update_display.aspx?pageID=593
-
-                var lastLoc : Location? = nil
-                var totalBurnDouble : Double = 0
-                let locs = trip.fetchOrderedLocations(includingInferred: false)
-
-                for location in locs {
-                    if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                        if let lastLocation = lastLoc, lastLocation.date.compare(location.date) != ComparisonResult.orderedDescending {
-                            let calPerKgMin : Double = {
-                                switch (location.speed) {
-                                case 0...1:
-                                    // standing
-                                    return 0.4
-                                case 1...4.47:
-                                    //
-                                    return 0.10
-                                case 4.47...5.37:
-                                    //
-                                    return 0.12
-                                case 5.37...6.26:
-                                    return 0.14
-                                case 6.26...7.15:
-                                    return 0.18
-                                default:
-                                    return 0.21
-                                }
-                            }()
-                            
-                            let burnDouble = calPerKgMin * self.currentWeightKilograms * ((location.date.timeIntervalSinceReferenceDate - lastLocation.date.timeIntervalSinceReferenceDate)/60)
-                            totalBurnDouble += burnDouble
-                            let sample = HKQuantitySample(type: activeEnergyBurnedType, quantity: HKQuantity(unit: HKUnit.kilocalorie(),
-                                doubleValue: burnDouble), start: lastLocation.date, end: location.date)
-                            
-                            
-                            burnSamples.append(sample)
-                        }
-                        
-                        lastLoc = location
-                    }
-                }
-                
+                // otherwise, use the server's calculation
                 totalBurn = HKQuantity(unit: HKUnit.kilocalorie(),
-                    doubleValue: totalBurnDouble)
+                    doubleValue: trip.caloriesBurned)
             }
             
             let distance = HKQuantity(unit: HKUnit.mile(), doubleValue: Double(trip.length.miles))
