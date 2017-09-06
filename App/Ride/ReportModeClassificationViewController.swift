@@ -73,11 +73,15 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     
     @IBAction func upload(_ sender: AnyObject) {
         var metadata: [String: Any] = [:]
+        
+        guard let route = trip.route else {
+            return
+        }
 
         if let notes = self.notesTextField.text, notes.characters.count > 0 {
             metadata["notes"] = notes
         }
-        APIClient.shared.uploadSensorData(trip, withMetadata: metadata)
+        APIClient.shared.uploadRoute(route, includeFullLocations: true)
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -122,7 +126,11 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             return
         }
         
-        let locs = trip.generateSummaryLocations()
+        guard let route = trip.route else {
+            return
+        }
+        
+        let locs = route.generateSummaryLocations()
         
         if let startLoc = locs.first,
             let endLoc = locs.last {

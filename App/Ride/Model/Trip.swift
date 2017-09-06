@@ -24,6 +24,29 @@ public class  Trip: NSManagedObject {
     var workoutObject: HKWorkout? = nil
     var wasStoppedManually : Bool = false
     
+    public var route: Route? {
+        get {
+            let context = CoreDataManager.shared.currentManagedObjectContext()
+            let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Route")
+            fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", self.uuid)
+            fetchedRequest.fetchLimit = 1
+            
+            let results: [AnyObject]?
+            do {
+                results = try context.fetch(fetchedRequest)
+            } catch let error {
+                DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+                results = nil
+            }
+            
+            if (results == nil || results!.count == 0) {
+                return nil
+            }
+            
+            return (results!.first as? Route)
+        }
+    }
+    
     
     private struct Static {
         static var timeFormatter : DateFormatter!
@@ -514,7 +537,12 @@ public class  Trip: NSManagedObject {
     
     @available(iOS 10.0, *)
     private func createRouteMapAttachement(_ handler: @escaping (_ attachment: UNNotificationAttachment?)->Void) {
-        let locations = self.generateSummaryLocations()
+        guard let route = self.route else {
+            handler(nil)
+            return
+        }
+        
+        let locations = route.generateSummaryLocations()
         
         if locations.count > 0 {
             let width = UIScreen.main.bounds.width

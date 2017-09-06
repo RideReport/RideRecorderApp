@@ -18,4 +18,6 @@ extension Profile {
     @NSManaged public var uuid: String?
     @NSManaged public var connectedApps: Set<ConnectedApp>?
     @NSManaged public var promotions: NSOrderedSet
+    @NSManaged internal var nextSyncURLString: String?
+    @NSManaged internal var nextPageURLString: String?
 }

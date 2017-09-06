@@ -74,7 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         
-        RideReportAPIClient.shared.startup()
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
             // avoid a bug that could have this called twice on app launch
             NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.appDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
@@ -112,6 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                                        classificationManager: SensorClassificationManager())
         }
         
+        RideReportAPIClient.startup()
         TripsManager.startup()
         
         if #available(iOS 10.0, *) {
@@ -300,7 +300,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             DDLogInfo("Received sync trips notification")
             if UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
-                APIClient.shared.uploadTrips(true, completionBlock: completionBlock)
+                RouteRecorder.shared.uploadRoutes(true, completionBlock: completionBlock)
             } else {
                 completionBlock()
             }

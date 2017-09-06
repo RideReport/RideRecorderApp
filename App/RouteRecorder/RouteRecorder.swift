@@ -89,7 +89,7 @@ public class RouteRecorder {
         }
     }
     
-    func uploadRoutes(_ syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
+    public func uploadRoutes(_ syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
         self.didEncounterUnrecoverableErrorUploadingRoutes = false
         self.uploadNextRoute(syncInBackground, completionBlock: completionBlock)
     }

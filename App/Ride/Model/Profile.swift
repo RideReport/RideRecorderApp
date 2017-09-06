@@ -25,6 +25,32 @@ public class Profile: NSManagedObject {
         }
     }
     
+    public var nextSyncURL: URL? {
+        get {
+            guard let urlString = self.nextSyncURLString else {
+                return nil
+            }
+            
+            return URL(string: urlString)
+        }
+        set {
+            self.nextSyncURLString = newValue?.absoluteString
+        }
+    }
+    
+    public var nextPageURL: URL? {
+        get {
+            guard let urlString = self.nextPageURLString else {
+                return nil
+            }
+            
+            return URL(string: urlString)
+        }
+        set {
+            self.nextPageURLString = newValue?.absoluteString
+        }
+    }
+    
     public var gender: HKBiologicalSex {
         get {
             willAccessValue(forKey: "gender")

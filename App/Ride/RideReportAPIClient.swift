@@ -55,7 +55,7 @@ class RideReportAPIClient {
             switch response.result {
             case .success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string, let startDateString = tripJson["startDate"].string, let startDate = Date.dateFromJSONString(startDateString) {
+                    if let uuid = tripJson["uuid"].string, let startDateString = tripJson["creationDate"].string, let startDate = Date.dateFromJSONString(startDateString) {
                         var trip: Trip! = Trip.tripWithUUID(uuid)
                         if (trip == nil) {
                             trip = Trip()
@@ -64,6 +64,7 @@ class RideReportAPIClient {
                         }
                         
                         trip.startDate = startDate
+                        trip.endDate = startDate // TODO: REMOVE THIS HACK
                         trip.isSynced = true
                         
                         if let activityTypeNumber = tripJson["activityType"].number,
@@ -89,7 +90,7 @@ class RideReportAPIClient {
     }
     
     @discardableResult func syncTrip(_ trip: Trip)->AuthenticatedAPIRequest {
-        //
+        return getTrip(trip)
     }
     
     @discardableResult func getTrip(_ trip: Trip)->AuthenticatedAPIRequest {
@@ -183,9 +184,11 @@ class RideReportAPIClient {
     
     func appDidReceiveNotificationDeviceToken(_ token: Data?) {
         let oldToken = self.notificationDeviceToken
+        let hadRegisteredForRemoteNotifications = self.hasRegisteredForRemoteNotifications
+        
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
-        if (oldToken != token) {
+        if (oldToken != token || !hadRegisteredForRemoteNotifications) {
             self.updateAccountStatus()
         }
     }

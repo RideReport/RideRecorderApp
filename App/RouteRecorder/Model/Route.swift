@@ -154,7 +154,7 @@ public class  Route: NSManagedObject {
         return 0
     }
     
-    func generateSummaryLocations()->[Location] {
+    public func generateSummaryLocations()->[Location] {
         var locs: [Location] = []
         
         if self.activityType != .cycling || !self.isClosed || locs.isEmpty {

@@ -10,30 +10,34 @@ import Foundation
 import CoreLocation
 import CoreMotion
 
-class TestClassificationManager : ClassificationManager {
-    var routeRecorder: RouteRecorder!
-    var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
+public class TestClassificationManager : ClassificationManager {
+    public var routeRecorder: RouteRecorder!
+    public var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
     private var testPredictionsIndex = 0
     private var testPredictionsTemplates: [PredictedActivity]!
     
-    func startup() {
+    public init () {
+        
+    }
+    
+    public func startup() {
         authorizationStatus = .authorized
     }
     
-    func gatherSensorData(predictionAggregator: PredictionAggregator) {
+    public func gatherSensorData(predictionAggregator: PredictionAggregator) {
         //
     }
     
-    func stopGatheringSensorData() {
+    public func stopGatheringSensorData() {
         //
     }
     
-    func setTestPredictionsTemplates(testPredictions: [PredictedActivity]) {
+    public func setTestPredictionsTemplates(testPredictions: [PredictedActivity]) {
         self.testPredictionsTemplates = testPredictions
     }
     
-    func predictCurrentActivityType(predictionAggregator: PredictionAggregator, withHandler handler: @escaping (PredictionAggregator) -> Void) {
+    public func predictCurrentActivityType(predictionAggregator: PredictionAggregator, withHandler handler: @escaping (PredictionAggregator) -> Void) {
         let predictionTemplate = self.testPredictionsTemplates[testPredictionsIndex]
         let prediction = Prediction()
         let _ = PredictedActivity(activityType: predictionTemplate.activityType, confidence: predictionTemplate.confidence, prediction: prediction)

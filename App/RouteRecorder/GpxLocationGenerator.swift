@@ -16,8 +16,8 @@ extension CLLocationCoordinate2D {
     }
 }
 
-class GpxLocationGenerator {
-    class func generate(distanceInterval: Double, count: Int, startingCoordinate: CLLocationCoordinate2D, startingDate: Date)->[CLLocation] {
+public class GpxLocationGenerator {
+    public class func generate(distanceInterval: Double, count: Int, startingCoordinate: CLLocationCoordinate2D, startingDate: Date)->[CLLocation] {
         var locs: [CLLocation] = []
         var coord = CLLocationCoordinate2D(latitude: startingCoordinate.latitude, longitude: startingCoordinate.longitude)
         var date = startingDate
@@ -31,7 +31,7 @@ class GpxLocationGenerator {
         return locs
     }
     
-    class func generate(locations: [CLLocation], fromOffsetDate startingDate: Date)->[CLLocation] {
+    public class func generate(locations: [CLLocation], fromOffsetDate startingDate: Date)->[CLLocation] {
         var locs: [CLLocation] = []
         let startLoc = locations.first!
         locs.append(contentsOf: GpxLocationGenerator.generate(distanceInterval: 0.1, count: 1, startingCoordinate: startLoc.coordinate, startingDate: startingDate)) // append a few stopped locs on the end to make sure the state machine initializes properly

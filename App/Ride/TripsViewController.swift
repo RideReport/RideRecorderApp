@@ -102,6 +102,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
+        RideReportAPIClient.shared.getAllTrips()
+        
         let cacheName = "TripsViewControllerFetchedResultsController"
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
