@@ -435,6 +435,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         switch trip.activityType {
         case .cycling where trip.length.miles >= 12:
             timeoutInterval = 1080
+        case .walking: // walking can be slow to trigger location changes
+            timeoutInterval = 600
         default:
             timeoutInterval = 300
         }
