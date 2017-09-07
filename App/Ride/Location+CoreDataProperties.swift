@@ -22,5 +22,6 @@ extension Location {
     @NSManaged public var verticalAccuracy: Double
     @NSManaged public var simplifiedInTrip: Trip?
     @NSManaged public var trip: Trip?
+    @NSManaged public var predictionAggregator: PredictionAggregator?
     @NSManaged public var lastArrivalLocationOfProfile: Profile?
 }

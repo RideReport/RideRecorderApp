@@ -13,6 +13,7 @@ import MapKit
 extension PredictionAggregator {
     @NSManaged public var aggregatePredictedActivity: PredictedActivity?
     @NSManaged public var predictions: Set<Prediction>
+    @NSManaged public var locations: Set<Location>
     @NSManaged public var accelerometerReadings: Set<AccelerometerReading>
     @NSManaged public var trip: Trip?
 }

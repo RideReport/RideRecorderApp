@@ -18,9 +18,13 @@ public class PredictionAggregator : NSManagedObject {
     public static let maximumSampleBeforeFailure = 15
 
     
-    convenience init() {
+    convenience init(locations: [Location]) {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "PredictionAggregator", in: context)!, insertInto: context)
+        
+        for loc in locations {
+            loc.predictionAggregator = self
+        }
     }
     
     public func fetchFirstReading(afterDate: Date)-> AccelerometerReading? {

@@ -33,8 +33,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
     private let minimumNumberOfNonMovingContiguousGPSLocations = 3
     
     internal private(set) var currentTrip : Trip?
-    private var locationsPendingTripStart: [Location] = []
-    private var aggregatorsPendingTripStart: [PredictionAggregator] = []
+    private var pendingAggregators: [PredictionAggregator] = []
     private var mostRecentGPSLocation: CLLocation?
     private var mostRecentLocationWithSufficientSpeed: CLLocation?
     private var currentPredictionAggregator: PredictionAggregator?
@@ -339,8 +338,7 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
         #endif
         
         if self.currentPredictionAggregator == nil {
-            let newAggregator = PredictionAggregator()
-            self.aggregatorsPendingTripStart.append(newAggregator)
+            let newAggregator = PredictionAggregator(locations: locations)
             self.currentPredictionAggregator = newAggregator
             
             sensorComponent.classificationManager.predictCurrentActivityType(predictionAggregator: newAggregator) {[weak self] (prediction) -> Void in
@@ -379,18 +377,39 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         }
                     }
                     
-                    for aggregator in strongSelf.aggregatorsPendingTripStart {
-                        strongSelf.currentTrip!.predictionAggregators.insert(aggregator)
+                    strongSelf.currentTrip!.addPredictionAggregator(newAggregator)
+                    
+                    var shouldAppendToCurrentTrip = true
+                    let mostRecentTrip = Trip.mostRecentTrip()
+                    if let mostRecentTrip = mostRecentTrip {
+                        // if the mostRecentTrip's mode is not like (~=) the currentTrip's, we should appending any
+                        // ~= aggregators to mostRecentTrip until we find one that ~= currentTrip
+                        shouldAppendToCurrentTrip = (mostRecentTrip.activityType ~= strongSelf.currentTrip!.activityType)
                     }
                     
-                    strongSelf.aggregatorsPendingTripStart = []
-                    
-                    for location in strongSelf.locationsPendingTripStart {
-                        location.trip = strongSelf.currentTrip!
+                    for aggregator in strongSelf.pendingAggregators {
+                        if shouldAppendToCurrentTrip {
+                            strongSelf.currentTrip!.addPredictionAggregator(aggregator)
+                        } else {
+                            if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
+                                aggregatePredictedActivity.activityType ~= mostRecentTrip!.activityType {
+                                // if the mode ~= the last trip, append there
+                                mostRecentTrip!.addPredictionAggregator(aggregator)
+                            } else if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
+                                aggregatePredictedActivity.activityType ~= strongSelf.currentTrip!.activityType {
+                                // as soon as the mode switches to ~= the current trip, start appending there instead
+                                shouldAppendToCurrentTrip = true
+                                strongSelf.currentTrip!.addPredictionAggregator(aggregator)
+                            } else {
+                                mostRecentTrip!.addPredictionAggregator(aggregator)
+                            }
+                        }
                     }
-                    strongSelf.locationsPendingTripStart = []
-                    for location in locations {
-                        location.trip = strongSelf.currentTrip!
+                    
+                    strongSelf.pendingAggregators = []
+                    
+                    if let mostRecentTrip = mostRecentTrip {
+                        _ = mostRecentTrip.saveLocationsAndUpdateInProgressLength(intermittently: false)
                     }
                     
                     _ = strongSelf.currentTrip!.saveLocationsAndUpdateInProgressLength(intermittently: false)
@@ -403,7 +422,8 @@ class RouteManager : NSObject, CLLocationManagerDelegate {
                         // don't include stationary samples in a trip when starting a new trip
                         // if a trip is already underway, we do include them (for example if the user stops at a traffic light)
                     } else {
-                        strongSelf.locationsPendingTripStart.append(contentsOf: locations)
+                        // otherwise, append to the next trip
+                        strongSelf.pendingAggregators.append(newAggregator)
                     }
                 }
             }

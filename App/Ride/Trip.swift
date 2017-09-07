@@ -837,6 +837,14 @@ public class  Trip: NSManagedObject {
         CoreDataManager.shared.saveContext()
     }
     
+    func addPredictionAggregator(_ predictionAggregator: PredictionAggregator) {
+        predictionAggregator.trip = self
+        
+        for loc in predictionAggregator.locations {
+            loc.trip = self
+        }
+    }
+    
     func loadSummaryFromAPNDictionary(_ summary: [AnyHashable: Any]) {
         self.isSummarySynced = true
 

@@ -39,6 +39,7 @@
         <attribute name="speed" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="verticalAccuracy" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="lastArrivalLocationOfProfile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Profile" inverseName="lastArrivalLocation" inverseEntity="Profile" syncable="YES"/>
+        <relationship name="predictionAggregator" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictionAggregator" inverseName="locations" inverseEntity="PredictionAggregator" syncable="YES"/>
         <relationship name="simplifiedInTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="simplifiedLocations" inverseEntity="Trip" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="locations" inverseEntity="Trip" syncable="YES"/>
     </entity>
@@ -57,6 +58,7 @@
     <entity name="PredictionAggregator" representedClassName=".PredictionAggregator" syncable="YES">
         <relationship name="accelerometerReadings" toMany="YES" deletionRule="Cascade" destinationEntity="AccelerometerReading" inverseName="predictionAggregator" inverseEntity="AccelerometerReading" syncable="YES"/>
         <relationship name="aggregatePredictedActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PredictedActivity" inverseName="predictionAggregator" inverseEntity="PredictedActivity" syncable="YES"/>
+        <relationship name="locations" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="predictionAggregator" inverseEntity="Location" syncable="YES"/>
         <relationship name="predictions" toMany="YES" deletionRule="Cascade" destinationEntity="Prediction" inverseName="predictionAggregator" inverseEntity="Prediction" syncable="YES"/>
         <relationship name="trip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="predictionAggregators" inverseEntity="Trip" syncable="YES"/>
     </entity>
@@ -118,10 +120,10 @@
         <element name="AccelerometerReading" positionX="-18" positionY="171" width="128" height="120"/>
         <element name="ConnectedApp" positionX="-45" positionY="135" width="128" height="210"/>
         <element name="ConnectedAppScope" positionX="-45" positionY="135" width="128" height="135"/>
-        <element name="Location" positionX="-63" positionY="-18" width="128" height="225"/>
+        <element name="Location" positionX="-63" positionY="-18" width="128" height="240"/>
         <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="105"/>
         <element name="Prediction" positionX="-45" positionY="135" width="128" height="105"/>
-        <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="105"/>
+        <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="120"/>
         <element name="Profile" positionX="-45" positionY="144" width="128" height="210"/>
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
         <element name="Trip" positionX="-63" positionY="36" width="128" height="390"/>

@@ -19,11 +19,28 @@ import Foundation
     case stationary
     case aviation // be sure to update count if changing this
     
+    static func ~= (left: ActivityType, right: ActivityType) -> Bool {
+        if left.isMotorizedMode && right.isMotorizedMode {
+            return true
+        }
+        if left.isPedestrianMode && right.isPedestrianMode {
+            return true
+        }
+        
+        return (left == right)
+    }
+    
     static var count: Int { return Int(ActivityType.aviation.rawValue) + 1}
     
     var isMotorizedMode: Bool {
         get {
             return (self == .automotive || self == .bus || self == .rail)
+        }
+    }
+    
+    var isPedestrianMode: Bool {
+        get {
+            return (self == .walking || self == .running)
         }
     }
     
