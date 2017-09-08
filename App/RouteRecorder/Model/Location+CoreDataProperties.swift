@@ -22,5 +22,6 @@ extension Location {
     @NSManaged public var verticalAccuracy: Double
     @NSManaged public var simplifiedInRoute: Route?
     @NSManaged public var route: Route?
+    @NSManaged public var predictionAggregator: PredictionAggregator?
     @NSManaged public var lastArrivalLocationOfRouteRecorderStore: RouteRecorderStore?
 }

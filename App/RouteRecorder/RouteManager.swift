@@ -33,8 +33,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     private let minimumNumberOfNonMovingContiguousGPSLocations = 3
     
     internal private(set) var currentRoute : Route?
-    private var locationsPendingRouteStart: [Location] = []
-    private var aggregatorsPendingRouteStart: [PredictionAggregator] = []
+    private var pendingAggregators: [PredictionAggregator] = []
     private var mostRecentGPSLocation: CLLocation?
     private var mostRecentLocationWithSufficientSpeed: CLLocation?
     private var currentPredictionAggregator: PredictionAggregator?
@@ -342,8 +341,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         #endif
         
         if self.currentPredictionAggregator == nil {
-            let newAggregator = PredictionAggregator()
-            self.aggregatorsPendingRouteStart.append(newAggregator)
+            let newAggregator = PredictionAggregator(locations: locations)
             self.currentPredictionAggregator = newAggregator
             
             routeRecorder.classificationManager.predictCurrentActivityType(predictionAggregator: newAggregator) {[weak self] (prediction) -> Void in
@@ -382,18 +380,39 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                         }
                     }
                     
-                    for aggregator in strongSelf.aggregatorsPendingRouteStart {
-                        strongSelf.currentRoute!.predictionAggregators.insert(aggregator)
+                    strongSelf.currentRoute!.addPredictionAggregator(newAggregator)
+                    
+                    var shouldAppendToCurrentRoute = true
+                    let mostRecentRoute = Route.mostRecentRoute()
+                    if let mostRecentRoute = mostRecentRoute {
+                        // if the mostRecentRoute's mode is not like (~=) the currentRoute's, we should appending any
+                        // ~= aggregators to mostRecentRoute until we find one that ~= currentTrip
+                        shouldAppendToCurrentRoute = (mostRecentRoute.activityType ~= strongSelf.currentRoute!.activityType)
                     }
                     
-                    strongSelf.aggregatorsPendingRouteStart = []
-                    
-                    for location in strongSelf.locationsPendingRouteStart {
-                        location.route = strongSelf.currentRoute!
+                    for aggregator in strongSelf.pendingAggregators {
+                        if shouldAppendToCurrentRoute {
+                            strongSelf.currentRoute!.addPredictionAggregator(aggregator)
+                        } else {
+                            if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
+                                aggregatePredictedActivity.activityType ~= mostRecentRoute!.activityType {
+                                // if the mode ~= the last route, append there
+                                mostRecentRoute!.addPredictionAggregator(aggregator)
+                            } else if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
+                                aggregatePredictedActivity.activityType ~= strongSelf.currentRoute!.activityType {
+                                // as soon as the mode switches to ~= the current route, start appending there instead
+                                shouldAppendToCurrentRoute = true
+                                strongSelf.currentRoute!.addPredictionAggregator(aggregator)
+                            } else {
+                                mostRecentRoute!.addPredictionAggregator(aggregator)
+                            }
+                        }
                     }
-                    strongSelf.locationsPendingRouteStart = []
-                    for location in locations {
-                        location.route = strongSelf.currentRoute!
+                    
+                    strongSelf.pendingAggregators = []
+                    
+                    if let mostRecentRoute = mostRecentRoute {
+                        _ = mostRecentRoute.saveLocationsAndUpdateInProgressLength(intermittently: false)
                     }
                     
                     _ = strongSelf.currentRoute!.saveLocationsAndUpdateInProgressLength(intermittently: false)
@@ -406,7 +425,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                         // don't include stationary samples in a route when starting a new route
                         // if a route is already underway, we do include them (for example if the user stops at a traffic light)
                     } else {
-                        strongSelf.locationsPendingRouteStart.append(contentsOf: locations)
+                        // otherwise, append to the next trip
+                        strongSelf.pendingAggregators.append(newAggregator)
                     }
                 }
             }
@@ -438,6 +458,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         switch route.activityType {
         case .cycling where route.length >= 20 * 1000: // longer time out above 20k
             timeoutInterval = 1080
+        case .walking: // walking can be slow to trigger location changes
+            timeoutInterval = 600
         default:
             timeoutInterval = 300
         }

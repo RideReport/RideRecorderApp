@@ -489,6 +489,14 @@ public class  Route: NSManagedObject {
         return loc
     }
     
+    func addPredictionAggregator(_ predictionAggregator: PredictionAggregator) {
+        predictionAggregator.route = self
+        
+        for loc in predictionAggregator.locations {
+            loc.route = self
+        }
+    }
+    
     func firstLocation(includeCopied: Bool) -> Location? {
         let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
