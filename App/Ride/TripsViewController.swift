@@ -34,7 +34,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBOutlet weak var popupView: PopupView!
     
-    private var dateOfLastTableRefresh: Date?
+    private var dateOfLastTableRefresh: Date = Date()
 
     private var reachability : Reachability!
     
@@ -47,9 +47,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var dateFormatter : DateFormatter!
     private var yearDateFormatter : DateFormatter!
     private var rewardSectionNeedsReload : Bool = false
-    private var sectionNeedingReloadAfterUpdates : Int = -1
-    private var sectionHeaderNeedingReloadAfterUpdates : Int = -1
-    private var sectionChangeType : NSFetchedResultsChangeType? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,11 +104,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let cacheName = "TripsViewControllerFetchedResultsController"
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
-        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripsListRow")
         fetchedRequest.fetchBatchSize = 20
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "sectionIdentifier", ascending: false), NSSortDescriptor(key: "startDate", ascending: false)]
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "sortName", ascending: false)]
 
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "section.date", cacheName:cacheName )
         self.fetchedResultsController!.delegate = self
         do {
             try self.fetchedResultsController!.performFetch()
@@ -131,7 +128,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.refreshEmptyTableView()
         
         self.tableView.reloadData()
-        self.dateOfLastTableRefresh = Date()
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) {[weak self] (_) in
             guard let strongSelf = self else {
@@ -374,20 +370,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     private func reloadSectionIdentifiersIfNeeded() {
-        if let date = self.dateOfLastTableRefresh, date.isToday() {
+        if self.dateOfLastTableRefresh.isToday() {
             // don't refresh if we've already done it today
         } else {
             // refresh to prevent section headers from getting out of date.
             self.dateOfLastTableRefresh = Date()
             
-            let hasRunTripsSectionIdentifiersMigration = UserDefaults.standard.bool(forKey: "hasRunTripsSectionIdentifiersMigration")
-            if (!hasRunTripsSectionIdentifiersMigration) {
-                UserDefaults.standard.set(true, forKey: "hasRunTripsSectionIdentifiersMigration")
-                UserDefaults.standard.synchronize()
-            }
-            
-            // if we haven't run the migration, do an exhaustive reload
-            Trip.reloadSectionIdentifiers(!hasRunTripsSectionIdentifiersMigration)
+            self.tableView.reloadData()
         }
         
     }
@@ -427,36 +416,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard let fetchedResultsController = self.fetchedResultsController else {
-            return
-        }
-        
         UIView.performWithoutAnimation {
             self.tableView.endUpdates()
         }
         
         self.refreshEmptyTableView()
         self.refreshTitle()
-        
-        self.sectionChangeType = nil
-        
-        if (sectionNeedingReloadAfterUpdates != -1) {
-            // reload both the section and the other trips section following, if it exists
-            self.tableView!.reloadSections(IndexSet(integer: sectionNeedingReloadAfterUpdates), with: .fade)
-            
-            if sectionNeedingReloadAfterUpdates < fetchedResultsController.sections?.count {
-                self.tableView!.reloadSections(IndexSet(integer: sectionNeedingReloadAfterUpdates + 1), with: .fade)
-            }
-            sectionNeedingReloadAfterUpdates = -1
-        }
-        
-        if (sectionHeaderNeedingReloadAfterUpdates != -1) {
-            if let headerView = self.tableView!.headerView(forSection: sectionHeaderNeedingReloadAfterUpdates) {
-                self.configureHeaderView(headerView, forHeaderInSection: sectionHeaderNeedingReloadAfterUpdates)
-            }
-            sectionHeaderNeedingReloadAfterUpdates = -1
-        }
-        
+
         // reload the rewards section as needed
         if rewardSectionNeedsReload {
             rewardSectionNeedsReload = false
@@ -468,10 +434,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         switch type {
         case .insert:
             self.tableView!.insertSections(IndexSet(integer: sectionIndex + 1), with: .fade)
-            sectionChangeType = .insert
         case .delete:
             self.tableView!.deleteSections(IndexSet(integer: sectionIndex + 1), with: .fade)
-            sectionChangeType = .delete
         case .move, .update:
             // do nothing
 
@@ -480,91 +444,26 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        guard let fetchedResultsController = self.fetchedResultsController else {
-            return
-        }
-        
-        var changeType = type
-        var newIndexPath = newIndexPath
-
-        if let trip = anObject as? Trip {
-            if (type == .update && trip.didChangeSection == true) {
-                // work around dumb bug
-                // https://developer.apple.com/library/prerelease/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
-                changeType = .move
-                if (newIndexPath == nil) {
-                    newIndexPath = indexPath
-                }
-            }
-            trip.didChangeSection = false
-        }
-        
-        switch(changeType) {
+        switch(type) {
             
         case .update:
             let indexPathPlusOne = IndexPath(row: indexPath!.row, section: indexPath!.section + 1)
             if let cell = self.tableView!.cellForRow(at: indexPathPlusOne) {
                 configureCell(cell, indexPath: indexPathPlusOne)
             }
-            
-            sectionHeaderNeedingReloadAfterUpdates = indexPathPlusOne.section
         case .insert:
-            if isOtherTripsSection(newIndexPath!.section) && fetchedResultsController.sections![newIndexPath!.section].numberOfObjects > 0 {
-                // only insert the first row
-                return
-            }
-            
-            // only insert a row if the new trip is a bike trip
             self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)], with: .fade)
-            
-            sectionHeaderNeedingReloadAfterUpdates = newIndexPath!.section + 1
             
             rewardSectionNeedsReload = true
         case .delete:
-            if isOtherTripsSection(indexPath!.section) && fetchedResultsController.sections!.count > 0 && fetchedResultsController.sections![indexPath!.section].numberOfObjects > 0 {
-                // don't delete the row unless it is the last
-                return
-            }
-            
-            // only delete a row if the trip was a bike trip
             self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)], with: .fade)
-            sectionHeaderNeedingReloadAfterUpdates = indexPath!.section + 1
 
             rewardSectionNeedsReload = true
         case .move:
-            sectionHeaderNeedingReloadAfterUpdates = indexPath!.section + 1
-            
-            guard let trip = anObject as? Trip else {
-                return
-            }
-            
-            let theSection = fetchedResultsController.sections![indexPath!.section]
-            let isInProgresstrip = theSection.name.contains(Trip.inProgressSectionIdentifierSuffix())
-        
-            if (newIndexPath != indexPath) {
-                if isInProgresstrip || (!trip.isInProgress && trip.activityType != .cycling) ||  sectionChangeType == .delete {
-                    // if the trip is moving from the cycling trips to other trips, then delete a row
-                    self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
-                                               with: .fade)
-                } else {
-                    sectionNeedingReloadAfterUpdates = indexPath!.section + 1
-                }
-                if trip.activityType == .cycling ||  sectionChangeType == .insert {
-                    // if the trip is a cycling trip, or we are inserting a new section
-                    self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
-                                               with: .fade)
-                } else {
-                    sectionNeedingReloadAfterUpdates = newIndexPath!.section + 1
-                }
-            } else if (sectionChangeType == .delete && indexPath?.section == 0 && newIndexPath == indexPath) {
-                // if an in progress trip is clossing, insert a row and reload the section
-                self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
-                                           with: .fade)
-            } else if isInProgresstrip && trip.didChangeSection && self.tableView.numberOfSections > 1 {
-                // if the trip isn't new (if it changed sections) and is moving to in progress, remove it from the section following
-                self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
-                                           with: .fade)
-            }
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
+                                       with: .fade)
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)],
+                                       with: .fade)
         }
     }
 
@@ -580,60 +479,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         return sections.count + 1
     }
     
-    private func isOtherTripsSection(_ section: Int)->Bool {
-        guard section >= 0 else {
-            return false
-        }
-        
-        guard let fetchedResultsController = self.fetchedResultsController else {
-            return false
-        }
-        
-        guard let sections = fetchedResultsController.sections, sections.count > section else {
-            return false
-        }
-        
-        let theSection = fetchedResultsController.sections![section]
-        
-        if theSection.name.contains(Trip.inProgressSectionIdentifierSuffix()) {
-            // always show full detail for the In Progress section
-            return false
-        }
-        
-        return !theSection.name.contains(Trip.cyclingSectionIdentifierSuffix())
-    }
-
-    private func otherTripsSectionHasOnlyOtherTrips(_ section: Int)->Bool {
-        guard isOtherTripsSection(section) else {
-            return false
-        }
-        
-        guard let fetchedResultsController = self.fetchedResultsController else {
-            return false
-        }
-        
-        guard section > 0 else {
-            // if section 0 is an otherTripSection then there was no cycling trips section before
-            return true
-        }
-        
-        let theSection = fetchedResultsController.sections![section]
-        let sectionName = theSection.name
-        
-        let thePreviousSection = fetchedResultsController.sections![section - 1]
-        
-        guard thePreviousSection.name.characters.count > Trip.cyclingSectionIdentifierSuffix().characters.count else {
-            // the prior section is the "In Progress" section.
-            return true
-        }
-        
-        let previousSectionName = (thePreviousSection.name as NSString).substring(to: thePreviousSection.name.characters.count - Trip.cyclingSectionIdentifierSuffix().characters.count)
-        
-        // if the section name is not equal to the prior sections name (minus the suffix)
-        return (sectionName != previousSectionName)
-    }
-
-    
     private func configureHeaderView(_ headerView: UITableViewHeaderFooterView, forHeaderInSection section: Int) {
         guard let view = headerView as? RoutesTableViewHeaderCell else {
             return
@@ -642,64 +487,50 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        let theSection = fetchedResultsController.sections![section - 1]
-        var sectionName = theSection.name
-        
-        if (theSection.name.contains(Trip.cyclingSectionIdentifierSuffix())) {
-            sectionName = (sectionName as NSString).substring(to: sectionName.characters.count - 2)
-        }
-        
-        var title = ""
         if section == 0 {
-            title = "  Trophies"
-        }
-        
-        if let date = Trip.sectionDateFormatter.date(from: sectionName) {
-            if (date.isToday()) {
-                title = "Today"
-            } else if (date.isYesterday()) {
-                title = "Yesterday"
-            } else if (date.isInLastWeek()) {
-                title = date.weekDay()
-            } else if (date.isThisYear()) {
-                title = self.dateFormatter.string(from: date)
-            } else {
-                title = self.yearDateFormatter.string(from: date)
-            }
-        } else {
-            view.dateLabel.text = "  In Progress"
+            view.dateLabel.text = "    Trophies"
             view.milesLabel.text = ""
-            return
-        }
-        
-        var totalLength: Meters = 0
-        if let tripsInSection = theSection.objects as? [Trip] {
-            for trip in tripsInSection {
-                if trip.activityType == .cycling {
-                    totalLength += trip.length
+        } else if let row = fetchedResultsController.object(at: IndexPath(row: 0, section: section - 1)) as? TripsListRow {
+            let section = row.section
+            
+            if (section.isInProgressSection) {
+                view.dateLabel.text = "  In Progress"
+                view.milesLabel.text = ""
+            } else {
+                var title = ""
+
+                if (section.date.isToday()) {
+                    title = "Today"
+                } else if (section.date.isYesterday()) {
+                    title = "Yesterday"
+                } else if (section.date.isInLastWeek()) {
+                    title = section.date.weekDay()
+                } else if (section.date.isThisYear()) {
+                    title = self.dateFormatter.string(from: section.date)
+                } else {
+                    title = self.yearDateFormatter.string(from: section.date)
+                }
+                
+                view.dateLabel.text = "  " + title
+                var totalLength: Meters = 0
+                for row in section.rows {
+                    if let trip = row.bikeTrip {
+                        totalLength += trip.length
+                    }
+                }
+                
+                if totalLength > 0 {
+                    view.milesLabel.text = totalLength.distanceString()
+                } else {
+                    view.milesLabel.text = "no rides"
                 }
             }
-        }
-        
-        view.dateLabel.text = "  " + title
-        if totalLength > 0 {
-            view.milesLabel.text = totalLength.distanceString()
-        } else {
-            view.milesLabel.text = "no rides"
         }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         guard section > 0 else {
             return 0
-        }
-        
-        guard !isOtherTripsSection(section - 1) else {
-            if otherTripsSectionHasOnlyOtherTrips(section - 1) {
-                return 28
-            } else {
-                return 0
-            }
         }
         
         return 28
@@ -718,10 +549,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard section > 0 else {
-            return 1
-        }
-        
-        guard !isOtherTripsSection(section - 1) else {
             return 1
         }
         
@@ -957,13 +784,16 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
+        guard let row = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow else {
+            return
+        }
+        
         rideSummaryView.delegate = self
         
-        if !isOtherTripsSection(indexPath.section - 1) {
+        if let trip = row.bikeTrip, !row.isOtherTripsRow {
             otherTripsLabel.isHidden = true
             rideSummaryView.isHidden = false
             
-            let trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
             if trip.isInProgress {
                 if (rideSummaryView.tripLength != trip.length) {
                     rideSummaryView.setTripSummary(tripLength: trip.length, description: String(format: "Trip started at %@.", trip.timeString()))
@@ -1246,7 +1076,12 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return false
         }
         
-        if (isOtherTripsSection(indexPath.section - 1)) {
+        guard let row = fetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow else {
+            return false
+        }
+
+        
+        if row.isOtherTripsRow {
             return false
         }
         

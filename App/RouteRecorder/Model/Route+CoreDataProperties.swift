@@ -17,8 +17,6 @@ extension Route {
     @NSManaged public var isUploaded: Bool
     @NSManaged public var isSummaryUploaded: Bool
     @NSManaged public var length: Float
-    @NSManaged public var ratingInteger: Int16
-    @NSManaged public var ratingVersion: Int16
     @NSManaged public var uuid: String!
     @NSManaged internal var locations: Set<Location>
     @NSManaged public var predictionAggregators: Set<PredictionAggregator>

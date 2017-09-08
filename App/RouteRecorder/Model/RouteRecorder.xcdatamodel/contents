@@ -48,8 +48,6 @@
         <attribute name="isSummaryUploaded" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isUploaded" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
         <attribute name="length" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="ratingInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
-        <attribute name="ratingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="locations" toMany="YES" deletionRule="Cascade" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>
         <relationship name="predictionAggregators" toMany="YES" deletionRule="Cascade" destinationEntity="PredictionAggregator" inverseName="route" inverseEntity="PredictionAggregator" syncable="YES"/>
@@ -64,7 +62,7 @@
         <element name="PredictedActivity" positionX="-36" positionY="144" width="128" height="105"/>
         <element name="Prediction" positionX="-45" positionY="135" width="128" height="105"/>
         <element name="PredictionAggregator" positionX="-45" positionY="135" width="128" height="120"/>
-        <element name="Route" positionX="-63" positionY="36" width="128" height="225"/>
+        <element name="Route" positionX="-63" positionY="36" width="128" height="195"/>
         <element name="RouteRecorderStore" positionX="-45" positionY="144" width="128" height="60"/>
     </elements>
 </model>

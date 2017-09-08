@@ -60,7 +60,6 @@ class RideReportAPIClient {
                         if (trip == nil) {
                             trip = Trip()
                             trip.uuid = uuid
-                            trip.areLocationsNotYetDownloaded = true
                         }
                         
                         trip.startDate = startDate

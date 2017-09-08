@@ -79,6 +79,23 @@ public class  Trip: NSManagedObject {
         }
     }
     
+    var startDate : Date {
+        get {
+            return self.primitiveValue(forKey: "startDate") as! Date
+        }
+        set {
+            let oldValue = self.primitiveValue(forKey: "startDate") as? Date // could be nil if entity is new
+            
+            self.willChangeValue(forKey: "startDate")
+            self.setPrimitiveValue(newValue, forKey: "startDate")
+            self.didChangeValue(forKey: "startDate")
+            
+            if (newValue != oldValue) {
+                updateTripListRow()
+            }
+        }
+    }
+    
     var activityType : ActivityType {
         get {
             return ActivityType(rawValue: self.activityTypeInteger) ?? ActivityType.unknown
@@ -89,6 +106,8 @@ public class  Trip: NSManagedObject {
             self.activityTypeInteger = newValue.rawValue
             
             if oldValue != newValue {
+                self.updateTripListRow()
+
                 DispatchQueue.main.async {
                     // newly closed trips should be synced to healthkit
                     if (HealthKitManager.hasStarted) {
@@ -100,6 +119,44 @@ public class  Trip: NSManagedObject {
         }
     }
     
+    private func updateTripListRow() {
+        let section = TripsListSection.section(forTrip: self)
+        
+        if let row = self.bikeTripOfTripsListRow {
+            if activityType == .cycling {
+                // already a bike trip, update
+                row.updateSortName()
+                row.section = section
+            } else {
+                // no longer a bike trip, destroy the row and make an other trips row if needed
+                CoreDataManager.shared.managedObjectContext?.delete(row)
+                if let lastRow = section.sortedRows().last, !lastRow.isOtherTripsRow {
+                    let row = TripsListRow()
+                    row.isOtherTripsRow = true
+                    row.updateSortName()
+                    row.section = section
+                }
+            }
+        } else {
+            if activityType == .cycling {
+                // becoming a bike trip
+                let row = TripsListRow()
+                row.bikeTrip = self
+                row.updateSortName()
+                row.section = section
+            } else {
+                // already not a bike trip, create an other trips row if needed
+                
+                if let lastRow = section.sortedRows().last, !lastRow.isOtherTripsRow {
+                    let row = TripsListRow()
+                    row.isOtherTripsRow = true
+                    row.updateSortName()
+                    row.section = section
+                }
+            }
+        }        
+    }
+    
     var rating: Rating {
         get {
             return Rating(rating: self.ratingInteger, version: self.ratingVersion)
@@ -108,63 +165,6 @@ public class  Trip: NSManagedObject {
             self.ratingInteger = newValue.choice.rawValue
             self.ratingVersion = newValue.version.rawValue
         }
-    }
-    
-    var didChangeSection : Bool = false
-    
-    var sectionIdentifier : String? {
-        get {
-            return self.primitiveValue(forKey: "sectionIdentifier") as? String
-        }
-        set {
-            if (newValue != self.sectionIdentifier) {
-                // work around dumb bug
-                // https://developer.apple.com/library/prerelease/content/releasenotes/iPhone/NSFetchedResultsChangeMoveReportedAsNSFetchedResultsChangeUpdate/index.html
-                didChangeSection = true
-            }
-            self.willChangeValue(forKey: "sectionIdentifier")
-            self.setPrimitiveValue(newValue, forKey: "sectionIdentifier")
-            self.didChangeValue(forKey: "sectionIdentifier")
-        }
-    }
-    
-    class func cyclingSectionIdentifierSuffix()->String {
-        return "yy"
-    }
-    
-    class func inProgressSectionIdentifierSuffix()->String {
-        return "z"
-    }
-    
-    private func sectionIdentifierString()->String {
-        return  Trip.sectionDateFormatter.string(from: self.startDate) + (self.activityType == .cycling ? Trip.cyclingSectionIdentifierSuffix() : "")
-    }
-    
-    class func reloadSectionIdentifiers(_ exhaustively: Bool = false) {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
-        if !exhaustively {
-            fetchedRequest.predicate = NSPredicate(format: "sectionIdentifier == nil")
-        }
-        
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
-        
-        let results: [AnyObject]?
-        do {
-            results = try context.fetch(fetchedRequest)
-        } catch let error {
-            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
-            results = nil
-        }
-        guard let trips = results as? [Trip] else {
-            return
-        }
-        
-        for trip in trips {
-            trip.sectionIdentifier = trip.sectionIdentifierString()
-        }
-        
-        CoreDataManager.shared.saveContext()
     }
     
     convenience init() {
@@ -440,7 +440,6 @@ public class  Trip: NSManagedObject {
     
     override public func awakeFromInsert() {
         super.awakeFromInsert()
-        self.sectionIdentifier = "z" // has to be non-nil or it will not show up in the list
     }
     
     override public func awakeFromFetch() {

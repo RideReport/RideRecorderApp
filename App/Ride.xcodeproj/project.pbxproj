@@ -81,6 +81,18 @@
 		3D634F9B1ECCEFF8008B1894 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */; };
 		3D634F9C1ECCEFF8008B1894 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */; };
 		3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */; };
+		3D65E8DE1F634197002D143A /* TripsListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DA1F634197002D143A /* TripsListRow.swift */; };
+		3D65E8DF1F634197002D143A /* TripsListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DA1F634197002D143A /* TripsListRow.swift */; };
+		3D65E8E01F634197002D143A /* TripsListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DA1F634197002D143A /* TripsListRow.swift */; };
+		3D65E8E11F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */; };
+		3D65E8E21F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */; };
+		3D65E8E31F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */; };
+		3D65E8E41F634197002D143A /* TripsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DC1F634197002D143A /* TripsListSection.swift */; };
+		3D65E8E51F634197002D143A /* TripsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DC1F634197002D143A /* TripsListSection.swift */; };
+		3D65E8E61F634197002D143A /* TripsListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DC1F634197002D143A /* TripsListSection.swift */; };
+		3D65E8E71F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */; };
+		3D65E8E81F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */; };
+		3D65E8E91F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */; };
 		3D6D77941D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D6D77951D7F8D8200A95602 /* tspark.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D6D77931D7F8D8200A95602 /* tspark.png */; };
 		3D72BD5F1F58ABDA0043ECBA /* AccelerometerReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BD4F1F58ABDA0043ECBA /* AccelerometerReading.swift */; };
@@ -497,6 +509,10 @@
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
+		3D65E8DA1F634197002D143A /* TripsListRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripsListRow.swift; path = Ride/Model/TripsListRow.swift; sourceTree = "<group>"; };
+		3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TripsListRow+CoreDataProperties.swift"; path = "Ride/Model/TripsListRow+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3D65E8DC1F634197002D143A /* TripsListSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripsListSection.swift; path = Ride/Model/TripsListSection.swift; sourceTree = "<group>"; };
+		3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TripsListSection+CoreDataProperties.swift"; path = "Ride/Model/TripsListSection+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3D6D77931D7F8D8200A95602 /* tspark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tspark.png; sourceTree = "<group>"; };
 		3D72BD4F1F58ABDA0043ECBA /* AccelerometerReading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AccelerometerReading.swift; path = RouteRecorder/Model/AccelerometerReading.swift; sourceTree = SOURCE_ROOT; };
 		3D72BD501F58ABDA0043ECBA /* AccelerometerReading+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AccelerometerReading+CoreDataProperties.swift"; path = "RouteRecorder/Model/AccelerometerReading+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
@@ -1196,6 +1212,10 @@
 				3D72BD7A1F58ABE80043ECBA /* Trip+CoreDataProperties.swift */,
 				3D72BD7B1F58ABE80043ECBA /* TripReward.swift */,
 				3D72BD7C1F58ABE80043ECBA /* TripReward+CoreDataProperties.swift */,
+				3D65E8DA1F634197002D143A /* TripsListRow.swift */,
+				3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */,
+				3D65E8DC1F634197002D143A /* TripsListSection.swift */,
+				3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -2184,9 +2204,11 @@
 				3DD08F111ECE17DB00246B78 /* NSLocale+Additions.swift in Sources */,
 				3DD08F131ECE17DB00246B78 /* UIDevice+HBAdditions.m in Sources */,
 				3DD08F141ECE17DB00246B78 /* UILabel+HBAdditions.m in Sources */,
+				3D65E8E01F634197002D143A /* TripsListRow.swift in Sources */,
 				3DD08F311ECE1A4000246B78 /* ColorPallete.swift in Sources */,
 				3DD08F1B1ECE17DB00246B78 /* NSString+HBAdditions.swift in Sources */,
 				3D72BDA31F58ABE80043ECBA /* TripReward+CoreDataProperties.swift in Sources */,
+				3D65E8E31F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */,
 				3D72BD971F58ABE80043ECBA /* RideReport.xcdatamodeld in Sources */,
 				3DD08F2F1ECE17F400246B78 /* WatchManager.swift in Sources */,
 				3D72BDE31F58AFDC0043ECBA /* Float+Meters.swift in Sources */,
@@ -2197,6 +2219,7 @@
 				3D72BD881F58ABE80043ECBA /* ConnectedAppScope+CoreDataProperties.swift in Sources */,
 				3DD08F1A1ECE17DB00246B78 /* CollectionTypeAdditions.swift in Sources */,
 				3D72BD851F58ABE80043ECBA /* ConnectedAppScope.swift in Sources */,
+				3D65E8E91F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */,
 				3D72BD9A1F58ABE80043ECBA /* Trip.swift in Sources */,
 				3DD08F301ECE17F400246B78 /* NotificationManager.swift in Sources */,
 				3DD08F2C1ECE17F400246B78 /* HealthKitManager.swift in Sources */,
@@ -2204,6 +2227,7 @@
 				3DD08F1E1ECE17E100246B78 /* DateValueFormatter.swift in Sources */,
 				3D72BE1A1F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */,
 				3D72BD7F1F58ABE80043ECBA /* ConnectedApp.swift in Sources */,
+				3D65E8E61F634197002D143A /* TripsListSection.swift in Sources */,
 				3DD08F161ECE17DB00246B78 /* Data+HBAdditions.swift in Sources */,
 				3DD08F171ECE17DB00246B78 /* UIView+HBadditions.swift in Sources */,
 				3D72BDA01F58ABE80043ECBA /* TripReward.swift in Sources */,
@@ -2232,6 +2256,7 @@
 				3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
 				3D72BDBC1F58AD440043ECBA /* Date+HBAdditions.swift in Sources */,
 				3D72BD7E1F58ABE80043ECBA /* ConnectedApp.swift in Sources */,
+				3D65E8E81F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */,
 				3D72BDCB1F58AD440043ECBA /* TimeInterval+HBAdditions.swift in Sources */,
 				3D634F791ECCEEB2008B1894 /* ColorPallete.swift in Sources */,
 				3D72BD991F58ABE80043ECBA /* Trip.swift in Sources */,
@@ -2241,9 +2266,12 @@
 				3D634F761ECCEEB2008B1894 /* RideNotificationView.swift in Sources */,
 				3D1E3E0E1F5A1C5A00B5800D /* RideReportAPIClient.swift in Sources */,
 				3D634F7A1ECCEEB2008B1894 /* RCounter.m in Sources */,
+				3D65E8E21F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */,
 				3D634F771ECCEEB2008B1894 /* RideSummaryView.swift in Sources */,
 				3D72BDEF1F58B0950043ECBA /* CoreDataManager.swift in Sources */,
 				3D72BDF41F58B36E0043ECBA /* Rating.swift in Sources */,
+				3D65E8DF1F634197002D143A /* TripsListRow.swift in Sources */,
+				3D65E8E51F634197002D143A /* TripsListSection.swift in Sources */,
 				3D72BD871F58ABE80043ECBA /* ConnectedAppScope+CoreDataProperties.swift in Sources */,
 				3D634F7F1ECCEEC1008B1894 /* NSString+HBAdditions.swift in Sources */,
 				842FDCCA1BD580100079AFCC /* UIDevice+HBAdditions.m in Sources */,
@@ -2310,6 +2338,7 @@
 				842141A71C407CEE009DA851 /* TripViewController.swift in Sources */,
 				3DA687B31E82086400483741 /* BalloonMarker.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
+				3D65E8E11F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */,
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */,
@@ -2321,6 +2350,7 @@
 				84AFFEAB1B041462009ABC19 /* ColorPallete.swift in Sources */,
 				3D72BE141F58C47A0043ECBA /* Profile.swift in Sources */,
 				848777B91A683A4A00B59B06 /* PopupView.swift in Sources */,
+				3D65E8E71F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */,
 				3DBABFD91CCEDCC900665646 /* ConnectedAppSettingsViewController.swift in Sources */,
 				844B949F1B8BE1A3009F4E27 /* BKPasscodeField.m in Sources */,
 				3D72BDCA1F58AD440043ECBA /* TimeInterval+HBAdditions.swift in Sources */,
@@ -2328,8 +2358,10 @@
 				3D19303B1EAE912200915813 /* RideNotificationView.swift in Sources */,
 				3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
+				3D65E8E41F634197002D143A /* TripsListSection.swift in Sources */,
 				3D72BD8F1F58ABE80043ECBA /* Promotion.swift in Sources */,
 				3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */,
+				3D65E8DE1F634197002D143A /* TripsListRow.swift in Sources */,
 				3D72BDE11F58AFDC0043ECBA /* Float+Meters.swift in Sources */,
 				84EA5BDF1A6DE17F00C71F53 /* SetupRatingViewController.swift in Sources */,
 				3D72BDA11F58ABE80043ECBA /* TripReward+CoreDataProperties.swift in Sources */,
