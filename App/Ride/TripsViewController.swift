@@ -99,12 +99,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        RideReportAPIClient.shared.getAllTrips()
-        
         let cacheName = "TripsViewControllerFetchedResultsController"
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripsListRow")
+        fetchedRequest.predicate = NSPredicate(format: "isOtherTripsRow == false OR otherTrips.@count >1")
         fetchedRequest.fetchBatchSize = 20
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "sortName", ascending: false)]
 
@@ -116,6 +115,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
             abort()
         }
+        
+        RideReportAPIClient.shared.syncTrips()
     }
     
     func coreDataDidLoad() {
@@ -217,7 +218,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if shouldGetTripsOnNextAppForeground {
             UserDefaults.standard.set(false, forKey: "shouldGetTripsOnNextAppForeground")
             UserDefaults.standard.synchronize()
-            RideReportAPIClient.shared.getAllTrips()
+            RideReportAPIClient.shared.syncTrips()
         }
     }
     
@@ -845,12 +846,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 tableCell.accessoryView = accessoryImageView
             }
             
-            let otherTripsCount = fetchedResultsController.sections![indexPath.section - 1].numberOfObjects
-            
-            if otherTripsCount == 1 {
+            if row.otherTrips.count == 1 {
                 otherTripsLabel.text = " 1 Other Trip"
             } else {
-                otherTripsLabel.text = String(otherTripsCount) + " Other Trips"
+                otherTripsLabel.text = String(row.otherTrips.count) + " Other Trips"
             }
         }
     }
@@ -869,11 +868,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return
         }
         
-        if let trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? Trip {
-            if trip.activityType == .cycling || !trip.isInProgress == false {
+        if let row = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow {
+            if let trip = row.bikeTrip {
                 self.performSegue(withIdentifier: "showTrip", sender: trip)
             } else {
-                self.performSegue(withIdentifier: "showOtherTripsView", sender: trip.startDate)
+                self.performSegue(withIdentifier: "showOtherTripsView", sender: row.section.date)
             }
         }
     }

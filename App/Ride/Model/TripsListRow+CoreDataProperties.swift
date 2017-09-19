@@ -12,9 +12,8 @@ import CoreData
 
 extension TripsListRow {
     @NSManaged var isOtherTripsRow: Bool
-    @NSManaged var otherTripsCount: Int16
     @NSManaged var sortName: String
     @NSManaged var bikeTrip: Trip?
+    @NSManaged var otherTrips: [Trip]
     @NSManaged var section: TripsListSection
-
 }

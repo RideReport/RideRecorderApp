@@ -50,7 +50,7 @@ class RideReportAPIClient {
     // MARK: - Trip Synchronization
     //
     
-    @discardableResult func getAllTrips()->AuthenticatedAPIRequest {
+    @discardableResult func syncTrips()->AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "trips", completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
@@ -334,10 +334,6 @@ class RideReportAPIClient {
                 
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
-                        if (self.accountVerificationStatus == .unverified) {
-                            // if we are just moved to an authenticated account, get any trips on the server
-                            self.getAllTrips()
-                        }
                         self.accountVerificationStatus = .verified
                     } else {
                         self.accountVerificationStatus = .unverified

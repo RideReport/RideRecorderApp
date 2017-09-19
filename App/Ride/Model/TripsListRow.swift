@@ -11,17 +11,17 @@ import CoreData
 
 @objc(TripsListRow)
 public class TripsListRow: NSManagedObject {
-    private static var _sectionDateFormatter : DateFormatter?
+    private static var _timeFormatter : DateFormatter?
     
-    class var sectionDateFormatter : DateFormatter {
+    class var timeDateFormatter : DateFormatter {
         get {
-            if (_sectionDateFormatter == nil) {
-                _sectionDateFormatter = DateFormatter()
-                _sectionDateFormatter!.locale = Locale.current
-                _sectionDateFormatter!.dateFormat = "yyyy-MM-dd"
+            if (_timeFormatter == nil) {
+                _timeFormatter = DateFormatter()
+                _timeFormatter!.locale = Locale.current
+                _timeFormatter!.dateFormat = "hh:mma"
             }
             
-            return _sectionDateFormatter!
+            return _timeFormatter!
         }
     }
     
@@ -29,16 +29,13 @@ public class TripsListRow: NSManagedObject {
         let context = CoreDataManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "TripsListRow", in: context)!, insertInto: context)
     }
-    
-    private class func nonbikeTripIdentifier()->String {
-        return "yy"
-    }
+
     
     func updateSortName() {
         if let trip = self.bikeTrip {
-            self.sortName = TripsListRow.sectionDateFormatter.string(from: trip.startDate)
+            self.sortName = "y" + TripsListRow.timeDateFormatter.string(from: trip.startDate)
         } else {
-            self.sortName = TripsListRow.nonbikeTripIdentifier()
+            self.sortName = "z"
         }
     }
 }

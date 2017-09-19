@@ -50,19 +50,6 @@ public class  Trip: NSManagedObject {
     
     private struct Static {
         static var timeFormatter : DateFormatter!
-        static var sectionDateFormatter : DateFormatter!
-    }
-    
-    class var sectionDateFormatter : DateFormatter {
-        get {
-            if (Static.sectionDateFormatter == nil) {
-                Static.sectionDateFormatter = DateFormatter()
-                Static.sectionDateFormatter.locale = Locale.current
-                Static.sectionDateFormatter.dateFormat = "yyyy-MM-dd"
-            }
-            
-            return Static.sectionDateFormatter
-        }
     }
     
     class var timeDateFormatter : DateFormatter {
@@ -122,39 +109,30 @@ public class  Trip: NSManagedObject {
     private func updateTripListRow() {
         let section = TripsListSection.section(forTrip: self)
         
-        if let row = self.bikeTripOfTripsListRow {
-            if activityType == .cycling {
-                // already a bike trip, update
+        if activityType == .cycling {
+            self.otherTripOfTripsListRow = nil
+            
+            if let row = self.bikeTripOfTripsListRow {
                 row.updateSortName()
                 row.section = section
             } else {
-                // no longer a bike trip, destroy the row and make an other trips row if needed
-                CoreDataManager.shared.managedObjectContext?.delete(row)
-                if let lastRow = section.sortedRows().last, !lastRow.isOtherTripsRow {
-                    let row = TripsListRow()
-                    row.isOtherTripsRow = true
-                    row.updateSortName()
-                    row.section = section
-                }
-            }
-        } else {
-            if activityType == .cycling {
-                // becoming a bike trip
                 let row = TripsListRow()
                 row.bikeTrip = self
                 row.updateSortName()
                 row.section = section
-            } else {
-                // already not a bike trip, create an other trips row if needed
-                
-                if let lastRow = section.sortedRows().last, !lastRow.isOtherTripsRow {
-                    let row = TripsListRow()
-                    row.isOtherTripsRow = true
-                    row.updateSortName()
-                    row.section = section
-                }
             }
-        }        
+        } else {
+            self.bikeTripOfTripsListRow = nil
+            var row: TripsListRow! = section.sortedRows().last
+            
+            if row == nil || !row.isOtherTripsRow {
+                row = TripsListRow()
+                row.isOtherTripsRow = true
+                row.updateSortName()
+                row.section = section
+            }
+            self.otherTripOfTripsListRow = row
+        }
     }
     
     var rating: Rating {

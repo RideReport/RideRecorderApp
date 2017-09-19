@@ -79,9 +79,9 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "isClosed = YES AND activityTypeInteger != %i AND startDate > %@ AND startDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
+        fetchedRequest.predicate = NSPredicate(format: "isInProgress = NO AND activityTypeInteger != %i AND startDate > %@ AND startDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
         
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "sectionIdentifier", cacheName:cacheName )
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
         do {
             try self.fetchedResultsController.performFetch()

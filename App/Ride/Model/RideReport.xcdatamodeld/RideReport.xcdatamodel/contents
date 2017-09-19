@@ -65,6 +65,7 @@
         <attribute name="temperature" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <relationship name="bikeTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="bikeTrip" inverseEntity="TripsListRow" syncable="YES"/>
+        <relationship name="otherTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="otherTrips" inverseEntity="TripsListRow" syncable="YES"/>
         <relationship name="tripRewards" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
     </entity>
     <entity name="TripReward" representedClassName=".TripReward" syncable="YES">
@@ -74,9 +75,9 @@
     </entity>
     <entity name="TripsListRow" representedClassName="TripsListRow" syncable="YES">
         <attribute name="isOtherTripsRow" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="otherTripsCount" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="sortName" attributeType="String" syncable="YES"/>
         <relationship name="bikeTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="bikeTripOfTripsListRow" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="otherTrips" toMany="YES" deletionRule="Nullify" destinationEntity="Trip" inverseName="otherTripOfTripsListRow" inverseEntity="Trip" syncable="YES"/>
         <relationship name="section" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListSection" inverseName="rows" inverseEntity="TripsListSection" syncable="YES"/>
     </entity>
     <entity name="TripsListSection" representedClassName="TripsListSection" syncable="YES">
@@ -88,7 +89,7 @@
         <element name="ConnectedAppScope" positionX="-45" positionY="81" width="128" height="135"/>
         <element name="Profile" positionX="-63" positionY="-18" width="128" height="225"/>
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
-        <element name="Trip" positionX="-9" positionY="99" width="128" height="330"/>
+        <element name="Trip" positionX="-9" positionY="99" width="128" height="345"/>
         <element name="TripReward" positionX="-27" positionY="90" width="128" height="90"/>
         <element name="TripsListRow" positionX="-45" positionY="135" width="128" height="120"/>
         <element name="TripsListSection" positionX="-36" positionY="144" width="128" height="75"/>
