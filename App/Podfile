@@ -7,7 +7,7 @@ def shared_pods
     pod 'SwiftyJSON'
     pod 'OAuthSwift'
     pod 'CocoaLumberjack/Swift'
-    pod 'GzipSwift'
+    pod 'GzipSwift', :git => 'https://github.com/1024jp/GzipSwift.git'
 end
 
 target 'RouteRecorder' do
@@ -48,7 +48,7 @@ end
 
 target 'Ride Report Notification Content' do
     pod 'SwiftyJSON'
-    pod 'GzipSwift'
+    pod 'GzipSwift', :git => 'https://github.com/1024jp/GzipSwift.git'
     pod 'CocoaLumberjack/Swift'
 end
 

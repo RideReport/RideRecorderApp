@@ -16,18 +16,18 @@ PODS:
     - Fabric (~> 1.6.3)
   - ECSlidingViewController (2.0.3)
   - Eureka (3.1.0)
-  - Fabric (1.6.11)
+  - Fabric (1.6.13)
   - FBSDKCoreKit (4.20.1):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.20.1):
     - FBSDKCoreKit
   - FBSDKShareKit (4.20.1):
     - FBSDKCoreKit
-  - GzipSwift (3.1.4)
+  - GzipSwift (4.0.0)
   - KeychainAccess (3.0.2)
   - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.6.1)
-  - Mapbox-iOS-SDK-symbols (3.6.2-symbols)
+  - Mapbox-iOS-SDK-symbols (3.7.0-alpha.1-symbols)
   - MapboxStatic.swift (0.8.0)
   - Mixpanel (3.1.2)
   - OAuthSwift (1.1.1)
@@ -58,7 +58,7 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - GzipSwift
+  - GzipSwift (from `https://github.com/1024jp/GzipSwift.git`)
   - KeychainAccess
   - Kingfisher
   - Mapbox-iOS-SDK
@@ -71,12 +71,17 @@ DEPENDENCIES:
   - SwiftyJSON
 
 EXTERNAL SOURCES:
+  GzipSwift:
+    :git: https://github.com/1024jp/GzipSwift.git
   Mapbox-iOS-SDK-symbols:
     :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/master/platform/ios/Mapbox-iOS-SDK-symbols.podspec
   MapboxStatic.swift:
     :git: https://github.com/mapbox/MapboxStatic.swift.git
 
 CHECKOUT OPTIONS:
+  GzipSwift:
+    :commit: 347cff84754b8e2aca3017b6805c0286693558b3
+    :git: https://github.com/1024jp/GzipSwift.git
   MapboxStatic.swift:
     :commit: 965daaf892e3f56ebd8c773a0daaebe33a89ceb5
     :git: https://github.com/mapbox/MapboxStatic.swift.git
@@ -89,15 +94,15 @@ SPEC CHECKSUMS:
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   ECSlidingViewController: 6485c14f23b4487e9946535421ca8f111f86cc53
   Eureka: d6725c38d0dcdceaa331d1468f75e76315715ae0
-  Fabric: 5911403591946b8228ab1c51d98f1d7137e863c6
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
   FBSDKCoreKit: 39a3569652983bf8666620dd334804c9057ae9b2
   FBSDKLoginKit: 17092ff61a18c54ca423aebc18c5acc2e5a4a728
   FBSDKShareKit: 4f37934d9ee9500d2d35752595816dc35f967478
-  GzipSwift: 11ddb2bf253b1cd7b60bb169da20f62ac4348769
+  GzipSwift: 616c07f4370200e7380766e19ecb15c45ea2ae6e
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: 7dd2a0fd08e9444b9c47f6e8fd1c32509bce3243
-  Mapbox-iOS-SDK-symbols: 531663a5e28e80175440638861468dc5ebc22262
+  Mapbox-iOS-SDK-symbols: 489d1710634a16758ce9e1d5f0b1a7ef69cfac53
   MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09
   Mixpanel: 38a26d7c6f2189827c8bbcf4e484af29f4401ce6
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
@@ -105,6 +110,6 @@ SPEC CHECKSUMS:
   Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
 
-PODFILE CHECKSUM: 85a3acb91eefb316e922138419fda0626302e845
+PODFILE CHECKSUM: d08031334db70d942a041f02223525502540f211
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.3.1

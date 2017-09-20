@@ -25,8 +25,6 @@ private func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
-
-
 class TripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, RideSummaryViewDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
