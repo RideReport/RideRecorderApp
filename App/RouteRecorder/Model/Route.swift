@@ -127,6 +127,27 @@ public class  Route: NSManagedObject {
         return (results!.first as! Route)
     }
     
+    public class func findRoute(withUUID uuid: String)->Route? {
+        let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Route")
+        fetchedRequest.predicate = NSPredicate(format: "uuid == [c] %@", uuid)
+        fetchedRequest.fetchLimit = 1
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.fetch(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        if (results == nil || results!.count == 0) {
+            return nil
+        }
+        
+        return (results!.first as? Route)
+    }
+    
     override public func awakeFromInsert() {
         super.awakeFromInsert()
         self.creationDate = Date()
@@ -154,7 +175,7 @@ public class  Route: NSManagedObject {
         return 0
     }
     
-    public func generateSummaryLocations()->[Location] {
+    public func fetchOrGenerateSummaryLocations()->[Location] {
         var locs: [Location] = []
         
         if self.activityType != .cycling || !self.isClosed || locs.isEmpty {

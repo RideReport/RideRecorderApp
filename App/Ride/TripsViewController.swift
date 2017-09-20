@@ -103,7 +103,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripsListRow")
         fetchedRequest.predicate = NSPredicate(format: "isOtherTripsRow == false OR otherTrips.@count >1")
         fetchedRequest.fetchBatchSize = 20
-        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "sortName", ascending: false)]
+        fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "isOtherTripsRow", ascending: true), NSSortDescriptor(key: "sortName", ascending: false)]
 
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: "section.date", cacheName:cacheName )
         self.fetchedResultsController!.delegate = self
@@ -114,7 +114,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             abort()
         }
         
-        RideReportAPIClient.shared.syncTrips()
+        //RideReportAPIClient.shared.syncTrips()
     }
     
     func coreDataDidLoad() {

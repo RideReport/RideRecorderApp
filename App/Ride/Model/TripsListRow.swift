@@ -33,9 +33,9 @@ public class TripsListRow: NSManagedObject {
     
     func updateSortName() {
         if let trip = self.bikeTrip {
-            self.sortName = "y" + TripsListRow.timeDateFormatter.string(from: trip.startDate)
+            self.sortName = TripsListRow.timeDateFormatter.string(from: trip.startDate)
         } else {
-            self.sortName = "z"
+            self.sortName = "z" // ignored, doesn't matter
         }
     }
 }

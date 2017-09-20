@@ -284,7 +284,7 @@ public class APIClient {
 
         var locations : [Any?] = []
         if !includeFullLocations {
-            let summaryLocs = route.generateSummaryLocations()
+            let summaryLocs = route.fetchOrGenerateSummaryLocations()
             
             if summaryLocs.count == 0 {
                 return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())

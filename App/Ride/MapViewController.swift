@@ -199,29 +199,35 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        //let locs = trip.generateSummaryLocations()
+        guard let route = trip.route else {
+            self.selectedTripLineSource = nil
+            
+            return
+        }
         
-//        if let startLoc = locs.first,
-//            let endLoc = locs.last {
-//                self.startPoint = MGLPointAnnotation()
-//                self.startPoint!.coordinate = startLoc.coordinate()
-//                mapView.addAnnotation(self.startPoint!)
-//            
-//            if (!trip.isInProgress) {
-//                self.endPoint = MGLPointAnnotation()
-//                self.endPoint!.coordinate = endLoc.coordinate()
-//                mapView.addAnnotation(self.endPoint!)
-//            }
-//        }
+        let locs = route.fetchOrGenerateSummaryLocations()
+        
+        if let startLoc = locs.first,
+            let endLoc = locs.last {
+                self.startPoint = MGLPointAnnotation()
+                self.startPoint!.coordinate = startLoc.coordinate()
+                mapView.addAnnotation(self.startPoint!)
+            
+            if (!trip.isInProgress) {
+                self.endPoint = MGLPointAnnotation()
+                self.endPoint!.coordinate = endLoc.coordinate()
+                mapView.addAnnotation(self.endPoint!)
+            }
+        }
 
         var coordinates : [CLLocationCoordinate2D] = []
         var count : UInt = 0
-//        for location in locs {
-//            let coord = location.coordinate()
-//            
-//            coordinates.append(coord)
-//            count += 1
-//        }
+        for location in locs {
+            let coord = location.coordinate()
+            
+            coordinates.append(coord)
+            count += 1
+        }
         
         guard coordinates.count > 0 else {
             return

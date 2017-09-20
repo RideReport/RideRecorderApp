@@ -4261,7 +4261,7 @@ Label</string>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NeO-Ki-kp2">
-                                <rect key="frame" x="187" y="0.0" width="40" height="5"/>
+                                <rect key="frame" x="187" y="6" width="40" height="5"/>
                                 <color key="backgroundColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="D7g-pP-OE5"/>
@@ -4493,7 +4493,7 @@ Label</string>
                             <constraint firstItem="KMu-Rt-AQb" firstAttribute="top" secondItem="LfK-Vy-2pU" secondAttribute="bottom" id="Yy1-Vc-Ktf"/>
                             <constraint firstItem="ysZ-MD-yd7" firstAttribute="centerX" secondItem="k2c-2e-HUE" secondAttribute="centerX" id="eTP-bA-h6k"/>
                             <constraint firstItem="LfK-Vy-2pU" firstAttribute="centerX" secondItem="k2c-2e-HUE" secondAttribute="centerX" id="fre-Nn-y8b"/>
-                            <constraint firstItem="NeO-Ki-kp2" firstAttribute="top" secondItem="BtH-vS-332" secondAttribute="topMargin" id="h03-If-Vgn"/>
+                            <constraint firstItem="NeO-Ki-kp2" firstAttribute="top" secondItem="BtH-vS-332" secondAttribute="topMargin" constant="6" id="h03-If-Vgn"/>
                             <constraint firstItem="2on-CO-SEX" firstAttribute="top" secondItem="ysZ-MD-yd7" secondAttribute="bottom" constant="2" id="hx6-FV-yJ7"/>
                             <constraint firstItem="LfK-Vy-2pU" firstAttribute="width" secondItem="BtH-vS-332" secondAttribute="width" id="hxc-wb-vv2"/>
                             <constraint firstItem="OmP-6e-mP8" firstAttribute="top" secondItem="k2c-2e-HUE" secondAttribute="top" constant="16" id="j4o-qX-vf6"/>

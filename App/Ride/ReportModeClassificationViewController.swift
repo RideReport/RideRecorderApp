@@ -130,7 +130,7 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
             return
         }
         
-        let locs = route.generateSummaryLocations()
+        let locs = route.fetchOrGenerateSummaryLocations()
         
         if let startLoc = locs.first,
             let endLoc = locs.last {
