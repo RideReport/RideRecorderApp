@@ -314,11 +314,10 @@ public class APIClient {
         self.routeRequests[route] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: routeDict as [String : Any]?) { (response) in
             self.routeRequests[route] = nil
             switch response.result {
-            case .success(let json):
+            case .success(_):
+                route.isSummaryUploaded = true
                 if includeFullLocations {
                     route.isUploaded = true
-                } else {
-                    route.isSummaryUploaded = true
                 }
                 
                 RouteRecorderDatabaseManager.shared.saveContext()
@@ -339,6 +338,19 @@ public class APIClient {
     //
     // MARK: - OAuth
     //
+    
+    func logout()-> AuthenticatedAPIRequest {        
+        return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "logout") { (response) in
+            switch response.result {
+            case .success(_):
+                APIClient.shared.reauthenticate()
+                DDLogInfo("Logged out!")
+            case .failure(let error):
+                DDLogWarn(String(format: "Error logging out: %@", error as CVarArg))
+                APIClient.shared.authenticateIfNeeded()
+            }
+        }
+    }
     
     public var authenticated: Bool {
         return (KeychainManager.shared.accessToken != nil)

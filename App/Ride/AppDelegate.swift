@@ -185,6 +185,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         }
     }
     
+    func logout() {
+        Profile.resetProfile()
+        CoreDataManager.shared.resetDatabase()
+        AppDelegate.appDelegate().transitionToCreatProfile()
+    }
+    
     func transitionToCreatProfile() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let setupVC : SetupViewController = storyBoard.instantiateViewController(withIdentifier: "setupViewController") as! SetupViewController

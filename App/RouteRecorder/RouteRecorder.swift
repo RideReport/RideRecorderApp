@@ -56,6 +56,12 @@ public class RouteRecorder {
         startup()
     }
     
+    public func logout() {
+        RouteRecorder.shared.routeManager.abortRoute()
+        RouteRecorderDatabaseManager.shared.resetDatabase()
+        APIClient.shared.logout()
+    }
+    
     private func startup() {
         RouteRecorderDatabaseManager.startup()
         KeychainManager.startup()

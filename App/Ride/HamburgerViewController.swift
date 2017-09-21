@@ -171,10 +171,8 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             } else if (RideReportAPIClient.shared.accountVerificationStatus == .verified){
                 let alertController = UIAlertController(title: nil, message: "Your trips and other data will be removed from this iPhone but remain backed up in the cloud. You can log back in later to retrieve your data.", preferredStyle: UIAlertControllerStyle.actionSheet)
                 alertController.addAction(UIAlertAction(title: "Log Out and Delete Data", style: UIAlertActionStyle.destructive, handler: { (_) in
-                    RouteRecorder.shared.routeManager.abortRoute()
-                    CoreDataManager.shared.resetDatabase()
-                    RideReportAPIClient.shared.logout()
-                    AppDelegate.appDelegate().transitionToCreatProfile()
+                    RouteRecorder.shared.logout()
+                    AppDelegate.appDelegate().logout()
                 }))
                 alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
                 self.present(alertController, animated: true, completion: nil)

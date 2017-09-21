@@ -120,17 +120,7 @@ class RideReportAPIClient {
     }
     
     @discardableResult func deleteTrip(_ trip: Trip)->AuthenticatedAPIRequest {
-        guard let uuid = trip.uuid else {
-            // the server doesn't know about this trip yet
-            DispatchQueue.main.async(execute: { () -> Void in
-                trip.managedObjectContext?.delete(trip)
-                CoreDataManager.shared.saveContext()
-            })
-            
-            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-        }
-        
-        return AuthenticatedAPIRequest(client: APIClient.shared, method: .delete, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+        return AuthenticatedAPIRequest(client: APIClient.shared, method: .delete, route: "trips/" + trip.uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .success(_),
                  .failure(_) where response.response != nil && response.response!.statusCode == 404:
@@ -342,21 +332,6 @@ class RideReportAPIClient {
                 }
             case .failure(let error):
                 DDLogWarn(String(format: "Error retriving account status: %@", error as CVarArg))
-            }
-        }
-    }
-    
-    func logout()-> AuthenticatedAPIRequest {
-        Profile.resetProfile()
-        
-        return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "logout") { (response) in
-            switch response.result {
-            case .success(_):
-                APIClient.shared.reauthenticate()
-                DDLogInfo("Logged out!")
-            case .failure(let error):
-                DDLogWarn(String(format: "Error logging out: %@", error as CVarArg))
-                APIClient.shared.authenticateIfNeeded()
             }
         }
     }
