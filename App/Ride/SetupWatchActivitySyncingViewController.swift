@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import HealthKitUI
 import RouteRecorder
+import CocoaLumberjack
 
 @available(iOS 9.3, *)
 class SetupWatchActivitySyncingViewController : SetupChildViewController {

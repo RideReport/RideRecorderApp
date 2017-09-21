@@ -9,6 +9,7 @@
 import Foundation
 import HealthKit
 import CoreData
+import CocoaLumberjack
 
 enum HealthKitManagerAuthorizationStatus {
     case notDetermined

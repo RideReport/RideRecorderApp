@@ -9,6 +9,7 @@
 import XCTest
 import CoreData
 import CoreMotion
+import CocoaLumberjack
 
 class RouteManagerTests: XCTestCase, NSFetchedResultsControllerDelegate {
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!

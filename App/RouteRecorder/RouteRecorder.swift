@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreMotion
+import CocoaLumberjack
 
 public protocol RouteRecorderDelegate: class {
     func didOpenRoute(route: Route)

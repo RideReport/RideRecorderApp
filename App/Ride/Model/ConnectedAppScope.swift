@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import SwiftyJSON
+import CocoaLumberjack
 
 public class ConnectedAppScope: NSManagedObject {
     class func createOrUpdate(withJson json: JSON, connectedApp: ConnectedApp)->ConnectedAppScope? {

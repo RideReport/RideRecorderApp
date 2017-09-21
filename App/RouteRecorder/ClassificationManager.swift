@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import CoreMotion
+import CocoaLumberjack
 
 public enum ClassificationManagerAuthorizationStatus {
     case notDetermined

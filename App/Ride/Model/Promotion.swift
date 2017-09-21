@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import SwiftyJSON
+import CocoaLumberjack
 
 public class  Promotion: NSManagedObject {
     class func createOrUpdate(_ uuid: String)->Promotion {

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import CocoaLumberjack
 
 private func DDLogStateChange(_ logMessage: String) {
     DDLogInfo("## " + logMessage)

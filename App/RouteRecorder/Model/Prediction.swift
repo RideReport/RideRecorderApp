@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import CoreMotion
+import CocoaLumberjack
 
 public class Prediction: NSManagedObject {    
     convenience init() {

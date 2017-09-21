@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import RouteRecorder
+import CocoaLumberjack
 
 class OtherTripsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var tableView: UITableView!

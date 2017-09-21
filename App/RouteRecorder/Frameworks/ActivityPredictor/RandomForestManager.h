@@ -7,6 +7,7 @@
 //
 
 #define RANDOM_FOREST_VECTOR_SIZE (14*3)
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

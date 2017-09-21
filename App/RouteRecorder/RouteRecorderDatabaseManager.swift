@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import EventKit
+import CocoaLumberjack
 
 class RouteRecorderDatabaseManager {
     var isStartingUp : Bool = true

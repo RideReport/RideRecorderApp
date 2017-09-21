@@ -10,6 +10,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import OAuthSwift
+import CocoaLumberjack
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]

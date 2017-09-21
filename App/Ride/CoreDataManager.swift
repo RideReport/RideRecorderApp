@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import EventKit
 import RouteRecorder
+import CocoaLumberjack
 
 class CoreDataManager {
     var isStartingUp : Bool = true

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RouteRecorder
 
 class TripViewController: UIViewController {
     var mapInfoIsDismissed : Bool = false

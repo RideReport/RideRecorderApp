@@ -15,6 +15,7 @@ import OAuthSwift
 import FBSDKCoreKit
 import ECSlidingViewController
 import Mixpanel
+import CocoaLumberjack
 
 enum PushNotificationRegistrationStatus {
     case unregistered
@@ -71,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.transitionToCreatProfile), name: Notification.Name(rawValue:"CoreDataManagerDidHardResetWithReadError"), object: nil)
         
         // Start Managers. The order matters!
-        Mixpanel.sharedInstance(withToken: "30ec76ef2bd713e7672d39b5e718a3af")
+        Mixpanel.initialize(token: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in

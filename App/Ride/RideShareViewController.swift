@@ -94,8 +94,8 @@ class RideShareViewController : UIViewController {
         self.activityViewController.excludedActivityTypes = excludedActivityTypes
         self.activityViewController.completionWithItemsHandler = { (activityType, completed, _, _) -> Void in
             if completed {
-                Mixpanel.sharedInstance().track(
-                    "sharedTrip",
+                Mixpanel.mainInstance().track(
+                    event: "sharedTrip",
                     properties: ["Type": "Unknown"]
                 )
                 self.dismiss(animated: true, completion: nil)

@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import CoreLocation
 import HealthKit
+import CocoaLumberjack
 
 public class Profile: NSManagedObject {
     public var weightKilograms: Double? {

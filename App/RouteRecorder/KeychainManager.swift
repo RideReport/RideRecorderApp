@@ -8,6 +8,7 @@
 
 import Foundation
 import KeychainAccess
+import CocoaLumberjack
 
 public class KeychainManager {
     public static private(set) var shared : KeychainManager!

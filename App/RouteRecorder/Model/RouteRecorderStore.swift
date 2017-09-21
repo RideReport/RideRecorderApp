@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CocoaLumberjack
 
 public class RouteRecorderStore: NSManagedObject {
     struct Static {

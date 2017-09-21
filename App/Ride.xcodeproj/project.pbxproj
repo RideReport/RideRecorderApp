@@ -961,7 +961,7 @@
 				3D7738001F589E6D00155DB8 /* Utility.h */,
 			);
 			name = ActivityPredictor;
-			path = TripRecorder/Frameworks/ActivityPredictor;
+			path = RouteRecorder/Frameworks/ActivityPredictor;
 			sourceTree = SOURCE_ROOT;
 		};
 		3D7736561F589CAA00155DB8 /* GpxLocationManager */ = {
@@ -972,7 +972,7 @@
 				3D7738201F589E8400155DB8 /* LocationManager.swift */,
 			);
 			name = GpxLocationManager;
-			path = TripRecorder/Frameworks/GpxLocationManager;
+			path = RouteRecorder/Frameworks/GpxLocationManager;
 			sourceTree = SOURCE_ROOT;
 		};
 		3D77376E1F589D1D00155DB8 /* Model */ = {
@@ -997,7 +997,7 @@
 				3D72BDDE1F58AFA20043ECBA /* RouteRecorder.xcdatamodel */,
 			);
 			name = Model;
-			path = TripRecorder/Model;
+			path = RouteRecorder/Model;
 			sourceTree = SOURCE_ROOT;
 		};
 		3D7737F81F589E6D00155DB8 /* json */ = {

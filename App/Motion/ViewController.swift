@@ -11,6 +11,7 @@ import SwiftyJSON
 import Eureka
 import CoreMotion
 import AVFoundation
+import CocoaLumberjack
 
 class ViewController: FormViewController {
     @IBOutlet weak var predictSwitch: UISwitch!

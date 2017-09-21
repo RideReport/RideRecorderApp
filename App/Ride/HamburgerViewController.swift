@@ -182,8 +182,8 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
             }
         } else if (cell == self.pauseResueTableViewCell) {
             if (RouteRecorder.shared.routeManager.isPaused()) {
-                Mixpanel.sharedInstance().track(
-                    "resumedTracking"
+                Mixpanel.mainInstance().track(
+                    event: "resumedTracking"
                 )
                 RouteRecorder.shared.routeManager.resumeTracking()
                 self.updatePauseResumeText()
@@ -200,32 +200,32 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 
                 let alertController = UIAlertController(title: "How Long Would You Like to Pause Ride Report?", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
                 alertController.addAction(UIAlertAction(title: "Pause For an Hour", style: UIAlertActionStyle.default, handler: { (_) in
-                    Mixpanel.sharedInstance().track(
-                        "pausedTracking",
+                    Mixpanel.mainInstance().track(
+                        event: "pausedTracking",
                         properties: ["duration": "hour"]
                     )
                     RouteRecorder.shared.routeManager.pauseTracking(Date().hoursFrom(1))
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause Until Tomorrow", style: UIAlertActionStyle.default, handler: { (_) in
-                    Mixpanel.sharedInstance().track(
-                        "pausedTracking",
+                    Mixpanel.mainInstance().track(
+                        event: "pausedTracking",
                         properties: ["duration": "day"]
                     )
                     RouteRecorder.shared.routeManager.pauseTracking(Date.tomorrow())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For a Week", style: UIAlertActionStyle.default, handler: { (_) in
-                    Mixpanel.sharedInstance().track(
-                        "pausedTracking",
+                    Mixpanel.mainInstance().track(
+                        event: "pausedTracking",
                         properties: ["duration": "week"]
                     )
                     RouteRecorder.shared.routeManager.pauseTracking(Date.nextWeek())
                     updateUIBlock()
                 }))
                 alertController.addAction(UIAlertAction(title: "Pause For Now", style: UIAlertActionStyle.default, handler: { (_) in
-                    Mixpanel.sharedInstance().track(
-                        "pausedTracking",
+                    Mixpanel.mainInstance().track(
+                        event: "pausedTracking",
                         properties: ["duration": "indefinite"]
                     )
                     RouteRecorder.shared.routeManager.pauseTracking()

@@ -16,6 +16,7 @@ import MapKit
 import HealthKit
 import UserNotifications
 import MapboxStatic
+import CocoaLumberjack
 
 public class  Trip: NSManagedObject {
     private var currentStateNotification : UILocalNotification? = nil

@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyJSON
 import Presentr
+import CocoaLumberjack
 
 class RedeemRewardViewController: UIViewController {
     var tripReward: TripReward?

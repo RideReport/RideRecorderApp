@@ -12,6 +12,7 @@ import CoreLocation
 import CoreMotion
 import MapKit
 import SwiftyJSON
+import CocoaLumberjack
 
 public class  Location: NSManagedObject {
     var source : LocationSource {

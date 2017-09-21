@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import WatchConnectivity
+import CocoaLumberjack
 
 class ConnectedAppsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!

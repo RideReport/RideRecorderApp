@@ -11,6 +11,7 @@ import SwiftyJSON
 import CoreData
 import CoreLocation
 import CoreMotion
+import CocoaLumberjack
 
 public class  Route: NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005

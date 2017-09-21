@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CocoaLumberjack
 
 @objc(TripsListSection)
 public class TripsListSection: NSManagedObject {

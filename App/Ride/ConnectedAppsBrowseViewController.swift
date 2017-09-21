@@ -12,6 +12,7 @@ import CoreData
 import Kingfisher
 import SafariServices
 import WatchConnectivity
+import CocoaLumberjack
 
 class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, NSFetchedResultsControllerDelegate, SFSafariViewControllerDelegate {
     @IBOutlet weak var tableView: UITableView!

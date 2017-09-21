@@ -9,6 +9,7 @@
 import Foundation
 import RouteRecorder
 import Mixpanel
+import CocoaLumberjack
 
 class RideReportAPIClient {
     public static private(set) var shared : RideReportAPIClient!
@@ -329,7 +330,7 @@ class RideReportAPIClient {
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "RideReportAPIClientStatusTextDidChange"), object: nil)
                 
                 if let mixPanelID = json["mixpanel_id"].string {
-                    Mixpanel.sharedInstance().identify(mixPanelID)
+                    Mixpanel.mainInstance().identify(distinctId: mixPanelID)
                 }
                 
                 if let account_verified = json["account_verified"].bool {

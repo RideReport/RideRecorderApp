@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import WatchConnectivity
 import RouteRecorder
+import CocoaLumberjack
 
 class HealthKitSetupViewController : UIViewController {
     @IBOutlet weak var titleLabel: UILabel!

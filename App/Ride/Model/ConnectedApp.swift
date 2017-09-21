@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import SwiftyJSON
+import CocoaLumberjack
 
 public class ConnectedApp: NSManagedObject {
     var authorizationCode: String?
