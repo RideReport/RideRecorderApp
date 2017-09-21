@@ -11,8 +11,8 @@ import CoreData
 
 
 extension Prediction {
-    @NSManaged public var startDate: Date
-    @NSManaged public var activityPredictionModelIdentifier: String?
-    @NSManaged public var predictedActivities: Set<PredictedActivity>
-    @NSManaged public var predictionAggregator: PredictionAggregator?
+    @NSManaged public internal(set) var startDate: Date
+    @NSManaged public internal(set) var activityPredictionModelIdentifier: String?
+    @NSManaged public internal(set) var predictedActivities: Set<PredictedActivity>
+    @NSManaged public internal(set) var predictionAggregator: PredictionAggregator?
 }

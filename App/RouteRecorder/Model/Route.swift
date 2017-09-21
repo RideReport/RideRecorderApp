@@ -17,7 +17,7 @@ public class  Route: NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
     var wasStoppedManually : Bool = false
     
-    var activityType : ActivityType {
+    public internal(set) var activityType : ActivityType {
         get {
             return ActivityType(rawValue: self.activityTypeInteger) ?? ActivityType.unknown
         }
@@ -546,7 +546,7 @@ public class  Route: NSManagedObject {
     }
     
     
-    var startDate : Date {
+    public var startDate : Date {
         if let firstLoc = self.firstLocation(includeCopied: false) {
             return firstLoc.date
         }
@@ -554,7 +554,7 @@ public class  Route: NSManagedObject {
         return self.creationDate
     }
     
-    var endDate : Date {
+    public var endDate : Date {
         if let firstLoc = self.mostRecentLocation() {
             return firstLoc.date
         }

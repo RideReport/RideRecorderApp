@@ -10,9 +10,9 @@ import Foundation
 import CoreData
 
 extension AccelerometerReading {
-    @NSManaged public var date: Date
-    @NSManaged public var x: Double
-    @NSManaged public var y: Double
-    @NSManaged public var z: Double
-    @NSManaged public var predictionAggregator: PredictionAggregator
+    @NSManaged public internal(set) var date: Date
+    @NSManaged public internal(set) var x: Double
+    @NSManaged public internal(set) var y: Double
+    @NSManaged public internal(set) var z: Double
+    @NSManaged public internal(set) var predictionAggregator: PredictionAggregator
 }

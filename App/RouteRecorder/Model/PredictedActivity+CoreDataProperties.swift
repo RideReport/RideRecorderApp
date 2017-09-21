@@ -11,8 +11,8 @@ import CoreData
 
 
 extension PredictedActivity {
-    @NSManaged public var activityTypeInteger: Int16
-    @NSManaged public var confidence: Float
-    @NSManaged public var prediction: Prediction?
-    @NSManaged public var predictionAggregator: PredictionAggregator?
+    @NSManaged public internal(set) var activityTypeInteger: Int16
+    @NSManaged public internal(set) var confidence: Float
+    @NSManaged public internal(set) var prediction: Prediction?
+    @NSManaged public internal(set) var predictionAggregator: PredictionAggregator?
 }

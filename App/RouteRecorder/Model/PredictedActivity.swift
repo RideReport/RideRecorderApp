@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 public class PredictedActivity: NSManagedObject {
-    public var activityType : ActivityType {
+    public internal(set) var activityType : ActivityType {
         get {
             return ActivityType(rawValue: self.activityTypeInteger) ?? ActivityType.unknown
         }

@@ -11,5 +11,5 @@ import CoreData
 
 
 extension RouteRecorderStore {
-    @NSManaged public var lastArrivalLocation: Location?
+    @NSManaged public internal(set)var lastArrivalLocation: Location?
 }

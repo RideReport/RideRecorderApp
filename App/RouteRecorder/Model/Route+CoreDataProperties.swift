@@ -11,14 +11,14 @@ import CoreData
 
 
 extension Route {
-    @NSManaged public var activityTypeInteger: Int16
-    @NSManaged public var creationDate: Date
-    @NSManaged public var isClosed: Bool
-    @NSManaged public var isUploaded: Bool
-    @NSManaged public var isSummaryUploaded: Bool
-    @NSManaged public var length: Float
-    @NSManaged public var uuid: String!
+    @NSManaged public internal(set) var activityTypeInteger: Int16
+    @NSManaged public internal(set) var creationDate: Date
+    @NSManaged public internal(set) var isClosed: Bool
+    @NSManaged public internal(set) var isUploaded: Bool
+    @NSManaged public internal(set) var isSummaryUploaded: Bool
+    @NSManaged public internal(set) var length: Float
+    @NSManaged public internal(set) var uuid: String!
     @NSManaged internal var locations: Set<Location>
-    @NSManaged public var predictionAggregators: Set<PredictionAggregator>
+    @NSManaged public internal(set) var predictionAggregators: Set<PredictionAggregator>
     @NSManaged internal var simplifiedLocations: Set<Location>
 }
