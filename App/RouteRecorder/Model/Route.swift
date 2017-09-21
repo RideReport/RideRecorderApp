@@ -22,7 +22,6 @@ public class  Route: NSManagedObject {
             return ActivityType(rawValue: self.activityTypeInteger) ?? ActivityType.unknown
         }
         set {
-            let oldValue = self.activityType
             self.activityTypeInteger = newValue.rawValue
         }
     }
@@ -161,6 +160,20 @@ public class  Route: NSManagedObject {
         // should never happen, but some legacy clients may find themselves in this state
         if (self.uuid == nil) {
             self.generateUUID()
+        }
+    }
+    
+    func loadFromJSON(JSON: JSON) {
+        if let activityTypeInteger = JSON["activityType"].int16 {
+            self.activityTypeInteger = activityTypeInteger
+        }
+        
+        if let dateString = JSON["creationDate"].string, let date = Date.dateFromJSONString(dateString) {
+            self.creationDate = date
+        }
+        
+        if let length = JSON["length"].float {
+            self.length = length
         }
     }
     
@@ -351,7 +364,13 @@ public class  Route: NSManagedObject {
         self.simplify({
             self.isClosed = true
             if let delegate = RouteRecorder.shared.delegate {
-                delegate.didCloseRoute(route: self)
+                DispatchQueue.main.async(execute: { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    
+                    delegate.didCloseRoute(route: strongSelf)
+                })
             }
         })
     }

@@ -9,7 +9,7 @@
 import Foundation
 import RouteRecorder
 
-class TripsManager : NSObject {
+class TripsManager : NSObject, RouteRecorderDelegate {
     static private(set) var shared : TripsManager!
     
     struct Static {
@@ -27,21 +27,23 @@ class TripsManager : NSObject {
     override init () {
         super.init()
     }
+    
+    func didOpenRoute(route: Route) {
+        
+    }
+    
+    func didCloseRoute(route: Route) {
+        let trip = Trip.findOrCreateTrip(withRoute: route)
+        CoreDataManager.shared.saveContext()
+        
+        trip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
+    }
+    
+    func didCancelRoute(route: Route) {
+        
+    }
 
     private func startup() {
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RouteRecorderDidCloseRoute"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
-            DispatchQueue.main.async(execute: { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                guard let route = notification.object as? Route else {
-                    return
-                }
-                
-                let trip = Trip(route: route)
-                trip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
-            })
-        }
+        RouteRecorder.shared.delegate = self
     }
 }

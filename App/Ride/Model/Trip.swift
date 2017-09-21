@@ -61,7 +61,7 @@ public class  Trip: NSManagedObject {
             self.setPrimitiveValue(newValue, forKey: "startDate")
             self.didChangeValue(forKey: "startDate")
             
-            if (newValue != oldValue) {
+            if (newValue != oldValue || (self.bikeTripOfTripsListRow == nil && self.otherTripOfTripsListRow == nil)) {
                 updateTripListRow()
             }
         }
@@ -76,7 +76,7 @@ public class  Trip: NSManagedObject {
             
             self.activityTypeInteger = newValue.rawValue
             
-            if oldValue != newValue {
+            if oldValue != newValue || (self.bikeTripOfTripsListRow == nil && self.otherTripOfTripsListRow == nil) {
                 self.updateTripListRow()
 
                 DispatchQueue.main.async {
@@ -134,9 +134,21 @@ public class  Trip: NSManagedObject {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
     }
     
-    convenience init(route: Route) {
-        let context = CoreDataManager.shared.currentManagedObjectContext()
-        self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
+    class func findOrCreateTrip(withRoute route: Route) -> Trip {
+        var trip: Trip! = Trip.tripWithUUID(route.uuid)
+            
+        if (trip == nil) {
+            let context = CoreDataManager.shared.currentManagedObjectContext()
+            trip = Trip(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
+            trip.uuid = route.uuid
+        }
+        
+        trip.startDate = route.startDate
+        trip.endDate = route.endDate
+        trip.activityType = route.activityType
+        trip.length = route.length
+        
+        return trip
     }
     
     class func tripCount() -> Int {
