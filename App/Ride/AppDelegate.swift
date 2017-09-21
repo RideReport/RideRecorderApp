@@ -301,7 +301,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             DDLogInfo("Received sync trips notification")
             if UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full {
                 // if the user is plugged in, go ahead and sync all unsynced trips.
-                RouteRecorder.shared.uploadRoutes(true, completionBlock: completionBlock)
+                RouteRecorder.shared.uploadRoutes(syncInBackground: true, completionBlock: completionBlock)
             } else {
                 completionBlock()
             }

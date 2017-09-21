@@ -61,7 +61,7 @@ public class RouteRecorder {
         APIClient.startup()
         
         if (UIApplication.shared.applicationState == UIApplicationState.active) {
-            self.uploadRoutes()
+            self.syncUnsyncedRoutes()
         }
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
@@ -80,17 +80,17 @@ public class RouteRecorder {
                 strongSelf.syncUnsyncedRoutes()
             }
         } else {
-            self.uploadRoutes()
+            self.syncUnsyncedRoutes()
         }
     }
     
     private func syncUnsyncedRoutes() {
         if (UIApplication.shared.applicationState == UIApplicationState.active) {
-            self.uploadRoutes()
+            self.uploadRoutes(syncInBackground: UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full)
         }
     }
     
-    public func uploadRoutes(_ syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
+    public func uploadRoutes(syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
         self.didEncounterUnrecoverableErrorUploadingRoutes = false
         self.uploadNextRoute(syncInBackground, completionBlock: completionBlock)
     }
@@ -100,7 +100,7 @@ public class RouteRecorder {
             APIClient.shared.uploadRoute(route, includeFullLocations: includeFullLocations).apiResponse({ (response) -> Void in
                 switch response.result {
                 case .success(let _): break
-                    
+                
                 case .failure(let error):
                     DDLogWarn(String(format: "Error syncing route: %@", error as CVarArg))
                     
