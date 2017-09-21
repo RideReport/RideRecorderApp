@@ -29,18 +29,28 @@ class TripsManager : NSObject, RouteRecorderDelegate {
     }
     
     func didOpenRoute(route: Route) {
-        
+        let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
+        trip.isInProgress = true
+        CoreDataManager.shared.saveContext()
     }
     
-    func didCloseRoute(route: Route) {
-        let trip = Trip.findOrCreateTrip(withRoute: route)
+    func didUpdateInProgressRoute(route: Route) {
+        _ = Trip.findAndUpdateOrCreateTrip(withRoute: route)
         CoreDataManager.shared.saveContext()
-        
-        trip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
     }
     
     func didCancelRoute(route: Route) {
+        let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
+        CoreDataManager.shared.currentManagedObjectContext().delete(trip)
+        CoreDataManager.shared.saveContext()
+    }
+    
+    func didCloseRoute(route: Route) {
+        let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
+        trip.isInProgress = false
+        CoreDataManager.shared.saveContext()
         
+        trip.sendTripCompletionNotificationLocally(secondsFromNow:15.0)
     }
 
     private func startup() {

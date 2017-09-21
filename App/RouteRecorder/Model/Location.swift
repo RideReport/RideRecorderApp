@@ -192,7 +192,7 @@ public class  Location: NSManagedObject {
         return MKMapItem(placemark: placemark)
     }
     
-    func clLocation() -> CLLocation {
+    public func clLocation() -> CLLocation {
         return CLLocation(coordinate: CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude), altitude: self.altitude, horizontalAccuracy: self.horizontalAccuracy, verticalAccuracy: self.verticalAccuracy, course: self.course, speed: self.speed, timestamp: self.date)
     }
 }

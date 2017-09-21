@@ -56,6 +56,9 @@ class TripViewController: UIViewController {
         if let tripSummaryViewController = self.tripSummaryViewController {
             tripSummaryViewController.selectedTrip = self.selectedTrip
         }
+        if let mapViewController = self.mapViewController {
+            mapViewController.setSelectedTrip(self.selectedTrip)
+        }
         
         self.updateMapViewDisplayBounds()
     }

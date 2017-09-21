@@ -134,7 +134,7 @@ public class  Trip: NSManagedObject {
         self.init(entity: NSEntityDescription.entity(forEntityName: "Trip", in: context)!, insertInto: context)
     }
     
-    class func findOrCreateTrip(withRoute route: Route) -> Trip {
+    class func findAndUpdateOrCreateTrip(withRoute route: Route) -> Trip {
         var trip: Trip! = Trip.tripWithUUID(route.uuid)
             
         if (trip == nil) {
@@ -147,6 +147,8 @@ public class  Trip: NSManagedObject {
         trip.endDate = route.endDate
         trip.activityType = route.activityType
         trip.length = route.length
+        
+        trip.bikeTripOfTripsListRow?.updateSortName() // force a row update so our distance will re-draw
         
         return trip
     }

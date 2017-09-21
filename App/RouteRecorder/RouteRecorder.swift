@@ -14,6 +14,7 @@ public protocol RouteRecorderDelegate: class {
     func didOpenRoute(route: Route)
     func didCloseRoute(route: Route)
     func didCancelRoute(route: Route)
+    func didUpdateInProgressRoute(route: Route)
 }
 
 public class RouteRecorder {

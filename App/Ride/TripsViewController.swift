@@ -102,7 +102,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripsListRow")
-        fetchedRequest.predicate = NSPredicate(format: "isOtherTripsRow == false OR otherTrips.@count >1")
+        fetchedRequest.predicate = NSPredicate(format: "(isOtherTripsRow == false AND bikeTrip != nil) OR otherTrips.@count >1")
         fetchedRequest.fetchBatchSize = 20
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "isOtherTripsRow", ascending: true), NSSortDescriptor(key: "sortName", ascending: false)]
 
@@ -965,7 +965,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return nil
         }
         
-        let trip : Trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
+        guard let row = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow else {
+            return nil
+        }
+        
+        guard let trip = row.bikeTrip else {
+            return nil
+        }
         if trip.isInProgress {
             return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
                 RouteRecorder.shared.routeManager.stopRoute()
@@ -978,72 +984,71 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
     #if DEBUG
         let toolsAction = UITableViewRowAction(style: UITableViewRowActionStyle.normal, title: "🐞 Tools") { (action, indexPath) -> Void in
-            let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as! Trip
             self.tableView.setEditing(false, animated: true)
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-//            alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
-//                trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
-//            }))
-//            alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
-//                for prediction in trip.predictionAggregators {
-//                   // RouteRecorder.shared.randomForestManager.classify(prediction)
-//                }
-//                //trip.calculateAggregatePredictedActivityType()
-//            }))
-//            
-//            alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
-//                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-//                })
-//                
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in
-//                    trip.isSavedToHealthKit = false
-//                    CoreDataManager.shared.saveContext()
-//                    HealthKitManager.shared.saveOrUpdateTrip(trip) {_ in
-//                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
-//                            
-//                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-//                        }
+            if let route = trip.route {
+                alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
+                    trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)
+                }))
+                alertController.addAction(UIAlertAction(title: "⚙️ Re-Classify", style: UIAlertActionStyle.default, handler: { (_) in
+//                    for prediction in route.predictionAggregators {
+//                        RouteRecorder.shared.randomForestManager.classify(prediction)
 //                    }
-//                }
-//            }))
-//            alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
-//                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
-//                    var cllocs: [CLLocation] = []
-//                    for loc in trip.fetchOrderedLocations(includingInferred: false) {
-//                        if let location = loc as? Location {
-//                            cllocs.append(location.clLocation())
-//                        }
-//                    }
-//                    
-//                    let date = Date()
-//                    RouteRecorder.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(locations: cllocs, fromOffsetDate: date))
-//                }
-//            }))
-//            alertController.addAction(UIAlertAction(title: "📦 Export", style: .default, handler: { (_) in
-//                let urls = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-//                let url = urls.last!
-//                
-//                if let trip : Trip = fetchedResultsController.object(at: NSIndexPath(row: indexPath.row, section: indexPath.section - 1) as IndexPath) as? Trip {
-//                    var cllocs: [CLLocation] = []
-//                    var locs = trip.fetchOrderedLocations(includingInferred: true)
-//                    for loc in locs {
-//                        if let location = loc as? Location {
-//                            cllocs.append(location.clLocation())
-//                        }
-//                    }
-//                    
-//                    let path = url + "/" + trip.uuid + ".archive"
-//                    if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
-//                        UIPasteboard.general.string = path
-//                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
-//                        alert.show()
-//                    } else {
-//                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
-//                        alert.show()
-//                    }
-//                }
-//            }))
+//                    route.calculateAggregatePredictedActivityType()
+                }))
+                
+                alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
+                    let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    })
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in
+                        trip.isSavedToHealthKit = false
+                        CoreDataManager.shared.saveContext()
+                        HealthKitManager.shared.saveOrUpdateTrip(trip) {_ in
+                            if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                                
+                                UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                            }
+                        }
+                    }
+                }))
+                alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
+                    var cllocs: [CLLocation] = []
+                    for loc in route.fetchOrderedLocationsForReplay() {
+                        if let location = loc as? Location {
+                            cllocs.append(location.clLocation())
+                        }
+                    }
+                    
+                    let date = Date()
+                    RouteRecorder.shared.locationManager.setLocations(locations: GpxLocationGenerator.generate(locations: cllocs, fromOffsetDate: date))
+                }))
+                alertController.addAction(UIAlertAction(title: "📦 Export", style: .default, handler: { (_) in
+                    let urls = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+                    let url = urls.last!
+                    
+                    var cllocs: [CLLocation] = []
+                    var locs = route.fetchOrderedLocationsForReplay()
+                    for loc in locs {
+                        if let location = loc as? Location {
+                            cllocs.append(location.clLocation())
+                        }
+                    }
+                    
+                    let path = url + "/" + route.uuid + ".archive"
+                    if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
+                        UIPasteboard.general.string = path
+                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
+                        alert.show()
+                    } else {
+                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
+                        alert.show()
+                    }
+                }))
+            } else {
+                alertController.addAction(UIAlertAction(title: "❌ No Route Found", style: .default, handler: nil))
+            }
             
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel, handler: nil))
             self.present(alertController, animated: true, completion: nil)

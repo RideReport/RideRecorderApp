@@ -26,7 +26,6 @@ public class  Route: NSManagedObject {
         }
     }
     
-    var inProgressLength : CLLocationDistance = 0
     var lastLocationUpdateCount : Int = 0
     private var lastInProgressLocation : Location? = nil
     
@@ -205,6 +204,12 @@ public class  Route: NSManagedObject {
         return locs
     }
     
+    #if DEBUG
+    public func fetchOrderedLocationsForReplay()->[Location] {
+        return self.fetchOrderedLocations(includingInferred: false)
+    }
+    #endif
+    
     func fetchOrderedLocations(simplified: Bool = false, includingInferred: Bool)->[Location] {
         let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Location")
@@ -253,7 +258,13 @@ public class  Route: NSManagedObject {
         RouteRecorderDatabaseManager.shared.saveContext()
         
         if let delegate = RouteRecorder.shared.delegate {
-            delegate.didCancelRoute(route: self)
+            DispatchQueue.main.async(execute: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                delegate.didCancelRoute(route: strongSelf)
+            })
         }
     }
     
@@ -284,7 +295,7 @@ public class  Route: NSManagedObject {
         self.length = Float(length)
     }
     
-    func saveLocationsAndUpdateInProgressLength(intermittently: Bool = true)->Bool {
+    func saveLocationsAndUpdateLength(intermittently: Bool = true)->Bool {
         let locSize = self.locationCount()
         if (!intermittently || lastLocationUpdateCount == -1 || abs(locSize - lastLocationUpdateCount) > 10) {
             // every 10
@@ -294,10 +305,20 @@ public class  Route: NSManagedObject {
                     let lastcllocation = lasLoc.clLocation()
 
                     lastLocationUpdateCount = locSize
-                    inProgressLength += Double(lastcllocation.distance(from: thiscllocation))
+                    self.length += Float(lastcllocation.distance(from: thiscllocation))
                     lastInProgressLocation = thisLoc
                     
                     RouteRecorderDatabaseManager.shared.saveContext()
+                    
+                    if let delegate = RouteRecorder.shared.delegate {
+                        DispatchQueue.main.async(execute: { [weak self] in
+                            guard let strongSelf = self else {
+                                return
+                            }
+                            
+                            delegate.didUpdateInProgressRoute(route: strongSelf)
+                        })
+                    }
 
                     return true
                 } else {
@@ -319,8 +340,15 @@ public class  Route: NSManagedObject {
             inferredLoc.route = self
         }
         
+        
         if let delegate = RouteRecorder.shared.delegate {
-            delegate.didOpenRoute(route: self)
+            DispatchQueue.main.async(execute: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                delegate.didOpenRoute(route: strongSelf)
+            })
         }
     }
     
@@ -383,6 +411,16 @@ public class  Route: NSManagedObject {
         self.simplifiedLocations = Set<Location>()
         
         RouteRecorderDatabaseManager.shared.saveContext()
+        
+        if let delegate = RouteRecorder.shared.delegate {
+            DispatchQueue.main.async(execute: { [weak self] in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                delegate.didOpenRoute(route: strongSelf)
+            })
+        }
     }
     
     func closestLocationToCoordinate(_ coordinate: CLLocationCoordinate2D)->Location! {

@@ -151,7 +151,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     public func stopRoute() {
-        self.stopGPSRouteAndEnterBackgroundState(abort: false)
+        self.stopGPSRouteAndEnterBackgroundState(abort: false, stoppedManually: true)
     }
     
     func stopGPSRouteAndEnterBackgroundState(abort: Bool = false, stoppedManually: Bool = false) {
@@ -281,7 +281,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             }
         }
         
-        _ = route.saveLocationsAndUpdateInProgressLength()
+        _ = route.saveLocationsAndUpdateLength()
         
         if let mostRecentLocationWithSufficientSpeed = self.mostRecentLocationWithSufficientSpeed, let mostRecentGPSLocation = self.mostRecentGPSLocation {
             if (gotGPSSpeed == true && abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForConsideringStoppedRoute){
@@ -413,10 +413,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                     strongSelf.pendingAggregators = []
                     
                     if let mostRecentRoute = mostRecentRoute {
-                        _ = mostRecentRoute.saveLocationsAndUpdateInProgressLength(intermittently: false)
+                        _ = mostRecentRoute.saveLocationsAndUpdateLength(intermittently: false)
                     }
                     
-                    _ = strongSelf.currentRoute!.saveLocationsAndUpdateInProgressLength(intermittently: false)
+                    _ = strongSelf.currentRoute!.saveLocationsAndUpdateLength(intermittently: false)
                     
                     if (strongSelf.currentRoute!.activityType == .cycling) {
                         strongSelf.startLocationTrackingUsingGPS()
