@@ -228,8 +228,40 @@ public class APIClient {
     }
     
     //
-    // MARK: - Setup
+    // MARK: - Routes
     //
+    
+    #if DEBUG
+    @discardableResult public func getRoute(withUUID uuid: String)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+            switch response.result {
+            case .success(let json):
+                var route: Route! = Route.findRoute(withUUID: uuid)
+                if route == nil {
+                    route = Route()
+                    route.uuid = uuid
+                }
+                
+                route.loadFromJSON(JSON: json)
+                route.isClosed = true
+                route.isUploaded = true
+                route.isSummaryUploaded = true
+                
+                if let locations = json["locations"].array {
+                    for locationJson in locations {
+                        if let loc = Location(JSON: locationJson) {
+                            loc.route = route
+                        }
+                    }
+                }
+                
+                RouteRecorderDatabaseManager.shared.saveContext()
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving getting individual route data: %@", error as CVarArg))
+            }
+        })
+    }
+    #endif
     
     public func upload(predictionAggregator: PredictionAggregator, withMetadata metadataDict:[String: Any] = [:]) {
         let accelerometerRouteURL = "ios_accelerometer_data"
@@ -246,7 +278,7 @@ public class APIClient {
         }
      }
     
-    @discardableResult public func uploadRoute(_ route: Route, includeFullLocations: Bool)->AuthenticatedAPIRequest {
+    @discardableResult public func uploadRoute(_ route: Route, includeFullLocations: Bool)->AuthenticatedAPIRequest {        
         guard (route.isClosed) else {
             DDLogWarn("Tried to upload route info on unclosed route!")
             
@@ -275,7 +307,7 @@ public class APIClient {
             }
         }
         
-        let routeURL = "trip/" + route.uuid
+        let routeURL = "trips/" + route.uuid
         
         let method = Alamofire.HTTPMethod.put
         var routeDict = [
@@ -294,7 +326,7 @@ public class APIClient {
             for location in summaryLocs {
                 locations.append((location).jsonDictionary())
             }
-            routeDict["summaryRoute"] = ["locations": locations]
+            routeDict["summaryLocations"] = ["locations": locations]
         } else {
             guard route.locationCount() > 0 else {
                 DDLogWarn("No locations found when syncing route locations!")

@@ -30,10 +30,11 @@ class TripViewController: UIViewController {
                     return
                 }
                 
-                if (strongSelf.selectedTrip != nil) {
-                    if (!strongSelf.hasRequestedTripInfo && (!strongSelf.selectedTrip.isSummarySynced)) {
+                if let trip = strongSelf.selectedTrip {
+                    #if DEBUG
+                    if (trip.route == nil) {
                         strongSelf.hasRequestedTripInfo = true
-                        RideReportAPIClient.shared.getTrip(strongSelf.selectedTrip).apiResponse({ [weak self] (_) -> Void in
+                        APIClient.shared.getRoute(withUUID: strongSelf.selectedTrip.uuid).apiResponse({ [weak self] (_) -> Void in
                             guard let reallyStrongSelf = self else {
                                 return
                             }
@@ -41,6 +42,7 @@ class TripViewController: UIViewController {
                             reallyStrongSelf.updateChildViews()
                         })
                     }
+                    #endif
                     
                     strongSelf.updateChildViews()
                 } else {
