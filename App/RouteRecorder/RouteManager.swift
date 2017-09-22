@@ -305,8 +305,13 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                     maximumTimeIntervalBetweenGPSMovements += self.timeIntervalForLocationTrackingDeferral
                 }
                 if (timeIntervalSinceLastGPSMovement > maximumTimeIntervalBetweenGPSMovements) {
-                    DDLogVerbose("Went too long with unusable speeds.")
-                    self.stopGPSRouteAndEnterBackgroundState()
+                    if (route.locationCount() > 10) {
+                        DDLogVerbose("Went too long with unusable speeds.")
+                        self.stopGPSRouteAndEnterBackgroundState()
+                    } else {
+                        // work around issue where a new trip may receive a state location, causing the trip to end prematurely
+                        DDLogVerbose("Received stale location with unusable speeds. Awaiting new update.")
+                    }
                 } else {
                     DDLogVerbose("Nothing but unusable speeds. Awaiting next update")
                 }
