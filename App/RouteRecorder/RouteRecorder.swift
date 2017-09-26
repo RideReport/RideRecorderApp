@@ -103,7 +103,7 @@ public class RouteRecorder {
     }
     
     private func uploadNextRoute(_ includeFullLocations: Bool, completionBlock: @escaping ()->Void = {}) {
-        if let route = Route.nextClosedUnuploadedRoute(), !self.didEncounterUnrecoverableErrorUploadingRoutes {
+        if let route = (includeFullLocations ? Route.nextClosedUnuploadedRoute() : Route.nextClosedUnuploadedRoute()), !self.didEncounterUnrecoverableErrorUploadingRoutes {
             APIClient.shared.uploadRoute(route, includeFullLocations: includeFullLocations).apiResponse({ (response) -> Void in
                 switch response.result {
                 case .success(let _): break

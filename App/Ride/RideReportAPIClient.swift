@@ -10,9 +10,11 @@ import Foundation
 import RouteRecorder
 import Mixpanel
 import CocoaLumberjack
+import Alamofire
 
 class RideReportAPIClient {
     public static private(set) var shared : RideReportAPIClient!
+    fileprivate var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     
     
     public class func startup(_ useDefaultConfiguration: Bool = false) {
@@ -89,8 +91,54 @@ class RideReportAPIClient {
         })
     }
     
-    @discardableResult func syncTrip(_ trip: Trip)->AuthenticatedAPIRequest {
-        return getTrip(trip)
+    @discardableResult func patchTrip(_ trip: Trip)->AuthenticatedAPIRequest {
+        if let existingRequest = self.tripRequests[trip] {
+            // if an existing API request is in flight and we have local changes, wait to sync until after it completes
+            
+            if !trip.isSynced {
+                existingRequest.requestCompletetionBlock = {
+                    // we need to reset isSynced since the changes were made after the request went out.
+                    trip.isSynced = false
+                    self.patchTrip(trip)
+                }
+                return existingRequest
+            } else {
+                // if we dont have local changes, simply skip this
+                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+            }
+        }
+        
+        let routeURL = "trips/" + trip.uuid
+        
+        let tripDict = [
+            "activityType": trip.activityType.numberValue,
+            "rating": trip.rating.choice.numberValue,
+            "ratingVersion": trip.rating.version.numberValue
+            ] as [String : Any]
+        
+        self.tripRequests[trip] = AuthenticatedAPIRequest(client: APIClient.shared, method: .patch, route: routeURL, parameters: tripDict as [String : Any]?) { (response) in
+            self.tripRequests[trip] = nil
+            switch response.result {
+            case .success(let json):
+                if let summary = json["summary"].dictionary {
+                    trip.loadSummaryFromJSON(summary)
+                }
+                trip.isSynced = true
+                
+                if let accountStatus = json["accountStatus"].dictionary, let statusText = accountStatus["status_text"]?.string, let statusEmoji = accountStatus["status_emoji"]?.string {
+                    Profile.profile().statusText = statusText
+                    Profile.profile().statusEmoji = statusEmoji
+                    CoreDataManager.shared.saveContext()
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil)
+                } else {
+                    CoreDataManager.shared.saveContext()
+                }
+            case .failure(let error):
+                DDLogWarn(String(format: "Error patching trip: %@", error as CVarArg))
+            }
+        }
+        
+        return self.tripRequests[trip]!
     }
     
     @discardableResult func getTrip(_ trip: Trip)->AuthenticatedAPIRequest {
@@ -140,11 +188,11 @@ class RideReportAPIClient {
         
     }
     
-    @discardableResult func saveAndSyncTripIfNeeded(_ trip: Trip)->AuthenticatedAPIRequest {
+    @discardableResult func saveAndPatchTripIfNeeded(_ trip: Trip)->AuthenticatedAPIRequest {
         trip.saveAndMarkDirty()
         
         if !trip.isSynced {
-            return self.syncTrip(trip)
+            return self.patchTrip(trip)
         }
         
         return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())

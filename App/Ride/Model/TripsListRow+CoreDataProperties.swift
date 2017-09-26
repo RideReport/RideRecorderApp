@@ -16,4 +16,5 @@ extension TripsListRow {
     @NSManaged var bikeTrip: Trip?
     @NSManaged var otherTrips: [Trip]
     @NSManaged var section: TripsListSection
+    @NSManaged var otherTripsRowOfSection: TripsListSection?
 }

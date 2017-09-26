@@ -234,7 +234,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
     
     @IBAction func changedRating(_: AnyObject) {
         self.selectedTrip.rating = ratingChoiceSelector.selectedRating
-        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndPatchTripIfNeeded(self.selectedTrip)
         self.reloadUI()
     }
     
@@ -283,7 +283,7 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
         
         if mode != self.selectedTrip.activityType {
             self.selectedTrip.activityType = self.modeSelectorView.selectedMode
-            RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+            RideReportAPIClient.shared.saveAndPatchTripIfNeeded(self.selectedTrip)
             
             self.reloadUI()
             
@@ -325,21 +325,21 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
     
     @IBAction func tappedNotGreat(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.bad)
-        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndPatchTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedGreat(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.good)
-        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndPatchTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }
     
     @IBAction func tappedMixed(_: AnyObject) {
         self.selectedTrip.rating = Rating.ratingWithCurrentVersion(RatingChoice.mixed)
-        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(self.selectedTrip)
+        RideReportAPIClient.shared.saveAndPatchTripIfNeeded(self.selectedTrip)
         
         self.reloadUI()
     }

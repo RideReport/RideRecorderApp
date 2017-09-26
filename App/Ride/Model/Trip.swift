@@ -107,13 +107,14 @@ public class  Trip: NSManagedObject {
             }
         } else {
             self.bikeTripOfTripsListRow = nil
-            var row: TripsListRow! = section.sortedRows().last
+            var row: TripsListRow! = section.otherTripsRow
             
             if row == nil || !row.isOtherTripsRow {
                 row = TripsListRow()
                 row.isOtherTripsRow = true
                 row.updateSortName()
                 row.section = section
+                section.otherTripsRow = row
             }
             self.otherTripOfTripsListRow = row
         }

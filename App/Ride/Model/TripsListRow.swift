@@ -18,7 +18,7 @@ public class TripsListRow: NSManagedObject {
             if (_timeFormatter == nil) {
                 _timeFormatter = DateFormatter()
                 _timeFormatter!.locale = Locale.current
-                _timeFormatter!.dateFormat = "hh:mma"
+                _timeFormatter!.dateFormat = "HH:mma"
             }
             
             return _timeFormatter!

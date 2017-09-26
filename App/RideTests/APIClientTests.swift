@@ -85,7 +85,7 @@ class APIClientTests: XCTestCase {
         let expectation = self.expectation(description: "TripSync")
         stubEndpoint("trips/" + trip.uuid, filename: "new_trip_201")
         
-        APIClient.shared.syncTrip(trip).apiResponse { (response) -> Void in
+        APIClient.shared.patchTrip(trip).apiResponse { (response) -> Void in
             expectation.fulfill()
             XCTAssertEqual(response.response?.statusCode, 201)
             XCTAssert(trip.isSynced)
@@ -104,7 +104,7 @@ class APIClientTests: XCTestCase {
         let expectation = self.expectation(description: "TripSync")
         stubEndpoint("trips/" + trip.uuid, filename: "trip_with_ready_summary_200")
         
-        APIClient.shared.syncTrip(trip).apiResponse { (response) -> Void in
+        APIClient.shared.patchTrip(trip).apiResponse { (response) -> Void in
             expectation.fulfill()
             XCTAssertEqual(response.response?.statusCode, 200)
             XCTAssert(trip.isSynced)
@@ -128,7 +128,7 @@ class APIClientTests: XCTestCase {
         let expectation = self.expectation(description: "TripSyncFails")
         stubEndpoint("trips/" + trip2.uuid, filename: "new_trip_409")
         
-        APIClient.shared.syncTrip(trip2).apiResponse { (response) -> Void in
+        APIClient.shared.patchTrip(trip2).apiResponse { (response) -> Void in
             XCTAssertEqual(response.response?.statusCode, 409)
             XCTAssert(!trip2.isSynced)
             XCTAssertNotEqual(trip.uuid, trip2.uuid)

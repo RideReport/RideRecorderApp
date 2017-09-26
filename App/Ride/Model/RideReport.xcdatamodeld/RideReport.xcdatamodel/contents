@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16G29" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13240" systemVersion="" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="1">
     <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="appSettingsText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="appSettingsUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -7,11 +7,14 @@
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isHiddenApp" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="uuid" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
         <attribute name="webAuthorizeUrl" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="profile" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Profile" inverseName="connectedApps" inverseEntity="Profile" syncable="YES"/>
         <relationship name="promotions" optional="YES" toMany="YES" deletionRule="No Action" destinationEntity="Promotion" inverseName="connectedApp" inverseEntity="Promotion" syncable="YES"/>
         <relationship name="scopes" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="ConnectedAppScope" inverseName="connectedApp" inverseEntity="ConnectedAppScope" syncable="YES"/>
+        <fetchIndex name="byUuidIndex">
+            <fetchIndexElement property="uuid" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="ConnectedAppScope" representedClassName=".ConnectedAppScope" syncable="YES">
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,7 +50,7 @@
         <relationship name="profile" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="Profile" inverseName="promotions" inverseEntity="Profile" syncable="YES"/>
     </entity>
     <entity name="Trip" representedClassName=".Trip" syncable="YES">
-        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="caloriesBurned" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="climacon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="endDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -56,17 +59,35 @@
         <attribute name="isInProgress" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isSavedToHealthKit" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="isSummarySynced" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="length" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="ratingInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
-        <attribute name="ratingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" indexed="YES" syncable="YES"/>
-        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="ratingInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="ratingVersion" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startingPlacemarkName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="temperature" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="uuid" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
-        <relationship name="bikeTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="bikeTrip" inverseEntity="TripsListRow" syncable="YES"/>
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="bikeTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="bikeTrip" inverseEntity="TripsListRow" syncable="YES"/>
         <relationship name="otherTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="otherTrips" inverseEntity="TripsListRow" syncable="YES"/>
         <relationship name="tripRewards" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
+        <fetchIndex name="byActivityTypeIntegerIndex">
+            <fetchIndexElement property="activityTypeInteger" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byIsSyncedIndex">
+            <fetchIndexElement property="isSynced" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRatingIntegerIndex">
+            <fetchIndexElement property="ratingInteger" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byRatingVersionIndex">
+            <fetchIndexElement property="ratingVersion" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byStartDateIndex">
+            <fetchIndexElement property="startDate" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byUuidIndex">
+            <fetchIndexElement property="uuid" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
     <entity name="TripReward" representedClassName=".TripReward" syncable="YES">
         <attribute name="descriptionText" attributeType="String" syncable="YES"/>
@@ -78,10 +99,12 @@
         <attribute name="sortName" attributeType="String" syncable="YES"/>
         <relationship name="bikeTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="bikeTripOfTripsListRow" inverseEntity="Trip" syncable="YES"/>
         <relationship name="otherTrips" toMany="YES" deletionRule="Nullify" destinationEntity="Trip" inverseName="otherTripOfTripsListRow" inverseEntity="Trip" syncable="YES"/>
+        <relationship name="otherTripsRowOfSection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListSection" inverseName="otherTripsRow" inverseEntity="TripsListSection" syncable="YES"/>
         <relationship name="section" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListSection" inverseName="rows" inverseEntity="TripsListSection" syncable="YES"/>
     </entity>
     <entity name="TripsListSection" representedClassName="TripsListSection" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="otherTripsRow" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="otherTripsRowOfSection" inverseEntity="TripsListRow" syncable="YES"/>
         <relationship name="rows" toMany="YES" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="section" inverseEntity="TripsListRow" syncable="YES"/>
     </entity>
     <elements>
@@ -91,7 +114,7 @@
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
         <element name="Trip" positionX="-9" positionY="99" width="128" height="345"/>
         <element name="TripReward" positionX="-27" positionY="90" width="128" height="90"/>
-        <element name="TripsListRow" positionX="-45" positionY="135" width="128" height="120"/>
-        <element name="TripsListSection" positionX="-36" positionY="144" width="128" height="75"/>
+        <element name="TripsListRow" positionX="-45" positionY="135" width="128" height="135"/>
+        <element name="TripsListSection" positionX="-36" positionY="144" width="128" height="90"/>
     </elements>
 </model>

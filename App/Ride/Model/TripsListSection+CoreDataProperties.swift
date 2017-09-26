@@ -13,4 +13,5 @@ import CoreData
 extension TripsListSection {
     @NSManaged var date: Date
     @NSManaged var rows: Set<TripsListRow>
+    @NSManaged var otherTripsRow: TripsListRow?
 }

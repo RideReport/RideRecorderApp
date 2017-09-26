@@ -353,7 +353,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                         trip.rating = rating
                         self.postTripRatedThanksNotification(ratingChoice: rating.choice)
                         
-                        RideReportAPIClient.shared.saveAndSyncTripIfNeeded(trip).apiResponse({ (_) -> Void in
+                        RideReportAPIClient.shared.saveAndPatchTripIfNeeded(trip).apiResponse({ (_) -> Void in
                             completionHandler()
                         })
                         break
