@@ -229,7 +229,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 presentedVC.dismiss(animated: false, completion: nil)
             }
             
-            connectVC.selectedConnectedApp = app
+            connectVC.launchToConnectedApp = app
             rootVC.present(navVC, animated: true, completion: nil)
         }
     }

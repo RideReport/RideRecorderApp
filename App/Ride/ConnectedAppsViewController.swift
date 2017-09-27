@@ -12,7 +12,7 @@ import WatchConnectivity
 import CocoaLumberjack
 
 class ConnectedAppsViewController: UITableViewController, NSFetchedResultsControllerDelegate {
-    private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
+    private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
 
     
     override func viewDidLoad() {
@@ -41,9 +41,9 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         self.fetchedResultsController = NSFetchedResultsController<NSFetchRequestResult>(fetchRequest:fetchedRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
-        self.fetchedResultsController.delegate = self
+        self.fetchedResultsController!.delegate = self
         do {
-            try self.fetchedResultsController.performFetch()
+            try self.fetchedResultsController!.performFetch()
         } catch let error {
             DDLogError("Error loading connected apps view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
             abort()
@@ -73,10 +73,14 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        guard let frc = self.fetchedResultsController else {
+            return
+        }
+        
         switch(type) {
             
         case .update:
-            if let path = indexPath, let app = self.fetchedResultsController.object(at: path) as? ConnectedApp,
+            if let path = indexPath, let app = frc.object(at: path) as? ConnectedApp,
                 let cell = self.tableView!.cellForRow(at: IndexPath(row: indexPath!.row, section: 1)) {
                 configureCell(cell, app:app)
             }
@@ -97,11 +101,15 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let frc = self.fetchedResultsController, let sections = frc.sections else {
+            return 0
+        }
+        
         if section == 0 {
             // health kit cell
             return UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 1 : 0
         } else if section == 1 {
-            let sectionInfo = self.fetchedResultsController.sections![0]
+            let sectionInfo = sections[0]
             return sectionInfo.numberOfObjects
         } else {
             // conect app cell
@@ -125,6 +133,10 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let frc = self.fetchedResultsController else {
+            return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
+        }
+        
         if indexPath.section == 0 {
             // health kit cell
             let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "SyncWithHealthAppCell", for: indexPath)
@@ -140,7 +152,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             return tableCell
         } else if indexPath.section == 1 {
             let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "ConnectedAppCell", for: indexPath)
-            if let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp {
+            if let app = frc.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp {
                 self.configureCell(tableCell, app: app)
             }
             
@@ -154,12 +166,16 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let frc = self.fetchedResultsController else {
+            return
+        }
+        
         guard let indexPath = self.tableView.indexPathForSelectedRow else {
             return
         }
         
         if (indexPath.section == 1) {
-            if let app = self.fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp,
+            if let app = frc.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp,
                 let appNC = segue.destination as?  UINavigationController,
                 let appVC = appNC.topViewController as? ConnectedAppSettingsViewController {
                 appVC.connectingApp = app

@@ -18,9 +18,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var emptyTableView: UIView!
     
-    var selectedConnectedApp: ConnectedApp? = nil
+    public var launchToConnectedApp: ConnectedApp? = nil
+    private var selectedConnectedApp: ConnectedApp? = nil
     private var safariViewController: UIViewController? = nil
-    private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
+    private var safariViewControllerActivityIndicator: UIView? = nil
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>!
     
     @IBAction func cancel(_ sender: AnyObject) {
@@ -72,8 +73,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             self.tableView.deselectRow(at: indexPath, animated: true)
         }
         
-        if (self.selectedConnectedApp != nil) {
+        if (self.launchToConnectedApp != nil) {
             // if we've already been told to select an app
+            self.selectedConnectedApp = self.launchToConnectedApp
+            self.launchToConnectedApp = nil
             self.handleSelectedApp(fromList: false)
         }
     }
@@ -194,20 +197,26 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
             let sfvc = SFSafariViewController(url: url)
             self.safariViewController = sfvc
             sfvc.delegate = self
+            
             if (fromList) {
                 self.navigationController?.pushViewController(sfvc, animated: true)
             } else {
                 self.navigationController?.pushViewController(sfvc, animated: false)
-                sfvc.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItemStyle.plain, target: AppDelegate.appDelegate(), action: #selector(AppDelegate.dismissCurrentPresentedViewController))
             }
+            
+            self.navigationController?.isNavigationBarHidden = true
+  
             if let coordinator = transitionCoordinator {
                 coordinator.animate(alongsideTransition: nil, completion: { (context) in
-                    let targetSubview = sfvc.view
+                    guard let targetSubview = sfvc.view else {
+                        return
+                    }
+                    
                     let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
                     loadingIndicator.color = ColorPallete.shared.darkGrey
-                    self.safariViewControllerActivityIndicator = loadingIndicator
                     loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
-                    targetSubview?.addSubview(loadingIndicator)
+                    targetSubview.addSubview(loadingIndicator)
+                    self.safariViewControllerActivityIndicator = loadingIndicator
                     NSLayoutConstraint(item: loadingIndicator, attribute: .centerY, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
                     NSLayoutConstraint(item: loadingIndicator, attribute: .centerX, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
                     loadingIndicator.startAnimating()
@@ -279,8 +288,10 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
                     }
 
                     self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
+                    self.navigationController?.isNavigationBarHidden = false
                 } else if let _ = URLComponents(url: callbackUrl, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "error" }).first?.value {
                     self.navigationController?.popViewController(animated: true)
+                    self.navigationController?.isNavigationBarHidden = false
                 }
             } else {
                 // For now, ignore this edge case because we only have one app.
@@ -293,6 +304,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.selectedConnectedApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
         alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
             self.navigationController?.popViewController(animated: true)
+            self.navigationController?.isNavigationBarHidden = false
         }))
         self.present(alertController, animated: true, completion: nil)
     }

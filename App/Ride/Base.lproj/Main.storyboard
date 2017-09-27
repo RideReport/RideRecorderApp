@@ -86,11 +86,11 @@
             <objects>
                 <viewController storyboardIdentifier="RideShareViewController" id="Eu2-LV-bdP" customClass="RideShareViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GEr-MR-08O">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="599"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EAJ-hS-lAz">
-                                <rect key="frame" x="0.0" y="114" width="375" height="375"/>
+                                <rect key="frame" x="0.0" y="112" width="375" height="375"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZrE-Gw-CPY">
                                         <rect key="frame" x="-0.5" y="0.0" width="375" height="375"/>
@@ -203,7 +203,7 @@
                 <navigationController storyboardIdentifier="ReportModeClassificationNavigationViewController" id="OMP-PP-PzA" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="dly-FU-scT">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -306,12 +306,12 @@
                                 <include reference="1OH-SF-3Te"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="9cG-e6-x2x"/>
                                 <include reference="4PN-IP-KcD"/>
                                 <include reference="GcH-3X-wTR"/>
                                 <include reference="jmV-J8-Vrq"/>
                                 <include reference="629-wG-VG4"/>
                                 <include reference="6xc-Jw-a5g"/>
-                                <exclude reference="9cG-e6-x2x"/>
                             </mask>
                         </variation>
                     </view>
@@ -1175,7 +1175,7 @@
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="itw-fS-GQj">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1297,15 +1297,15 @@
                                 <exclude reference="Uzi-C3-YfN"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="SCR-Zr-K2n"/>
+                                <exclude reference="WVR-Ui-Rv9"/>
                                 <exclude reference="BiQ-Nv-0fa"/>
                                 <exclude reference="J7b-E6-wZq"/>
                                 <exclude reference="FLO-qP-ULV"/>
                                 <exclude reference="GzQ-kM-Q3B"/>
-                                <exclude reference="WVR-Ui-Rv9"/>
                                 <exclude reference="ibX-He-VNM"/>
                                 <exclude reference="juy-Kk-Wl3"/>
                                 <exclude reference="lJE-V0-uMv"/>
-                                <exclude reference="SCR-Zr-K2n"/>
                                 <exclude reference="2Z1-oe-T1E"/>
                                 <exclude reference="8wP-PR-HB4"/>
                                 <exclude reference="XBk-ZG-XZH"/>
@@ -1319,6 +1319,8 @@
                                 <include reference="Uzi-C3-YfN"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="KMf-Jl-9Rb"/>
+                                <include reference="SCR-Zr-K2n"/>
                                 <include reference="BiQ-Nv-0fa"/>
                                 <exclude reference="J7b-E6-wZq"/>
                                 <exclude reference="FLO-qP-ULV"/>
@@ -1326,8 +1328,6 @@
                                 <exclude reference="ibX-He-VNM"/>
                                 <exclude reference="juy-Kk-Wl3"/>
                                 <exclude reference="lJE-V0-uMv"/>
-                                <exclude reference="KMf-Jl-9Rb"/>
-                                <include reference="SCR-Zr-K2n"/>
                                 <include reference="2Z1-oe-T1E"/>
                                 <include reference="8wP-PR-HB4"/>
                                 <include reference="XBk-ZG-XZH"/>
@@ -1594,6 +1594,7 @@
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="constraints">
+                                <exclude reference="nuO-Bh-TsJ"/>
                                 <include reference="zaB-aK-ILx"/>
                                 <exclude reference="1Gr-1s-E8F"/>
                                 <include reference="YzU-Oh-5zR"/>
@@ -1602,7 +1603,6 @@
                                 <include reference="9EQ-fJ-O4c"/>
                                 <include reference="1MP-1E-gMQ"/>
                                 <exclude reference="TO1-fx-lXm"/>
-                                <exclude reference="nuO-Bh-TsJ"/>
                             </mask>
                         </variation>
                     </view>
@@ -1967,10 +1967,10 @@
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
+                                <include reference="pFE-Ma-puR"/>
                                 <include reference="LLU-Vz-7EJ"/>
                                 <include reference="2dD-au-2u1"/>
                                 <include reference="u2W-7N-VW8"/>
-                                <include reference="pFE-Ma-puR"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -2196,7 +2196,7 @@
                 <navigationController storyboardIdentifier="setupViewController" modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="SetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                 </navigationController>
@@ -2521,8 +2521,8 @@
                                 <exclude reference="wcb-pj-ucz"/>
                             </mask>
                             <mask key="constraints">
-                                <exclude reference="Mkm-xG-QKd"/>
                                 <exclude reference="Vk1-hr-zwe"/>
+                                <exclude reference="Mkm-xG-QKd"/>
                                 <exclude reference="ojS-q0-qQW"/>
                             </mask>
                         </variation>
@@ -2537,6 +2537,9 @@
                                 <include reference="Y5r-bc-kIk"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="Fsf-xD-5CR"/>
+                                <exclude reference="Vk1-hr-zwe"/>
+                                <include reference="crj-Dn-PUf"/>
                                 <include reference="xEr-Za-eJf"/>
                                 <include reference="3wC-dV-JFU"/>
                                 <include reference="6lf-SD-DbD"/>
@@ -2553,9 +2556,6 @@
                                 <include reference="orX-r0-Wr0"/>
                                 <include reference="wqQ-MS-cft"/>
                                 <include reference="178-Ux-8QU"/>
-                                <include reference="Fsf-xD-5CR"/>
-                                <exclude reference="Vk1-hr-zwe"/>
-                                <include reference="crj-Dn-PUf"/>
                                 <include reference="ojS-q0-qQW"/>
                             </mask>
                         </variation>
@@ -2832,7 +2832,7 @@
                 <navigationController storyboardIdentifier="hamburgerNavController" automaticallyAdjustsScrollViewInsets="NO" id="CTm-Br-P8L" customClass="HamburgerNavController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZWp-cC-VxW">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2851,7 +2851,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="cgk-4v-LE7">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2870,7 +2870,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="h4X-JN-Qfj">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2889,7 +2889,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Wgm-TQ-5U2">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3623,7 +3623,7 @@ All the Apps</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fC1-1h-Vad" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="miM-Fr-gmr">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3754,7 +3754,7 @@ All the Apps</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9QE-OU-mae" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MPD-qM-pSo">
-                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3822,7 +3822,7 @@ All the Apps</string>
                                 </variation>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" rowHeight="98" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="cd5-To-OKh">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="68" width="375" height="599"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -4104,6 +4104,7 @@ Label</string>
                                 <include reference="5DC-rg-JBz"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="KRl-DF-uHl"/>
                                 <include reference="0Lb-SZ-nGX"/>
                                 <include reference="ab0-FW-KGW"/>
                                 <include reference="e98-Dj-P8Z"/>
@@ -4117,7 +4118,6 @@ Label</string>
                                 <include reference="W4l-nF-XlY"/>
                                 <include reference="xC6-kq-Hub"/>
                                 <include reference="7YD-6l-GVY"/>
-                                <include reference="KRl-DF-uHl"/>
                             </mask>
                         </variation>
                     </view>

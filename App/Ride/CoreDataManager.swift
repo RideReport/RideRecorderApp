@@ -33,6 +33,7 @@ class CoreDataManager {
     }
     
     private func startup () {
+        isStartingUp = false
         NotificationCenter.default.post(name: Notification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
     }
     
