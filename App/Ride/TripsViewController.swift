@@ -979,7 +979,17 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
-            RideReportAPIClient.shared.deleteTrip(trip)
+            let alertController = UIAlertController(title: "Delete Trip?", message: "This will permanently delete your trip", preferredStyle: .actionSheet)
+            
+            let DeleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+                RideReportAPIClient.shared.deleteTrip(trip)
+            }
+            let CancelAction = UIAlertAction(title: "Cancel", style: .cancel) {(_) in }
+            
+            alertController.addAction(DeleteAction)
+            alertController.addAction(CancelAction)
+            
+            self.present(alertController, animated: true, completion: nil)
         }
         
     #if DEBUG
@@ -1057,21 +1067,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     #else
         return [deleteAction]
     #endif
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (indexPath.section == 0) {
-            return
-        }
-        
-        guard let fetchedResultsController = self.fetchedResultsController else {
-            return
-        }
-        
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
-            let trip : Trip = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as! Trip
-            RideReportAPIClient.shared.deleteTrip(trip)
-        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

@@ -12,6 +12,7 @@ end
 
 target 'RouteRecorder' do
     shared_pods
+    pod 'WebLinking'
 end
 
 target 'Ride Report' do

@@ -11,6 +11,7 @@ import RouteRecorder
 import Mixpanel
 import CocoaLumberjack
 import Alamofire
+import WebLinking
 
 class RideReportAPIClient {
     public static private(set) var shared : RideReportAPIClient!
@@ -54,11 +55,31 @@ class RideReportAPIClient {
     //
     
     @discardableResult func syncTrips()->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "trips", completionHandler: { (response) -> Void in
+        let url = Profile.profile().nextSyncURLString ?? (AuthenticatedAPIRequest.serverAddress + "trips")
+        
+        return getTrips(atURL: url)
+    }
+    
+    @discardableResult func getMoreTrips()->AuthenticatedAPIRequest {
+        let url = Profile.profile().nextPageURLString ?? (AuthenticatedAPIRequest.serverAddress + "trips")
+        
+        return getTrips(atURL: url)
+    }
+    
+    @discardableResult private func getTrips(atURL url: String)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, url: url, completionHandler: { (response) -> Void in
+            if let syncLink = response.response?.findLink(relation: "sync") {
+                Profile.profile().nextSyncURLString = syncLink.uri
+            }
+            if let nextLink = response.response?.findLink(relation: "next") {
+                Profile.profile().nextPageURLString = nextLink.uri
+            }
+            CoreDataManager.shared.saveContext()
+            
             switch response.result {
             case .success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string, let startDateString = tripJson["creationDate"].string, let startDate = Date.dateFromJSONString(startDateString) {
+                    if let uuid = tripJson["uuid"].string, let startDateString = tripJson["startDate"].string, let startDate = Date.dateFromJSONString(startDateString) {
                         var trip: Trip! = Trip.tripWithUUID(uuid)
                         if (trip == nil) {
                             trip = Trip()

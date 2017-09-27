@@ -69,7 +69,7 @@
         <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="bikeTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="bikeTrip" inverseEntity="TripsListRow" syncable="YES"/>
         <relationship name="otherTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="otherTrips" inverseEntity="TripsListRow" syncable="YES"/>
-        <relationship name="tripRewards" toMany="YES" deletionRule="No Action" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
+        <relationship name="tripRewards" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward" syncable="YES"/>
         <fetchIndex name="byActivityTypeIntegerIndex">
             <fetchIndexElement property="activityTypeInteger" type="Binary" order="ascending"/>
         </fetchIndex>

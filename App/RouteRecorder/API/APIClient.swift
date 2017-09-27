@@ -97,6 +97,10 @@ public class AuthenticatedAPIRequest {
     }
     
     public convenience init(client: APIClient, method: Alamofire.HTTPMethod, route: String, parameters: [String: Any]? = nil, encoding: ParameterEncoding = GZipEncoding.default, idempotencyKey: String? = nil, authenticated: Bool = true, completionHandler: @escaping APIResponseBlock) {
+        self.init(client: client, method: method, url: AuthenticatedAPIRequest.serverAddress + route, parameters: parameters, encoding: encoding, idempotencyKey: idempotencyKey, authenticated: authenticated, completionHandler: completionHandler)
+    }
+    
+    public convenience init(client: APIClient, method: Alamofire.HTTPMethod, url: String, parameters: [String: Any]? = nil, encoding: ParameterEncoding = GZipEncoding.default, idempotencyKey: String? = nil, authenticated: Bool = true, completionHandler: @escaping APIResponseBlock) {
         self.init()
         
         if (authenticated && !client.authenticated) {
@@ -121,7 +125,7 @@ public class AuthenticatedAPIRequest {
             headers["Idempotence-Key"] = theIdempotencyKey
         }
 
-        self.request = client.sessionManager.request(AuthenticatedAPIRequest.serverAddress + route, method: method, parameters: parameters, encoding: encoding, headers: headers)
+        self.request = client.sessionManager.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
         
         let handleHTTPResonseErrors = { (response: HTTPURLResponse?) in
             if (response?.statusCode == 401) {
@@ -307,7 +311,7 @@ public class APIClient {
             }
         }
         
-        let routeURL = "trips/" + route.uuid
+        let routeURL = "routes/" + route.uuid
         
         let method = Alamofire.HTTPMethod.put
         var routeDict = [
@@ -326,7 +330,7 @@ public class APIClient {
             for location in summaryLocs {
                 locations.append((location).jsonDictionary())
             }
-            routeDict["summaryLocations"] = ["locations": locations]
+            routeDict["summaryLocations"] = locations
         } else {
             guard route.locationCount() > 0 else {
                 DDLogWarn("No locations found when syncing route locations!")
