@@ -114,8 +114,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             DDLogError("Error loading trips view fetchedResultsController \(error as NSError), \((error as NSError).userInfo)")
             abort()
         }
-        
-        //RideReportAPIClient.shared.syncTrips()
     }
     
     func coreDataDidLoad() {
@@ -213,12 +211,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let shouldGetTripsOnNextAppForeground = UserDefaults.standard.bool(forKey: "shouldGetTripsOnNextAppForeground")
-        if shouldGetTripsOnNextAppForeground {
-            UserDefaults.standard.set(false, forKey: "shouldGetTripsOnNextAppForeground")
-            UserDefaults.standard.synchronize()
-            RideReportAPIClient.shared.syncTrips()
-        }
+        RideReportAPIClient.shared.syncTrips()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -383,13 +376,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     
     private func refreshEmptyTableView() {
-        guard let frc = self.fetchedResultsController else {
+        guard let fetchedResultsController = self.fetchedResultsController else {
             // Core Data hasn't loaded yet
             self.emptyTableView.isHidden = true
             return
         }
         
-        if let sections = frc.sections, sections.count > 0 && sections[0].numberOfObjects > 0 {
+        if let sections = fetchedResultsController.sections, sections.count > 0 && sections[0].numberOfObjects > 0 {
             self.emptyTableView.isHidden = true
         } else {
             self.emptyTableView.isHidden = false
@@ -476,7 +469,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return 0
         }
         
-        return sections.count + 1
+        return sections.count + 2
     }
     
     private func configureHeaderView(_ headerView: UITableViewHeaderFooterView, forHeaderInSection section: Int) {
@@ -529,7 +522,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard section > 0 else {
+        guard let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections else {
+            return 0
+        }
+        
+        guard section > 0 && section < sections.count else {
             return 0
         }
         
@@ -552,11 +549,29 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return 1
         }
         
-        guard let fetchedResultsController = self.fetchedResultsController else {
+        guard let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections else {
             return 0
         }
         
+        if section == sections.count + 1 {
+            // include a loading indicator in the last section if there are more trips to download
+            return 1
+        }
+        
         return fetchedResultsController.sections![section - 1].numberOfObjects
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections else {
+            return
+        }
+        
+        if indexPath.section == sections.count + 1 && RideReportAPIClient.shared.hasMoreTripsRemaining {
+            // load more cell
+            RideReportAPIClient.shared.getMoreTrips().apiResponse({ (_) in
+                self.tableView!.reloadSections(IndexSet(integer: indexPath.section - 1), with: .fade)
+            })
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -585,6 +600,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
                 
                 configureRewardsCell(tableCell)
+            }
+        } else if let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections, indexPath.section == sections.count + 1 {
+            let reuseID = "LoadMoreViewTableCell"
+            tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
+            if RideReportAPIClient.shared.hasMoreTripsRemaining {
+               tableCell.contentView.isHidden = false
+            } else {
+               tableCell.contentView.isHidden = true
             }
         } else {
             let reuseID = "RoutesViewTableCell"
@@ -1074,7 +1097,15 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return false
         }
         
-        guard let row = fetchedResultsController?.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow else {
+        guard let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections else {
+            return false
+        }
+        
+        if (indexPath.section > sections.count) {
+            return false
+        }
+        
+        guard let row = fetchedResultsController.object(at: IndexPath(row: indexPath.row, section: indexPath.section - 1)) as? TripsListRow else {
             return false
         }
 

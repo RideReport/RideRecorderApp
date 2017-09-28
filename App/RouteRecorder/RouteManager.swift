@@ -19,7 +19,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     
     var stopRouteAndDeliverNotificationBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var locationUpdateBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
- 
+    
     // State
     public static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
     
@@ -75,6 +75,21 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         self.routeRecorder.locationManager.requestAlwaysAuthorization()
         self.routeRecorder.locationManager.activityType = CLActivityType.fitness
         self.routeRecorder.locationManager.pausesLocationUpdatesAutomatically = false
+        
+        DispatchQueue.main.async {
+            self.closeOpenRoutes()
+        }
+    }
+    
+    private func closeOpenRoutes() {
+        for route in Route.openRoutes() {
+            if (route.locations.count <= 3) {
+                // if it doesn't more than 3 points, toss it.
+                route.cancel()
+            } else if !route.isClosed {
+                route.close()
+            }
+        }
     }
     
     //

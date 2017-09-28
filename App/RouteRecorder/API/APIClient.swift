@@ -346,11 +346,14 @@ public class APIClient {
         
         routeDict["length"] = route.length
 
+        DDLogInfo("Uploading route…")
         
         self.routeRequests[route] = AuthenticatedAPIRequest(client: self, method: method, route: routeURL, parameters: routeDict as [String : Any]?) { (response) in
             self.routeRequests[route] = nil
             switch response.result {
             case .success(_):
+                DDLogInfo("Uploaded route")
+
                 route.isSummaryUploaded = true
                 if includeFullLocations {
                     route.isUploaded = true

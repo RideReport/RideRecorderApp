@@ -13,7 +13,7 @@ import CocoaLumberjack
 public protocol RouteRecorderDelegate: class {
     func didOpenRoute(route: Route)
     func didCloseRoute(route: Route)
-    func didCancelRoute(route: Route)
+    func didCancelRoute(withUUID uuid: String)
     func didUpdateInProgressRoute(route: Route)
 }
 
@@ -66,7 +66,7 @@ public class RouteRecorder {
         RouteRecorderDatabaseManager.startup()
         KeychainManager.startup()
         APIClient.startup()
-        
+                
         if (UIApplication.shared.applicationState == UIApplicationState.active) {
             self.syncUnsyncedRoutes()
         }

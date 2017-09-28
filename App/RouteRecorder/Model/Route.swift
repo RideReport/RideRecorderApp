@@ -254,16 +254,13 @@ public class  Route: NSManagedObject {
     }
     
     func cancel() {
+        let uuidToDelete: String = self.uuid
         RouteRecorderDatabaseManager.shared.currentManagedObjectContext().delete(self)
         RouteRecorderDatabaseManager.shared.saveContext()
         
         if let delegate = RouteRecorder.shared.delegate {
-            DispatchQueue.main.async(execute: { [weak self] in
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                delegate.didCancelRoute(route: strongSelf)
+            DispatchQueue.main.async(execute: {
+                delegate.didCancelRoute(withUUID: uuidToDelete)
             })
         }
     }

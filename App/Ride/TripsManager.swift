@@ -39,8 +39,11 @@ class TripsManager : NSObject, RouteRecorderDelegate {
         CoreDataManager.shared.saveContext()
     }
     
-    func didCancelRoute(route: Route) {
-        let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
+    func didCancelRoute(withUUID uuid: String) {
+        guard let trip = Trip.tripWithUUID(uuid) else {
+            return
+        }
+        
         CoreDataManager.shared.currentManagedObjectContext().delete(trip)
         CoreDataManager.shared.saveContext()
     }
