@@ -79,12 +79,19 @@ class RideReportAPIClient {
         })
     }
     
+    private var isRequestingMoreTrips = false
     @discardableResult func getMoreTrips()->AuthenticatedAPIRequest {
+        guard !isRequestingMoreTrips else {
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
+        }
+        
         guard let url = Profile.profile().nextPageURLString else {
             return getTrips()
         }
+        isRequestingMoreTrips = true
         
         return getTrips(atURL: url).apiResponse({ (response) in
+            self.isRequestingMoreTrips = false
             if let nextLink = response.response?.findLink(relation: "next") {
                 Profile.profile().nextPageURLString = nextLink.uri
             } else {
@@ -139,6 +146,10 @@ class RideReportAPIClient {
                             trip.length = length.floatValue
                         }
                         
+                        if let displayDataURLString = tripJson["displayDataURL"].string {
+                            trip.displayDataURLString = displayDataURLString
+                        }
+                        
                         if let summary = tripJson["summary"].dictionary {
                             trip.loadSummaryFromJSON(summary)
                         }
@@ -149,6 +160,32 @@ class RideReportAPIClient {
                 DDLogWarn(String(format: "Error retriving getting trip data: %@", error as CVarArg))
             }
         })
+    }
+    
+    public func getTripDisplayData(displayDataURL: String, handler: @escaping (Data?)->()) {
+        if let url = URL(string: displayDataURL), let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
+            handler(cachedResponse.data)
+            return
+        }
+        
+        _ = AuthenticatedAPIRequest(client: APIClient.shared, method: .get, url: displayDataURL, parameters: nil) { (response) in
+            switch response.result {
+            case .success(let json):
+                do {
+                    let data = try json.rawData()
+                    if let urlresponse = response.response, let urlrequest = response.request {
+                        URLCache.shared.storeCachedResponse(CachedURLResponse(response: urlresponse, data: data), for: urlrequest)
+                    }
+                    handler(data)
+                } catch {
+                    DDLogWarn("Error parsing display data response!")
+                    handler(nil)
+                }
+            case .failure(_):
+                DDLogWarn("Error getting display data!")
+                handler(nil)
+            }
+        }
     }
     
     @discardableResult func patchTrip(_ trip: Trip)->AuthenticatedAPIRequest {

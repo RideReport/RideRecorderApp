@@ -1080,7 +1080,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                     }
                 }))
             } else {
-                alertController.addAction(UIAlertAction(title: "❌ No Route Found", style: .default, handler: nil))
+                alertController.addAction(UIAlertAction(title: "⬇️ Download Route", style: .default) { (_) in
+                    APIClient.shared.getRoute(withUUID: trip.uuid)
+                })
             }
             
             alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.cancel, handler: nil))

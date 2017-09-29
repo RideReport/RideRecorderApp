@@ -13,7 +13,6 @@ import RouteRecorder
 class TripViewController: UIViewController {
     var mapInfoIsDismissed : Bool = false
     var isInitialTripUpdate = true
-    var hasRequestedTripInfo : Bool = false
     
     private var hasGivenFeedbackForReachedThreshold = true
     private var feedbackGenerator: NSObject!
@@ -30,20 +29,7 @@ class TripViewController: UIViewController {
                     return
                 }
                 
-                if let trip = strongSelf.selectedTrip {
-                    #if DEBUG
-                    if (trip.route == nil) {
-                        strongSelf.hasRequestedTripInfo = true
-                        APIClient.shared.getRoute(withUUID: strongSelf.selectedTrip.uuid).apiResponse({ [weak self] (_) -> Void in
-                            guard let reallyStrongSelf = self else {
-                                return
-                            }
-                            
-                            reallyStrongSelf.updateChildViews()
-                        })
-                    }
-                    #endif
-                    
+                if let trip = strongSelf.selectedTrip {               
                     strongSelf.updateChildViews()
                 } else {
                     if let mapViewController = strongSelf.mapViewController {

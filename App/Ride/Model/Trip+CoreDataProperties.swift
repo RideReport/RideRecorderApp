@@ -14,6 +14,7 @@ extension Trip {
     @NSManaged public var activityTypeInteger: Int16
     @NSManaged public var caloriesBurned: Double
     @NSManaged public var climacon: String?
+    @NSManaged public var displayDataURLString: String?
     @NSManaged public var endDate: Date
     @NSManaged public var endingPlacemarkName: String?
     @NSManaged public var healthKitUuid: String?
