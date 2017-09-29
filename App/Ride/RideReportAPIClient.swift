@@ -135,24 +135,8 @@ class RideReportAPIClient {
                         trip.startDate = startDate
                         trip.endDate = startDate // TODO: REMOVE THIS HACK
                         trip.isSynced = true
-                        
-                        if let activityTypeNumber = tripJson["activityType"].number,
-                            let ratingChoiceNumber = tripJson["rating"].number,
-                            let length = tripJson["length"].number,
-                            let activityType = ActivityType(rawValue: activityTypeNumber.int16Value) {
-                            let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
-                            trip.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
-                            trip.activityType = activityType
-                            trip.length = length.floatValue
-                        }
-                        
-                        if let displayDataURLString = tripJson["displayDataURL"].string {
-                            trip.displayDataURLString = displayDataURLString
-                        }
-                        
-                        if let summary = tripJson["summary"].dictionary {
-                            trip.loadSummaryFromJSON(summary)
-                        }
+                      
+                        trip.loadFromJSON(tripJson)
                     }
                 }
                 CoreDataManager.shared.saveContext()
@@ -217,9 +201,7 @@ class RideReportAPIClient {
             self.tripRequests[trip] = nil
             switch response.result {
             case .success(let json):
-                if let summary = json["summary"].dictionary {
-                    trip.loadSummaryFromJSON(summary)
-                }
+                trip.loadFromJSON(json)
                 trip.isSynced = true
                 
                 if let accountStatus = json["accountStatus"].dictionary, let statusText = accountStatus["status_text"]?.string, let statusEmoji = accountStatus["status_emoji"]?.string {
@@ -247,9 +229,7 @@ class RideReportAPIClient {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
-                if let summary = json["summary"].dictionary {
-                    trip.loadSummaryFromJSON(summary)
-                }
+                trip.loadFromJSON(json)
                 
                 CoreDataManager.shared.saveContext()
             case .failure(let error):

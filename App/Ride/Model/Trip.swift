@@ -472,6 +472,26 @@ public class  Trip: NSManagedObject {
         }
     }
     
+    func loadFromJSON(_ tripJson: JSON) {
+        if let activityTypeNumber = tripJson["activityType"].number,
+            let ratingChoiceNumber = tripJson["rating"].number,
+            let length = tripJson["length"].number,
+            let activityType = ActivityType(rawValue: activityTypeNumber.int16Value) {
+            let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
+            self.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
+            self.activityType = activityType
+            self.length = length.floatValue
+        }
+        
+        if let displayDataURLString = tripJson["displayDataURL"].string {
+            self.displayDataURLString = displayDataURLString
+        }
+        
+        if let summary = tripJson["summary"].dictionary {
+            self.loadSummaryFromJSON(summary)
+        }
+    }
+    
     func loadSummaryFromJSON(_ summary: [String: JSON]) {
         if let ready = summary["ready"]?.boolValue {
             self.isSummarySynced = ready
