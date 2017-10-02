@@ -82,6 +82,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     // MARK: - Update Map UI
     //
     
+    private var isRequestingDisplayData = false
     func setSelectedTrip(_ selectedTrip : Trip?) {
         _selectedTrip = selectedTrip
         
@@ -112,19 +113,22 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         // if we have a displayDataURLString, use that
         
         if let displayDataURLString = trip.displayDataURLString {
-            RideReportAPIClient.shared.getTripDisplayData(displayDataURL: displayDataURLString) { (data) in
-                guard let data = data else {
-                    return
-                }
-                
-                do {
-                    let shape = try MGLShape(data: data, encoding: String.Encoding.utf8.rawValue)
-                    self.selectedTripLineSource.shape = shape
-                    if let shape = self.selectedTripLineSource.shape as? MGLShapeCollectionFeature {
-                        self.mapView.showAnnotations(shape.shapes, edgePadding: self.insets, animated: true)
+            if !isRequestingDisplayData {
+                isRequestingDisplayData = true
+                RideReportAPIClient.shared.getTripDisplayData(displayDataURL: displayDataURLString) { (data) in
+                    self.isRequestingDisplayData = false
+                    guard let data = data else {
+                        return
                     }
-                } catch {
-                    DDLogWarn("Error parsing display data JSON!")
+                    
+                    if let shape = try? MGLShape(data: data, encoding: String.Encoding.utf8.rawValue) {
+                        self.selectedTripLineSource.shape = shape
+                        if let shape = self.selectedTripLineSource.shape as? MGLShapeCollectionFeature {
+                            self.mapView.showAnnotations(shape.shapes, edgePadding: self.insets, animated: true)
+                        }
+                    } else {
+                        DDLogWarn("Error parsing display data JSON!")
+                    }
                 }
             }
 
