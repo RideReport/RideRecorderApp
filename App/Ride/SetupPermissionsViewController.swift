@@ -187,7 +187,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 
                 self.requestLocationsPermission()
             } else {
-                self.currentPermissionsAsk = .askForMotion
+                self.currentPermissionsAsk = .sayFinished // motion permission is not needed, for now
                 self.nextPermission()
             }
         } else if self.currentPermissionsAsk == .askForMotion { // currently gets skipped

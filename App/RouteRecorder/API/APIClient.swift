@@ -70,7 +70,7 @@ public class AuthenticatedAPIRequest {
         case clientAborted
     }
     
-    public static var serverAddress = "https://api.ride.report/api/v2/"
+    public static var serverAddress = "https://api.ride.report/api/v4/"
     
     public class func unauthenticatedResponse() -> DataResponse<JSON> {
         let error = NSError(domain: AuthenticatedAPIRequestErrorDomain, code: AuthenticatedAPIRequestErrorCode.unauthenticated.rawValue, userInfo: nil)
