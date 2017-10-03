@@ -50,15 +50,13 @@ class SetupViewController: UINavigationController {
             self.myViewControllers.append(setupPermissionVC)
         }
         
-        if (RideReportAPIClient.shared.accountVerificationStatus != .verified) {
-            let setupCreateProfile = self.storyboard!.instantiateViewController(withIdentifier: "setupCreateProfile") as! SetupChildViewController
-            self.setupVC(vc: setupCreateProfile)
-            
-            let setupConfirmEmail = self.storyboard!.instantiateViewController(withIdentifier: "setupConfirmEmail") as! SetupChildViewController
-            self.setupVC(vc: setupConfirmEmail)
-
-            self.myViewControllers.append(contentsOf: [setupCreateProfile, setupConfirmEmail])
-        }
+        let setupCreateProfile = self.storyboard!.instantiateViewController(withIdentifier: "setupCreateProfile") as! SetupChildViewController
+        self.setupVC(vc: setupCreateProfile)
+        
+        let setupConfirmEmail = self.storyboard!.instantiateViewController(withIdentifier: "setupConfirmEmail") as! SetupChildViewController
+        self.setupVC(vc: setupConfirmEmail)
+        
+        self.myViewControllers.append(contentsOf: [setupCreateProfile, setupConfirmEmail])
         
         self.myViewControllers.append(setupFinished)
         
@@ -88,7 +86,7 @@ class SetupViewController: UINavigationController {
         vc.parentSetupViewController = self
     }
     
-    func nextPage(sender: AnyObject, userInfo : [String: Any]? = nil, skipNext: Bool = false) {
+    func nextPage(sender: AnyObject, userInfo : [String: Any]? = nil, skipInterval: Int = 0) {
         if (!hasAddedWatchkitToSetup) {
             // defer this to allow the session to activate.
             hasAddedWatchkitToSetup = true
@@ -105,7 +103,7 @@ class SetupViewController: UINavigationController {
         if let button = sender as? UIControl { button.isUserInteractionEnabled = false }
         
         let pageNumber = (self.myViewControllers!).index(of: sender as! SetupChildViewController)
-        let interval = skipNext ? 2 : 1
+        let interval = skipInterval + 1
         
         if (pageNumber == nil || (pageNumber! + interval) >= (self.myViewControllers.count - 1)) {
             self.done()

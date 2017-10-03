@@ -225,7 +225,11 @@ class SetupPermissionsViewController: SetupChildViewController {
     }
     
     @IBAction func tappedDoneButton(_ sender: AnyObject) {
-        self.next(self)
+        var skipInterval = 0
+        if (RideReportAPIClient.shared.accountVerificationStatus == .verified) {
+            skipInterval = 2 // skip setup profile and confirm
+        }
+        self.parentSetupViewController?.nextPage(sender: self, userInfo: nil, skipInterval: skipInterval)
     }
     
     @IBAction func tappedDoItButton(_ sender: AnyObject) {

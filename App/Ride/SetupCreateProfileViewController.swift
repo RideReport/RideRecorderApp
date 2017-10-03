@@ -56,7 +56,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
     }
     
     func skip() {
-        self.parentSetupViewController?.nextPage(sender: self, userInfo: nil, skipNext: true)
+        self.parentSetupViewController?.nextPage(sender: self, userInfo: nil, skipInterval: 1) // skip confirm
     }
     
     func create() {
