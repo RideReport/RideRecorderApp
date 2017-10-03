@@ -25,6 +25,27 @@ public class  TripReward : NSManagedObject {
         return 0
     }
     
+    var earnedAtCoordinate: CLLocationCoordinate2D? {
+        get {
+            guard earnedAtLatitude != -1 && earnedAtLongitude != -1 else {
+                return nil
+            }
+            
+            return CLLocationCoordinate2D(latitude: earnedAtLatitude, longitude: earnedAtLongitude)
+        }
+        
+        set {
+            guard let coord = newValue else {
+                self.earnedAtLatitude = -1
+                self.earnedAtLongitude = -1
+                return
+            }
+            
+            self.earnedAtLatitude = coord.latitude
+            self.earnedAtLongitude = coord.longitude
+        }
+    }
+    
     var rewardUUID: String? {
         get {
             let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
@@ -71,6 +92,11 @@ public class  TripReward : NSManagedObject {
             reward.descriptionText = description
             if let rewardUUID = dictionary["reward_uuid"] as? String, let icon_url = dictionary["icon_url"] as? String {
                 reward.emoji = rewardUUID + TripReward.stupidHackDelimterString + icon_url
+            }
+            
+            if let earnedAtCoordinateArray = dictionary["earned_at_coordinate"] as? [Double], earnedAtCoordinateArray.count == 2 {
+                reward.earnedAtLongitude = earnedAtCoordinateArray[0]
+                reward.earnedAtLatitude = earnedAtCoordinateArray[1]
             }
             
             return reward
