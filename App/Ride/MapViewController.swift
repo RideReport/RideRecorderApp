@@ -118,6 +118,10 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 RideReportAPIClient.shared.getTripDisplayData(displayDataURL: displayDataURLString) { (data) in
                     self.isRequestingDisplayData = false
                     guard let data = data else {
+                        let alertController = UIAlertController(title: "Error loading map", message: "Ride Report could not download the map for this trip. Please try again later.", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "We're so sorry ☹️", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                        
                         return
                     }
                     
