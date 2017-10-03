@@ -328,6 +328,8 @@ class RideReportAPIClient {
             iosDictionary["device_model"] = model
         }
         
+        iosDictionary["device_screen"] = ["width": UIScreen.main.bounds.width, "height": UIScreen.main.bounds.height, "scale": UIScreen.main.scale]
+        
         if !iosDictionary.isEmpty {
             profileDictionary["ios"] = iosDictionary
         }
@@ -369,7 +371,6 @@ class RideReportAPIClient {
         }
         
         parameters["profile"] = self.profileDictionary()
-        
         
         if let locationManager = RouteRecorder.shared.locationManager, let loc = locationManager.location {
             parameters["lnglat"] = String(loc.coordinate.longitude) + "," + String(loc.coordinate.latitude)
