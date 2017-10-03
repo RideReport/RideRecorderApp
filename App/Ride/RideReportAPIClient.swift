@@ -49,7 +49,6 @@ class RideReportAPIClient {
     var hasRegisteredForRemoteNotifications: Bool = false
     var notificationDeviceToken: Data?
     
-    
     //
     // MARK: - Trip Synchronization
     //

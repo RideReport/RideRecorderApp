@@ -20,7 +20,6 @@ class RouteManagerTests: XCTestCase, NSFetchedResultsControllerDelegate {
         
         CoreDataManager.startup(true)
         SensorManagerComponent.inject(motionManager: CMMotionManager(),
-                                       motionActivityManager: CMMotionActivityManager(),
                                        locationManager: LocationManager(type: .gpx),
                                        routeManager: RouteManager(),
                                        randomForestManager: RandomForestManager(),

@@ -12,7 +12,7 @@ import CoreMotion
 
 public class TestClassificationManager : ClassificationManager {
     public var routeRecorder: RouteRecorder!
-    public var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
+    public static var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
     private var testPredictionsIndex = 0
     private var testPredictionsTemplates: [PredictedActivity]!
@@ -21,10 +21,12 @@ public class TestClassificationManager : ClassificationManager {
         
     }
     
-    public func startup() {
-        authorizationStatus = .authorized
+    public func startup(handler: @escaping ()->Void = {() in }) {
+        TestClassificationManager.authorizationStatus = .authorized
+        
+        handler()
     }
-    
+
     public func gatherSensorData(predictionAggregator: PredictionAggregator) {
         //
     }

@@ -75,6 +75,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                 
             }
             
+            let frame = self.view.frame // avoid calling from background thread in preload
             let textureAtlas = SKTextureAtlas(dictionary: imageDictionary)
             textureAtlas.preload { () -> Void in
                 self.spriteKitView.presentScene(self.scene)
@@ -99,7 +100,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                     emojiSprite.physicsBody?.collisionBitMask = 0
                     self.scene.physicsBody!.categoryBitMask = 2
                     emojiSprite.physicsBody?.linearDamping = 0.0
-                    emojiSprite.position = CGPoint(x: 20.0 + CGFloat(arc4random_uniform(UInt32(self.view.frame.size.width - self.imageSize.width))), y: self.view.frame.size.height + self.topSpace - self.imageSize.height)
+                    emojiSprite.position = CGPoint(x: 20.0 + CGFloat(arc4random_uniform(UInt32(frame.size.width - self.imageSize.width))), y: frame.size.height + self.topSpace - self.imageSize.height)
                     emojisSprites.append(emojiSprite)
                 }
                 

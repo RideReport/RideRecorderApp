@@ -20,9 +20,6 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     var stopRouteAndDeliverNotificationBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     var locationUpdateBackgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
     
-    // State
-    public static var authorizationStatus : CLAuthorizationStatus = CLAuthorizationStatus.notDetermined
-    
     private var didStartFromBackground : Bool = false
     private var isDefferringLocationUpdates : Bool = false
     private var isLocationManagerUsingGPS : Bool = false
@@ -52,11 +49,15 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     
     let minimumBatteryForTracking : Float = 0.2
     
+    private var pendingRegistrationHandler: (()->Void)? = nil
+    
     //
     // MARK: - Initializers
     //
     
-    public func startup(_ fromBackground: Bool) {
+    public func startup(_ fromBackground: Bool, handler: @escaping ()->Void = {() in }) {
+        self.pendingRegistrationHandler = handler
+        
         if (fromBackground) {
             self.didStartFromBackground = true
             
@@ -72,7 +73,16 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         self.routeRecorder.locationManager.delegate = self
-        self.routeRecorder.locationManager.requestAlwaysAuthorization()
+        if RouteManager.authorizationStatus() == .notDetermined {
+            self.routeRecorder.locationManager.requestAlwaysAuthorization()
+        } else {
+            if let handler = self.pendingRegistrationHandler {
+                DispatchQueue.main.async {
+                    self.pendingRegistrationHandler = nil
+                    handler()
+                }
+            }
+        }
         self.routeRecorder.locationManager.activityType = CLActivityType.fitness
         self.routeRecorder.locationManager.pausesLocationUpdatesAutomatically = false
         
@@ -525,7 +535,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     }
     
     public func isPausedDueToUnauthorized() -> Bool {
-        return (self.routeRecorder.locationManager.authorizationStatus() != CLAuthorizationStatus.authorizedAlways)
+        return (RouteManager.authorizationStatus() != .authorizedAlways)
     }
     
     
@@ -619,18 +629,24 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     // MARK: - CLLocationManger Delegate Methods
     //
     
+    public static func authorizationStatus()-> CLAuthorizationStatus {
+        return RouteRecorder.shared.locationManager.authorizationStatus()
+    }
+    
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         DDLogVerbose("Did change authorization status")
         
-        if (self.routeRecorder.locationManager.authorizationStatus() == CLAuthorizationStatus.authorizedAlways) {
+        if (status == CLAuthorizationStatus.authorizedAlways) {
             self.startTrackingMachine()
         } else {
             // tell the user they need to give us access to the zion mainframes
             DDLogVerbose("Not authorized for location access!")
         }
         
-        RouteManager.authorizationStatus = status
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
+        if let handler = self.pendingRegistrationHandler {
+            self.pendingRegistrationHandler = nil
+            handler()
+        }
     }
     
     public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {

@@ -21,7 +21,6 @@ enum CurrentPermissionAsk {
 }
 
 class SetupPermissionsViewController: SetupChildViewController {
-    
     @IBOutlet weak var helperTextLabel : UILabel!
     @IBOutlet weak var nextButton : UIButton!
     @IBOutlet weak var notificationDetailsLabel: UILabel!
@@ -40,6 +39,125 @@ class SetupPermissionsViewController: SetupChildViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
+    private func requestNotificationsPermission() {
+        self.helperTextLabel.delay(1.0) {
+            NotificationManager.startup() { (status) in
+                DispatchQueue.main.async {
+                    let completionBlock = { [weak self] in
+                        guard let strongSelf = self else {
+                            return
+                        }
+                        strongSelf.currentPermissionsAsk = .askForLocations
+                        strongSelf.nextPermission()
+                    }
+                    
+                    if (status == .denied) {
+                        let alertController = UIAlertController(title: "Notifications are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "Go to Notification Settings", style: UIAlertActionStyle.default) { (_) in
+                            let url = URL(string: UIApplicationOpenSettingsURLString)
+                            if url != nil && UIApplication.shared.canOpenURL(url!) {
+                                UIApplication.shared.openURL(url!)
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                completionBlock()
+                            }
+                        })
+                        alertController.addAction(UIAlertAction(title: "Disable Lock Screen Reports", style: UIAlertActionStyle.destructive) { (_) in
+                            completionBlock()
+                        })
+                        self.present(alertController, animated: true, completion: nil)
+                    } else {
+                        completionBlock()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func requestLocationsPermission() {
+        self.currentPermissionsAsk = .askedForLocations
+        
+        self.helperTextLabel.delay(1.5) {
+            RouteRecorder.shared.routeManager.startup(false) {
+                let completionBlock = { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    strongSelf.currentPermissionsAsk = .sayFinished // motion permission is not needed, for now
+                    strongSelf.nextPermission()
+                }
+                
+                if (RouteManager.authorizationStatus() == .denied || RouteManager.authorizationStatus() == .restricted) {
+                    let alertController = UIAlertController(title: "Location Services are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "Go to Location Settings", style: UIAlertActionStyle.default) { (_) in
+                        let url = URL(string: UIApplicationOpenSettingsURLString)
+                        if url != nil && UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.openURL(url!)
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            completionBlock()
+                        }
+                    })
+                    alertController.addAction(UIAlertAction(title: "Enable Ride Report Later", style: UIAlertActionStyle.destructive) { (_) in
+                        completionBlock()
+                    })
+                    self.present(alertController, animated: true, completion: nil)
+                } else if (RouteManager.authorizationStatus() == .authorizedWhenInUse ){
+                    let alertController = UIAlertController(title: "Background Location Services are disabled", message: "In order to start logging your bike trips automatically, Ride Report needs permission to use your locations always. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "Go to Location Settings", style: UIAlertActionStyle.default) { (_) in
+                        let url = URL(string: UIApplicationOpenSettingsURLString)
+                        if url != nil && UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.openURL(url!)
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            completionBlock()
+                        }
+                    })
+                    alertController.addAction(UIAlertAction(title: "Enable Ride Report Later", style: UIAlertActionStyle.destructive) { (_) in
+                        completionBlock()
+                    })
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    completionBlock()
+                }
+            }
+        }
+    }
+    
+    func requestMotionPermission() {
+        self.currentPermissionsAsk = .askedForMotion
+        
+        self.helperTextLabel.delay(1.5) {
+            RouteRecorder.shared.randomForestManager.startup()
+            RouteRecorder.shared.classificationManager.startup() {
+                let completionBlock = { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    strongSelf.currentPermissionsAsk = .sayFinished
+                    strongSelf.nextPermission()
+                }
+                
+                if (SensorClassificationManager.authorizationStatus == .denied) {
+                    let alertController = UIAlertController(title: "Motion & Fitness is disabled", message: "Ride Report needs permission to use your motion activity in order to log your bike trips automatically. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "Go to Motion & Fitness Settings", style: UIAlertActionStyle.default) { (_) in
+                        let url = URL(string: UIApplicationOpenSettingsURLString)
+                        if url != nil && UIApplication.shared.canOpenURL(url!) {
+                            UIApplication.shared.openURL(url!)
+                        }
+                        completionBlock()
+                    })
+                    alertController.addAction(UIAlertAction(title: "Enable Ride Report Later", style: UIAlertActionStyle.destructive) { (_) in
+                        completionBlock()
+                    })
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    completionBlock()
+                }
+            }
+        }
+    }
+    
     func nextPermission() {
         if self.currentPermissionsAsk == .askForNotifications {
             self.batteryLifeLabel.fadeOut()
@@ -47,118 +165,41 @@ class SetupPermissionsViewController: SetupChildViewController {
             self.nextButton.fadeOut()
             self.notificationDetailsLabel.popIn()
             
-            if (AppDelegate.appDelegate().notificationRegistrationStatus == .unregistered) {
-                self.currentPermissionsAsk = .askedForNotifications
-                self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
-
-                var didShowShowPermissionDialog = false
-                NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillResignActive, object: nil, queue: nil) {[weak self] (_) -> Void in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    
-                    // this is the only way to know whether or not they've been asked for permission or not – wait for the dialog to make our app resign active =/
-                    didShowShowPermissionDialog = true
-                    NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
-                    
-                    NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { (_) -> Void in
-                        // they tapped a button and we are active again. advance!
-                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-                        strongSelf.currentPermissionsAsk = .askForLocations
-                        DispatchQueue.main.async {
-                            guard let strongSelf = self else {
-                                return
-                            }
-                            
-                            // make sure its on the main thread
-                            strongSelf.nextPermission()
-                        }
-                    }
-                }
-                
-                let delay: TimeInterval = 1
-                self.notificationDetailsLabel.delay(delay + 0.3, completionHandler: { () -> Void in
-                    // timeout. this is for the case where they've already denied notification status.
-                    if !didShowShowPermissionDialog {
-                        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIApplicationWillResignActive, object: nil)
+            NotificationManager.checkAuthorized(handler: { (status) in
+                DispatchQueue.main.async {
+                    if status != .authorized {
+                        self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
+                        self.requestNotificationsPermission()
+                    } else {
                         self.currentPermissionsAsk = .askForLocations
                         self.nextPermission()
                     }
-                })
-                
-                self.helperTextLabel.delay(delay) {
-                    NotificationManager.startup()
                 }
-            } else {
-                // they've already granted it
-                self.currentPermissionsAsk = .askForLocations
-                self.nextPermission()
-            }
+            })
         } else if self.currentPermissionsAsk == .askForLocations {
-            if (RouteManager.authorizationStatus == .notDetermined) {
-                self.currentPermissionsAsk = .askedForLocations
-                self.notificationDetailsLabel.text = "✅ Send notifications after your ride"
+            self.notificationDetailsLabel.text = "✅ Send notifications after your ride"
+
+            if RouteManager.authorizationStatus() != .authorizedAlways {
                 self.notificationDetailsLabel.delay(0.5) {
                     self.notificationDetailsLabel.text = "2️⃣ Use your location during your ride"
                     self.notificationDetailsLabel.popIn()
                 }
                 
-                self.helperTextLabel.delay(1.5) {
-                    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
-                        guard let strongSelf = self else {
-                            return
-                        }
-                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil)
-                        if RouteManager.authorizationStatus != .notDetermined {
-                            strongSelf.currentPermissionsAsk = .askForMotion
-                            DispatchQueue.main.async {
-                                guard let strongSelf = self else {
-                                    return
-                                }
-                                
-                                // make sure its on the main thread
-                                strongSelf.nextPermission()
-                            }
-                        }
-                    }
-                    RouteRecorder.shared.routeManager.startup(false)
-                }
+                self.requestLocationsPermission()
             } else {
-                // they've already granted or denied it                
                 self.currentPermissionsAsk = .askForMotion
                 self.nextPermission()
             }
-        } else if self.currentPermissionsAsk == .askForMotion {
-            if (RouteRecorder.shared.classificationManager.authorizationStatus == .notDetermined) {
-                self.currentPermissionsAsk = .askedForMotion
-                self.notificationDetailsLabel.text = "✅ Use your location during your ride"
+        } else if self.currentPermissionsAsk == .askForMotion { // currently gets skipped
+            self.notificationDetailsLabel.text = "✅ Use your location during your ride"
+ 
+            if (SensorClassificationManager.authorizationStatus != .authorized) {
                 self.notificationDetailsLabel.delay(0.5) {
                     self.notificationDetailsLabel.text = "3️⃣ Use your motion activity during your ride"
                     self.notificationDetailsLabel.popIn()
                 }
                 
-                self.helperTextLabel.delay(1.5) {
-                    RouteRecorder.shared.randomForestManager.startup()
-                    RouteRecorder.shared.classificationManager.startup()
-                    
-                    NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil, queue: nil) {[weak self] (_) -> Void in
-                        guard let strongSelf = self else {
-                            return
-                        }
-                        NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: nil)
-                        if RouteRecorder.shared.classificationManager.authorizationStatus != .notDetermined {
-                            strongSelf.currentPermissionsAsk = .sayFinished
-                            DispatchQueue.main.async {
-                                guard let strongSelf = self else {
-                                    return
-                                }
-                                
-                                // make sure its on the main thread
-                                strongSelf.nextPermission()
-                            }
-                        }
-                    }
-                }
+                self.requestMotionPermission()
             } else {
                 // they've already granted or denied it
                 self.currentPermissionsAsk = .sayFinished
@@ -166,7 +207,10 @@ class SetupPermissionsViewController: SetupChildViewController {
             }
         } else if self.currentPermissionsAsk == .sayFinished {
             self.currentPermissionsAsk = .finished
-            self.notificationDetailsLabel.text = "✅ Use your motion activity during your ride"
+            
+            self.notificationDetailsLabel.text = "✅ Use your location during your ride"
+            //self.notificationDetailsLabel.text = "✅ Use your motion activity during your ride" <--- motion currently is skipped
+            
             self.notificationDetailsLabel.delay(0.5) {
                 self.notificationDetailsLabel.fadeOut()
             }

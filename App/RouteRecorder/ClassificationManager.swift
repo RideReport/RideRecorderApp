@@ -19,9 +19,8 @@ public enum ClassificationManagerAuthorizationStatus {
 
 public protocol ClassificationManager {
     var routeRecorder: RouteRecorder! { get set }
-    var authorizationStatus : ClassificationManagerAuthorizationStatus { get }
-    
-    func startup()
+        
+    func startup(handler: @escaping ()->Void)
     func predictCurrentActivityType(predictionAggregator:PredictionAggregator, withHandler handler:@escaping (_: PredictionAggregator) -> Void)
     func setTestPredictionsTemplates(testPredictions: [PredictedActivity])
     
@@ -41,41 +40,22 @@ public class SensorClassificationManager : ClassificationManager {
     private var motionQueue: OperationQueue!
     private var referenceBootDate: Date!
     
+    public static var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
+    
     let motionStartTimeoutInterval: TimeInterval = 30
     let motionContinueTimeoutInterval: TimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
 
     private var isGatheringMotionData: Bool = false
-    public var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
     public init () {
         self.motionQueue = OperationQueue()
     }
     
-    public func startup() {
+    public func startup(handler: @escaping ()->Void = {() in }) {
         routeRecorder.motionManager.accelerometerUpdateInterval = 1/50 // 50hz, the native rate for CMSensorRecorder
         
-        let hasBeenGrantedMotionAccess = UserDefaults.standard.bool(forKey: "MotionManagerHasRequestedMotionAccess")
-        if (!hasBeenGrantedMotionAccess) {
-            // run a query so we can have the permission dialog come up when we want it to
-            DispatchQueue.main.async(execute: { () -> Void in
-                self.routeRecorder.motionActivityManager.queryActivityStarting(from: Date(timeIntervalSinceNow: -10), to: Date(), to: self.motionQueue) { (actibity, error) -> Void in
-                    if let err = error, err._code == Int(CMErrorMotionActivityNotAuthorized.rawValue) {
-                        self.authorizationStatus = .denied
-                        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
-                    } else {
-                        self.authorizationStatus = .authorized
-                        NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)
-                        
-                        UserDefaults.standard.set(true, forKey: "MotionManagerHasRequestedMotionAccess")
-                        UserDefaults.standard.synchronize()
-                    }
-                }
-            })
-        } else {
-            self.authorizationStatus = .authorized
-            NotificationCenter.default.post(name: Notification.Name(rawValue: "appDidChangeManagerAuthorizationStatus"), object: self)            
-        }
+        handler()
     }
     
     public func stopGatheringSensorData() {

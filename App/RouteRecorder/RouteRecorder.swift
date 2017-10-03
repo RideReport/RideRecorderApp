@@ -27,7 +27,6 @@ public class RouteRecorder {
     public private(set) var classificationManager: ClassificationManager!
     public private(set) var randomForestManager: RandomForestManager!
     public private(set) var motionManager: CMMotionManager!
-    public private(set) var motionActivityManager: CMMotionActivityManager!
     
     fileprivate var didEncounterUnrecoverableErrorUploadingRoutes = false
     
@@ -37,13 +36,12 @@ public class RouteRecorder {
         }
     }
     
-    public class func inject(motionManager: CMMotionManager, motionActivityManager: CMMotionActivityManager, locationManager: LocationManager, routeManager: RouteManager, randomForestManager: RandomForestManager, classificationManager: ClassificationManager) {
-        shared = RouteRecorder(motionManager: motionManager, motionActivityManager: motionActivityManager, locationManager: locationManager, routeManager: routeManager, randomForestManager: randomForestManager, classificationManager: classificationManager)
+    public class func inject(motionManager: CMMotionManager, locationManager: LocationManager, routeManager: RouteManager, randomForestManager: RandomForestManager, classificationManager: ClassificationManager) {
+        shared = RouteRecorder(motionManager: motionManager, locationManager: locationManager, routeManager: routeManager, randomForestManager: randomForestManager, classificationManager: classificationManager)
     }
     
-    private init(motionManager: CMMotionManager, motionActivityManager: CMMotionActivityManager, locationManager: LocationManager, routeManager: RouteManager, randomForestManager: RandomForestManager, classificationManager: ClassificationManager) {
+    private init(motionManager: CMMotionManager, locationManager: LocationManager, routeManager: RouteManager, randomForestManager: RandomForestManager, classificationManager: ClassificationManager) {
         self.motionManager = motionManager
-        self.motionActivityManager = motionActivityManager
         self.locationManager = locationManager
         
         self.randomForestManager = randomForestManager

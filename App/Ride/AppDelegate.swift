@@ -17,19 +17,12 @@ import ECSlidingViewController
 import Mixpanel
 import CocoaLumberjack
 
-enum PushNotificationRegistrationStatus {
-    case unregistered
-    case registered
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 
     var window: UIWindow?
     var fileLogger : DDFileLogger!
-    
-    var notificationRegistrationStatus : PushNotificationRegistrationStatus = .unregistered
-    
+        
     class func appDelegate() -> AppDelegate! {
         let delegate = UIApplication.shared.delegate
         
@@ -83,7 +76,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
 #if DEBUG
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
         RouteRecorder.inject(motionManager: CMMotionManager(),
-                                      motionActivityManager: CMMotionActivityManager(),
                                       locationManager: LocationManager(type: .gpx),
                                       routeManager: RouteManager(),
                                       randomForestManager: RandomForestManager(),
@@ -105,7 +97,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             // to allow for dependency injection
             
             RouteRecorder.inject(motionManager: CMMotionManager(),
-                                       motionActivityManager: CMMotionActivityManager(),
                                        locationManager: LocationManager(type: .coreLocation),
                                        routeManager: RouteManager(),
                                        randomForestManager: RandomForestManager(),
@@ -132,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 NotificationManager.startup()
             }
             RouteRecorder.shared.randomForestManager.startup()
-            RouteRecorder.shared.classificationManager.startup()
+            RouteRecorder.shared.classificationManager.startup(handler: {})
             
             if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
                 DDLogInfo("Launched in background due to location update")
@@ -249,13 +240,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        if ((notificationSettings.types.intersection(UIUserNotificationType.alert)) == []) {
-            // can't send alerts, let the user know.
-            if (!UserDefaults.standard.bool(forKey: "UserKnowsNotificationsAreDisabled")) {
-                let alert = UIAlertView(title: "Notifications are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", delegate: self, cancelButtonTitle:nil, otherButtonTitles:"Disable Lock Screen Reports", "Go to Notification Settings")
-                alert.show()
-            }
-        }
+        NotificationManager.shared.didRegisterForNotifications(notificationSettings: notificationSettings)
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
@@ -263,25 +248,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        self.notificationRegistrationStatus = .registered
-        
         RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(nil)
-    }
-    
-    func alertView(_ alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        if (buttonIndex == 1) {
-            let url = URL(string: UIApplicationOpenSettingsURLString)
-            if url != nil && UIApplication.shared.canOpenURL(url!) {
-                UIApplication.shared.openURL(url!)
-            }
-        } else {
-            UserDefaults.standard.set(true, forKey: "UserKnowsNotificationsAreDisabled")
-            UserDefaults.standard.synchronize()
-        }
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
