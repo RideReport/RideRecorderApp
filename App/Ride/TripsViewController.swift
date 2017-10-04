@@ -61,6 +61,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         // when the user drags up they should see the right color above the rewards cell
         var headerViewBackgroundViewFrame = self.tableView.bounds
         headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
+        headerViewBackgroundViewFrame.size.width += headerViewBackgroundViewFrame.size.width // dont know why this is needed to get it to fill
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
         headerViewBackgroundView.backgroundColor = ColorPallete.shared.almostWhite
         self.tableView.insertSubview(headerViewBackgroundView, at: 0)
@@ -587,8 +588,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func configureLoadMoreCell(_ tableCell: UITableViewCell) {
+         // hide the separator
+        tableCell.separatorInset = UIEdgeInsetsMake(0, tableCell.bounds.size.width, 0, 0)
+        
         if RideReportAPIClient.shared.hasMoreTripsRemaining {
             tableCell.contentView.isHidden = false
+            if let activitySpinner = tableCell.viewWithTag(1) as? UIActivityIndicatorView{
+                activitySpinner.startAnimating()
+            }
         } else {
             tableCell.contentView.isHidden = true
         }
