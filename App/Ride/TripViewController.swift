@@ -29,7 +29,7 @@ class TripViewController: UIViewController {
                     return
                 }
                 
-                if let trip = strongSelf.selectedTrip {               
+                if let _ = strongSelf.selectedTrip {
                     strongSelf.updateChildViews()
                 } else {
                     if let mapViewController = strongSelf.mapViewController {

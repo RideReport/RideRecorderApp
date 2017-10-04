@@ -45,7 +45,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     private var dateFormatter : DateFormatter!
     private var yearDateFormatter : DateFormatter!
-    private var rewardSectionNeedsReload : Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -238,16 +237,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.tableView.deselectRow(at: self.tableView.indexPathForSelectedRow!, animated: animated)
         }
         
-        if (CoreDataManager.shared.isStartingUp) {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                strongSelf.refreshTitle()
-            }
-        } else {
-            self.refreshTitle()
-        }
+        self.title = "Ride Report"
     }
     
     func refreshHeaderCells() {
@@ -389,10 +379,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    private func refreshTitle() {
-        self.title = "Ride Report"
-    }
-    
     func unloadFetchedResultsController() {
         guard let fetchedResultsController = self.fetchedResultsController else {
             return
@@ -403,24 +389,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        UIView.performWithoutAnimation {
-            self.tableView.beginUpdates()
-        }
+        self.tableView.beginUpdates()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        UIView.performWithoutAnimation {
-            self.tableView.endUpdates()
-        }
+        self.tableView.endUpdates()
         
         self.refreshEmptyTableView()
-        self.refreshTitle()
-
-        // reload the rewards section as needed
-        if rewardSectionNeedsReload {
-            rewardSectionNeedsReload = false
-            self.tableView!.reloadSections(IndexSet(integer: 0), with: .fade)
-        }
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
@@ -446,12 +421,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         case .insert:
             self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)], with: .fade)
-            
-            rewardSectionNeedsReload = true
         case .delete:
             self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: indexPath!.section + 1)], with: .fade)
-
-            rewardSectionNeedsReload = true
         case .move:
             self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)],
                                        with: .fade)
@@ -562,14 +533,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections else {
-            return
-        }
-        
-        if indexPath.section == sections.count + 1 && RideReportAPIClient.shared.hasMoreTripsRemaining {
-            // load more cell
+        if cell.reuseIdentifier == "LoadMoreViewTableCell" && RideReportAPIClient.shared.hasMoreTripsRemaining {
             RideReportAPIClient.shared.getMoreTrips().apiResponse({ (_) in
-                self.tableView!.reloadSections(IndexSet(integer: indexPath.section - 1), with: .fade)
+                self.configureLoadMoreCell(cell)
             })
         }
     }
@@ -604,11 +570,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         } else if let fetchedResultsController = self.fetchedResultsController, let sections = fetchedResultsController.sections, indexPath.section == sections.count + 1 {
             let reuseID = "LoadMoreViewTableCell"
             tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
-            if RideReportAPIClient.shared.hasMoreTripsRemaining {
-               tableCell.contentView.isHidden = false
-            } else {
-               tableCell.contentView.isHidden = true
-            }
+            
+            configureLoadMoreCell(tableCell)
         } else {
             let reuseID = "RoutesViewTableCell"
             
@@ -621,6 +584,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         return tableCell
+    }
+    
+    func configureLoadMoreCell(_ tableCell: UITableViewCell) {
+        if RideReportAPIClient.shared.hasMoreTripsRemaining {
+            tableCell.contentView.isHidden = false
+        } else {
+            tableCell.contentView.isHidden = true
+        }
     }
     
     func configurePromoCell(_ tableCell: UITableViewCell, promotion: Promotion) {
