@@ -23,7 +23,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     
     private let tripFeatureSourceIdentifier = "trip"
     
-    private var selectedTripLineFeature : MGLPolylineFeature?
+    private var selectedTripLineFeature : MGLShapeCollectionFeature?
     private var selectedTripLineSource : MGLShapeSource!
     private var startPoint: MGLPointAnnotation?
     private var endPoint: MGLPointAnnotation?
@@ -176,8 +176,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        self.selectedTripLineFeature = MGLPolylineFeature(coordinates: &coordinates, count: count)
-        self.selectedTripLineFeature!.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue]
+        let backingLine = MGLPolylineFeature(coordinates: &coordinates, count: count)
+        backingLine.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue, "role": "backing"]
+        
+        let line = MGLPolylineFeature(coordinates: &coordinates, count: count)
+        line.attributes = ["activityType": trip.activityType.numberValue, "rating": trip.rating.choice.numberValue, "role": "track", "isImputed": false]
+        
+        self.selectedTripLineFeature = MGLShapeCollectionFeature(shapes: [backingLine, line])
+        
         self.selectedTripLineSource.shape = self.selectedTripLineFeature
         
         DispatchQueue.main.async(execute: { [weak self] in
