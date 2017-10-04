@@ -48,14 +48,14 @@ class WatchManager : NSObject, WCSessionDelegate {
     
     var paired: Bool {
         get {
-            return WCSession.default().isPaired
+            return WCSession.default.isPaired
         }
     }
     
     private func startup() {
         guard WCSession.isSupported() else { return }
         
-        let wcSession = WCSession.default()
+        let wcSession = WCSession.default
         wcSession.delegate = self
         
         if wcSession.activationState != .activated {

@@ -311,7 +311,7 @@ class StatsViewController: UIViewController {
         }
     }
     
-    func bobbleChick() {
+    @objc func bobbleChick() {
         CATransaction.begin()
         
         let shakeAnimation = CAKeyframeAnimation(keyPath: "transform")
@@ -399,8 +399,8 @@ class StatsViewController: UIViewController {
         let font: UIFont = UIFont.boldSystemFont(ofSize: 18)
         let unitsFont: UIFont = UIFont.systemFont(ofSize: 18)
         
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: ColorPallete.shared.darkGrey, NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle]
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: ColorPallete.shared.darkGrey, NSFontAttributeName: unitsFont, NSParagraphStyleAttributeName: paragraphStyle]
+        let valueAttributes: [NSAttributedStringKey: Any] = [NSAttributedStringKey.foregroundColor: ColorPallete.shared.darkGrey, NSAttributedStringKey.font: font, NSAttributedStringKey.paragraphStyle: paragraphStyle]
+        let unitAttributes: [NSAttributedStringKey: Any] = [NSAttributedStringKey.foregroundColor: ColorPallete.shared.darkGrey, NSAttributedStringKey.font: unitsFont, NSAttributedStringKey.paragraphStyle: paragraphStyle]
         
         if let impressiveArray = statsDict["impressive"]?.array, impressiveArray.count == 2 {
             if let emoji = impressiveArray[0].string, let stat = impressiveArray[1].string {
@@ -419,7 +419,7 @@ class StatsViewController: UIViewController {
         }
         
         if let meters = statsDict["meters"]?.float {
-            let (distanceString, longUnits, shortUnits) = meters.distanceStrings(suppressFractionalUnits: true)
+            let (distanceString, longUnits, _) = meters.distanceStrings(suppressFractionalUnits: true)
             rollupsString.append(NSAttributedString(string: distanceString, attributes: valueAttributes))
             rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
             rollupsString.append(NSAttributedString(string: longUnits, attributes: unitAttributes))
@@ -570,7 +570,7 @@ class StatsViewController: UIViewController {
                 transition.type = kCATransitionFade
                 navVC.view.layer.add(transition, forKey: nil)
                 var newVCs = navVC.viewControllers
-                newVCs.popLast()
+                _ = newVCs.popLast()
                 newVCs.append(rewardsVC)
                 navVC.setViewControllers(newVCs, animated: false)
             }

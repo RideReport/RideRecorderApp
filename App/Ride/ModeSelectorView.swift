@@ -192,8 +192,8 @@ import RouteRecorder
             self.fontSize = 30
         }
         
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
-        self.setTitleTextAttributes([NSFontAttributeName: UIFont.systemFont(ofSize: self.fontSize), NSForegroundColorAttributeName:UIColor.black], for: .selected)
+        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
+        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize), NSAttributedStringKey.foregroundColor:UIColor.black], for: .selected)
         
         self.addTarget(self, action: #selector(ModeSelectorView.valueChanged(_:)), for: .valueChanged)
         if #available(iOS 10.0, *) {
@@ -204,7 +204,7 @@ import RouteRecorder
         reloadUI()
     }
     
-    func valueChanged(_ sender:UIButton)
+    @objc func valueChanged(_ sender:UIButton)
     {
         if #available(iOS 10.0, *) {
             if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {

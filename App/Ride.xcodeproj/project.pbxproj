@@ -1611,7 +1611,7 @@
 					3D3306041D7774E900B7E56A = {
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 9NRH28TN93;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -1622,6 +1622,7 @@
 					3D7738A31F58A21000155DB8 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = 9NRH28TN93;
+						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 					};
 					3DD06C771D50159E00A5D719 = {
@@ -1658,7 +1659,7 @@
 					84D1554E19D2733500316995 = {
 						CreatedOnToolsVersion = 6.1;
 						DevelopmentTeam = 9NRH28TN93;
-						LastSwiftMigration = 0820;
+						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -2663,7 +2664,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -2689,7 +2691,8 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride Report Notification Content/Ride-Report-Content-Extension-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -2728,7 +2731,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = RouteRecorder/RouteRecorderBridgingHeader.h;
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -2766,7 +2770,8 @@
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = RouteRecorder/RouteRecorderBridgingHeader.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -3135,7 +3140,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "9NRH28TN93/Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -3181,7 +3187,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -116,10 +116,10 @@ fileprivate class RideRewardComponentView : UIView {
         let heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[bodyLabel(>=emojiLabel)]-4-|", options: [], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: heightConstraints)
         
-        emojiLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
-        bodyLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        emojiLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+        bodyLabel.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .vertical)
         
-        self.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        self.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .vertical)
     }
 }
 
@@ -258,10 +258,10 @@ fileprivate class RideSummaryComponentView : UIView {
         let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bodyLabel(>=distanceView)]|", options: [], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: yConstraints)
         
-        distanceView.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .vertical)
-        bodyLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        distanceView.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+        bodyLabel.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .vertical)
         
-        self.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        self.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: .vertical)
     }
 }
 
@@ -512,7 +512,7 @@ protocol RideSummaryViewDelegate: class {
         CATransaction.commit()
     }
     
-    func didTapReward(sender: AnyObject) {
+    @objc func didTapReward(sender: AnyObject) {
         if let reward = ((sender as? UITapGestureRecognizer)?.view as? RideRewardComponentView)?.associatedObject, let delegate = self.delegate {
             delegate.didTapReward(withAssociatedObject: reward)
         }

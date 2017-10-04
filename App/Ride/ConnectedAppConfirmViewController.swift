@@ -70,7 +70,7 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         self.postConnectApplication()
     }
     
-    func postConnectApplication() {
+    @objc func postConnectApplication() {
         guard !self.hasCanceled else {
             return
         }

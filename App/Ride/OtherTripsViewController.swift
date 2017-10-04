@@ -209,12 +209,8 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         
         setDisclosureArrowColor(tableCell)
         
-        var dateTitle = ""
-        if (trip.startDate != nil) {
-            dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.startDate))
-            
-        }
-        
+        let dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.startDate))
+
         let areaDescriptionString = trip.areaDescriptionString
         var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         
@@ -250,7 +246,23 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         }
         
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
-            RideReportAPIClient.shared.deleteTrip(trip)
+            let alertController = UIAlertController(title: "Delete Trip?", message: "This will permanently delete your trip", preferredStyle: .actionSheet)
+            
+            let deleteAlertAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+                RideReportAPIClient.shared.deleteTrip(trip).apiResponse({ (response) in
+                    if case .failure = response.result {
+                        let alertController = UIAlertController(title: "There was an error deleting that trip. Please try again later.!", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+                        alertController.addAction(UIAlertAction(title: "Darn", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                })
+            }
+            let cancelAlertAction = UIAlertAction(title: "Cancel", style: .cancel) {(_) in }
+            
+            alertController.addAction(deleteAlertAction)
+            alertController.addAction(cancelAlertAction)
+            
+            self.present(alertController, animated: true, completion: nil)
         }
         
         #if DEBUG
@@ -296,13 +308,6 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         #else
             return [deleteAction]
         #endif
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if (editingStyle == UITableViewCellEditingStyle.delete) {
-            let trip : Trip = self.fetchedResultsController.object(at: indexPath) as! Trip
-            RideReportAPIClient.shared.deleteTrip(trip)
-        }
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

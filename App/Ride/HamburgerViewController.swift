@@ -240,8 +240,10 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     func sendLogFile() {
         guard MFMailComposeViewController.canSendMail() else {
-            let alert = UIAlertView(title:"No email account", message: "Whoops, it looks like you don't have an email account configured on this iPhone", delegate: nil, cancelButtonTitle:"Ima Fix It")
-            alert.show()
+            let alertController = UIAlertController(title: "No email account", message: "Whoops, it looks like you don't have an email account configured on this iPhone. Please add one and try again.", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "On it", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            
             return
         }
         

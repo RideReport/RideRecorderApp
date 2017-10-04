@@ -300,13 +300,13 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.reachability = nil
     }
     
-    func launchPermissions() {
+    @objc func launchPermissions() {
         if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
             UIApplication.shared.openURL(appSettings)
         }
     }
     
-    func resumeRideReport() {
+    @objc func resumeRideReport() {
         RouteRecorder.shared.routeManager.resumeTracking()
         refreshHelperPopupUI()
     }
@@ -678,7 +678,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let paragraphStyle = NSMutableParagraphStyle()
             paragraphStyle.lineHeightMultiple = 1.2
             
-            let emojiWidth = ("👍" as NSString).size(attributes: [NSFontAttributeName: trophySummaryLabel.font]).width
+            let emojiWidth = ("👍" as NSString).size(withAttributes: [NSAttributedStringKey.font: trophySummaryLabel.font]).width
             let columnSeperatorWidth: CGFloat = 6
             let totalWidth = emojiWidth + columnSeperatorWidth
             
@@ -687,7 +687,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             var columnCount = 0
             while totalLineWidth + totalWidth < (self.view.frame.size.width - 30) {
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.center, location: totalLineWidth, options: [:]))
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.left, location: totalLineWidth + emojiWidth , options: [NSTabColumnTerminatorsAttributeName:CharacterSet(charactersIn:"\t")]))
+                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.left, location: totalLineWidth + emojiWidth , options: [NSTextTab.OptionKey.columnTerminators:CharacterSet(charactersIn:"\t")]))
                 tabStops.append(NSTextTab(textAlignment: NSTextAlignment.left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
                 totalLineWidth += totalWidth
                 columnCount += 1
@@ -717,7 +717,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             }
         
             let attrString = NSMutableAttributedString(string: rewardString)
-            attrString.addAttribute(NSParagraphStyleAttributeName, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
+            attrString.addAttribute(NSAttributedStringKey.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
 
             trophySummaryLabel.attributedText = attrString
         } else {
@@ -985,13 +985,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
             let alertController = UIAlertController(title: "Delete Trip?", message: "This will permanently delete your trip", preferredStyle: .actionSheet)
             
-            let DeleteAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
-                RideReportAPIClient.shared.deleteTrip(trip)
+            let deleteAlertAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
+                RideReportAPIClient.shared.deleteTrip(trip).apiResponse({ (response) in
+                    if case .failure = response.result {
+                        let alertController = UIAlertController(title: "There was an error deleting that trip. Please try again later.!", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+                        alertController.addAction(UIAlertAction(title: "Darn", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                })
             }
-            let CancelAction = UIAlertAction(title: "Cancel", style: .cancel) {(_) in }
+            let cancelAlertAction = UIAlertAction(title: "Cancel", style: .cancel) {(_) in }
             
-            alertController.addAction(DeleteAction)
-            alertController.addAction(CancelAction)
+            alertController.addAction(deleteAlertAction)
+            alertController.addAction(cancelAlertAction)
             
             self.present(alertController, animated: true, completion: nil)
         }
@@ -1029,10 +1035,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }))
                 alertController.addAction(UIAlertAction(title: "🔁 Replay", style: .default, handler: { (_) in
                     var cllocs: [CLLocation] = []
-                    for loc in route.fetchOrderedLocationsForReplay() {
-                        if let location = loc as? Location {
-                            cllocs.append(location.clLocation())
-                        }
+                    for location in route.fetchOrderedLocationsForReplay() {
+                        cllocs.append(location.clLocation())
                     }
                     
                     let date = Date()
@@ -1043,21 +1047,21 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                     let url = urls.last!
                     
                     var cllocs: [CLLocation] = []
-                    var locs = route.fetchOrderedLocationsForReplay()
-                    for loc in locs {
-                        if let location = loc as? Location {
-                            cllocs.append(location.clLocation())
-                        }
+                    let locs = route.fetchOrderedLocationsForReplay()
+                    for location in locs {
+                        cllocs.append(location.clLocation())
                     }
                     
                     let path = url + "/" + route.uuid + ".archive"
                     if NSKeyedArchiver.archiveRootObject(cllocs, toFile: path) {
                         UIPasteboard.general.string = path
-                        let alert = UIAlertView(title:"Save Location Copied to Clipboard.", message: path, delegate: nil, cancelButtonTitle:"k")
-                        alert.show()
+                        let alertController = UIAlertController(title: "Save Location Copied to Clipboard.", message: path, preferredStyle: UIAlertControllerStyle.actionSheet)
+                        alertController.addAction(UIAlertAction(title: "k", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
                     } else {
-                        let alert = UIAlertView(title:"Failed to save file!", message: nil, delegate: nil, cancelButtonTitle:"k")
-                        alert.show()
+                        let alertController = UIAlertController(title: "Failed to save file!", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+                        alertController.addAction(UIAlertAction(title: "k", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
                     }
                 }))
             } else {

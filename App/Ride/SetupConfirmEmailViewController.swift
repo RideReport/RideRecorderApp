@@ -28,7 +28,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(SetupConfirmEmailViewController.back))
     }
     
-    func back() {
+    @objc func back() {
         self.parentSetupViewController?.previousPage(sender: self)
     }
     
@@ -83,14 +83,14 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         self.pollTimer = nil
     }
     
-    func hidePINUIIfExpired() {
+    @objc func hidePINUIIfExpired() {
         if (self.timeOfInitialPresesntation != nil && abs(self.timeOfInitialPresesntation!.timeIntervalSinceNow) > 120.0) {
             // if they are coming back into the app and it's been too long for the code to be valid, show the other UI
             self.showVerifyViaButtonUI()
         }
     }
     
-    func pollAccountStatus() {
+    @objc func pollAccountStatus() {
         RideReportAPIClient.shared.updateAccountStatus().apiResponse() { (response) in
             if (RideReportAPIClient.shared.accountVerificationStatus == .verified) {
                 self.parentSetupViewController?.nextPage(sender: self)
@@ -104,7 +104,7 @@ class SetupConfirmEmailViewController: SetupChildViewController, BKPasscodeInput
         self.passcodeInputView.resignFirstResponder()
     }
     
-    func layoutPasscodeInputViewBottomContraints(_ notification: Notification) {
+    @objc func layoutPasscodeInputViewBottomContraints(_ notification: Notification) {
         let userInfo = notification.userInfo!
         
         let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue

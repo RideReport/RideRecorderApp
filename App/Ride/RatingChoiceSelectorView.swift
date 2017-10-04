@@ -153,7 +153,7 @@ import Foundation
         reloadUI()
     }
     
-    func buttonTapped(_ sender:UIButton)
+    @objc func buttonTapped(_ sender:UIButton)
     {
         
         if #available(iOS 10.0, *) {
@@ -229,7 +229,7 @@ import Foundation
         CATransaction.commit()
     }
     
-    func selectionDidChange() {
+    @objc func selectionDidChange() {
         reloadUI()
     }
     
@@ -241,8 +241,8 @@ import Foundation
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
-        let attributedEmojiString = NSAttributedString(string: rating.emoji, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.emojiFontSize), NSForegroundColorAttributeName: UIColor.black, NSParagraphStyleAttributeName: paragraphStyle])
-        let attributedDescriptionString = NSAttributedString(string: rating.noun, attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: self.descriptionFontSize), NSForegroundColorAttributeName: (selected ? ColorPallete.shared.darkGrey : ColorPallete.shared.unknownGrey), NSParagraphStyleAttributeName: paragraphStyle])
+        let attributedEmojiString = NSAttributedString(string: rating.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiFontSize), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
+        let attributedDescriptionString = NSAttributedString(string: rating.noun, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.descriptionFontSize), NSAttributedStringKey.foregroundColor: (selected ? ColorPallete.shared.darkGrey : ColorPallete.shared.unknownGrey), NSAttributedStringKey.paragraphStyle: paragraphStyle])
         
         let emojiSize = attributedEmojiString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:[NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context:nil).size
         let descriptionSize = attributedDescriptionString.boundingRect(with: CGSize(width: imageWidth, height: CGFloat.greatestFiniteMagnitude), options:(NSStringDrawingOptions.usesLineFragmentOrigin), context:nil).size

@@ -75,7 +75,7 @@ class HealthKitManager {
         
         healthStore.requestAuthorization(toShare: writeTypes, read: readTypes) { (success, err) -> Void in
             if let error = err {
-                DDLogWarn("Error accesing health kit data!: \(error), \(error._userInfo)")
+                DDLogWarn("Error accesing health kit data!: \(error), \(String(describing: error._userInfo))")
                 HealthKitManager.authorizationStatus = .denied
                 DispatchQueue.main.async {
                     authorizationHandler(false)

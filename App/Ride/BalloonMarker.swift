@@ -191,10 +191,10 @@ open class BalloonMarker: MarkerImage
     {
         labelns = NSMutableAttributedString(string: "")
         
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.valuesFont, NSParagraphStyleAttributeName: _paragraphStyle]
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: self.textColor, NSFontAttributeName: self.font, NSParagraphStyleAttributeName: _paragraphStyle]
+        let valueAttributes: [NSAttributedStringKey: Any] = [NSAttributedStringKey.foregroundColor: self.textColor, NSAttributedStringKey.font: self.valuesFont, NSAttributedStringKey.paragraphStyle: _paragraphStyle]
+        let unitAttributes: [NSAttributedStringKey: Any] = [NSAttributedStringKey.foregroundColor: self.textColor, NSAttributedStringKey.font: self.font, NSAttributedStringKey.paragraphStyle: _paragraphStyle]
         
-        let data = JSON(entry.data as? Any)
+        let data = JSON(entry.data as Any)
         if let weatherEmoji = data["weather_emoji"].string{
             labelns.append(NSAttributedString(string: weatherEmoji + " ", attributes: unitAttributes))
         }
@@ -213,7 +213,7 @@ open class BalloonMarker: MarkerImage
         }
         
         if let meters = data["meters"].float, meters > 0 {
-            let (distanceString, longUnits, ShortUnits) = meters.distanceStrings(suppressFractionalUnits: true)
+            let (distanceString, _, ShortUnits) = meters.distanceStrings(suppressFractionalUnits: true)
             
             labelns.append(NSAttributedString(string: "\n", attributes: valueAttributes))
             labelns.append(NSAttributedString(string: distanceString, attributes: valueAttributes))

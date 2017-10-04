@@ -254,10 +254,6 @@ class RideReportAPIClient {
                     CoreDataManager.shared.saveContext()
                 }
             case .failure(let error):
-                DispatchQueue.main.async {
-                    let alert = UIAlertView(title:nil, message: "There was an error deleting that trip. Please try again later.", delegate: nil, cancelButtonTitle:"Darn")
-                    alert.show()
-                }
                 DDLogWarn(String(format: "Error deleting trip data: %@", error as CVarArg))
             }
         })
@@ -461,25 +457,18 @@ class RideReportAPIClient {
         }
     }
     
-    func sendVerificationTokenForEmail(_ email: String)-> AuthenticatedAPIRequest {
+    @discardableResult func sendVerificationTokenForEmail(_ email: String)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "send_email_code", parameters: ["email": email]) { (response) in
             switch response.result {
             case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
             case .failure(let error):
                 DDLogWarn(String(format: "Error sending verification email: %@", error as CVarArg))
-                
-                if let httpResponse = response.response, httpResponse.statusCode == 400 {
-                    DispatchQueue.main.async {
-                        let alert = UIAlertView(title:nil, message: "That doesn't look like a valid email address. Please double-check your typing and try again.", delegate: nil, cancelButtonTitle:"On it")
-                        alert.show()
-                    }
-                }
             }
         }
     }
     
-    func verifyToken(_ token: String)-> AuthenticatedAPIRequest {
+    @discardableResult func verifyToken(_ token: String)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "verify_email_code", parameters: ["code": token]) { (response) in
             switch response.result {
             case .success(let json):
@@ -491,7 +480,7 @@ class RideReportAPIClient {
         }
     }
     
-    func verifyFacebook(_ token: String)-> AuthenticatedAPIRequest {
+    @discardableResult func verifyFacebook(_ token: String)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "verify_facebook_login", parameters: ["token": token]) { (response) in
             switch response.result {
             case .success(let json):
@@ -499,12 +488,6 @@ class RideReportAPIClient {
                 self.updateAccountStatus()
             case .failure(let error):
                 DDLogWarn(String(format: "Error verifying facebook token: %@", error as CVarArg))
-                if let httpResponse = response.response, httpResponse.statusCode == 400 {
-                    DispatchQueue.main.async {
-                        let alert = UIAlertView(title:nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
-                        alert.show()
-                    }
-                }
             }
         }
     }
@@ -515,7 +498,7 @@ class RideReportAPIClient {
     //
     
     
-    func getAllApplications()-> AuthenticatedAPIRequest {
+    @discardableResult func getAllApplications()-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "applications") { (response) -> Void in
             switch response.result {
             case .success(let json):
@@ -554,7 +537,7 @@ class RideReportAPIClient {
         }
     }
     
-    func connectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+    @discardableResult func connectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "applications/" + app.uuid + "/connect", parameters: app.json().dictionaryObject as [String : Any]?) { (response) -> Void in
             switch response.result {
             case .success(let json):
@@ -569,7 +552,7 @@ class RideReportAPIClient {
         }
     }
     
-    func disconnectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
+    @discardableResult func disconnectApplication(_ app: ConnectedApp)-> AuthenticatedAPIRequest {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "applications/" + app.uuid + "/disconnect") { (response) -> Void in
             switch response.result {
             case .success(_):

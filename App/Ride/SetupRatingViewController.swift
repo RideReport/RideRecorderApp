@@ -54,7 +54,7 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
                 opacityAnimation.fromValue = NSNumber(value: 0.0)
                 opacityAnimation.toValue =   NSNumber(value: 1.0)
                 opacityAnimation.autoreverses = true
-                opacityAnimation.repeatCount = FLT_MAX
+                opacityAnimation.repeatCount = .greatestFiniteMagnitude
                 
                 self.pushSimulationView.layer.add(opacityAnimation, forKey: "shadowOpacity")
 

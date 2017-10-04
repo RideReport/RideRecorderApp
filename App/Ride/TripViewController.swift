@@ -108,7 +108,7 @@ class TripViewController: UIViewController {
         }
     }
     
-    func panGesture(_ recognizer: UIPanGestureRecognizer) {
+    @objc func panGesture(_ recognizer: UIPanGestureRecognizer) {
         guard let tripSummaryViewController = self.tripSummaryViewController else {
             return
         }

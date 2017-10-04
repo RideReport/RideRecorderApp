@@ -99,8 +99,9 @@ class RedeemRewardViewController: UIViewController {
                 case .failure(_):
                     DDLogWarn("Error retriving getting reward!")
                     if let strongSelf = self {
-                        let alert = UIAlertView(title:nil, message: "Your reward could not be loaded. Please check that you are connected to the internet and try again.", delegate: nil, cancelButtonTitle:"Darn")
-                        alert.show()
+                        let alertController = UIAlertController(title: nil, message: "Your reward could not be loaded. Please check that you are connected to the internet and try again", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "Darn", style: UIAlertActionStyle.cancel, handler: nil))
+                        strongSelf.present(alertController, animated: true, completion: nil)
                         
                         strongSelf.cancel(strongSelf)
                     }
@@ -117,8 +118,10 @@ class RedeemRewardViewController: UIViewController {
         
         if let voided = json["voided"].bool, voided {
             self.cancel(self)
-            let alert = UIAlertView(title:nil, message: "This reward has expired.", delegate: nil, cancelButtonTitle:"Darn")
-            alert.show()
+            
+            let alertController = UIAlertController(title: nil, message: "This reward has expired.", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "Darn", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
             
             return
         }

@@ -55,11 +55,11 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         }
     }
     
-    func skip() {
+    @objc func skip() {
         self.parentSetupViewController?.nextPage(sender: self, userInfo: nil, skipInterval: 1) // skip confirm
     }
     
-    func create() {
+    @objc func create() {
         self.facebookButton.isEnabled = false
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         self.emailTextField.isEnabled = false
@@ -74,6 +74,11 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
                 self.verifyEmailWithJson(json)
             case .failure:
                 self.emailTextField.becomeFirstResponder()
+                if let httpResponse = response.response, httpResponse.statusCode == 400 {
+                    let alertController = UIAlertController(title: nil, message: "That doesn't look like a valid email address. Please double-check your typing and try again.", preferredStyle: UIAlertControllerStyle.actionSheet)
+                    alertController.addAction(UIAlertAction(title: "On it", style: UIAlertActionStyle.cancel, handler: nil))
+                    self.present(alertController, animated: true, completion: nil)
+                }
             }
         }
 
@@ -128,7 +133,7 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
         self.reloadUI()
     }
     
-    func didTap(_ tapGesture: UIGestureRecognizer) {
+    @objc func didTap(_ tapGesture: UIGestureRecognizer) {
         if tapGesture.state != UIGestureRecognizerState.ended {
             return
         }
@@ -189,8 +194,10 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
                             case .success(let json):
                                 self.verifyEmailWithJson(json)
                             case .failure:
-                                let alert = UIAlertView(title:nil, message: "There was an error validating your email from Facebook. Please try signing up using your email address instead.", delegate: nil, cancelButtonTitle:"On it")
-                                alert.show()
+                                let alertController = UIAlertController(title: nil, message: "There was an error validating your email from Facebook. Please try signing up using your email address instead.", preferredStyle: UIAlertControllerStyle.alert)
+                                alertController.addAction(UIAlertAction(title: "On it", style: UIAlertActionStyle.cancel, handler: nil))
+                                self.present(alertController, animated: true, completion: nil)
+                      
                                 self.emailTextField.becomeFirstResponder()
                             }
                          }
@@ -202,6 +209,12 @@ class SetupCreateProfileViewController: SetupChildViewController, UITextFieldDel
                     self.facebookButton.isEnabled = true
                     self.navigationItem.rightBarButtonItem?.isEnabled = true
                     self.emailTextField.isEnabled = true
+                    
+                    if let httpResponse = response.response, httpResponse.statusCode == 400 {
+                        let alertController = UIAlertController(title: nil, message: "There was an error communicating with Facebook. Please try again later or use sign up using your email address instead.", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "On it", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
             }
         }

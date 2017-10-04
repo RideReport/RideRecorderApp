@@ -182,7 +182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         AppDelegate.appDelegate().transitionToCreatProfile()
     }
     
-    func transitionToCreatProfile() {
+    @objc func transitionToCreatProfile() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let setupVC : SetupViewController = storyBoard.instantiateViewController(withIdentifier: "setupViewController") as! SetupViewController
         

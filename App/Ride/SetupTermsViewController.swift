@@ -55,22 +55,24 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
             
             
             let emojis = "🙌 🌂 🌤 🌧 ⛄️ 💧 🚴 🚲 🌈 🌠 ❤️ 💙 💜 💚 💛 🎖 🏅 🏆 🎗 💫 🍁 🎩 👒".components(separatedBy: " ")
-            let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 56)!]
+            let fontAttributes = [NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 56)!]
             
             for emoji in emojis {
                 if emoji.containsUnsupportEmoji() {
                     continue
                 }
+                guard let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue) else {
+                    continue
+                }
                 
-                let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue)
-                if (imageDictionary[unicodeString as! String] == nil) {
+                if (imageDictionary[unicodeString as String] == nil) {
                     UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
                     (emoji as NSString).draw(at: CGPoint(x: 0,y: 0), withAttributes:fontAttributes)
                     
                     let emojiImage = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
                     
-                    imageDictionary[unicodeString as! String] = emojiImage
+                    imageDictionary[unicodeString as String] = emojiImage
                 }
                 
             }
@@ -87,11 +89,13 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
                         continue
                     }
                     
+                    guard let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue) else {
+                        continue
+                    }
                     
-                    let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue)
-                    let texture = textureAtlas.textureNamed(unicodeString as! String)
+                    let texture = textureAtlas.textureNamed(unicodeString as String)
                     
-                    let emojiSize = (emoji as NSString).size(attributes: fontAttributes)
+                    let emojiSize = (emoji as NSString).size(withAttributes: fontAttributes)
                     let insetEmojiSize = CGSize(width: emojiSize.width - 8, height: emojiSize.height - 8)
                     texture.usesMipmaps = true
                     texture.filteringMode = SKTextureFilteringMode.nearest
@@ -148,7 +152,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         }
     }
     
-    func didTapLink(_ tapGesture: UIGestureRecognizer) {
+    @objc func didTapLink(_ tapGesture: UIGestureRecognizer) {
         if tapGesture.state != UIGestureRecognizerState.ended {
             return
         }
@@ -156,7 +160,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         let tapLocation = tapGesture.location(in: self.termsTextView)
         let textPosition = self.termsTextView.closestPosition(to: tapLocation)
         if let attributes = self.termsTextView.textStyling(at: textPosition!, in: UITextStorageDirection.forward) {
-            let underline = attributes[NSUnderlineStyleAttributeName] as! NSNumber?
+            let underline = attributes[NSAttributedStringKey.underlineStyle.rawValue] as! NSNumber?
             if (underline?.intValue == NSUnderlineStyle.styleSingle.rawValue) {
                 UIApplication.shared.openURL(URL(string: "https://ride.report/legal")!)
 

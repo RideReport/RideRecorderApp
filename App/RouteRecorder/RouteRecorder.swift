@@ -104,7 +104,7 @@ public class RouteRecorder {
         if let route = (includeFullLocations ? Route.nextClosedUnuploadedRoute() : Route.nextUnuploadedSummaryRoute()), !self.didEncounterUnrecoverableErrorUploadingRoutes {
             APIClient.shared.uploadRoute(route, includeFullLocations: includeFullLocations).apiResponse({ (response) -> Void in
                 switch response.result {
-                case .success(let _): break
+                case .success(_): break
                 
                 case .failure(let error):
                     DDLogWarn(String(format: "Error syncing route: %@", error as CVarArg))

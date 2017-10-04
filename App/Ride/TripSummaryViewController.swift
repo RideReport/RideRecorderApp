@@ -287,23 +287,21 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
             
             self.reloadUI()
             
-            let alert = UIAlertView(title: "Ride Report was confused 😬", message: "Would you like to report this misclassification so that Ride Report can get better in the future?", delegate: self, cancelButtonTitle: "Nah", otherButtonTitles: "Sure")
-            alert.show()
+            let alertController = UIAlertController(title: "Ride Report was confused 😬", message: "Would you like to report this misclassification so that Ride Report can get better in the future?", preferredStyle: UIAlertControllerStyle.actionSheet)
+            alertController.addAction(UIAlertAction(title: "Sure", style: UIAlertActionStyle.default) { (_) in
+                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                let reportModeClassificationNavigationViewController = storyBoard.instantiateViewController(withIdentifier: "ReportModeClassificationNavigationViewController") as! UINavigationController
+                if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
+                    reportModeClassificationViewController.trip = self.selectedTrip
+                }
+                self.present(reportModeClassificationNavigationViewController, animated: true, completion: nil)
+            })
+            alertController.addAction(UIAlertAction(title: "Nah", style: UIAlertActionStyle.cancel, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
         } else {
             self.reloadUI()
         }
         NotificationCenter.default.post(name: Notification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil)
-    }
-    
-    func alertView(_ alertView: UIAlertView, didDismissWithButtonIndex buttonIndex: Int) {
-        if (buttonIndex == 1) {
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            let reportModeClassificationNavigationViewController = storyBoard.instantiateViewController(withIdentifier: "ReportModeClassificationNavigationViewController") as! UINavigationController
-            if let reportModeClassificationViewController = reportModeClassificationNavigationViewController.topViewController as? ReportModeClassificationViewController {
-                reportModeClassificationViewController.trip = self.selectedTrip
-            }
-            self.present(reportModeClassificationNavigationViewController, animated: true, completion: nil)
-        }
     }
     
     func didTapReward(withAssociatedObject object: Any) {

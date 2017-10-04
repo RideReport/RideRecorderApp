@@ -241,27 +241,27 @@ import AudioToolbox
         reloadUI()
     }
     
-    func pressedEditButton() {
+    @objc func pressedEditButton() {
         delegate?.didTapEditButton?(self)
         self.hideControls()
     }
     
-    func pressedDestructiveButton() {
+    @objc func pressedDestructiveButton() {
         delegate?.didTapDestructiveButton?(self)
         self.hideControls()
     }
     
-    func pressedActionButton() {
+    @objc func pressedActionButton() {
         delegate?.didTapActionButton?(self)
         self.hideControls()        
     }
     
-    func pressedClearButton() {
+    @objc func pressedClearButton() {
         delegate?.didTapClearButton?(self)
         self.hideControls()
     }
     
-    func pressedShareButton() {
+    @objc func pressedShareButton() {
         delegate?.didTapShareButton?(self)
     }
     
@@ -392,7 +392,7 @@ import AudioToolbox
         var insetY : CGFloat = 8
         var bodySpacingY : CGFloat = 0
         
-        var appNameSize = appNameLabel.text!.size(attributes: [NSFontAttributeName: appNameLabel.font])
+        var appNameSize = appNameLabel.text!.size(withAttributes: [NSAttributedStringKey.font: appNameLabel.font])
         var bodySizeOffset: CGFloat = 0
         var dateLabelOffsetX: CGFloat = 0
         var dateLabelOffsetY: CGFloat = 0
@@ -456,8 +456,8 @@ import AudioToolbox
             dateLabelOffsetY = 1
         }
         
-        let dateLabelSize = dateLabel.text!.size(attributes: [NSFontAttributeName: dateLabel.font])
-        let bodySize = bodyLabel.text!.boundingRect(with: CGSize(width: self.bounds.width - insetLeftBody - insetRight - bodySizeOffset, height: self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.truncatesLastVisibleLine], attributes:[NSFontAttributeName: bodyLabel.font], context: nil).size
+        let dateLabelSize = dateLabel.text!.size(withAttributes: [NSAttributedStringKey.font: dateLabel.font])
+        let bodySize = bodyLabel.text!.boundingRect(with: CGSize(width: self.bounds.width - insetLeftBody - insetRight - bodySizeOffset, height: self.bounds.height - insetY - appNameSize.height), options: [NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.truncatesLastVisibleLine], attributes:[NSAttributedStringKey.font: bodyLabel.font], context: nil).size
         
         appIconView.frame = CGRect(x: insetX, y: insetY, width: 20, height: 20)
         appNameLabel.frame = CGRect(x: insetLeft, y: insetY, width: appNameSize.width, height: appNameSize.height)

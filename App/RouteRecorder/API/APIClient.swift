@@ -383,7 +383,7 @@ public class APIClient {
     // MARK: - OAuth
     //
     
-    func logout()-> AuthenticatedAPIRequest {        
+    @discardableResult func logout()-> AuthenticatedAPIRequest {        
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .post, route: "logout") { (response) in
             switch response.result {
             case .success(_):

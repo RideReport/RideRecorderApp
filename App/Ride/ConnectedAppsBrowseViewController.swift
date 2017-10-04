@@ -267,7 +267,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
         }
     }
     
-    func authCodeCallbackNotificationReceived(_ notification: Notification) {
+    @objc func authCodeCallbackNotificationReceived(_ notification: Notification) {
         if let _ = self.safariViewController, let callbackUrl = notification.object as? URL, let app = self.selectedConnectedApp {
             let uuid = callbackUrl.lastPathComponent
             if uuid == app.uuid {

@@ -99,21 +99,20 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         self.scene!.physicsWorld.contactDelegate = self
         
         let bikeTripEmojiCounts = TripReward.tripRewardCountsGroupedByAttribute("emoji", additionalAttributes: ["descriptionText"])
-        let fontAttributes = [NSFontAttributeName: UIFont(name: "Helvetica", size: 48)!]
+        let fontAttributes = [NSAttributedStringKey.font: UIFont(name: "Helvetica", size: 48)!]
         
         let imageSize = CGSize(width: 52.0, height: 52.0) // upscale so we can grow it
         let emojiSpriteSize = CGSize(width: 30.0, height: 30.0)
         for countData in bikeTripEmojiCounts {
-            if let emoji = countData["emoji"] as? String {
-                let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue)
-                if (imageDictionary[unicodeString as! String] == nil) {
+            if let emoji = countData["emoji"] as? String, let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue) {
+                if (imageDictionary[unicodeString as String] == nil) {
                     UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
                     (emoji as NSString).draw(at: CGPoint(x: 0,y: 0), withAttributes:fontAttributes)
                     
                     let emojiImage = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
                     
-                    imageDictionary[unicodeString as! String] = emojiImage
+                    imageDictionary[unicodeString as String] = emojiImage
                 }
             }
         }
@@ -130,7 +129,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
                     let descriptionText = countData["descriptionText"] as? String,
                     let unicodeString = NSString(data: emoji.data(using: String.Encoding.nonLossyASCII)!, encoding: String.Encoding.utf8.rawValue),
                     let count = countData["count"] as? NSNumber {
-                        let texture = textureAtlas.textureNamed(unicodeString as! String)
+                        let texture = textureAtlas.textureNamed(unicodeString as String)
                     
                         let insetEmojiSize = CGSize(width: emojiSpriteSize.width - 8, height: emojiSpriteSize.height - 8)
                         texture.usesMipmaps = true

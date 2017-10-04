@@ -44,6 +44,7 @@
 }
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     [self _setupCounter];
 }
 

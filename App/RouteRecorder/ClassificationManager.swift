@@ -122,17 +122,7 @@ public class SensorClassificationManager : ClassificationManager {
         predictionAggregator.currentPrediction = prediction
         RouteRecorderDatabaseManager.shared.saveContext()
         
-        var recordedSensorDataIsAvailable = false
-        if #available(iOS 9.0, *) {
-            if CMSensorRecorder.isAccelerometerRecordingAvailable() {
-                // go back N minutes and do predictions
-                // recordedSensorDataIsAvailable = true
-            }
-        }
-        
-        if !recordedSensorDataIsAvailable {
-            beginMotionUpdates(predictionAggregator: predictionAggregator, withHandler: handler)
-        }
+        beginMotionUpdates(predictionAggregator: predictionAggregator, withHandler: handler)
     }
     
     //
