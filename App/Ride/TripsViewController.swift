@@ -319,7 +319,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             if (self.popupView.isHidden) {
                 self.popupView.popIn()
             }
-            if (RouteRecorder.shared.routeManager.isPausedDueToUnauthorized()) {
+            if (RouteManager.authorizationStatus() == .authorizedWhenInUse) {
+                self.popupView.text = "Ride Report needs permission to run in the background"
+                popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
+            } else if (RouteManager.authorizationStatus() != .authorizedAlways) {
                 self.popupView.text = "Ride Report needs permission to run"
                 popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
             } else if (RouteRecorder.shared.routeManager.isPausedDueToBatteryLife()) {
