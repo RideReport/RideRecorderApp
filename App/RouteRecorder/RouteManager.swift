@@ -95,6 +95,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         for route in Route.openRoutes() {
             if (route.locations.count <= 3) {
                 // if it doesn't more than 3 points, toss it.
+                DDLogInfo("Canceling route with fewer than 3 locations")
                 route.cancel()
             } else if !route.isClosed {
                 route.close()
