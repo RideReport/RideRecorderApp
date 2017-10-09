@@ -319,20 +319,18 @@ public class APIClient {
             "creationDate": route.creationDate.JSONString()
         ] as [String : Any]
 
-        if !includeFullLocations || !route.isSummaryUploaded {
-            let summaryLocs = route.fetchOrGenerateSummaryLocations()
-            
-            if summaryLocs.count == 0 {
-                return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
-            }
-            
-            var summaryLocations : [Any?] = []
-
-            for location in summaryLocs {
-                summaryLocations.append((location).jsonDictionary())
-            }
-            routeDict["summaryLocations"] = summaryLocations
+        let summaryLocs = route.fetchOrGenerateSummaryLocations()
+        
+        if summaryLocs.count == 0 {
+            return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
+        
+        var summaryLocations : [Any?] = []
+        
+        for location in summaryLocs {
+            summaryLocations.append((location).jsonDictionary())
+        }
+        routeDict["summaryLocations"] = summaryLocations
         
         if includeFullLocations {
             guard route.locationCount() > 0 else {
