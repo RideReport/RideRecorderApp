@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- Location Source
+ Describes the source of a Location object.
  
  - unknown: Default value.
  - activeGPS: Location received when active, (possibly) high-accuracy tracking is enabled.
@@ -19,7 +19,6 @@ import Foundation
  - visitDeparture: Location created from a Core Location Visit Departure event. Used as a means of establishing a route's start location. Timestamp is estimated but could be used for determining a route's start time.
  - lastRouteArrival: Location copied from the end of the last route. Used as an alternative means of establishing start location. Timestamp should always be ignored.
  */
-
 @objc enum LocationSource : Int16, CustomStringConvertible {
     case unknown = 0
     case activeGPS
