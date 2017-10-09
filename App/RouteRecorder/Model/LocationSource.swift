@@ -8,6 +8,18 @@
 
 import Foundation
 
+/**
+ Location Source
+ 
+ - unknown: Default value.
+ - activeGPS: Location received when active, (possibly) high-accuracy tracking is enabled.
+ - passive: Location received when passive, (possibly) low-accuracy tracking is enabled.
+ - geofence: Center location of a geofence created when the geofence event fires.
+ - visitArrival: Location created from a Core Location Visit Arrival event. Possibly used as a means of establishing route's end location. Timestamp is estimated but could be used for determining a route's end time.
+ - visitDeparture: Location created from a Core Location Visit Departure event. Used as a means of establishing a route's start location. Timestamp is estimated but could be used for determining a route's start time.
+ - lastRouteArrival: Location copied from the end of the last route. Used as an alternative means of establishing start location. Timestamp should always be ignored.
+ */
+
 @objc enum LocationSource : Int16, CustomStringConvertible {
     case unknown = 0
     case activeGPS
