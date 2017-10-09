@@ -371,7 +371,11 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         #endif
         
-        if self.currentPredictionAggregator == nil {
+        if let aggregator =  self.currentPredictionAggregator {
+            for loc in locations {
+                loc.predictionAggregator = aggregator
+            }
+        } else {
             let newAggregator = PredictionAggregator(locations: locations)
             self.currentPredictionAggregator = newAggregator
             
