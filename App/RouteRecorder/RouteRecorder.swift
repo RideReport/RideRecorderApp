@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreMotion
+import CoreData
 import CocoaLumberjack
 
 public protocol RouteRecorderDelegate: class {
@@ -83,24 +84,51 @@ public class RouteRecorder {
                 }
                 NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "RouteRecorderDatabaseManagerDidStartup"), object: nil)
                 strongSelf.syncUnsyncedRoutes()
+                strongSelf.deleteUploadedRoutes()
             }
         } else {
             self.syncUnsyncedRoutes()
+            self.deleteUploadedRoutes()
         }
+    }
+    
+    private func deleteUploadedRoutes() {
+        // Deletes routes with isUploaded=true or routes with isSummaryUploaded=true that are at least a week old
+        let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Route")
+        let uploadedRoutesPredicate = NSPredicate(format: "isUploaded == YES OR (isSummaryUploaded == YES AND creationDate < %@)", Date().daysFrom(-7) as CVarArg)
+        fetchedRequest.predicate = uploadedRoutesPredicate
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.fetch(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        guard let routes = results as? [Route], routes.count > 0 else {
+            return
+        }
+        
+        for route in routes {
+            RouteRecorderDatabaseManager.shared.currentManagedObjectContext().delete(route)
+        }
+        RouteRecorderDatabaseManager.shared.saveContext()
     }
     
     private func syncUnsyncedRoutes() {
         if (UIApplication.shared.applicationState == UIApplicationState.active) {
-            self.uploadRoutes(syncInBackground: UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full)
+            self.uploadRoutes(includeFullLocations: UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full)
         }
     }
     
-    public func uploadRoutes(syncInBackground: Bool = false, completionBlock: @escaping ()->Void = {}) {
+    public func uploadRoutes(includeFullLocations: Bool = false, completionBlock: @escaping ()->Void = {}) {
         self.didEncounterUnrecoverableErrorUploadingRoutes = false
-        self.uploadNextRoute(syncInBackground, completionBlock: completionBlock)
+        self.uploadNextRoute(includeFullLocations: includeFullLocations, completionBlock: completionBlock)
     }
     
-    private func uploadNextRoute(_ includeFullLocations: Bool, completionBlock: @escaping ()->Void = {}) {
+    private func uploadNextRoute(includeFullLocations: Bool, completionBlock: @escaping ()->Void = {}) {
         if let route = (includeFullLocations ? Route.nextClosedUnuploadedRoute() : Route.nextUnuploadedSummaryRoute()), !self.didEncounterUnrecoverableErrorUploadingRoutes {
             APIClient.shared.uploadRoute(route, includeFullLocations: includeFullLocations).apiResponse({ (response) -> Void in
                 switch response.result {
@@ -115,7 +143,7 @@ public class RouteRecorder {
                     }
                 }
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.6 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
-                    self.uploadNextRoute(includeFullLocations, completionBlock: completionBlock)
+                    self.uploadNextRoute(includeFullLocations: includeFullLocations, completionBlock: completionBlock)
                 })
             })
         } else {
