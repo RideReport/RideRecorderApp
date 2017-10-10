@@ -285,14 +285,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         } else if let uuid = userInfo["uuid"] as? String,
             let trip = Trip.tripWithUUID(uuid) {
             
-            var clearRemoteMessage = false
-            if let aps = userInfo["aps"] as? NSDictionary, let _ = aps["alert"] as? String {
-                clearRemoteMessage = true
-            }
             DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
+            
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.shared.saveContext()
-            trip.sendTripCompletionNotificationLocally(clearRemoteMessage)
             if let statusText = userInfo["status_text"] as? String, let statusEmoji = userInfo["status_emoji"] as? String {
                 Profile.profile().statusText = statusText
                 Profile.profile().statusEmoji = statusEmoji

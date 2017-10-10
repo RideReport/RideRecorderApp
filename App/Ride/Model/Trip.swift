@@ -15,7 +15,6 @@ import CoreMotion
 import MapKit
 import HealthKit
 import UserNotifications
-import MapboxStatic
 import CocoaLumberjack
 
 public class  Trip: NSManagedObject {
@@ -531,121 +530,21 @@ public class  Trip: NSManagedObject {
         }
     }
     
-    @available(iOS 10.0, *)
-    private func createRouteMapAttachement(_ handler: @escaping (_ attachment: UNNotificationAttachment?)->Void) {
-        guard let route = self.route else {
-            handler(nil)
-            return
-        }
-        
-        let locations = route.fetchOrGenerateSummaryLocations()
-        
-        if locations.count > 0 {
-            let width = UIScreen.main.bounds.width
-            let height = UIScreen.main.bounds.height - 370 // make sure that all three buttons fit on the screen without scrolling
-            
-            var coords = [CLLocationCoordinate2D]()
-            
-            
-            for loc in locations {
-                coords.append(loc.coordinate())
-            }
-            
-            let path = Path(
-                coordinates: coords
-            )
-            path.strokeWidth = 8
-            path.strokeColor = {
-                if(self.rating.choice == RatingChoice.good) {
-                    return ColorPallete.shared.goodGreen
-                } else if(self.rating.choice == RatingChoice.bad) {
-                    return ColorPallete.shared.badRed
-                } else {
-                    return ColorPallete.shared.unknownGrey
-                }
-            }()
-            path.fillColor = UIColor.clear
-            
-            let backingPath = Path(
-                coordinates: coords
-            )
-            backingPath.strokeWidth = 12
-            backingPath.strokeColor = UIColor(red: 115/255, green: 123/255, blue: 102/255, alpha: 1.0)
-            backingPath.fillColor = UIColor.clear
-            
-            let startMarker = CustomMarker(
-                coordinate: locations.first!.coordinate(),
-                url: URL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinGreen%402x.png")!
-            )
-            
-            let endMarker = CustomMarker(
-                coordinate: locations.last!.coordinate(),
-                url: URL(string: "https://s3-us-west-2.amazonaws.com/ridereport/pinRed%402x.png")!
-            )
-            
-            let options = SnapshotOptions(
-                styleURL: URL(string: "mapbox://styles/quicklywilliam/cire41sgs0001ghme6posegq0")!,
-                size: CGSize(width: width, height: height))
-            options.showsAttribution = false
-            
-            options.overlays = [backingPath, path, startMarker, endMarker]
-            let snapshot = Snapshot(
-                options: options,
-                accessToken: "pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA")
-            
-            let filePath = NSTemporaryDirectory() + (self.uuid + ".png")
-            
-            var taskFinished = false
-            
-            let task = snapshot.image(completionHandler: { (image, error) in
-                if (taskFinished) {
-                    return
-                }
-                
-                taskFinished = true
-                
-                if let image = image {
-                    let data = UIImagePNGRepresentation(image)
-                    try? data?.write(to: URL(fileURLWithPath: filePath), options: .atomic)
-                    if let attachment = try? UNNotificationAttachment(identifier: "map", url: NSURL(fileURLWithPath: filePath) as URL, options: [UNNotificationAttachmentOptionsThumbnailClippingRectKey:  CGRect(x: 0.5, y: 0.5, width: 1, height: 1).dictionaryRepresentation]) {
-                        handler(attachment)
-                        return
-                    }
-                }
-                
-                handler(nil)
-            })
-            
-            // timeout after two seconds, runs on same (main) thread as snapshot.image callback
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
-                if (!taskFinished) {
-                    taskFinished = true
-                    task.cancel()
-                    handler(nil)
-                }
-            })
+    func cancelTripStateNotificationOnLegacyDevices() {
+        if #available(iOS 10.0, *) {
+            // return
         } else {
-            handler(nil)
+            if (self.currentStateNotification != nil) {
+                UIApplication.shared.cancelLocalNotification(self.currentStateNotification!)
+                self.currentStateNotification = nil
+            }
         }
     }
     
-    func cancelTripStateNotification(_ clearRemoteMessage: Bool = false) {
-        // clear any remote push notifications
-        if clearRemoteMessage {
-            UIApplication.shared.applicationIconBadgeNumber = 1
-            UIApplication.shared.applicationIconBadgeNumber = 0
-        }
-        
-        if (self.currentStateNotification != nil) {
-            UIApplication.shared.cancelLocalNotification(self.currentStateNotification!)
-            self.currentStateNotification = nil
-        }
-    }
-    
-    func sendTripCompletionNotificationLocally(_ clearRemoteMessage: Bool = false, secondsFromNow: TimeInterval = 0) {
+    func sendTripCompletionNotificationLocally(secondsFromNow: TimeInterval) {
         DDLogInfo("Scheduling notification…")
         
-        self.cancelTripStateNotification(clearRemoteMessage)
+        self.cancelTripStateNotificationOnLegacyDevices()
         
         if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
@@ -669,34 +568,25 @@ public class  Trip: NSManagedObject {
                     DDLogInfo("Schedule trip notification background task expired!")
                 })
                 
-                let attachmentCallbackHandler = { (attachment: UNNotificationAttachment?) in
-                    let content = UNMutableNotificationContent()
-                    content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
-                    content.sound = UNNotificationSound(named: "bell.aiff")
-                    content.body = self.notificationString()
-                    content.userInfo = userInfo
-                    if let attachment = attachment {
-                        content.attachments = [attachment]
-                    }
-                    
-                    // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
-                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow > 0 ? secondsFromNow : 1, repeats: false)
-                    let requestIdentifier = "sampleRequest"
-                    let request = UNNotificationRequest(identifier: requestIdentifier,
-                                                        content: content,
-                                                        trigger: trigger)
-                    
-                    UNUserNotificationCenter.current().add(request) { (error) in
-                        DispatchQueue.main.async {
-                            if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                                DDLogInfo("Ending trip notification background task!")
-                                UIApplication.shared.endBackgroundTask(backgroundTaskID)
-                            }
+                let content = UNMutableNotificationContent()
+                content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
+                content.sound = UNNotificationSound(named: "bell.aiff")
+                content.body = self.notificationString()
+                content.userInfo = userInfo
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
+                let request = UNNotificationRequest(identifier: self.uuid,
+                                                    content: content,
+                                                    trigger: trigger)
+                
+                UNUserNotificationCenter.current().add(request) { (error) in
+                    DispatchQueue.main.async {
+                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                            DDLogInfo("Ending trip notification background task!")
+                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
                         }
                     }
                 }
-                
-                createRouteMapAttachement(attachmentCallbackHandler)
             } else {
                 self.currentStateNotification = UILocalNotification()
                 self.currentStateNotification?.alertBody = self.notificationString()

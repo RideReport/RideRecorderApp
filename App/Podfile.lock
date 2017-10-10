@@ -28,7 +28,6 @@ PODS:
   - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.6.3)
   - Mapbox-iOS-SDK-symbols (3.6.3-symbols)
-  - MapboxStatic.swift (0.8.0)
   - Mixpanel-swift (2.2.1)
   - OAuthSwift (1.1.1)
   - OHHTTPStubs/Core (6.0.0)
@@ -64,7 +63,6 @@ DEPENDENCIES:
   - Kingfisher
   - Mapbox-iOS-SDK
   - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
-  - MapboxStatic.swift (from `https://github.com/mapbox/MapboxStatic.swift.git`)
   - Mixpanel-swift
   - OAuthSwift
   - OHHTTPStubs/Swift
@@ -77,16 +75,11 @@ EXTERNAL SOURCES:
     :git: https://github.com/1024jp/GzipSwift.git
   Mapbox-iOS-SDK-symbols:
     :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec
-  MapboxStatic.swift:
-    :git: https://github.com/mapbox/MapboxStatic.swift.git
 
 CHECKOUT OPTIONS:
   GzipSwift:
     :commit: 347cff84754b8e2aca3017b6805c0286693558b3
     :git: https://github.com/1024jp/GzipSwift.git
-  MapboxStatic.swift:
-    :commit: 965daaf892e3f56ebd8c773a0daaebe33a89ceb5
-    :git: https://github.com/mapbox/MapboxStatic.swift.git
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
@@ -105,7 +98,6 @@ SPEC CHECKSUMS:
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: 27805cb5f36d2bffe732b1d392278f4e408d06d2
   Mapbox-iOS-SDK-symbols: c3a077d2d84ddde5e6a487eed5261a035808f3f4
-  MapboxStatic.swift: e5357c89d34c31d884c27a180552cb794b41db09
   Mixpanel-swift: d0374c33e38a7f184203eef1c8eae64be54986ed
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
   OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
@@ -113,6 +105,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   WebLinking: b476999d59f78bd6649e6754d60693a7d147b00c
 
-PODFILE CHECKSUM: 562741f23e68f9f7cc94e6e38b3e2077ebdfe4c2
+PODFILE CHECKSUM: 8b701c1732edff2db36e62ae73694058cf6288bb
 
 COCOAPODS: 1.3.1

@@ -28,7 +28,6 @@ target 'Ride Report' do
     pod 'FBSDKShareKit'
     pod 'Mapbox-iOS-SDK', :configurations => ['Release']
     pod 'Mapbox-iOS-SDK-symbols', :podspec => "https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec", :configurations => ['Debug']
-    pod 'MapboxStatic.swift', :git => "https://github.com/mapbox/MapboxStatic.swift.git"
     pod 'Mixpanel-swift'
 end
 
