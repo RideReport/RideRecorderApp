@@ -284,7 +284,7 @@
                                 </variation>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Tell us about your trip" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1OH-SF-3Te">
-                                <rect key="frame" x="20" y="88" width="335" height="30"/>
+                                <rect key="frame" x="20" y="84" width="335" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                             </textField>
@@ -2096,7 +2096,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AXG-zy-OqC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1685.5072463768117" y="450.00000000000006"/>
+            <point key="canvasLocation" x="1716" y="511"/>
         </scene>
         <!--Stress Map-->
         <scene sceneID="4tC-aS-a2H">
@@ -3966,7 +3966,7 @@ Label</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="q5e-fk-Orc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="816" y="1560"/>
+            <point key="canvasLocation" x="938" y="1218"/>
         </scene>
         <!--Setup Watch Activity Syncing View Controller-->
         <scene sceneID="WHC-Rl-kWF">
@@ -4604,6 +4604,6 @@ Label</string>
         <image name="menu.png" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="WNJ-Ui-G2R"/>
+        <segue reference="wPS-ZA-hS9"/>
     </inferredMetricsTieBreakers>
 </document>

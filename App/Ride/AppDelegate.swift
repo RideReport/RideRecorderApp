@@ -197,18 +197,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         self.window?.makeKeyAndVisible()
     }
     
-    func dismissCurrentPresentedViewController() {
-        if let rootVC = self.window?.rootViewController {
-            if let presentedVC = rootVC.presentedViewController {
-                // dismiss anything in the way first
-                presentedVC.dismiss(animated: true, completion: nil)
-            }
-        }
-    }
-    
     func transitionToConnectApp(_ app: ConnectedApp) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let navVC : UINavigationController = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
+        let navVC = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
         
         guard let connectVC = navVC.topViewController as? ConnectedAppsBrowseViewController else {
             return
@@ -237,6 +228,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         
         self.window?.rootViewController = viewController
         self.window?.makeKeyAndVisible()
+    }
+    
+    func transitionToTripView(trip: Trip) {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        guard let tripVC = storyBoard.instantiateViewController(withIdentifier: "TripViewController") as? TripViewController else {
+            return
+        }
+        
+        if let rootVC = self.window?.rootViewController as? ECSlidingViewController, let navVC = rootVC.topViewController as? UINavigationController {
+            if let presentedVC = rootVC.presentedViewController {
+                // dismiss anything in the way first
+                presentedVC.dismiss(animated: false, completion: nil)
+            }
+            tripVC.selectedTrip = trip
+            navVC.pushViewController(tripVC, animated: true)
+        }
     }
     
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
@@ -294,6 +301,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
                 Profile.profile().statusEmoji = statusEmoji
                 CoreDataManager.shared.saveContext()
             }
+            
             completionBlock()
         } else {
             completionBlock()

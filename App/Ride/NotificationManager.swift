@@ -15,7 +15,7 @@ enum NotificationManagerAuthorizationStatus {
     case denied
 }
 
-class NotificationManager : NSObject {
+class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
     static private(set) var shared : NotificationManager!
     private var pendingRegistrationHandler: ((NotificationManagerAuthorizationStatus)->Void)? = nil
     
@@ -73,6 +73,15 @@ class NotificationManager : NSObject {
         }
     }
     
+    @available(iOS 10.0, *)
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
+        if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
+            if let trip = Trip.tripWithUUID(response.notification.request.identifier) {
+                AppDelegate.appDelegate().transitionToTripView(trip: trip)
+            }
+        }
+    }
+    
     func registerNotifications() {
         if #available(iOS 10.0, *) {
             var actions : [UNNotificationAction] = []
@@ -109,6 +118,7 @@ class NotificationManager : NSObject {
                     }
                 }
             }
+            UNUserNotificationCenter.current().delegate = self
         } else {
             var actions : [UIMutableUserNotificationAction] = []
             
