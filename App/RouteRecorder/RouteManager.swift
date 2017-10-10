@@ -554,8 +554,6 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         self.cancelScheduledAppResumeReminderNotifications()
-        RouteRecorderStore.store().lastArrivalLocation = nil
-        RouteRecorderDatabaseManager.shared.saveContext()
         
         if (untilDate != nil) {
             UserDefaults.standard.set(untilDate, forKey: "RouteManagerIsPausedUntilDate")
@@ -572,6 +570,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogStateChange("Paused Tracking")
         
         self.stopGPSRouteAndEnterBackgroundState()
+        RouteRecorderStore.store().lastArrivalLocation = nil
+        RouteRecorderDatabaseManager.shared.saveContext()
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
@@ -580,14 +580,14 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             let notif = UILocalNotification()
             notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
             UIApplication.shared.presentLocalNotificationNow(notif)
-            
-            RouteRecorderStore.store().lastArrivalLocation = nil
-            RouteRecorderDatabaseManager.shared.saveContext()
-            
+                        
             DDLogStateChange("Paused Tracking due to battery life")
             
             self.stopGPSRouteAndEnterBackgroundState()
         }
+        
+        RouteRecorderStore.store().lastArrivalLocation = nil
+        RouteRecorderDatabaseManager.shared.saveContext()
     }
     
     private func checkPausedAndResumeIfNeeded()->Bool {
