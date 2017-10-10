@@ -110,6 +110,7 @@
 
 - (void)_initialize
 {
+    self.animationDuration = 0.3;
     _numberOfDigits = 3;
     self.currentReading = 1;
 }
@@ -129,18 +130,19 @@
     [self updateCounter:(self.currentReading + 1) animate:animate];
 }
 
--(void)updateFrame:(UIImageView*)img fromImageCenter:(CGPoint)imgCenterFrom toImageCenter:(CGPoint)imgCenterTo andImageFrame:(CGRect)frame{
+-(void)updateFrame:(UIImageView*)img fromImageCenter:(CGPoint)imgCenterFrom toImageCenter:(CGPoint)imgCenterTo andImageFrame:(CGRect)frame {
     CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"position"];
     anim.fromValue = [NSValue valueWithCGPoint:imgCenterFrom];
     anim.toValue = [NSValue valueWithCGPoint:imgCenterTo];
     anim.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    anim.duration = 0.3;
+    anim.duration = self.animationDuration;
     [img.layer addAnimation:anim forKey:@"rollLeft"];
     img.frame = frame;
 }
 
 - (void)updateCounter:(NSUInteger)newValue animate:(BOOL)animate {
     // Work out the digits
+    int millionsOld = (self.currentReading % 10000000)/1000000;
     int hthousandthOld = (self.currentReading % 1000000)/100000;
     int tenthounsandthOld = (self.currentReading % 100000) / 10000;
     int thounsandthOld = (self.currentReading % 10000)/1000;
@@ -155,7 +157,9 @@
     [oldValueArray addObject: [NSNumber numberWithInt:thounsandthOld]];
     [oldValueArray addObject: [NSNumber numberWithInt:tenthounsandthOld]];
     [oldValueArray addObject: [NSNumber numberWithInt:hthousandthOld]];
+    [oldValueArray addObject: [NSNumber numberWithInt:millionsOld]];
     
+    int millionsNew = (newValue % 10000000)/1000000;
     int hthousandthNew = (newValue % 1000000)/100000;
     int tenthounsandthNew = (newValue % 100000) / 10000;
     int thounsandthNew = (newValue % 10000)/1000;
@@ -170,6 +174,7 @@
     [newValueArray addObject: [NSNumber numberWithInt:thounsandthNew]];
     [newValueArray addObject: [NSNumber numberWithInt:tenthounsandthNew]];
     [newValueArray addObject: [NSNumber numberWithInt:hthousandthNew]];
+    [newValueArray addObject: [NSNumber numberWithInt:millionsNew]];
     
     
     for (int i = 0; i < self.numberOfDigits; i++) {

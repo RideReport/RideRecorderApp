@@ -15,6 +15,7 @@ IB_DESIGNABLE
 
 @property (nonatomic) IBInspectable NSUInteger currentReading;
 @property (nonatomic) IBInspectable NSUInteger numberOfDigits;
+@property (nonatomic) NSTimeInterval animationDuration;
 
 - (void)incrementCounter;
 - (void)incrementCounter:(BOOL)animate;

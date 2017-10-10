@@ -60,7 +60,6 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         super.viewWillAppear(animated)
         
         self.reloadMapInfoToolBar()
-        self.counter.update(0, animate: false) // we're going to animate it instead.
 
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
@@ -69,39 +68,6 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
             strongSelf.reloadMapInfoToolBar()
         }
 
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        // animate the counter up to its current value
-        if case .area(_, let count, _, _) = RideReportAPIClient.shared.area {
-            if !self.counter.isHidden {
-                var j = 0
-                var i = 0
-                let increment = Int(count)/100
-                while i < Int(count) {
-                    let c = UInt(i)
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { [weak self] in
-                        guard let strongSelf = self else {
-                            return
-                        }
-                        
-                        strongSelf.counter.update(c, animate: false)
-                    }
-                    j += 1
-                    i += increment
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(Double(j)*0.0167 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    
-                    strongSelf.counter.update(count, animate: false)
-                }
-            }
-        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -151,13 +117,27 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
                 self.counterText.isHidden = true
                 
                 self.mapInfoText.text = String(format: "Ride Report doesn't have enough trips to show a map in %@. Every ride you take get us closer!", name)
-            case .area(let name, let count, let countPerHour, let launched):
+            case .area(let name, let meters, let metersPerHour, let launched):
                 self.counter.isHidden = false
                 self.counterText.isHidden = false
                 
-                self.counter.update(count, animate: true)
-                self.counterTimer = Timer.scheduledTimer(timeInterval: 3600.0/Double(countPerHour), target: self.counter, selector: #selector(RCounter.incrementCounter as (RCounter) -> () -> Void), userInfo: nil, repeats: true)
-                self.counterText.text = String(format: "Rides in %@", name)
+                let milesOrKm = Meters(meters).localizedMajorUnit
+                let milesOrKmPerHour = Meters(metersPerHour).localizedMajorUnit
+                let isMiles = (milesOrKm == Meters(meters).miles)
+                let duration = 3600.0/Double(Int(milesOrKmPerHour))
+                
+                self.counter.update(UInt(milesOrKm) - 1, animate: false)
+                self.counter.animationDuration = duration - 0.1
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { [weak self] in
+                    guard let strongSelf = self else {
+                        return
+                    }
+                    strongSelf.counter.update(UInt(milesOrKm), animate: true) //animate in the first mile
+                })
+                
+                self.counterTimer = Timer.scheduledTimer(timeInterval: duration, target: self.counter, selector: #selector(RCounter.incrementCounter as (RCounter) -> () -> Void), userInfo: nil, repeats: true)
+                self.counterText.text = String(format: "%@ Biked in %@", isMiles ? "Miles" : "KM", name)
 
                 if (launched) {
                     self.mapInfoText.text = String(format: "Map shows average ratings from %@ riders. Better routes are green, stressful routes are red.", name)

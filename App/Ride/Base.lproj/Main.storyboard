@@ -2129,8 +2129,8 @@
                                             </mask>
                                         </variation>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rides Logged in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-ci-OtU">
-                                        <rect key="frame" x="170" y="50" width="197" height="70"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Miles Biked in Portland" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="LqR-ci-OtU">
+                                        <rect key="frame" x="197" y="50" width="170" height="70"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="6Sa-Wa-B0s"/>
                                             <constraint firstAttribute="height" constant="42" id="GIj-n2-lfU"/>
@@ -2146,18 +2146,18 @@
                                         </variation>
                                     </label>
                                     <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MF5-jO-gGh" customClass="RCounter">
-                                        <rect key="frame" x="1" y="50" width="162" height="70"/>
+                                        <rect key="frame" x="1" y="50" width="189" height="70"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.73999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="70" id="cp8-j3-r4h"/>
-                                            <constraint firstAttribute="width" constant="162" id="d9c-dn-CJ4"/>
+                                            <constraint firstAttribute="width" constant="189" id="d9c-dn-CJ4"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="currentReading">
                                                 <integer key="value" value="0"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="numberOfDigits">
-                                                <integer key="value" value="6"/>
+                                                <integer key="value" value="7"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <variation key="widthClass=compact">

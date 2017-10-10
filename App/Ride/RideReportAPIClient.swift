@@ -33,7 +33,7 @@ class RideReportAPIClient {
     
     enum Area {
         case unknown
-        case area(name: String, count: UInt, countRatePerHour: UInt, launched: Bool)
+        case area(name: String, meters: UInt, metersPerHour: UInt, launched: Bool)
         case nonArea
     }
     
@@ -376,8 +376,8 @@ class RideReportAPIClient {
             switch response.result {
             case .success(let json):
                 if let areaJson = json["area"].dictionary {
-                    if let name = areaJson["name"]?.string, let count = areaJson["count_info"]?["count"].uInt, let countRatePerHour = areaJson["count_info"]?["per_hour"].uInt, let launched = areaJson["launched"]?.bool {
-                        self.area = .area(name: name, count: count, countRatePerHour: countRatePerHour, launched: launched)
+                    if let name = areaJson["name"]?.string, let meters = areaJson["count_info"]?["meters"].uInt, let metersPerHour = areaJson["count_info"]?["meters_per_hour"].uInt, let launched = areaJson["launched"]?.bool {
+                        self.area = .area(name: name, meters: meters, metersPerHour: metersPerHour, launched: launched)
                     } else {
                         self.area = .nonArea
                     }
