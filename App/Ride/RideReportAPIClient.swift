@@ -10,6 +10,7 @@ import Foundation
 import RouteRecorder
 import Mixpanel
 import CocoaLumberjack
+import Crashlytics
 import Alamofire
 import WebLinking
 
@@ -399,6 +400,7 @@ class RideReportAPIClient {
                 
                 if let supportId = json["support_id"].string {
                     Profile.profile().supportId = supportId
+                    Crashlytics.sharedInstance().setUserIdentifier(supportId)
                 }
                 
                 if let promotions = json["promotions"].array {
