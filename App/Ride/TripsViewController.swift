@@ -37,7 +37,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     private var reachability : Reachability!
     
-    private var cellToReAnimateOnAppActivate: UITableViewCell?
+    private weak var cellToReAnimateOnAppActivate: UITableViewCell?
     private var shouldShowStreakAnimation = false
     private var shouldShowRewardsAnimation = true
     
