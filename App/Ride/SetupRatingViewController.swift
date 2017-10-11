@@ -10,7 +10,7 @@ import Foundation
 
 class SetupRatingViewController: SetupChildViewController, RideNotificationViewDelegate {
     
-    weak var pushSimulationView : RideNotificationView!
+    @IBOutlet weak var pushSimulationView : RideNotificationView!
     @IBOutlet weak var iPhoneContainerViewTopConstraint : NSLayoutConstraint!
     @IBOutlet weak var iPhoneContainerView : UIView!
     @IBOutlet weak var buttonContainerView : UIView!
