@@ -421,7 +421,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         case .update:
             let indexPathPlusOne = IndexPath(row: indexPath!.row, section: indexPath!.section + 1)
             if let cell = self.tableView!.cellForRow(at: indexPathPlusOne) {
-                configureCell(cell, indexPath: indexPathPlusOne)
+                var newIndexPathPlusOne = indexPathPlusOne
+                if let newIndexPath = newIndexPath {
+                    newIndexPathPlusOne = IndexPath(row: newIndexPath.row, section: newIndexPath.section + 1)
+                }
+                configureCell(cell, indexPath: newIndexPathPlusOne)
             }
         case .insert:
             self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: newIndexPath!.section + 1)], with: .fade)
