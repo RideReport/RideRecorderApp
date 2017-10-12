@@ -11,6 +11,7 @@ import SwiftyJSON
 import Eureka
 import CoreMotion
 import AVFoundation
+import RouteRecorder
 import CocoaLumberjack
 
 class ViewController: FormViewController {
@@ -40,7 +41,7 @@ class ViewController: FormViewController {
             })
         }
         form +++ Section(header: "What is your email address?", footer: "We may email you with questions about your trip.") {
-            $0.header?.height = { 1 }
+            $0.header?.height = { 36 }
         }
             <<< EmailRow("email"){
                 $0.placeholder = "me@them.com"
@@ -284,7 +285,7 @@ class ViewController: FormViewController {
     
     fileprivate var isPredicting: Bool = false
     
-    func runPredictionIfEnabled() {
+    @objc func runPredictionIfEnabled() {
         guard self.predictSwitch.isOn else {
             return
         }
@@ -331,7 +332,7 @@ class ViewController: FormViewController {
             }
         }
         
-        SensorManagerComponent.shared.classificationManager.predictCurrentActivityType(predictionAggregator: self.aggregatorForQuery!) {[weak self] (aggregator) -> Void in
+        RouteRecorder.shared.classificationManager.predictCurrentActivityType(predictionAggregator: self.aggregatorForQuery!) {[weak self] (aggregator) -> Void in
             guard let strongSelf = self else {
                 return
             }

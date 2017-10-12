@@ -18,10 +18,13 @@ public class PredictionAggregator : NSManagedObject {
     public static let minimumSampleCountForSuccess = 8
     public static let maximumSampleBeforeFailure = 15
 
-    
-    convenience init(locations: [Location]) {
+    convenience init() {
         let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
         self.init(entity: NSEntityDescription.entity(forEntityName: "PredictionAggregator", in: context)!, insertInto: context)
+    }
+    
+    convenience init(locations: [Location]) {
+        self.init()
         
         for loc in locations {
             loc.predictionAggregator = self
@@ -152,13 +155,17 @@ public class PredictionAggregator : NSManagedObject {
         for ar in self.accelerometerReadings {
             accelerometerAccelerations.append(ar.jsonDictionary())
         }
-        dict["accelerometerAccelerations"] = accelerometerAccelerations
+        dict["accelerometerReadings"] = accelerometerAccelerations
         
         var predictions : [Any] = []
         for p in self.predictions {
             predictions.append(p.jsonDictionary())
         }
         dict["predictions"] = predictions
+        
+        if let aggregatePredictedActivity = self.aggregatePredictedActivity {
+            dict["aggregatePredictedActivity"] = aggregatePredictedActivity.jsonDictionary()
+        }
         
         var locsArray : [Any] = []
         

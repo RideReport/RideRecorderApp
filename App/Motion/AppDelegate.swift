@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreMotion
+import RouteRecorder
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,16 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
 
-        KeychainManager.startup()
-        CoreDataManager.startup()
-        APIClient.startup()
-        SensorManagerComponent.inject(motionManager: CMMotionManager(),
-                                      locationManager: LocationManager(type: .coreLocation),
-                                      routeManager: RouteManager(),
-                                      randomForestManager: RandomForestManager(),
-                                      classificationManager: SensorClassificationManager())
-        SensorManagerComponent.shared.randomForestManager.startup()
-        SensorManagerComponent.shared.classificationManager.startup()
+        RouteRecorder.inject(motionManager: CMMotionManager(),
+                             locationManager: LocationManager(type: .coreLocation),
+                             routeManager: RouteManager(),
+                             randomForestManager: RandomForestManager(),
+                             classificationManager: SensorClassificationManager())
+        RouteRecorder.shared.randomForestManager.startup()
+        RouteRecorder.shared.classificationManager.startup(handler: {})
+        
         startupNotifications()
 
         return true

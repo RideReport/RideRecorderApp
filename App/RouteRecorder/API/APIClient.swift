@@ -268,7 +268,7 @@ public class APIClient {
     #endif
     
     public func upload(predictionAggregator: PredictionAggregator, withMetadata metadataDict:[String: Any] = [:]) {
-        let accelerometerRouteURL = "ios_accelerometer_data"
+        let accelerometerRouteURL = "prediction_aggregators"
         var params = metadataDict
         params["data"] = predictionAggregator.jsonDictionary() as Any?
 

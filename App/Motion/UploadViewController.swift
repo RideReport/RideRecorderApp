@@ -8,6 +8,7 @@
 
 import Foundation
 import Eureka
+import RouteRecorder
 
 class UploadViewController: FormViewController {
     public var aggregator : PredictionAggregator?
@@ -43,7 +44,6 @@ class UploadViewController: FormViewController {
                     metadata["identifier"] = identifier.uuidString
                 }
                 
-                CoreDataManager.shared.saveContext()
                 APIClient.shared.upload(predictionAggregator: aggregator, withMetadata: metadata)
                 
                 strongSelf.navigationController?.popToRootViewController(animated: true)

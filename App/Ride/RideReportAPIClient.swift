@@ -178,7 +178,7 @@ class RideReportAPIClient {
             
             if !trip.isSynced {
                 existingRequest.requestCompletetionBlock = {
-                    // we need to reset isSynced since the changes were made after the request went out.
+                                // we need to reset isSynced since the changes were made after the request went out.
                     trip.isSynced = false
                     self.patchTrip(trip)
                 }

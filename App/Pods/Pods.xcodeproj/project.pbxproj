@@ -173,6 +173,7 @@
 		30BB25ADBF880F15D0FBF8C60E4E64BD /* FBSDKShareAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFCAA20CCB3456A31DA0D2A0D1CB44B /* FBSDKShareAPI.m */; };
 		319FA27229C73E95F315F2CD29627A00 /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E43B21952F62FE1E2E8CDA91C025727 /* HMAC.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		31E5BF8A28D57C3C726310C4B643E047 /* FBSDKShareError.m in Sources */ = {isa = PBXBuildFile; fileRef = C1DD93905BCFB64282402E516D343A44 /* FBSDKShareError.m */; };
+		31EB25C690D321D564D0ADB6FADA8A89 /* Pods-RouteRecorder-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2013AAB4D98160302B5BB7E62A60DBDF /* Pods-RouteRecorder-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31F03BD2C1A98AA6CDB364D49CFCF60E /* FBSDKBridgeAPIRequest+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = CEB26605EA5A8E63D7796BC855F096B9 /* FBSDKBridgeAPIRequest+Private.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		322D20FE50D9190D15FCC214039B735F /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 44E3A6C724E47EB6201195E2FBC498E1 /* FBSDKCoreKit+Internal.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		33395912F2FFA355C4C36B7EDEAA3DA7 /* ImageView+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C26B0F25802574FF995217E61D4DF2 /* ImageView+Kingfisher.swift */; };
@@ -235,6 +236,7 @@
 		44515B1459AA1EEB9CAAC1A451652B0B /* FBSDKSharing.h in Headers */ = {isa = PBXBuildFile; fileRef = EF9281B79B2FD52F2997B1BED8BC96A4 /* FBSDKSharing.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		44995983A29BC94B9CC792EDB679232C /* FBSDKSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 78ADA6927BE70F3ED642FE6A08215C13 /* FBSDKSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4499DC9A7038C8D353E2D610EA635074 /* FBSDKKeychainStoreViaBundleID.h in Headers */ = {isa = PBXBuildFile; fileRef = C1F0F377E2F177580F2C3D7D703764FA /* FBSDKKeychainStoreViaBundleID.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		449E34B083F1734D481648360035789C /* Pods-RouteRecorder-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D4461D1898EEC6442C93CD4EEB22CCF7 /* Pods-RouteRecorder-dummy.m */; };
 		453612B3302CFF3345E7FC70F827F90D /* FBSDKLikeBoxBorderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CAA64F90AA10EEAB914F308B202D8456 /* FBSDKLikeBoxBorderView.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		45606CAA08DF35568C1876E7DF138AA8 /* DDLegacyMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 7390CA7C55C9AB62FD7B34B576463EC2 /* DDLegacyMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		46039CDF37551F5CD083176E59D08805 /* Objc.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81203DA09C57EA7434950EE6FECAC0B /* Objc.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -278,7 +280,6 @@
 		535C677E373564D237FDC4F30ED9A595 /* PieChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8472FD5BE4FE90F9FD09259501EB10 /* PieChartData.swift */; };
 		5387216E723A3C68E851CA15573CDD71 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA502A9BFEC4F2F248FFECE8DECD38D8 /* Request.swift */; };
 		53882E613DA7185E0F29F050B7178E89 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 694A53A98FD9EA9BDDC07D4CE552BCF4 /* Bolts.framework */; };
-		53D6E7BB9A32B798B48CF0A927EFC2FB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C23D82C55B902D052C15C1EAE985577F /* Foundation.framework */; };
 		54C4041C785072263803B9598AC95B5D /* FlushRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E6CB935A5562210B24E5118AB6F37 /* FlushRequest.swift */; };
 		557F40B925D4627F510766E01EFCDC2C /* SHA1.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5215C98A0DE682222102B00F5549989 /* SHA1.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		55A4E9CF3193F865C1E8C6522B51A671 /* GzipSwift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 25A58A61CAEA202FBF2AEF240B65C027 /* GzipSwift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -446,7 +447,6 @@
 		8B05083CA44803381B6B7D22F0F76155 /* HorizontalBarChartRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278A9FD24ED518A8EEF1751BEA689FF7 /* HorizontalBarChartRenderer.swift */; };
 		8B79A79FFD015D6AF8FACF2472690EC6 /* CGSizeToNSDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DBDDCF2B07EF0361AEFE2581A245CF /* CGSizeToNSDictionary.swift */; };
 		8BDBA8042C5829E782549C11420A899E /* FBSDKColor.h in Headers */ = {isa = PBXBuildFile; fileRef = C63B4DFE02831E0B941F93D4396CAD59 /* FBSDKColor.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		8C473DC9ECEDB5DCF7EC2B0F8AA7AC4D /* Pods-RouteRecorder-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D4461D1898EEC6442C93CD4EEB22CCF7 /* Pods-RouteRecorder-dummy.m */; };
 		8D659D019E3980DE8F3D0E4BC839DE30 /* URL+OAuthSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C9820921ED70C70F52EE6D3116B25F8 /* URL+OAuthSwift.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8DA7E6883118CB3C8132B64D3D43AE0B /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5229650167DC145E809556286F49FEF6 /* Resource.swift */; };
 		8DD5ADE2DD9ED7E6707B6AABABA74896 /* FBSDKImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = C4E56EDB530B8512476A487A32E8F96D /* FBSDKImageDownloader.m */; };
@@ -587,6 +587,7 @@
 		B2CA7FC41622904417A5382B4B2478C8 /* FBSDKBridgeAPIProtocolWebV1.m in Sources */ = {isa = PBXBuildFile; fileRef = 0323D35741B0CBF1BCC57A6658063C32 /* FBSDKBridgeAPIProtocolWebV1.m */; };
 		B3B5B10201D9BA6470173163A6F6725E /* SelectorAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82672628B6EF817306894F46D432A1F /* SelectorAlertController.swift */; };
 		B4A58B2ECFE7BDD6EE1E8B1C66EA92EE /* FBSDKButton+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9429A5C249F46F03694297F7E77259 /* FBSDKButton+Subclass.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		B56D62247B7482337F2F45AD8C3F5A56 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C23D82C55B902D052C15C1EAE985577F /* Foundation.framework */; };
 		B5A3C756F2A1A374CE568556C51E016D /* OAuthSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B9F4A623F779E085FF59067F80B5280 /* OAuthSwift-dummy.m */; };
 		B5BA32808AFF5DC9C2723CD85931B9DB /* TextAreaRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB3B8CE5F985D8FBC71D96D669108E8 /* TextAreaRow.swift */; };
 		B60EC99709BE6821834A445EC1B39877 /* FBSDKLoginManagerLoginResult+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 28F6092DE403DF05B4F2042BA249A4B8 /* FBSDKLoginManagerLoginResult+Internal.h */; settings = {ATTRIBUTES = (Project, ); }; };
@@ -748,7 +749,6 @@
 		E92B5113A74D07D38C8137460AE0E3C7 /* RuleRegExp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E8CF6E853D29AC60500A5C30E79139 /* RuleRegExp.swift */; };
 		E98E03457C835857DD5225E868683257 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA4F06E2C748E0E7002520A7CAAF360 /* Renderer.swift */; };
 		EA06C3F77DFE7082756541F14946FA59 /* BFAppLink_Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = BD4F7F13EC6B75854624A09607CE8896 /* BFAppLink_Internal.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		EA0A0491CCF01731855F678179500389 /* Pods-RouteRecorder-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2013AAB4D98160302B5BB7E62A60DBDF /* Pods-RouteRecorder-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA816A580C3858934ED6FE92040C26DD /* RequestModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2316E46B2AB2E5D64A58CB944052DFF0 /* RequestModifier.swift */; };
 		EAA818F8D74B798F159E7D77D2E2817E /* XAxisRendererRadarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A608D4EF4A7AAAA3C9B4ECE74BB41C34 /* XAxisRendererRadarChart.swift */; };
 		EAC20184A508FD4E6117E09676FAFBEE /* BaseWebSocketMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8FF8A15EADB3852E807E75734A4F00 /* BaseWebSocketMessage.swift */; };
@@ -832,6 +832,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		0294E9E3FB9F295284486E15E72BF52C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 88E9EC28B8B46C3631E6B242B50F4442;
+			remoteInfo = Alamofire;
+		};
 		09DE1D430E7A240A15B5D293977DD617 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
@@ -845,13 +852,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 748F1C7F61D88F3FB355A8E829489671;
 			remoteInfo = OHHTTPStubs;
-		};
-		18E39A2C64C8A2C9D5B3C1048E070A7A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4D060252E9C8ECC584314C5DE2484AC1;
-			remoteInfo = WebLinking;
 		};
 		1A284C3FDF677B35A6B7F8B40DC995A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -873,6 +873,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9709635CA61F7F72E71552ACC5E71EC3;
 			remoteInfo = CocoaLumberjack;
+		};
+		2DCC3A48C9A6A510C286B7B390B18466 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8905DB6521F8FDC34752B69DEE3FDEB7;
+			remoteInfo = KeychainAccess;
 		};
 		32459CD8CC175E2B9182D2D93A864CC0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -908,6 +915,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = BEF7E6E85DB5CDE5D7A18F4F2EB8494B;
 			remoteInfo = FBSDKCoreKit;
+		};
+		41C6B2E377355A47027F6FDC635429E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4E9CB5FA53E7C59108A3E80AA40371DE;
+			remoteInfo = OAuthSwift;
 		};
 		425DA51B0616C6A7DAEB96C1227BA87B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -951,26 +965,12 @@
 			remoteGlobalIDString = BEF7E6E85DB5CDE5D7A18F4F2EB8494B;
 			remoteInfo = FBSDKCoreKit;
 		};
-		86EEDC5832E13D7C692EA9AAC571D13C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 103C159A8E41B13CC7B3B8B027604542;
-			remoteInfo = GzipSwift;
-		};
 		8745BF59DE72ABEA1FF867559A58E835 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 44CAD6CE523055ED339E87154473A254;
 			remoteInfo = Bolts;
-		};
-		93CE4B731D586AE3DA6368CA3559F279 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9709635CA61F7F72E71552ACC5E71EC3;
-			remoteInfo = CocoaLumberjack;
 		};
 		9EC814BEBC8972AFE3EA3F76C8C00B11 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1000,12 +1000,12 @@
 			remoteGlobalIDString = 103C159A8E41B13CC7B3B8B027604542;
 			remoteInfo = GzipSwift;
 		};
-		A20AFC2CF963EEEBC1B10A4A63F252DB /* PBXContainerItemProxy */ = {
+		A27AB96A13E2A137006C703C5D34E563 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 88E9EC28B8B46C3631E6B242B50F4442;
-			remoteInfo = Alamofire;
+			remoteGlobalIDString = F06CF9872FE05A9846E593D19C59A05C;
+			remoteInfo = SwiftyJSON;
 		};
 		A4D7971C3B3A88138D8EFCFBB0F59E4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1056,12 +1056,12 @@
 			remoteGlobalIDString = 88E9EC28B8B46C3631E6B242B50F4442;
 			remoteInfo = Alamofire;
 		};
-		BA8F6AE8F3425D5C1D561815D603FD65 /* PBXContainerItemProxy */ = {
+		B75C5002CB7BB5F7C8FCF589201E3B4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 4E9CB5FA53E7C59108A3E80AA40371DE;
-			remoteInfo = OAuthSwift;
+			remoteGlobalIDString = 103C159A8E41B13CC7B3B8B027604542;
+			remoteInfo = GzipSwift;
 		};
 		BB29D71D3263A5F1DE4F2D9BF00B6EA5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1069,6 +1069,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DD1F15A05F62E2C20BC860F6DA62FC5E;
 			remoteInfo = FBSDKShareKit;
+		};
+		BFCBE5550AF060FFDC4196D87119F01E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9709635CA61F7F72E71552ACC5E71EC3;
+			remoteInfo = CocoaLumberjack;
 		};
 		C119156AD6383002279AD66EA6628773 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1097,13 +1104,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 9709635CA61F7F72E71552ACC5E71EC3;
 			remoteInfo = CocoaLumberjack;
-		};
-		CD8B3B28A49E4C282B92FF494EBE9B43 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F06CF9872FE05A9846E593D19C59A05C;
-			remoteInfo = SwiftyJSON;
 		};
 		D0396B3E9FE1FE177949C529B960470D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1160,13 +1160,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4E9CB5FA53E7C59108A3E80AA40371DE;
 			remoteInfo = OAuthSwift;
-		};
-		EA56099C13B6E5E8B9D1C38D5889EF01 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8905DB6521F8FDC34752B69DEE3FDEB7;
-			remoteInfo = KeychainAccess;
 		};
 		F0F7DB532A2302B4AF20BBD1B24C7886 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2152,14 +2145,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		015ACA291A74BEF0E29F04BCF9EEFAAD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				53D6E7BB9A32B798B48CF0A927EFC2FB /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0EAA7BE6D86066B894D5AF7F9BA0F37B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -2293,6 +2278,14 @@
 			files = (
 				8E610F054B0F5FDBBB26323A0C73F4F9 /* Foundation.framework in Frameworks */,
 				AD5D905ABDE0ED57B623A541EB1DBC20 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF5B926026D395DE6EB37F056AD2F954 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B56D62247B7482337F2F45AD8C3F5A56 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3922,14 +3915,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		094B269AEB6DFA6CF291986EC8C2868B /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EA0A0491CCF01731855F678179500389 /* Pods-RouteRecorder-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		0F94B6BFE5A6242FBBB0BE3D27F7CEE9 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -4111,6 +4096,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E2839B4E8C504CF4CCFB4B3FC5FCB6E /* Pods-Ride Report Notification Content-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B028491D5AABDD15D9A8BBDAEF50AF7D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				31EB25C690D321D564D0ADB6FADA8A89 /* Pods-RouteRecorder-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4665,30 +4658,6 @@
 			productReference = 78187CD4EBAE88051A70A395D76F7DB0 /* Pods_Ride_Report_Notification_Content.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		CFBB10931295E79CACCE3A530CAFCA34 /* Pods-RouteRecorder */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 95C206344ABC6B087B192BE168133A8D /* Build configuration list for PBXNativeTarget "Pods-RouteRecorder" */;
-			buildPhases = (
-				899F9D67908044F7493CC129F2DB58E5 /* Sources */,
-				015ACA291A74BEF0E29F04BCF9EEFAAD /* Frameworks */,
-				094B269AEB6DFA6CF291986EC8C2868B /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				BF95BB8C35FE0DB1BA8F284FD55E1281 /* PBXTargetDependency */,
-				0585AE59637C8E24B587A3F1D179FBB9 /* PBXTargetDependency */,
-				F5D77532E45086F566CAAAEA84091E97 /* PBXTargetDependency */,
-				E3B5BE15A14A26A1FD8E1581F758FAAC /* PBXTargetDependency */,
-				6B616FE013C31BEA79D0C1B782A3EA35 /* PBXTargetDependency */,
-				07EDB32316B5966207BA77180B286E7D /* PBXTargetDependency */,
-				247E994642B9F3259B684CB7FC229DC2 /* PBXTargetDependency */,
-			);
-			name = "Pods-RouteRecorder";
-			productName = "Pods-RouteRecorder";
-			productReference = 88C45ED6C9807EDE5AD4BA36E1E4A159 /* Pods_RouteRecorder.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		DD1F15A05F62E2C20BC860F6DA62FC5E /* FBSDKShareKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA1E88518B4CEE4DB9F66DFB92B943EF /* Build configuration list for PBXNativeTarget "FBSDKShareKit" */;
@@ -4784,6 +4753,29 @@
 			productReference = AE0477359A406DA6CC69B9BEA8D933D7 /* Charts.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		FEE4E4C688E4A21EFB91311D26941220 /* Pods-RouteRecorder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5E6381D4DA8F8C396C307EEEA516F47 /* Build configuration list for PBXNativeTarget "Pods-RouteRecorder" */;
+			buildPhases = (
+				34DDE5BD87B96BBED481C69932EC796A /* Sources */,
+				BF5B926026D395DE6EB37F056AD2F954 /* Frameworks */,
+				B028491D5AABDD15D9A8BBDAEF50AF7D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EEB6FC9083224CCE4DD30C0B644896CB /* PBXTargetDependency */,
+				8CCA94D0C65A6BBFCFEC30BC855F9A30 /* PBXTargetDependency */,
+				2C325D06D1FFC9EA0D92176E3102ECEA /* PBXTargetDependency */,
+				10393DB6FA86915DB7FB3EBDAD5CBF89 /* PBXTargetDependency */,
+				55E96581C0CD23B59A2B67EEED49C535 /* PBXTargetDependency */,
+				83CDC0C66CD7B9556D7915830920D225 /* PBXTargetDependency */,
+			);
+			name = "Pods-RouteRecorder";
+			productName = "Pods-RouteRecorder";
+			productReference = 88C45ED6C9807EDE5AD4BA36E1E4A159 /* Pods_RouteRecorder.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -4825,7 +4817,7 @@
 				C7B81B70CD9353EEA8F819849236D5E2 /* Pods-Ride Report Notification Content */,
 				5BB561F7110E22952F6D7C0D8A868EA3 /* Pods-Ride Report Tests */,
 				EEB907044F31DE7AB5A9C48F3908C827 /* Pods-Ride Report UITests */,
-				CFBB10931295E79CACCE3A530CAFCA34 /* Pods-RouteRecorder */,
+				FEE4E4C688E4A21EFB91311D26941220 /* Pods-RouteRecorder */,
 				250BCA34B13898EFBFB27D3F931DC3FF /* Presentr */,
 				F06CF9872FE05A9846E593D19C59A05C /* SwiftyJSON */,
 				4D060252E9C8ECC584314C5DE2484AC1 /* WebLinking */,
@@ -4919,6 +4911,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		34DDE5BD87B96BBED481C69932EC796A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				449E34B083F1734D481648360035789C /* Pods-RouteRecorder-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BAD4950223B8D770AA7EAFED245522C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4996,14 +4996,6 @@
 				5A54A9178928558C579D201BF7500392 /* BFWebViewAppLinkResolver.m in Sources */,
 				AA0283267E8DA7A4F516A18CAE3152B6 /* Bolts-dummy.m in Sources */,
 				83C94DD9A551CAEBB9000477466F9318 /* Bolts.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		899F9D67908044F7493CC129F2DB58E5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8C473DC9ECEDB5DCF7EC2B0F8AA7AC4D /* Pods-RouteRecorder-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5601,18 +5593,6 @@
 			target = BEF7E6E85DB5CDE5D7A18F4F2EB8494B /* FBSDKCoreKit */;
 			targetProxy = 73C767A1587F504A57B8560BAA8A6CD3 /* PBXContainerItemProxy */;
 		};
-		0585AE59637C8E24B587A3F1D179FBB9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CocoaLumberjack;
-			target = 9709635CA61F7F72E71552ACC5E71EC3 /* CocoaLumberjack */;
-			targetProxy = 93CE4B731D586AE3DA6368CA3559F279 /* PBXContainerItemProxy */;
-		};
-		07EDB32316B5966207BA77180B286E7D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SwiftyJSON;
-			target = F06CF9872FE05A9846E593D19C59A05C /* SwiftyJSON */;
-			targetProxy = CD8B3B28A49E4C282B92FF494EBE9B43 /* PBXContainerItemProxy */;
-		};
 		0984E7C1CC5721D68E859E7C654AA073 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = FBSDKCoreKit;
@@ -5630,6 +5610,12 @@
 			name = KeychainAccess;
 			target = 8905DB6521F8FDC34752B69DEE3FDEB7 /* KeychainAccess */;
 			targetProxy = D3FF8CD2346F140A1A7FDF912CE431AF /* PBXContainerItemProxy */;
+		};
+		10393DB6FA86915DB7FB3EBDAD5CBF89 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = KeychainAccess;
+			target = 8905DB6521F8FDC34752B69DEE3FDEB7 /* KeychainAccess */;
+			targetProxy = 2DCC3A48C9A6A510C286B7B390B18466 /* PBXContainerItemProxy */;
 		};
 		1808F0A443117873A0BAC713D57FD636 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5649,11 +5635,11 @@
 			target = 103C159A8E41B13CC7B3B8B027604542 /* GzipSwift */;
 			targetProxy = A152F954409CAD3671B3DE831B9C8141 /* PBXContainerItemProxy */;
 		};
-		247E994642B9F3259B684CB7FC229DC2 /* PBXTargetDependency */ = {
+		2C325D06D1FFC9EA0D92176E3102ECEA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = WebLinking;
-			target = 4D060252E9C8ECC584314C5DE2484AC1 /* WebLinking */;
-			targetProxy = 18E39A2C64C8A2C9D5B3C1048E070A7A /* PBXContainerItemProxy */;
+			name = GzipSwift;
+			target = 103C159A8E41B13CC7B3B8B027604542 /* GzipSwift */;
+			targetProxy = B75C5002CB7BB5F7C8FCF589201E3B4F /* PBXContainerItemProxy */;
 		};
 		310F134D9F62B79C00ABBC75B281A934 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5691,6 +5677,12 @@
 			target = 44CAD6CE523055ED339E87154473A254 /* Bolts */;
 			targetProxy = 8745BF59DE72ABEA1FF867559A58E835 /* PBXContainerItemProxy */;
 		};
+		55E96581C0CD23B59A2B67EEED49C535 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = OAuthSwift;
+			target = 4E9CB5FA53E7C59108A3E80AA40371DE /* OAuthSwift */;
+			targetProxy = 41C6B2E377355A47027F6FDC635429E5 /* PBXContainerItemProxy */;
+		};
 		5BB325A61E43D2A27F0766ED06A51AA2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Bolts;
@@ -5714,12 +5706,6 @@
 			name = SwiftyJSON;
 			target = F06CF9872FE05A9846E593D19C59A05C /* SwiftyJSON */;
 			targetProxy = FD499A9B94BA3DE0752C3AC2C7A2BD37 /* PBXContainerItemProxy */;
-		};
-		6B616FE013C31BEA79D0C1B782A3EA35 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = OAuthSwift;
-			target = 4E9CB5FA53E7C59108A3E80AA40371DE /* OAuthSwift */;
-			targetProxy = BA8F6AE8F3425D5C1D561815D603FD65 /* PBXContainerItemProxy */;
 		};
 		6FC9FEBA8EB8CF7377D6A5798084C2FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5757,6 +5743,12 @@
 			target = 250BCA34B13898EFBFB27D3F931DC3FF /* Presentr */;
 			targetProxy = 520EC752BDD3F10A6FAE4D566F93EEE9 /* PBXContainerItemProxy */;
 		};
+		83CDC0C66CD7B9556D7915830920D225 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwiftyJSON;
+			target = F06CF9872FE05A9846E593D19C59A05C /* SwiftyJSON */;
+			targetProxy = A27AB96A13E2A137006C703C5D34E563 /* PBXContainerItemProxy */;
+		};
 		85E1B57A69648759481A14FC529F82DB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SwiftyJSON;
@@ -5768,6 +5760,12 @@
 			name = GzipSwift;
 			target = 103C159A8E41B13CC7B3B8B027604542 /* GzipSwift */;
 			targetProxy = 33DB9B22B43889E736D5B085577136BF /* PBXContainerItemProxy */;
+		};
+		8CCA94D0C65A6BBFCFEC30BC855F9A30 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CocoaLumberjack;
+			target = 9709635CA61F7F72E71552ACC5E71EC3 /* CocoaLumberjack */;
+			targetProxy = BFCBE5550AF060FFDC4196D87119F01E /* PBXContainerItemProxy */;
 		};
 		921DE3206180EF531283FC57165480A2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -5829,12 +5827,6 @@
 			target = 8905DB6521F8FDC34752B69DEE3FDEB7 /* KeychainAccess */;
 			targetProxy = 1A284C3FDF677B35A6B7F8B40DC995A3 /* PBXContainerItemProxy */;
 		};
-		BF95BB8C35FE0DB1BA8F284FD55E1281 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Alamofire;
-			target = 88E9EC28B8B46C3631E6B242B50F4442 /* Alamofire */;
-			targetProxy = A20AFC2CF963EEEBC1B10A4A63F252DB /* PBXContainerItemProxy */;
-		};
 		CFADA55F22181A5A4A4598B0307E253E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Eureka;
@@ -5865,29 +5857,23 @@
 			target = 88E9EC28B8B46C3631E6B242B50F4442 /* Alamofire */;
 			targetProxy = 4127D27FF630EF2F36AEE3178F01C67D /* PBXContainerItemProxy */;
 		};
-		E3B5BE15A14A26A1FD8E1581F758FAAC /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = KeychainAccess;
-			target = 8905DB6521F8FDC34752B69DEE3FDEB7 /* KeychainAccess */;
-			targetProxy = EA56099C13B6E5E8B9D1C38D5889EF01 /* PBXContainerItemProxy */;
-		};
 		EA154A70901D0168A28C79A55E2FE424 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = OAuthSwift;
 			target = 4E9CB5FA53E7C59108A3E80AA40371DE /* OAuthSwift */;
 			targetProxy = F2BA31786BCDDA6B93E20474847509D3 /* PBXContainerItemProxy */;
 		};
+		EEB6FC9083224CCE4DD30C0B644896CB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			target = 88E9EC28B8B46C3631E6B242B50F4442 /* Alamofire */;
+			targetProxy = 0294E9E3FB9F295284486E15E72BF52C /* PBXContainerItemProxy */;
+		};
 		F3D2D1E198297BE55E749F1769F68392 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Kingfisher;
 			target = C4944FEC314D1A66588651D006273ADE /* Kingfisher */;
 			targetProxy = A4D7971C3B3A88138D8EFCFBB0F59E4F /* PBXContainerItemProxy */;
-		};
-		F5D77532E45086F566CAAAEA84091E97 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GzipSwift;
-			target = 103C159A8E41B13CC7B3B8B027604542 /* GzipSwift */;
-			targetProxy = 86EEDC5832E13D7C692EA9AAC571D13C /* PBXContainerItemProxy */;
 		};
 		FB5CE871D6C5EB4EF48744E4EE55791F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -6301,6 +6287,46 @@
 			};
 			name = Debug;
 		};
+		2C3C251C978EBEE0A381C9BD001F8FF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8076C9AA85B5F09C2DB755AE9D80FF47 /* Pods-RouteRecorder.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Target Support Files/Pods-RouteRecorder/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-RouteRecorder/Pods-RouteRecorder.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_RouteRecorder;
+				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		31B00660784499D2C22AC6AF4FF4F5E4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADE6A289BAF6178CD4DDE0C16C5AD8BC /* OHHTTPStubs.xcconfig */;
@@ -6379,46 +6405,6 @@
 				STRIP_INSTALLED_PRODUCT = NO;
 				SYMROOT = "${SRCROOT}/../build";
 				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		3C59AB9BBEDA297DE8A402E7A1FD6583 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8076C9AA85B5F09C2DB755AE9D80FF47 /* Pods-RouteRecorder.release.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-RouteRecorder/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-RouteRecorder/Pods-RouteRecorder.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_RouteRecorder;
-				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -6631,43 +6617,6 @@
 				MODULEMAP_FILE = "Target Support Files/Alamofire/Alamofire.modulemap";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_NAME = Alamofire;
-				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		59A16CAEE94A5F6B45F9C6B6490B706D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 73E0A63F7F3BCB08A6B8A174A6016A5B /* Eureka.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/Eureka/Eureka-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Eureka/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Eureka/Eureka.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = Eureka;
 				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -7057,47 +7006,6 @@
 			};
 			name = Debug;
 		};
-		8B616A056961A9723BAE771FED2AAD72 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C94AC62A8AAB8AEC34CD60C553B054 /* Pods-RouteRecorder.debug.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "Target Support Files/Pods-RouteRecorder/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-RouteRecorder/Pods-RouteRecorder.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Pods_RouteRecorder;
-				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		91D276BAB3333F75439654DAF0514A7F /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EE42D40828A98281826448D82A4CC9A2 /* Mixpanel-swift.xcconfig */;
@@ -7171,6 +7079,43 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
+		};
+		986ADD87AEBDA6B9198A81FF5FDA7BA5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73E0A63F7F3BCB08A6B8A174A6016A5B /* Eureka.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/Eureka/Eureka-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Eureka/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Eureka/Eureka.modulemap";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = Eureka;
+				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		9B7D875EB3CF0C3868CFB0FD8FB59E96 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7509,16 +7454,16 @@
 			};
 			name = Release;
 		};
-		DD242861623A0C025C4F6F32FE4AE420 /* Release */ = {
+		DDA47FD33BDB8BAE48FD364267415FF7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 73E0A63F7F3BCB08A6B8A174A6016A5B /* Eureka.xcconfig */;
+			baseConfigurationReference = 89C94AC62A8AAB8AEC34CD60C553B054 /* Pods-RouteRecorder.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
 				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -7526,25 +7471,29 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/Eureka/Eureka-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Eureka/Info.plist";
+				INFOPLIST_FILE = "Target Support Files/Pods-RouteRecorder/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Eureka/Eureka.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = Eureka;
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-RouteRecorder/Pods-RouteRecorder.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Pods_RouteRecorder;
 				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 		E486B598ABCEC1FFE9C5D3B0FDA209D9 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -7732,6 +7681,43 @@
 			};
 			name = Release;
 		};
+		FB2D10D3C0C4BA0B993FE5EE8AFB8C58 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 73E0A63F7F3BCB08A6B8A174A6016A5B /* Eureka.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREFIX_HEADER = "Target Support Files/Eureka/Eureka-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Eureka/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Eureka/Eureka.modulemap";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = Eureka;
+				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		FD07852AEF3365D19B9426A68A0D6DB4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 008927DAD172E8DB2B82FBACBDD72D1D /* Pods-Ride Report.release.xcconfig */;
@@ -7891,8 +7877,8 @@
 		50C8E1EFA0C5DC6AD96DBEE0EFA14308 /* Build configuration list for PBXNativeTarget "Eureka" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				59A16CAEE94A5F6B45F9C6B6490B706D /* Debug */,
-				DD242861623A0C025C4F6F32FE4AE420 /* Release */,
+				FB2D10D3C0C4BA0B993FE5EE8AFB8C58 /* Debug */,
+				986ADD87AEBDA6B9198A81FF5FDA7BA5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -7951,15 +7937,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		95C206344ABC6B087B192BE168133A8D /* Build configuration list for PBXNativeTarget "Pods-RouteRecorder" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8B616A056961A9723BAE771FED2AAD72 /* Debug */,
-				3C59AB9BBEDA297DE8A402E7A1FD6583 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		9FA048BBEA093CDB3F69C5B36929A5AF /* Build configuration list for PBXNativeTarget "KeychainAccess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -7983,6 +7960,15 @@
 			buildConfigurations = (
 				00C717E6E4BB67A7D1894C16444FFFED /* Debug */,
 				169893144FA04019301AC5B5ECAB126F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B5E6381D4DA8F8C396C307EEEA516F47 /* Build configuration list for PBXNativeTarget "Pods-RouteRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DDA47FD33BDB8BAE48FD364267415FF7 /* Debug */,
+				2C3C251C978EBEE0A381C9BD001F8FF4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

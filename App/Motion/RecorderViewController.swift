@@ -10,12 +10,11 @@ import Foundation
 import AVFoundation
 import CoreLocation
 import MediaPlayer
+import RouteRecorder
 
 class RecorderViewController: UIViewController, CLLocationManagerDelegate {
     fileprivate var backgroundTaskID = UIBackgroundTaskInvalid
     public var formData : [String: Any]!
-    
-    var sensorComponent: SensorManagerComponent!
 
     fileprivate var isRecording: Bool = false
     fileprivate var synth: AVSpeechSynthesizer = AVSpeechSynthesizer()
@@ -31,9 +30,7 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var startStopButton: UIBarButtonItem!
     @IBOutlet weak var pauseDeleteButton: UIBarButtonItem!
     
-    override func viewDidLoad() {        
-        self.sensorComponent = SensorManagerComponent.shared
-        
+    override func viewDidLoad() {
         self.locationManager = CLLocationManager()
         self.locationManager.activityType = CLActivityType.fitness
         self.locationManager.pausesLocationUpdatesAutomatically = false
@@ -115,9 +112,8 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
     
     private func stopRecording() {
         self.isRecording = false
-        CoreDataManager.shared.saveContext()
         
-        sensorComponent.classificationManager.stopGatheringSensorData()
+        RouteRecorder.shared.classificationManager.stopGatheringSensorData()
         self.locationManager.stopUpdatingLocation()
 
         if let player = self.player, player.isPlaying {
@@ -133,7 +129,7 @@ class RecorderViewController: UIViewController, CLLocationManagerDelegate {
             self.startDate = Date()
         }
         
-        sensorComponent.classificationManager.gatherSensorData(predictionAggregator: self.aggregator!)
+        RouteRecorder.shared.classificationManager.gatherSensorData(predictionAggregator: self.aggregator!)
         self.locationManager.startUpdatingLocation()
     }
     

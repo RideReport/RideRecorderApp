@@ -25,7 +25,6 @@
 		3D125EB81EB012C200DA2E6E /* RedeemRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */; };
 		3D19303B1EAE912200915813 /* RideNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D19303A1EAE912100915813 /* RideNotificationView.swift */; };
 		3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
-		3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */; };
 		3D1E3E0D1F5A1C5A00B5800D /* RideReportAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1E3E0C1F5A1C5A00B5800D /* RideReportAPIClient.swift */; };
 		3D1E3E0E1F5A1C5A00B5800D /* RideReportAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1E3E0C1F5A1C5A00B5800D /* RideReportAPIClient.swift */; };
 		3D1E3E0F1F5A1C5A00B5800D /* RideReportAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1E3E0C1F5A1C5A00B5800D /* RideReportAPIClient.swift */; };
@@ -168,20 +167,16 @@
 		3D72BDEE1F58B0950043ECBA /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDED1F58B0950043ECBA /* CoreDataManager.swift */; };
 		3D72BDEF1F58B0950043ECBA /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDED1F58B0950043ECBA /* CoreDataManager.swift */; };
 		3D72BDF01F58B0950043ECBA /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDED1F58B0950043ECBA /* CoreDataManager.swift */; };
-		3D72BDF11F58B0950043ECBA /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDED1F58B0950043ECBA /* CoreDataManager.swift */; };
 		3D72BDF31F58B36E0043ECBA /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDF21F58B36E0043ECBA /* Rating.swift */; };
 		3D72BDF41F58B36E0043ECBA /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDF21F58B36E0043ECBA /* Rating.swift */; };
 		3D72BDF51F58B36E0043ECBA /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDF21F58B36E0043ECBA /* Rating.swift */; };
-		3D72BDF61F58B36E0043ECBA /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDF21F58B36E0043ECBA /* Rating.swift */; };
 		3D72BE111F58C3BC0043ECBA /* Float+Meters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BDE01F58AFDC0043ECBA /* Float+Meters.swift */; };
 		3D72BE141F58C47A0043ECBA /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE121F58C47A0043ECBA /* Profile.swift */; };
 		3D72BE151F58C47A0043ECBA /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE121F58C47A0043ECBA /* Profile.swift */; };
 		3D72BE161F58C47A0043ECBA /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE121F58C47A0043ECBA /* Profile.swift */; };
-		3D72BE171F58C47A0043ECBA /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE121F58C47A0043ECBA /* Profile.swift */; };
 		3D72BE181F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE131F58C47A0043ECBA /* Profile+CoreDataProperties.swift */; };
 		3D72BE191F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE131F58C47A0043ECBA /* Profile+CoreDataProperties.swift */; };
 		3D72BE1A1F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE131F58C47A0043ECBA /* Profile+CoreDataProperties.swift */; };
-		3D72BE1B1F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D72BE131F58C47A0043ECBA /* Profile+CoreDataProperties.swift */; };
 		3D74E21C1DA2C0130079A7E6 /* TripSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */; };
 		3D7738051F589E6D00155DB8 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D7737F61F589E6D00155DB8 /* FFTManager.cpp */; };
 		3D7738061F589E6D00155DB8 /* FFTManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D7737F61F589E6D00155DB8 /* FFTManager.cpp */; };
@@ -239,6 +234,9 @@
 		3DA8C1101F8EE1E900BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
 		3DA8C1121F8EE1EC00BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
 		3DA8C1131F8EE1EC00BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
+		3DA8C1161F8FED0200BE1460 /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
+		3DA8C11D1F9004AA00BE1460 /* RouteRecorder.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D7738A41F58A21000155DB8 /* RouteRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3DA8C11E1F90085900BE1460 /* RouteRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7738A41F58A21000155DB8 /* RouteRecorder.framework */; };
 		3DB9BD1A1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
@@ -408,6 +406,13 @@
 			remoteGlobalIDString = 3D7738A31F58A21000155DB8;
 			remoteInfo = TripRecorder;
 		};
+		3DA8C1181F90030600BE1460 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84D1554719D2733500316995 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D7738A31F58A21000155DB8;
+			remoteInfo = RouteRecorder;
+		};
 		3DD06C861D50159E00A5D719 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 84D1554719D2733500316995 /* Project object */;
@@ -441,6 +446,16 @@
 				3D3306131D7774E900B7E56A /* Ride Report Notification Content.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3DA8C11C1F90049D00BE1460 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3DA8C11D1F9004AA00BE1460 /* RouteRecorder.framework in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3DD06C9E1D50159E00A5D719 /* Embed App Extensions */ = {
@@ -743,6 +758,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DA8C11E1F90085900BE1460 /* RouteRecorder.framework in Frameworks */,
 				3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */,
 				3D78EF541EE9FE7C0042D7FD /* QuartzCore.framework in Frameworks */,
 				3D78EF551EE9FE800042D7FD /* ImageIO.framework in Frameworks */,
@@ -842,11 +858,11 @@
 				8409C4A61C518A8400999446 /* HealthKit.framework in Frameworks */,
 				84F137531B5DADD30023EC82 /* CoreTelephony.framework in Frameworks */,
 				845330A31A40B01100452EEB /* MessageUI.framework in Frameworks */,
+				3D7738B91F58A21000155DB8 /* RouteRecorder.framework in Frameworks */,
 				8445317A19FEEC8C0096F26E /* CoreLocation.framework in Frameworks */,
 				84D1557C19D274EB00316995 /* CoreMotion.framework in Frameworks */,
 				84D1557819D2737D00316995 /* MapKit.framework in Frameworks */,
 				24C1DF999B3DD3D53FC86163 /* Pods_Ride_Report.framework in Frameworks */,
-				3D7738B91F58A21000155DB8 /* RouteRecorder.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1454,12 +1470,14 @@
 				3D2705D51C8785D400A96DE0 /* Sources */,
 				3D2705D61C8785D400A96DE0 /* Frameworks */,
 				3D2705D71C8785D400A96DE0 /* Resources */,
+				3DA8C11C1F90049D00BE1460 /* CopyFiles */,
 				A57745350A4EED113C98BDDF /* [CP] Embed Pods Frameworks */,
 				6A9868008789B49A1CC5ABB5 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				3DA8C1191F90030600BE1460 /* PBXTargetDependency */,
 			);
 			name = Motion;
 			productName = Motion;
@@ -2226,21 +2244,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
-				3D72BE171F58C47A0043ECBA /* Profile.swift in Sources */,
 				3DD544581F2A61200009876D /* UploadViewController.swift in Sources */,
-				3D72BDF61F58B36E0043ECBA /* Rating.swift in Sources */,
 				3D7738081F589E6D00155DB8 /* FFTManager.cpp in Sources */,
 				3D72BDBE1F58AD440043ECBA /* Date+HBAdditions.swift in Sources */,
-				3D72BDF11F58B0950043ECBA /* CoreDataManager.swift in Sources */,
 				3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */,
 				3DCD87301F2FE4E2006323EC /* RecorderViewController.swift in Sources */,
 				3D2DBC0A1CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				3D21CFC61CAD9B3800ED40DE /* ColorPallete.swift in Sources */,
 				3D2705DC1C8785D400A96DE0 /* AppDelegate.swift in Sources */,
 				3D72BDE91F58B03B0043ECBA /* CLLocationSpeed+HBAdditions.swift in Sources */,
-				3D1A15521CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
+				3DA8C1161F8FED0200BE1460 /* NSLocale+Additions.swift in Sources */,
 				3D72BDE41F58AFDC0043ECBA /* Float+Meters.swift in Sources */,
-				3D72BE1B1F58C47A0043ECBA /* Profile+CoreDataProperties.swift in Sources */,
 				3D72BDCD1F58AD440043ECBA /* TimeInterval+HBAdditions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2530,6 +2544,11 @@
 			isa = PBXTargetDependency;
 			target = 3D7738A31F58A21000155DB8 /* RouteRecorder */;
 			targetProxy = 3D7738B71F58A21000155DB8 /* PBXContainerItemProxy */;
+		};
+		3DA8C1191F90030600BE1460 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D7738A31F58A21000155DB8 /* RouteRecorder */;
+			targetProxy = 3DA8C1181F90030600BE1460 /* PBXContainerItemProxy */;
 		};
 		3DD06C871D50159E00A5D719 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
