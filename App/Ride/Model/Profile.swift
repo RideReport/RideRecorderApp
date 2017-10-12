@@ -127,6 +127,25 @@ public class Profile: NSManagedObject {
         return Static.profile
     }
     
+    func updateEncouragements(encouragementDictionaries: [Any]) {
+        for oldEncouragement in self.encouragements {
+            guard let oldEncouragement = oldEncouragement as? Encouragement else {
+                continue
+            }
+            self.managedObjectContext?.delete(oldEncouragement)
+        }
+        
+        for encouragementDict in encouragementDictionaries {
+            guard let encouragementDict = encouragementDict as? [String: Any] else {
+                continue
+            }
+            
+            if let encouragement = Encouragement(dictionary: encouragementDict) {
+                encouragement.profile = self
+            }
+        }
+    }
+    
     func eligibilePromotion()->Promotion? {
         if let promo = self.promotions.array.first as? Promotion, promo.isUserDismissed == false {
             if let app = promo.connectedApp, app.profile != nil {

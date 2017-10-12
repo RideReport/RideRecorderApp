@@ -204,9 +204,9 @@ class RideReportAPIClient {
                 trip.loadFromJSON(json)
                 trip.isSynced = true
                 
-                if let accountStatus = json["accountStatus"].dictionary, let statusText = accountStatus["status_text"]?.string, let statusEmoji = accountStatus["status_emoji"]?.string {
-                    Profile.profile().statusText = statusText
-                    Profile.profile().statusEmoji = statusEmoji
+                
+                if let encouragementDictionaries = json["encouragements"].arrayObject {
+                    Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
                     CoreDataManager.shared.saveContext()
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "APIClientStatusTextDidChange"), object: nil)
                 } else {
@@ -315,10 +315,13 @@ class RideReportAPIClient {
     func profileDictionary() -> [String: Any] {
         var profileDictionary = [String: Any]()
         
-        // iOS Data
         var iosDictionary = [String: Any]()
-        if let preferredLanguage = (Locale.current as NSLocale).object(forKey: NSLocale.Key.languageCode) as? String {
+        if let preferredLanguage = Locale.current.languageCode {
             iosDictionary["preferred_language"] = preferredLanguage
+        }
+        
+        if let countryCode = Locale.current.countryCode {
+            iosDictionary["country_code"] = countryCode
         }
         
         if let model = UIDevice.current.deviceModel() {
@@ -393,9 +396,8 @@ class RideReportAPIClient {
                     Profile.profile().featureFlags = []
                 }
                 
-                if let statusText = json["status_text"].string, let statusEmoji = json["status_emoji"].string {
-                    Profile.profile().statusText = statusText
-                    Profile.profile().statusEmoji = statusEmoji
+                if let encouragementDictionaries = json["encouragements"].arrayObject {
+                    Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
                 }
                 
                 if let supportId = json["support_id"].string {

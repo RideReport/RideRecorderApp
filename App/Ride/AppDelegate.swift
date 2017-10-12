@@ -296,9 +296,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
             
             trip.loadSummaryFromAPNDictionary(userInfo)
             CoreDataManager.shared.saveContext()
-            if let statusText = userInfo["status_text"] as? String, let statusEmoji = userInfo["status_emoji"] as? String {
-                Profile.profile().statusText = statusText
-                Profile.profile().statusEmoji = statusEmoji
+            
+            if let encouragementDictionaries = userInfo["encouragements"] as? [AnyObject] {
+                Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
                 CoreDataManager.shared.saveContext()
             }
             

@@ -9,11 +9,14 @@
 import Foundation
 
 extension Collection {
-    /// Return a copy of `self` with its elements shuffled
     func shuffle() -> [Iterator.Element] {
         var list = Array(self)
         list.shuffleInPlace()
         return list
+    }
+    
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }
 

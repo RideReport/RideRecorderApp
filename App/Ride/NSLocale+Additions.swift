@@ -15,10 +15,16 @@ extension Locale {
     }
     
     static func isGB()-> Bool {
-        if let countryString = (Locale.current as NSLocale).object(forKey: NSLocale.Key.countryCode) as? String {
+        if let countryString = Locale.current.countryCode {
             return countryString == "GB"
         }
         
         return false
+    }
+    
+    var countryCode: String? {
+        get {
+            return (self as NSLocale).object(forKey: NSLocale.Key.countryCode) as? String
+        }
     }
 }

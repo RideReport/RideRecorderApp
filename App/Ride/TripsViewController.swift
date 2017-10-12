@@ -651,97 +651,41 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func configureRewardsCell(_ tableCell: UITableViewCell) {
-        guard let trophySummaryLabel = tableCell.viewWithTag(1) as? UILabel,
-            let streakTextLabel = tableCell.viewWithTag(2) as? UILabel,
-            let streakJewelLabel = tableCell.viewWithTag(3) as? UILabel,
-            let trophyCountLabel = tableCell.viewWithTag(4) as? UILabel else {
-                return
+        guard let stackView = tableCell.viewWithTag(1) as? UIStackView else {
+            return
         }
         
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        for view in stackView.arrangedSubviews {
+            stackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
+        }
+        
+        for encouragement in Profile.profile().encouragements.array {
+            guard let encouragement = encouragement as? Encouragement else {
+                continue
+            }
+            
+            let rewardsView = RewardView()
+            rewardsView.translatesAutoresizingMaskIntoConstraints = false
+            rewardsView.emoji = encouragement.emoji
+            rewardsView.body = encouragement.descriptionText
+            
+            stackView.addArrangedSubview(rewardsView)
+            
+            if (self.shouldShowStreakAnimation) {
+                self.shouldShowStreakAnimation = false
+                // do the animation here…
+            }
+        }
+
         if let chevronImage = getDisclosureArrow(tableCell) {
             let accessoryImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: chevronImage.size.width + 8, height: chevronImage.size.height))
             accessoryImageView.contentMode = .right
             accessoryImageView.tintColor = ColorPallete.shared.goodGreen
             accessoryImageView.image = chevronImage
             tableCell.accessoryView = accessoryImageView
-        }
-        
- 
-        
-        let trophyCount = TripReward.numberOfRewards
-        if trophyCount > 1 {
-            trophyCountLabel.text = String(trophyCount) + " Trophies"
-        } else if trophyCount == 1 {
-            trophyCountLabel.text = "You Got a Trophy!"
-        } else {
-            trophyCountLabel.text = "No Trophies Yet"
-        }
-        
-        var rewardString = ""
-        if trophyCount > 1 {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.lineHeightMultiple = 1.2
-            
-            let emojiWidth = ("👍" as NSString).size(withAttributes: [NSAttributedStringKey.font: trophySummaryLabel.font]).width
-            let columnSeperatorWidth: CGFloat = 6
-            let totalWidth = emojiWidth + columnSeperatorWidth
-            
-            var tabStops : [NSTextTab] = []
-            var totalLineWidth : CGFloat = 0
-            var columnCount = 0
-            while totalLineWidth + totalWidth < (self.view.frame.size.width - 30) {
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.center, location: totalLineWidth, options: [:]))
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.left, location: totalLineWidth + emojiWidth , options: [NSTextTab.OptionKey.columnTerminators:CharacterSet(charactersIn:"\t")]))
-                tabStops.append(NSTextTab(textAlignment: NSTextAlignment.left, location: totalLineWidth + emojiWidth + columnSeperatorWidth , options: [:]))
-                totalLineWidth += totalWidth
-                columnCount += 1
-            }
-            
-            paragraphStyle.tabStops = tabStops
-            
-            var i = 1
-            var lineCount = 0
-            let rewardsTripCounts = TripReward.tripRewardCountsGroupedByAttribute("emoji")
-            for countData in rewardsTripCounts {
-                if let emoji = countData["emoji"] as? String {
-                    if emoji.containsUnsupportEmoji() {
-                        // support for older versions of iOS without a given emoji
-                        continue
-                    }
-                      rewardString += emoji + "\t"
-                    i += 1
-                    if i>=columnCount {
-                        i = 1
-                        lineCount += 1
-                        if let lastEmoji = rewardsTripCounts.last?["emoji"] as? String, lastEmoji != emoji  {
-                            rewardString += "\n"
-                        }
-                    }
-                }
-            }
-        
-            let attrString = NSMutableAttributedString(string: rewardString)
-            attrString.addAttribute(NSAttributedStringKey.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attrString.length))
-
-            trophySummaryLabel.attributedText = attrString
-        } else {
-            trophySummaryLabel.text = ""
-        }
-        
-        if let statusText = Profile.profile().statusText, let statusEmoji = Profile.profile().statusEmoji {
-            streakTextLabel.text = statusText
-            streakJewelLabel.text = statusEmoji
-            if (self.shouldShowStreakAnimation) {
-                self.shouldShowStreakAnimation = false
-                if statusEmoji == "🐣" {
-                    self.bobbleView(streakJewelLabel)
-                } else {
-                    self.beatHeart(streakJewelLabel)
-                }
-            }
-        } else {
-            streakTextLabel.text = ""
-            streakJewelLabel.text = ""
         }
     }
     
