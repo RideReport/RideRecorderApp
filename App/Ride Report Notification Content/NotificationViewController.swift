@@ -39,8 +39,8 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
     
     func didReceive(_ notification: UNNotification) {
-        if let rideDescription = notification.request.content.userInfo["rideDescription"] as? String,
-            let rideLength = notification.request.content.userInfo["rideLength"] as? Float,
+        if let rideDescription = notification.request.content.userInfo["description"] as? String,
+            let rideLength = notification.request.content.userInfo["length"] as? Float,
             let rewardDicts = notification.request.content.userInfo["rewards"] as? [[String: Any]] {
             
             var hasMap = false

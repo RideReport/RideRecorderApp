@@ -157,14 +157,14 @@ protocol RideSummaryViewDelegate: class {
         var colors = [ColorPallete.shared.notificationActionBlue, ColorPallete.shared.pink, ColorPallete.shared.primary, ColorPallete.shared.orange, ColorPallete.shared.turquoise, ColorPallete.shared.badRed, ColorPallete.shared.brightBlue]
         
         for rewardDict in rewards {
-            if let displaySafeEmoji = rewardDict["displaySafeEmoji"] as? String,
-                let descriptionText = rewardDict["descriptionText"] as? String {
+            if let displaySafeEmoji = rewardDict["emoji"] as? String,
+                let descriptionText = rewardDict["description"] as? String {
                 let rewardView = RewardView()
                 if let object = rewardDict["object"] {
                     rewardView.associatedObject = object
                 }
                 
-                if let rewardUUID = rewardDict["rewardUUID"] as? String, !rewardUUID.isEmpty {
+                if let rewardUUID = rewardDict["reward_uuid"] as? String, !rewardUUID.isEmpty {
                     rewardView.drawsDottedOutline = true
                     let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(RideSummaryView.didTapReward(sender:)))
                     rewardView.addGestureRecognizer(tapRecognizer)

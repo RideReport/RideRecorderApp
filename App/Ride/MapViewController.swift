@@ -126,8 +126,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                     }
                     
                     if let shape = try? MGLShape(data: data, encoding: String.Encoding.utf8.rawValue) {
-                        self.selectedTripLineSource.shape = shape
-                        if let shape = self.selectedTripLineSource.shape as? MGLShapeCollectionFeature {
+                        if let shape = shape as? MGLShapeCollectionFeature {
+                            // apply the rating locally to make UI more responsive to rating changes
+                            for subshape in shape.shapes {
+                                subshape.attributes["rating"] = trip.rating.choice.numberValue
+                            }
+                         
+                            self.selectedTripLineSource.shape = shape
+
                             self.mapView.showAnnotations(shape.shapes, edgePadding: self.insets, animated: true)
                         }
                     } else {

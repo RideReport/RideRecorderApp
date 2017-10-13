@@ -549,15 +549,15 @@ public class  Trip: NSManagedObject {
         if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
             
-            var userInfo: [String: Any] = ["uuid" : self.uuid, "rideDescription" : self.displayStringWithTime(), "rideLength" : self.length]
+            var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
             
             var rewardDicts: [[String: Any]] = []
             for element in self.tripRewards {
                 if let reward = element as? TripReward {
                     var rewardDict: [String: Any] = [:]
-                    rewardDict["rewardUUID"] = reward.rewardUUID
-                    rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
-                    rewardDict["descriptionText"] = reward.descriptionText
+                    rewardDict["reward_uuid"] = reward.rewardUUID
+                    rewardDict["emoji"] = reward.displaySafeEmoji
+                    rewardDict["description"] = reward.descriptionText
                     rewardDicts.append(rewardDict)
                 }
             }

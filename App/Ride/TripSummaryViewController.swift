@@ -122,9 +122,9 @@ class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSumm
                 if let reward = element as? TripReward {
                     var rewardDict: [String: Any] = [:]
                     rewardDict["object"] = reward
-                    rewardDict["rewardUUID"] = reward.rewardUUID
-                    rewardDict["displaySafeEmoji"] = reward.displaySafeEmoji
-                    rewardDict["descriptionText"] = reward.descriptionText
+                    rewardDict["reward_uuid"] = reward.rewardUUID
+                    rewardDict["emoji"] = reward.displaySafeEmoji
+                    rewardDict["description"] = reward.descriptionText
                     rewardDicts.append(rewardDict)
                 }
             }

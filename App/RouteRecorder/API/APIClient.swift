@@ -124,6 +124,10 @@ public class AuthenticatedAPIRequest {
         if let theIdempotencyKey = idempotencyKey {
             headers["Idempotence-Key"] = theIdempotencyKey
         }
+        
+        #if DEBUG
+            headers["RR-development-client"] = "true"
+        #endif
 
         self.request = client.sessionManager.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
         

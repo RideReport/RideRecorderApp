@@ -258,7 +258,6 @@ class RideReportAPIClient {
                 DDLogWarn(String(format: "Error deleting trip data: %@", error as CVarArg))
             }
         })
-        
     }
     
     @discardableResult func saveAndPatchTripIfNeeded(_ trip: Trip)->AuthenticatedAPIRequest {
@@ -365,9 +364,6 @@ class RideReportAPIClient {
         var parameters: [String: Any] = [:]
         if let deviceToken = self.notificationDeviceToken {
             parameters["device_token"] = deviceToken.hexadecimalString()
-            #if DEBUG
-                parameters["is_development_client"] = true
-            #endif
         }
         
         parameters["profile"] = self.profileDictionary()
