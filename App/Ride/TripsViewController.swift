@@ -667,7 +667,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 continue
             }
             
-            let rewardsView = RewardView()
+            let rewardsView = TrophyView()
             rewardsView.translatesAutoresizingMaskIntoConstraints = false
             rewardsView.emoji = encouragement.emoji
             rewardsView.body = encouragement.descriptionText
@@ -1014,7 +1014,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }))
             } else {
                 alertController.addAction(UIAlertAction(title: "⬇️ Download Route", style: .default) { (_) in
-                    APIClient.shared.getRoute(withUUID: trip.uuid)
+                    APIClient.shared.getRouteLocations(withUUID: trip.uuid)
                 })
             }
             

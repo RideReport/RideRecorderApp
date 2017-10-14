@@ -8,7 +8,7 @@
 
 import Foundation
 
-@IBDesignable public class RewardView : UIView {
+@IBDesignable public class TrophyView : UIView {
     public var associatedObject: Any?
     
     @IBInspectable var emojiFontSize: CGFloat = 40  {

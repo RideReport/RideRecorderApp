@@ -575,7 +575,7 @@ public class  Trip: NSManagedObject {
                 content.userInfo = userInfo
                 
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
-                let request = UNNotificationRequest(identifier: self.uuid,
+                let request = UNNotificationRequest(identifier: self.uuid.lowercased(),
                                                     content: content,
                                                     trigger: trigger)
                 

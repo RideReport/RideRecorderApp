@@ -4,7 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment version="2304" identifier="iOS"/>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -86,11 +86,11 @@
             <objects>
                 <viewController storyboardIdentifier="RideShareViewController" id="Eu2-LV-bdP" customClass="RideShareViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="GEr-MR-08O">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="599"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EAJ-hS-lAz">
-                                <rect key="frame" x="0.0" y="112" width="375" height="375"/>
+                                <rect key="frame" x="0.0" y="114" width="375" height="375"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZrE-Gw-CPY">
                                         <rect key="frame" x="-0.5" y="0.0" width="375" height="375"/>
@@ -203,7 +203,7 @@
                 <navigationController storyboardIdentifier="ReportModeClassificationNavigationViewController" id="OMP-PP-PzA" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="dly-FU-scT">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -284,7 +284,7 @@
                                 </variation>
                             </view>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Tell us about your trip" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1OH-SF-3Te">
-                                <rect key="frame" x="20" y="88" width="335" height="30"/>
+                                <rect key="frame" x="20" y="84" width="335" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                             </textField>
@@ -349,7 +349,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hQC-Qb-oe8">
-                                <rect key="frame" x="0.0" y="68" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="667"/>
                                 <subviews>
                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🚲" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="glo-RJ-K1F">
                                         <rect key="frame" x="147.5" y="267" width="80" height="80"/>
@@ -396,7 +396,7 @@
                                 </variation>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" rowHeight="48" sectionHeaderHeight="22" sectionFooterHeight="22" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W5I-Vg-qji">
-                                <rect key="frame" x="0.0" y="68" width="375" height="599"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -747,8 +747,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" canCancelContentTouches="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zla-Yb-nBj">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pSA-ng-4Kd" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="656"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pSA-ng-4Kd" userLabel="ContentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="824"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VK5-ye-s3a" userLabel="Space View">
                                                 <rect key="frame" x="0.0" y="-782" width="375" height="800"/>
@@ -765,27 +765,27 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UkN-7t-tmH" customClass="PieChartView" customModule="Charts">
-                                                <rect key="frame" x="6" y="66" width="201.5" height="201.5"/>
+                                                <rect key="frame" x="6" y="241.5" width="201.5" height="201.5"/>
                                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="UkN-7t-tmH" secondAttribute="height" id="uVC-pX-yIN"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgo-rF-cJI" customClass="PieChartView" customModule="Charts">
-                                                <rect key="frame" x="167.5" y="66" width="201.5" height="201.5"/>
+                                                <rect key="frame" x="167.5" y="241.5" width="201.5" height="201.5"/>
                                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Hgo-rF-cJI" secondAttribute="height" id="Xel-1V-NMT"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BFJ-bl-7Dt">
-                                                <rect key="frame" x="12" y="63" width="351" height="21"/>
+                                                <rect key="frame" x="12" y="239" width="351" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ntu-0h-ZDg" userLabel="Empty Trips View">
-                                                <rect key="frame" x="0.0" y="63" width="375" height="200"/>
+                                                <rect key="frame" x="0.0" y="239" width="375" height="200"/>
                                                 <subviews>
                                                     <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🐣" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="XUX-9b-hb1">
                                                         <rect key="frame" x="157.5" y="7" width="60" height="60"/>
@@ -846,7 +846,7 @@
                                                 </variation>
                                             </view>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ucX-LG-YpG">
-                                                <rect key="frame" x="80" y="27" width="215" height="29"/>
+                                                <rect key="frame" x="80" y="203" width="215" height="29"/>
                                                 <segments>
                                                     <segment title="This Year"/>
                                                     <segment title="Last Year"/>
@@ -857,28 +857,28 @@
                                                 </connections>
                                             </segmentedControl>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4DP-EY-M0T" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="257.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="433" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="vO1-JH-coM"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvb-dp-11E" userLabel="Space View">
-                                                <rect key="frame" x="0.0" y="258.5" width="375" height="18"/>
+                                                <rect key="frame" x="0.0" y="434" width="375" height="18"/>
                                                 <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="18" id="n8t-pp-fDM"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eIw-Gw-Dtj" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="276.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="452" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="jVx-IN-yIZ"/>
                                                 </constraints>
                                             </view>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-Lb-PW8">
-                                                <rect key="frame" x="107" y="285.5" width="161" height="29"/>
+                                                <rect key="frame" x="107" y="461" width="161" height="29"/>
                                                 <segments>
                                                     <segment title="Day"/>
                                                     <segment title="Week"/>
@@ -889,31 +889,118 @@
                                                 </connections>
                                             </segmentedControl>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vzr-Vx-Rtu" customClass="BarChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="321.5" width="375" height="300"/>
+                                                <rect key="frame" x="0.0" y="497" width="375" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="300" id="bBP-b7-nZa"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vVu-WK-FHk" customClass="LineChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="321.5" width="375" height="300"/>
+                                                <rect key="frame" x="0.0" y="497" width="375" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="300" id="tIQ-Da-W1b"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OYF-ZM-x0P" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="629.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="805" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="QLD-N2-bzs"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Y0-aN-csO" userLabel="Space View">
-                                                <rect key="frame" x="0.0" y="719" width="414" height="18"/>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Y0-aN-csO" userLabel="Space View">
+                                                <rect key="frame" x="0.0" y="806" width="375" height="800"/>
                                                 <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="800" id="gC9-Q9-TxS"/>
+                                                </constraints>
+                                            </view>
+                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nsk-4E-Jn1">
+                                                <rect key="frame" x="0.0" y="49.5" width="375" height="120"/>
+                                                <subviews>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="88L-9t-zJN">
+                                                        <rect key="frame" x="0.0" y="0.0" width="240" height="120"/>
+                                                        <subviews>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="og8-6D-7NQ" customClass="TrophyProgressView" customModule="Ride_Report" customModuleProvider="target">
+                                                                <rect key="frame" x="0.0" y="0.0" width="80" height="120"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="emoji" value="👹"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="count">
+                                                                        <integer key="value" value="2"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                                                                        <real key="value" value="0.59999999999999998"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="emojiFontSize">
+                                                                        <real key="value" value="80"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tV-d1-Rq9" customClass="TrophyProgressView" customModule="Ride_Report" customModuleProvider="target">
+                                                                <rect key="frame" x="80" y="0.0" width="80" height="120"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="emoji" value="👹"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="count">
+                                                                        <integer key="value" value="13"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                                                                        <real key="value" value="1"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qr1-4i-rbP" customClass="TrophyProgressView" customModule="Ride_Report" customModuleProvider="target">
+                                                                <rect key="frame" x="160" y="0.0" width="80" height="120"/>
+                                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="emoji" value="👹"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="count">
+                                                                        <integer key="value" value="6"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                                                                        <real key="value" value="0.20000000000000001"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                            </view>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="88L-9t-zJN" firstAttribute="top" secondItem="Nsk-4E-Jn1" secondAttribute="top" id="LjZ-bi-fFf"/>
+                                                    <constraint firstAttribute="bottom" secondItem="88L-9t-zJN" secondAttribute="bottom" id="Oa2-3i-eAN"/>
+                                                    <constraint firstAttribute="height" constant="120" id="YhI-sd-u2P"/>
+                                                    <constraint firstAttribute="trailing" secondItem="88L-9t-zJN" secondAttribute="trailing" id="ZjA-vD-H81"/>
+                                                    <constraint firstItem="88L-9t-zJN" firstAttribute="leading" secondItem="Nsk-4E-Jn1" secondAttribute="leading" id="ahB-dH-do6"/>
+                                                    <constraint firstAttribute="height" secondItem="88L-9t-zJN" secondAttribute="height" id="hRp-DP-HR3"/>
+                                                </constraints>
+                                            </scrollView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Trophies" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z2z-zo-jH3">
+                                                <rect key="frame" x="135.5" y="27" width="104" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                                <color key="textColor" red="0.30980392159999998" green="0.6705882353" blue="0.047058823530000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j7n-yf-3KZ" userLabel="Divider View">
+                                                <rect key="frame" x="0.0" y="176" width="375" height="1"/>
+                                                <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="0.5" id="Yv4-wC-ZA9"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJH-Pp-ojE" userLabel="Space View">
+                                                <rect key="frame" x="0.0" y="177" width="375" height="18"/>
+                                                <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="18" id="aPu-kF-NNb"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QUu-0W-gEK" userLabel="Divider View">
+                                                <rect key="frame" x="0.0" y="195" width="375" height="1"/>
+                                                <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="0.5" id="Ghj-uz-g5Q"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -921,9 +1008,12 @@
                                         <constraints>
                                             <constraint firstItem="VK5-ye-s3a" firstAttribute="top" secondItem="pSA-ng-4Kd" secondAttribute="top" constant="-782" id="0AW-GI-Tab"/>
                                             <constraint firstItem="YLp-IO-ib1" firstAttribute="top" secondItem="pSA-ng-4Kd" secondAttribute="top" constant="18" id="2a3-U8-Jcm"/>
-                                            <constraint firstItem="ucX-LG-YpG" firstAttribute="top" secondItem="YLp-IO-ib1" secondAttribute="bottom" constant="8" id="6KN-pi-kQt"/>
+                                            <constraint firstItem="vJH-Pp-ojE" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="3yd-Bd-gGY"/>
+                                            <constraint firstItem="vJH-Pp-ojE" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="60J-7P-71c"/>
                                             <constraint firstItem="vVu-WK-FHk" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="6L1-n5-h9x"/>
+                                            <constraint firstItem="Nsk-4E-Jn1" firstAttribute="top" secondItem="Z2z-zo-jH3" secondAttribute="bottom" constant="1" id="7J7-Ux-EJ3"/>
                                             <constraint firstItem="4DP-EY-M0T" firstAttribute="leading" secondItem="pSA-ng-4Kd" secondAttribute="leading" id="ALp-Fn-dc7"/>
+                                            <constraint firstItem="ucX-LG-YpG" firstAttribute="top" secondItem="vJH-Pp-ojE" secondAttribute="bottom" constant="8" id="B0T-eI-LHM"/>
                                             <constraint firstItem="OYF-ZM-x0P" firstAttribute="top" secondItem="vVu-WK-FHk" secondAttribute="bottom" constant="8" id="BgC-yR-kvf"/>
                                             <constraint firstItem="ntu-0h-ZDg" firstAttribute="top" secondItem="ucX-LG-YpG" secondAttribute="bottom" constant="8" id="Bzo-jD-wGj"/>
                                             <constraint firstItem="UkN-7t-tmH" firstAttribute="leading" secondItem="pSA-ng-4Kd" secondAttribute="leading" constant="6" id="C76-az-i9u"/>
@@ -931,11 +1021,13 @@
                                             <constraint firstAttribute="trailing" secondItem="Hgo-rF-cJI" secondAttribute="trailing" constant="6" id="HWg-uv-SI0"/>
                                             <constraint firstItem="2Y0-aN-csO" firstAttribute="trailing" secondItem="OYF-ZM-x0P" secondAttribute="trailing" id="HfI-Ec-O3L"/>
                                             <constraint firstItem="UkN-7t-tmH" firstAttribute="top" secondItem="BFJ-bl-7Dt" secondAttribute="bottom" constant="-18" id="Ik3-3t-w7o"/>
+                                            <constraint firstItem="QUu-0W-gEK" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="Jsm-q5-qy3"/>
                                             <constraint firstItem="2Y0-aN-csO" firstAttribute="leading" secondItem="OYF-ZM-x0P" secondAttribute="leading" id="KRq-tm-Jmi"/>
                                             <constraint firstItem="VK5-ye-s3a" firstAttribute="leading" secondItem="YLp-IO-ib1" secondAttribute="leading" id="LUj-GA-vMy"/>
                                             <constraint firstItem="eIw-Gw-Dtj" firstAttribute="leading" secondItem="4DP-EY-M0T" secondAttribute="leading" id="LZm-fl-Eig"/>
                                             <constraint firstItem="Vzr-Vx-Rtu" firstAttribute="leading" secondItem="vVu-WK-FHk" secondAttribute="leading" id="Lea-GH-xcG"/>
                                             <constraint firstItem="Hgo-rF-cJI" firstAttribute="width" secondItem="UkN-7t-tmH" secondAttribute="width" id="Nbf-7j-h9u"/>
+                                            <constraint firstItem="Nsk-4E-Jn1" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="Obl-Wz-kxG"/>
                                             <constraint firstItem="hvb-dp-11E" firstAttribute="top" secondItem="4DP-EY-M0T" secondAttribute="bottom" id="R5v-he-M1P"/>
                                             <constraint firstItem="2Y0-aN-csO" firstAttribute="top" secondItem="OYF-ZM-x0P" secondAttribute="bottom" id="R68-bh-iGc"/>
                                             <constraint firstItem="OYF-ZM-x0P" firstAttribute="trailing" secondItem="eIw-Gw-Dtj" secondAttribute="trailing" id="TfK-kh-Xh6"/>
@@ -953,18 +1045,27 @@
                                             <constraint firstItem="Q7h-Lb-PW8" firstAttribute="top" secondItem="eIw-Gw-Dtj" secondAttribute="bottom" constant="8" id="hSG-qI-WmC"/>
                                             <constraint firstItem="Q7h-Lb-PW8" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="jaL-QE-gxS"/>
                                             <constraint firstItem="4DP-EY-M0T" firstAttribute="top" secondItem="UkN-7t-tmH" secondAttribute="bottom" constant="-10" id="jfW-pZ-DWS"/>
+                                            <constraint firstItem="QUu-0W-gEK" firstAttribute="top" secondItem="vJH-Pp-ojE" secondAttribute="bottom" id="kaw-vL-2QI"/>
                                             <constraint firstItem="hvb-dp-11E" firstAttribute="leading" secondItem="4DP-EY-M0T" secondAttribute="leading" id="n4x-p7-d1o"/>
+                                            <constraint firstItem="Z2z-zo-jH3" firstAttribute="top" secondItem="VK5-ye-s3a" secondAttribute="bottom" constant="9" id="npp-rO-kEL"/>
                                             <constraint firstItem="VK5-ye-s3a" firstAttribute="trailing" secondItem="YLp-IO-ib1" secondAttribute="trailing" id="oUg-Mv-gd4"/>
                                             <constraint firstItem="ucX-LG-YpG" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="och-P3-cKE"/>
                                             <constraint firstItem="YLp-IO-ib1" firstAttribute="trailing" secondItem="4DP-EY-M0T" secondAttribute="trailing" id="olY-uc-40k"/>
                                             <constraint firstItem="YLp-IO-ib1" firstAttribute="top" secondItem="VK5-ye-s3a" secondAttribute="bottom" id="oma-NA-fTw"/>
                                             <constraint firstItem="vVu-WK-FHk" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="pEN-eg-37w"/>
+                                            <constraint firstItem="j7n-yf-3KZ" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="pW9-ID-g1B"/>
                                             <constraint firstItem="Vzr-Vx-Rtu" firstAttribute="top" secondItem="vVu-WK-FHk" secondAttribute="top" id="ppV-ol-Gbo"/>
                                             <constraint firstItem="Hgo-rF-cJI" firstAttribute="top" secondItem="UkN-7t-tmH" secondAttribute="top" id="rt2-PA-N2u"/>
+                                            <constraint firstItem="Z2z-zo-jH3" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="s8y-RY-d6a"/>
                                             <constraint firstItem="Vzr-Vx-Rtu" firstAttribute="height" secondItem="vVu-WK-FHk" secondAttribute="height" id="sqh-sW-jyE"/>
                                             <constraint firstAttribute="bottom" secondItem="2Y0-aN-csO" secondAttribute="bottom" constant="-782" id="tOO-UZ-9Io"/>
+                                            <constraint firstItem="QUu-0W-gEK" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="tVO-Na-KMF"/>
+                                            <constraint firstItem="j7n-yf-3KZ" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="uyp-3t-UOK"/>
+                                            <constraint firstItem="vJH-Pp-ojE" firstAttribute="top" secondItem="j7n-yf-3KZ" secondAttribute="bottom" id="wIB-Mz-MSW"/>
                                             <constraint firstItem="Vzr-Vx-Rtu" firstAttribute="width" secondItem="vVu-WK-FHk" secondAttribute="width" id="waq-W5-eZq"/>
                                             <constraint firstItem="BFJ-bl-7Dt" firstAttribute="leading" secondItem="pSA-ng-4Kd" secondAttribute="leading" constant="12" id="wdK-iw-rgx"/>
+                                            <constraint firstItem="vJH-Pp-ojE" firstAttribute="top" secondItem="Nsk-4E-Jn1" secondAttribute="bottom" constant="7.5" id="z5S-63-fSr"/>
+                                            <constraint firstItem="Nsk-4E-Jn1" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="zdP-kq-fbb"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -1001,7 +1102,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vYu-EL-yrr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1506" y="-188"/>
+            <point key="canvasLocation" x="1504.8" y="-188.45577211394306"/>
         </scene>
         <!--Rewards View Controller-->
         <scene sceneID="550-Jo-gSm">
@@ -1117,7 +1218,7 @@
                     <toolbarItems/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="itw-fS-GQj">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2138,7 +2239,7 @@
                 <navigationController storyboardIdentifier="setupViewController" modalTransitionStyle="crossDissolve" id="Vfc-5U-4UL" customClass="SetupViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="aIy-Zm-fp3">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                 </navigationController>
@@ -2774,7 +2875,7 @@
                 <navigationController storyboardIdentifier="hamburgerNavController" automaticallyAdjustsScrollViewInsets="NO" id="CTm-Br-P8L" customClass="HamburgerNavController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="ZWp-cC-VxW">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2793,7 +2894,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="cgk-4v-LE7">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2812,7 +2913,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="h4X-JN-Qfj">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2831,7 +2932,7 @@
                     <toolbarItems/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="Wgm-TQ-5U2">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3285,19 +3386,19 @@ All the Apps</string>
                                 </variation>
                             </visualEffectView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="This App is Really Cool and Does great Stuff" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="VUK-8H-ODx">
-                                <rect key="frame" x="36" y="283" width="303" height="21.5"/>
+                                <rect key="frame" x="36" y="279" width="303" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Love to Ride would like to access:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="PV7-3r-mDx" userLabel="Scopes Permissions Text">
-                                <rect key="frame" x="36" y="344.5" width="303" height="17"/>
+                                <rect key="frame" x="36" y="340.5" width="303" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.2627125978" green="0.2627638578" blue="0.26270926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-Bi-Atn">
-                                <rect key="frame" x="16" y="373.5" width="343" height="169"/>
+                                <rect key="frame" x="16" y="369.5" width="343" height="169"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="169" id="jjx-84-DnN"/>
@@ -3375,7 +3476,7 @@ All the Apps</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" image="AppIcon40x40.png" translatesAutoresizingMaskIntoConstraints="NO" id="lRe-6R-CEp">
-                                <rect key="frame" x="97.5" y="85" width="180" height="180"/>
+                                <rect key="frame" x="97.5" y="81" width="180" height="180"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="180" id="qAk-01-vHY"/>
                                     <constraint firstAttribute="width" constant="180" id="xd9-ZS-Kk3"/>
@@ -3565,7 +3666,7 @@ All the Apps</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fC1-1h-Vad" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="miM-Fr-gmr">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3696,7 +3797,7 @@ All the Apps</string>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9QE-OU-mae" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" id="MPD-qM-pSo">
-                        <rect key="frame" x="0.0" y="20" width="375" height="48"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -3764,7 +3865,7 @@ All the Apps</string>
                                 </variation>
                             </view>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="plain" rowHeight="98" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="cd5-To-OKh">
-                                <rect key="frame" x="0.0" y="68" width="375" height="599"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="separatorColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>

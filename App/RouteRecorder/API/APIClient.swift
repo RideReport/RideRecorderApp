@@ -240,22 +240,16 @@ public class APIClient {
     //
     
     #if DEBUG
-    @discardableResult public func getRoute(withUUID uuid: String)->AuthenticatedAPIRequest {
-        return AuthenticatedAPIRequest(client: self, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
+    @discardableResult public func getRouteLocations(withUUID uuid: String)->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: self, method: .get, route: "routes/" + uuid + "/locations", completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
-                var route: Route! = Route.findRoute(withUUID: uuid)
+                let route: Route! = Route.findRoute(withUUID: uuid)
                 if route == nil {
-                    route = Route()
-                    route.uuid = uuid
+                    return
                 }
                 
-                route.loadFromJSON(JSON: json)
-                route.isClosed = true
-                route.isUploaded = true
-                route.isSummaryUploaded = true
-                
-                if let locations = json["locations"].array {
+                if let locations = json.array {
                     for locationJson in locations {
                         if let loc = Location(JSON: locationJson) {
                             loc.route = route

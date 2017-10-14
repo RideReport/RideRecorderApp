@@ -230,13 +230,14 @@
 		3DA8C10B1F8ECDCC00BE1460 /* Encouragement+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C1061F8EC46400BE1460 /* Encouragement+CoreDataProperties.swift */; };
 		3DA8C10C1F8ECDCE00BE1460 /* Encouragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C1071F8EC4A500BE1460 /* Encouragement.swift */; };
 		3DA8C10D1F8ECDCE00BE1460 /* Encouragement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C1071F8EC4A500BE1460 /* Encouragement.swift */; };
-		3DA8C10F1F8EE0C400BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
-		3DA8C1101F8EE1E900BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
-		3DA8C1121F8EE1EC00BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
-		3DA8C1131F8EE1EC00BE1460 /* RewardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */; };
+		3DA8C10F1F8EE0C400BE1460 /* TrophyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */; };
+		3DA8C1101F8EE1E900BE1460 /* TrophyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */; };
+		3DA8C1121F8EE1EC00BE1460 /* TrophyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */; };
+		3DA8C1131F8EE1EC00BE1460 /* TrophyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */; };
 		3DA8C1161F8FED0200BE1460 /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DA8C11D1F9004AA00BE1460 /* RouteRecorder.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3D7738A41F58A21000155DB8 /* RouteRecorder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3DA8C11E1F90085900BE1460 /* RouteRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7738A41F58A21000155DB8 /* RouteRecorder.framework */; };
+		3DB027711F91654400D7BB72 /* TrophyProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB027701F91654400D7BB72 /* TrophyProgressView.swift */; };
 		3DB9BD1A1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1B1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
 		3DB9BD1C1CC6DE13004A5BD0 /* AnimatedGradientLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */; };
@@ -613,8 +614,9 @@
 		3DA687B21E82086400483741 /* BalloonMarker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BalloonMarker.swift; sourceTree = "<group>"; };
 		3DA8C1061F8EC46400BE1460 /* Encouragement+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Encouragement+CoreDataProperties.swift"; path = "Ride/Model/Encouragement+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		3DA8C1071F8EC4A500BE1460 /* Encouragement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Encouragement.swift; path = Ride/Model/Encouragement.swift; sourceTree = "<group>"; };
-		3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardView.swift; sourceTree = "<group>"; };
+		3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyView.swift; sourceTree = "<group>"; };
 		3DACFF751D5FB8210011FE9E /* Ride Report Watch App Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ride Report Watch App Extension.entitlements"; sourceTree = "<group>"; };
+		3DB027701F91654400D7BB72 /* TrophyProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyProgressView.swift; sourceTree = "<group>"; };
 		3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AnimatedGradientLabel.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3DBABFD11CCED10600665646 /* ConnectedAppConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectedAppConfirmViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3DBABFD31CCED49C00665646 /* ConnectedAppsBrowseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectedAppsBrowseViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -1177,7 +1179,8 @@
 				3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */,
 				3D19303A1EAE912100915813 /* RideNotificationView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
-				3DA8C10E1F8EE0C400BE1460 /* RewardView.swift */,
+				3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */,
+				3DB027701F91654400D7BB72 /* TrophyProgressView.swift */,
 				84C29F6C1BDEDD070003A26B /* ClearButton.swift */,
 				84AFFEAA1B041462009ABC19 /* ColorPallete.swift */,
 				84091CD71BD848A400264652 /* RCounter.h */,
@@ -2266,7 +2269,7 @@
 				3D72BE111F58C3BC0043ECBA /* Float+Meters.swift in Sources */,
 				3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */,
 				3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */,
-				3DA8C1101F8EE1E900BE1460 /* RewardView.swift in Sources */,
+				3DA8C1101F8EE1E900BE1460 /* TrophyView.swift in Sources */,
 				3D265C111D777CDF00405F69 /* NSString+HBAdditions.swift in Sources */,
 				3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */,
 				84EA5FAA1EB19AF800964706 /* RideSummaryView.swift in Sources */,
@@ -2356,7 +2359,7 @@
 				3D72BD851F58ABE80043ECBA /* ConnectedAppScope.swift in Sources */,
 				3D65E8E91F634197002D143A /* TripsListSection+CoreDataProperties.swift in Sources */,
 				3D72BD9A1F58ABE80043ECBA /* Trip.swift in Sources */,
-				3DA8C1121F8EE1EC00BE1460 /* RewardView.swift in Sources */,
+				3DA8C1121F8EE1EC00BE1460 /* TrophyView.swift in Sources */,
 				3DD08F301ECE17F400246B78 /* NotificationManager.swift in Sources */,
 				3DD08F2C1ECE17F400246B78 /* HealthKitManager.swift in Sources */,
 				3DD08EFC1ECE167400246B78 /* Ride_Report_UITests.swift in Sources */,
@@ -2399,7 +2402,7 @@
 				3DA8C10C1F8ECDCE00BE1460 /* Encouragement.swift in Sources */,
 				3D72BD991F58ABE80043ECBA /* Trip.swift in Sources */,
 				842FDCC91BD5800E0079AFCC /* UILabel+HBAdditions.m in Sources */,
-				3DA8C1131F8EE1EC00BE1460 /* RewardView.swift in Sources */,
+				3DA8C1131F8EE1EC00BE1460 /* TrophyView.swift in Sources */,
 				8409C4A91C518B2400999446 /* HealthKitManager.swift in Sources */,
 				3D72BD811F58ABE80043ECBA /* ConnectedApp+CoreDataProperties.swift in Sources */,
 				3D634F761ECCEEB2008B1894 /* RideNotificationView.swift in Sources */,
@@ -2500,6 +2503,7 @@
 				3D19303B1EAE912200915813 /* RideNotificationView.swift in Sources */,
 				3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */,
 				84EA5BDB1A6DA8DF00C71F53 /* RideSummaryView.swift in Sources */,
+				3DB027711F91654400D7BB72 /* TrophyProgressView.swift in Sources */,
 				3D65E8E41F634197002D143A /* TripsListSection.swift in Sources */,
 				3D72BD8F1F58ABE80043ECBA /* Promotion.swift in Sources */,
 				3D65B9731D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift in Sources */,
@@ -2524,7 +2528,7 @@
 				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				3D0D56081F58C8DB00410679 /* TripsManager.swift in Sources */,
-				3DA8C10F1F8EE0C400BE1460 /* RewardView.swift in Sources */,
+				3DA8C10F1F8EE0C400BE1460 /* TrophyView.swift in Sources */,
 				3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,

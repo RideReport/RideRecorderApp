@@ -23,7 +23,7 @@ protocol RideSummaryViewDelegate: class {
 
     private var chevronImageView: UIImageView?
     private var tripSummaryView: RideSummaryComponentView?
-    private var rewardViews: [RewardView]!
+    private var rewardViews: [TrophyView]!
     public var tripLength: Float = -1.0
     
     var chevronImage: UIImage? = nil {
@@ -159,7 +159,7 @@ protocol RideSummaryViewDelegate: class {
         for rewardDict in rewards {
             if let displaySafeEmoji = rewardDict["emoji"] as? String,
                 let descriptionText = rewardDict["description"] as? String {
-                let rewardView = RewardView()
+                let rewardView = TrophyView()
                 if let object = rewardDict["object"] {
                     rewardView.associatedObject = object
                 }
@@ -261,7 +261,7 @@ protocol RideSummaryViewDelegate: class {
     }
     
     @objc func didTapReward(sender: AnyObject) {
-        if let reward = ((sender as? UITapGestureRecognizer)?.view as? RewardView)?.associatedObject, let delegate = self.delegate {
+        if let reward = ((sender as? UITapGestureRecognizer)?.view as? TrophyView)?.associatedObject, let delegate = self.delegate {
             delegate.didTapReward(withAssociatedObject: reward)
         }
     }
