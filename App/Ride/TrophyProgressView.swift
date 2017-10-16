@@ -13,6 +13,8 @@ import UIKit
 @IBDesignable public class TrophyProgressView : UIView {
     public var associatedObject: Any?
     
+    private var hasLayedOutSubviews = false
+    
     let countLabelSize: CGFloat = 16
     var badgeSize: CGFloat {
         get {
@@ -22,25 +24,26 @@ import UIKit
     
     @IBInspectable var emojiFontSize: CGFloat = 80  {
         didSet {
-            reloadUI()
+            reloadEmojiUI()
         }
     }
     
     @IBInspectable var emoji: String = "" {
         didSet {
-            reloadUI()
+            reloadEmojiImages()
+            reloadEmojiUI()
         }
     }
     
     @IBInspectable var count: Int = 0 {
         didSet {
-            reloadUI()
+            reloadEmojiUI()
         }
     }
     
     @IBInspectable var progress: CGFloat = 0 {
         didSet {
-            reloadUI()
+            reloadProgressUI()
         }
     }
     
@@ -49,6 +52,9 @@ import UIKit
             self.setNeedsLayout()
         }
     }
+    
+    private var emojiSaturated: UIImage?
+    private var emojiDesaturated: UIImage?
     
     private var emojiView: UIImageView!
     private var emojiProgressView: UIImageView!
@@ -70,28 +76,46 @@ import UIKit
     }
     
     public override func prepareForInterfaceBuilder() {
-        reloadUI()
+        reloadEmojiUI()
+        reloadProgressUI()
     }
     
-    func reloadUI() {
-        let (saturated, desatured) = emojiImage()
-        emojiProgressView.image = saturated
-        emojiView.image = desatured
-        countLabel.text = String(format: "%i", count)
+    func reloadProgressUI() {
+        guard hasLayedOutSubviews else {
+            return
+        }
         
         let imageWidth = self.emojiFontSize + 8
         let piePath = UIBezierPath()
         let centerPoint = CGPoint(x: imageWidth/2, y:imageWidth/2)
         piePath.move(to: centerPoint)
-        piePath.addArc(withCenter: center, radius:imageWidth/2 + 10, startAngle:CGFloat(Double.pi/2), endAngle: CGFloat(0), clockwise:true)
+        piePath.addArc(withCenter: centerPoint, radius:imageWidth/2 + 10, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(Double.pi * 2) * progress, clockwise:true)
         piePath.close()
-        
+        NSLog("%@", piePath)
         let maskLayer = CAShapeLayer()
         maskLayer.fillColor = UIColor.black.cgColor
         maskLayer.bounds = emojiProgressView.layer.bounds
-        maskLayer.position = emojiProgressView.layer.position
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
+    }
+    
+    func reloadEmojiUI() {
+        guard hasLayedOutSubviews else {
+            return
+        }
+        
+        guard emoji != "" else {
+            emojiProgressView.image = nil
+            emojiView.image = nil
+            countLabel.text = ""
+            return
+        }
+        
+        emojiProgressView.image = emojiSaturated
+        emojiView.image = emojiDesaturated
+        countLabel.text = String(format: "%i", count)
+        countLabel.isHidden = count <= 0
+        circleView.isHidden = count <= 0
         
         if (drawsDottedOutline) {
             self.backgroundColor = ColorPallete.shared.almostWhite
@@ -127,7 +151,9 @@ import UIKit
     }
     
     override public func layoutSubviews() {
-        reloadUI()
+        self.hasLayedOutSubviews = true
+        reloadEmojiUI()
+        reloadProgressUI()
     }
     
     func commonInit() {
@@ -173,7 +199,8 @@ import UIKit
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         circleView.addSubview(countLabel)
         
-        reloadUI()
+        reloadEmojiUI()
+        reloadProgressUI()
     }
     
     public override func updateConstraints() {
@@ -187,10 +214,12 @@ import UIKit
    
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiFontSize + 10))
         
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant:0))
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiFontSize))
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
+        for view in [emojiView, emojiProgressView] {
+            currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant:0))
+            currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
+            currentConstraints.append(NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiFontSize))
+            currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
+        }
         
         currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:0))
         currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
@@ -203,7 +232,13 @@ import UIKit
         currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: countLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
     }
     
-    private func emojiImage() -> (UIImage?,UIImage?) {
+    private func reloadEmojiImages() {
+        guard emoji != "" else {
+            emojiSaturated = nil
+            emojiDesaturated = nil
+            return
+        }
+        
         let emojiOffset: CGFloat = 4
         let imageWidth = self.emojiFontSize + emojiOffset * 2
         
@@ -223,7 +258,9 @@ import UIKit
         UIGraphicsEndImageContext()
         
         guard let saturatedImage = saturatedImageOptional else {
-            return (nil, nil)
+            self.emojiSaturated = nil
+            self.emojiDesaturated = nil
+            return
         }
         
         let context = CIContext(options: nil)
@@ -234,7 +271,8 @@ import UIKit
         let cgImage = context.createCGImage(output!,from:output!.extent)
         let desaturedImage = UIImage(cgImage: cgImage!, scale: UIScreen.main.scale, orientation: UIImageOrientation.up)
         
-        return (saturatedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal), desaturedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal))
+        self.emojiSaturated = saturatedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        self.emojiDesaturated = desaturedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
     }
 }
 
