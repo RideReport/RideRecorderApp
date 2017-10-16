@@ -244,9 +244,13 @@ public class APIClient {
         return AuthenticatedAPIRequest(client: self, method: .get, route: "routes/" + uuid + "/locations", completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
-                let route: Route! = Route.findRoute(withUUID: uuid)
+                var route: Route! = Route.findRoute(withUUID: uuid)
                 if route == nil {
-                    return
+                    route = Route()
+                    route.uuid = uuid
+                    route.isClosed = true
+                    route.isUploaded = true
+                    route.isSummaryUploaded = true
                 }
                 
                 if let locations = json.array {
