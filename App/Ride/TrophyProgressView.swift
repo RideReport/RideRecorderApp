@@ -22,7 +22,7 @@ import UIKit
         }
     }
     
-    @IBInspectable var emojiFontSize: CGFloat = 80  {
+    @IBInspectable var emojiFontSize: CGFloat = 70  {
         didSet {
             reloadEmojiUI()
         }
@@ -89,7 +89,7 @@ import UIKit
         let piePath = UIBezierPath()
         let centerPoint = CGPoint(x: imageWidth/2, y:imageWidth/2)
         piePath.move(to: centerPoint)
-        piePath.addArc(withCenter: centerPoint, radius:imageWidth/2 + 10, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(Double.pi * 2) * progress, clockwise:true)
+        piePath.addArc(withCenter: centerPoint, radius:imageWidth/2 + 50, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(Double.pi * 2) * progress, clockwise:true)
         piePath.close()
         NSLog("%@", piePath)
         let maskLayer = CAShapeLayer()
@@ -180,8 +180,6 @@ import UIKit
         let circleLayer = CAShapeLayer()
         circleLayer.fillColor = ColorPallete.shared.badRed.cgColor
         circleLayer.contentsScale = UIScreen.main.scale
-        circleLayer.lineWidth = 3
-        circleLayer.strokeColor = ColorPallete.shared.almostWhite.cgColor
         circleLayer.bounds = borderFrame
         circleLayer.position = circleView.layer.position
         circleLayer.path = UIBezierPath(ovalIn: borderFrame).cgPath
@@ -221,8 +219,8 @@ import UIKit
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
         }
         
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:0))
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:self.badgeSize/2))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:-self.badgeSize/2))
         currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
         currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
         
@@ -250,8 +248,18 @@ import UIKit
         let emojiSize = attributedEmojiString.boundingRect(with: CGSize(width: self.emojiFontSize, height: CGFloat.greatestFiniteMagnitude), options:[NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context:nil).size
         
         UIGraphicsBeginImageContextWithOptions(CGSize(width: imageWidth, height: imageWidth), false , 0.0)
-        let emojiDrawRect = CGRect(x: emojiOffset, y: 0, width: emojiSize.width, height: emojiSize.height)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [ColorPallete.shared.goodGreen.cgColor, ColorPallete.shared.primaryDark.cgColor]
+        gradientLayer.locations = [0.6, 1.0]
+        gradientLayer.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageWidth)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.cornerRadius = 8
+        if let context = UIGraphicsGetCurrentContext() {
+            gradientLayer.render(in: context)
+        }
         
+        let emojiDrawRect = CGRect(x: 0, y: -emojiOffset, width: emojiSize.width, height: emojiSize.height)
         attributedEmojiString.draw(in: emojiDrawRect)
         
         let saturatedImageOptional = UIGraphicsGetImageFromCurrentImageContext()
