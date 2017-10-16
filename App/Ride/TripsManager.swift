@@ -53,7 +53,7 @@ class TripsManager : NSObject, RouteRecorderDelegate {
         trip.isInProgress = false
         CoreDataManager.shared.saveContext()
         
-        trip.sendTripCompletionNotificationLocally(secondsFromNow:0.0, silent = true)
+        trip.sendTripCompletionNotificationLocally(secondsFromNow:0.0, silent: true)
     }
 
     private func startup() {
