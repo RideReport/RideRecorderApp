@@ -541,7 +541,7 @@ public class  Trip: NSManagedObject {
         }
     }
     
-    func sendTripCompletionNotificationLocally(secondsFromNow: TimeInterval) {
+    func sendTripCompletionNotificationLocally(secondsFromNow: TimeInterval, silent: Bool = false) {
         DDLogInfo("Scheduling notification…")
         
         self.cancelTripStateNotificationOnLegacyDevices()
@@ -570,7 +570,7 @@ public class  Trip: NSManagedObject {
                 
                 let content = UNMutableNotificationContent()
                 content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
-                content.sound = UNNotificationSound(named: "bell.aiff")
+                content.sound = silent ? nil : UNNotificationSound(named: "bell.aiff")
                 content.body = self.notificationString()
                 content.userInfo = userInfo
                 
