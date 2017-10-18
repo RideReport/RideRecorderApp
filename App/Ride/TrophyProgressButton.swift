@@ -9,12 +9,12 @@
 import Foundation
 import CoreGraphics
 import UIKit
+import Kingfisher
+import UIImageColors
 
-@IBDesignable public class TrophyProgressView : UIView {
+@IBDesignable public class TrophyProgressButton : UIButton {
     public var associatedObject: Any?
-    
-    private var hasLayedOutSubviews = false
-    
+        
     let countLabelSize: CGFloat = 16
     var badgeSize: CGFloat {
         get {
@@ -22,34 +22,45 @@ import UIKit
         }
     }
     
-    @IBInspectable var emojiFontSize: CGFloat = 70  {
+    @IBInspectable var emojiFontSize: CGFloat = 50
+    
+    @IBInspectable var badgeDimension: CGFloat = 78
+    
+    var emoji: String = "" {
         didSet {
-            reloadEmojiUI()
+            reloadEmojiImages()
         }
     }
     
-    @IBInspectable var emoji: String = "" {
-        didSet {
-            reloadEmojiImages()
-            reloadEmojiUI()
-        }
-    }
+    @IBInspectable var body: String = ""
     
     @IBInspectable var count: Int = 0 {
         didSet {
-            reloadEmojiUI()
+            reloadCountProgressUI()
         }
     }
     
-    @IBInspectable var progress: CGFloat = 0 {
+    @IBInspectable var progress: Double = 0 {
         didSet {
-            reloadProgressUI()
+            reloadCountProgressUI()
         }
     }
     
     @IBInspectable public var drawsDottedOutline = false {
         didSet {
             self.setNeedsLayout()
+        }
+    }
+    
+    private var emojiSaturatedCacheKey: String {
+        get {
+            return String(format: "%@-%.0f-%.0f", self.emoji, self.badgeSize, self.emojiFontSize)
+        }
+    }
+    
+    private var emojiDesaturatedCacheKey: String {
+        get {
+            return self.emojiSaturatedCacheKey + "-desaturated"
         }
     }
     
@@ -76,34 +87,29 @@ import UIKit
     }
     
     public override func prepareForInterfaceBuilder() {
-        reloadEmojiUI()
-        reloadProgressUI()
+        reloadCountProgressUI()
     }
     
-    func reloadProgressUI() {
-        guard hasLayedOutSubviews else {
-            return
-        }
+    private func reloadCountProgressUI() {
+        let progressToShow = count >= 1 ? 1 : progress // don't show the progress indicator if you've earned the trophy at least once
         
-        let imageWidth = self.emojiFontSize + 8
         let piePath = UIBezierPath()
-        let centerPoint = CGPoint(x: imageWidth/2, y:imageWidth/2)
+        let centerPoint = CGPoint(x: self.badgeDimension/2, y:self.badgeDimension/2)
         piePath.move(to: centerPoint)
-        piePath.addArc(withCenter: centerPoint, radius:imageWidth/2 + 50, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(Double.pi * 2) * progress, clockwise:true)
+        piePath.addArc(withCenter: centerPoint, radius:self.badgeDimension/2 + 50, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(-Double.pi/2 + Double.pi * 2 * progressToShow), clockwise:true)
         piePath.close()
-        NSLog("%@", piePath)
         let maskLayer = CAShapeLayer()
         maskLayer.fillColor = UIColor.black.cgColor
         maskLayer.bounds = emojiProgressView.layer.bounds
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
+        
+        countLabel.text = String(format: "%i", count)
+        countLabel.isHidden = (count <= 1 || (count == 1 && progress > 0))
+        circleView.isHidden = (count <= 1 || (count == 1 && progress > 0))
     }
     
-    func reloadEmojiUI() {
-        guard hasLayedOutSubviews else {
-            return
-        }
-        
+    private func reloadEmojiUI() {
         guard emoji != "" else {
             emojiProgressView.image = nil
             emojiView.image = nil
@@ -113,9 +119,6 @@ import UIKit
         
         emojiProgressView.image = emojiSaturated
         emojiView.image = emojiDesaturated
-        countLabel.text = String(format: "%i", count)
-        countLabel.isHidden = count <= 0
-        circleView.isHidden = count <= 0
         
         if (drawsDottedOutline) {
             self.backgroundColor = ColorPallete.shared.almostWhite
@@ -150,13 +153,7 @@ import UIKit
         }
     }
     
-    override public func layoutSubviews() {
-        self.hasLayedOutSubviews = true
-        reloadEmojiUI()
-        reloadProgressUI()
-    }
-    
-    func commonInit() {
+    private func commonInit() {
         self.clipsToBounds = false
         self.translatesAutoresizingMaskIntoConstraints = false
         
@@ -164,6 +161,7 @@ import UIKit
         emojiView.contentMode = .center
         emojiView.backgroundColor = UIColor.clear
         emojiView.clipsToBounds = false
+        emojiView.alpha = 0.4
         emojiView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(emojiView)
         
@@ -197,8 +195,7 @@ import UIKit
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         circleView.addSubview(countLabel)
         
-        reloadEmojiUI()
-        reloadProgressUI()
+        reloadCountProgressUI()
     }
     
     public override func updateConstraints() {
@@ -210,12 +207,12 @@ import UIKit
             NSLayoutConstraint.activate(currentConstraints)
         }
    
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiFontSize + 10))
+        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeDimension))
         
         for view in [emojiView, emojiProgressView] {
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant:0))
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
-            currentConstraints.append(NSLayoutConstraint(item: view, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiFontSize))
+            currentConstraints.append(NSLayoutConstraint(item: view as Any, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeDimension))
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
         }
         
@@ -237,50 +234,126 @@ import UIKit
             return
         }
         
-        let emojiOffset: CGFloat = 4
-        let imageWidth = self.emojiFontSize + emojiOffset * 2
+        if let cachedEmojiSatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiSaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]),
+            let cachedEmojiDesatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiDesaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]) {
+            self.emojiSaturated = cachedEmojiSatured
+            self.emojiDesaturated = cachedEmojiDesatured
+            self.reloadEmojiUI()
+            return
+        }
         
+        // rendering the emoji can be slow, so perform in the background and then fade in
+        emojiView.isHidden = true
+        emojiProgressView.isHidden = true
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.renderEmojiImages()
+            
+            DispatchQueue.main.async {
+                guard let reallyStrongSelf = self else {
+                    return
+                }
+                
+                reallyStrongSelf.reloadEmojiUI()
+                reallyStrongSelf.emojiView.fadeIn()
+                reallyStrongSelf.emojiProgressView.fadeIn()
+            }
+        }
+    }
+    
+    private func renderEmojiImages() {
+        let imageSize = CGSize(width: self.badgeDimension, height: self.badgeDimension)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
         let attributedEmojiString = NSAttributedString(string: self.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiFontSize), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
+        let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
         
-        let emojiSize = attributedEmojiString.boundingRect(with: CGSize(width: self.emojiFontSize, height: CGFloat.greatestFiniteMagnitude), options:[NSStringDrawingOptions.usesLineFragmentOrigin, NSStringDrawingOptions.usesFontLeading], context:nil).size
+        let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
+        UIGraphicsBeginImageContextWithOptions(imageSize, false , 0.0)
+        attributedEmojiString.draw(with: CGRect(x: (imageSize.width - boundingRect.width)/2 + xOffset, y: (imageSize.height - boundingRect.height)/2, width: boundingRect.width, height: boundingRect.height),  options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
         
-        UIGraphicsBeginImageContextWithOptions(CGSize(width: imageWidth, height: imageWidth), false , 0.0)
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [ColorPallete.shared.goodGreen.cgColor, ColorPallete.shared.primaryDark.cgColor]
-        gradientLayer.locations = [0.6, 1.0]
-        gradientLayer.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageWidth)
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.cornerRadius = 8
-        if let context = UIGraphicsGetCurrentContext() {
-            gradientLayer.render(in: context)
-        }
-        
-        let emojiDrawRect = CGRect(x: 0, y: -emojiOffset, width: emojiSize.width, height: emojiSize.height)
-        attributedEmojiString.draw(in: emojiDrawRect)
-        
-        let saturatedImageOptional = UIGraphicsGetImageFromCurrentImageContext()
+        let emojiImageOptional = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        guard let saturatedImage = saturatedImageOptional else {
-            self.emojiSaturated = nil
-            self.emojiDesaturated = nil
+        guard let emojiImage = emojiImageOptional else {
+            return
+        }
+        
+        let ratio = emojiImage.size.width/emojiImage.size.height
+        let downsampleDimension: CGFloat = 100
+        let colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
+        
+        guard let saturatedGradientEmoji = gradientImage(withEmojiImage: emojiImage, color: colors.primary, secondaryColor: colors.secondary, backgroundColor: colors.background) else {
+            return
+        }
+        
+        self.emojiSaturated = saturatedGradientEmoji.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        
+        if progress == 1 {
             return
         }
         
         let context = CIContext(options: nil)
-        let currentFilter = CIFilter(name: "CIPhotoEffectTonal")
-        currentFilter!.setValue(CIImage(image: saturatedImage), forKey: kCIInputImageKey)
-        let output = currentFilter!.outputImage
         
-        let cgImage = context.createCGImage(output!,from:output!.extent)
-        let desaturedImage = UIImage(cgImage: cgImage!, scale: UIScreen.main.scale, orientation: UIImageOrientation.up)
+        guard let pixellateFilter = CIFilter(name: "CIPixellate") else {
+            return
+        }
+        pixellateFilter.setValue(CIImage(image:emojiImage), forKey: kCIInputImageKey)
+        pixellateFilter.setValue(NSNumber(value: 8), forKey: kCIInputScaleKey)
+        guard let pixellateOutput = pixellateFilter.outputImage, let pixellateCGImage = context.createCGImage(pixellateOutput, from:pixellateOutput.extent) else {
+            return
+        }
+        let pixellateImage = UIImage(cgImage: pixellateCGImage, scale: UIScreen.main.scale, orientation: UIImageOrientation.up)
         
-        self.emojiSaturated = saturatedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        guard let saturatedGradientPixellatedEmoji = gradientImage(withEmojiImage: pixellateImage, color: colors.primary, secondaryColor: colors.secondary, backgroundColor: colors.background) else {
+            return
+        }
+        
+        guard let desaturateFilter = CIFilter(name: "CIPhotoEffectTonal") else {
+            return
+        }
+        desaturateFilter.setValue(CIImage(image: saturatedGradientPixellatedEmoji), forKey: kCIInputImageKey)
+        guard let desaturateOutput = desaturateFilter.outputImage, let desaturateCGImage = context.createCGImage(desaturateOutput, from:desaturateOutput.extent) else {
+            return
+        }
+        let desaturedImage = UIImage(cgImage: desaturateCGImage, scale: UIScreen.main.scale, orientation: UIImageOrientation.up)
+        
+        self.emojiSaturated = saturatedGradientEmoji.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         self.emojiDesaturated = desaturedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
+        if let emojiSaturated = self.emojiSaturated, let emojiDesaturated = self.emojiDesaturated {
+            ImageCache.default.store(emojiSaturated, forKey: self.emojiSaturatedCacheKey)
+            ImageCache.default.store(emojiDesaturated, forKey: self.emojiDesaturatedCacheKey )
+        }
+    }
+    
+    private func gradientImage(withEmojiImage emojiImage: UIImage, color: UIColor, secondaryColor: UIColor, backgroundColor: UIColor)->UIImage? {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: self.badgeDimension, height: self.badgeDimension), false , 0.0)
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [color.cgColor, secondaryColor.cgColor]
+        gradientLayer.borderColor = backgroundColor.cgColor
+        gradientLayer.borderWidth = 2.0
+        gradientLayer.locations = [0.4, 1.0]
+        gradientLayer.bounds = CGRect(x: 0, y: 0, width: self.badgeDimension, height: self.badgeDimension)
+        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientLayer.cornerRadius = 8
+        if let context = UIGraphicsGetCurrentContext() {
+        gradientLayer.render(in: context)
+        }
+    
+        let drawPointX = abs(self.badgeDimension - emojiImage.size.width)/2.0 * -1.0
+        let drawPointY = abs(self.badgeDimension - emojiImage.size.height)/2.0 * -1.0
+        emojiImage.draw(at: CGPoint(x: drawPointX, y: drawPointY))
+    
+        let gradientImageOptional = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return gradientImageOptional
     }
 }
 

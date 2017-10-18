@@ -269,10 +269,37 @@ public class APIClient {
     }
     #endif
     
-    public func upload(predictionAggregator: PredictionAggregator, withMetadata metadataDict:[String: Any] = [:]) {
-        let accelerometerRouteURL = "prediction_aggregators"
-        var params = metadataDict
-        params["data"] = predictionAggregator.jsonDictionary() as Any?
+    public func upload(predictionAggregators: [PredictionAggregator], forRoute routes: [Route]) {
+        let routeURL = "/prediction_aggregators"
+
+        var params: [String: Any] = [:]
+        var predictionAggregatorsDictionaries : [Any?] = []
+
+        for aggregator in predictionAggregators {
+          predictionAggregatorsDictionaries.append(aggregator.jsonDictionary() as Any?)
+        }
+        params["predictionAggregators"] = predictionAggregatorsDictionaries
+        
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: false) { (response) in
+            switch response.result {
+            case .success(_):
+                DDLogWarn("Yep")
+            case .failure(_):
+                DDLogWarn("Nope!")
+            }
+        }
+    }
+
+    public func uploadTrainingData(predictionAggregators: [PredictionAggregator], withSurveyData surveyData:[String: Any] = [:]) {
+        let accelerometerRouteURL = "training_data"
+        var params = surveyData
+        
+        var predictionAggregatorsDictionaries : [Any?] = []
+
+        for aggregator in predictionAggregators {
+            predictionAggregatorsDictionaries.append(aggregator.jsonDictionary() as Any?)
+        }
+        params["predictionAggregators"] = predictionAggregatorsDictionaries
 
         _ = AuthenticatedAPIRequest(client: self, method: .post, route: accelerometerRouteURL, parameters:params , authenticated: false) { (response) in
             switch response.result {

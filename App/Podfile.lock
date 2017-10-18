@@ -45,6 +45,7 @@ PODS:
     - OHHTTPStubs/Default
   - Presentr (1.2.3)
   - SwiftyJSON (3.1.4)
+  - UIImageColors (1.4.0)
   - WebLinking (2.0.0)
 
 DEPENDENCIES:
@@ -68,6 +69,7 @@ DEPENDENCIES:
   - OHHTTPStubs/Swift
   - Presentr
   - SwiftyJSON
+  - UIImageColors
   - WebLinking
 
 EXTERNAL SOURCES:
@@ -103,8 +105,9 @@ SPEC CHECKSUMS:
   OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
   Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  UIImageColors: 1f891e1a3224efebb01ad476df3a5aed4220ee24
   WebLinking: b476999d59f78bd6649e6754d60693a7d147b00c
 
-PODFILE CHECKSUM: fc6afb70b1fe58ffadc09a7040d6a7ce7e909e4e
+PODFILE CHECKSUM: 874c3150eae0123ce80e46650160733a3b5ed3c7
 
 COCOAPODS: 1.3.1

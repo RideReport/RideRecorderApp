@@ -13,9 +13,10 @@ import Alamofire
 
 class StatsViewController: UIViewController {
     @IBOutlet weak var seriesSegment: UISegmentedControl!
+    @IBOutlet weak var trophiesView: UIStackView!
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var lineChartView: LineChartView!
-    
+        
     @IBOutlet weak var rollupsSegment: UISegmentedControl!
     @IBOutlet weak var rollupsLabel: UILabel!
     
@@ -28,10 +29,10 @@ class StatsViewController: UIViewController {
     
     private var reachabilityManager: NetworkReachabilityManager?
     
-    private var chartJson: JSON?
+    private var statsJson: JSON?
     
     override func viewDidLoad() {
-        self.title = "Ride Statistics"
+        self.title = "Achievements"
                 
         lineChartView.drawBordersEnabled = false
         lineChartView.legend.enabled = false
@@ -139,18 +140,19 @@ class StatsViewController: UIViewController {
         guard let jsonData = try? Data(contentsOf: url) else {
             return
         }
-        chartJson = JSON(data: jsonData)
+        statsJson = JSON(data: jsonData)
         
-        guard chartJson != nil else {
+        guard statsJson != nil else {
             return
         }
         
+        self.reloadTrophiesView()
         self.reloadSeriesChartData()
         self.reloadRollups()
         self.reloadPieChartData()
         
         defer {
-            if chartJson == nil {
+            if statsJson == nil {
                 self.seriesSegment.isHidden = true
             } else {
                 self.seriesSegment.isHidden = false
@@ -165,6 +167,90 @@ class StatsViewController: UIViewController {
     @IBAction func changeRollups(_ sender: Any) {
         reloadRollups()
         reloadPieChartData()
+    }
+    
+    @objc func didTapTrophyProgress(_ sender: Any) {
+        guard let tappedTrophyProgress = sender as? TrophyProgressButton else {
+            return
+        }
+        
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        guard let trophyVC = storyBoard.instantiateViewController(withIdentifier: "trophyViewController") as? TrophyViewController else {
+            return
+        }
+        
+        trophyVC.emoji = tappedTrophyProgress.emoji
+        trophyVC.body = tappedTrophyProgress.body
+        trophyVC.count = tappedTrophyProgress.count
+        trophyVC.progress = tappedTrophyProgress.progress
+        
+        customPresentViewController(TrophyViewController.presenter(), viewController: trophyVC, animated: true, completion: nil)
+    }
+    
+    func reloadTrophiesView() {
+        var seeMoreView: UIView?
+        
+        for view in trophiesView.arrangedSubviews {
+            if view.tag != 2 {
+                trophiesView.removeArrangedSubview(view)
+                view.removeFromSuperview()
+            } else {
+                seeMoreView = view
+            }
+        }
+        
+        seeMoreView?.isHidden = true
+        
+        guard let json = statsJson, let trophyProgresses = json["trophyProgresses"].array, trophyProgresses.count > 0 else {
+            return
+        }
+        
+        for trophyDictionary in trophyProgresses {
+            guard let emoji = trophyDictionary["emoji"].string,
+                  let description = trophyDictionary["description"].string,
+                  let count = trophyDictionary["count"].int else {
+                continue
+            }
+            
+            let trophyButon = TrophyProgressButton()
+            trophyButon.addTarget(self, action: #selector(StatsViewController.didTapTrophyProgress(_:)), for: .touchUpInside)
+            trophyButon.translatesAutoresizingMaskIntoConstraints = false
+            trophyButon.emoji = emoji
+            trophyButon.body = description
+            trophyButon.count = count
+            
+            if let progress = trophyDictionary["progress"].double {
+                trophyButon.progress = progress
+            } else {
+                trophyButon.progress = 1.0
+            }
+            
+            trophiesView.addArrangedSubview(trophyButon)
+        }
+        
+        if let seeMoreView = seeMoreView {
+            // re-insert the seeMoreView at the back
+            trophiesView.removeArrangedSubview(seeMoreView)
+            trophiesView.addArrangedSubview(seeMoreView)
+            seeMoreView.isHidden = false
+            seeMoreView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(StatsViewController.didTapSeeMoreButton)))
+        }
+    }
+    
+    @objc func didTapSeeMoreButton() {
+        self.performSegue(withIdentifier: "showTrophiesViewController", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let json = statsJson, let trophyProgresses = json["trophyProgresses"].array else {
+            return
+        }
+        
+        if (segue.identifier == "showTrophiesViewController") {
+            if let trophyVC = segue.destination as? TrophiesViewController {
+                trophyVC.trophyProgresses = trophyProgresses
+            }
+        }
     }
     
     func reloadSeriesChartData() {
@@ -190,7 +276,7 @@ class StatsViewController: UIViewController {
             timeInterval = Double(24*3600.0)
         }
         
-        guard let json = chartJson, let seriesJson = json["series"].dictionary, let period = seriesJson[seriesKey]?.array else {
+        guard let json = statsJson, let seriesJson = json["series"].dictionary, let period = seriesJson[seriesKey]?.array else {
             barChartView.data = nil
             lineChartView.data = nil
             
@@ -348,7 +434,7 @@ class StatsViewController: UIViewController {
             rollupsKey = "thisyear"
         }
         
-        guard let json = chartJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
+        guard let json = statsJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
             self.bobbleChickView.delay(0.2) {
                 self.bobbleChick()
             }
@@ -456,7 +542,7 @@ class StatsViewController: UIViewController {
             rollupsKey = "thisyear"
         }
         
-        guard let json = chartJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
+        guard let json = statsJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
             piechart1.data = nil
             piechart2.data = nil
             return

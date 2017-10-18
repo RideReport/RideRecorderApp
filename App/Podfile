@@ -23,6 +23,7 @@ target 'Ride Report' do
     pod 'Charts'
     pod 'WebLinking'
     pod 'Presentr'
+    pod 'UIImageColors'
     pod 'FBSDKCoreKit'
     pod 'FBSDKLoginKit'
     pod 'FBSDKShareKit'
