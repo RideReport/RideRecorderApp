@@ -146,7 +146,7 @@ class StatsViewController: UIViewController {
             return
         }
         
-        guard let version = Bundle.main.infoDictionary?["CFBundleVersion"] as? Int, let requiredVersion = json["requiredClientVersion"].int, version >= requiredVersion else {
+        guard let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionString), let requiredVersion = json["requiredClientVersion"].int, version >= requiredVersion else {
             let alertController = UIAlertController(title: "Ride Report needs to be updated", message: "Please update your Ride Report app to view your achievements.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "Update Ride Report", style: UIAlertActionStyle.default) { _ in
                 if let appURL = URL(string: "itms://itunes.apple.com/us/app/ride-report-automatic-gps-bike-ride-tracker/id1053230099") {
