@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -923,7 +923,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="0.0" height="120"/>
                                                         <subviews>
                                                             <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vf3-zk-zGP">
-                                                                <rect key="frame" x="-17.5" y="-62.5" width="60" height="120"/>
+                                                                <rect key="frame" x="-58.5" y="-62.5" width="60" height="120"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWQ-tt-f49">
                                                                         <rect key="frame" x="1.5" y="38.5" width="35" height="43"/>
@@ -1186,50 +1186,43 @@ All</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ALk-pf-NnC">
-                            <size key="itemSize" width="80" height="120"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="4" id="ALk-pf-NnC">
+                            <size key="itemSize" width="82" height="120"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="trophyContainerView" id="sKm-C7-pOF">
-                                <rect key="frame" x="0.0" y="0.0" width="80" height="120"/>
+                            <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="trophyContainerView" id="sKm-C7-pOF">
+                                <rect key="frame" x="6" y="6" width="82" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="80" height="120"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="82" height="120"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9yh-7O-3EG" customClass="TrophyProgressButton" customModule="Ride_Report" customModuleProvider="target">
-                                            <rect key="frame" x="5" y="0.0" width="70" height="70"/>
+                                        <button opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9yh-7O-3EG" customClass="TrophyProgressButton" customModule="Ride_Report" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="70" id="Ikr-ED-QVX"/>
-                                                <constraint firstAttribute="height" constant="70" id="fnL-Xb-0VG"/>
+                                                <constraint firstAttribute="width" constant="80" id="Ikr-ED-QVX"/>
+                                                <constraint firstAttribute="height" constant="80" id="fnL-Xb-0VG"/>
                                             </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="emojiFontSize">
-                                                    <real key="value" value="40"/>
-                                                </userDefinedRuntimeAttribute>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="badgeDimension">
-                                                    <real key="value" value="60"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Foo boo bar baz bat hads ads" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.55000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="mjK-Q1-RQe">
-                                            <rect key="frame" x="6" y="76" width="68" height="44"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Foo boo bar hadsas has az man mat" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumScaleFactor="0.55000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="mjK-Q1-RQe">
+                                            <rect key="frame" x="0.0" y="76" width="80" height="44"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </view>
+                                <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="mjK-Q1-RQe" secondAttribute="trailing" constant="6" id="03k-w3-hDP"/>
+                                    <constraint firstAttribute="trailing" secondItem="mjK-Q1-RQe" secondAttribute="trailing" id="03k-w3-hDP"/>
                                     <constraint firstAttribute="bottom" secondItem="mjK-Q1-RQe" secondAttribute="bottom" id="QOS-N3-xQn"/>
-                                    <constraint firstItem="mjK-Q1-RQe" firstAttribute="leading" secondItem="sKm-C7-pOF" secondAttribute="leading" constant="6" id="WN7-yI-xzO"/>
-                                    <constraint firstItem="mjK-Q1-RQe" firstAttribute="top" secondItem="9yh-7O-3EG" secondAttribute="bottom" constant="6" id="bVR-6t-I8z"/>
-                                    <constraint firstItem="9yh-7O-3EG" firstAttribute="top" secondItem="sKm-C7-pOF" secondAttribute="top" id="c29-JC-dFK"/>
-                                    <constraint firstItem="9yh-7O-3EG" firstAttribute="centerX" secondItem="sKm-C7-pOF" secondAttribute="centerX" id="rbx-9b-uNd"/>
+                                    <constraint firstItem="mjK-Q1-RQe" firstAttribute="leading" secondItem="sKm-C7-pOF" secondAttribute="leading" id="WN7-yI-xzO"/>
+                                    <constraint firstItem="mjK-Q1-RQe" firstAttribute="top" secondItem="9yh-7O-3EG" secondAttribute="bottom" constant="2" id="bVR-6t-I8z"/>
+                                    <constraint firstItem="9yh-7O-3EG" firstAttribute="top" secondItem="sKm-C7-pOF" secondAttribute="top" constant="4" id="c29-JC-dFK"/>
+                                    <constraint firstItem="9yh-7O-3EG" firstAttribute="leading" secondItem="sKm-C7-pOF" secondAttribute="leading" id="xD3-0F-gou"/>
                                 </constraints>
                             </collectionViewCell>
                         </cells>

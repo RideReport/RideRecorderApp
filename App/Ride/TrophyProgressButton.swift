@@ -15,25 +15,11 @@ import UIImageColors
 @IBDesignable public class TrophyProgressButton : UIButton {
     public var associatedObject: Any?
         
-    let countLabelSize: CGFloat = 16
-    var badgeSize: CGFloat {
-        get {
-            return countLabelSize + 8
-        }
-    }
-    
+    @IBInspectable var countLabelSize: CGFloat = 16
     @IBInspectable var emojiFontSize: CGFloat = 50
-    
     @IBInspectable var badgeDimension: CGFloat = 78
     
-    var emoji: String = "" {
-        didSet {
-            reloadEmojiImages()
-        }
-    }
-    
     @IBInspectable var body: String = ""
-    
     @IBInspectable var count: Int = 0 {
         didSet {
             reloadCountProgressUI()
@@ -49,6 +35,18 @@ import UIImageColors
     @IBInspectable public var drawsDottedOutline = false {
         didSet {
             self.setNeedsLayout()
+        }
+    }
+    
+    var badgeSize: CGFloat {
+        get {
+            return self.countLabelSize * 3/2
+        }
+    }
+    
+    var emoji: String = "" {
+        didSet {
+            reloadEmojiImages()
         }
     }
     
@@ -101,6 +99,7 @@ import UIImageColors
         let maskLayer = CAShapeLayer()
         maskLayer.fillColor = UIColor.black.cgColor
         maskLayer.bounds = emojiProgressView.layer.bounds
+        maskLayer.position = emojiProgressView.center
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
         
@@ -216,8 +215,8 @@ import UIImageColors
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
         }
         
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:self.badgeSize/2))
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:-self.badgeSize/2))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:self.badgeSize/2 - 3))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:-self.badgeSize/2 + 3))
         currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
         currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
         
@@ -285,7 +284,7 @@ import UIImageColors
         }
         
         let ratio = emojiImage.size.width/emojiImage.size.height
-        let downsampleDimension: CGFloat = 100
+        let downsampleDimension: CGFloat = 60
         let colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
         
         guard let saturatedGradientEmoji = gradientImage(withEmojiImage: emojiImage, color: colors.primary, secondaryColor: colors.secondary, backgroundColor: colors.background) else {
