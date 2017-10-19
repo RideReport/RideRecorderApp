@@ -154,7 +154,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             return
         }
         
-        let locs = self.isClosed ? route.fetchOrGenerateSummaryLocations() : route.fetchOrderedLocations(simplified: false, includingInferred: true)
+        let locs = route.isClosed ? route.fetchOrGenerateSummaryLocations() : route.fetchLocations()
         
         if let startLoc = locs.first,
             let endLoc = locs.last {

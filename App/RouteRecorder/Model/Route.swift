@@ -188,6 +188,10 @@ public class  Route: NSManagedObject {
         return 0
     }
     
+    public func fetchLocations()->[Location] {
+        return self.fetchOrderedLocations(simplified: false, includingInferred: true)
+    }
+    
     public func fetchOrGenerateSummaryLocations()->[Location] {
         var locs: [Location] = []
         
