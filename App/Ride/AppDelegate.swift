@@ -18,7 +18,7 @@ import Mixpanel
 import CocoaLumberjack
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var fileLogger : DDFileLogger!
@@ -53,7 +53,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UIAlertViewDelegate {
         UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
         UISegmentedControl.appearance().tintColor = ColorPallete.shared.primary
         if #available(iOS 9.0, *) {
-            UIView.appearance(whenContainedInInstancesOf: [UIAlertView.self]).tintColor = ColorPallete.shared.primary
             UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.primary
         }
         

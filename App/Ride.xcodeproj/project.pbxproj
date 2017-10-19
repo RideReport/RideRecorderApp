@@ -21,6 +21,7 @@
 		3D0D56181F5A133800410679 /* GZipEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D56171F5A133800410679 /* GZipEncoding.swift */; };
 		3D0D561D1F5A13A700410679 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0D561C1F5A13A700410679 /* APIClient.swift */; };
 		3D0D8B241CE2560E0059AC6B /* bell.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 3D0D8B231CE2560E0059AC6B /* bell.aiff */; };
+		3D0F63521F994E3400FDFC3C /* UIApplication+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F63511F994E3400FDFC3C /* UIApplication+Additions.swift */; };
 		3D0FD6051CDC019300632BFB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0FD6041CDC019300632BFB /* SafariServices.framework */; };
 		3D125EB81EB012C200DA2E6E /* RedeemRewardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */; };
 		3D19303B1EAE912200915813 /* RideNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D19303A1EAE912100915813 /* RideNotificationView.swift */; };
@@ -501,6 +502,7 @@
 		3D0D56171F5A133800410679 /* GZipEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GZipEncoding.swift; sourceTree = "<group>"; };
 		3D0D561C1F5A13A700410679 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		3D0D8B231CE2560E0059AC6B /* bell.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bell.aiff; sourceTree = "<group>"; };
+		3D0F63511F994E3400FDFC3C /* UIApplication+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Additions.swift"; sourceTree = "<group>"; };
 		3D0FD6041CDC019300632BFB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		3D125EB71EB012C200DA2E6E /* RedeemRewardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RedeemRewardViewController.swift; sourceTree = "<group>"; };
 		3D19303A1EAE912100915813 /* RideNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideNotificationView.swift; sourceTree = "<group>"; };
@@ -976,6 +978,7 @@
 			children = (
 				3D0D56171F5A133800410679 /* GZipEncoding.swift */,
 				3D72BDEB1F58B0660043ECBA /* CLLocation+Additions.swift */,
+				3D0F63511F994E3400FDFC3C /* UIApplication+Additions.swift */,
 			);
 			name = Helpers;
 			path = RouteRecorder/Helpers;
@@ -2303,6 +2306,7 @@
 				3D72BD6B1F58ABDA0043ECBA /* Route+CoreDataProperties.swift in Sources */,
 				3D7738C81F58A2B800155DB8 /* RouteRecorder.swift in Sources */,
 				3D7738E01F58A2E100155DB8 /* Utility.cpp in Sources */,
+				3D0F63521F994E3400FDFC3C /* UIApplication+Additions.swift in Sources */,
 				3D72BD651F58ABDA0043ECBA /* PredictedActivity+CoreDataProperties.swift in Sources */,
 				3D7738DA1F58A2CF00155DB8 /* GpxLocationManager.swift in Sources */,
 				3D72BD661F58ABDA0043ECBA /* Prediction.swift in Sources */,

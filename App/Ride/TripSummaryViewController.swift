@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-class TripSummaryViewController: UIViewController, UIAlertViewDelegate, RideSummaryViewDelegate {
+class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
     @IBOutlet weak var grabberBarView: UIView!
     @IBOutlet weak var modeSelectorView: ModeSelectorView!
     @IBOutlet weak var rideSummaryView: RideSummaryView!

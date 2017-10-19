@@ -254,8 +254,9 @@ class ViewController: FormViewController {
                 let formDataOptionals = strongSelf.form.values(includeHidden: false)
                 for key in formDataOptionals.keys {
                     if formDataOptionals[key]! == nil {
-                        let alert = UIAlertView(title:nil, message: "Please provide an answer for every field!", delegate: nil, cancelButtonTitle:"Got it")
-                        alert.show()
+                        let alertController = UIAlertController(title: nil, message: "Please provide an answer for every field!", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "Got it", style: UIAlertActionStyle.cancel, handler: nil))
+                        self.present(alertController, animated: true, completion: nil)
                         
                         return
                     } else {

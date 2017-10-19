@@ -142,8 +142,11 @@ public class AuthenticatedAPIRequest {
                 }
             } else if (response?.statusCode == 500) {
                 DispatchQueue.main.async {
-                    let alert = UIAlertView(title:nil, message: "OOps! Something is wrong on our end. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Trombone")
-                    alert.show()
+                    if let viewController = UIApplication.topMostViewController {
+                        let alertController = UIAlertController(title: "Ride Report is having trouble", message: "Something is wrong on our end. Please try again later.", preferredStyle: UIAlertControllerStyle.alert)
+                        alertController.addAction(UIAlertAction(title: "Sad Trombone", style: UIAlertActionStyle.cancel, handler: nil))
+                        viewController.present(alertController, animated: true, completion: nil)
+                    }
                 }
             }
         }
@@ -464,8 +467,12 @@ public class APIClient {
                 }
             case .failure(let error):
                 DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
-                let alert = UIAlertView(title:nil, message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", delegate: nil, cancelButtonTitle:"Sad Panda")
-                alert.show()
+
+                if let viewController = UIApplication.topMostViewController {
+                    let alertController = UIAlertController(title: "Ride Report is having trouble", message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", preferredStyle: UIAlertControllerStyle.alert)
+                    alertController.addAction(UIAlertAction(title: "Sad Panda", style: UIAlertActionStyle.cancel, handler: nil))
+                    viewController.present(alertController, animated: true, completion: nil)
+                }
             }
         }
     }
