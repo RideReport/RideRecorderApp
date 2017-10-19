@@ -191,7 +191,7 @@ public class  Route: NSManagedObject {
     public func fetchOrGenerateSummaryLocations()->[Location] {
         var locs: [Location] = []
         
-        if self.activityType != .cycling || !self.isClosed || locs.isEmpty {
+        if self.activityType != .cycling {
             locs = self.fetchOrderedLocations(simplified: false, includingInferred: true)
         } else {
             locs = self.fetchOrderedLocations(simplified: true, includingInferred: true)
