@@ -8,6 +8,8 @@
 
 import Foundation
 import UserNotifications
+import CocoaLumberjack
+import RouteRecorder
 
 enum NotificationManagerAuthorizationStatus {
     case notDetermined
@@ -73,13 +75,116 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
+    public func didReceiveNotification(userInfo: [AnyHashable: Any]) {
+        if let syncTrips = userInfo["syncTrips"] as? Bool, syncTrips {
+            DDLogInfo("Received sync trips notification in foreground")
+            if UIDevice.current.batteryState == UIDeviceBatteryState.charging || UIDevice.current.batteryState == UIDeviceBatteryState.full {
+                // if the user is plugged in, go ahead and sync all unsynced trips.
+                RouteRecorder.shared.uploadRoutes(includeFullLocations: true)
+            }
+        } else if let tripUpdatesAvailable = userInfo["tripUpdatesAvailable"] as? Bool, tripUpdatesAvailable {
+            RideReportAPIClient.shared.syncTrips()
+        } else if let encouragementDictionaries = userInfo["encouragements"] as? [AnyObject] {
+            Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
+            CoreDataManager.shared.saveContext()
+        } else if let uuid = userInfo["uuid"] as? String,
+            let trip = Trip.tripWithUUID(uuid) {
+            
+            DDLogInfo(String(format: "Received trip summary notification, uuid: %@", uuid))
+            
+            trip.loadSummaryFromAPNDictionary(userInfo)
+            CoreDataManager.shared.saveContext()
+            
+            if let encouragementDictionaries = userInfo["encouragements"] as? [AnyObject] {
+                Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
+                CoreDataManager.shared.saveContext()
+            }
+        }
+    }
+    
+    @available(iOS 10.0, *)
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        self.didReceiveNotification(userInfo: notification.request.content.userInfo)
+    }
+    
     @available(iOS 10.0, *)
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Swift.Void) {
         if response.actionIdentifier == UNNotificationDefaultActionIdentifier {
             if let trip = Trip.tripWithUUID(response.notification.request.identifier) {
                 AppDelegate.appDelegate().transitionToTripView(trip: trip)
             }
+            completionHandler()
+        } else {
+            self.handleNotificationAction(response.actionIdentifier, userInfo: response.notification.request.content.userInfo, completionHandler: completionHandler)
         }
+    }
+    
+    public func handleNotificationAction(_ identifier: String?, userInfo: [AnyHashable: Any], completionHandler: @escaping () -> Void) {
+        if let uuid = userInfo["uuid"] as? String,
+            let trip = Trip.tripWithUUID(uuid) {
+            DDLogInfo(String(format: "Received trip rating notification action"))
+            
+            for rating in Profile.profile().ratingVersion.availableRatings {
+                if identifier == rating.choice.notificationActionIdentifier {
+                    let notif = self.postTripRatedThanksNotification(ratingChoice: rating.choice)
+                    
+                    DDLogInfo("Beginning post trip rating background task!")
+                    let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                        DDLogInfo("Post trip notification background task expired!")
+                        UIApplication.shared.cancelLocalNotification(notif)
+                    })
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+                        UIApplication.shared.cancelLocalNotification(notif)
+                    })
+                    
+                    trip.rating = rating
+                    
+                    RideReportAPIClient.shared.saveAndPatchTripIfNeeded(trip).apiResponse({ (_) -> Void in
+                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                            DDLogInfo("Ending post trip rating background task!")
+                            
+                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        }
+                        
+                        completionHandler()
+                    })
+                    return
+                }
+            }
+            
+            completionHandler()
+        } else if (identifier == "RESUME_IDENTIFIER") {
+            RouteRecorder.shared.routeManager.resumeTracking()
+            completionHandler()
+        } else {
+            completionHandler()
+        }
+    }
+    
+    func postTripRatedThanksNotification(ratingChoice: RatingChoice)->UILocalNotification {
+        var emojicuteness : [Character] = []
+        var thanksPhrases : [String] = []
+        
+        if (ratingChoice == .good) {
+            emojicuteness = Array("🐯🍄🐎🙌🐵🐌🌠🍌🍕🍳🍯🍻🎀🎃📈🎄👑💙⛄️💃🎩🏆".characters)
+            thanksPhrases = ["Thanks!", "Sweet!", "YES!", "kewlll", "w00t =)", "yaay（＾_＾)", "Nice.", "Spleenndid"]
+        } else if (ratingChoice == .mixed){
+            emojicuteness = Array("🤔😬😶🤖🎲📊🗿🥉🌦🎭🃏".characters)
+            thanksPhrases = ["hmmm", "welp.", "interesting =/", "riiiiight", "k", "aight.", "gotcha.", "(・_・)ヾ"]
+        } else if (ratingChoice == .bad) {
+            emojicuteness = Array("😓😔😿💩😤🐷🍆💔🚽📌🚸🚳📉😭".characters)
+            thanksPhrases = ["Maww =(", "d'oh!", "sad panda (´･︹ ･` )", "Shucks.", "oh well =(", "drats", "dag =/"]
+        }
+        
+        let thanksPhrase = thanksPhrases[Int(arc4random_uniform(UInt32(thanksPhrases.count)))]
+        let emoji1 = String(emojicuteness[Int(arc4random_uniform(UInt32(emojicuteness.count)))])
+        let emoji2 = String(emojicuteness[Int(arc4random_uniform(UInt32(emojicuteness.count)))])
+        
+        let notif = UILocalNotification()
+        notif.alertBody = emoji1 + thanksPhrase + emoji2
+        UIApplication.shared.presentLocalNotificationNow(notif)
+        
+        return notif
     }
     
     func registerNotifications() {
