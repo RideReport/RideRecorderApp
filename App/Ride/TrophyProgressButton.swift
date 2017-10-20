@@ -17,7 +17,11 @@ import UIImageColors
     @IBInspectable var emojiFontSize: CGFloat = 50
     @IBInspectable var badgeDimension: CGFloat = 78
     
-    @IBInspectable var showsCount: Bool = true
+    @IBInspectable var showsCount: Bool = true {
+        didSet {
+            reloadCountProgressUI()
+        }
+    }
     
     var trophyProgress: TrophyProgress? = nil {
         didSet {
