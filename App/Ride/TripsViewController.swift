@@ -417,7 +417,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch(type) {
-            
         case .update:
             let indexPathPlusOne = IndexPath(row: indexPath!.row, section: indexPath!.section + 1)
             if let cell = self.tableView!.cellForRow(at: indexPathPlusOne) {

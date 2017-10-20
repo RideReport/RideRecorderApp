@@ -13,25 +13,19 @@ import Kingfisher
 import UIImageColors
 
 @IBDesignable public class TrophyProgressButton : UIButton {
-    public var associatedObject: Any?
-        
     @IBInspectable var countLabelSize: CGFloat = 16
     @IBInspectable var emojiFontSize: CGFloat = 50
     @IBInspectable var badgeDimension: CGFloat = 78
     
-    @IBInspectable var body: String = ""
-    @IBInspectable var count: Int = 0 {
+    @IBInspectable var showsCount: Bool = true
+    
+    var trophyProgress: TrophyProgress? = nil {
         didSet {
             reloadCountProgressUI()
+            reloadEmojiImages()
         }
     }
-    
-    @IBInspectable var progress: Double = 0 {
-        didSet {
-            reloadCountProgressUI()
-        }
-    }
-    
+   
     @IBInspectable public var drawsDottedOutline = false {
         didSet {
             self.setNeedsLayout()
@@ -43,16 +37,14 @@ import UIImageColors
             return self.countLabelSize * 3/2
         }
     }
-    
-    var emoji: String = "" {
-        didSet {
-            reloadEmojiImages()
-        }
-    }
-    
+
     private var emojiSaturatedCacheKey: String {
         get {
-            return String(format: "%@-%.0f-%.0f", self.emoji, self.badgeSize, self.emojiFontSize)
+            guard let trophyProgress = self.trophyProgress else {
+                return ""
+            }
+            
+            return String(format: "%@-%.0f-%.0f", trophyProgress.emoji, self.badgeSize, self.emojiFontSize)
         }
     }
     
@@ -89,7 +81,11 @@ import UIImageColors
     }
     
     private func reloadCountProgressUI() {
-        let progressToShow = count >= 1 ? 1 : progress // don't show the progress indicator if you've earned the trophy at least once
+        guard let trophyProgress = self.trophyProgress else {
+            return
+        }
+        
+        let progressToShow = trophyProgress.count >= 1 ? 1 : trophyProgress.progress // don't show the progress indicator if you've earned the trophy at least once
         
         let piePath = UIBezierPath()
         let centerPoint = CGPoint(x: self.badgeDimension/2, y:self.badgeDimension/2)
@@ -103,13 +99,17 @@ import UIImageColors
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
         
-        countLabel.text = String(format: "%i", count)
-        countLabel.isHidden = (count <= 1 || (count == 1 && progress > 0))
-        circleView.isHidden = (count <= 1 || (count == 1 && progress > 0))
+        countLabel.text = String(format: "%i", trophyProgress.count)
+        countLabel.isHidden = (!showsCount || trophyProgress.count <= 1 || (trophyProgress.count == 1 && trophyProgress.progress > 0))
+        circleView.isHidden = (!showsCount || trophyProgress.count <= 1 || (trophyProgress.count == 1 && trophyProgress.progress > 0))
     }
     
     private func reloadEmojiUI() {
-        guard emoji != "" else {
+        guard let trophyProgress = self.trophyProgress else {
+            return
+        }
+        
+        guard trophyProgress.emoji != "" else {
             emojiProgressView.image = nil
             emojiView.image = nil
             countLabel.text = ""
@@ -227,7 +227,7 @@ import UIImageColors
     }
     
     private func reloadEmojiImages() {
-        guard emoji != "" else {
+        guard let trophyProgress = trophyProgress else {
             emojiSaturated = nil
             emojiDesaturated = nil
             return
@@ -265,11 +265,15 @@ import UIImageColors
     }
     
     private func renderEmojiImages() {
+        guard let trophyProgress = trophyProgress else {
+            return
+        }
+        
         let imageSize = CGSize(width: self.badgeDimension, height: self.badgeDimension)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = .center
         
-        let attributedEmojiString = NSAttributedString(string: self.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiFontSize), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
+        let attributedEmojiString = NSAttributedString(string: trophyProgress.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiFontSize), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
         let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
         
         let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
@@ -293,7 +297,7 @@ import UIImageColors
         
         self.emojiSaturated = saturatedGradientEmoji.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         
-        if progress == 1 {
+        if trophyProgress.progress == 1 {
             return
         }
         

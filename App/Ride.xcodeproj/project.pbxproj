@@ -49,6 +49,7 @@
 		3D33060C1D7774E900B7E56A /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D33060B1D7774E900B7E56A /* NotificationViewController.swift */; };
 		3D33060F1D7774E900B7E56A /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D33060D1D7774E900B7E56A /* MainInterface.storyboard */; };
 		3D3306131D7774E900B7E56A /* Ride Report Notification Content.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		3D3599CA1F99763E0078E97D /* TrophyProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3599C91F99763E0078E97D /* TrophyProgress.swift */; };
 		3D3C3E1B1E68E69B004C719E /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E171E68E69B004C719E /* pinGreen@2x.png */; };
 		3D3C3E1C1E68E69B004C719E /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E171E68E69B004C719E /* pinGreen@2x.png */; };
 		3D3C3E1D1E68E69B004C719E /* pinGreen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E181E68E69B004C719E /* pinGreen@3x.png */; };
@@ -529,6 +530,7 @@
 		3D33060B1D7774E900B7E56A /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NotificationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		3D33060E1D7774E900B7E56A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		3D3306101D7774E900B7E56A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3D3599C91F99763E0078E97D /* TrophyProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TrophyProgress.swift; path = Ride/Model/TrophyProgress.swift; sourceTree = "<group>"; };
 		3D3C3E171E68E69B004C719E /* pinGreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGreen@2x.png"; sourceTree = "<group>"; };
 		3D3C3E181E68E69B004C719E /* pinGreen@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGreen@3x.png"; sourceTree = "<group>"; };
 		3D3C3E191E68E69B004C719E /* pinRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@2x.png"; sourceTree = "<group>"; };
@@ -1259,6 +1261,7 @@
 				3D65E8DB1F634197002D143A /* TripsListRow+CoreDataProperties.swift */,
 				3D65E8DC1F634197002D143A /* TripsListSection.swift */,
 				3D65E8DD1F634197002D143A /* TripsListSection+CoreDataProperties.swift */,
+				3D3599C91F99763E0078E97D /* TrophyProgress.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -2542,6 +2545,7 @@
 				3D2DBC091CAC7CB800016982 /* ModeSelectorView.swift in Sources */,
 				84BD37031A706C6D0084B6AF /* SetupFinishedViewController.swift in Sources */,
 				3D0D56081F58C8DB00410679 /* TripsManager.swift in Sources */,
+				3D3599CA1F99763E0078E97D /* TrophyProgress.swift in Sources */,
 				3DA8C10F1F8EE0C400BE1460 /* TrophyView.swift in Sources */,
 				3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,

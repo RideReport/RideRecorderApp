@@ -12,18 +12,17 @@ import Presentr
 import CocoaLumberjack
 
 class TrophyViewController: UIViewController {
-    var emoji: String = ""
-    var body: String = ""
-    var count: Int = 0
-    var progress: Double = 1
+    var trophyProgress: TrophyProgress? = nil
     
     private static let viewSizePercentageWidth: CGFloat = 0.8
     private static let viewSizePercentageHeight: CGFloat = 0.2
     
-    @IBOutlet weak var trophyProgress: TrophyProgressButton!
+    @IBOutlet weak var trophyProgressButton: TrophyProgressButton!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     
+    
+    private var dateFormatter : DateFormatter!
     
     static func presenter()-> Presentr {
         let width = ModalSize.fluid(percentage: Float(TrophyViewController.viewSizePercentageWidth))
@@ -47,58 +46,83 @@ class TrophyViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.dateFormatter = DateFormatter()
+        self.dateFormatter.locale = Locale.current
+        self.dateFormatter.dateFormat = "MMM d ''yy"
+        
         refreshUI()
         
-        if count >= 1 {
-            self.trophyProgress.isHidden = true
+        if trophyProgress != nil && trophyProgress!.count >= 1 {
+            self.trophyProgressButton.isHidden = true
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if count >= 1 {
-            self.view.sparkle(ColorPallete.shared.brightBlue, inRect: self.trophyProgress.frame.insetBy(dx: -30, dy: -30))
-            self.trophyProgress.fadeIn()
+        guard let trophyProgress = trophyProgress else {
+            return
+        }
+        
+        if trophyProgress.count >= 1 {
+            self.view.sparkle(ColorPallete.shared.brightBlue, inRect: self.trophyProgressButton.frame.insetBy(dx: -30, dy: -30))
+            self.trophyProgressButton.fadeIn()
         } else {
-            self.trophyProgress.isHidden = false
+            self.trophyProgressButton.isHidden = false
         }
     }
     
     private func refreshUI() {
-        self.trophyProgress.emoji = emoji
-        self.trophyProgress.count = 1 // don't show count
-        self.trophyProgress.progress = progress
+        guard let trophyProgress = trophyProgress else {
+            return
+        }
         
-        self.descriptionLabel.text = body
+        self.trophyProgressButton.trophyProgress = trophyProgress
+        self.trophyProgressButton.showsCount = false
         
-        if count < 1 {
-            if progress > 0 {
-                self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy.", Int(progress * 100))
+        self.descriptionLabel.text = trophyProgress.body
+        
+        if trophyProgress.count < 1 {
+            if trophyProgress.progress > 0 {
+                self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy.", Int(trophyProgress.progress * 100))
             } else {
                 self.detailLabel.text = "You have never earned this trophy."
             }
         } else {
-            if progress > 0 && progress < 1 {
+            if trophyProgress.progress > 0 && trophyProgress.progress < 1 {
                 let formatter = NumberFormatter()
                 formatter.numberStyle = .ordinal
-                guard let countOrdinal = formatter.string(from: NSNumber(value: count + 1)) else {
+                guard let countOrdinal = formatter.string(from: NSNumber(value: trophyProgress.count + 1)) else {
                     self.detailLabel.text = ""
                     return
                 }
                 
-                self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(progress * 100), countOrdinal)
-            } else if count == 1 {
-                self.detailLabel.text = "You have earned this trophy."
+                var descString = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(trophyProgress.progress * 100), countOrdinal)
+                if let lastEarnedDate = trophyProgress.lastEarned {
+                    descString += String(format:"You last earned this trophy on %@.", dateFormatter.string(from: lastEarnedDate))
+                }
+                self.detailLabel.text = descString
+            } else if trophyProgress.count == 1 {
+                if let lastEarnedDate = trophyProgress.lastEarned {
+                    self.detailLabel.text = String(format:"You last earned this trophy on %@.", dateFormatter.string(from: lastEarnedDate))
+                } else {
+                    self.detailLabel.text = "You have earned this trophy."
+                }
             } else {
                 let formatter = NumberFormatter()
                 formatter.numberStyle = .spellOut
-                guard let countSpelled = formatter.string(from: NSNumber(value: count)) else {
+                guard let countSpelled = formatter.string(from: NSNumber(value: trophyProgress.count)) else {
                     self.detailLabel.text = ""
                     return
                 }
                 
-                self.detailLabel.text = String(format: "You have earned this trophy %@ times.", countSpelled)
+                var descString = String(format: "You have earned this trophy %@ times", countSpelled)
+                if let lastEarnedDate = trophyProgress.lastEarned {
+                    descString += String(format:", most recently on %@.", dateFormatter.string(from: lastEarnedDate))
+                } else {
+                    descString += "."
+                }
+                self.detailLabel.text = descString
             }
         }
     }

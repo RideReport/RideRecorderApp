@@ -31,25 +31,16 @@ class TrophiesViewController: UICollectionViewController {
                 return cell
         }
         
-        let trophyProgress = trophyProgresses[indexPath.row]
+        let trophyProgressDict = trophyProgresses[indexPath.row]
         
-        guard let emoji = trophyProgress["emoji"].string,
-            let body = trophyProgress["description"].string,
-            let count = trophyProgress["count"].int else {
-                return cell
+        
+        guard let trophyProgress = TrophyProgress(dictionary: trophyProgressDict) else {
+            return cell
         }
         
-        trophyProgressButton.emoji = emoji
-        trophyProgressButton.body = body
-        trophyProgressButton.count = count
-        
-        if let progress = trophyProgress["progress"].double {
-            trophyProgressButton.progress = progress
-        } else {
-            trophyProgressButton.progress = 1.0
-        }
-        
-        trophyDescript.text = body
+        trophyProgressButton.trophyProgress = trophyProgress
+    
+        trophyDescript.text = trophyProgress.body
         
         return cell
     }
@@ -59,28 +50,18 @@ class TrophiesViewController: UICollectionViewController {
                 return
         }
         
-        let trophyProgress = trophyProgresses[indexPath.row]
-
-        guard let emoji = trophyProgress["emoji"].string,
-            let body = trophyProgress["description"].string,
-            let count = trophyProgress["count"].int else {
-                return
-        }
+        let trophyProgressDict = trophyProgresses[indexPath.row]
         
+        guard let trophyProgress = TrophyProgress(dictionary: trophyProgressDict) else {
+            return
+        }
+
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         guard let trophyVC = storyBoard.instantiateViewController(withIdentifier: "trophyViewController") as? TrophyViewController else {
             return
         }
         
-        trophyVC.emoji = emoji
-        trophyVC.body = body
-        trophyVC.count = count
-        
-        if let progress = trophyProgress["progress"].double {
-            trophyVC.progress = progress
-        } else {
-            trophyVC.progress = 1.0
-        }
+        trophyVC.trophyProgress = trophyProgress
         
         customPresentViewController(TrophyViewController.presenter(), viewController: trophyVC, animated: true, completion: nil)
     }

@@ -146,7 +146,7 @@ class StatsViewController: UIViewController {
             return
         }
         
-        guard let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionString), let requiredVersion = json["requiredClientVersion"].int, version >= requiredVersion else {
+        guard let versionString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String, let version = Int(versionString), let requiredVersion = json["requiredIOSClientVersion"].int, version >= requiredVersion else {
             let alertController = UIAlertController(title: "Ride Report needs to be updated", message: "Please update your Ride Report app to view your achievements.", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "Update Ride Report", style: UIAlertActionStyle.default) { _ in
                 if let appURL = URL(string: "itms://itunes.apple.com/us/app/ride-report-automatic-gps-bike-ride-tracker/id1053230099") {
@@ -194,10 +194,7 @@ class StatsViewController: UIViewController {
             return
         }
         
-        trophyVC.emoji = tappedTrophyProgress.emoji
-        trophyVC.body = tappedTrophyProgress.body
-        trophyVC.count = tappedTrophyProgress.count
-        trophyVC.progress = tappedTrophyProgress.progress
+        trophyVC.trophyProgress = tappedTrophyProgress.trophyProgress
         
         customPresentViewController(TrophyViewController.presenter(), viewController: trophyVC, animated: true, completion: nil)
     }
@@ -221,24 +218,14 @@ class StatsViewController: UIViewController {
         }
         
         for trophyDictionary in trophyProgresses {
-            guard let emoji = trophyDictionary["emoji"].string,
-                  let description = trophyDictionary["description"].string,
-                  let count = trophyDictionary["count"].int else {
+            guard let trophyProgress = TrophyProgress(dictionary: trophyDictionary) else {
                 continue
             }
             
             let trophyButon = TrophyProgressButton()
             trophyButon.addTarget(self, action: #selector(StatsViewController.didTapTrophyProgress(_:)), for: .touchUpInside)
             trophyButon.translatesAutoresizingMaskIntoConstraints = false
-            trophyButon.emoji = emoji
-            trophyButon.body = description
-            trophyButon.count = count
-            
-            if let progress = trophyDictionary["progress"].double {
-                trophyButon.progress = progress
-            } else {
-                trophyButon.progress = 1.0
-            }
+            trophyButon.trophyProgress = trophyProgress
             
             trophiesView.addArrangedSubview(trophyButon)
         }

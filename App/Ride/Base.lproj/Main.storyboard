@@ -923,7 +923,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="0.0" height="120"/>
                                                         <subviews>
                                                             <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vf3-zk-zGP">
-                                                                <rect key="frame" x="-58.5" y="-62.5" width="60" height="120"/>
+                                                                <rect key="frame" x="-16" y="-62.5" width="60" height="120"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWQ-tt-f49">
                                                                         <rect key="frame" x="1.5" y="38.5" width="35" height="43"/>
@@ -1194,7 +1194,7 @@ All</string>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="trophyContainerView" id="sKm-C7-pOF">
-                                <rect key="frame" x="6" y="6" width="82" height="120"/>
+                                <rect key="frame" x="10" y="10" width="82" height="120"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="82" height="120"/>
@@ -4406,7 +4406,7 @@ Label</string>
                     <connections>
                         <outlet property="descriptionLabel" destination="k55-dH-2Gk" id="kmg-se-0Pi"/>
                         <outlet property="detailLabel" destination="8yC-6N-Fko" id="TWv-kq-k0j"/>
-                        <outlet property="trophyProgress" destination="MXJ-jP-ZvG" id="9dK-lC-q89"/>
+                        <outlet property="trophyProgressButton" destination="MXJ-jP-ZvG" id="e1q-tK-qUD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JPC-8f-tHz" userLabel="First Responder" sceneMemberID="firstResponder"/>
