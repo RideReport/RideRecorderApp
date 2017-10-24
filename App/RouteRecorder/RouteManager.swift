@@ -747,6 +747,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                     
                     self.currentRoute = nil
                 }
+                // if we've build up any aggregators without starting a trip, clear them out
+                self.pendingAggregators = []
             }
         } else {
             DDLogInfo("User departed")
