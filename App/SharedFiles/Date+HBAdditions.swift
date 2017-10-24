@@ -78,6 +78,10 @@ extension Date {
             return date
         }
         
+        if let date = Date.jsonISO8601DateFormatter.date(from: string) {
+            return date
+        }
+        
         return Date.jsonOldDateFormatter.date(from: string)
     }
     
