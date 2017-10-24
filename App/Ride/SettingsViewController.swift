@@ -1,5 +1,5 @@
 //
-//  HamburgerViewController.swift
+//  SettingsViewController.swift
 //  Ride
 //
 //  Created by William Henderson on 9/7/15.
@@ -7,25 +7,11 @@
 //
 
 import Foundation
-import ECSlidingViewController
 import Mixpanel
 import MessageUI
 import RouteRecorder
 
-class HamburgerNavController: UINavigationController {
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.edgesForExtendedLayout = [UIRectEdge.bottom, UIRectEdge.top, UIRectEdge.left]
-    }
-    
-    @IBAction func unwind(_ segue: UIStoryboardSegue) {
-        
-    }
-    
-}
-
-class HamburgerViewController: UITableViewController, MFMailComposeViewControllerDelegate {
+class SettingsViewController: UITableViewController, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var accountTableViewCell: UITableViewCell!
     @IBOutlet weak var connectedAppsTableViewCell: UITableViewCell!
     @IBOutlet weak var pauseResueTableViewCell: UITableViewCell!
@@ -35,8 +21,6 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.slidingViewController().topViewAnchoredGesture = [ECSlidingViewControllerAnchoredGesture.tapping, ECSlidingViewControllerAnchoredGesture.panning]
-        self.tableView.backgroundColor = ColorPallete.shared.primary
         self.tableView.scrollsToTop = false // https://github.com/KnockSoftware/Ride/issues/204
     }
     
@@ -104,14 +88,6 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         return CGFloat.leastNormalMagnitude
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        #if DEBUG
-            return 7
-        #else
-            return 5
-        #endif
-    }
-    
     #if DEBUG
     func updateDebugCrazyPersonModeCellText() {
         if (UserDefaults.standard.bool(forKey: "DebugVerbosityMode")) {
@@ -133,14 +109,6 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
         }
     }
     #endif
-    
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        for case let button as UIButton in cell.subviews {
-            let image = button.backgroundImage(for: .normal)?.withRenderingMode(.alwaysTemplate)
-            button.tintColor = ColorPallete.shared.almostWhite
-            button.setBackgroundImage(image, for: .normal)
-        }
-    }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -185,15 +153,9 @@ class HamburgerViewController: UITableViewController, MFMailComposeViewControlle
                 )
                 RouteRecorder.shared.routeManager.resumeTracking()
                 self.updatePauseResumeText()
-                if let routesVC = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
-                    routesVC.refreshHelperPopupUI()
-                }
             } else {
                 let updateUIBlock = {
                     self.updatePauseResumeText()
-                    if let mainViewController = (((self.view.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
-                        mainViewController.refreshHelperPopupUI()
-                    }
                 }
                 
                 let alertController = UIAlertController(title: "How Long Would You Like to Pause Ride Report?", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)

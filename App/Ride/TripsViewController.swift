@@ -49,7 +49,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.hidesBackButton = true
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Rides", style: .plain, target: nil, action: nil)
         
         self.popupView.isHidden = true
@@ -58,15 +57,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 48
         
+        self.tableView.register(RoutesTableViewHeaderCell.self, forHeaderFooterViewReuseIdentifier: "RoutesViewTableSectionHeaderCell")
+        
         // when the user drags up they should see the right color above the rewards cell
         var headerViewBackgroundViewFrame = self.tableView.bounds
         headerViewBackgroundViewFrame.origin.y = -headerViewBackgroundViewFrame.size.height
         headerViewBackgroundViewFrame.size.width += headerViewBackgroundViewFrame.size.width // dont know why this is needed to get it to fill
         let headerViewBackgroundView = UIView(frame: headerViewBackgroundViewFrame)
-        headerViewBackgroundView.backgroundColor = ColorPallete.shared.almostWhite
+        headerViewBackgroundView.backgroundColor = UIColor(red: 249/255, green: 249/255, blue: 249/255, alpha: 1.0)
         self.tableView.insertSubview(headerViewBackgroundView, at: 0)
         
-        self.tableView.register(RoutesTableViewHeaderCell.self, forHeaderFooterViewReuseIdentifier: "RoutesViewTableSectionHeaderCell")
+        if let navVC = self.navigationController {
+            navVC.navigationBar.shadowImage = UIImage()
+        }
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
@@ -216,6 +219,10 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if let navVC = self.navigationController {
+            navVC.setNavigationBarHidden(true, animated: animated)
+        }
 
         self.refreshEmptyTableView()
         
@@ -239,6 +246,12 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         self.title = "Ride Report"
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if let navVC = self.navigationController {
+            navVC.setNavigationBarHidden(false, animated: animated)
+        }
     }
     
     func refreshHeaderCells() {
@@ -668,6 +681,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             let rewardsView = TrophyView()
             rewardsView.translatesAutoresizingMaskIntoConstraints = false
+            rewardsView.emojiFont = UIFont.systemFont(ofSize: 50)
+            rewardsView.bodyFont = UIFont.systemFont(ofSize: 20, weight: .semibold)
             rewardsView.emoji = encouragement.emoji
             rewardsView.body = encouragement.descriptionText
             
@@ -677,14 +692,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 self.shouldShowStreakAnimation = false
                 // do the animation here…
             }
-        }
-
-        if let chevronImage = getDisclosureArrow(tableCell) {
-            let accessoryImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: chevronImage.size.width + 8, height: chevronImage.size.height))
-            accessoryImageView.contentMode = .right
-            accessoryImageView.tintColor = ColorPallete.shared.goodGreen
-            accessoryImageView.image = chevronImage
-            tableCell.accessoryView = accessoryImageView
         }
     }
     
@@ -810,7 +817,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         if let cell = self.tableView!.cellForRow(at: indexPath), cell.reuseIdentifier == "RewardsViewTableCell" {
-            self.performSegue(withIdentifier: "showStatsView", sender: self)
+            // does nothing
             return
         }
         if let cell = self.tableView!.cellForRow(at: indexPath), cell.reuseIdentifier == "PromoViewTableCell" {
@@ -852,18 +859,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         customPresentViewController(RedeemRewardViewController.presenter(), viewController: redeemVC, animated: true, completion: nil)
 
         return
-    }
-    
-    func showMapInfo() {
-        let directionsNavController = self.storyboard!.instantiateViewController(withIdentifier: "DirectionsNavViewController") as! UINavigationController
-        self.present(directionsNavController, animated: true, completion: nil)
-        
-        weak var directionsVC = directionsNavController.topViewController as? DirectionsViewController
-        if directionsVC != nil  {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) {
-                directionsVC?.mapViewController.mapView.attributionButton.sendActions(for: UIControlEvents.touchUpInside)
-            }
-        }
     }
     
     @IBAction func actOnPromo(_ sender: AnyObject) {

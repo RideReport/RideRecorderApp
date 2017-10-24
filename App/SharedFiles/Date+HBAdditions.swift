@@ -29,7 +29,7 @@ extension Date {
     // MARK: - Helpers
     //
     
-    static var jsonDateFormatter: DateFormatter {
+    static var jsonOldDateFormatter: DateFormatter {
         get {
             let jsonDateFormatter = DateFormatter()
             jsonDateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -39,11 +39,21 @@ extension Date {
         }
     }
     
-    static var jsonMillisecondDateFormatter: DateFormatter {
+    static var jsonISO8601DateFormatter: DateFormatter {
         get {
             let jsonMillisecondDateFormatter = DateFormatter()
             jsonMillisecondDateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZZZ"
+            jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZ"
+            
+            return jsonMillisecondDateFormatter
+        }
+    }
+    
+    static var jsonISO8601DateFormatterIncludingMilliseconds: DateFormatter {
+        get {
+            let jsonMillisecondDateFormatter = DateFormatter()
+            jsonMillisecondDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            jsonMillisecondDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ"
         
             return jsonMillisecondDateFormatter
         }
@@ -53,25 +63,26 @@ extension Date {
         get {
             let zonelessJsonDateFormatter = DateFormatter()
             zonelessJsonDateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            zonelessJsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            zonelessJsonDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
             
             return zonelessJsonDateFormatter
         }
     }
     
     static func dateFromJSONString(_ string: String)->Date? {
-        if let date = Date.jsonDateFormatter.date(from: string) {
+        if let date = Date.jsonISO8601DateFormatterIncludingMilliseconds.date(from: string) {
             return date
         }
-        return Date.zonelessJsonDateFormatter.date(from: string)
+        
+        if let date = Date.zonelessJsonDateFormatter.date(from: string) {
+            return date
+        }
+        
+        return Date.jsonOldDateFormatter.date(from: string)
     }
     
-    func JSONString() -> String {
-        return Date.jsonDateFormatter.string(from: self)
-    }
-    
-    func MillisecondJSONString() -> String {
-        return Date.jsonMillisecondDateFormatter.string(from: self)
+    func JSONString(includingMilliseconds: Bool) -> String {
+        return includingMilliseconds ? Date.jsonISO8601DateFormatterIncludingMilliseconds.string(from: self) : Date.jsonISO8601DateFormatter.string(from: self)
     }
     
     func isBeforeNoon()->Bool {

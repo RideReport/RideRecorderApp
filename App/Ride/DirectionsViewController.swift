@@ -81,6 +81,16 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
         NotificationCenter.default.removeObserver(self)
     }
     
+    func showMapInfo() {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)) { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.mapViewController.mapView.attributionButton.sendActions(for: UIControlEvents.touchUpInside)
+        }
+    }
+    
     //
     // MARK: - UI Actions
     //

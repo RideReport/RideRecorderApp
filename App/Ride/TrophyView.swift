@@ -11,19 +11,19 @@ import Foundation
 @IBDesignable public class TrophyView : UIView {
     public var associatedObject: Any?
     
-    @IBInspectable var emojiFontSize: CGFloat = 40  {
+    @IBInspectable var emojiFont: UIFont = UIFont.systemFont(ofSize: 30)  {
         didSet {
             reloadUI()
         }
     }
     
-    @IBInspectable var textFontSize: CGFloat = 18  {
+    @IBInspectable var bodyFont: UIFont = UIFont.systemFont(ofSize: 18)  {
         didSet {
             reloadUI()
         }
     }
     
-    @IBInspectable var textColor = ColorPallete.shared.darkGrey  {
+    @IBInspectable var bodyColor = ColorPallete.shared.darkGrey  {
         didSet {
             reloadUI()
         }
@@ -72,10 +72,10 @@ import Foundation
         emojiLabel.text = emoji
         bodyLabel.text = body
         
-        emojiLabel.textColor = self.textColor
-        emojiLabel.font = UIFont.systemFont(ofSize: self.emojiFontSize)
+        emojiLabel.textColor = self.bodyColor
+        emojiLabel.font = self.emojiFont
 
-        bodyLabel.font = UIFont.systemFont(ofSize: self.textFontSize)
+        bodyLabel.font = self.bodyFont
         
         if (drawsDottedOutline) {
             self.backgroundColor = ColorPallete.shared.almostWhite
@@ -104,7 +104,7 @@ import Foundation
             }
         } else {
             self.backgroundColor = UIColor.clear
-            bodyLabel.textColor = self.textColor
+            bodyLabel.textColor = self.bodyColor
             
             if let layer = self.borderLayer {
                 layer.removeFromSuperlayer()
@@ -154,7 +154,7 @@ import Foundation
             return
         }
         
-        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|-[emojiLabel(%f)]-[bodyLabel]|", self.emojiFontSize*1.1), options: [.alignAllCenterY], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
+        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|-[emojiLabel(%f)]-12-[bodyLabel]|", self.emojiFont.pointSize*1.1), options: [.alignAllCenterY], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: widthConstraints)
         
         let heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[bodyLabel(>=emojiLabel)]-4-|", options: [], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])

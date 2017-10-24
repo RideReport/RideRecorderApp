@@ -17,9 +17,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.tableView.backgroundColor = ColorPallete.shared.primary
-        
+                
         if (CoreDataManager.shared.isStartingUp) {
             NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
                 guard let strongSelf = self else {
@@ -55,8 +53,6 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.slidingViewController().anchorRightRevealAmount = 276.0 // the default
-        self.slidingViewController().viewDidLayoutSubviews()
         self.tableView.reloadData()
     }
     

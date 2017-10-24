@@ -217,6 +217,7 @@ class StatsViewController: UIViewController {
             return
         }
         
+        var i = 1
         for trophyDictionary in trophyProgresses {
             guard let trophyProgress = TrophyProgress(dictionary: trophyDictionary) else {
                 continue
@@ -228,6 +229,11 @@ class StatsViewController: UIViewController {
             trophyButon.trophyProgress = trophyProgress
             
             trophiesView.addArrangedSubview(trophyButon)
+            i += 1
+            if CGFloat(i)*(trophyButon.badgeDimension + trophiesView.spacing) > (self.view.frame.width * 1.5) {
+                // show up to a screen and a half's width of featured trophy progresses
+                break
+            }
         }
         
         if let seeMoreView = seeMoreView {

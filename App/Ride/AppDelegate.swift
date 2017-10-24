@@ -13,7 +13,6 @@ import CoreMotion
 import Crashlytics
 import OAuthSwift
 import FBSDKCoreKit
-import ECSlidingViewController
 import Mixpanel
 import CocoaLumberjack
 
@@ -48,10 +47,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(self.fileLogger)
         
-        UINavigationBar.appearance().barTintColor = ColorPallete.shared.primary
-        UINavigationBar.appearance().tintColor = ColorPallete.shared.almostWhite
+        UINavigationBar.appearance().tintColor = ColorPallete.shared.primary
         UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
         UISegmentedControl.appearance().tintColor = ColorPallete.shared.primary
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor:UIColor.clear], for: .selected)
+        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedStringKey.foregroundColor:UIColor.clear], for: .normal)
+        UITabBar.appearance().tintColor = ColorPallete.shared.primary
+        UIApplication.shared.statusBarStyle = .lightContent
+        
         if #available(iOS 9.0, *) {
             UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self]).tintColor = ColorPallete.shared.primary
         }
@@ -170,8 +173,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func showMapAttribution() {
-        if let routesVC = (((self.window?.rootViewController as? ECSlidingViewController)?.topViewController as? UINavigationController)?.topViewController as? TripsViewController) {
-            routesVC.showMapInfo()
+        if let window = self.window, let rootVC = window.rootViewController as? UITabBarController, let vcs = rootVC.viewControllers {
+            for vc in vcs {
+                if let directionsVC = vc as? DirectionsViewController {
+                    rootVC.selectedViewController = directionsVC
+                    directionsVC.showMapInfo()
+                }
+            }
         }
     }
     
@@ -218,7 +226,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func transitionToMainNavController() {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController : UIViewController = storyBoard.instantiateViewController(withIdentifier: "slidingViewController") as UIViewController!
+        let viewController : UIViewController = storyBoard.instantiateViewController(withIdentifier: "mainViewController") as UIViewController!
         
         let transition = CATransition()
         transition.duration = 0.6
@@ -235,7 +243,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         
-        if let rootVC = self.window?.rootViewController as? ECSlidingViewController, let navVC = rootVC.topViewController as? UINavigationController {
+        if let window = self.window, let rootVC = window.rootViewController as? UITabBarController, let vcs = rootVC.viewControllers, let navVC = vcs.first as? UINavigationController {
+            if rootVC.selectedIndex != 0 {
+                rootVC.selectedIndex = 0
+            }
+            
             if let presentedVC = rootVC.presentedViewController {
                 // dismiss anything in the way first
                 presentedVC.dismiss(animated: false, completion: nil)

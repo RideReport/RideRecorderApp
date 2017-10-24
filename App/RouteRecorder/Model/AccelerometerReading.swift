@@ -13,7 +13,7 @@ import CoreMotion
 public class AccelerometerReading : NSManagedObject {    
     public func jsonDictionary() -> [String: Any] {
         return [
-            "date": self.date.MillisecondJSONString(),
+            "date": self.date.JSONString(includingMilliseconds: true),
             "x": self.x,
             "y": self.y,
             "z": self.z,

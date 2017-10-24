@@ -28,7 +28,7 @@ extension Trip {
     @NSManaged public var isSummarySynced: Bool
     @NSManaged public var temperature: NSNumber?
     @NSManaged public var uuid: String!
-    @NSManaged public var bikeTripOfTripsListRow: TripsListRow!
-    @NSManaged public var otherTripOfTripsListRow: TripsListRow!
+    @NSManaged public var bikeTripOfTripsListRow: TripsListRow?
+    @NSManaged public var otherTripOfTripsListRow: TripsListRow?
     @NSManaged public var tripRewards: NSOrderedSet
 }

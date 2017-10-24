@@ -80,7 +80,7 @@ public class Prediction: NSManagedObject {
             dict["activityPredictionModelIdentifier"] = activityPredictionModelIdentifier
         }
         
-        dict["startDate"] = startDate.MillisecondJSONString()
+        dict["startDate"] = startDate.JSONString(includingMilliseconds: true)
         
         var predictionsArray : [Any] = []
         for p in self.predictedActivities {

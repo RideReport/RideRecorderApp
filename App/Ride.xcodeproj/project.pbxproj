@@ -327,7 +327,7 @@
 		844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */; };
 		8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451037C1C20BAE600ABD323 /* Action@2x.png */; };
 		8451037F1C20BAE600ABD323 /* Action@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451037D1C20BAE600ABD323 /* Action@3x.png */; };
-		8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */; };
+		8451FA781B9E24FF008ACDCD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA771B9E24FF008ACDCD /* SettingsViewController.swift */; };
 		8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA851B9E2F6E008ACDCD /* menu@2x.png */; };
 		8451FA891B9E2F6E008ACDCD /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8451FA861B9E2F6E008ACDCD /* menu@3x.png */; };
 		8451FA8B1B9E40B8008ACDCD /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */; };
@@ -690,7 +690,7 @@
 		844B949E1B8BE1A3009F4E27 /* BKPasscodeInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BKPasscodeInputView.m; sourceTree = "<group>"; };
 		8451037C1C20BAE600ABD323 /* Action@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Action@2x.png"; sourceTree = "<group>"; };
 		8451037D1C20BAE600ABD323 /* Action@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Action@3x.png"; sourceTree = "<group>"; };
-		8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HamburgerViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		8451FA771B9E24FF008ACDCD /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SettingsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		8451FA851B9E2F6E008ACDCD /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
 		8451FA861B9E2F6E008ACDCD /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@3x.png"; sourceTree = "<group>"; };
 		8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
@@ -1224,7 +1224,7 @@
 				3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */,
 				840042621C1B774700368A82 /* RideShareViewController.swift */,
 				8451FA8A1B9E40B8008ACDCD /* HelpViewController.swift */,
-				8451FA771B9E24FF008ACDCD /* HamburgerViewController.swift */,
+				8451FA771B9E24FF008ACDCD /* SettingsViewController.swift */,
 				84D1555919D2733500316995 /* MapViewController.swift */,
 				847A056E1A02E757008F5371 /* TripsViewController.swift */,
 				84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */,
@@ -2126,7 +2126,6 @@
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
 				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
-				"${BUILT_PRODUCTS_DIR}/ECSlidingViewController/ECSlidingViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
 				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
@@ -2150,7 +2149,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ECSlidingViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
@@ -2503,7 +2501,7 @@
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */,
-				8451FA781B9E24FF008ACDCD /* HamburgerViewController.swift in Sources */,
+				8451FA781B9E24FF008ACDCD /* SettingsViewController.swift in Sources */,
 				3D72BD801F58ABE80043ECBA /* ConnectedApp+CoreDataProperties.swift in Sources */,
 				3D72BDBB1F58AD440043ECBA /* Date+HBAdditions.swift in Sources */,
 				3D72BD831F58ABE80043ECBA /* ConnectedAppScope.swift in Sources */,
@@ -2796,6 +2794,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = RouteRecorder/RouteRecorderBridgingHeader.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				VERSIONING_SYSTEM = "apple-generic";

@@ -347,7 +347,7 @@ public class APIClient {
         let method = Alamofire.HTTPMethod.put
         var routeDict = [
             "activityType": route.activityType.numberValue,
-            "creationDate": route.creationDate.JSONString()
+            "creationDate": route.creationDate.JSONString(includingMilliseconds: true)
         ] as [String : Any]
 
         let summaryLocs = route.fetchOrGenerateSummaryLocations()

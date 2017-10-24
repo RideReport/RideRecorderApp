@@ -106,7 +106,7 @@ protocol RideSummaryViewDelegate: class {
             }
             i += 1
             
-            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
+            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-4-[componentView]-12-|", options: [], metrics: nil, views: ["componentView": componentView])
             currentConstraints.append(contentsOf: widthConstraints)
         }
         visualFormat += "-|"

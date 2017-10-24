@@ -336,7 +336,7 @@ class RideReportAPIClient {
         // Health Kit Data
         var healthKitDictionary = [String: Any]()
         if let dob = Profile.profile().dateOfBirth {
-            healthKitDictionary["date_of_birth"] = dob.JSONString()
+            healthKitDictionary["date_of_birth"] = dob.JSONString(includingMilliseconds: false)
         }
         
         if let weight = Profile.profile().weightKilograms, weight > 0 {
