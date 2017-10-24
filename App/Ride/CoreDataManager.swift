@@ -97,7 +97,7 @@ class CoreDataManager {
                 // used for testing Core Data Stack
                 try coordinator!.addPersistentStore(ofType: NSInMemoryStoreType, configurationName: nil, at: nil, options: nil)
             } else {
-                if  let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: url), let versions = metadata["NSStoreModelVersionIdentifiers"] as? NSArray, let firstVersionString = versions.firstObject as? String, let firstVersion = Int(firstVersionString), firstVersion >= 1 {
+                if  let metadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: url), let versions = metadata["NSStoreModelVersionIdentifiers"] as? NSArray, let firstVersionString = versions.firstObject as? String, let firstVersion = Int(firstVersionString), firstVersion >= 24 {
                     try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
                 } else if !FileManager.default.fileExists(atPath: url.path) {
                     try coordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: options)
@@ -117,7 +117,10 @@ class CoreDataManager {
     }
     
     private func attemptProfileRecoveryAndResetDatabase(atURL url: URL) {
-        if let (accessToken, accessTokenExpiresIn) = recoverAccessToken(fromDatabaseAtURL: url) {
+        if let accessToken = KeychainManager.shared.accessToken, !accessToken.isEmpty {
+            DDLogInfo("Found access token in keychain.")
+            hardResetDatabase(url: url)
+        } else if let (accessToken, accessTokenExpiresIn) = recoverAccessToken(fromDatabaseAtURL: url) {
             DDLogInfo("Recovered access token.")
             
             hardResetDatabase(url: url)
@@ -125,9 +128,6 @@ class CoreDataManager {
             KeychainManager.shared.accessToken = accessToken
             KeychainManager.shared.accessTokenExpiresIn = accessTokenExpiresIn
             self.saveContext()
-            
-            UserDefaults.standard.set(true, forKey: "shouldGetTripsOnNextAppForeground")
-            UserDefaults.standard.synchronize()
         } else {
             DDLogInfo("Failed to recover access token!")
             hardResetDatabase(url: url)
