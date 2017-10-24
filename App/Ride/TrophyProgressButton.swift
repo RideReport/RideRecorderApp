@@ -11,6 +11,7 @@ import CoreGraphics
 import UIKit
 import Kingfisher
 import UIImageColors
+import BadgeSwift
 
 @IBDesignable public class TrophyProgressButton : UIButton {
     @IBInspectable var countLabelSize: CGFloat = 16
@@ -35,12 +36,6 @@ import UIImageColors
             self.setNeedsLayout()
         }
     }
-    
-    var badgeSize: CGFloat {
-        get {
-            return self.countLabelSize * 3/2
-        }
-    }
 
     private var emojiSaturatedCacheKey: String {
         get {
@@ -48,7 +43,7 @@ import UIImageColors
                 return ""
             }
             
-            return String(format: "%@-%.0f-%.0f", trophyProgress.emoji, self.badgeSize, self.emojiFontSize)
+            return String(format: "%@-%.0f-%.0f", trophyProgress.emoji, self.countLabelSize, self.emojiFontSize)
         }
     }
     
@@ -63,8 +58,7 @@ import UIImageColors
     
     private var emojiView: UIImageView!
     private var emojiProgressView: UIImageView!
-    private var countLabel: UILabel!
-    private var circleView: UIView!
+    private var badgeView: BadgeSwift!
     
     private var currentConstraints: [NSLayoutConstraint]! = []
     private var borderLayer: CAShapeLayer?
@@ -103,9 +97,8 @@ import UIImageColors
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
         
-        countLabel.text = String(format: "%i", trophyProgress.count)
-        countLabel.isHidden = (!showsCount || trophyProgress.count <= 1 || (trophyProgress.count == 1 && trophyProgress.progress > 0))
-        circleView.isHidden = (!showsCount || trophyProgress.count <= 1 || (trophyProgress.count == 1 && trophyProgress.progress > 0))
+        badgeView.text = String(format: "%i", trophyProgress.count)
+        badgeView.isHidden = (!showsCount || trophyProgress.count <= 1 || (trophyProgress.count == 1 && trophyProgress.progress > 0))
     }
     
     private func reloadEmojiUI() {
@@ -116,7 +109,7 @@ import UIImageColors
         guard trophyProgress.emoji != "" else {
             emojiProgressView.image = nil
             emojiView.image = nil
-            countLabel.text = ""
+            badgeView.text = ""
             return
         }
         
@@ -175,28 +168,14 @@ import UIImageColors
         emojiProgressView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(emojiProgressView)
         
-        circleView = UIView(frame: CGRect(x: 0, y: 0, width: badgeSize, height: badgeSize))
-        self.addSubview(circleView)
-        let borderFrame = CGRect(x: 0, y: 0, width: badgeSize, height: badgeSize)
-        let circleLayer = CAShapeLayer()
-        circleLayer.fillColor = ColorPallete.shared.badRed.cgColor
-        circleLayer.contentsScale = UIScreen.main.scale
-        circleLayer.bounds = borderFrame
-        circleLayer.position = circleView.layer.position
-        circleLayer.path = UIBezierPath(ovalIn: borderFrame).cgPath
-        circleView.translatesAutoresizingMaskIntoConstraints = false
-        circleView.layer.addSublayer(circleLayer)
-        
-        countLabel = UILabel()
-        countLabel.textColor = UIColor.white
-        countLabel.textAlignment = .center
-        countLabel.font = UIFont.boldSystemFont(ofSize: countLabelSize)
-        countLabel.minimumScaleFactor = 0.4
-        countLabel.backgroundColor = UIColor.clear
-        countLabel.lineBreakMode = .byWordWrapping
-        countLabel.numberOfLines = 0
-        countLabel.translatesAutoresizingMaskIntoConstraints = false
-        circleView.addSubview(countLabel)
+        badgeView = BadgeSwift()
+        self.addSubview(badgeView)
+        badgeView.insets = CGSize(width: 4, height: 4)
+        badgeView.font = UIFont.boldSystemFont(ofSize: countLabelSize)
+        badgeView.textColor = UIColor.white
+        badgeView.badgeColor = ColorPallete.shared.badRed
+        badgeView.translatesAutoresizingMaskIntoConstraints = false
+        badgeView.shadowOpacityBadge = 0
         
         reloadCountProgressUI()
     }
@@ -219,19 +198,12 @@ import UIImageColors
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
         }
         
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:self.badgeSize/2 - 3))
-        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: circleView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:-self.badgeSize/2 + 3))
-        currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
-        currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
-        
-        currentConstraints.append(NSLayoutConstraint(item: countLabel, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
-        currentConstraints.append(NSLayoutConstraint(item: countLabel, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeSize))
-        currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.centerX, relatedBy: NSLayoutRelation.equal, toItem: countLabel, attribute: NSLayoutAttribute.centerX, multiplier: 1.0, constant:0))
-        currentConstraints.append(NSLayoutConstraint(item: circleView, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: countLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: badgeView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:-3))
+        currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: badgeView, attribute: NSLayoutAttribute.centerX, multiplier: 1.0, constant: 3))
     }
     
     private func reloadEmojiImages() {
-        guard let trophyProgress = trophyProgress else {
+        guard let _ = trophyProgress else {
             emojiSaturated = nil
             emojiDesaturated = nil
             return

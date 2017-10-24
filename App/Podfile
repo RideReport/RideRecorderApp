@@ -29,6 +29,7 @@ target 'Ride Report' do
     pod 'Mapbox-iOS-SDK', :configurations => ['Release']
     pod 'Mapbox-iOS-SDK-symbols', :podspec => "https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec", :configurations => ['Debug']
     pod 'Mixpanel-swift'
+    pod 'BadgeSwift'
 end
 
 target 'Ride Report Tests' do
