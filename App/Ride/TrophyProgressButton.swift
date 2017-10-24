@@ -267,16 +267,12 @@ import BadgeSwift
         let downsampleDimension: CGFloat = 60
         let colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
         
-        guard let saturatedGradientEmoji = gradientImage(withEmojiImage: emojiImage, color: colors.primary, secondaryColor: colors.secondary, backgroundColor: colors.background) else {
+        guard let saturatedGradientEmoji = gradientImage(withEmojiImage: emojiImage, colors: colors) else {
             return
         }
         
         self.emojiSaturated = saturatedGradientEmoji.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
-        
-        if trophyProgress.progress == 1 {
-            return
-        }
-        
+
         let context = CIContext(options: nil)
         
         guard let pixellateFilter = CIFilter(name: "CIPixellate") else {
@@ -289,7 +285,7 @@ import BadgeSwift
         }
         let pixellateImage = UIImage(cgImage: pixellateCGImage, scale: UIScreen.main.scale, orientation: UIImageOrientation.up)
         
-        guard let saturatedGradientPixellatedEmoji = gradientImage(withEmojiImage: pixellateImage, color: colors.primary, secondaryColor: colors.secondary, backgroundColor: colors.background) else {
+        guard let saturatedGradientPixellatedEmoji = gradientImage(withEmojiImage: pixellateImage, colors: colors) else {
             return
         }
         
@@ -310,21 +306,38 @@ import BadgeSwift
         }
     }
     
-    private func gradientImage(withEmojiImage emojiImage: UIImage, color: UIColor, secondaryColor: UIColor, backgroundColor: UIColor)->UIImage? {
+    private func gradientImage(withEmojiImage emojiImage: UIImage, colors: UIImageColors)->UIImage? {
+        var nonWhiteBackgroundColor = colors.background!
+        
+        let minimumColorValue: CGFloat = 0.84
+        if let RGB = nonWhiteBackgroundColor.cgColor.components, RGB[0] > minimumColorValue && RGB[1] > minimumColorValue && RGB[2] > minimumColorValue {
+            // don't use too light a color
+            nonWhiteBackgroundColor = colors.detail
+        }
+        
+        let magicCornerRadiusRatio: Float = 10/57 // https://hicksdesign.co.uk/journal/ios-icon-corner-radii
+        
         UIGraphicsBeginImageContextWithOptions(CGSize(width: self.badgeDimension, height: self.badgeDimension), false , 0.0)
+        let gradientRect = CGRect(x: 0, y: 0, width: self.badgeDimension, height: self.badgeDimension)
+        let cornerRadius = CGFloat(floorf(Float(badgeDimension) * magicCornerRadiusRatio))
+        let lineWidth = CGFloat(floorf(Float(badgeDimension)/25))
+        
         let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = [color.cgColor, secondaryColor.cgColor]
-        gradientLayer.borderColor = backgroundColor.cgColor
-        gradientLayer.borderWidth = 2.0
+        gradientLayer.colors = [colors.secondary.cgColor, colors.primary.cgColor]
         gradientLayer.locations = [0.4, 1.0]
-        gradientLayer.bounds = CGRect(x: 0, y: 0, width: self.badgeDimension, height: self.badgeDimension)
+        gradientLayer.bounds = gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2) // ensure gradient is not visible outside border
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.cornerRadius = 8
+        gradientLayer.cornerRadius = cornerRadius
         if let context = UIGraphicsGetCurrentContext() {
         gradientLayer.render(in: context)
         }
-    
+        
+        let path = UIBezierPath(roundedRect: gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2), byRoundingCorners: UIRectCorner.allCorners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+        path.lineWidth = lineWidth
+        nonWhiteBackgroundColor.setStroke()
+        path.stroke()
+        
         let drawPointX = abs(self.badgeDimension - emojiImage.size.width)/2.0 * -1.0
         let drawPointY = abs(self.badgeDimension - emojiImage.size.height)/2.0 * -1.0
         emojiImage.draw(at: CGPoint(x: drawPointX, y: drawPointY))
