@@ -22,8 +22,6 @@ class TrophyViewController: UIViewController {
     @IBOutlet weak var detailLabel: UILabel!
     
     
-    private var dateFormatter : DateFormatter!
-    
     static func presenter()-> Presentr {
         let width = ModalSize.fluid(percentage: Float(TrophyViewController.viewSizePercentageWidth))
         let height = ModalSize.custom(size: 375)
@@ -45,10 +43,6 @@ class TrophyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.dateFormatter = DateFormatter()
-        self.dateFormatter.locale = Locale.current
-        self.dateFormatter.dateFormat = "MMM d ''yy"
         
         refreshUI()
         
@@ -99,12 +93,12 @@ class TrophyViewController: UIViewController {
                 
                 var descString = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(trophyProgress.progress * 100), countOrdinal)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:" You last earned this trophy on %@.", dateFormatter.string(from: lastEarnedDate))
+                    descString += String(format:" You last earned this trophy on %@.", lastEarnedDate.colloquialDate())
                 }
                 self.detailLabel.text = descString
             } else if trophyProgress.count == 1 {
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    self.detailLabel.text = String(format:"You last earned this trophy on %@.", dateFormatter.string(from: lastEarnedDate))
+                    self.detailLabel.text = String(format:"You last earned this trophy on %@.", lastEarnedDate.colloquialDate())
                 } else {
                     self.detailLabel.text = "You have earned this trophy."
                 }
@@ -118,7 +112,7 @@ class TrophyViewController: UIViewController {
                 
                 var descString = String(format: "You have earned this trophy %@ times", countSpelled)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:", most recently on %@.", dateFormatter.string(from: lastEarnedDate))
+                    descString += String(format:", most recently on %@.", lastEarnedDate.colloquialDate())
                 } else {
                     descString += "."
                 }

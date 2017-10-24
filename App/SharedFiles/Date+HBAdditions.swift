@@ -10,6 +10,32 @@ import Foundation
 
 
 extension Date {
+    static var colloquialDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.dateFormat = "MMM d"
+        
+        return dateFormatter
+    }
+    
+    static var colloquialTimeFormatter: DateFormatter {
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale.current
+        timeFormatter.dateFormat = "h:mma"
+        timeFormatter.amSymbol = (timeFormatter.amSymbol as NSString).lowercased
+        timeFormatter.pmSymbol = (timeFormatter.pmSymbol as NSString).lowercased
+        
+        return timeFormatter
+    }
+    
+    static var colloquialDateFormatterWithYear: DateFormatter {
+        let yearDateFormatter = DateFormatter()
+        yearDateFormatter.locale = Locale.current
+        yearDateFormatter.dateFormat = "MMM d ''yy"
+        
+        return yearDateFormatter
+    }
+    
     static func tomorrow() -> Date {
         return Date().beginingOfDay().daysFrom(1)
     }
@@ -63,7 +89,7 @@ extension Date {
         get {
             let zonelessJsonDateFormatter = DateFormatter()
             zonelessJsonDateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            zonelessJsonDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            zonelessJsonDateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             
             return zonelessJsonDateFormatter
         }
@@ -83,6 +109,28 @@ extension Date {
         }
         
         return Date.jsonOldDateFormatter.date(from: string)
+    }
+    
+    func colloquialDate()->String {
+        var colloquialDate = ""
+        
+        if self.isTomorrow() {
+            colloquialDate = "tomorrow"
+        } else if self.isToday() && self > Date() {
+            colloquialDate = Date.colloquialTimeFormatter.string(from: self)
+        } else if self.isToday() {
+            colloquialDate = "today"
+        } else if self.isYesterday() {
+            colloquialDate = "yesterday"
+        } else if self.isInLastWeek() || (self > Date() && self.isThisWeek()) {
+            colloquialDate = self.weekDay()
+        } else if self.isThisYear() {
+            colloquialDate = Date.colloquialDateFormatter.string(from: self)
+        } else {
+            colloquialDate = Date.colloquialDateFormatterWithYear.string(from: self)
+        }
+        
+        return colloquialDate
     }
     
     func JSONString(includingMilliseconds: Bool) -> String {

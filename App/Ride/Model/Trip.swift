@@ -690,7 +690,7 @@ public class  Trip: NSManagedObject {
     }
     
     func timeString()->String {
-        let timeString = String(format: "%@", Trip.timeDateFormatter.string(from: self.startDate))
+        let timeString = String(format: "%@", Date.colloquialTimeFormatter.string(from: self.startDate))
         
         return timeString
     }

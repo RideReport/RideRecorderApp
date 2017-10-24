@@ -42,9 +42,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     private var shouldShowRewardsAnimation = true
     
     private var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?
-
-    private var dateFormatter : DateFormatter!
-    private var yearDateFormatter : DateFormatter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,14 +70,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         // get rid of empty table view seperators
         self.tableView.tableFooterView = UIView()
-        
-        self.dateFormatter = DateFormatter()
-        self.dateFormatter.locale = Locale.current
-        self.dateFormatter.dateFormat = "MMM d"
-        
-        self.yearDateFormatter = DateFormatter()
-        self.yearDateFormatter.locale = Locale.current
-        self.yearDateFormatter.dateFormat = "MMM d ''yy"
         
         self.emptyTableView.isHidden = true
         
@@ -344,15 +333,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 popupView.addTarget(self, action: #selector(TripsViewController.resumeRideReport), for: UIControlEvents.touchUpInside)
                 
                 if let pausedUntilDate = RouteRecorder.shared.routeManager.pausedUntilDate() {
-                    if (pausedUntilDate.isToday()) {
-                        self.popupView.text = "Ride Report is paused until " + Trip.timeDateFormatter.string(from: pausedUntilDate)
-                    } else if (pausedUntilDate.isTomorrow()) {
-                        self.popupView.text = "Ride Report is paused until tomorrow"
-                    } else if (pausedUntilDate.isThisWeek()) {
-                        self.popupView.text = "Ride Report is paused until " + pausedUntilDate.weekDay()
-                    } else {
-                        self.popupView.text = "Ride Report is paused until " + self.dateFormatter.string(from: pausedUntilDate as Date)
-                    }
+                    self.popupView.text = "Ride Report is paused until " + pausedUntilDate.colloquialDate()
                 } else {
                     self.popupView.text = "Ride Report is paused"
                 }
@@ -481,20 +462,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 view.dateLabel.text = "  In Progress"
                 view.milesLabel.text = ""
             } else {
-                var title = ""
+                let title = section.date.colloquialDate().capitalized
 
-                if (section.date.isToday()) {
-                    title = "Today"
-                } else if (section.date.isYesterday()) {
-                    title = "Yesterday"
-                } else if (section.date.isInLastWeek()) {
-                    title = section.date.weekDay()
-                } else if (section.date.isThisYear()) {
-                    title = self.dateFormatter.string(from: section.date)
-                } else {
-                    title = self.yearDateFormatter.string(from: section.date)
-                }
-                
                 view.dateLabel.text = "  " + title
                 var totalLength: Meters = 0
                 for row in section.rows {
