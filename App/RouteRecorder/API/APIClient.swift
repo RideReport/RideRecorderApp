@@ -333,7 +333,6 @@ public class APIClient {
             if !route.isUploaded {
                 existingRequest.requestCompletetionBlock = {
                     // we need to reset isUploaded since the changes were made after the request went out.
-                    route.isUploaded = false
                     self.uploadRoute(route, includeFullLocations: includeFullLocations)
                 }
                 return existingRequest
