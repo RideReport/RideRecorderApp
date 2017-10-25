@@ -574,7 +574,8 @@ public class  Trip: NSManagedObject {
                 content.body = self.notificationString()
                 content.userInfo = userInfo
                 
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
+                let scheduleTime = (secondsFromNow > 0) ? secondsFromNow : 0.01 // 0 will crash, see https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: scheduleTime, repeats: false)
                 let request = UNNotificationRequest(identifier: self.uuid.lowercased(),
                                                     content: content,
                                                     trigger: trigger)
