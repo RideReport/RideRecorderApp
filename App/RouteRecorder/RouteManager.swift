@@ -738,7 +738,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             if !self.isLocationManagerUsingGPS {
                 // ignore arrivals that occur during GPS usage
                 
-                if let route = self.currentRoute, !route.isClosed {
+                if let route = self.currentRoute ?? Route.mostRecentRoute(), !route.isClosed {
                     DDLogStateChange("Ending route with arrival")
 
                     let loc = Location(visit: visit, isArriving: true)
