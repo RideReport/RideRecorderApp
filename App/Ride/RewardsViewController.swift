@@ -85,7 +85,7 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
         }
         
         self.scene = SKScene(size: self.view.bounds.size)
-        self.scene!.backgroundColor = self.spriteKitView.backgroundColor!
+        self.scene!.backgroundColor = self.spriteKitView.backgroundColor ?? UIColor.clear
         self.scene!.scaleMode = SKSceneScaleMode.resizeFill
         self.scene!.delegate = self
         
