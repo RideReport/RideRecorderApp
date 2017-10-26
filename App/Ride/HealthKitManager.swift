@@ -345,7 +345,7 @@ class HealthKitManager {
             } else {
                 // otherwise, use the server's calculation
                 totalBurn = HKQuantity(unit: HKUnit.kilocalorie(),
-                    doubleValue: trip.caloriesBurned)
+                    doubleValue: trip.calories?.doubleValue ?? 0)
             }
             
             let distance = HKQuantity(unit: HKUnit.mile(), doubleValue: Double(trip.length.miles))

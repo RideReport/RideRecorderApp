@@ -12,7 +12,7 @@ import CoreData
 
 extension Trip {
     @NSManaged public var activityTypeInteger: Int16
-    @NSManaged public var caloriesBurned: Double
+    @NSManaged public var calories: NSNumber?
     @NSManaged public var climacon: String?
     @NSManaged public var displayDataURLString: String?
     @NSManaged public var endDate: Date
@@ -22,6 +22,7 @@ extension Trip {
     @NSManaged public var isSavedToHealthKit: Bool
     @NSManaged public var isSynced: Bool
     @NSManaged public var length: Float
+    @NSManaged public var movingSpeed: NSNumber?
     @NSManaged public var ratingInteger: Int16
     @NSManaged public var ratingVersion: Int16
     @NSManaged public var startingPlacemarkName: String?

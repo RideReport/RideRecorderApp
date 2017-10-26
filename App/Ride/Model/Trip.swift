@@ -447,6 +447,18 @@ public class  Trip: NSManagedObject {
             self.temperature = nil
         }
         
+        if let movingSpeed = summary["movingSpeed"] as? NSNumber {
+            self.movingSpeed = movingSpeed
+        } else {
+            self.movingSpeed = nil
+        }
+        
+        if let calories = summary["calories"] as? NSNumber {
+            self.calories = calories
+        } else {
+            self.calories = nil
+        }
+        
         if let startPlaceName = summary["startPlaceName"] as? String {
             self.startingPlacemarkName = startPlaceName
         }
@@ -475,11 +487,18 @@ public class  Trip: NSManagedObject {
         if let activityTypeNumber = tripJson["activityType"].number,
             let ratingChoiceNumber = tripJson["rating"].number,
             let length = tripJson["length"].number,
-            let activityType = ActivityType(rawValue: activityTypeNumber.int16Value) {
+            let activityType = ActivityType(rawValue: activityTypeNumber.int16Value),
+            let startDateString = tripJson["startDate"].string,
+            let startDate = Date.dateFromJSONString(startDateString),
+            let endDateString = tripJson["endDate"].string,
+            let endDate = Date.dateFromJSONString(endDateString) {
             let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
             self.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
             self.activityType = activityType
             self.length = length.floatValue
+            
+            self.startDate = startDate
+            self.endDate = endDate
         }
         
         if let displayDataURLString = tripJson["displayDataURL"].string {
@@ -504,6 +523,18 @@ public class  Trip: NSManagedObject {
             self.temperature = NSNumber(value: temp)
         } else {
             self.temperature = nil
+        }
+        
+        if let temp = summary["movingSpeed"]?.double {
+            self.movingSpeed = NSNumber(value: temp)
+        } else {
+            self.movingSpeed = nil
+        }
+        
+        if let temp = summary["calories"]?.double {
+            self.calories = NSNumber(value: temp)
+        } else {
+            self.calories = nil
         }
         
         if let startPlaceName = summary["startPlaceName"]?.string {
@@ -684,10 +715,6 @@ public class  Trip: NSManagedObject {
             }
         }
         return String(format: "%@%@", self.climacon ?? "", tempString)
-    }
-    
-    func calorieString()->String {
-        return String(format: "%0.fcal", self.caloriesBurned)
     }
     
     func timeString()->String {

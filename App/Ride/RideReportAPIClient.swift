@@ -125,15 +125,13 @@ class RideReportAPIClient {
             switch response.result {
             case .success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string, let startDateString = tripJson["startDate"].string, let startDate = Date.dateFromJSONString(startDateString) {
+                    if let uuid = tripJson["uuid"].string {
                         var trip: Trip! = Trip.tripWithUUID(uuid)
                         if (trip == nil) {
                             trip = Trip()
                             trip.uuid = uuid
                         }
                         
-                        trip.startDate = startDate
-                        trip.endDate = startDate // TODO: REMOVE THIS HACK
                         trip.isSynced = true
                       
                         trip.loadFromJSON(tripJson)

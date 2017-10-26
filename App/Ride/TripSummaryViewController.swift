@@ -139,9 +139,19 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
             
             if self.selectedTrip.activityType == .cycling {
                 durationLabel.text = self.selectedTrip.duration().intervalString
-                avgSpeedLabel.text = "MMMM"
                 weatherLabel.text = self.selectedTrip.weatherString()
-                calorieLabel.text = self.selectedTrip.calorieString()
+                
+                if let movingSpeed = self.selectedTrip.movingSpeed {
+                    avgSpeedLabel.text = CLLocationSpeed(movingSpeed.doubleValue).string
+                } else {
+                    avgSpeedLabel.text = "--"
+                }
+                
+                if let calories = self.selectedTrip.calories {
+                    calorieLabel.text = String(format: "%0.fcal", calories.doubleValue)
+                } else {
+                    calorieLabel.text = "--"
+                }
                 
                 statsView.isHidden = false
                 statsView2.isHidden = false
