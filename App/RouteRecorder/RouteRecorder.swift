@@ -96,7 +96,7 @@ public class RouteRecorder {
         // Deletes routes with isUploaded=true or routes with isSummaryUploaded=true that are at least a week old
         let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Route")
-        let uploadedRoutesPredicate = NSPredicate(format: "isUploaded == YES OR (isSummaryUploaded == YES AND creationDate < %@)", Date().daysFrom(-7) as CVarArg)
+        let uploadedRoutesPredicate = NSPredicate(format: "isSummaryUploaded == YES AND creationDate < %@", Date().daysFrom(-7) as CVarArg)
         fetchedRequest.predicate = uploadedRoutesPredicate
         
         let results: [AnyObject]?
