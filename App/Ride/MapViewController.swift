@@ -130,6 +130,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                             // apply the rating locally to make UI more responsive to rating changes
                             for subshape in shape.shapes {
                                 subshape.attributes["rating"] = trip.rating.choice.numberValue
+                                subshape.attributes["activityType"] = trip.activityType.numberValue
                             }
                          
                             self.selectedTripLineSource.shape = shape
