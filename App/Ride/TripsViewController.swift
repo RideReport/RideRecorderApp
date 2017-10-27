@@ -203,7 +203,12 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        RideReportAPIClient.shared.syncTrips()
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+            // avoid a bug that could have this called twice on app launch
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { _ in
+                RideReportAPIClient.shared.syncTrips()
+            }
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
