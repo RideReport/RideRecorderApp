@@ -151,6 +151,10 @@ public class PredictionAggregator : NSManagedObject {
     public func jsonDictionary() -> [String: Any] {
         var dict:[String: Any] = [:]
         
+        if let routeUUID = self.route?.uuid {
+            dict["routeUUID"] = routeUUID
+        }
+        
         var accelerometerAccelerations : [Any] = []
         for ar in self.accelerometerReadings {
             accelerometerAccelerations.append(ar.jsonDictionary())

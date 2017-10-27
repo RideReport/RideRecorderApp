@@ -272,14 +272,14 @@ public class APIClient {
     }
     #endif
     
-    public func upload(predictionAggregators: [PredictionAggregator], forRoute routes: [Route]) {
+    public func uploadPredictionAggregators(forRoute route: Route) {
         let routeURL = "/prediction_aggregators"
 
         var params: [String: Any] = [:]
         var predictionAggregatorsDictionaries : [Any?] = []
 
-        for aggregator in predictionAggregators {
-          predictionAggregatorsDictionaries.append(aggregator.jsonDictionary() as Any?)
+        for aggregator in route.predictionAggregators {
+            predictionAggregatorsDictionaries.append(aggregator.jsonDictionary() as Any?)
         }
         params["predictionAggregators"] = predictionAggregatorsDictionaries
         
