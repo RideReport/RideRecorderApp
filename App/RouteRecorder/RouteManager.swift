@@ -76,6 +76,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         if RouteManager.authorizationStatus() == .notDetermined {
             self.routeRecorder.locationManager.requestAlwaysAuthorization()
         } else {
+            self.startTrackingMachine()
+            
             if let handler = self.pendingRegistrationHandler {
                 DispatchQueue.main.async {
                     self.pendingRegistrationHandler = nil
