@@ -310,6 +310,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         }
         
         _ = route.saveLocationsAndUpdateLength()
+        self.beginDeferringUpdatesIfAppropriate()
         
         if let mostRecentLocationWithSufficientSpeed = self.mostRecentLocationWithSufficientSpeed, let mostRecentGPSLocation = self.mostRecentGPSLocation {
             if (gotGPSSpeed == true && abs(mostRecentLocationWithSufficientSpeed.timestamp.timeIntervalSince(mostRecentGPSLocation.timestamp)) > self.timeIntervalForConsideringStoppedRoute){

@@ -594,7 +594,7 @@ public class  Trip: NSManagedObject {
             
             let message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(alwaysUseSingular: true))
 
-            var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
+            var userInfo: [String: Any] = ["uuid" : self.uuid]
             
             if #available(iOS 10.0, *) {
                 let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
