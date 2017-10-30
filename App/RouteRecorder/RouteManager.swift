@@ -47,7 +47,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     let timeIntervalForStoppingRouteWithoutSubsequentWalking : TimeInterval = 200
     let timeIntervalForLocationTrackingDeferral : TimeInterval = 120
     
-    let minimumBatteryForTracking : Float = 0.2
+    let minimumBatteryForTracking : Float = 0.0
     
     private var pendingRegistrationHandler: (()->Void)? = nil
     
