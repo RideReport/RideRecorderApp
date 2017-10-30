@@ -102,9 +102,9 @@ class StatsViewController: UIViewController {
     
     
     override func viewWillAppear(_ animated: Bool) {
-        barChartView.animate(xAxisDuration: 0.0, yAxisDuration: 0.5)
-        piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
-        piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutBounce)
+        barChartView.clear()
+        piechart1.clear()
+        piechart2.clear()
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
             // avoid a bug that could have this called twice on app launch

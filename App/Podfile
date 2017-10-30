@@ -53,7 +53,7 @@ target 'Ride Report Notification Content' do
     pod 'CocoaLumberjack/Swift'
 end
 
-swift4Targets = ['Eureka']
+swift4Targets = ['Eureka', 'Charts']
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
