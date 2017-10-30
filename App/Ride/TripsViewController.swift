@@ -658,7 +658,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             rewardsView.emojiFont = UIFont.systemFont(ofSize: 50)
             rewardsView.bodyFont = UIFont.systemFont(ofSize: 20, weight: .semibold)
             rewardsView.emoji = encouragement.emoji
-            rewardsView.body = encouragement.descriptionText
+            rewardsView.body = "Make this pretty fucking long so it wraps"
             
             stackView.addArrangedSubview(rewardsView)
             
@@ -924,8 +924,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
             if let route = trip.route {
-                alertController.addAction(UIAlertAction(title: "Pred Agg", style: UIAlertActionStyle.default, handler: { (_) in
+                alertController.addAction(UIAlertAction(title: "⬆️ Upload Prediction Aggregators", style: UIAlertActionStyle.default, handler: { (_) in
                     APIClient.shared.uploadPredictionAggregators(forRoute: route)
+                }))
+                alertController.addAction(UIAlertAction(title: "〰 Re-simplifiy", style: UIAlertActionStyle.default, handler: { (_) in
+                    route.resimplify()
                 }))
                 alertController.addAction(UIAlertAction(title: "🏁 Simulate Ride End", style: UIAlertActionStyle.default, handler: { (_) in
                     trip.sendTripCompletionNotificationLocally(secondsFromNow:5.0)

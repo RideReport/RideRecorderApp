@@ -339,6 +339,8 @@ public class  Route: NSManagedObject {
         if let lastArrivalLocation = RouteRecorderStore.store().lastArrivalLocation {
             let inferredLoc = Location(lastArrivalLocation: lastArrivalLocation)
             inferredLoc.route = self
+        } else {
+            DDLogInfo("No lastArrivalLocation found")
         }
         
         
@@ -459,6 +461,12 @@ public class  Route: NSManagedObject {
         
         return results as! [Location]
     }
+    
+    #if DEBUG
+    public func resimplify() {
+        self.simplify()
+    }
+    #endif
     
     func simplify(_ handler: ()->Void = {}) {
         let accurateLocs = self.usableLocationsForSimplification()
