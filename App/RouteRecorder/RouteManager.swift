@@ -761,6 +761,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             } else if let priorRoute = Route.mostRecentRoute(), let priorLoc = priorRoute.mostRecentLocation(), loc.date < priorLoc.date {
                 // if the departure occured prior to the end of the last route, prepend it in that route
                 loc.route = priorRoute
+                if priorRoute.isClosed {
+                    priorRoute.reopen()
+                    priorRoute.close()
+                }
                 RouteRecorderDatabaseManager.shared.saveContext()
             } else {
                 self.runPredictionAndStartRouteIfNeeded(withLocations: [loc])
