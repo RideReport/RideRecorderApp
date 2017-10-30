@@ -592,7 +592,7 @@ public class  Trip: NSManagedObject {
         if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
             
-            let message = String(format: "%@ %@ ride starting at %@…", self.activityType.emoji, self.length.distanceString(alwaysUseSingular: true), self.timeString())
+            let message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(alwaysUseSingular: true))
 
             var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
             
