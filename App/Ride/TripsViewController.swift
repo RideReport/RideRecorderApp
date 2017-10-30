@@ -189,7 +189,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             if (Trip.numberOfCycledTrips > 10 && !UserDefaults.standard.bool(forKey: "hasBeenOfferedCreateAccountAfter10Trips")) {
                 UserDefaults.standard.set(true, forKey: "hasBeenOfferedCreateAccountAfter10Trips")
                 UserDefaults.standard.synchronize()
-                let alertController = UIAlertController(title: "Don't lose your trips!", message: "Create an account so you can recover your rides if your phone is lost.", preferredStyle: UIAlertControllerStyle.actionSheet)
+                let alertController = UIAlertController(title: "Don't lose your rides!", message: "Create an account so you can recover your rides if your phone is lost.", preferredStyle: UIAlertControllerStyle.actionSheet)
                 alertController.addAction(UIAlertAction(title: "Create Account", style: UIAlertActionStyle.default, handler: { (_) in
                     AppDelegate.appDelegate().transitionToCreatProfile()
                 }))
@@ -730,7 +730,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             
             if trip.isInProgress {
                 if (rideSummaryView.tripLength != trip.length) {
-                    rideSummaryView.setTripSummary(tripLength: trip.length, description: String(format: "Trip started at %@.", trip.timeString()))
+                    rideSummaryView.setTripSummary(tripLength: trip.length, description: String(format: "Ride started at %@.", trip.timeString()))
                     rideSummaryView.setRewards([])
                 }
             } else {
@@ -895,18 +895,18 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             return nil
         }
         if trip.isInProgress {
-            return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Trip") { (action, indexPath) -> Void in
+            return [UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "End Ride") { (action, indexPath) -> Void in
                 RouteRecorder.shared.routeManager.stopRoute()
             }]
         }
         
         let deleteAction = UITableViewRowAction(style: UITableViewRowActionStyle.default, title: "Delete") { (action, indexPath) -> Void in
-            let alertController = UIAlertController(title: "Delete Trip?", message: "This will permanently delete your trip", preferredStyle: .actionSheet)
+            let alertController = UIAlertController(title: "Delete Ride?", message: "This will permanently delete your ride", preferredStyle: .actionSheet)
             
             let deleteAlertAction = UIAlertAction(title: "Delete", style: .destructive) { (_) in
                 RideReportAPIClient.shared.deleteTrip(trip).apiResponse({ (response) in
                     if case .failure = response.result {
-                        let alertController = UIAlertController(title: "There was an error deleting that trip. Please try again later.!", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+                        let alertController = UIAlertController(title: "There was an error deleting that ride. Please try again later.!", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
                         alertController.addAction(UIAlertAction(title: "Darn", style: UIAlertActionStyle.cancel, handler: nil))
                         self.present(alertController, animated: true, completion: nil)
                     }

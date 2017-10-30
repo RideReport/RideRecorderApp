@@ -49,6 +49,12 @@ public class  Trip: NSManagedObject {
         }
     }
     
+    var notificationIdentifier : String {
+        get {
+            return self.uuid.lowercased()
+        }
+    }
+    
     var startDate : Date {
         get {
             return self.primitiveValue(forKey: "startDate") as! Date
@@ -572,6 +578,64 @@ public class  Trip: NSManagedObject {
         }
     }
     
+    func clearTripInProgressNotification() {
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [self.notificationIdentifier])
+        } else {
+            cancelTripStateNotificationOnLegacyDevices()
+        }
+    }
+    
+    func updateTripInProgressNotification() {
+        self.cancelTripStateNotificationOnLegacyDevices()
+        
+        if (self.activityType == .cycling) {
+            // don't show a notification for anything but bike trips.
+            
+            let message = String(format: "%@ %@ ride starting at %@…", self.activityType.emoji, self.length.distanceString(alwaysUseSingular: true), self.timeString())
+
+            var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
+            
+            if #available(iOS 10.0, *) {
+                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    DDLogInfo("Schedule trip notification background task expired!")
+                })
+                
+                let content = UNMutableNotificationContent()
+                content.categoryIdentifier = "RIDE_STARTED_CATEGORY"
+                content.sound = nil
+                content.body = message
+                content.userInfo = userInfo
+                
+                let scheduleTime = 0.01 // 0 will crash, see https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: scheduleTime, repeats: false)
+                let request = UNNotificationRequest(identifier: self.notificationIdentifier,
+                                                    content: content,
+                                                    trigger: trigger)
+                
+                UNUserNotificationCenter.current().add(request) { (error) in
+                    DispatchQueue.main.async {
+                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                            DDLogInfo("Ending trip notification background task!")
+                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        }
+                    }
+                }
+            } else {
+                self.currentStateNotification = UILocalNotification()
+                self.currentStateNotification?.alertBody = message
+                self.currentStateNotification?.soundName = nil
+                self.currentStateNotification?.alertAction = "view"
+                self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
+                self.currentStateNotification?.userInfo = userInfo
+                
+                // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
+                self.currentStateNotification?.fireDate = Date().secondsFrom(1)
+                UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
+            }
+        }
+    }
+    
     func sendTripCompletionNotificationLocally(secondsFromNow: TimeInterval, silent: Bool = false) {
         DDLogInfo("Scheduling notification…")
         
@@ -607,7 +671,7 @@ public class  Trip: NSManagedObject {
                 
                 let scheduleTime = (secondsFromNow > 0) ? secondsFromNow : 0.01 // 0 will crash, see https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger
                 let trigger = UNTimeIntervalNotificationTrigger(timeInterval: scheduleTime, repeats: false)
-                let request = UNNotificationRequest(identifier: self.uuid.lowercased(),
+                let request = UNNotificationRequest(identifier: self.notificationIdentifier,
                                                     content: content,
                                                     trigger: trigger)
                 
@@ -622,7 +686,7 @@ public class  Trip: NSManagedObject {
             } else {
                 self.currentStateNotification = UILocalNotification()
                 self.currentStateNotification?.alertBody = self.notificationString()
-                self.currentStateNotification?.soundName = "bell.aiff"
+                self.currentStateNotification?.soundName = silent ? nil : "bell.aiff"
                 self.currentStateNotification?.alertAction = "rate"
                 self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
                 self.currentStateNotification?.userInfo = userInfo

@@ -11,13 +11,13 @@ import Foundation
 typealias Meters = Float
 
 extension Float {
-    func distanceString(suppressFractionalUnits: Bool = false)->String {
-        let (distanceString, longUnits, _) = self.distanceStrings(suppressFractionalUnits: suppressFractionalUnits)
+    func distanceString(suppressFractionalUnits: Bool = false, alwaysUseSingular: Bool = false)->String {
+        let (distanceString, longUnits, _) = self.distanceStrings(suppressFractionalUnits: suppressFractionalUnits, alwaysUseSingular: alwaysUseSingular)
         
         return distanceString + " " + longUnits
     }
     
-    func distanceStrings(suppressFractionalUnits: Bool = false)-> (distance: String, unitsLong: String, unitsShort: String) {
+    func distanceStrings(suppressFractionalUnits: Bool = false, alwaysUseSingular: Bool = false)-> (distance: String, unitsLong: String, unitsShort: String) {
         let METERS_CUTOFF: Float = 400.0
         let FEET_CUTOFF: Float = 1056.0
         
@@ -25,7 +25,7 @@ extension Float {
             if (self < METERS_CUTOFF) {
                 let metersString = self.stringWithDecimals(0)
 
-                return ("\(metersString)", metersString == "1" ? "meter" : "meters", "m")
+                return ("\(metersString)", (alwaysUseSingular || metersString == "1") ? "meter" : "meters", "m")
             } else {
                 if Locale.isGB() {
                     var numberOfDecimals = 1
@@ -33,7 +33,7 @@ extension Float {
                         numberOfDecimals = 0
                     }
                     let milesString = self.miles.stringWithDecimals(numberOfDecimals)
-                    return ("\(milesString)", milesString == "1" ? "mile" : "miles", "mi")
+                    return ("\(milesString)", (alwaysUseSingular || milesString == "1") ? "mile" : "miles", "mi")
                 } else {
                     var numberOfDecimals = 1
                     if suppressFractionalUnits || self.kilometers > 10 {
@@ -45,14 +45,14 @@ extension Float {
         } else { // assume Imperial / U.S.
             if (feet < FEET_CUTOFF) {
                 let feetString = self.feet.stringWithDecimals(0)
-                return ("\(feetString)", feetString == "1" ? "foot" : "feet", "ft")
+                return ("\(feetString)", (alwaysUseSingular || feetString == "1") ? "foot" : "feet", "ft")
             } else {
                 var numberOfDecimals = 1
                 if suppressFractionalUnits || self.miles > 10 {
                     numberOfDecimals = 0
                 }
                 let milesString = self.miles.stringWithDecimals(numberOfDecimals)
-                return ("\(milesString)", milesString == "1" ? "mile" : "miles", "mi")
+                return ("\(milesString)", (alwaysUseSingular || milesString == "1") ? "mile" : "miles", "mi")
             }
         }
     }

@@ -151,6 +151,9 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
                     return
                 }
             }
+            if identifier == "END_RIDE_IDENTIFIER" {
+                RouteRecorder.shared.routeManager.stopRoute()
+            }
             
             completionHandler()
         } else if (identifier == "RESUME_IDENTIFIER") {
@@ -198,7 +201,8 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
             
             let rideCompleteCategory = UNNotificationCategory(identifier: "RIDE_COMPLETION_CATEGORY", actions: actions, intentIdentifiers: [], options: UNNotificationCategoryOptions(rawValue: 0))
             
-            let rideStartedCategory = UNNotificationCategory(identifier: "RIDE_STARTED_CATEGORY", actions: [], intentIdentifiers: [], options: UNNotificationCategoryOptions(rawValue: 0))
+            let rideStartedAction = UNNotificationAction(identifier: "END_RIDE_IDENTIFIER", title:  "End Ride", options: UNNotificationActionOptions.destructive)
+            let rideStartedCategory = UNNotificationCategory(identifier: "RIDE_STARTED_CATEGORY", actions: [rideStartedAction], intentIdentifiers: [], options: UNNotificationCategoryOptions(rawValue: 0))
             
             #if DEBUG
                 let debugCategory = UNNotificationCategory(identifier: "DEBUG_CATEGORY", actions: [], intentIdentifiers: [], options: UNNotificationCategoryOptions(rawValue: 0))
@@ -242,8 +246,16 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
             rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.minimal)
             rideCompleteCategory.setActions(actions, for: UIUserNotificationActionContext.default)
             
+            let rideStartedAction = UIMutableUserNotificationAction()
+            rideStartedAction.identifier = "END_RIDE_IDENTIFIER"
+            rideStartedAction.title = "End Ride"
+            rideStartedAction.activationMode = UIUserNotificationActivationMode.background
+            rideStartedAction.isDestructive = true
+            rideStartedAction.isAuthenticationRequired = false
             let rideStartedCategory = UIMutableUserNotificationCategory()
             rideStartedCategory.identifier = "RIDE_STARTED_CATEGORY"
+            rideCompleteCategory.setActions([rideStartedAction], for: UIUserNotificationActionContext.minimal)
+            rideCompleteCategory.setActions([rideStartedAction], for: UIUserNotificationActionContext.default)
             
             #if DEBUG
                 let debugCategory = UIMutableUserNotificationCategory()
