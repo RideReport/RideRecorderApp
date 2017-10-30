@@ -299,7 +299,7 @@ public class  Route: NSManagedObject {
     func saveLocationsAndUpdateLength(intermittently: Bool = true)->Bool {
         let locSize = self.locationCount()
         
-        let updateInterval = (UIApplication.shared.applicationState == UIApplicationState.active) ? 10 : 20 // update less often in the background
+        let updateInterval = (UIApplication.shared.applicationState == UIApplicationState.active) ? 10 : 60 // update less often in the background
         if (!intermittently || lastLocationUpdateCount == -1 || abs(locSize - lastLocationUpdateCount) > updateInterval) {
             // every 10
             if let thisLoc = self.mostRecentLocation() {
