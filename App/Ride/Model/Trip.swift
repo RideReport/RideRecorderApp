@@ -492,13 +492,13 @@ public class  Trip: NSManagedObject {
             let startDate = Date.dateFromJSONString(startDateString),
             let endDateString = tripJson["endDate"].string,
             let endDate = Date.dateFromJSONString(endDateString) {
+            self.startDate = startDate
+            self.endDate = endDate
+            
             let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
             self.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
             self.activityType = activityType
             self.length = length.floatValue
-            
-            self.startDate = startDate
-            self.endDate = endDate
         }
         
         if let displayDataURLString = tripJson["displayDataURL"].string {
