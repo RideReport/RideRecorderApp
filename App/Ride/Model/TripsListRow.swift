@@ -38,4 +38,8 @@ public class TripsListRow: NSManagedObject {
             self.sortName = "z" // ignored, doesn't matter
         }
     }
+    
+    class func keyPathsForValuesAffectingBikeTrip() -> Set<String> {
+        return Set(["bikeTrip.climacon", "bikeTrip.length", "bikeTrip.activityTypeInteger", "bikeTrip.isSummarySynced"])
+    }
 }
