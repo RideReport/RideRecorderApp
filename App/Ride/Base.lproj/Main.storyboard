@@ -877,7 +877,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="0.0" height="120"/>
                                                         <subviews>
                                                             <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vf3-zk-zGP">
-                                                                <rect key="frame" x="-17.5" y="-38.5" width="60" height="120"/>
+                                                                <rect key="frame" x="-16" y="-38.5" width="60" height="120"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWQ-tt-f49">
                                                                         <rect key="frame" x="1.5" y="38.5" width="35" height="43"/>
@@ -2098,7 +2098,7 @@ All</string>
             </objects>
             <point key="canvasLocation" x="1690" y="557"/>
         </scene>
-        <!--Stress Map-->
+        <!--Comfort Map-->
         <scene sceneID="4tC-aS-a2H">
             <objects>
                 <viewController storyboardIdentifier="DirectionsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="F6t-GP-FwY" customClass="DirectionsViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
@@ -2213,7 +2213,7 @@ All</string>
                     <tabBarItem key="tabBarItem" title="Map" image="Map" id="kgv-Gf-KhA">
                         <inset key="imageInsets" minX="0.0" minY="6" maxX="0.0" maxY="-6"/>
                     </tabBarItem>
-                    <navigationItem key="navigationItem" title="Stress Map" id="5bz-3M-gtr">
+                    <navigationItem key="navigationItem" title="Comfort Map" id="5bz-3M-gtr">
                         <barButtonItem key="rightBarButtonItem" title="Done" id="WbF-4E-Mdw">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
@@ -3341,19 +3341,19 @@ All the Apps</string>
                                 </variation>
                             </visualEffectView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="This App is Really Cool and Does great Stuff" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="VUK-8H-ODx">
-                                <rect key="frame" x="36" y="279" width="303" height="21.5"/>
+                                <rect key="frame" x="36" y="283" width="303" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Love to Ride would like to access:" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="PV7-3r-mDx" userLabel="Scopes Permissions Text">
-                                <rect key="frame" x="36" y="340.5" width="303" height="17"/>
+                                <rect key="frame" x="36" y="344.5" width="303" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" red="0.2627125978" green="0.2627638578" blue="0.26270926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aKf-Bi-Atn">
-                                <rect key="frame" x="16" y="369.5" width="343" height="169"/>
+                                <rect key="frame" x="16" y="373.5" width="343" height="169"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="169" id="jjx-84-DnN"/>
@@ -3431,7 +3431,7 @@ All the Apps</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" image="AppIcon40x40.png" translatesAutoresizingMaskIntoConstraints="NO" id="lRe-6R-CEp">
-                                <rect key="frame" x="97.5" y="81" width="180" height="180"/>
+                                <rect key="frame" x="97.5" y="85" width="180" height="180"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="180" id="qAk-01-vHY"/>
                                     <constraint firstAttribute="width" constant="180" id="xd9-ZS-Kk3"/>

@@ -150,7 +150,7 @@ class DirectionsViewController: UIViewController, RideNotificationViewDelegate {
                 self.counterText.text = String(format: "%@ Biked in %@", isMiles ? "Miles" : "KM", name)
 
                 if (launched) {
-                    self.mapInfoText.text = String(format: "Map shows average ratings from %@ riders. Better routes are green, stressful routes are red.", name)
+                    self.mapInfoText.text = String(format: "Map shows average ratings from %@ riders. Comfortable routes are green, stressful routes are red.", name)
                 }  else {
                     self.mapInfoText.text = String(format: "Ride Report doesn't have enough trips to show a map in %@. Every ride you take get us closer!", name)
                 }
