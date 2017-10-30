@@ -660,8 +660,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             rewardsView.emojiFont = UIFont.systemFont(ofSize: 50)
             rewardsView.bodyFont = UIFont.systemFont(ofSize: 20, weight: .semibold)
             rewardsView.emoji = encouragement.emoji
-            rewardsView.body = "Make this pretty fucking long so it wraps"
-            
+            rewardsView.body = encouragement.descriptionText
+
             stackView.addArrangedSubview(rewardsView)
             
             if (self.shouldShowStreakAnimation) {
