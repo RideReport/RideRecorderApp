@@ -592,9 +592,14 @@ public class  Trip: NSManagedObject {
         if (self.activityType == .cycling) {
             // don't show a notification for anything but bike trips.
             
-            let message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(alwaysUseSingular: true))
+            var message = ""
+            if self.length.miles > 1 {
+                message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(suppressFractionalUnits: true, alwaysUseSingular: true))
+            } else {
+                message = String(format: "%@ ride in progress.", self.activityType.emoji)
+            }
 
-            var userInfo: [String: Any] = ["uuid" : self.uuid]
+            let userInfo: [String: Any] = ["uuid" : self.uuid]
             
             if #available(iOS 10.0, *) {
                 let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
