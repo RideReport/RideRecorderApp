@@ -218,8 +218,6 @@
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
 		3D8969441D5FDDCE0034578A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8969431D5FDDCE0034578A /* HealthKit.framework */; };
-		3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
-		3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
 		3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */; };
 		3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
 		3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */; };
@@ -279,8 +277,6 @@
 		3DD08F391ECE1B2700246B78 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC01BD56FBC0079AFCC /* libc++.tbd */; };
 		3DD15E161F97FA5700E32A0C /* TrophiesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD15E151F97FA5700E32A0C /* TrophiesViewController.swift */; };
 		3DD544581F2A61200009876D /* UploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD544571F2A61200009876D /* UploadViewController.swift */; };
-		3DD5445A1F2ABA040009876D /* AppIcon40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */; };
-		3DD5445B1F2ABA040009876D /* AppIcon40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */; };
 		3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A721DA5BCE20015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
 		3DF07A741DA5BCE40015005C /* NSLocale+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF07A701DA5B9D10015005C /* NSLocale+Additions.swift */; };
@@ -612,8 +608,6 @@
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		3D8969431D5FDDCE0034578A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
-		3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@2x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@2x.png"; sourceTree = "<group>"; };
-		3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon40x40@3x.png"; path = "Images.xcassets/AppIcon.appiconset/AppIcon40x40@3x.png"; sourceTree = "<group>"; };
 		3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTripsViewController.swift; sourceTree = "<group>"; };
 		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
@@ -1306,8 +1300,6 @@
 				84EA5FB21EB1BC3700964706 /* tspark@3x.png */,
 				3D0D8B231CE2560E0059AC6B /* bell.aiff */,
 				3D49510F1C8E092300E216AA /* forest.cv */,
-				3D9730C71C52B68B00DE4B6B /* AppIcon40x40@2x.png */,
-				3D9730C81C52B68B00DE4B6B /* AppIcon40x40@3x.png */,
 				8451037C1C20BAE600ABD323 /* Action@2x.png */,
 				8451037D1C20BAE600ABD323 /* Action@3x.png */,
 				842141C91C4427A2009DA851 /* iphonewhite@3x.png */,
@@ -1762,9 +1754,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3DD5445A1F2ABA040009876D /* AppIcon40x40@2x.png in Resources */,
 				3DA1EFE51C8F94EB002B12DB /* silence.mp3 in Resources */,
-				3DD5445B1F2ABA040009876D /* AppIcon40x40@3x.png in Resources */,
 				3D2705E61C8785D400A96DE0 /* LaunchScreen.storyboard in Resources */,
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */,
@@ -1845,7 +1835,6 @@
 				842141A51C406A84009DA851 /* map@3x.png in Resources */,
 				84D1555D19D2733500316995 /* Main.storyboard in Resources */,
 				84D1556219D2733500316995 /* LaunchScreen.xib in Resources */,
-				3D9730C91C52B68B00DE4B6B /* AppIcon40x40@2x.png in Resources */,
 				3D6D77941D7F8D8200A95602 /* tspark.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
 				3D3C3E1B1E68E69B004C719E /* pinGreen@2x.png in Resources */,
@@ -1866,7 +1855,6 @@
 				84091CE01BD848C000264652 /* counter-shadow.png in Resources */,
 				842141CA1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
 				842141A41C406A84009DA851 /* map@2x.png in Resources */,
-				3D9730CA1C52B68B00DE4B6B /* AppIcon40x40@3x.png in Resources */,
 				84D1555F19D2733500316995 /* Images.xcassets in Resources */,
 				8492BCB61C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
 				8492BCB81C35C0A0006BDDB8 /* trip_with_ready_summary_200.json in Resources */,
