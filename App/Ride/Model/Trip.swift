@@ -489,31 +489,42 @@ public class  Trip: NSManagedObject {
         }
     }
     
-    func loadFromJSON(_ tripJson: JSON) {
-        if let activityTypeNumber = tripJson["activityType"].number,
+    @discardableResult class func createOrUpdateFromJSON(_ tripJson: JSON)->Trip? {
+        guard let uuid = tripJson["uuid"].string,
+            let activityTypeNumber = tripJson["activityType"].number,
             let ratingChoiceNumber = tripJson["rating"].number,
             let length = tripJson["length"].number,
             let activityType = ActivityType(rawValue: activityTypeNumber.int16Value),
             let startDateString = tripJson["startDate"].string,
             let startDate = Date.dateFromJSONString(startDateString),
             let endDateString = tripJson["endDate"].string,
-            let endDate = Date.dateFromJSONString(endDateString) {
-            self.startDate = startDate
-            self.endDate = endDate
+            let endDate = Date.dateFromJSONString(endDateString) else {
+                return nil
+        }
             
-            let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
-            self.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
-            self.activityType = activityType
-            self.length = length.floatValue
+        var trip: Trip! = Trip.tripWithUUID(uuid)
+        if (trip == nil) {
+            trip = Trip()
+            trip.uuid = uuid
         }
         
+        trip.startDate = startDate
+        trip.endDate = endDate
+        
+        let ratingVersionNumber = tripJson["ratingVersion"].number ?? RatingVersion.v1.numberValue // if not given, the server is speaking the old version-less API
+        trip.rating = Rating(rating: ratingChoiceNumber.int16Value, version: ratingVersionNumber.int16Value)
+        trip.activityType = activityType
+        trip.length = length.floatValue
+        
         if let displayDataURLString = tripJson["displayDataURL"].string {
-            self.displayDataURLString = displayDataURLString
+            trip.displayDataURLString = displayDataURLString
         }
         
         if let summary = tripJson["summary"].dictionary {
-            self.loadSummaryFromJSON(summary)
+            trip.loadSummaryFromJSON(summary)
         }
+        
+        return trip
     }
     
     func loadSummaryFromJSON(_ summary: [String: JSON]) {

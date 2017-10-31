@@ -42,6 +42,8 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
                 }
             }
             
+            self.title = self.connectingApp.name ?? "App"
+
             self.connectingAppDetailText.text = self.connectingApp.descriptionText
             self.connectingAppScopesText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
             self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")

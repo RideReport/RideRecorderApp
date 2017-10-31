@@ -77,23 +77,23 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             
         case .update:
             if let path = indexPath, let app = frc.object(at: path) as? ConnectedApp,
-                let cell = self.tableView!.cellForRow(at: IndexPath(row: indexPath!.row, section: 1)) {
+                let cell = self.tableView!.cellForRow(at: IndexPath(row: indexPath!.row, section: 0)) {
                 configureCell(cell, app:app)
             }
         case .insert:
-            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 1)], with: UITableViewRowAnimation.fade)
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 0)], with: UITableViewRowAnimation.fade)
         case .delete:
-            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 1)], with: UITableViewRowAnimation.fade)
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 0)], with: UITableViewRowAnimation.fade)
         case .move:
-            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 1)],
+            self.tableView!.deleteRows(at: [IndexPath(row: indexPath!.row, section: 0)],
                                                    with: UITableViewRowAnimation.fade)
-            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 1)],
+            self.tableView!.insertRows(at: [IndexPath(row: newIndexPath!.row, section: 0)],
                                                    with: UITableViewRowAnimation.fade)
         }
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -101,16 +101,8 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             return 0
         }
         
-        if section == 0 {
-            // health kit cell
-            return UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 1 : 0
-        } else if section == 1 {
-            let sectionInfo = sections[0]
-            return sectionInfo.numberOfObjects
-        } else {
-            // conect app cell
-            return 1
-        }
+        let sectionInfo = sections[0]
+        return sectionInfo.numberOfObjects + 1 + (UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 1 : 0)
     }
     
     //
@@ -133,7 +125,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
         }
         
-        if indexPath.section == 0 {
+        if indexPath.row == self.fetchedResultsController?.fetchedObjects?.count ?? 0 {
             // health kit cell
             let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "SyncWithHealthAppCell", for: indexPath)
             if #available(iOS 10.0, *) {
@@ -146,16 +138,16 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             }
             
             return tableCell
-        } else if indexPath.section == 1 {
+        } else if indexPath.row > self.fetchedResultsController?.fetchedObjects?.count ?? 0 {
+            // conect app cell
+            return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
+        } else {
             let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "ConnectedAppCell", for: indexPath)
             if let app = frc.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp {
                 self.configureCell(tableCell, app: app)
             }
             
             return tableCell
-        } else {
-            // conect app cell
-            return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
         }
         
     }
@@ -170,10 +162,9 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             return
         }
         
-        if (indexPath.section == 1) {
+        if (indexPath.row < self.fetchedResultsController?.fetchedObjects?.count ?? 0) {
             if let app = frc.object(at: IndexPath(row: indexPath.row, section: 0)) as? ConnectedApp,
-                let appNC = segue.destination as?  UINavigationController,
-                let appVC = appNC.topViewController as? ConnectedAppSettingsViewController {
+                let appVC = segue.destination as?  ConnectedAppSettingsViewController {
                 appVC.connectingApp = app
             }
         }

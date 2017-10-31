@@ -71,7 +71,7 @@ class RideReportAPIClient {
                 self.syncTrips()
             } else if let syncLink = response.response?.findLink(relation: "sync") {
                 Profile.profile().nextSyncURLString = syncLink.uri
-            } else {
+            } else if case .success = response.result {
                 Profile.profile().nextSyncURLString = nil
             }
             
@@ -94,7 +94,7 @@ class RideReportAPIClient {
             self.isRequestingMoreTrips = false
             if let nextLink = response.response?.findLink(relation: "next") {
                 Profile.profile().nextPageURLString = nextLink.uri
-            } else {
+            } else if case .success = response.result {
                 Profile.profile().nextPageURLString = nil
             }
             
@@ -108,7 +108,7 @@ class RideReportAPIClient {
         return getTrips(atURL: url).apiResponse({ (response) in
             if let nextLink = response.response?.findLink(relation: "next") {
                 Profile.profile().nextPageURLString = nextLink.uri
-            } else {
+            } else if case .success = response.result {
                 Profile.profile().nextPageURLString = nil
             }
             
@@ -126,15 +126,9 @@ class RideReportAPIClient {
             case .success(let json):
                 for tripJson in json.array! {
                     if let uuid = tripJson["uuid"].string {
-                        var trip: Trip! = Trip.tripWithUUID(uuid)
-                        if (trip == nil) {
-                            trip = Trip()
-                            trip.uuid = uuid
+                        if let trip = Trip.createOrUpdateFromJSON(tripJson) {
+                            trip.isSynced = true
                         }
-                        
-                        trip.isSynced = true
-                      
-                        trip.loadFromJSON(tripJson)
                     }
                 }
                 CoreDataManager.shared.saveContext()
@@ -199,9 +193,9 @@ class RideReportAPIClient {
             self.tripRequests[trip] = nil
             switch response.result {
             case .success(let json):
-                trip.loadFromJSON(json)
-                trip.isSynced = true
-                
+                if let updatedTrip = Trip.createOrUpdateFromJSON(json) {
+                    updatedTrip.isSynced = true
+                }
                 
                 if let encouragementDictionaries = json["encouragements"].arrayObject {
                     Profile.profile().updateEncouragements(encouragementDictionaries: encouragementDictionaries)
@@ -227,7 +221,7 @@ class RideReportAPIClient {
         return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "trips/" + uuid, completionHandler: { (response) -> Void in
             switch response.result {
             case .success(let json):
-                trip.loadFromJSON(json)
+                Trip.createOrUpdateFromJSON(json)
                 
                 CoreDataManager.shared.saveContext()
             case .failure(let error):

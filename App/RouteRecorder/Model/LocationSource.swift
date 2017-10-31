@@ -21,12 +21,12 @@ import Foundation
  */
 @objc enum LocationSource : Int16, CustomStringConvertible {
     case unknown = 0
-    case activeGPS
-    case passive
-    case geofence
-    case visitArrival
-    case visitDeparture
-    case lastRouteArrival
+    case activeGPS // 1
+    case passive // 2
+    case geofence // 3
+    case visitArrival // 4
+    case visitDeparture // 5
+    case lastRouteArrival // 6
     
     static var inferredSources: [LocationSource] {
         return [.unknown, .geofence, .visitArrival, .visitDeparture, .lastRouteArrival]

@@ -50,6 +50,8 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     }
     
     private func refreshUI() {
+        self.title = self.connectingApp.name ?? "App"
+        
         self.connectedAppDetailText.text = String(format: "%@ accesses data from your trips in Ride Report.", self.connectingApp.name ?? "App")
         if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
             self.connectedAppLogo.kf.setImage(with: url)
@@ -61,10 +63,6 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
         } else {
             self.connectedAppSettingsButton.isHidden = true
         }
-    }
-    
-    @IBAction func cancel(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func settings(_ sender: AnyObject) {
@@ -103,11 +101,11 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
                 
                 switch response.result {
                 case .success(_):
-                    strongSelf.dismiss(animated: true, completion: nil)
+                    strongSelf.navigationController?.popViewController(animated: true)
                 case .failure(_):
                     let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be disconnected from %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
                     alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
-                        strongSelf.dismiss(animated: true, completion: nil)
+                        strongSelf.navigationController?.popViewController(animated: true)
                     }))
                     strongSelf.present(alertController, animated: true, completion: nil)
                 }
