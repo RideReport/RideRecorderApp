@@ -505,6 +505,15 @@ class StatsViewController: UIViewController {
             }
         }
         
+        if let longestRideStreakArray = statsDict["longest_ride_streak"]?.array, longestRideStreakArray.count == 2 {
+            if let emoji = longestRideStreakArray[0].string, let stat = longestRideStreakArray[1].string {
+                rollupsString.append(NSAttributedString(string: emoji, attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
+                rollupsString.append(NSAttributedString(string: stat, attributes: unitAttributes))
+                rollupsString.append(NSAttributedString(string: "\n", attributes: unitAttributes))
+            }
+        }
+        
         if let rides = statsDict["rides"]?.int, let ridesString = integerFormatter.string(from: NSNumber(value: rides)) {
             rollupsString.append(NSAttributedString(string: ridesString, attributes: valueAttributes))
             rollupsString.append(NSAttributedString(string: " ", attributes: valueAttributes))
