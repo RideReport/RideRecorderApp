@@ -37,7 +37,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     private var currentPredictionAggregator: PredictionAggregator?
     
     // Constants
-    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2.25 // ~5mph
+    let minimumSpeedToContinueMonitoring : CLLocationSpeed = 2 // ~5mph
     
     let minimumSpeedForPostRouteWalkingAround : CLLocationSpeed = 0.2
     let minimumTimeIntervalBeforeDeclaringWalkingSession : TimeInterval = 10
