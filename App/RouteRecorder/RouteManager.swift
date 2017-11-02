@@ -222,6 +222,11 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                 stoppedRoute.wasStoppedManually = true
             }
             
+            if stoppedRoute.averageMovingSpeed < 2 {
+                // identify short walking trips that were mistaken for bike trips
+                stoppedRoute.activityType = .walking
+            }
+            
             stoppedRoute.close()
             APIClient.shared.uploadRoute(stoppedRoute, includeFullLocations: false).apiResponse() { (response) -> Void in
                 switch response.result {

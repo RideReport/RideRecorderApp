@@ -630,39 +630,10 @@ public class  Route: NSManagedObject {
         return self.creationDate
     }
     
-    var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.firstLocation(includeCopied: false), let endLoc = self.mostRecentLocation() else {
-            return 0.0
-        }
-        
-        let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
-        let time = endDate.timeIntervalSince(startLoc.date)
-        
-        return distance/time
-    }
-    
-    var aproximateAverageBikingSpeed : CLLocationSpeed {
-        var sumSpeed : Double = 0.0
-        var count = 0
-        let simplifiedLocs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
-        for location in simplifiedLocs {
-            if (location.speed > 1.0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                count += 1
-                sumSpeed += (location as Location).speed
-            }
-        }
-        
-        if (count == 0) {
-            return 0
-        }
-        
-        return sumSpeed/Double(count)
-    }
-    
     var averageMovingSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        let locs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
+        let locs = self.fetchOrderedLocations(simplified: false, includingInferred: false)
 
         for location in locs {
             if (location.speed > Location.minimumMovingSpeed && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
@@ -681,7 +652,7 @@ public class  Route: NSManagedObject {
     var averageSpeed : CLLocationSpeed {
         var sumSpeed : Double = 0.0
         var count = 0
-        let locs = self.fetchOrderedLocations(simplified: true, includingInferred: false)
+        let locs = self.fetchOrderedLocations(simplified: false, includingInferred: false)
 
         for location in locs {
             if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
