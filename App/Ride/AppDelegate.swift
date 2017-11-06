@@ -120,10 +120,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // For new users, we wait to start permission-needing managers
             // This avoids immediately presenting the privacy permission dialogs.
             
-            DispatchQueue.main.async {
-                // perform async
-                NotificationManager.startup()
-            }
+            NotificationManager.startup()
+
             RouteRecorder.shared.randomForestManager.startup()
             RouteRecorder.shared.classificationManager.startup(handler: {})
             
