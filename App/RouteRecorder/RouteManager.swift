@@ -502,10 +502,12 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         switch route.activityType {
         case .cycling where route.length >= 20 * 1000: // longer time out above 20k
             timeoutInterval = 1080
-        case .walking: // walking can be slow to trigger location changes
-            timeoutInterval = 600
-        default:
+        case .cycling:
             timeoutInterval = 300
+        case .walking: // walking can be slow to trigger location changes
+            timeoutInterval = 900
+        default: // non-cycling trips have low accuracy locations that may be far apart
+            timeoutInterval = 600
         }
         
         return abs(route.endDate.timeIntervalSince(location.date)) < timeoutInterval
