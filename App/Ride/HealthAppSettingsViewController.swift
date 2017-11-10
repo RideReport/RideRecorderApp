@@ -49,10 +49,6 @@ class HealthAppSettingsViewController : UIViewController{
         CATransaction.commit()
     }
     
-    @IBAction func cancel(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     @IBAction func disconnect(_ sender: AnyObject) {
         var message = "Your rides will no longer automatically saved into the Health App."
         if #available(iOS 10.0, *) {
@@ -65,7 +61,7 @@ class HealthAppSettingsViewController : UIViewController{
             HealthKitManager.shutdown()
             UserDefaults.standard.set(false, forKey: "healthKitIsSetup")
             UserDefaults.standard.synchronize()
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
         self.present(alertController, animated: true, completion: nil)

@@ -125,7 +125,10 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
         }
         
-        if indexPath.row == self.fetchedResultsController?.fetchedObjects?.count ?? 0 {
+        let healthKitRowCount = UserDefaults.standard.bool(forKey: "healthKitIsSetup") ? 1 : 0
+        let frcRowCount = (self.fetchedResultsController?.fetchedObjects?.count ?? 0)
+        
+        if healthKitRowCount > 0 && indexPath.row + 1 == frcRowCount + healthKitRowCount {
             // health kit cell
             let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "SyncWithHealthAppCell", for: indexPath)
             if #available(iOS 10.0, *) {
@@ -138,7 +141,7 @@ class ConnectedAppsViewController: UITableViewController, NSFetchedResultsContro
             }
             
             return tableCell
-        } else if indexPath.row > self.fetchedResultsController?.fetchedObjects?.count ?? 0 {
+        } else if indexPath.row >= frcRowCount + healthKitRowCount {
             // conect app cell
             return self.tableView.dequeueReusableCell(withIdentifier: "ConnectAppCell", for: indexPath)
         } else {
