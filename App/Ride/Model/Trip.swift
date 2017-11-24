@@ -623,11 +623,9 @@ public class  Trip: NSManagedObject {
                 content.body = message
                 content.userInfo = userInfo
                 
-                let scheduleTime = 0.01 // 0 will crash, see https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: scheduleTime, repeats: false)
                 let request = UNNotificationRequest(identifier: self.notificationIdentifier,
                                                     content: content,
-                                                    trigger: trigger)
+                                                    trigger: nil)
                 
                 UNUserNotificationCenter.current().add(request) { (error) in
                     DispatchQueue.main.async {
@@ -685,8 +683,7 @@ public class  Trip: NSManagedObject {
                 content.body = self.notificationString()
                 content.userInfo = userInfo
                 
-                let scheduleTime = (secondsFromNow > 0) ? secondsFromNow : 0.01 // 0 will crash, see https://developer.apple.com/documentation/usernotifications/untimeintervalnotificationtrigger
-                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: scheduleTime, repeats: false)
+                let trigger: UNTimeIntervalNotificationTrigger? = (secondsFromNow <= 0) ? nil : UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
                 let request = UNNotificationRequest(identifier: self.notificationIdentifier,
                                                     content: content,
                                                     trigger: trigger)
