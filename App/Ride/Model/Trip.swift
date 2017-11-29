@@ -598,120 +598,132 @@ public class  Trip: NSManagedObject {
     }
     
     func updateTripInProgressNotification() {
-        self.cancelTripStateNotificationOnLegacyDevices()
+        guard self.activityType == .cycling else {
+            // don't show a notification for anything but bike trips
+            
+            // it's possible an in progress notification was delivered if we originally thought the trip was cycling but then changed our minds,
+            // so we need to call clearTripInProgressNotification
+            self.clearTripInProgressNotification()
+            return
+        }
         
-        if (self.activityType == .cycling) {
-            // don't show a notification for anything but bike trips.
+        var message = ""
+        if self.length.miles > 1 {
+            message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(suppressFractionalUnits: true, alwaysUseSingular: true))
+        } else {
+            message = String(format: "%@ ride in progress.", self.activityType.emoji)
+        }
+        
+        let userInfo: [String: Any] = ["uuid" : self.uuid]
+        
+        if #available(iOS 10.0, *) {
+            let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                DDLogInfo("Schedule trip notification background task expired!")
+            })
             
-            var message = ""
-            if self.length.miles > 1 {
-                message = String(format: "%@ %@ ride in progress.", self.activityType.emoji, self.length.distanceString(suppressFractionalUnits: true, alwaysUseSingular: true))
-            } else {
-                message = String(format: "%@ ride in progress.", self.activityType.emoji)
-            }
-
-            let userInfo: [String: Any] = ["uuid" : self.uuid]
+            let content = UNMutableNotificationContent()
+            content.categoryIdentifier = "RIDE_STARTED_CATEGORY"
+            content.sound = nil
+            content.body = message
+            content.userInfo = userInfo
             
-            if #available(iOS 10.0, *) {
-                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    DDLogInfo("Schedule trip notification background task expired!")
-                })
-                
-                let content = UNMutableNotificationContent()
-                content.categoryIdentifier = "RIDE_STARTED_CATEGORY"
-                content.sound = nil
-                content.body = message
-                content.userInfo = userInfo
-                
-                let request = UNNotificationRequest(identifier: self.notificationIdentifier,
-                                                    content: content,
-                                                    trigger: nil)
-                
-                UNUserNotificationCenter.current().add(request) { (error) in
-                    DispatchQueue.main.async {
-                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                            DDLogInfo("Ending trip notification background task!")
-                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-                        }
+            let request = UNNotificationRequest(identifier: self.notificationIdentifier,
+                                                content: content,
+                                                trigger: nil)
+            
+            UNUserNotificationCenter.current().add(request) { (error) in
+                DispatchQueue.main.async {
+                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending trip notification background task!")
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
                     }
                 }
-            } else {
-                self.currentStateNotification = UILocalNotification()
-                self.currentStateNotification?.alertBody = message
-                self.currentStateNotification?.soundName = nil
-                self.currentStateNotification?.alertAction = "view"
-                self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
-                self.currentStateNotification?.userInfo = userInfo
-                
-                // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
-                self.currentStateNotification?.fireDate = Date().secondsFrom(1)
-                UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
             }
+        } else {
+            // pre iOS 10 we cannot update notifications so we must cancel and reschedule them
+            self.cancelTripStateNotificationOnLegacyDevices()
+            
+            self.currentStateNotification = UILocalNotification()
+            self.currentStateNotification?.alertBody = message
+            self.currentStateNotification?.soundName = nil
+            self.currentStateNotification?.alertAction = "view"
+            self.currentStateNotification?.category = "RIDE_STARTED_CATEGORY"
+            self.currentStateNotification?.userInfo = userInfo
+            
+            // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
+            self.currentStateNotification?.fireDate = Date().secondsFrom(1)
+            UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
         }
     }
     
     func sendTripCompletionNotificationLocally(secondsFromNow: TimeInterval, silent: Bool = false) {
         DDLogInfo("Scheduling notification…")
         
-        self.cancelTripStateNotificationOnLegacyDevices()
+        guard self.activityType == .cycling else {
+            // don't show a notification for anything but bike trips
+            
+            // it's possible an in progress notification was delivered if we originally thought the trip was cycling but then changed our minds,
+            // so we need to call clearTripInProgressNotification
+            self.clearTripInProgressNotification()
+            return
+        }
         
-        if (self.activityType == .cycling) {
-            // don't show a notification for anything but bike trips.
-            
-            var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
-            
-            var rewardDicts: [[String: Any]] = []
-            for element in self.tripRewards {
-                if let reward = element as? TripReward {
-                    var rewardDict: [String: Any] = [:]
-                    rewardDict["reward_uuid"] = reward.rewardUUID
-                    rewardDict["emoji"] = reward.displaySafeEmoji
-                    rewardDict["description"] = reward.descriptionText
-                    rewardDicts.append(rewardDict)
-                }
+        var userInfo: [String: Any] = ["uuid" : self.uuid, "description" : self.displayStringWithTime(), "length" : self.length]
+        
+        var rewardDicts: [[String: Any]] = []
+        for element in self.tripRewards {
+            if let reward = element as? TripReward {
+                var rewardDict: [String: Any] = [:]
+                rewardDict["reward_uuid"] = reward.rewardUUID
+                rewardDict["emoji"] = reward.displaySafeEmoji
+                rewardDict["description"] = reward.descriptionText
+                rewardDicts.append(rewardDict)
             }
-            userInfo["rewards"] = rewardDicts
+        }
+        userInfo["rewards"] = rewardDicts
+        
+        if #available(iOS 10.0, *) {
+            let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                DDLogInfo("Schedule trip notification background task expired!")
+            })
             
-            if #available(iOS 10.0, *) {
-                let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    DDLogInfo("Schedule trip notification background task expired!")
-                })
-                
-                let content = UNMutableNotificationContent()
-                content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
-                content.sound = silent ? nil : UNNotificationSound(named: "bell.aiff")
-                content.body = self.notificationString()
-                content.userInfo = userInfo
-                
-                let trigger: UNTimeIntervalNotificationTrigger? = (secondsFromNow <= 0) ? nil : UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
-                let request = UNNotificationRequest(identifier: self.notificationIdentifier,
-                                                    content: content,
-                                                    trigger: trigger)
-                
-                UNUserNotificationCenter.current().add(request) { (error) in
-                    DispatchQueue.main.async {
-                        if (backgroundTaskID != UIBackgroundTaskInvalid) {
-                            DDLogInfo("Ending trip notification background task!")
-                            UIApplication.shared.endBackgroundTask(backgroundTaskID)
-                        }
+            let content = UNMutableNotificationContent()
+            content.categoryIdentifier = "RIDE_COMPLETION_CATEGORY"
+            content.sound = silent ? nil : UNNotificationSound(named: "bell.aiff")
+            content.body = self.notificationString()
+            content.userInfo = userInfo
+            
+            let trigger: UNTimeIntervalNotificationTrigger? = (secondsFromNow <= 0) ? nil : UNTimeIntervalNotificationTrigger(timeInterval: secondsFromNow, repeats: false)
+            let request = UNNotificationRequest(identifier: self.notificationIdentifier,
+                                                content: content,
+                                                trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { (error) in
+                DispatchQueue.main.async {
+                    if (backgroundTaskID != UIBackgroundTaskInvalid) {
+                        DDLogInfo("Ending trip notification background task!")
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
                     }
                 }
+            }
+        } else {
+            // pre iOS 10 we cannot update notifications so we must cancel and reschedule them
+            self.cancelTripStateNotificationOnLegacyDevices()
+            
+            self.currentStateNotification = UILocalNotification()
+            self.currentStateNotification?.alertBody = self.notificationString()
+            self.currentStateNotification?.soundName = silent ? nil : "bell.aiff"
+            self.currentStateNotification?.alertAction = "rate"
+            self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
+            self.currentStateNotification?.userInfo = userInfo
+            
+            if secondsFromNow > 0 {
+                self.currentStateNotification?.fireDate = Date().secondsFrom(Int(secondsFromNow))
+                UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
             } else {
-                self.currentStateNotification = UILocalNotification()
-                self.currentStateNotification?.alertBody = self.notificationString()
-                self.currentStateNotification?.soundName = silent ? nil : "bell.aiff"
-                self.currentStateNotification?.alertAction = "rate"
-                self.currentStateNotification?.category = "RIDE_COMPLETION_CATEGORY"
-                self.currentStateNotification?.userInfo = userInfo
-                
-                if secondsFromNow > 0 {
-                    self.currentStateNotification?.fireDate = Date().secondsFrom(Int(secondsFromNow))
-                    UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
-                } else {
-                    // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
-                    self.currentStateNotification?.fireDate = Date().secondsFrom(1)
-                    UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
-                }
+                // 1 second delay to avoid it being cleared at the end of the run loop by cancelTripStateNotification
+                self.currentStateNotification?.fireDate = Date().secondsFrom(1)
+                UIApplication.shared.scheduleLocalNotification(self.currentStateNotification!)
             }
         }
     }
