@@ -66,6 +66,14 @@ class TrophyViewController: UIViewController {
         }
     }
     
+    private func lastEarnedSubstring(fromDate date: Date)->String{
+        if date.isToday() || date.isYesterday() {
+            return date.colloquialDate()
+        } else {
+            return String(format:"on %@", date.colloquialDate())
+        }
+    }
+    
     private func refreshUI() {
         guard let trophyProgress = trophyProgress else {
             return
@@ -93,12 +101,12 @@ class TrophyViewController: UIViewController {
                 
                 var descString = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(trophyProgress.progress * 100), countOrdinal)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:" You last earned this trophy on %@.", lastEarnedDate.colloquialDate())
+                    descString += String(format:" You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 }
                 self.detailLabel.text = descString
             } else if trophyProgress.count == 1 {
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    self.detailLabel.text = String(format:"You last earned this trophy on %@.", lastEarnedDate.colloquialDate())
+                    self.detailLabel.text = String(format:"You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 } else {
                     self.detailLabel.text = "You have earned this trophy."
                 }
@@ -112,7 +120,7 @@ class TrophyViewController: UIViewController {
                 
                 var descString = String(format: "You have earned this trophy %@ times", countSpelled)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:", most recently on %@.", lastEarnedDate.colloquialDate())
+                    descString += String(format:", most recently %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 } else {
                     descString += "."
                 }
