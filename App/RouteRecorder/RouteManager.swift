@@ -582,6 +582,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         self.stopGPSRouteAndEnterBackgroundState()
         RouteRecorderStore.store().lastArrivalLocation = nil
         RouteRecorderDatabaseManager.shared.saveContext()
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidPauseOrResume"), object: nil)
     }
     
     private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
@@ -598,6 +600,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         
         RouteRecorderStore.store().lastArrivalLocation = nil
         RouteRecorderDatabaseManager.shared.saveContext()
+        
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidPauseOrResume"), object: nil)
     }
     
     private func checkPausedAndResumeIfNeeded()->Bool {
@@ -638,6 +642,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogStateChange("Resume Tracking")
         self.startTrackingMachine()
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidPauseOrResume"), object: nil)
     }
     
     //

@@ -44,6 +44,13 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             })
         }
         
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RouteManagerDidPauseOrResume"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.updatePauseResumeText()
+        }
+        
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientAccountStatusDidGetArea"), object: nil, queue: nil) {[weak self] (notif) -> Void in
             guard let strongSelf = self else {
                 return

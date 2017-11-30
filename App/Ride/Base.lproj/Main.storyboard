@@ -630,42 +630,6 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wvU-m5-X4Y" customClass="PopupView" customModule="Ride_Report" customModuleProvider="target">
-                                <rect key="frame" x="6" y="71" width="121.66666666666669" height="45"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="45" id="94Y-bV-ClB"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="bbU-8m-MuI"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                        <color key="value" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="0.85999999999999999" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                        <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.71999999999999997" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowBaseWidth">
-                                        <real key="value" value="16"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowHeight">
-                                        <real key="value" value="10"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="strokeWidth">
-                                        <real key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="arrowInset">
-                                        <real key="value" value="16"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <exclude reference="94Y-bV-ClB"/>
-                                    </mask>
-                                </variation>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.97647058819999999" green="0.97647058819999999" blue="0.97647058819999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
@@ -673,12 +637,10 @@
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="top" secondItem="geV-4l-h3o" secondAttribute="top" id="2yP-Ih-wqK"/>
                             <constraint firstAttribute="bottom" secondItem="W5I-Vg-qji" secondAttribute="bottom" id="5sS-Wp-wWt"/>
                             <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
-                            <constraint firstItem="wvU-m5-X4Y" firstAttribute="top" secondItem="geV-4l-h3o" secondAttribute="top" constant="7" id="Qjf-Cr-Vc6"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="height" secondItem="BOa-Zo-opp" secondAttribute="height" id="boS-NI-JG8"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerX" secondItem="geV-4l-h3o" secondAttribute="centerX" id="clf-Iy-X6w"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="BOa-Zo-opp" secondAttribute="top" constant="20" id="iLV-LH-LEH"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="centerX" secondItem="geV-4l-h3o" secondAttribute="centerX" id="mAD-t8-7Hh"/>
-                            <constraint firstItem="wvU-m5-X4Y" firstAttribute="leading" secondItem="BOa-Zo-opp" secondAttribute="leadingMargin" constant="-14" id="vte-wx-ygx"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="geV-4l-h3o"/>
                         <variation key="heightClass=regular">
@@ -695,7 +657,6 @@
                     <connections>
                         <outlet property="emptyTableChick" destination="glo-RJ-K1F" id="ZVb-b2-y86"/>
                         <outlet property="emptyTableView" destination="hQC-Qb-oe8" id="Zdc-71-QHN"/>
-                        <outlet property="popupView" destination="wvU-m5-X4Y" id="PoQ-G9-vZi"/>
                         <outlet property="tableView" destination="W5I-Vg-qji" id="ICZ-R4-rgn"/>
                         <segue destination="A5D-RC-UCB" kind="show" identifier="showTrip" id="WNJ-Ui-G2R"/>
                         <segue destination="JUH-up-o6b" kind="show" identifier="showOtherTripsView" id="tyC-8a-0AR"/>
@@ -1211,10 +1172,10 @@ All</string>
             </objects>
             <point key="canvasLocation" x="-26" y="558"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Ride Report Tab Bar Controller-->
         <scene sceneID="rcJ-FQ-8bB">
             <objects>
-                <tabBarController storyboardIdentifier="mainViewController" id="8yK-5J-7uH" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="mainViewController" id="8yK-5J-7uH" customClass="RideReportTabBarController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ryK-oF-BbA">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>

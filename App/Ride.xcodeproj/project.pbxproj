@@ -66,6 +66,7 @@
 		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
+		3D4CA9F01FD0C36D00BCFD33 /* RideReportTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */; };
 		3D634F741ECCEEB2008B1894 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
 		3D634F751ECCEEB2008B1894 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA687B21E82086400483741 /* BalloonMarker.swift */; };
 		3D634F761ECCEEB2008B1894 /* RideNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D19303A1EAE912100915813 /* RideNotificationView.swift */; };
@@ -534,6 +535,7 @@
 		3D3CB8DB1EDF7CD6003964CE /* 1.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 1.archive; sourceTree = "<group>"; };
 		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
+		3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideReportTabBarController.swift; sourceTree = "<group>"; };
 		3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
 		3D65E8DA1F634197002D143A /* TripsListRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TripsListRow.swift; path = Ride/Model/TripsListRow.swift; sourceTree = "<group>"; };
@@ -1212,6 +1214,7 @@
 			children = (
 				842599D61B90F3540038C3CA /* Setup */,
 				3DBABFD51CCEDB9F00665646 /* Connected Apps */,
+				3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */,
 				842141A61C407CEE009DA851 /* TripViewController.swift */,
 				3D74E21B1DA2C0130079A7E6 /* TripSummaryViewController.swift */,
 				847ED0901A40DA0D00CAA396 /* DirectionsViewController.swift */,
@@ -2488,6 +2491,7 @@
 				3DA687B31E82086400483741 /* BalloonMarker.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				3D65E8E11F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */,
+				3D4CA9F01FD0C36D00BCFD33 /* RideReportTabBarController.swift in Sources */,
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
 				3DF07A711DA5B9D20015005C /* NSLocale+Additions.swift in Sources */,

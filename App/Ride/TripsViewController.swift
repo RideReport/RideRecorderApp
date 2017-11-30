@@ -31,8 +31,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var emptyTableChick: UIView!
     
-    @IBOutlet weak var popupView: PopupView!
-    
     private var dateOfLastTableRefresh: Date = Date()
 
     private var reachability : Reachability!
@@ -47,8 +45,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         super.viewDidLoad()
         
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Rides", style: .plain, target: nil, action: nil)
-        
-        self.popupView.isHidden = true
         
         self.tableView.layoutMargins = UIEdgeInsets.zero
         self.tableView.rowHeight = UITableViewAutomaticDimension
@@ -126,7 +122,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.reloadSectionIdentifiersIfNeeded()
             strongSelf.loadFetchedResultsController()
             
-            strongSelf.refreshHelperPopupUI()
             strongSelf.tableView.reloadData()
             
             let firstTripIndex = IndexPath(row: 0, section: 1)
@@ -221,21 +216,11 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
 
         self.refreshEmptyTableView()
-        
-        self.refreshHelperPopupUI()
-        
         self.refreshHeaderCells()
         
         
         self.reachability = Reachability.forLocalWiFi()
         self.reachability.startNotifier()
-        
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.reachabilityChanged, object: nil, queue: nil) {[weak self] (notif) -> Void in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.refreshHelperPopupUI()
-        }
         
         if (self.tableView.indexPathForSelectedRow != nil) {
             self.tableView.deselectRow(at: self.tableView.indexPathForSelectedRow!, animated: animated)
@@ -307,54 +292,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         super.didReceiveMemoryWarning()
         
         self.reachability = nil
-    }
-    
-    @objc func launchPermissions() {
-        if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
-            UIApplication.shared.openURL(appSettings)
-        }
-    }
-    
-    @objc func resumeRideReport() {
-        RouteRecorder.shared.routeManager.resumeTracking()
-        refreshHelperPopupUI()
-    }
-    
-    
-    func refreshHelperPopupUI() {
-        popupView.removeTarget(self, action: nil, for: UIControlEvents.allEvents)
-        
-        if (RouteRecorder.shared.routeManager.isPaused()) {
-            if (self.popupView.isHidden) {
-                self.popupView.popIn()
-            }
-            if (RouteManager.authorizationStatus() == .authorizedWhenInUse) {
-                self.popupView.text = "Ride Report needs permission to run in the background"
-                popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
-            } else if (RouteManager.authorizationStatus() != .authorizedAlways) {
-                self.popupView.text = "Ride Report needs permission to run"
-                popupView.addTarget(self, action: #selector(TripsViewController.launchPermissions), for: UIControlEvents.touchUpInside)
-            } else if (RouteRecorder.shared.routeManager.isPausedDueToBatteryLife()) {
-                self.popupView.text = "Ride Report is paused until you charge your phone"
-            } else {
-                popupView.addTarget(self, action: #selector(TripsViewController.resumeRideReport), for: UIControlEvents.touchUpInside)
-                
-                if let pausedUntilDate = RouteRecorder.shared.routeManager.pausedUntilDate() {
-                    self.popupView.text = "Ride Report is paused until " + pausedUntilDate.colloquialDate()
-                } else {
-                    self.popupView.text = "Ride Report is paused"
-                }
-            }
-        } else {
-            if (!UIDevice.current.isWiFiEnabled) {
-                if (self.popupView.isHidden) {
-                    self.popupView.popIn()
-                }
-                self.popupView.text = "Ride Report works best when Wi-Fi is on"
-            } else if (!self.popupView.isHidden) {
-                self.popupView.fadeOut()
-            }
-        }
     }
     
     private func reloadSectionIdentifiersIfNeeded() {
