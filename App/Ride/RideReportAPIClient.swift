@@ -125,7 +125,12 @@ class RideReportAPIClient {
             switch response.result {
             case .success(let json):
                 for tripJson in json.array! {
-                    if let uuid = tripJson["uuid"].string {
+                    if let deleted = tripJson["deleted"].bool, deleted {
+                        if let uuid = tripJson["uuid"].string, let trip = Trip.tripWithUUID(uuid) {
+                            trip.managedObjectContext?.delete(trip)
+                            CoreDataManager.shared.saveContext()
+                        }
+                    } else if let uuid = tripJson["uuid"].string {
                         if let trip = Trip.createOrUpdateFromJSON(tripJson) {
                             trip.isSynced = true
                         }
