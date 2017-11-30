@@ -94,7 +94,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let context = CoreDataManager.shared.currentManagedObjectContext()
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TripsListRow")
-        fetchedRequest.predicate = NSPredicate(format: "(isOtherTripsRow == false AND bikeTrip != nil) OR otherTrips.@count >1")
+        fetchedRequest.predicate = NSPredicate(format: "(isOtherTripsRow == false AND bikeTrip != nil) OR otherTrips.@count >= 1")
         fetchedRequest.fetchBatchSize = 20
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "section.date", ascending: false), NSSortDescriptor(key: "isOtherTripsRow", ascending: true), NSSortDescriptor(key: "sortName", ascending: false)]
 
