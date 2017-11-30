@@ -443,7 +443,9 @@ public class APIClient {
         
         KeychainManager.shared.accessToken = nil
         KeychainManager.shared.accessTokenExpiresIn = nil
-        didChangeAuthenticationStatus()
+        if let delegate = self.delegate {
+            delegate.didChangeAuthenticationStatus()
+        }
 
         self.authenticateIfNeeded()
     }
