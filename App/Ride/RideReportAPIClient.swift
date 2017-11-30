@@ -14,7 +14,7 @@ import Crashlytics
 import Alamofire
 import WebLinking
 
-class RideReportAPIClient {
+class RideReportAPIClient: APIClientDelegate {
     public static private(set) var shared : RideReportAPIClient!
     fileprivate var tripRequests : [Trip: AuthenticatedAPIRequest] = [:]
     
@@ -22,6 +22,7 @@ class RideReportAPIClient {
     public class func startup(_ useDefaultConfiguration: Bool = false) {
         if (RideReportAPIClient.shared == nil) {
             RideReportAPIClient.shared = RideReportAPIClient()
+            APIClient.shared.delegate = RideReportAPIClient.shared
             RideReportAPIClient.shared.syncStatus()
         }
     }
@@ -288,6 +289,14 @@ class RideReportAPIClient {
     //
     // MARK: - Account API Methods
     //
+    
+    func didChangeAuthenticationStatus() {
+        if (APIClient.shared.authenticated) {
+            self.syncStatus()
+        } else {
+            self.accountVerificationStatus = .unknown
+        }
+    }
     
     func appDidReceiveNotificationDeviceToken(_ token: Data?) {
         let oldToken = self.notificationDeviceToken

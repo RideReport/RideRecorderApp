@@ -201,8 +201,14 @@ public class AuthenticatedAPIRequest {
     }
 }
 
+public protocol APIClientDelegate: class {
+    func didChangeAuthenticationStatus()
+}
+
 public class APIClient {
     public static private(set) var shared : APIClient!
+    
+    weak open var delegate: APIClientDelegate?
     
     fileprivate var sessionManager : SessionManager
     fileprivate var routeRequests : [Route: AuthenticatedAPIRequest] = [:]
@@ -437,7 +443,8 @@ public class APIClient {
         
         KeychainManager.shared.accessToken = nil
         KeychainManager.shared.accessTokenExpiresIn = nil
-        
+        didChangeAuthenticationStatus()
+
         self.authenticateIfNeeded()
     }
     
@@ -460,6 +467,9 @@ public class APIClient {
                     if (KeychainManager.shared.accessToken == nil) {
                         KeychainManager.shared.accessToken = accessToken
                         KeychainManager.shared.accessTokenExpiresIn = expiresIn
+                        if let delegate = self.delegate {
+                            delegate.didChangeAuthenticationStatus()
+                        }
                     } else {
                         DDLogWarn("Got a new access token when one was already set!")
                     }
