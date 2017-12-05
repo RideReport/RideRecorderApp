@@ -617,9 +617,11 @@ public class  Trip: NSManagedObject {
         let userInfo: [String: Any] = ["uuid" : self.uuid]
         
         if #available(iOS 10.0, *) {
-            let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+            var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+            backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("Schedule trip notification background task expired!")
                 UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                backgroundTaskID = UIBackgroundTaskInvalid
             })
             
             let content = UNMutableNotificationContent()
@@ -684,9 +686,11 @@ public class  Trip: NSManagedObject {
         userInfo["rewards"] = rewardDicts
         
         if #available(iOS 10.0, *) {
-            let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+            var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+            backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("Schedule trip notification background task expired!")
                 UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                backgroundTaskID = UIBackgroundTaskInvalid
             })
             
             let content = UNMutableNotificationContent()

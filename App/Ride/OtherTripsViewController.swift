@@ -285,8 +285,11 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
 //                    //trip.calculateAggregatePredictedActivityType()
 //                }))
                 alertController.addAction(UIAlertAction(title: "Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
-                    let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+                    backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                         UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        backgroundTaskID = UIBackgroundTaskInvalid
+
                     })
                     
                     

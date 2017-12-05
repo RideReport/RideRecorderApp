@@ -273,10 +273,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         DDLogInfo("Beginning remote notification background task!")
-        let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+        var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+        backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
             DDLogInfo("Received remote notification background task expired!")
             completionHandler(.newData)
             UIApplication.shared.endBackgroundTask(backgroundTaskID)
+            backgroundTaskID = UIBackgroundTaskInvalid
+
         })
         
         let completionBlock = {

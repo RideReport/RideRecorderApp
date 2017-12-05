@@ -129,10 +129,12 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
                     let notif = self.postTripRatedThanksNotification(ratingChoice: rating.choice)
                     
                     DDLogInfo("Beginning post trip rating background task!")
-                    let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                    var backgroundTaskID: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid
+                    backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                         DDLogInfo("Post trip notification background task expired!")
                         UIApplication.shared.cancelLocalNotification(notif)
                         UIApplication.shared.endBackgroundTask(backgroundTaskID)
+                        backgroundTaskID = UIBackgroundTaskInvalid
                     })
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
                         UIApplication.shared.cancelLocalNotification(notif)
