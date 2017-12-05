@@ -132,6 +132,7 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
                     let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                         DDLogInfo("Post trip notification background task expired!")
                         UIApplication.shared.cancelLocalNotification(notif)
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
                     })
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
                         UIApplication.shared.cancelLocalNotification(notif)

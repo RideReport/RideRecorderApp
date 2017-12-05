@@ -65,8 +65,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo(String(format: "Launched in background, beginning Route Manager Location Update Background task! Time remaining: %@", UIApplication.shared.backgroundTimeRemaining.debugDescription()))
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")
+
+                    UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                 })
             }
         }
@@ -168,8 +170,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         if (self.locationUpdateBackgroundTaskID == UIBackgroundTaskInvalid) {
             DDLogInfo(String(format: "Beginning Route Manager Location Update Background task! Time remaining: %@", UIApplication.shared.backgroundTimeRemaining.debugDescription()))
             self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                 DDLogInfo("Route Manager Location Update Background task expired!")
+
+                UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+                self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
             })
         }
     }
@@ -213,8 +217,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             if (self.stopRouteAndDeliverNotificationBackgroundTaskID == UIBackgroundTaskInvalid) {
                 DDLogInfo("Beginning Route Manager Stop Route Background task!")
                 self.stopRouteAndDeliverNotificationBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    self.stopRouteAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Background task expired!")
+
+                    UIApplication.shared.endBackgroundTask(self.stopRouteAndDeliverNotificationBackgroundTaskID)
+                    self.stopRouteAndDeliverNotificationBackgroundTaskID = UIBackgroundTaskInvalid
                 })
             }
             
@@ -722,8 +728,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             
             if (self.isLocationManagerUsingGPS) {
                 self.locationUpdateBackgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
-                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                     DDLogInfo("Route Manager Location Update Background task expired!")
+                    
+                    UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+                    self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                 })
             } else {
                 DDLogInfo("Ended Route Manager Location Update Background task!")

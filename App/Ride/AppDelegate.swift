@@ -276,6 +276,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
             DDLogInfo("Received remote notification background task expired!")
             completionHandler(.newData)
+            UIApplication.shared.endBackgroundTask(backgroundTaskID)
         })
         
         let completionBlock = {

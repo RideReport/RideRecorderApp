@@ -876,6 +876,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 
                 alertController.addAction(UIAlertAction(title: "❤️ Sync to Health App", style: UIAlertActionStyle.default, handler: { (_) in
                     let backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
+                        UIApplication.shared.endBackgroundTask(backgroundTaskID)
                     })
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { () -> Void in

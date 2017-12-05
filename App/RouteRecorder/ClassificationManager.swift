@@ -75,6 +75,7 @@ public class SensorClassificationManager : ClassificationManager {
             DDLogInfo("Beginning GatherSensorData background task!")
             self.backgroundTaskID = UIApplication.shared.beginBackgroundTask(expirationHandler: { () -> Void in
                 DDLogInfo("GatherSensorData Background task expired!")
+                UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         }
@@ -107,6 +108,7 @@ public class SensorClassificationManager : ClassificationManager {
                 DDLogInfo("Query Activity Type Background task expired!")
                 predictionAggregator.addUnknownTypePrediction()
                 handler(predictionAggregator)
+                UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
         } else {
