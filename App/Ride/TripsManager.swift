@@ -32,15 +32,11 @@ class TripsManager : NSObject, RouteRecorderDelegate {
         let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
         trip.isInProgress = true
         CoreDataManager.shared.saveContext()
-        
-        trip.updateTripInProgressNotification()
     }
     
     func didUpdateInProgressRoute(route: Route) {
         let trip = Trip.findAndUpdateOrCreateTrip(withRoute: route)
         CoreDataManager.shared.saveContext()
-        
-        trip.updateTripInProgressNotification()
     }
     
     func didCancelRoute(withUUID uuid: String) {
