@@ -665,18 +665,8 @@ class StatsViewController: UIViewController {
     }
     
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-            if let navVC = self.navigationController, let rewardsVC = storyBoard.instantiateViewController(withIdentifier: "rewardsViewController") as? RewardsViewController {
-                let transition = CATransition()
-                transition.duration = 0.6
-                transition.type = kCATransitionFade
-                navVC.view.layer.add(transition, forKey: nil)
-                var newVCs = navVC.viewControllers
-                _ = newVCs.popLast()
-                newVCs.append(rewardsVC)
-                navVC.setViewControllers(newVCs, animated: false)
-            }
+        if motion == .motionShake {            
+            self.performSegue(withIdentifier: "showTrophySnowGlobe", sender: self)
         }
     }
 }

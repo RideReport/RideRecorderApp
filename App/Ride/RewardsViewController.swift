@@ -15,8 +15,6 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     @IBOutlet weak var spriteKitView: SKView!
     @IBOutlet weak var rewardPopup: PopupView!
     
-    
-    
     private var scene: SKScene?
     private var imageDictionary : [String: UIImage] = [:]
     private var motionManager = CMMotionManager()
@@ -69,6 +67,10 @@ class RewardsViewController: UIViewController, SKPhysicsContactDelegate, SKScene
     
     override func viewWillDisappear(_ animated: Bool) {
         self.motionManager.stopDeviceMotionUpdates()
+    }
+    
+    @IBAction func cancel(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 
     override func viewWillLayoutSubviews()

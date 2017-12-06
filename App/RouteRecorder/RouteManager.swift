@@ -780,10 +780,14 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             let loc = Location(visit: visit, isArriving: false)
             
             if let route = self.currentRoute {
+                DDLogInfo("Including departure location in current route")
+                
                 loc.route = route
                 RouteRecorderDatabaseManager.shared.saveContext()
             } else if let priorRoute = Route.mostRecentRoute(), let priorLoc = priorRoute.mostRecentLocation(), loc.date < priorLoc.date {
                 // if the departure occured prior to the end of the last route, prepend it in that route
+                DDLogInfo("Including departure location in last route")
+
                 loc.route = priorRoute
                 if priorRoute.isClosed {
                     priorRoute.reopen()
