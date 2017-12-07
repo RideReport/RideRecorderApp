@@ -67,52 +67,48 @@ class RideReportAPIClient: APIClientDelegate {
         }
     }
     
-    @discardableResult func syncTrips()->AuthenticatedAPIRequest {
-        guard let url = Profile.profile().nextSyncURLString else {
-            return getTrips()
+    @discardableResult func syncTrips(atNextPageURL nextPageURL: String? = nil)->AuthenticatedAPIRequest {
+        var syncTripURL: String!
+        
+        if let nextPageURL = nextPageURL {
+            syncTripURL = nextPageURL
+        } else if let syncURL = Profile.profile().nextSyncURLString {
+            syncTripURL = syncURL
+        } else {
+            // the user has never synchronized, do initial get
+            
+            return getMoreTrips()
         }
         
-        return getTrips(atURL: url).apiResponse({ (response) in
-            if let nextLink = response.response?.findLink(relation: "next") {
-                Profile.profile().nextSyncURLString = nextLink.uri
-                self.syncTrips()
-            } else if let syncLink = response.response?.findLink(relation: "sync") {
+        return getTrips(atURL: syncTripURL).apiResponse({ (response) in
+            if let syncLink = response.response?.findLink(relation: "sync") {
                 Profile.profile().nextSyncURLString = syncLink.uri
-            } else if case .success = response.result {
-                Profile.profile().nextSyncURLString = nil
+            }
+            
+            if let nextLink = response.response?.findLink(relation: "next") {
+                self.syncTrips(atNextPageURL: nextLink.uri)
             }
             
             CoreDataManager.shared.saveContext()
         })
     }
     
-    private var isRequestingMoreTrips = false
+    private var isRequestingTrips = false
     @discardableResult func getMoreTrips()->AuthenticatedAPIRequest {
-        guard !isRequestingMoreTrips else {
+        guard !isRequestingTrips else {
             return AuthenticatedAPIRequest(clientAbortedWithResponse: AuthenticatedAPIRequest.clientAbortedResponse())
         }
         
-        guard let url = Profile.profile().nextPageURLString else {
-            return getTrips()
+        var getTripsURL: String!
+        if let nextPageURL = Profile.profile().nextPageURLString {
+            getTripsURL = nextPageURL
+        } else {
+            getTripsURL = (AuthenticatedAPIRequest.serverAddress + "trips")
         }
-        isRequestingMoreTrips = true
+        isRequestingTrips = true
         
-        return getTrips(atURL: url).apiResponse({ (response) in
-            self.isRequestingMoreTrips = false
-            if let nextLink = response.response?.findLink(relation: "next") {
-                Profile.profile().nextPageURLString = nextLink.uri
-            } else if case .success = response.result {
-                Profile.profile().nextPageURLString = nil
-            }
-            
-            CoreDataManager.shared.saveContext()
-        })
-    }
-    
-    @discardableResult private func getTrips()->AuthenticatedAPIRequest {
-        let url = (AuthenticatedAPIRequest.serverAddress + "trips")
-        
-        return getTrips(atURL: url).apiResponse({ (response) in
+        return getTrips(atURL: getTripsURL).apiResponse({ (response) in
+            self.isRequestingTrips = false
             if let nextLink = response.response?.findLink(relation: "next") {
                 Profile.profile().nextPageURLString = nextLink.uri
             } else if case .success = response.result {
