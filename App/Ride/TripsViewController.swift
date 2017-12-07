@@ -167,11 +167,19 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.refreshHeaderCells()
         }
         
-        RideReportAPIClient.shared.syncTrips()
+        RideReportAPIClient.shared.syncTrips().apiResponse { (_) in
+            self.refreshEmptyTableView()
+        }
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.4 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
             // avoid a bug that could have this called twice on app launch
-            NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { _ in
-                RideReportAPIClient.shared.syncTrips()
+            NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { [weak self] _ in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                RideReportAPIClient.shared.syncTrips().apiResponse({ (_) in
+                    strongSelf.refreshEmptyTableView()
+                })
             }
         })
         
@@ -312,6 +320,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         if let sections = fetchedResultsController.sections, sections.count > 0 && sections[0].numberOfObjects > 0 {
+            self.emptyTableView.isHidden = true
+        } else if !RideReportAPIClient.shared.hasDoneInitialGetTrips {
+            // don't show the empty table view until we've run get trips
             self.emptyTableView.isHidden = true
         } else {
             self.emptyTableView.isHidden = false

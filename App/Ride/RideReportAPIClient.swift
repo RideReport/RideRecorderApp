@@ -69,6 +69,12 @@ class RideReportAPIClient: APIClientDelegate {
     // MARK: - Trip Synchronization
     //
     
+    var hasDoneInitialGetTrips: Bool {
+        get {
+            return Profile.profile().nextSyncURLString != nil
+        }
+    }
+    
     var hasMoreTripsRemaining: Bool {
         get {
             return Profile.profile().nextPageURLString != nil
