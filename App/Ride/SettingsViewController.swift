@@ -65,6 +65,10 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     }
     
     func updateAccountStatusText() {
+        if let section = tableView.indexPath(for: self.accountTableViewCell)?.section {
+            self.tableView.reloadSections([section], with: .fade)
+        }
+        
         switch RideReportAPIClient.shared.accountVerificationStatus {
         case .unknown:
             self.accountTableViewCell.isUserInteractionEnabled = false
@@ -90,8 +94,19 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
         }
     }
     
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if let emailAddress = RideReportAPIClient.shared.accountEmailAddress, section == 2 {
+            return emailAddress
+        }
+        
+        return ""
+    }
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
+        if let _ = RideReportAPIClient.shared.accountEmailAddress, section == 2 {
+            return 30.0
+        }
         return CGFloat.leastNormalMagnitude
     }
     

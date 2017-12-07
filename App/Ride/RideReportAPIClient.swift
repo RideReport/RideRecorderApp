@@ -44,9 +44,15 @@ class RideReportAPIClient: APIClientDelegate {
     // Status
     var accountVerificationStatus = AccountVerificationStatus.unknown {
         didSet {
+            if accountVerificationStatus != .verified {
+                self.accountEmailAddress = nil
+            }
+            
             NotificationCenter.default.post(name: Notification.Name(rawValue: "RideReportAPIClientAccountStatusDidChange"), object: nil)
         }
     }
+    
+    var accountEmailAddress: String? = nil
     
     var hasRegisteredForRemoteNotifications: Bool = false
     var notificationDeviceToken: Data?
@@ -452,6 +458,7 @@ class RideReportAPIClient: APIClientDelegate {
                 
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
+                        self.accountEmailAddress = json["accounts"]["emails"].array?.first?["email"].string
                         self.accountVerificationStatus = .verified
                     } else {
                         self.accountVerificationStatus = .unverified
