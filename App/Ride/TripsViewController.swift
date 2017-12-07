@@ -44,6 +44,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.removeObserver(self)
+        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "Rides", style: .plain, target: nil, action: nil)
         
         self.tableView.layoutMargins = UIEdgeInsets.zero

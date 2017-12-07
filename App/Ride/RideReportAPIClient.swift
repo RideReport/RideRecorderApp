@@ -23,7 +23,15 @@ class RideReportAPIClient: APIClientDelegate {
         if (RideReportAPIClient.shared == nil) {
             RideReportAPIClient.shared = RideReportAPIClient()
             APIClient.shared.delegate = RideReportAPIClient.shared
+            
+            
             RideReportAPIClient.shared.syncStatus()
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.8 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
+                // avoid a bug that could have this called twice on app launch
+                NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationDidBecomeActive, object: nil, queue: nil) { _ in
+                    RideReportAPIClient.shared.syncStatus()
+                }
+            })
         }
     }
     

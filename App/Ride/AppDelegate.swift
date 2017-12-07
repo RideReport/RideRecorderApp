@@ -69,11 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Start Managers. The order matters!
         Mixpanel.initialize(token: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
-        
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: { () -> Void in
-            // avoid a bug that could have this called twice on app launch
-            NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.appDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-        })
 
 #if DEBUG
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
@@ -154,20 +149,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.window?.rootViewController = setupVC
         self.window?.makeKeyAndVisible()
-    }
-    
-    @objc func appDidBecomeActive() {
-        if (CoreDataManager.shared.isStartingUp) {
-            NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
-                guard let strongSelf = self else {
-                    return
-                }
-                NotificationCenter.default.removeObserver(strongSelf, name: NSNotification.Name(rawValue: "CoreDataManagerDidStartup"), object: nil)
-                RideReportAPIClient.shared.syncStatus()
-            }
-        } else {
-            RideReportAPIClient.shared.syncStatus()
-        }
     }
     
     func showMapAttribution() {
