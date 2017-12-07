@@ -15,7 +15,7 @@ class HelpViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
-        return CGFloat.leastNormalMagnitude
+        return 30.0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -19,6 +19,8 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     @IBOutlet weak var debugCrazyPersonTableViewCell: UITableViewCell!
     @IBOutlet weak var debugContinousPredictionTableViewCell: UITableViewCell!
     
+    var shouldShowDebugRows = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.scrollsToTop = false // https://github.com/KnockSoftware/Ride/issues/204
@@ -28,7 +30,9 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
         super.viewWillAppear(animated)
         self.updateAccountStatusText()
         self.updatePauseResumeText()
-        #if DEBUG
+        #if MDEBUG
+            shouldShowDebugRows = true
+            
             self.updateDebugCrazyPersonModeCellText()
             self.updateContinousPredictionsModeCellText()
         #endif
@@ -73,30 +77,50 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
         case .unknown:
             self.accountTableViewCell.isUserInteractionEnabled = false
             self.accountTableViewCell.textLabel?.textColor = ColorPallete.shared.unknownGrey
-            self.accountTableViewCell.textLabel?.text = "Updating…"
+            self.accountTableViewCell.textLabel?.text = " Updating…"
         case .unverified:
             self.accountTableViewCell.isUserInteractionEnabled = true
             self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.accountTableViewCell.textLabel?.text = "Create Account"
+            self.accountTableViewCell.textLabel?.text = "🚨 Create Account"
         case .verified:
             self.accountTableViewCell.isUserInteractionEnabled = true
             self.accountTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
-            self.accountTableViewCell.textLabel?.text = "Log Out"
+            self.accountTableViewCell.textLabel?.text = "🚪 Log Out"
         }
         
     }
     
     func updatePauseResumeText() {
         if (RouteRecorder.shared.routeManager.isPaused()) {
-            self.pauseResueTableViewCell.textLabel?.text = "Resume Ride Report"
+            self.pauseResueTableViewCell.textLabel?.text = "▶️ Resume Ride Report"
         } else {
-            self.pauseResueTableViewCell.textLabel?.text = "Pause Ride Report"
+            self.pauseResueTableViewCell.textLabel?.text = "⏸ Pause Ride Report"
         }
     }
     
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 && indexPath.row > 1 && !shouldShowDebugRows {
+            return 0
+        }
+        
+        return super.tableView(tableView, heightForRowAt: indexPath)
+    }
+    
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if let emailAddress = RideReportAPIClient.shared.accountEmailAddress, section == 2 {
-            return emailAddress
+        if section == 1 {
+            if let emailAddress = RideReportAPIClient.shared.accountEmailAddress {
+                return emailAddress
+            } else {
+                return "Don't lose your rides!"
+            }
+        }
+        
+        return ""
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        if RideReportAPIClient.shared.accountEmailAddress == nil && section == 1 {
+            return "Create an account so you can recover your rides if your phone is lost."
         }
         
         return ""
@@ -104,13 +128,20 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // returning 0 uses the default, not what you think it does
-        if let _ = RideReportAPIClient.shared.accountEmailAddress, section == 2 {
-            return 30.0
+        if section == 1 {
+            return 60.0
         }
+        return 30.0
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if RideReportAPIClient.shared.accountEmailAddress == nil && section == 1 {
+            return 50.0
+        }
+        
         return CGFloat.leastNormalMagnitude
     }
     
-    #if DEBUG
     func updateDebugCrazyPersonModeCellText() {
         if (UserDefaults.standard.bool(forKey: "DebugVerbosityMode")) {
             self.debugCrazyPersonTableViewCell.textLabel?.textColor = self.pauseResueTableViewCell.textLabel?.textColor
@@ -130,7 +161,6 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
             self.debugContinousPredictionTableViewCell.accessoryType = UITableViewCellAccessoryType.none
         }
     }
-    #endif
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) else {
@@ -140,21 +170,17 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
         if (cell == self.sendReportTableViewCell) {
             self.sendLogFile()
         } else if (cell == self.debugCrazyPersonTableViewCell) {
-            #if DEBUG
                 let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugVerbosityMode")
                 UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugVerbosityMode")
                 UserDefaults.standard.synchronize()
                 self.updateDebugCrazyPersonModeCellText()
                 self.tableView.deselectRow(at: indexPath, animated: true)
-            #endif
         } else if (cell == self.debugContinousPredictionTableViewCell) {
-            #if DEBUG
                 let debugVerbosityMode = UserDefaults.standard.bool(forKey: "DebugContinousMode")
                 UserDefaults.standard.set(!debugVerbosityMode, forKey: "DebugContinousMode")
                 UserDefaults.standard.synchronize()
                 self.updateContinousPredictionsModeCellText()
                 self.tableView.deselectRow(at: indexPath, animated: true)
-            #endif
         }  else if (cell == self.accountTableViewCell) {
             if (RideReportAPIClient.shared.accountVerificationStatus == .unverified) {
                 AppDelegate.appDelegate().transitionToCreatProfile()

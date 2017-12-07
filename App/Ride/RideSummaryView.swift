@@ -81,7 +81,7 @@ protocol RideSummaryViewDelegate: class {
                 self.chevronImageView = imageView
             }
             
-            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format: "H:|-[tripSummaryView]-[chevronImageView(%f)]-|", chevron.size.width), options: [.alignAllCenterY], metrics: nil, views: ["tripSummaryView": summaryView, "chevronImageView": chevronImageView!])
+            let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format: "H:|-[tripSummaryView]-[chevronImageView(%f)]-12-|", chevron.size.width), options: [.alignAllCenterY], metrics: nil, views: ["tripSummaryView": summaryView, "chevronImageView": chevronImageView!])
             currentConstraints.append(contentsOf: widthConstraints)
         } else {
             if chevronImageView != nil {
