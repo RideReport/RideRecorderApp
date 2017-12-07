@@ -412,7 +412,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                 if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
                     let priorRoute = strongSelf.currentRoute ?? Route.mostRecentRoute()
                     
-                    if let route = priorRoute, let loc = firstLocation, strongSelf.routeQualifiesForResumption(route: route, fromActivityType: prediction.activityType, fromLocation: loc) {
+                    if let route = priorRoute, let loc = firstLocation, strongSelf.routeQualifiesForResumption(route: route, fromActivityType: prediction.activityType, fromDate: loc.date) {
                         DDLogStateChange("Resuming route")
                         
                         route.reopen()
@@ -448,14 +448,20 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                             if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
                                 aggregatePredictedActivity.activityType ~= mostRecentRoute!.activityType {
                                 // if the mode ~= the last route, append there
-                                mostRecentRoute!.addPredictionAggregator(aggregator)
+                                if let date = aggregator.fetchLastReading()?.date, let mostRecentRoute = mostRecentRoute, strongSelf.routeQualifiesForResumption(route: mostRecentRoute, fromActivityType: aggregatePredictedActivity.activityType, fromDate: date) {
+                                    mostRecentRoute.addPredictionAggregator(aggregator)
+                                }
                             } else if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
                                 aggregatePredictedActivity.activityType ~= strongSelf.currentRoute!.activityType {
-                                // as soon as the mode switches to ~= the current route, start appending there instead
+                                // as soon as the mode switches to ~= the current route, start prepending there instead
                                 shouldAppendToCurrentRoute = true
-                                strongSelf.currentRoute!.addPredictionAggregator(aggregator)
+                                if let date = aggregator.fetchLastReading()?.date, let currentRoute = strongSelf.currentRoute,  strongSelf.routeQualifiesForResumption(route: currentRoute, fromActivityType: aggregatePredictedActivity.activityType, fromDate: date) {
+                                    currentRoute.addPredictionAggregator(aggregator)
+                                }
                             } else {
-                                mostRecentRoute!.addPredictionAggregator(aggregator)
+                                if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity, let date = aggregator.fetchLastReading()?.date, let mostRecentRoute = mostRecentRoute, strongSelf.routeQualifiesForResumption(route: mostRecentRoute, fromActivityType: aggregatePredictedActivity.activityType, fromDate: date) {
+                                    mostRecentRoute.addPredictionAggregator(aggregator)
+                                }
                             }
                         }
                     }
@@ -489,16 +495,14 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     // MARK: - Helper methods
     //
     
-    private func routeQualifiesForResumption(route: Route, fromActivityType activityType: ActivityType, fromLocation location: Location)->Bool {
+    private func routeQualifiesForResumption(route: Route, fromActivityType activityType: ActivityType, fromDate date: Date)->Bool {
         if (route.wasStoppedManually) {
             // dont resume manually stopped routes
             return false
         }
         
-        if (route.activityType != activityType) {
-            if (route.activityType.isMotorizedMode && activityType.isMotorizedMode) {
-                // if both routes are motorized, allow resumption since our mode detection within motorized mode is not great
-            } else if (activityType == .stationary || route.activityType == .unknown) {
+        if !(route.activityType ~= activityType) {
+            if (activityType == .stationary || route.activityType == .unknown) {
                 // unknown and stationary activities could be a part of any mode
             } else {
                 return false
@@ -517,7 +521,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
             timeoutInterval = 600
         }
         
-        return abs(route.endDate.timeIntervalSince(location.date)) < timeoutInterval
+        return abs(route.endDate.timeIntervalSince(date)) < timeoutInterval
     }
     
     private func beginDeferringUpdatesIfAppropriate() {
