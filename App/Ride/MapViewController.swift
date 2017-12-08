@@ -20,6 +20,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
     @IBInspectable var showStressMap : Bool = false
     
     private var tripsAreLoaded = false
+    private var isInitialAnimation = true
     
     private let tripFeatureSourceIdentifier = "trip"
     
@@ -45,6 +46,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         
         self.mapView.delegate = self
+        self.mapView.isHidden = true
         self.mapView.logoView.isHidden = true
         self.mapView.attributionButton.isHidden = true
         self.mapView.isRotateEnabled = false
@@ -135,7 +137,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                          
                             self.selectedTripLineSource.shape = shape
 
-                            self.mapView.showAnnotations(shape.shapes, edgePadding: self.insets, animated: true)
+                            if (self.isInitialAnimation) {
+                                self.mapView.fadeIn()
+                            }
+                            self.mapView.showAnnotations(shape.shapes, edgePadding: self.insets, animated: !self.isInitialAnimation)
+                            self.isInitialAnimation = false
                         }
                     } else {
                         DDLogWarn("Error parsing display data JSON!")
@@ -197,8 +203,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
             guard let strongSelf = self else {
                 return
             }
-            
-            strongSelf.mapView.setVisibleCoordinates(coordinates, count: count, edgePadding: strongSelf.insets, animated: true)
+            if (strongSelf.isInitialAnimation) {
+                strongSelf.mapView.fadeIn()
+            }
+            strongSelf.mapView.setVisibleCoordinates(coordinates, count: count, edgePadding: strongSelf.insets, animated: !strongSelf.isInitialAnimation)
+            strongSelf.isInitialAnimation = false
         })
     }
     
