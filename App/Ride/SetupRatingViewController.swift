@@ -114,7 +114,7 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
         if #available(iOS 10.0, *) {
             helperTextLabel.animatedSetMarkdownStringValue("Ok, tap the **View** button.")
         } else {
-            helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
+            helperTextLabel.animatedSetMarkdownStringValue("So, **how was your ride**?\n(we're pretending here)")
         }
     }
     
@@ -140,7 +140,7 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
     
     private func showTripRichNotification() {
         self.buttonContainerView.popIn()
-        helperTextLabel.animatedSetMarkdownStringValue("If **any part** – even a little – of your trip stressed you out, tap **Not Great**.")
+        helperTextLabel.animatedSetMarkdownStringValue("So, **how was your ride**?\n(we're pretending here)")
     }
     
     func didTapActionButton(_ view: RideNotificationView) {
