@@ -100,7 +100,7 @@ protocol RideSummaryViewDelegate: class {
             let stringI = "comp" + String(i)
             viewDict[stringI] = componentView
             if i == 0 {
-                visualFormat += String(format: "-2-[%@]", stringI)
+                visualFormat += String(format: "-6-[%@]", stringI)
             } else {
                 visualFormat += String(format: "-(-6)-[%@]", stringI)
             }
@@ -394,12 +394,12 @@ fileprivate class RideSummaryComponentView : UIView {
         }
         
         
-        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|[distanceView(%f)]-6-[bodyLabel]|", RideSummaryComponentView.distanceViewDimensions), options: [.alignAllTop], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
+        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|[distanceView(%f)]-6-[bodyLabel]|", RideSummaryComponentView.distanceViewDimensions), options: [.alignAllCenterY], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: widthConstraints)
         
         currentConstraints.append(NSLayoutConstraint(item: distanceView, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: RideSummaryComponentView.distanceViewDimensions))
         
-        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[bodyLabel(>=distanceView)]|", options: [], metrics: nil, views: ["distanceView": distanceView, "bodyLabel": bodyLabel])
+        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=8)-[bodyLabel]-(>=8)-|", options: [], metrics: nil, views: ["bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: yConstraints)
         
         distanceView.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)

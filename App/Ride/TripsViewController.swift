@@ -517,6 +517,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             let reuseID = "RoutesViewTableCell"
             
             tableCell = self.tableView.dequeueReusableCell(withIdentifier: reuseID, for: indexPath as IndexPath)
+            tableCell.contentView.autoresizingMask = .flexibleHeight
             configureCell(tableCell, indexPath: indexPath as IndexPath)
             
             tableCell.layoutMargins = UIEdgeInsets.zero
