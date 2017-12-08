@@ -69,10 +69,6 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     }
     
     func updateAccountStatusText() {
-        if let section = tableView.indexPath(for: self.accountTableViewCell)?.section {
-            self.tableView.reloadSections([section], with: .fade)
-        }
-        
         switch RideReportAPIClient.shared.accountVerificationStatus {
         case .unknown:
             self.accountTableViewCell.isUserInteractionEnabled = false
