@@ -639,7 +639,7 @@
                             <constraint firstAttribute="width" secondItem="W5I-Vg-qji" secondAttribute="width" id="CXs-WT-GH9"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="height" secondItem="BOa-Zo-opp" secondAttribute="height" id="boS-NI-JG8"/>
                             <constraint firstItem="hQC-Qb-oe8" firstAttribute="centerX" secondItem="geV-4l-h3o" secondAttribute="centerX" id="clf-Iy-X6w"/>
-                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="BOa-Zo-opp" secondAttribute="top" constant="20" id="iLV-LH-LEH"/>
+                            <constraint firstItem="W5I-Vg-qji" firstAttribute="top" secondItem="geV-4l-h3o" secondAttribute="top" id="iLV-LH-LEH"/>
                             <constraint firstItem="W5I-Vg-qji" firstAttribute="centerX" secondItem="geV-4l-h3o" secondAttribute="centerX" id="mAD-t8-7Hh"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="geV-4l-h3o"/>
@@ -839,7 +839,7 @@
                                                         <rect key="frame" x="16" y="0.0" width="0.0" height="120"/>
                                                         <subviews>
                                                             <view hidden="YES" tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vf3-zk-zGP">
-                                                                <rect key="frame" x="-16" y="-38.5" width="60" height="120"/>
+                                                                <rect key="frame" x="-58.5" y="-38.5" width="60" height="120"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pWQ-tt-f49">
                                                                         <rect key="frame" x="1.5" y="38.5" width="35" height="43"/>
