@@ -133,11 +133,11 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>$(PRODUCT_NAME) saves workouts, energy burned and cycling distance to the Health App.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Tap &apos;Always Allow&apos; if you want your bike rides to log automatically!</string>
+	<string>Tap &apos;Always Allow&apos; to log your bike rides automatically!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your location information to log your bike rides.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Tap &apos;Always Allow&apos; if you want your bike rides to log automatically!</string>
+	<string>Tap &apos;Always Allow&apos; to log your bike rides automatically!</string>
 	<key>NSMotionUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your motion activity to automatically log your bike rides.</string>
 	<key>UIBackgroundModes</key>

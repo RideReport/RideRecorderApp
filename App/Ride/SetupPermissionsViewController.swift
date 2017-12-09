@@ -88,7 +88,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 }
                 
                 if (RouteManager.authorizationStatus() == .denied || RouteManager.authorizationStatus() == .restricted) {
-                    let alertController = UIAlertController(title: "Location Services are disabled", message: "Ride Report needs permission to send notifications to deliver Ride reports to your lock screen.", preferredStyle: UIAlertControllerStyle.alert)
+                    let alertController = UIAlertController(title: "Location Services are disabled", message: "In order to log your bike trips automatically, Ride Report needs permission to use your locations. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
                     alertController.addAction(UIAlertAction(title: "Go to Location Settings", style: UIAlertActionStyle.default) { (_) in
                         let url = URL(string: UIApplicationOpenSettingsURLString)
                         if url != nil && UIApplication.shared.canOpenURL(url!) {
@@ -103,7 +103,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                     })
                     self.present(alertController, animated: true, completion: nil)
                 } else if (RouteManager.authorizationStatus() == .authorizedWhenInUse ){
-                    let alertController = UIAlertController(title: "Background Location Services are disabled", message: "In order to start logging your bike trips automatically, Ride Report needs permission to use your locations always. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
+                    let alertController = UIAlertController(title: "Background Location Services are disabled", message: "In order to log your bike trips automatically, Ride Report needs permission to use your locations always. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
                     alertController.addAction(UIAlertAction(title: "Go to Location Settings", style: UIAlertActionStyle.default) { (_) in
                         let url = URL(string: UIApplicationOpenSettingsURLString)
                         if url != nil && UIApplication.shared.canOpenURL(url!) {
@@ -181,7 +181,7 @@ class SetupPermissionsViewController: SetupChildViewController {
 
             if RouteManager.authorizationStatus() != .authorizedAlways {
                 self.notificationDetailsLabel.delay(0.5) {
-                    self.notificationDetailsLabel.text = "2️⃣ Use your location during your ride"
+                    self.notificationDetailsLabel.text = "2️⃣ Use your location when Ride Report is in the background"
                     self.notificationDetailsLabel.popIn()
                 }
                 
@@ -191,7 +191,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                 self.nextPermission()
             }
         } else if self.currentPermissionsAsk == .askForMotion { // currently gets skipped
-            self.notificationDetailsLabel.text = "✅ Use your location during your ride"
+            self.notificationDetailsLabel.text = "✅ Use your location when Ride Report is in the background"
  
             if (SensorClassificationManager.authorizationStatus != .authorized) {
                 self.notificationDetailsLabel.delay(0.5) {
