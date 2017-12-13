@@ -46,7 +46,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         
         
         self.mapView.delegate = self
-        self.mapView.isHidden = true
+        if !showStressMap {
+            self.mapView.isHidden = true
+        }
         self.mapView.logoView.isHidden = true
         self.mapView.attributionButton.isHidden = true
         self.mapView.isRotateEnabled = false
