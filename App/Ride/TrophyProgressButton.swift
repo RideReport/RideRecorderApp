@@ -14,9 +14,11 @@ import UIImageColors
 import BadgeSwift
 
 @IBDesignable public class TrophyProgressButton : UIButton {
+    public static var defaultBadgeDimension: CGFloat = 78
+    
     @IBInspectable var countLabelSize: CGFloat = 16
     @IBInspectable var emojiFontSize: CGFloat = 50
-    @IBInspectable var badgeDimension: CGFloat = 78
+    @IBInspectable var badgeDimension: CGFloat = TrophyProgressButton.defaultBadgeDimension
     
     @IBInspectable var showsCount: Bool = true {
         didSet {
@@ -80,6 +82,7 @@ import BadgeSwift
     
     private func reloadCountProgressUI() {
         guard let trophyProgress = self.trophyProgress else {
+            badgeView.isHidden = true
             return
         }
         
@@ -103,6 +106,10 @@ import BadgeSwift
     
     private func reloadEmojiUI() {
         guard let trophyProgress = self.trophyProgress else {
+            emojiProgressView.image = nil
+            emojiView.image = nil
+            badgeView.text = ""
+            
             return
         }
         
@@ -206,11 +213,25 @@ import BadgeSwift
         guard let _ = trophyProgress else {
             emojiSaturated = nil
             emojiDesaturated = nil
+            
+            self.reloadEmojiUI()
+            return
+        }
+        
+        if let cachedEmojiSatured = ImageCache.default.retrieveImageInMemoryCache(forKey: self.emojiSaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]),
+            let cachedEmojiDesatured = ImageCache.default.retrieveImageInMemoryCache(forKey: self.emojiDesaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]) {
+            self.emojiSaturated = cachedEmojiSatured
+            self.emojiDesaturated = cachedEmojiDesatured
+            self.reloadEmojiUI()
             return
         }
         
         if let cachedEmojiSatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiSaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]),
             let cachedEmojiDesatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiDesaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]) {
+            // cache the image to memory for next time
+            ImageCache.default.store(cachedEmojiSatured, original: nil, forKey: self.emojiSaturatedCacheKey, processorIdentifier: "", cacheSerializer: DefaultCacheSerializer.default, toDisk: false, completionHandler:nil)
+            ImageCache.default.store(cachedEmojiDesatured, original: nil, forKey: self.emojiDesaturatedCacheKey, processorIdentifier: "", cacheSerializer: DefaultCacheSerializer.default, toDisk: false, completionHandler:nil)
+            
             self.emojiSaturated = cachedEmojiSatured
             self.emojiDesaturated = cachedEmojiDesatured
             self.reloadEmojiUI()
@@ -279,7 +300,7 @@ import BadgeSwift
             return
         }
         pixellateFilter.setValue(CIImage(image:emojiImage), forKey: kCIInputImageKey)
-        pixellateFilter.setValue(NSNumber(value: 8), forKey: kCIInputScaleKey)
+        pixellateFilter.setValue(NSNumber(value: Float(self.badgeDimension)/10), forKey: kCIInputScaleKey)
         guard let pixellateOutput = pixellateFilter.outputImage, let pixellateCGImage = context.createCGImage(pixellateOutput, from:pixellateOutput.extent) else {
             return
         }
@@ -302,7 +323,7 @@ import BadgeSwift
         self.emojiDesaturated = desaturedImage.withRenderingMode(UIImageRenderingMode.alwaysOriginal)
         if let emojiSaturated = self.emojiSaturated, let emojiDesaturated = self.emojiDesaturated {
             ImageCache.default.store(emojiSaturated, forKey: self.emojiSaturatedCacheKey)
-            ImageCache.default.store(emojiDesaturated, forKey: self.emojiDesaturatedCacheKey )
+            ImageCache.default.store(emojiDesaturated, forKey: self.emojiDesaturatedCacheKey)
         }
     }
     

@@ -20,23 +20,27 @@ public class TrophyProgress {
         self.init()
         
         guard let emoji = dictionary["emoji"].string,
-            let body = dictionary["description"].string,
-            let count = dictionary["count"].int else {
+            let body = dictionary["description"].string else {
                 return nil
         }
         
         self.emoji = emoji
         self.body = body
-        self.count = count
         
         if let dateString = dictionary["lastEarned"].string, let date = Date.dateFromJSONString(dateString) {
             self.lastEarned = date
         }
         
+        if let count = dictionary["count"].int {
+            self.count = count
+        } else {
+            self.count = 0
+        }
+        
         if let progress = dictionary["progress"].double {
             self.progress = progress
         } else {
-            self.progress = 1.0
+            self.progress = 0.0
         }
     }
 }

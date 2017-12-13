@@ -230,7 +230,7 @@ class StatsViewController: UIViewController {
             
             trophiesView.addArrangedSubview(trophyButon)
             i += 1
-            if CGFloat(i)*(trophyButon.badgeDimension + trophiesView.spacing) > (self.view.frame.width * 1.5) {
+            if CGFloat(i)*(trophyButon.badgeDimension + trophiesView.spacing) > (self.view.frame.width * 1.2) {
                 // show up to a screen and a half's width of featured trophy progresses
                 break
             }
@@ -247,18 +247,6 @@ class StatsViewController: UIViewController {
     
     @objc func didTapSeeMoreButton() {
         self.performSegue(withIdentifier: "showTrophiesViewController", sender: self)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let json = statsJson, let trophyProgresses = json["trophyProgresses"].array else {
-            return
-        }
-        
-        if (segue.identifier == "showTrophiesViewController") {
-            if let trophyVC = segue.destination as? TrophiesViewController {
-                trophyVC.trophyProgresses = trophyProgresses
-            }
-        }
     }
     
     func reloadSeriesChartData() {

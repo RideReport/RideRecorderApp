@@ -995,13 +995,90 @@ All</string>
                         <outlet property="rollupsSegment" destination="ucX-LG-YpG" id="zJI-cQ-XZg"/>
                         <outlet property="seriesSegment" destination="Q7h-Lb-PW8" id="kZP-mz-1Mp"/>
                         <outlet property="trophiesView" destination="88L-9t-zJN" id="B2E-UL-Zj5"/>
-                        <segue destination="x1F-ty-14F" kind="show" identifier="showTrophiesViewController" id="oAt-Ev-TyE"/>
                         <segue destination="4DY-1f-UaH" kind="presentation" identifier="showTrophySnowGlobe" modalTransitionStyle="crossDissolve" id="6zq-x5-kO4"/>
+                        <segue destination="8ef-jM-WnR" kind="show" identifier="showTrophiesViewController" id="mL5-hM-Zs1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vYu-EL-yrr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-588" y="-214"/>
+        </scene>
+        <!--Trophies View Controller-->
+        <scene sceneID="yGY-eu-oLC">
+            <objects>
+                <tableViewController id="8ef-jM-WnR" customClass="TrophiesViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="136" estimatedRowHeight="136" sectionHeaderHeight="28" sectionFooterHeight="28" id="0H8-Dx-zIA">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TrophyCategoryCell" rowHeight="136" id="LBX-80-HUQ">
+                                <rect key="frame" x="0.0" y="28" width="375" height="136"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LBX-80-HUQ" id="be1-Nt-Ty7">
+                                    <rect key="frame" x="0.0" y="0.0" width="341" height="136"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" ambiguous="YES" alwaysBounceHorizontal="YES" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dov-kC-Nxd">
+                                            <rect key="frame" x="0.0" y="35" width="341" height="101"/>
+                                            <subviews>
+                                                <stackView opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" distribution="equalSpacing" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="gNC-tN-nA5">
+                                                    <rect key="frame" x="16" y="0.0" width="0.0" height="101"/>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="gNC-tN-nA5" secondAttribute="bottom" id="3NH-R8-QH0"/>
+                                                <constraint firstAttribute="trailing" secondItem="gNC-tN-nA5" secondAttribute="trailing" constant="16" id="CWs-bC-Mqr"/>
+                                                <constraint firstItem="gNC-tN-nA5" firstAttribute="leading" secondItem="dov-kC-Nxd" secondAttribute="leading" constant="16" id="DdQ-PG-bWQ"/>
+                                                <constraint firstItem="gNC-tN-nA5" firstAttribute="top" secondItem="dov-kC-Nxd" secondAttribute="top" id="F0L-UZ-0zF"/>
+                                                <constraint firstAttribute="height" secondItem="gNC-tN-nA5" secondAttribute="height" id="TVz-GT-ky6"/>
+                                            </constraints>
+                                        </scrollView>
+                                        <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gZb-oX-MIN">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="35"/>
+                                            <color key="backgroundColor" red="1" green="0.2527923882" blue="1" alpha="0.32523544520547948" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jhd-vz-tgC">
+                                            <rect key="frame" x="14" y="16" width="315" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="MYA-zw-kJK"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="dov-kC-Nxd" firstAttribute="width" secondItem="be1-Nt-Ty7" secondAttribute="width" id="3uh-p1-Eph"/>
+                                        <constraint firstItem="dov-kC-Nxd" firstAttribute="top" secondItem="gZb-oX-MIN" secondAttribute="bottom" id="TVw-Pa-rHp"/>
+                                        <constraint firstItem="dov-kC-Nxd" firstAttribute="top" secondItem="Jhd-vz-tgC" secondAttribute="bottom" constant="-2" id="Tnb-N9-s3K"/>
+                                        <constraint firstItem="Jhd-vz-tgC" firstAttribute="leading" secondItem="be1-Nt-Ty7" secondAttribute="leading" constant="14" id="Wki-P1-rMd"/>
+                                        <constraint firstAttribute="bottom" secondItem="dov-kC-Nxd" secondAttribute="bottom" id="i0H-GL-qQE"/>
+                                        <constraint firstItem="Jhd-vz-tgC" firstAttribute="top" secondItem="be1-Nt-Ty7" secondAttribute="top" constant="16" id="kQS-Ln-rNE"/>
+                                        <constraint firstItem="dov-kC-Nxd" firstAttribute="centerX" secondItem="be1-Nt-Ty7" secondAttribute="centerX" id="lJQ-Dh-X6O"/>
+                                        <constraint firstAttribute="trailing" secondItem="Jhd-vz-tgC" secondAttribute="trailing" constant="12" id="oND-7E-wRA"/>
+                                        <constraint firstItem="gZb-oX-MIN" firstAttribute="leading" secondItem="be1-Nt-Ty7" secondAttribute="leading" id="okU-oc-5V7"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <constraints>
+                                    <constraint firstItem="gZb-oX-MIN" firstAttribute="top" secondItem="LBX-80-HUQ" secondAttribute="top" id="GBh-p2-G0z"/>
+                                    <constraint firstAttribute="trailing" secondItem="gZb-oX-MIN" secondAttribute="trailing" id="eWw-Ti-ls9"/>
+                                </constraints>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="8ef-jM-WnR" id="H2S-Xp-PWg"/>
+                            <outlet property="delegate" destination="8ef-jM-WnR" id="CPf-uc-Hl4"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <segue destination="x1F-ty-14F" kind="show" identifier="showTrophyCategoryViewController" id="huo-hH-xrE"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="73k-DN-7C5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="253.59999999999999" y="-82.3088455772114"/>
         </scene>
         <!--Rewards View Controller-->
         <scene sceneID="550-Jo-gSm">
@@ -1095,12 +1172,12 @@ All</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gdo-v0-RHm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1521" y="-614"/>
+            <point key="canvasLocation" x="1521" y="-748"/>
         </scene>
         <!--Trophies-->
         <scene sceneID="GeD-n6-O1T">
             <objects>
-                <collectionViewController title="Trophies" hidesBottomBarWhenPushed="YES" id="x1F-ty-14F" customClass="TrophiesViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController title="Trophies" hidesBottomBarWhenPushed="YES" id="x1F-ty-14F" customClass="TrophyCategoryViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" id="OfT-Ah-xxf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1154,7 +1231,7 @@ All</string>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cqe-aq-qJq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="92" y="-215"/>
+            <point key="canvasLocation" x="1070" y="-82"/>
         </scene>
         <!--My Rides-->
         <scene sceneID="UeG-mh-VCJ">
@@ -4644,7 +4721,7 @@ Label</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mXa-RL-gDL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="782" y="-615"/>
+            <point key="canvasLocation" x="769" y="-724"/>
         </scene>
     </scenes>
     <resources>

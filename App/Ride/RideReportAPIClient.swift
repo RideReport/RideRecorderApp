@@ -297,7 +297,21 @@ class RideReportAPIClient: APIClientDelegate {
                     try? data.write(to: url)
                 }
             case .failure(let error):
-                DDLogWarn(String(format: "Error retriving getting individual trip data: %@", error as CVarArg))
+                DDLogWarn(String(format: "Error retriving getting stats data: %@", error as CVarArg))
+            }
+        })
+    }
+    
+    @discardableResult func getTrophydex()->AuthenticatedAPIRequest {
+        return AuthenticatedAPIRequest(client: APIClient.shared, method: .get, route: "trophydex", completionHandler: { (response) -> Void in
+            switch response.result {
+            case .success(let json):
+                let url = CoreDataManager.shared.applicationDocumentsDirectory.appendingPathComponent("trophydex.json")
+                if let data = try? json.rawData() {
+                    try? data.write(to: url)
+                }
+            case .failure(let error):
+                DDLogWarn(String(format: "Error retriving getting trophy data: %@", error as CVarArg))
             }
         })
     }
