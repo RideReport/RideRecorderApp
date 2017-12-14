@@ -89,14 +89,14 @@ import BadgeSwift
         let progressToShow = trophyProgress.count >= 1 ? 1 : trophyProgress.progress // don't show the progress indicator if you've earned the trophy at least once
         
         let piePath = UIBezierPath()
-        let centerPoint = CGPoint(x: self.badgeDimension/2, y:self.badgeDimension/2)
+        let centerPoint = CGPoint(x: badgeDimension/2, y:badgeDimension/2)
         piePath.move(to: centerPoint)
         piePath.addArc(withCenter: centerPoint, radius:self.badgeDimension/2 + 50, startAngle:CGFloat(-Double.pi/2), endAngle: CGFloat(-Double.pi/2 + Double.pi * 2 * progressToShow), clockwise:true)
         piePath.close()
         let maskLayer = CAShapeLayer()
         maskLayer.fillColor = UIColor.black.cgColor
-        maskLayer.bounds = emojiProgressView.layer.bounds
-        maskLayer.position = emojiProgressView.center
+        maskLayer.bounds = CGRect(x: 0, y: 0, width: 0, height: 0)
+        maskLayer.position = CGPoint(x: 0, y: 0)
         maskLayer.path = piePath.cgPath
         emojiProgressView.layer.mask = maskLayer
         
@@ -183,8 +183,6 @@ import BadgeSwift
         badgeView.badgeColor = ColorPallete.shared.badRed
         badgeView.translatesAutoresizingMaskIntoConstraints = false
         badgeView.shadowOpacityBadge = 0
-        
-        reloadCountProgressUI()
     }
     
     public override func updateConstraints() {
@@ -207,6 +205,9 @@ import BadgeSwift
         
         currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: badgeView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:-3))
         currentConstraints.append(NSLayoutConstraint(item: emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: badgeView, attribute: NSLayoutAttribute.centerX, multiplier: 1.0, constant: 3))
+        
+        // re-center the progress wheel
+        reloadCountProgressUI()
     }
     
     private func reloadEmojiImages() {

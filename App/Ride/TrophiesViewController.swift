@@ -27,7 +27,7 @@ class TrophiesViewController: UITableViewController {
             NotificationCenter.default.addObserver(self, selector: #selector(TrophiesViewController.updateData), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         })
         
-        self.trophiesPerRow =  Int(floor((self.view.frame.width * 1.5) / (TrophyProgressButton.defaultBadgeDimension + trophySpacing)))
+        self.trophiesPerRow =  Int(floor((self.view.frame.width) / (TrophyProgressButton.defaultBadgeDimension + trophySpacing)))
         
         self.reloadData()
         updateData()
@@ -111,6 +111,13 @@ class TrophiesViewController: UITableViewController {
         return tableCell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section < trophyCategories.count {
+            let trophyCategory = trophyCategories[indexPath.row]
+            self.performSegue(withIdentifier: "showTrophyCategoryViewController", sender: trophyCategory)
+        }
+    }
+    
     private var disclosureArrow: UIImage? = nil
     func getDisclosureArrow(_ tableCell: UITableViewCell)->UIImage? {
         if disclosureArrow != nil {
@@ -127,8 +134,7 @@ class TrophiesViewController: UITableViewController {
     }
     
     func configureCell(_ tableCell: UITableViewCell, trophyCategory: TrophyCategory, atIndex index: Int) {
-        guard let scrollView = tableCell.viewWithTag(1) as? UIScrollView,
-            let trophiesView = scrollView.viewWithTag(2) as? UIStackView,
+        guard let trophiesView = tableCell.viewWithTag(1) as? UIStackView,
             let label = tableCell.viewWithTag(3) as? UILabel,
             let button = tableCell.viewWithTag(4) as? UIButton else {
             return
