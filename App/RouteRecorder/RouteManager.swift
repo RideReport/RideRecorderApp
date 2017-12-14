@@ -443,7 +443,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                     
                     for aggregator in strongSelf.pendingAggregators {
                         if shouldAppendToCurrentRoute {
-                            strongSelf.currentRoute!.addPredictionAggregator(aggregator)
+                            if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
+                                let date = aggregator.fetchLastReading()?.date, let currentRoute = strongSelf.currentRoute,  strongSelf.routeQualifiesForResumption(route: currentRoute, fromActivityType: aggregatePredictedActivity.activityType, fromDate: date) {
+                                currentRoute.addPredictionAggregator(aggregator)
+                            }
                         } else {
                             if let aggregatePredictedActivity = aggregator.aggregatePredictedActivity,
                                 aggregatePredictedActivity.activityType ~= mostRecentRoute!.activityType {
