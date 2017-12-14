@@ -14,6 +14,7 @@ import UIImageColors
 import BadgeSwift
 
 @IBDesignable public class TrophyProgressButton : UIButton {
+    public static var versionNumber = 1
     public static var defaultBadgeDimension: CGFloat = 78
     
     @IBInspectable var countLabelSize: CGFloat = 16
@@ -45,7 +46,7 @@ import BadgeSwift
                 return ""
             }
             
-            return String(format: "%@-%.0f-%.0f", trophyProgress.emoji, self.countLabelSize, self.emojiFontSize)
+            return String(format: "%@-%.0f-%.0f-%i", trophyProgress.emoji, self.countLabelSize, self.emojiFontSize, TrophyProgressButton.versionNumber)
         }
     }
     
@@ -226,13 +227,13 @@ import BadgeSwift
             self.reloadEmojiUI()
             return
         }
-        
+
         if let cachedEmojiSatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiSaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]),
             let cachedEmojiDesatured = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiDesaturatedCacheKey, options: [.scaleFactor(UIScreen.main.scale)]) {
             // cache the image to memory for next time
             ImageCache.default.store(cachedEmojiSatured, original: nil, forKey: self.emojiSaturatedCacheKey, processorIdentifier: "", cacheSerializer: DefaultCacheSerializer.default, toDisk: false, completionHandler:nil)
             ImageCache.default.store(cachedEmojiDesatured, original: nil, forKey: self.emojiDesaturatedCacheKey, processorIdentifier: "", cacheSerializer: DefaultCacheSerializer.default, toDisk: false, completionHandler:nil)
-            
+
             self.emojiSaturated = cachedEmojiSatured
             self.emojiDesaturated = cachedEmojiDesatured
             self.reloadEmojiUI()
@@ -329,12 +330,21 @@ import BadgeSwift
     }
     
     private func gradientImage(withEmojiImage emojiImage: UIImage, colors: UIImageColors)->UIImage? {
-        var nonWhiteBackgroundColor = colors.background!
+        var nonWhiteBorderColor = colors.background!
         
         let minimumColorValue: CGFloat = 0.84
-        if let RGB = nonWhiteBackgroundColor.cgColor.components, RGB[0] > minimumColorValue && RGB[1] > minimumColorValue && RGB[2] > minimumColorValue {
+        if let RGB = nonWhiteBorderColor.cgColor.components, RGB[0] > minimumColorValue && RGB[1] > minimumColorValue && RGB[2] > minimumColorValue {
             // don't use too light a color
-            nonWhiteBackgroundColor = colors.detail
+            nonWhiteBorderColor = colors.detail
+        }
+        
+        var drawsBorder = false
+        // draw a border for light background colors
+
+        if let RGB = colors.primary.cgColor.components, RGB[0] > minimumColorValue && RGB[1] > minimumColorValue && RGB[2] > minimumColorValue {
+            drawsBorder = true
+        } else if let RGB = colors.secondary.cgColor.components, RGB[0] > minimumColorValue && RGB[1] > minimumColorValue && RGB[2] > minimumColorValue {
+            drawsBorder = true
         }
         
         let magicCornerRadiusRatio: Float = 10/57 // https://hicksdesign.co.uk/journal/ios-icon-corner-radii
@@ -342,7 +352,7 @@ import BadgeSwift
         UIGraphicsBeginImageContextWithOptions(CGSize(width: self.badgeDimension, height: self.badgeDimension), false , 0.0)
         let gradientRect = CGRect(x: 0, y: 0, width: self.badgeDimension, height: self.badgeDimension)
         let cornerRadius = CGFloat(floorf(Float(badgeDimension) * magicCornerRadiusRatio))
-        let lineWidth = CGFloat(floorf(Float(badgeDimension)/25))
+        let lineWidth = drawsBorder ? CGFloat(floorf(Float(badgeDimension)/35)) : 0
         
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colors.secondary.cgColor, colors.primary.cgColor]
@@ -357,7 +367,7 @@ import BadgeSwift
         
         let path = UIBezierPath(roundedRect: gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2), byRoundingCorners: UIRectCorner.allCorners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
         path.lineWidth = lineWidth
-        nonWhiteBackgroundColor.setStroke()
+        nonWhiteBorderColor.setStroke()
         path.stroke()
         
         let drawPointX = abs(self.badgeDimension - emojiImage.size.width)/2.0 * -1.0
