@@ -17,18 +17,20 @@ PODS:
     - Fabric (~> 1.6.3)
   - Eureka (4.0.1)
   - Fabric (1.6.13)
-  - FBSDKCoreKit (4.20.1):
+  - FBSDKCoreKit (4.29.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.20.1):
+  - FBSDKLoginKit (4.29.0):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.20.1):
+  - FBSDKShareKit (4.29.0):
     - FBSDKCoreKit
-  - GzipSwift (4.0.0)
+  - GzipSwift (4.0.4)
   - KeychainAccess (3.0.2)
   - Kingfisher (3.5.2)
   - Mapbox-iOS-SDK (3.6.3)
   - Mapbox-iOS-SDK-symbols (3.6.3-symbols)
-  - Mixpanel-swift (2.2.1)
+  - Mixpanel-swift (2.3.0):
+    - Mixpanel-swift/Complete (= 2.3.0)
+  - Mixpanel-swift/Complete (2.3.0)
   - OAuthSwift (1.1.1)
   - OHHTTPStubs/Core (6.0.0)
   - OHHTTPStubs/Default (6.0.0):
@@ -43,7 +45,7 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (6.0.0)
   - OHHTTPStubs/Swift (6.0.0):
     - OHHTTPStubs/Default
-  - Presentr (1.2.3)
+  - Presentr (1.3)
   - SwiftyJSON (3.1.4)
   - UIImageColors (1.4.0)
   - WebLinking (2.0.0)
@@ -59,7 +61,7 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
-  - GzipSwift (from `https://github.com/1024jp/GzipSwift.git`)
+  - GzipSwift
   - KeychainAccess
   - Kingfisher
   - Mapbox-iOS-SDK
@@ -73,15 +75,8 @@ DEPENDENCIES:
   - WebLinking
 
 EXTERNAL SOURCES:
-  GzipSwift:
-    :git: https://github.com/1024jp/GzipSwift.git
   Mapbox-iOS-SDK-symbols:
     :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec
-
-CHECKOUT OPTIONS:
-  GzipSwift:
-    :commit: 347cff84754b8e2aca3017b6805c0286693558b3
-    :git: https://github.com/1024jp/GzipSwift.git
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
@@ -92,22 +87,22 @@ SPEC CHECKSUMS:
   Crashlytics: 79e236942ca1e7fc641df1feb9a275360a78ab6a
   Eureka: c8bd5cc07143b6f66268c208d28a246c99b41955
   Fabric: 2fb5676bc811af011a04513451f463dac6803206
-  FBSDKCoreKit: 39a3569652983bf8666620dd334804c9057ae9b2
-  FBSDKLoginKit: 17092ff61a18c54ca423aebc18c5acc2e5a4a728
-  FBSDKShareKit: 4f37934d9ee9500d2d35752595816dc35f967478
-  GzipSwift: 616c07f4370200e7380766e19ecb15c45ea2ae6e
+  FBSDKCoreKit: 6f139173dc63a1deaff4430a55f2fe5bb222d2af
+  FBSDKLoginKit: 56a057ca6822535ea0faa25f57a7c41edb697fd4
+  FBSDKShareKit: 18a2cd118aef11dd657fe7e8b64bae5c719088b2
+  GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   Kingfisher: 9950e382c500b6834ce004c7c4131c444e90c3a1
   Mapbox-iOS-SDK: 27805cb5f36d2bffe732b1d392278f4e408d06d2
   Mapbox-iOS-SDK-symbols: c3a077d2d84ddde5e6a487eed5261a035808f3f4
-  Mixpanel-swift: d0374c33e38a7f184203eef1c8eae64be54986ed
+  Mixpanel-swift: 9b0af868125d06db8476361429f0f404c81959dd
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
   OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
-  Presentr: a21c7bbb3532c8ff60320e235c0a4869e72f8885
+  Presentr: 3f0825a42cb32ecd8fc6b6d0b0de87d7d0b42482
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   UIImageColors: 1f891e1a3224efebb01ad476df3a5aed4220ee24
   WebLinking: b476999d59f78bd6649e6754d60693a7d147b00c
 
-PODFILE CHECKSUM: 48eddcf88a8b6e672d03d1fffe965d82fce7033c
+PODFILE CHECKSUM: 799750e2f86a1bda3381a755d11f4ab2af82b101
 
 COCOAPODS: 1.3.1
