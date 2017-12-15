@@ -13,7 +13,6 @@ import Alamofire
 
 class StatsViewController: UIViewController {
     @IBOutlet weak var seriesSegment: UISegmentedControl!
-    @IBOutlet weak var trophiesView: UIStackView!
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var lineChartView: LineChartView!
         
@@ -32,7 +31,9 @@ class StatsViewController: UIViewController {
     private var statsJson: JSON?
     
     override func viewDidLoad() {
-        self.title = "Achievements"
+        self.title = "Stats"
+        
+        seriesSegment.selectedSegmentIndex = 2
                 
         lineChartView.drawBordersEnabled = false
         lineChartView.legend.enabled = false
@@ -161,7 +162,6 @@ class StatsViewController: UIViewController {
             return
         }
         
-        self.reloadTrophiesView()
         self.reloadSeriesChartData()
         self.reloadRollups()
         self.reloadPieChartData()
@@ -182,71 +182,6 @@ class StatsViewController: UIViewController {
     @IBAction func changeRollups(_ sender: Any) {
         reloadRollups()
         reloadPieChartData()
-    }
-    
-    @objc func didTapTrophyProgress(_ sender: Any) {
-        guard let tappedTrophyProgress = sender as? TrophyProgressButton else {
-            return
-        }
-        
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        guard let trophyVC = storyBoard.instantiateViewController(withIdentifier: "trophyViewController") as? TrophyViewController else {
-            return
-        }
-        
-        trophyVC.trophyProgress = tappedTrophyProgress.trophyProgress
-        
-        customPresentViewController(TrophyViewController.presenter(), viewController: trophyVC, animated: true, completion: nil)
-    }
-    
-    func reloadTrophiesView() {
-        var seeMoreView: UIView?
-        
-        for view in trophiesView.arrangedSubviews {
-            if view.tag != 2 {
-                trophiesView.removeArrangedSubview(view)
-                view.removeFromSuperview()
-            } else {
-                seeMoreView = view
-            }
-        }
-        
-        seeMoreView?.isHidden = true
-        
-        guard let json = statsJson, let trophyProgresses = json["trophyProgresses"].array, trophyProgresses.count > 0 else {
-            return
-        }
-        
-        var i = 1
-        for trophyDictionary in trophyProgresses {
-            guard let trophyProgress = TrophyProgress(dictionary: trophyDictionary) else {
-                continue
-            }
-            
-            let trophyButon = TrophyProgressButton()
-            trophyButon.addTarget(self, action: #selector(StatsViewController.didTapTrophyProgress(_:)), for: .touchUpInside)
-            trophyButon.translatesAutoresizingMaskIntoConstraints = false
-            trophyButon.trophyProgress = trophyProgress
-            
-            trophiesView.addArrangedSubview(trophyButon)
-            i += 1
-            if CGFloat(i)*(trophyButon.badgeDimension + trophiesView.spacing) > (self.view.frame.width * 1.2) {
-                // show up to a screen and a half's width of featured trophy progresses
-                break
-            }
-        }
-        
-        if let seeMoreView = seeMoreView {
-            // re-insert the seeMoreView at the back
-            trophiesView.removeArrangedSubview(seeMoreView)
-            trophiesView.addArrangedSubview(seeMoreView)
-            seeMoreView.isHidden = false
-            seeMoreView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(StatsViewController.didTapSeeMoreButton)))
-        }
-    }
-    
-    @objc func didTapSeeMoreButton() {
-        self.performSegue(withIdentifier: "showTrophiesViewController", sender: self)
     }
     
     func reloadSeriesChartData() {
@@ -279,8 +214,8 @@ class StatsViewController: UIViewController {
             return
         }
         
+        seriesSegment.setEnabled(true, forSegmentAt: 0)
         seriesSegment.setEnabled(true, forSegmentAt: 1)
-        seriesSegment.setEnabled(true, forSegmentAt: 2)
         
         if seriesKey == "month" {
             var entryData: [ChartDataEntry] = []
@@ -368,8 +303,8 @@ class StatsViewController: UIViewController {
                 barChartView.rightAxis.axisMinimum = 0
                 barChartView.rightAxis.axisMaximum = 10
                 
+                seriesSegment.setEnabled(false, forSegmentAt: 0)
                 seriesSegment.setEnabled(false, forSegmentAt: 1)
-                seriesSegment.setEnabled(false, forSegmentAt: 2)
             }
             
             barChartView.data = data
@@ -645,16 +580,6 @@ class StatsViewController: UIViewController {
             
             piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
             piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
-        }
-    }
-    
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-    
-    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {            
-            self.performSegue(withIdentifier: "showTrophySnowGlobe", sender: self)
         }
     }
 }
