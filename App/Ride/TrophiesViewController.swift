@@ -118,6 +118,10 @@ class TrophiesViewController: UITableViewController {
                     let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "StatsSeriesCell", for: indexPath)
                     self.configureStatsSeriesCell(tableCell, json: jsonRow)
                     return tableCell
+                } else if type == "encouragements" {
+                    let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "EncouragementsCell", for: indexPath)
+                    self.configureEncouragementsCell(tableCell, json: jsonRow)
+                    return tableCell
                 }
             }
         }  
@@ -155,6 +159,70 @@ class TrophiesViewController: UITableViewController {
         }
         
         return nil
+    }
+    
+    func configureEncouragementsCell(_ tableCell: UITableViewCell, json: JSON) {
+        guard let encouragementsStackView = tableCell.viewWithTag(1) as? UIStackView else {
+                return
+        }
+        
+        guard let contentArray = json["content"].array else {
+            return
+        }
+        
+        encouragementsStackView.spacing = trophySpacing
+        
+        var i = 0
+        for content in contentArray {
+//            guard let type = content["type"].string else {
+//                break
+//            }
+//
+//            if type = "trophy_encouragement" {
+//
+//            }
+            
+            if content["trophy_progress"].dictionary != nil {
+                let trophyProgress = TrophyProgress(dictionary: content["trophy_progress"])
+                var encouragementView: EncouragementView!
+                if i >= encouragementsStackView.arrangedSubviews.count {
+                    encouragementView = EncouragementView()
+                    encouragementView.frame = CGRect(x: 0, y: 0, width: tableCell.frame.size.width - 18, height: tableCell.frame.size.height - 4)
+                    encouragementView.translatesAutoresizingMaskIntoConstraints = false
+                    encouragementsStackView.addArrangedSubview(encouragementView)
+                } else {
+                    encouragementView = encouragementsStackView.arrangedSubviews[i] as! EncouragementView
+                }
+                encouragementView.title = content["title"].string
+                encouragementView.trophyProgress = trophyProgress
+//                encouragementView.removeTarget(nil, action: nil, for: .touchUpInside)
+//                encouragementView.addAction(for: .touchUpInside) {
+//                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//                    guard let trophyVC = storyBoard.instantiateViewController(withIdentifier: "trophyViewController") as? TrophyViewController else {
+//                        return
+//                    }
+//
+//                    trophyVC.trophyProgress = trophyProgress
+//
+//                    self.customPresentViewController(TrophyViewController.presenter(), viewController: trophyVC, animated: true, completion: nil)
+//                }
+            }
+            
+            i += 1
+            if i >= self.trophiesPerRow {
+                // show up to a screen and a half's width of featured trophy progresses
+                break
+            }
+        }
+        
+        while i < encouragementsStackView.arrangedSubviews.count {
+            let encouragementView = encouragementsStackView.arrangedSubviews[i] as! EncouragementView
+            
+            encouragementView.trophyProgress = nil
+            //trophyButon.removeTarget(nil, action: nil, for: .touchUpInside)
+            
+            i += 1
+        }
     }
     
     func configureTrophyCategoryCell(_ tableCell: UITableViewCell, json: JSON) {

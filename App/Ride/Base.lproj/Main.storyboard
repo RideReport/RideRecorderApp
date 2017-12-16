@@ -924,8 +924,28 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="StatsSeriesCell" id="v7k-DT-gaF">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="EncouragementsCell" rowHeight="136" id="oFW-0W-wqx">
                                 <rect key="frame" x="0.0" y="28" width="375" height="136"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="oFW-0W-wqx" id="qQm-6m-WF4">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="136"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" ambiguous="YES" alignment="center" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="SFO-fX-iPw">
+                                            <rect key="frame" x="18" y="8" width="305" height="128"/>
+                                            <color key="backgroundColor" red="0.0" green="0.97680455450000003" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="SFO-fX-iPw" secondAttribute="bottom" id="9YG-Vf-QaA"/>
+                                        <constraint firstItem="SFO-fX-iPw" firstAttribute="top" secondItem="qQm-6m-WF4" secondAttribute="top" constant="8" id="eVQ-Wf-atM"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="SFO-fX-iPw" secondAttribute="trailing" constant="18" id="htY-af-oMK"/>
+                                        <constraint firstItem="SFO-fX-iPw" firstAttribute="leading" secondItem="qQm-6m-WF4" secondAttribute="leading" constant="18" id="mJq-r5-uMh"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="StatsSeriesCell" id="v7k-DT-gaF">
+                                <rect key="frame" x="0.0" y="164" width="375" height="136"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="v7k-DT-gaF" id="skk-PV-abl">
                                     <rect key="frame" x="0.0" y="0.0" width="341" height="136"/>
@@ -981,7 +1001,7 @@
                                 </constraints>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="TrophyCategoryCell" rowHeight="136" id="LBX-80-HUQ">
-                                <rect key="frame" x="0.0" y="164" width="375" height="136"/>
+                                <rect key="frame" x="0.0" y="300" width="375" height="136"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="LBX-80-HUQ" id="be1-Nt-Ty7">
                                     <rect key="frame" x="0.0" y="0.0" width="341" height="136"/>

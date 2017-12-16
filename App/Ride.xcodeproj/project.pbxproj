@@ -394,6 +394,7 @@
 		84F137611B5DAE0C0023EC82 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137601B5DAE0C0023EC82 /* libsqlite3.dylib */; };
 		84F137631B5DAE160023EC82 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F137621B5DAE160023EC82 /* libz.dylib */; };
 		84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F1F8E51B66A3D400EA0B6E /* Reachability.m */; };
+		84F766BF1FE489FC00921697 /* EncouragementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F766BE1FE489FB00921697 /* EncouragementView.swift */; };
 		84F8E62B1AF953CD00270C76 /* markers-soft.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F8E6291AF953CD00270C76 /* markers-soft.png */; };
 		84F8E62C1AF953CD00270C76 /* markers-soft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */; };
 		84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */; };
@@ -757,6 +758,7 @@
 		84F137621B5DAE160023EC82 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		84F1F8E41B66A3D400EA0B6E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		84F1F8E51B66A3D400EA0B6E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		84F766BE1FE489FB00921697 /* EncouragementView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncouragementView.swift; sourceTree = "<group>"; };
 		84F8E6291AF953CD00270C76 /* markers-soft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft.png"; sourceTree = "<group>"; };
 		84F8E62A1AF953CD00270C76 /* markers-soft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "markers-soft@2x.png"; sourceTree = "<group>"; };
 		84FEF0111B9F7BF000F0BB89 /* BrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserViewController.swift; sourceTree = "<group>"; };
@@ -1201,6 +1203,7 @@
 				848777B81A683A4A00B59B06 /* PopupView.swift */,
 				3DA687B21E82086400483741 /* BalloonMarker.swift */,
 				3DB9BD191CC6DE13004A5BD0 /* AnimatedGradientLabel.swift */,
+				84F766BE1FE489FB00921697 /* EncouragementView.swift */,
 				3D19303A1EAE912100915813 /* RideNotificationView.swift */,
 				84EA5BDA1A6DA8DF00C71F53 /* RideSummaryView.swift */,
 				3DA8C10E1F8EE0C400BE1460 /* TrophyView.swift */,
@@ -2517,6 +2520,7 @@
 				3DA687B31E82086400483741 /* BalloonMarker.swift in Sources */,
 				84D1555A19D2733500316995 /* MapViewController.swift in Sources */,
 				3D65E8E11F634197002D143A /* TripsListRow+CoreDataProperties.swift in Sources */,
+				84F766BF1FE489FC00921697 /* EncouragementView.swift in Sources */,
 				3D4CA9F01FD0C36D00BCFD33 /* RideReportTabBarController.swift in Sources */,
 				8409C4A81C518B2400999446 /* HealthKitManager.swift in Sources */,
 				84EA5BE11A6DE84900C71F53 /* SetupViewController.swift in Sources */,
