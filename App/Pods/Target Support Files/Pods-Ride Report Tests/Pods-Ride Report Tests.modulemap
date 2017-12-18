@@ -1,0 +1,6 @@
+framework module Pods_Ride_Report_Tests {
+  umbrella header "Pods-Ride Report Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

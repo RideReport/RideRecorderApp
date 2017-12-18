@@ -1,0 +1,6 @@
+framework module Pods_Ride_Report_Notification_Content {
+  umbrella header "Pods-Ride Report Notification Content-umbrella.h"
+
+  export *
+  module * { export * }
+}
