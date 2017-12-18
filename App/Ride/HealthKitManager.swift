@@ -269,7 +269,9 @@ class HealthKitManager {
         
         guard trip.startDate.compare(trip.endDate) != .orderedDescending else {
             // https://github.com/KnockSoftware/Ride/issues/206
-            DDLogInfo(String(format: "Workout start date is not before end date!"))
+            DDLogInfo(String(format: "Workout start date is not before end date, skipping!"))
+            trip.isSavedToHealthKit = true
+            CoreDataManager.shared.saveContext()
             handler(false)
             return
         }
