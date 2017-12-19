@@ -35,7 +35,7 @@ class TrophiesViewController: UITableViewController {
         })
         
         self.trophiesPerRow =  Int(floor((self.view.frame.size.width) / (TrophyProgressButton.defaultBadgeDimension + TrophiesViewController.minimumTrophySpacing)))
-        self.trophySpacing = (self.view.frame.size.width - TrophiesViewController.marginX - (CGFloat(trophiesPerRow) * TrophyProgressButton.defaultBadgeDimension)) / CGFloat(trophiesPerRow - 1)
+        self.trophySpacing = (self.view.frame.size.width - 2*TrophiesViewController.marginX - (CGFloat(trophiesPerRow) * TrophyProgressButton.defaultBadgeDimension)) / CGFloat(trophiesPerRow - 1)
         
         self.shouldShowGraphAnimation = false
         self.reloadData()
