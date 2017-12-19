@@ -25,7 +25,12 @@ import BadgeSwift
         }
     }
     
-    var subtitle: String? = ""
+    var subtitle: String? = "" {
+        didSet {
+            self.subtitleLabel.text = subtitle
+        }
+    }
+    
     var trophyProgress: TrophyProgress? = nil {
         didSet {
             self.reloadEmojiImagesAndThenGradientBackgroundAndLabelColors()
