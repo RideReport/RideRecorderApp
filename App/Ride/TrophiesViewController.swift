@@ -199,6 +199,7 @@ class TrophiesViewController: UITableViewController {
                 
                 encouragementView.title = content["title"].string
                 encouragementView.subtitle = content["subtitle"].string
+                encouragementView.header = content["header"].string
                 encouragementView.trophyProgress = trophyProgress
                 
                 encouragementView.removeTarget(nil, action: nil, for: .touchUpInside)

@@ -13,7 +13,17 @@ import Kingfisher
 import UIImageColors
 import BadgeSwift
 
+class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColors struc
+    public var colors: UIImageColors!
+    
+    convenience init(_ colors: UIImageColors) {
+        self.init()
+        self.colors = colors
+    }
+}
+
 @IBDesignable public class EncouragementView : UIButton {
+    private static let emojiColorsCache = NSCache<NSString, UIImageColorsWrapper>()
     private let minimumColorValue: CGFloat = 0.84
     public static var versionNumber = 1
     
@@ -28,6 +38,12 @@ import BadgeSwift
     var subtitle: String? = "" {
         didSet {
             self.subtitleLabel.text = subtitle
+        }
+    }
+    
+    var header: String? = "" {
+        didSet {
+            self.headerLabel.text = header
         }
     }
     
@@ -59,9 +75,11 @@ import BadgeSwift
     private var backgroundImageView: UIImageView!
     
     private var gradientLayer: CAGradientLayer?
+    private var headerShadowLayer: CALayer?
     
     private var encouragementTitleLabel: UILabel!
     private var subtitleLabel: UILabel!
+    private var headerLabel: UILabel!
     
     private var currentConstraints: [NSLayoutConstraint]! = []
     private var borderLayer: CAShapeLayer?
@@ -147,22 +165,28 @@ import BadgeSwift
         self.addSubview(emojiView)
         
         encouragementTitleLabel = UILabel()
-        encouragementTitleLabel.font = UIFont.boldSystemFont(ofSize: 24)
-        encouragementTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        encouragementTitleLabel.font = UIFont.boldSystemFont(ofSize: 22)
         encouragementTitleLabel.numberOfLines = 1
         encouragementTitleLabel.adjustsFontSizeToFitWidth = true
         encouragementTitleLabel.minimumScaleFactor = 0.6
-        encouragementTitleLabel.clipsToBounds = false
+        encouragementTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(encouragementTitleLabel)
         
         subtitleLabel = UILabel()
-        subtitleLabel.font = UIFont.systemFont(ofSize: 18)
+        subtitleLabel.font = UIFont.systemFont(ofSize: 14)
         subtitleLabel.numberOfLines = 3
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.minimumScaleFactor = 0.6
         subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        subtitleLabel.clipsToBounds = false
         self.addSubview(subtitleLabel)
+        
+        headerLabel = UILabel()
+        headerLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        headerLabel.numberOfLines = 1
+        headerLabel.adjustsFontSizeToFitWidth = true
+        headerLabel.minimumScaleFactor = 0.6
+        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(headerLabel)
     }
     
     public override func updateConstraints() {
@@ -174,6 +198,13 @@ import BadgeSwift
         
         self.reloadEmojiImagesAndThenGradientBackgroundAndLabelColors()
     }
+
+    #if DEBUG
+    @objc func injected() {
+        reloadConstraints()
+        refreshGradientBackgroundAndLabelColors()
+    }
+    #endif
     
     func reloadConstraints() {
         defer {
@@ -186,6 +217,7 @@ import BadgeSwift
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.frame.width))
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.frame.height))
         
+        
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: backgroundImageView, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant:0))
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: backgroundImageView, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant:0))
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: backgroundImageView, attribute: NSLayoutAttribute.height, multiplier: 1.0, constant: 0))
@@ -194,18 +226,19 @@ import BadgeSwift
         currentConstraints.append(NSLayoutConstraint(item: emojiView as Any, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiImageSize))
         currentConstraints.append(NSLayoutConstraint(item: emojiView as Any, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.emojiImageSize))
         
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:0))
+        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:12))
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
         
-        currentConstraints.append(NSLayoutConstraint(item: encouragementTitleLabel as Any, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: 24))
-        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:30))
-        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 10))
+        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: headerLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant:4))
+        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: headerLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -20))
+        
+        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:40))
+        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
         currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
-        currentConstraints.append(NSLayoutConstraint(item: encouragementTitleLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.top, multiplier: 1.0, constant:-2))
-        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 10))
+        currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.firstBaseline, multiplier: 1.0, constant:8))
         
         currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant:8))
-        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 10))
+        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
         currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
     }
     
@@ -275,12 +308,24 @@ import BadgeSwift
             return
         }
         
-        let ratio = emojiImage.size.width/emojiImage.size.height
-        let downsampleDimension: CGFloat = 60
-        let colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
+        guard let trophyProgress = trophyProgress else {
+            return
+        }
+        
+        var colors: UIImageColors!
+        if let cachedColor =  EncouragementView.emojiColorsCache.object(forKey: trophyProgress.emoji as NSString)?.colors {
+            colors = cachedColor
+        } else {
+            // create it from scratch then store in the cache
+            let ratio = emojiImage.size.width/emojiImage.size.height
+            let downsampleDimension: CGFloat = 80
+            colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
+            EncouragementView.emojiColorsCache.setObject(UIImageColorsWrapper(colors), forKey: trophyProgress.emoji as NSString)
+        }
         
         self.encouragementTitleLabel.textColor = colors.background
         self.subtitleLabel.textColor = colors.background
+        self.headerLabel.textColor = colors.background
         
         var gradientLayer: CAGradientLayer! = self.gradientLayer
         if gradientLayer == nil {
@@ -310,8 +355,23 @@ import BadgeSwift
         gradientLayer.borderWidth = lineWidth
         gradientLayer.borderColor = borderColor.cgColor
         gradientLayer.bounds = self.bounds
+        gradientLayer.masksToBounds = true
         gradientLayer.position = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height/2)
         gradientLayer.colors = [colors.secondary.cgColor, colors.primary.cgColor]
+        
+        let headerShadowHeight: CGFloat = 26
+
+        var headerShadowLayer: CALayer! = self.headerShadowLayer
+        if headerShadowLayer == nil {
+            headerShadowLayer = CALayer()
+            headerShadowLayer.masksToBounds = true
+            gradientLayer.addSublayer(headerShadowLayer)
+            self.headerShadowLayer = headerShadowLayer
+        }
+        
+        headerShadowLayer.backgroundColor = colors.primary.withAlphaComponent(0.8).cgColor
+        headerShadowLayer.bounds = CGRect(x: 0, y: 0, width: self.frame.size.width, height: headerShadowHeight)
+        headerShadowLayer.position = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height - headerShadowHeight/2)
     }
     
     private func renderEmojiImages() {
