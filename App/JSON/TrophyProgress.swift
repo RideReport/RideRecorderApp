@@ -10,31 +10,30 @@ import Foundation
 import SwiftyJSON
 
 public class TrophyProgress {
+    public static let emptyBodyPlaceholderString = "???"
+    
     var emoji: String = ""
     var progress: Double = 0
-    var body: String = ""
-    var instructions: String = ""
+    var body: String? = nil
+    var instructions: String? = nil
     var count: Int = 0
     var lastEarned: Date? = nil
     
     convenience init?(dictionary: JSON) {
         self.init()
         
-        guard let emoji = dictionary["emoji"].string,
-            let body = dictionary["description"].string else {
-                return nil
+        guard let emoji = dictionary["emoji"].string else {
+            return nil
         }
         
         self.emoji = emoji
-        self.body = body
+        self.body = dictionary["description"].string
         
         if let dateString = dictionary["lastEarned"].string, let date = Date.dateFromJSONString(dateString) {
             self.lastEarned = date
         }
         
-        if let instructions = dictionary["instructions"].string {
-            self.instructions = instructions
-        }
+        self.instructions = dictionary["instructions"].string
         
         if let count = dictionary["count"].int {
             self.count = count

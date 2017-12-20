@@ -49,7 +49,7 @@ class TrophyCategoryViewController: UICollectionViewController {
         
         trophyProgressButton.trophyProgress = trophyProgress
     
-        trophyDescript.text = trophyProgress.body
+        trophyDescript.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
         
         return cell
     }

@@ -220,6 +220,8 @@
 		3D818A141C938BED00B64403 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A131C938BED00B64403 /* AssetsLibrary.framework */; };
 		3D818A161C938C0B00B64403 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D818A151C938C0B00B64403 /* CoreMedia.framework */; };
 		3D8969441D5FDDCE0034578A /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8969431D5FDDCE0034578A /* HealthKit.framework */; };
+		3D9705B91FE9C7F100F9F2EA /* UIViewController+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9705B81FE9C7F100F9F2EA /* UIViewController+Injection.swift */; };
+		3D9705BA1FE9C7F100F9F2EA /* UIViewController+Injection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9705B81FE9C7F100F9F2EA /* UIViewController+Injection.swift */; };
 		3D9F2EF11D11C71600BE4E0C /* OtherTripsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */; };
 		3DA1EFDE1C8F8745002B12DB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FDCC51BD56FEB0079AFCC /* libz.tbd */; };
 		3DA1EFE31C8F9287002B12DB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */; };
@@ -619,6 +621,7 @@
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		3D8969431D5FDDCE0034578A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
+		3D9705B81FE9C7F100F9F2EA /* UIViewController+Injection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Injection.swift"; sourceTree = "<group>"; };
 		3D9F2EF01D11C71600BE4E0C /* OtherTripsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTripsViewController.swift; sourceTree = "<group>"; };
 		3DA1EFE21C8F9287002B12DB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		3DA1EFE41C8F94EB002B12DB /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = "<group>"; };
@@ -1315,6 +1318,7 @@
 				8421419C1C3F06EE009DA851 /* CollectionTypeAdditions.swift */,
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 				3D3523A01FE09653009D3E6B /* UIKit+ClosureAdditions.swift */,
+				3D9705B81FE9C7F100F9F2EA /* UIViewController+Injection.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2275,6 +2279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D9705BA1FE9C7F100F9F2EA /* UIViewController+Injection.swift in Sources */,
 				3D2705DE1C8785D400A96DE0 /* ViewController.swift in Sources */,
 				3DD544581F2A61200009876D /* UploadViewController.swift in Sources */,
 				3D7738081F589E6D00155DB8 /* FFTManager.cpp in Sources */,
@@ -2572,6 +2577,7 @@
 				3D3599CA1F99763E0078E97D /* TrophyProgress.swift in Sources */,
 				3DA8C10F1F8EE0C400BE1460 /* TrophyView.swift in Sources */,
 				3D1A15501CD80BC200F9BD8D /* HealthAppSettingsViewController.swift in Sources */,
+				3D9705B91FE9C7F100F9F2EA /* UIViewController+Injection.swift in Sources */,
 				84D1555519D2733500316995 /* AppDelegate.swift in Sources */,
 				84F1F8E61B66A3D400EA0B6E /* Reachability.m in Sources */,
 				84EA5BEE1A6F226400C71F53 /* SetupPermissionsViewController.swift in Sources */,
@@ -3198,6 +3204,7 @@
 				COCOAPODS_PARALLEL_CODE_SIGN = true;
 				CODE_SIGN_ENTITLEMENTS = "Ride Report.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 9NRH28TN93;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -3254,10 +3261,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 					"$(PROJECT_DIR)/TripRecorder/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DEBUG=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,

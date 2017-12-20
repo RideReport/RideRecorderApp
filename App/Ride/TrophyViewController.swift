@@ -82,9 +82,13 @@ class TrophyViewController: UIViewController {
         self.trophyProgressButton.trophyProgress = trophyProgress
         self.trophyProgressButton.showsCount = false
         
-        self.descriptionLabel.text = trophyProgress.body
+        self.descriptionLabel.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
         
         if trophyProgress.count < 1 {
+            if let instructions = trophyProgress.instructions {
+                self.descriptionLabel.text = instructions
+            }
+            
             if trophyProgress.progress > 0 {
                 self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy.", Int(trophyProgress.progress * 100))
             } else {

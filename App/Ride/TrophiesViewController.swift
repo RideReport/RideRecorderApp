@@ -24,6 +24,9 @@ class TrophiesViewController: UITableViewController {
     override func viewDidLoad() {
         self.title = "Achievements"
         
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 136
+        
         reachabilityManager = NetworkReachabilityManager()
     }
     
