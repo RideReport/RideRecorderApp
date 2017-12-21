@@ -20,6 +20,7 @@ class TrophyViewController: UIViewController {
     @IBOutlet weak var trophyProgressButton: TrophyProgressButton!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
+    @IBOutlet weak var moreInfoTextView: UITextView!
     
     
     static func presenter()-> Presentr {
@@ -43,6 +44,11 @@ class TrophyViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(TrophyViewController.didTapMoreInfo(_:)))
+        self.moreInfoTextView.addGestureRecognizer(tapRecognizer)
+        self.moreInfoTextView.isSelectable = true
+        self.moreInfoTextView.isEditable = false
         
         refreshUI()
         
@@ -74,6 +80,16 @@ class TrophyViewController: UIViewController {
         }
     }
     
+    @objc func didTapMoreInfo(_ tapGesture: UIGestureRecognizer) {
+        if tapGesture.state != UIGestureRecognizerState.ended {
+            return
+        }
+        
+        if let url = trophyProgress?.moreInfoUrl {
+            UIApplication.shared.openURL(url)
+        }
+    }
+    
     private func refreshUI() {
         guard let trophyProgress = trophyProgress else {
             return
@@ -84,6 +100,12 @@ class TrophyViewController: UIViewController {
         
         self.descriptionLabel.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
         
+        if let _ = trophyProgress.moreInfoUrl {
+            moreInfoTextView.isHidden = false
+        } else {
+            moreInfoTextView.isHidden = true
+        }
+        
         if trophyProgress.count < 1 {
             if let instructions = trophyProgress.instructions {
                 self.descriptionLabel.text = instructions
@@ -92,7 +114,7 @@ class TrophyViewController: UIViewController {
             if trophyProgress.progress > 0 {
                 self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy.", Int(trophyProgress.progress * 100))
             } else {
-                self.detailLabel.text = "You have never earned this trophy."
+                self.detailLabel.text = "You have not earned this trophy."
             }
         } else {
             if trophyProgress.progress > 0 && trophyProgress.progress < 1 {

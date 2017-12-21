@@ -234,7 +234,6 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -14))
         currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.firstBaseline, multiplier: 1.0, constant:8))
         
-        currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant:8))
         currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
         currentConstraints.append(NSLayoutConstraint(item: self.encouragementTitleLabel, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: 0))
     }

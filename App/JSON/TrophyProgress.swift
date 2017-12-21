@@ -15,6 +15,7 @@ public class TrophyProgress {
     var emoji: String = ""
     var progress: Double = 0
     var body: String? = nil
+    var moreInfoUrl: URL? = nil
     var instructions: String? = nil
     var count: Int = 0
     var lastEarned: Date? = nil
@@ -29,11 +30,15 @@ public class TrophyProgress {
         self.emoji = emoji
         self.body = dictionary["description"].string
         
-        if let dateString = dictionary["lastEarned"].string, let date = Date.dateFromJSONString(dateString) {
+        if let dateString = dictionary["last_earned"].string, let date = Date.dateFromJSONString(dateString) {
             self.lastEarned = date
         }
         
         self.instructions = dictionary["instructions"].string
+        
+        if let urlString = dictionary["more_info_url"].string {
+            self.moreInfoUrl = URL(string: urlString)
+        }
         
         if let count = dictionary["count"].int {
             self.count = count
