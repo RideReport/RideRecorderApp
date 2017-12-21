@@ -370,7 +370,7 @@ class StatsViewController: UIViewController {
                 self.bobbleChick()
             }
             emptyTripsView.isHidden = false
-            emptyTripsLabel.text = "How about this? We'll give you a baby chick trophy for your first ride."
+            emptyTripsLabel.text = "Come back and check this out after your first ride!"
             
             rollupsLabel.text = ""
             return
@@ -385,7 +385,7 @@ class StatsViewController: UIViewController {
             
             if let lifeStatsDict = rollupsJson["lifetime"]?.dictionary, let lifetimeRides = lifeStatsDict["rides"]?.int, lifetimeRides == 0 {
                 rollupsSegment.setEnabled(false, forSegmentAt: 2)
-                emptyTripsLabel.text = "How about this? We'll give you a baby chick trophy for your first ride."
+                emptyTripsLabel.text = "Come back and check this out after your first ride!"
             } else if rollupsKey == "thisyear" {
                 emptyTripsLabel.text = "You haven't taken any rides yet this year. What are you waiting for?"
             }

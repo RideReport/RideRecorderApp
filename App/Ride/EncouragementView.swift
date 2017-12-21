@@ -165,7 +165,6 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         self.addSubview(emojiView)
         
         encouragementTitleLabel = UILabel()
-        encouragementTitleLabel.font = UIFont.boldSystemFont(ofSize: 22)
         encouragementTitleLabel.numberOfLines = 1
         encouragementTitleLabel.adjustsFontSizeToFitWidth = true
         encouragementTitleLabel.minimumScaleFactor = 0.6
@@ -173,7 +172,6 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         self.addSubview(encouragementTitleLabel)
         
         subtitleLabel = UILabel()
-        subtitleLabel.font = UIFont.systemFont(ofSize: 14)
         subtitleLabel.numberOfLines = 3
         subtitleLabel.adjustsFontSizeToFitWidth = true
         subtitleLabel.minimumScaleFactor = 0.6
@@ -181,7 +179,6 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         self.addSubview(subtitleLabel)
         
         headerLabel = UILabel()
-        headerLabel.font = UIFont.boldSystemFont(ofSize: 14)
         headerLabel.numberOfLines = 1
         headerLabel.adjustsFontSizeToFitWidth = true
         headerLabel.minimumScaleFactor = 0.6
@@ -234,18 +231,28 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:40))
         currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
-        currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
+        currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -14))
         currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.firstBaseline, multiplier: 1.0, constant:8))
         
         currentConstraints.append(NSLayoutConstraint(item: subtitleLabel, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant:8))
         currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
-        currentConstraints.append(NSLayoutConstraint(item: self.emojiView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
+        currentConstraints.append(NSLayoutConstraint(item: self.encouragementTitleLabel, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: subtitleLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: 0))
     }
     
     override public func layoutSubviews() {
         super.layoutSubviews()
         
         reloadConstraints()
+        
+        if self.frame.size.width > 300 {
+            encouragementTitleLabel.font = UIFont.boldSystemFont(ofSize: 24)
+            subtitleLabel.font = UIFont.systemFont(ofSize: 16)
+            headerLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        } else {
+            encouragementTitleLabel.font = UIFont.boldSystemFont(ofSize: 22)
+            subtitleLabel.font = UIFont.systemFont(ofSize: 14)
+            headerLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        }
         
         if let gradientLayer = self.gradientLayer {
             gradientLayer.frame = self.bounds
