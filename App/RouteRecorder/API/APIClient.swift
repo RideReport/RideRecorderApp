@@ -132,7 +132,7 @@ public class AuthenticatedAPIRequest {
 
         self.request = client.sessionManager.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
         
-        let handleHTTPResonseErrors = { (response: HTTPURLResponse?) in
+        let handleHTTPResonseErrors = { (response: HTTPURLResponse?, json: JSON?) in
             if (response?.statusCode == 401) {
                 DispatchQueue.main.async {
                     if (self.authToken == KeychainManager.shared.accessToken) {
@@ -140,6 +140,30 @@ public class AuthenticatedAPIRequest {
                         // since it is possible we've already reauthenciated
                         client.reauthenticate()
                     }
+                }
+            } else if (response?.statusCode == 455) {
+                DispatchQueue.main.async {
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    view.configureTheme(.error)
+                    view.configureDropShadow()
+                    view.button?.setTitle("Update", for: .normal)
+                    view.buttonTapHandler = {
+                        _ in SwiftMessages.hide()
+                        if let appURL = URL(string: "itms://itunes.apple.com/us/app/ride-report-automatic-gps-bike-ride-tracker/id1053230099") {
+                            UIApplication.shared.openURL(appURL)
+                        }
+                    }
+                    
+                    if let json = json, let title = json["display_title"].string, let body = json["display_body"].string {
+                        view.configureContent(title: title, body: body, iconText: "🤖")
+                    } else {
+                        view.configureContent(title: "App Update Required", body: "Please update the app to keep using Ride Report!", iconText: "🤖")
+                    }
+                    
+                    var config = SwiftMessages.Config()
+                    config.presentationStyle = .top
+                    config.duration = .forever
+                    SwiftMessages.show(config: config, view: view)
                 }
             } else if let statusCode = response?.statusCode, statusCode >= 500 && statusCode < 600 {
                 DispatchQueue.main.async {
@@ -149,7 +173,12 @@ public class AuthenticatedAPIRequest {
                     view.button?.isHidden = true
                     
                     let iconText = ["😓", "😥", "😳", "🙄", "😭"].sm_random()!
-                    view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
+                    
+                    if let json = json, let title = json["display_title"].string, let body = json["display_body"].string {
+                        view.configureContent(title: title, body: body, iconText: iconText)
+                    } else {
+                        view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
+                    }
                     
                     var config = SwiftMessages.Config()
                     config.presentationStyle = .top
@@ -167,7 +196,7 @@ public class AuthenticatedAPIRequest {
                 case .success(_):
                     completionHandler(jsonResponse)
                 case .failure(_):
-                    handleHTTPResonseErrors(response.response)
+                    handleHTTPResonseErrors(response.response, nil)
                     completionHandler(jsonResponse)
                 }
                 
@@ -180,7 +209,7 @@ public class AuthenticatedAPIRequest {
                 case .success(_):
                     completionHandler(response)
                 case .failure(_):
-                    handleHTTPResonseErrors(response.response)
+                    handleHTTPResonseErrors(response.response, response.value)
                     completionHandler(response)
                 }
                 
@@ -486,21 +515,6 @@ public class APIClient {
                 }
             case .failure(let error):
                 DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
-                
-                DispatchQueue.main.async {
-                    let view = MessageView.viewFromNib(layout: .cardView)
-                    view.configureTheme(.warning)
-                    view.configureDropShadow()
-                    view.button?.isHidden = true
-                    
-                    let iconText = ["😓", "😥", "😳", "🙄", "😭"].sm_random()!
-                    view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
-                    
-                    var config = SwiftMessages.Config()
-                    config.presentationStyle = .top
-                    config.duration = .seconds(seconds: 3)
-                    SwiftMessages.show(config: config, view: view)
-                }
             }
         }
     }
