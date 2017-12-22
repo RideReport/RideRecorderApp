@@ -11,6 +11,7 @@ import SwiftyJSON
 import Alamofire
 import OAuthSwift
 import CocoaLumberjack
+import SwiftMessages
 
 public let AuthenticatedAPIRequestErrorDomain = "com.Knock.RideReport.error"
 let APIRequestBaseHeaders = ["Content-Type": "application/json", "Accept": "application/json, text/plain"]
@@ -142,11 +143,18 @@ public class AuthenticatedAPIRequest {
                 }
             } else if (response?.statusCode == 500) {
                 DispatchQueue.main.async {
-                    if let viewController = UIApplication.topMostViewController {
-                        let alertController = UIAlertController(title: "Ride Report is having trouble", message: "Something is wrong on our end. Please try again later.", preferredStyle: UIAlertControllerStyle.alert)
-                        alertController.addAction(UIAlertAction(title: "Sad Trombone", style: UIAlertActionStyle.cancel, handler: nil))
-                        viewController.present(alertController, animated: true, completion: nil)
-                    }
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    view.configureTheme(.warning)
+                    view.configureDropShadow()
+                    view.button?.isHidden = true
+                    
+                    let iconText = ["😓", "😥", "😳", "🙄", "😭"].sm_random()!
+                    view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
+                    
+                    var config = SwiftMessages.Config()
+                    config.presentationStyle = .top
+                    config.duration = .seconds(seconds: 3)
+                    SwiftMessages.show(config: config, view: view)
                 }
             }
         }
@@ -478,11 +486,20 @@ public class APIClient {
                 }
             case .failure(let error):
                 DDLogWarn(String(format: "Error retriving access token: %@", error as CVarArg))
-
-                if let viewController = UIApplication.topMostViewController {
-                    let alertController = UIAlertController(title: "Ride Report is having trouble", message: "There was an authenication error talking to the server. Please report this issue to bugs@ride.report!", preferredStyle: UIAlertControllerStyle.alert)
-                    alertController.addAction(UIAlertAction(title: "Sad Panda", style: UIAlertActionStyle.cancel, handler: nil))
-                    viewController.present(alertController, animated: true, completion: nil)
+                
+                DispatchQueue.main.async {
+                    let view = MessageView.viewFromNib(layout: .cardView)
+                    view.configureTheme(.warning)
+                    view.configureDropShadow()
+                    view.button?.isHidden = true
+                    
+                    let iconText = ["😓", "😥", "😳", "🙄", "😭"].sm_random()!
+                    view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
+                    
+                    var config = SwiftMessages.Config()
+                    config.presentationStyle = .top
+                    config.duration = .seconds(seconds: 3)
+                    SwiftMessages.show(config: config, view: view)
                 }
             }
         }

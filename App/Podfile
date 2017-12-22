@@ -2,6 +2,7 @@ platform :ios, '8.0'
 use_frameworks!
 
 def shared_pods
+    pod 'SwiftMessages'
     pod 'KeychainAccess'
     pod 'Alamofire'
     pod 'SwiftyJSON'
