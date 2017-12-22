@@ -61,6 +61,7 @@ class RideReportAPIClient: APIClientDelegate {
     }
     
     var accountEmailAddress: String? = nil
+    var accountFacebookName: String? = nil
     
     var hasRegisteredForRemoteNotifications: Bool = false
     var notificationDeviceToken: Data?
@@ -147,7 +148,7 @@ class RideReportAPIClient: APIClientDelegate {
                             trip.managedObjectContext?.delete(trip)
                             CoreDataManager.shared.saveContext()
                         }
-                    } else if let uuid = tripJson["uuid"].string {
+                    } else if let _ = tripJson["uuid"].string {
                         if let trip = Trip.createOrUpdateFromJSON(tripJson) {
                             trip.isSynced = true
                         }
@@ -482,7 +483,15 @@ class RideReportAPIClient: APIClientDelegate {
                 
                 if let account_verified = json["account_verified"].bool {
                     if (account_verified) {
-                        self.accountEmailAddress = json["accounts"]["emails"].array?.first?["email"].string
+                        if let email = json["accounts"]["emails"].array?.first?["email"].string {
+                            self.accountEmailAddress = email
+                        }
+                        if let email = json["accounts"]["facebook_accounts"].array?.first?["email"].string {
+                            self.accountEmailAddress = email
+                        }
+                        if let facebookName = json["accounts"]["facebook_accounts"].array?.first?["name"].string {
+                            self.accountFacebookName = facebookName
+                        }
                         self.accountVerificationStatus = .verified
                     } else {
                         self.accountVerificationStatus = .unverified

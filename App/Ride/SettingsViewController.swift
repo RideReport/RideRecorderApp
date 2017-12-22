@@ -104,8 +104,14 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 1 {
-            if let emailAddress = RideReportAPIClient.shared.accountEmailAddress {
-                return emailAddress
+            if (RideReportAPIClient.shared.accountVerificationStatus == .verified) {
+                if let emailAddress = RideReportAPIClient.shared.accountEmailAddress {
+                    return emailAddress
+                } else if let fullName = RideReportAPIClient.shared.accountFacebookName {
+                    return "Logged in with Facebook as " + fullName
+                } else {
+                    return "Logged in"
+                }
             } else {
                 return "Don't lose your rides!"
             }
@@ -115,7 +121,7 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     }
     
     override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        if RideReportAPIClient.shared.accountEmailAddress == nil && section == 1 {
+        if (RideReportAPIClient.shared.accountVerificationStatus == .verified) && section == 1 {
             return "Create an account so you can recover your rides if your phone is lost."
         }
         
@@ -131,7 +137,7 @@ class SettingsViewController: UITableViewController, MFMailComposeViewController
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if RideReportAPIClient.shared.accountEmailAddress == nil && section == 1 {
+        if (RideReportAPIClient.shared.accountVerificationStatus != .verified) && section == 1 {
             return 50.0
         }
         
