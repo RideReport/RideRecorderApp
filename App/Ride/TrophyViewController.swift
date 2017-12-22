@@ -164,9 +164,17 @@ class TrophyViewController: UIViewController {
                 }
             } else if trophyProgress.count == 1 {
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    detailString = String(format:"You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
+                    detailString = String(format:"You earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 } else {
                     detailString = "You have earned this trophy."
+                }
+            } else if trophyProgress.count == 2 {
+                detailString = String(format: "You have earned this trophy twice")
+                
+                if let lastEarnedDate = trophyProgress.lastEarned {
+                    detailString += String(format:", most recently %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
+                } else {
+                    detailString += "."
                 }
             } else {
                 let formatter = NumberFormatter()
