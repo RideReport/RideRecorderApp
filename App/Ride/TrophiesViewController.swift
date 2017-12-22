@@ -134,7 +134,8 @@ class TrophiesViewController: UITableViewController {
             }
         }  
         
-        return self.tableView.dequeueReusableCell(withIdentifier: "StatsSeriesCell", for: indexPath)
+        // if it's not a type we know about, render a 0 height cell to skip over it.
+        return self.tableView.dequeueReusableCell(withIdentifier: "EmptyTableViewCell", for: indexPath)
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
