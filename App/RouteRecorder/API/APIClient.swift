@@ -141,7 +141,7 @@ public class AuthenticatedAPIRequest {
                         client.reauthenticate()
                     }
                 }
-            } else if (response?.statusCode == 500) {
+            } else if let statusCode = response?.statusCode, statusCode >= 500 && statusCode < 600 {
                 DispatchQueue.main.async {
                     let view = MessageView.viewFromNib(layout: .cardView)
                     view.configureTheme(.warning)
