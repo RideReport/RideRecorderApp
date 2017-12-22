@@ -9,14 +9,12 @@
 import Foundation
 import SwiftyJSON
 
-public class TrophyCategory {
+public struct TrophyCategory {
     var name: String = ""
     var application: ConnectedApp? = nil
     var trophyProgresses: [TrophyProgress] = []
     
-    convenience init?(dictionary: JSON) {
-        self.init()
-        
+    init?(_ dictionary: JSON) {        
         guard let name = dictionary["name"].string,
             let trophyProgressJsons = dictionary["content"].array else {
                 return nil
@@ -26,7 +24,7 @@ public class TrophyCategory {
         
         
         for trophyProgressJson in trophyProgressJsons {
-            if let trophyProgress = TrophyProgress(dictionary: trophyProgressJson) {
+            if let trophyProgress = TrophyProgress(trophyProgressJson) {
                 trophyProgresses.append(trophyProgress)
             }
         }

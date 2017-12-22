@@ -22,10 +22,16 @@ class TrophyViewController: UIViewController {
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var moreInfoTextView: UITextView!
     
+    @IBOutlet weak var rewardImageView: UIImageView!
+    @IBOutlet weak var rewardOrganizationName: UILabel!
+    @IBOutlet weak var rewardDescriptionLabel: UILabel!
+    
+    private var shouldShowTrophyProgressView = true
+    
     
     static func presenter()-> Presentr {
         let width = ModalSize.fluid(percentage: Float(TrophyViewController.viewSizePercentageWidth))
-        let height = ModalSize.custom(size: 375)
+        let height = ModalSize.custom(size: 475)
         let center = ModalCenterPosition.center
         let customType = PresentationType.custom(width: width, height: height, center: center)
         
@@ -64,11 +70,13 @@ class TrophyViewController: UIViewController {
             return
         }
         
-        if trophyProgress.count >= 1 {
-            self.view.sparkle(ColorPallete.shared.brightBlue, inRect: self.trophyProgressButton.frame.insetBy(dx: -30, dy: -30))
-            self.trophyProgressButton.fadeIn()
-        } else {
-            self.trophyProgressButton.isHidden = false
+        if shouldShowTrophyProgressView {
+            if trophyProgress.count >= 1 {
+                self.view.sparkle(ColorPallete.shared.brightBlue, inRect: self.trophyProgressButton.frame.insetBy(dx: -30, dy: -30))
+                self.trophyProgressButton.fadeIn()
+            } else {
+                self.trophyProgressButton.isHidden = false
+            }
         }
     }
     
@@ -100,21 +108,46 @@ class TrophyViewController: UIViewController {
         
         self.descriptionLabel.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
         
-        if let _ = trophyProgress.moreInfoUrl {
-            moreInfoTextView.isHidden = false
-        } else {
-            moreInfoTextView.isHidden = true
+        self.trophyProgressButton.isHidden = false
+        self.rewardImageView.isHidden = true
+        self.rewardOrganizationName.isHidden = true
+        self.rewardDescriptionLabel.superview?.isHidden = true
+        self.shouldShowTrophyProgressView = true
+        
+        var hasReward = false
+        if let reward = trophyProgress.reward {
+            hasReward = true
+            if let imageURL = reward.imageURL {
+                self.trophyProgressButton.isHidden = true
+                self.shouldShowTrophyProgressView = false
+                self.rewardImageView.isHidden = false
+                self.rewardImageView.kf.setImage(with: imageURL)
+            }
+            if let orgName = reward.organizationName {
+                self.rewardOrganizationName.isHidden = false
+                self.rewardOrganizationName.text = orgName
+            }
+            
+            self.rewardDescriptionLabel.superview?.isHidden = false
+            self.rewardDescriptionLabel.text = reward.description
         }
         
+        if let _ = trophyProgress.moreInfoUrl {
+            moreInfoTextView.superview?.isHidden = false
+        } else {
+            moreInfoTextView.superview?.isHidden = true
+        }
+        
+        var detailString = ""
         if trophyProgress.count < 1 {
             if let instructions = trophyProgress.instructions {
                 self.descriptionLabel.text = instructions
             }
             
             if trophyProgress.progress > 0 {
-                self.detailLabel.text = String(format: "You are %i%% of the way to earning this trophy.", Int(trophyProgress.progress * 100))
+                detailString = String(format: "You are %i%% of the way to earning this trophy.", Int(trophyProgress.progress * 100))
             } else {
-                self.detailLabel.text = "You have not earned this trophy."
+                detailString = "You have not earned this trophy."
             }
         } else {
             if trophyProgress.progress > 0 && trophyProgress.progress < 1 {
@@ -125,16 +158,15 @@ class TrophyViewController: UIViewController {
                     return
                 }
                 
-                var descString = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(trophyProgress.progress * 100), countOrdinal)
+                detailString = String(format: "You are %i%% of the way to earning this trophy for your %@ time.", Int(trophyProgress.progress * 100), countOrdinal)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:" You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
+                    detailString += String(format:" You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 }
-                self.detailLabel.text = descString
             } else if trophyProgress.count == 1 {
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    self.detailLabel.text = String(format:"You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
+                    detailString = String(format:"You last earned this trophy %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 } else {
-                    self.detailLabel.text = "You have earned this trophy."
+                    detailString = "You have earned this trophy."
                 }
             } else {
                 let formatter = NumberFormatter()
@@ -144,15 +176,20 @@ class TrophyViewController: UIViewController {
                     return
                 }
                 
-                var descString = String(format: "You have earned this trophy %@ times", countSpelled)
+                detailString = String(format: "You have earned this trophy %@ times", countSpelled)
                 if let lastEarnedDate = trophyProgress.lastEarned {
-                    descString += String(format:", most recently %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
+                    detailString += String(format:", most recently %@.", lastEarnedSubstring(fromDate: lastEarnedDate))
                 } else {
-                    descString += "."
+                    detailString += "."
                 }
-                self.detailLabel.text = descString
             }
         }
+        
+        if hasReward {
+            detailString = detailString.replacingOccurrences(of: "trophy", with: "reward")
+        }
+        
+        self.detailLabel.text = detailString
     }
     
     @IBAction func cancel(_ sender: AnyObject) {

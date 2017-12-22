@@ -21,6 +21,19 @@ import BadgeSwift
     @IBInspectable var emojiFontSize: CGFloat = 50
     @IBInspectable var badgeDimension: CGFloat = TrophyProgressButton.defaultBadgeDimension
     
+    private var cornerRadius: CGFloat {
+        get {
+            let magicCornerRadiusRatio: CGFloat = 10/57 // https://hicksdesign.co.uk/journal/ios-icon-corner-radii
+            return CGFloat(self.badgeDimension * magicCornerRadiusRatio)
+        }
+    }
+    
+    private var borderWidth: CGFloat {
+        get {
+            return self.badgeDimension/35.0
+        }
+    }
+    
     @IBInspectable var showsCount: Bool = true {
         didSet {
             reloadCountProgressUI()
@@ -44,6 +57,10 @@ import BadgeSwift
         get {
             guard let trophyProgress = self.trophyProgress else {
                 return ""
+            }
+            
+            if let iconURL = trophyProgress.iconURL {
+                return String(format: "%@-%.0f-%i", iconURL.lastPathComponent, self.countLabelSize, TrophyProgressButton.versionNumber)
             }
             
             return String(format: "%@-%.0f-%.0f-%i", trophyProgress.emoji, self.countLabelSize, self.emojiFontSize, TrophyProgressButton.versionNumber)
@@ -124,28 +141,27 @@ import BadgeSwift
         emojiProgressView.image = emojiSaturated
         emojiView.image = emojiDesaturated
         
-        if (drawsDottedOutline) {
+        if (self.trophyProgress?.reward != nil) {
             self.backgroundColor = ColorPallete.shared.almostWhite
-            let borderWidth: CGFloat = 2
             
             if self.borderLayer == nil {
                 let borderLayer = CAShapeLayer()
                 borderLayer.fillColor = UIColor.clear.cgColor
                 borderLayer.strokeColor = ColorPallete.shared.goodGreen.cgColor
-                borderLayer.lineWidth = borderWidth
+                borderLayer.lineWidth = self.borderWidth
                 borderLayer.lineJoin = kCALineJoinRound
-                borderLayer.lineDashPattern = [6,3]
+                borderLayer.lineDashPattern = [8,5]
                 
                 self.layer.addSublayer(borderLayer)
                 self.borderLayer = borderLayer
             }
             if let layer = self.borderLayer {
                 let frameSize = self.frame.size
-                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width + 4, height: frameSize.height + 4)
+                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width - self.borderWidth/2, height: frameSize.height - self.borderWidth/2)
                 
                 layer.bounds = borderRect
                 layer.position = CGPoint(x: frameSize.width/2, y: frameSize.height/2)
-                layer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: 5).cgPath
+                layer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: self.cornerRadius).cgPath
             }
         } else {
             self.backgroundColor = UIColor.clear
@@ -212,7 +228,7 @@ import BadgeSwift
     }
     
     private func reloadEmojiImages() {
-        guard let _ = trophyProgress else {
+        guard let trophyProgress = trophyProgress else {
             emojiSaturated = nil
             emojiDesaturated = nil
             
@@ -249,9 +265,7 @@ import BadgeSwift
                 return
             }
             
-            strongSelf.renderEmojiImages()
-            
-            DispatchQueue.main.async {
+            let loadUIBlock = {
                 guard let reallyStrongSelf = self else {
                     return
                 }
@@ -260,10 +274,21 @@ import BadgeSwift
                 reallyStrongSelf.emojiView.fadeIn()
                 reallyStrongSelf.emojiProgressView.fadeIn()
             }
+            
+            if let iconURL = trophyProgress.iconURL {
+                ImageDownloader.default.downloadImage(with: iconURL, options: [.scaleFactor(UIScreen.main.scale)], progressBlock: nil) {
+                    (image, error, url, data) in
+                    strongSelf.renderEmojiImages(withIconImage: image)
+                    DispatchQueue.main.async { loadUIBlock() }
+                }
+            } else {
+                strongSelf.renderEmojiImages()
+                DispatchQueue.main.async { loadUIBlock() }
+            }
         }
     }
     
-    private func renderEmojiImages() {
+    private func renderEmojiImages(withIconImage iconImage: UIImage? = nil) {
         guard let trophyProgress = trophyProgress else {
             return
         }
@@ -273,11 +298,17 @@ import BadgeSwift
         paragraphStyle.alignment = .center
         
         let attributedEmojiString = NSAttributedString(string: trophyProgress.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiFontSize), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
-        let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
         
-        let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
         UIGraphicsBeginImageContextWithOptions(imageSize, false , 0.0)
-        attributedEmojiString.draw(with: CGRect(x: (imageSize.width - boundingRect.width)/2 + xOffset, y: (imageSize.height - boundingRect.height)/2, width: boundingRect.width, height: boundingRect.height),  options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+        if let iconImage = iconImage {
+            let dimension = self.emojiFontSize
+            iconImage.draw(in: CGRect(x: (imageSize.width - dimension)/2, y: (imageSize.height - dimension)/2, width: dimension, height: dimension))
+
+        } else {
+            let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+            let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
+            attributedEmojiString.draw(with: CGRect(x: (imageSize.width - boundingRect.width)/2 + xOffset, y: (imageSize.height - boundingRect.height)/2, width: boundingRect.width, height: boundingRect.height),  options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+        }
         
         let emojiImageOptional = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
@@ -347,12 +378,9 @@ import BadgeSwift
             drawsBorder = true
         }
         
-        let magicCornerRadiusRatio: Float = 10/57 // https://hicksdesign.co.uk/journal/ios-icon-corner-radii
-        
         UIGraphicsBeginImageContextWithOptions(CGSize(width: self.badgeDimension, height: self.badgeDimension), false , 0.0)
         let gradientRect = CGRect(x: 0, y: 0, width: self.badgeDimension, height: self.badgeDimension)
-        let cornerRadius = CGFloat(floorf(Float(badgeDimension) * magicCornerRadiusRatio))
-        let lineWidth = drawsBorder ? CGFloat(floorf(Float(badgeDimension)/35)) : 0
+        let lineWidth = drawsBorder ? self.borderWidth : 0
         
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [colors.secondary.cgColor, colors.primary.cgColor]
@@ -360,12 +388,12 @@ import BadgeSwift
         gradientLayer.bounds = gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2) // ensure gradient is not visible outside border
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        gradientLayer.cornerRadius = cornerRadius
+        gradientLayer.cornerRadius = self.cornerRadius
         if let context = UIGraphicsGetCurrentContext() {
         gradientLayer.render(in: context)
         }
         
-        let path = UIBezierPath(roundedRect: gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2), byRoundingCorners: UIRectCorner.allCorners, cornerRadii: CGSize(width: cornerRadius, height: cornerRadius))
+        let path = UIBezierPath(roundedRect: gradientRect.insetBy(dx: lineWidth/2, dy: lineWidth/2), byRoundingCorners: UIRectCorner.allCorners, cornerRadii: CGSize(width: self.cornerRadius, height: self.cornerRadius))
         path.lineWidth = lineWidth
         nonWhiteBorderColor.setStroke()
         path.stroke()

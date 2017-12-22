@@ -27,7 +27,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
     private let minimumColorValue: CGFloat = 0.84
     public static var versionNumber = 1
     
-    var emojiImageSize: CGFloat = 80
+    private let emojiImageSize: CGFloat = 80
     
     var title: String? = "" {
         didSet {
@@ -58,6 +58,18 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
             self.setNeedsLayout()
         }
     }
+    
+    private var gradientCacheKey: String {
+        guard let trophyProgress = self.trophyProgress else {
+            return ""
+        }
+        
+        if let iconURL = trophyProgress.iconURL {
+            return String(format: "%@-%i", iconURL.lastPathComponent, EncouragementView.versionNumber)
+        }
+        
+        return String(format: "%@-%i", trophyProgress.emoji, EncouragementView.versionNumber)
+    }
 
     private var emojiCacheKey: String {
         get {
@@ -65,7 +77,11 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
                 return ""
             }
             
-            return String(format: "%@-%.0f-%.0f-%i", trophyProgress.emoji, self.frame.width, self.frame.height, EncouragementView.versionNumber)
+            if let iconURL = trophyProgress.iconURL {
+                 return String(format: "%@-%i", iconURL.lastPathComponent, EncouragementView.versionNumber)
+            }
+            
+            return String(format: "%@-%i", trophyProgress.emoji, EncouragementView.versionNumber)
         }
     }
     
@@ -227,7 +243,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: emojiView, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
         
         currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: headerLabel, attribute: NSLayoutAttribute.bottom, multiplier: 1.0, constant:4))
-        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: headerLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -20))
+        currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: headerLabel, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant: -10))
         
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.centerY, multiplier: 1.0, constant:40))
         currentConstraints.append(NSLayoutConstraint(item: self.backgroundImageView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: encouragementTitleLabel, attribute: NSLayoutAttribute.trailing, multiplier: 1.0, constant: 18))
@@ -259,7 +275,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
     }
     
     private func reloadEmojiImagesAndThenGradientBackgroundAndLabelColors() {
-        guard let _ = trophyProgress else {
+        guard let trophyProgress = trophyProgress else {
             emojiImage = nil
             
             self.reloadEmojiUI()
@@ -273,8 +289,8 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
             self.refreshGradientBackgroundAndLabelColors()
             return
         }
-        
-        
+
+
         if let cachedEmojiImage = ImageCache.default.retrieveImageInDiskCache(forKey: self.emojiCacheKey, options: [.scaleFactor(UIScreen.main.scale)]) {
             // cache the image to memory for next time
             ImageCache.default.store(cachedEmojiImage, original: nil, forKey: self.emojiCacheKey, processorIdentifier: "", cacheSerializer: DefaultCacheSerializer.default, toDisk: false, completionHandler:nil)
@@ -294,9 +310,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
                 return
             }
             
-            strongSelf.renderEmojiImages()
-            
-            DispatchQueue.main.async {
+            let loadUIBlock = {
                 guard let reallyStrongSelf = self else {
                     return
                 }
@@ -306,6 +320,18 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
                 reallyStrongSelf.backgroundImageView.fadeIn()
                 reallyStrongSelf.refreshGradientBackgroundAndLabelColors()
             }
+            
+            if let iconURL = trophyProgress.iconURL {
+                ImageDownloader.default.downloadImage(with: iconURL, options: [.scaleFactor(UIScreen.main.scale)], progressBlock: nil) {
+                    (image, error, url, data) in
+                    strongSelf.renderEmojiImages(withIconImage: image)
+                    DispatchQueue.main.async { loadUIBlock() }
+                }
+            } else {
+                strongSelf.renderEmojiImages()
+                DispatchQueue.main.async { loadUIBlock() }
+            }
+
         }
     }
     
@@ -314,19 +340,19 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
             return
         }
         
-        guard let trophyProgress = trophyProgress else {
+        guard let _ = trophyProgress else {
             return
         }
         
         var colors: UIImageColors!
-        if let cachedColor =  EncouragementView.emojiColorsCache.object(forKey: trophyProgress.emoji as NSString)?.colors {
+        if let cachedColor =  EncouragementView.emojiColorsCache.object(forKey: self.gradientCacheKey as NSString)?.colors {
             colors = cachedColor
         } else {
             // create it from scratch then store in the cache
             let ratio = emojiImage.size.width/emojiImage.size.height
             let downsampleDimension: CGFloat = 80
             colors = emojiImage.getColors(scaleDownSize: CGSize(width: downsampleDimension, height: downsampleDimension/ratio))
-            EncouragementView.emojiColorsCache.setObject(UIImageColorsWrapper(colors), forKey: trophyProgress.emoji as NSString)
+            EncouragementView.emojiColorsCache.setObject(UIImageColorsWrapper(colors), forKey: self.gradientCacheKey as NSString)
         }
         
         self.encouragementTitleLabel.textColor = colors.background
@@ -380,7 +406,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         headerShadowLayer.position = CGPoint(x: self.frame.size.width/2, y: self.frame.size.height - headerShadowHeight/2)
     }
     
-    private func renderEmojiImages() {
+    private func renderEmojiImages(withIconImage iconImage: UIImage? = nil) {
         guard let trophyProgress = trophyProgress else {
             return
         }
@@ -390,11 +416,18 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         paragraphStyle.alignment = .center
         
         let attributedEmojiString = NSAttributedString(string: trophyProgress.emoji, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.emojiImageSize - 10), NSAttributedStringKey.foregroundColor: UIColor.black, NSAttributedStringKey.paragraphStyle: paragraphStyle])
-        let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
-        
-        let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
         UIGraphicsBeginImageContextWithOptions(imageSize, false , 0.0)
-        attributedEmojiString.draw(with: CGRect(x: (imageSize.width - boundingRect.width)/2 + xOffset, y: (imageSize.height - boundingRect.height)/2, width: imageSize.width, height: imageSize.height),  options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+        
+        if let iconImage = iconImage {
+            let dimension = self.emojiImageSize - 10
+            iconImage.draw(in: CGRect(x: (imageSize.width - dimension)/2, y: (imageSize.height - dimension)/2, width: dimension, height: dimension))
+        } else {
+            let boundingRect = attributedEmojiString.boundingRect(with: imageSize, options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+            
+            let xOffset: CGFloat = 1 // dont know why, but emoji refuse to draw centered
+            attributedEmojiString.draw(with: CGRect(x: (imageSize.width - boundingRect.width)/2 + xOffset, y: (imageSize.height - boundingRect.height)/2, width: imageSize.width, height: imageSize.height),  options:[.usesLineFragmentOrigin, .usesFontLeading, .usesDeviceMetrics], context: nil)
+        }
+        
         
         let emojiImageOptional = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

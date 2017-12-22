@@ -9,20 +9,22 @@
 import Foundation
 import SwiftyJSON
 
-public class TrophyProgress {
+public struct TrophyProgress {
     public static let emptyBodyPlaceholderString = "???"
     
     var emoji: String = ""
     var progress: Double = 0
+    var count: Int = 0
+    
     var body: String? = nil
     var moreInfoUrl: URL? = nil
+    var iconURL: URL? = nil
     var instructions: String? = nil
-    var count: Int = 0
     var lastEarned: Date? = nil
     
-    convenience init?(dictionary: JSON) {
-        self.init()
-        
+    var reward: TrophyReward? = nil
+    
+    init?(_ dictionary: JSON) {        
         guard let emoji = dictionary["emoji"].string else {
             return nil
         }
@@ -39,6 +41,13 @@ public class TrophyProgress {
         if let urlString = dictionary["more_info_url"].string {
             self.moreInfoUrl = URL(string: urlString)
         }
+        
+        if let urlString = dictionary["icon_url"].string {
+            self.iconURL = URL(string: urlString)
+        }
+        
+        self.reward = TrophyReward(dictionary["reward"])
+        
         
         if let count = dictionary["count"].int {
             self.count = count

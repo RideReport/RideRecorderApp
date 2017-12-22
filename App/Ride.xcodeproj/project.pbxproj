@@ -60,6 +60,7 @@
 		3D3C3E211E68E69B004C719E /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */; };
 		3D3C3E221E68E69B004C719E /* pinRed@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */; };
 		3D3CB8DC1EDF7CD6003964CE /* 1.archive in Resources */ = {isa = PBXBuildFile; fileRef = 3D3CB8DB1EDF7CD6003964CE /* 1.archive */; };
+		3D3DB2941FEC738800DFF9CF /* TrophyReward.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3DB2931FEC738800DFF9CF /* TrophyReward.swift */; };
 		3D42887E1D77899A0071CEAE /* UIView+HBadditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B61A6834C300B59B06 /* UIView+HBadditions.swift */; };
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
@@ -544,6 +545,7 @@
 		3D3C3E191E68E69B004C719E /* pinRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@2x.png"; sourceTree = "<group>"; };
 		3D3C3E1A1E68E69B004C719E /* pinRed@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@3x.png"; sourceTree = "<group>"; };
 		3D3CB8DB1EDF7CD6003964CE /* 1.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 1.archive; sourceTree = "<group>"; };
+		3D3DB2931FEC738800DFF9CF /* TrophyReward.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyReward.swift; sourceTree = "<group>"; };
 		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideReportTabBarController.swift; sourceTree = "<group>"; };
@@ -1168,6 +1170,7 @@
 			children = (
 				3D3599C91F99763E0078E97D /* TrophyProgress.swift */,
 				3DEF6A0D1FDF538400E5ABA7 /* TrophyCategory.swift */,
+				3D3DB2931FEC738800DFF9CF /* TrophyReward.swift */,
 			);
 			path = JSON;
 			sourceTree = "<group>";
@@ -2517,6 +2520,7 @@
 				847A056F1A02E757008F5371 /* TripsViewController.swift in Sources */,
 				3D7738051F589E6D00155DB8 /* FFTManager.cpp in Sources */,
 				84EA5BEC1A6F0BFF00C71F53 /* UILabel+HBAdditions.m in Sources */,
+				3D3DB2941FEC738800DFF9CF /* TrophyReward.swift in Sources */,
 				3D1E3E0D1F5A1C5A00B5800D /* RideReportAPIClient.swift in Sources */,
 				3DF08F4D1F96AFF600EC3892 /* TrophyViewController.swift in Sources */,
 				8411B0881C20EC20002E8E80 /* DMActivityInstagram.m in Sources */,

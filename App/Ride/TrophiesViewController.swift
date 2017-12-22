@@ -45,7 +45,7 @@ class TrophiesViewController: UITableViewController {
         self.updateData()
     }
     
-    @objc fileprivate func updateData() {
+    @objc fileprivate func updateData() {        
         if let manager = reachabilityManager  {
             if  manager.isReachable {
                 RideReportAPIClient.shared.getTrophydex().apiResponse { (response) in
@@ -145,7 +145,7 @@ class TrophiesViewController: UITableViewController {
             }
             
             if type == "category" {
-                if let trophyCategory = TrophyCategory(dictionary: jsonRow) {
+                if let trophyCategory = TrophyCategory(jsonRow) {
                     self.performSegue(withIdentifier: "showTrophyCategoryViewController", sender: trophyCategory)
                 }
             } else if type == "stats_series" {
@@ -186,7 +186,7 @@ class TrophiesViewController: UITableViewController {
             }
 
             if type == "trophy_encouragement" {
-                let trophyProgress = TrophyProgress(dictionary: content["trophy_progress"])
+                let trophyProgress = TrophyProgress(content["trophy_progress"])
                 var encouragementView: EncouragementView!
                 if i >= encouragementsStackView.arrangedSubviews.count {
                     encouragementView = EncouragementView()
@@ -230,7 +230,7 @@ class TrophiesViewController: UITableViewController {
     }
     
     func configureTrophyCategoryCell(_ tableCell: UITableViewCell, json: JSON) {
-        guard let trophyCategory = TrophyCategory(dictionary: json) else {
+        guard let trophyCategory = TrophyCategory(json) else {
             return
         }
         

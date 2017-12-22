@@ -1075,6 +1075,14 @@
                                     <constraint firstAttribute="trailing" secondItem="gZb-oX-MIN" secondAttribute="trailing" id="eWw-Ti-ls9"/>
                                 </constraints>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="EmptyTableViewCell" rowHeight="0.0" id="3aP-Kc-lhQ">
+                                <rect key="frame" x="0.0" y="468" width="375" height="0.0"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3aP-Kc-lhQ" id="auC-SV-rB6">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="8ef-jM-WnR" id="H2S-Xp-PWg"/>
@@ -4287,18 +4295,31 @@ Label</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" distribution="fillProportionally" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="uD7-LP-R05">
+                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" distribution="equalSpacing" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="uD7-LP-R05">
                                 <rect key="frame" x="16" y="16" width="343" height="635"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="748" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="da1-Ra-OYl">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="71.5"/>
+                                    <view contentMode="scaleToFill" verticalCompressionResistancePriority="748" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="da1-Ra-OYl">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="60"/>
                                         <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" priority="749" constant="20" id="nZ2-AW-8QN"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="120" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MXJ-jP-ZvG" customClass="TrophyProgressButton" customModule="Ride_Report" customModuleProvider="target">
-                                        <rect key="frame" x="111.5" y="83.5" width="120" height="120"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="Organization Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.30000001192092896" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1dy-cg-vEd">
+                                        <rect key="frame" x="0.0" y="74.5" width="343" height="21.5"/>
+                                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" weight="black" pointSize="18"/>
+                                        <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VwY-xV-J8e">
+                                        <rect key="frame" x="0.0" y="110.5" width="343" height="110.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" relation="lessThanOrEqual" constant="200" id="GtX-JJ-62t"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" placeholderIntrinsicWidth="120" placeholderIntrinsicHeight="120" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MXJ-jP-ZvG" customClass="TrophyProgressButton" customModule="Ride_Report" customModuleProvider="target">
+                                        <rect key="frame" x="111.5" y="235.5" width="120" height="120"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="120" id="71i-ry-4aS"/>
                                         </constraints>
@@ -4311,11 +4332,30 @@ Label</string>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </button>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aQd-wk-FhN">
-                                        <rect key="frame" x="0.0" y="215.5" width="343" height="95.5"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DDh-Z8-DGF">
+                                        <rect key="frame" x="0.0" y="370.5" width="343" height="60"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Eight Legs Crazy Bonus Points!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k55-dH-2Gk">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="95.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="751" ambiguous="YES" text="This is a description of the trophy reward, like the discount or something." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999999999999996" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92g-LT-p49">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="60"/>
+                                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="92g-LT-p49" firstAttribute="leading" secondItem="DDh-Z8-DGF" secondAttribute="leading" id="41B-YE-YkQ"/>
+                                            <constraint firstAttribute="bottom" secondItem="92g-LT-p49" secondAttribute="bottom" id="NKQ-8R-uPh"/>
+                                            <constraint firstAttribute="trailing" secondItem="92g-LT-p49" secondAttribute="trailing" id="RkF-Da-2aP"/>
+                                            <constraint firstItem="92g-LT-p49" firstAttribute="top" secondItem="DDh-Z8-DGF" secondAttribute="top" id="j0o-el-Rzs"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aQd-wk-FhN">
+                                        <rect key="frame" x="0.0" y="445" width="343" height="79"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" ambiguous="YES" text="Eight Legs Crazy Bonus Points!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k55-dH-2Gk">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="79"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" weight="black" pointSize="28"/>
                                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4330,10 +4370,10 @@ Label</string>
                                             <constraint firstAttribute="bottom" secondItem="k55-dH-2Gk" secondAttribute="bottom" id="e9s-dg-nsO"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="epP-o0-c0q">
-                                        <rect key="frame" x="0.0" y="323" width="343" height="71.5"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="epP-o0-c0q">
+                                        <rect key="frame" x="0.0" y="538.5" width="343" height="32"/>
                                         <subviews>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hcy-q7-Mya">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hcy-q7-Mya">
                                                 <rect key="frame" x="0.0" y="0.0" width="343" height="32"/>
                                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -4400,11 +4440,11 @@ Label</string>
                                             <constraint firstItem="Hcy-q7-Mya" firstAttribute="top" secondItem="epP-o0-c0q" secondAttribute="top" id="lJw-LI-Wba"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5R5-mJ-wNO">
-                                        <rect key="frame" x="0.0" y="406.5" width="343" height="228.5"/>
+                                    <view contentMode="scaleToFill" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5R5-mJ-wNO">
+                                        <rect key="frame" x="0.0" y="585" width="343" height="50"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="You are 90% of the way to earning this trophy for your 4th time!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="8yC-6N-Fko">
-                                                <rect key="frame" x="0.0" y="0.0" width="343" height="228.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="You are 90% of the way to earning this trophy for your 4th time!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8yC-6N-Fko">
+                                                <rect key="frame" x="0.0" y="0.0" width="343" height="57"/>
                                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -4421,9 +4461,12 @@ Label</string>
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="VwY-xV-J8e" firstAttribute="width" relation="lessThanOrEqual" secondItem="uD7-LP-R05" secondAttribute="width" id="0Em-iB-OVF"/>
                                     <constraint firstItem="da1-Ra-OYl" firstAttribute="width" secondItem="uD7-LP-R05" secondAttribute="width" id="AG8-yD-uwc"/>
                                     <constraint firstItem="aQd-wk-FhN" firstAttribute="width" secondItem="uD7-LP-R05" secondAttribute="width" id="TKk-Ut-gBh"/>
+                                    <constraint firstItem="DDh-Z8-DGF" firstAttribute="width" secondItem="uD7-LP-R05" secondAttribute="width" id="XNd-Pm-sWT"/>
                                     <constraint firstItem="5R5-mJ-wNO" firstAttribute="width" secondItem="uD7-LP-R05" secondAttribute="width" id="luI-OX-EU6"/>
+                                    <constraint firstItem="1dy-cg-vEd" firstAttribute="width" secondItem="uD7-LP-R05" secondAttribute="width" id="wpu-Px-2DO"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -4439,6 +4482,9 @@ Label</string>
                         <outlet property="descriptionLabel" destination="k55-dH-2Gk" id="kmg-se-0Pi"/>
                         <outlet property="detailLabel" destination="8yC-6N-Fko" id="TWv-kq-k0j"/>
                         <outlet property="moreInfoTextView" destination="Hcy-q7-Mya" id="ZNf-pG-gJB"/>
+                        <outlet property="rewardDescriptionLabel" destination="92g-LT-p49" id="Tqt-lJ-O2H"/>
+                        <outlet property="rewardImageView" destination="VwY-xV-J8e" id="dUw-FV-JY8"/>
+                        <outlet property="rewardOrganizationName" destination="1dy-cg-vEd" id="w6l-2i-N7V"/>
                         <outlet property="trophyProgressButton" destination="MXJ-jP-ZvG" id="e1q-tK-qUD"/>
                     </connections>
                 </viewController>
