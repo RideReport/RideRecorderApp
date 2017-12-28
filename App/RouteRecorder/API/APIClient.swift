@@ -392,6 +392,10 @@ public class APIClient {
             "activityType": route.activityType.numberValue,
             "creationDate": route.creationDate.JSONString(includingMilliseconds: true)
         ] as [String : Any]
+        
+        if let closedDate = route.closedDate {
+            routeDict["closedDate"] = closedDate
+        }
 
         let summaryLocs = route.fetchOrGenerateSummaryLocations()
         

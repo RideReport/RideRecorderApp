@@ -396,6 +396,7 @@ public class  Route: NSManagedObject {
 
         self.simplify({
             self.isClosed = true
+            self.closedDate = Date()
             if let delegate = RouteRecorder.shared.delegate {
                 DispatchQueue.main.async(execute: { [weak self] in
                     guard let strongSelf = self else {
@@ -410,6 +411,7 @@ public class  Route: NSManagedObject {
     
     func reopen() {
         self.isClosed = false
+        self.closedDate = nil
         self.lastLocationUpdateCount = -1
         self.isUploaded = false
         self.isSummaryUploaded = false
