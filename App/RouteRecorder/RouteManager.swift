@@ -47,8 +47,6 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     let timeIntervalForStoppingRouteWithoutSubsequentWalking : TimeInterval = 200
     let timeIntervalForLocationTrackingDeferral : TimeInterval = 120
     
-    let minimumBatteryForTracking : Float = 0.0
-    
     private var pendingRegistrationHandler: (()->Void)? = nil
     
     //
@@ -72,7 +70,6 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                 })
             }
         }
-        UIDevice.current.isBatteryMonitoringEnabled = true
         
         self.routeRecorder.locationManager.delegate = self
         if RouteManager.authorizationStatus() == .notDetermined {
@@ -366,6 +363,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         } else if (self.dateOfStoppingLocationManagerGPS != nil && abs(self.dateOfStoppingLocationManagerGPS!.timeIntervalSinceNow) < 2) {
             // sometimes turning off GPS will continue to delvier a few locations. thus, keep track of dateOfStoppingLocationManagerGPS to avoid
             // considering these updates as significiation location changes.
+            DDLogVerbose("Skipping location received right after stopping GPS updates")
+
             return
         } else {
             // we are not actively using GPS. we don't know what mode we are using and whether or not we should start a new currentRoute.
@@ -548,15 +547,8 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     // MARK: - Pause/Resuming Route Manager
     //
     
-    public func isPausedDueToBatteryLife() -> Bool {
-#if (arch(i386) || arch(x86_64)) && os(iOS)
-    return false
-#endif
-        return UIDevice.current.batteryLevel < self.minimumBatteryForTracking
-    }
-    
     public func isPaused() -> Bool {
-        return self.isPausedDueToBatteryLife() || self.isPausedByUser() || isPausedDueToUnauthorized()
+        return self.isPausedByUser() || isPausedDueToUnauthorized()
     }
     
     public func isPausedByUser() -> Bool {
@@ -594,24 +586,6 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         DDLogStateChange("Paused Tracking")
         
         self.stopGPSRouteAndEnterBackgroundState()
-        RouteRecorderStore.store().lastArrivalLocation = nil
-        RouteRecorderDatabaseManager.shared.saveContext()
-        
-        NotificationCenter.default.post(name: Notification.Name(rawValue: "RouteManagerDidPauseOrResume"), object: nil)
-    }
-    
-    private func pauseTrackingDueToLowBatteryLife(withLastLocation location: CLLocation?) {
-        if (self.isLocationManagerUsingGPS) {
-            // if we are currently updating, send the user a push and stop.
-            let notif = UILocalNotification()
-            notif.alertBody = "Whoa, your battery is pretty low. Ride Report will stop running until you get a charge!"
-            UIApplication.shared.presentLocalNotificationNow(notif)
-                        
-            DDLogStateChange("Paused Tracking due to battery life")
-            
-            self.stopGPSRouteAndEnterBackgroundState()
-        }
-        
         RouteRecorderStore.store().lastArrivalLocation = nil
         RouteRecorderDatabaseManager.shared.saveContext()
         
@@ -742,18 +716,9 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                     self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
                 })
             } else {
-                DDLogInfo("Ended Route Manager Location Update Background task!")
+                DDLogInfo("Did not reschedule Route Manager Location Update Background task!")
             }
         }
-        
-        #if (arch(i386) || arch(x86_64)) && os(iOS)
-            // skip this check
-        #else
-            guard UIDevice.current.batteryLevel > self.minimumBatteryForTracking else  {
-                self.pauseTrackingDueToLowBatteryLife(withLastLocation: locations.first)
-                return
-            }
-        #endif
         
         self.processLocations(locations)
     }

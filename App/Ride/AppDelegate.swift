@@ -47,6 +47,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.fileLogger.logFileManager.maximumNumberOfLogFiles = 7
         DDLog.add(self.fileLogger)
         
+        // isBatteryMonitoringEnabled needed to check battery state
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        
         UINavigationBar.appearance().tintColor = ColorPallete.shared.primary
         UISwitch.appearance().onTintColor = ColorPallete.shared.goodGreen
         UISegmentedControl.appearance().tintColor = ColorPallete.shared.primary

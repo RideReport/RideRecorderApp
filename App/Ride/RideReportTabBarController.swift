@@ -97,8 +97,6 @@ class RideReportTabBarController : UITabBarController {
             } else if (RouteManager.authorizationStatus() != .authorizedAlways) {
                 self.popupView.text = "Ride Report needs permission to run"
                 popupView.addTarget(self, action: #selector(RideReportTabBarController.launchPermissions), for: UIControlEvents.touchUpInside)
-            } else if (RouteRecorder.shared.routeManager.isPausedDueToBatteryLife()) {
-                self.popupView.text = "Ride Report is paused until you charge your phone"
             } else {
                 popupView.addTarget(self, action: #selector(RideReportTabBarController.resumeRideReport), for: UIControlEvents.touchUpInside)
                 
