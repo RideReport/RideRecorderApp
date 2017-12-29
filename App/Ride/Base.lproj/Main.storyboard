@@ -4477,6 +4477,7 @@ Label</string>
                             <constraint firstAttribute="bottom" secondItem="uD7-LP-R05" secondAttribute="bottom" constant="16" id="aoE-af-DVh"/>
                             <constraint firstItem="uD7-LP-R05" firstAttribute="leading" secondItem="hjZ-kL-h8W" secondAttribute="leading" constant="16" id="wDv-Qc-DGe"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="dWJ-r5-GvX"/>
                     </view>
                     <connections>
                         <outlet property="descriptionLabel" destination="k55-dH-2Gk" id="kmg-se-0Pi"/>
