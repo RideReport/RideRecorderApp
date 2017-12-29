@@ -42,9 +42,9 @@ public class SensorClassificationManager : ClassificationManager {
     
     public static var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
-    let motionStartTimeoutInterval: TimeInterval = 30
-    let motionContinueTimeoutInterval: TimeInterval = 60
     private var backgroundTaskID = UIBackgroundTaskInvalid
+    var cancelTimedoutPredictionBlock: DispatchWorkItem?
+
 
     private var isGatheringMotionData: Bool = false
     
@@ -111,6 +111,19 @@ public class SensorClassificationManager : ClassificationManager {
                 UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
                 self.backgroundTaskID = UIBackgroundTaskInvalid
             })
+            
+            // schedule an early bailer if we're not done yet
+            let maximumTimeNeeded = Double(PredictionAggregator.maximumSampleBeforeFailure - 1) * PredictionAggregator.sampleOffsetTimeInterval + Double(PredictionAggregator.maximumSampleBeforeFailure) * self.routeRecorder.randomForestManager.desiredSessionDuration
+            let timeoutPredictionInterval = maximumTimeNeeded + 2 // plus a generous buffer
+            
+            let timeoutPredictionBlock = DispatchWorkItem {
+                self.cancelTimedoutPredictionBlock = nil
+                DDLogInfo("Prediction attempt expired, canceling!")
+                predictionAggregator.addUnknownTypePrediction()
+                handler(predictionAggregator)
+            }
+            cancelTimedoutPredictionBlock = timeoutPredictionBlock
+            DispatchQueue.main.asyncAfter(deadline: .now() + timeoutPredictionInterval, execute: timeoutPredictionBlock)
         } else {
             DDLogInfo("Could not query activity type, background task already in process!")
             predictionAggregator.addUnknownTypePrediction()
@@ -147,6 +160,11 @@ public class SensorClassificationManager : ClassificationManager {
         }
         
         self.routeRecorder.motionManager.stopAccelerometerUpdates()
+        
+        if let timedoutPredictionBlock = self.cancelTimedoutPredictionBlock {
+            timedoutPredictionBlock.cancel()
+            self.cancelTimedoutPredictionBlock = nil
+        }
         
         if (self.backgroundTaskID != UIBackgroundTaskInvalid) {
             DDLogInfo("Ending background task with Stop Motion Updates!")

@@ -380,11 +380,9 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     private func runPredictionAndStartRouteIfNeeded(withLocations locations:[Location]) {
         let firstLocation = locations.first
         
-        #if DEBUG
         for location in locations {
             DDLogVerbose(String(format: "Location found. Speed: %f, Accuracy: %f", location.speed, location.horizontalAccuracy))
         }
-        #endif
         
         if let aggregator =  self.currentPredictionAggregator {
             for loc in locations {
