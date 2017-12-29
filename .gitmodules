@@ -16,3 +16,6 @@
 [submodule "App/Frameworks/GpxLocationManager"]
 	path = App/Frameworks/GpxLocationManager
 	url = git@github.com:KnockSoftware/GpxLocationManager.git
+[submodule "App/RouteRecorder/Frameworks/ActivityPredictor"]
+	path = App/RouteRecorder/Frameworks/ActivityPredictor
+	url = git@github.com:KnockSoftware/ActivityPredictor.git
