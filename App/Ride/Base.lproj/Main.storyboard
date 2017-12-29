@@ -4383,7 +4383,7 @@ Label</string>
                                                     <fragment content="Tap here for more information">
                                                         <attributes>
                                                             <color key="NSColor" red="0.0" green="0.25950000000000001" blue="0.66513999999999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                            <font key="NSFont" size="13" name="SFUIDisplay-Regular"/>
+                                                            <font key="NSFont" metaFont="system"/>
                                                             <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
                                                                 <tabStops>
                                                                     <textTab alignment="left" location="36">

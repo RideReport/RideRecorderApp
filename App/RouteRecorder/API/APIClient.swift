@@ -394,7 +394,7 @@ public class APIClient {
         ] as [String : Any]
         
         if let closedDate = route.closedDate {
-            routeDict["closedDate"] = closedDate
+            routeDict["closedDate"] = closedDate.JSONString(includingMilliseconds: true)
         }
 
         let summaryLocs = route.fetchOrGenerateSummaryLocations()
