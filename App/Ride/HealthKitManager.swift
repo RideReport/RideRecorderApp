@@ -304,9 +304,10 @@ class HealthKitManager {
             return
         }
         
-        // an open or non-cycling trip should not be saved but it may need to be deleted (if it was a cycling trip at some point, or if it was resumed)
-        guard trip.activityType == .cycling && !trip.isInProgress else {
-            DDLogInfo(String(format: "Trip not closed or not a cycling trip. Skipping workout save…"))
+        // this code is intentionally after the delete block.
+        // some trips may need to be deleted but not be saved (for example if it was a cycling trip at some point but changed, or if it was resumed but isn't yet calorie'd)
+        guard let _ = trip.calories, trip.activityType == .cycling else {
+            DDLogInfo(String(format: "Trip doesn't have calories yet or is not a cycling trip. Skipping workout save for now…"))
             trip.isBeingSavedToHealthKit = false
             trip.isSavedToHealthKit = true
             handler(false)
@@ -347,7 +348,7 @@ class HealthKitManager {
             } else {
                 // otherwise, use the server's calculation
                 totalBurn = HKQuantity(unit: HKUnit.kilocalorie(),
-                    doubleValue: trip.calories?.doubleValue ?? 0)
+                    doubleValue: trip.calories ?? 0)
             }
             
             let distance = HKQuantity(unit: HKUnit.mile(), doubleValue: Double(trip.length.miles))

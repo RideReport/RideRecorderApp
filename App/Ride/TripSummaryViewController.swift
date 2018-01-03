@@ -148,7 +148,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
                 }
                 
                 if let calories = self.selectedTrip.calories {
-                    calorieLabel.text = String(format: "%0.fcal", calories.doubleValue)
+                    calorieLabel.text = String(format: "%0.fcal", calories)
                 } else {
                     calorieLabel.text = "--"
                 }

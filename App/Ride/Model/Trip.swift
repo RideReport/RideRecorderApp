@@ -85,13 +85,39 @@ public class  Trip: NSManagedObject {
                 self.updateTripListRow()
 
                 DispatchQueue.main.async {
-                    // newly closed trips should be synced to healthkit
-                    if (HealthKitManager.hasStarted) {
-                        self.isSavedToHealthKit = false
-                        HealthKitManager.shared.saveOrUpdateTrip(self)
-                    }
+                    // if we are changing the mode it may need to be re-synced to healthkit
+                    self.updateHealthKitWorkout()
                 }
             }
+        }
+    }
+    
+    var calories: Double? {
+        get {
+            return (self.primitiveValue(forKey: "calories") as? NSNumber)?.doubleValue
+        }
+        set {
+            let oldValue = self.primitiveValue(forKey: "calories") as? NSNumber
+            
+            self.willChangeValue(forKey: "calories")
+            self.setPrimitiveValue(newValue, forKey: "calories")
+            self.didChangeValue(forKey: "calories")
+            
+            if (oldValue == nil || newValue != oldValue!.doubleValue) {
+                DispatchQueue.main.async {
+                    // if we are changing the mode it may need to be re-synced to healthkit
+                    self.updateHealthKitWorkout()
+                }
+            }
+        }
+    }
+    
+    
+    
+    private func updateHealthKitWorkout() {
+        if (HealthKitManager.hasStarted) {
+            self.isSavedToHealthKit = false
+            HealthKitManager.shared.saveOrUpdateTrip(self)
         }
     }
     
@@ -460,7 +486,7 @@ public class  Trip: NSManagedObject {
         }
         
         if let calories = summary["calories"] as? NSNumber {
-            self.calories = calories
+            self.calories = calories.doubleValue
         } else {
             self.calories = nil
         }
@@ -542,14 +568,14 @@ public class  Trip: NSManagedObject {
             self.temperature = nil
         }
         
-        if let temp = summary["movingSpeed"]?.double {
-            self.movingSpeed = NSNumber(value: temp)
+        if let speed = summary["movingSpeed"]?.double {
+            self.movingSpeed = NSNumber(value: speed)
         } else {
             self.movingSpeed = nil
         }
         
-        if let temp = summary["calories"]?.double {
-            self.calories = NSNumber(value: temp)
+        if let cals = summary["calories"]?.double {
+            self.calories = cals
         } else {
             self.calories = nil
         }

@@ -12,7 +12,6 @@ import CoreData
 
 extension Trip {
     @NSManaged public var activityTypeInteger: Int16
-    @NSManaged public var calories: NSNumber?
     @NSManaged public var climacon: String?
     @NSManaged public var displayDataURLString: String?
     @NSManaged public var endDate: Date
