@@ -34,6 +34,12 @@ import BadgeSwift
         }
     }
     
+    private var rewardBorderWidth: CGFloat {
+        get {
+            return self.borderWidth * 1.5
+        }
+    }
+    
     @IBInspectable var showsCount: Bool = true {
         didSet {
             reloadCountProgressUI()
@@ -148,7 +154,7 @@ import BadgeSwift
                 let borderLayer = CAShapeLayer()
                 borderLayer.fillColor = UIColor.clear.cgColor
                 borderLayer.strokeColor = ColorPallete.shared.goodGreen.cgColor
-                borderLayer.lineWidth = self.borderWidth
+                borderLayer.lineWidth = self.rewardBorderWidth
                 borderLayer.lineJoin = kCALineJoinRound
                 borderLayer.lineDashPattern = [8,5]
                 
@@ -157,12 +163,13 @@ import BadgeSwift
             }
             if let layer = self.borderLayer {
                 let frameSize = self.frame.size
-                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width - self.borderWidth/2, height: frameSize.height - self.borderWidth/2)
+                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width - self.rewardBorderWidth/2, height: frameSize.height - self.rewardBorderWidth/2)
                 
                 layer.bounds = borderRect
                 layer.position = CGPoint(x: frameSize.width/2, y: frameSize.height/2)
                 layer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: self.cornerRadius).cgPath
             }
+            self.bringSubview(toFront: self.badgeView)
         } else {
             self.backgroundColor = UIColor.clear
             
