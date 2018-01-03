@@ -15,6 +15,7 @@ import CocoaLumberjack
 
 public class  Route: NSManagedObject {
     let simplificationEpisilon: CLLocationDistance = 0.00005
+    let simplificationSpeedEpisilon: CLLocationSpeed = 4
     var wasStoppedManually : Bool = false
     
     public internal(set) var activityType : ActivityType {
@@ -473,40 +474,67 @@ public class  Route: NSManagedObject {
     #endif
     
     func simplify(_ handler: ()->Void = {}) {
-        let accurateLocs = self.usableLocationsForSimplification()
+        let accurateOrNonActiveLocs = self.usableLocationsForSimplification()
         
         let currentSimplifiedLocs = self.fetchOrderedLocations(simplified: true, includingInferred: true)
         for loc in currentSimplifiedLocs {
             loc.simplifiedInRoute = nil
         }
         
-        if (accurateLocs.count == 0) {
+        if (accurateOrNonActiveLocs.count == 0) {
             handler()
             return
         }
         
-        self.simplifyLocations(accurateLocs, episilon: simplificationEpisilon)
+        self.simplifyLocations(accurateOrNonActiveLocs, episilon: simplificationEpisilon, speedEpisilon: simplificationSpeedEpisilon)
         
         RouteRecorderDatabaseManager.shared.saveContext()
         handler()
     }
     
     // Ramer–Douglas–Peucker geometric simplication algorithm
-    private func simplifyLocations(_ locations: [Location], episilon : CLLocationDegrees) {
+    private func simplifyLocations(_ locations: [Location], episilon : CLLocationDegrees, speedEpisilon: CLLocationSpeed) {
         var maximumDistance : CLLocationDegrees = 0
         var indexOfMaximumDistance = 0
+        
+        var maximumSpeedDifference : CLLocationSpeed = 0
+        var indexOfMaximumSpeedDifference = 0
         
         let startLoc = locations.first
         let endLoc = locations.last
         var counter = 1
         
+        var currentlyStopped = startLoc!.speed >= 0 && startLoc!.speed < Location.minimumMovingSpeed
+        
         if (locations.count > 2) {
-            for loc in locations[1...(locations.count - 2)] {
+            for loc in locations[counter...(locations.count - 2)] {
                 let distance = self.shortestDistanceFromLineToPoint(startLoc!.coordinate(), lineEndPoint: endLoc!.coordinate(), point: loc.coordinate())
                 if (distance > maximumDistance) {
                     indexOfMaximumDistance = counter
                     maximumDistance = distance
                 }
+                
+                let startSpeed = startLoc!.speed
+                let endSpeed = endLoc!.speed
+                let speedSlope = (endSpeed - startSpeed) / endLoc!.timeIntervalSinceLocation(location: startLoc!)
+                
+                if startSpeed >= 0 && endSpeed >= 0 && loc.speed >= 0 {
+                    let expectedSpeed = startSpeed + speedSlope * loc.timeIntervalSinceLocation(location: startLoc!)
+                    let speedDifference = fabs(expectedSpeed - loc.speed)
+                    if (speedDifference > maximumSpeedDifference) {
+                        indexOfMaximumSpeedDifference = counter
+                        maximumSpeedDifference = speedDifference
+                    } else if (!currentlyStopped && loc.speed < Location.minimumMovingSpeed) {
+                        currentlyStopped = true
+                        indexOfMaximumSpeedDifference = counter
+                        maximumSpeedDifference = Double.greatestFiniteMagnitude
+                    } else if (currentlyStopped && loc.speed >= Location.minimumMovingSpeed) {
+                        currentlyStopped = false
+                        indexOfMaximumSpeedDifference = counter
+                        maximumSpeedDifference = Double.greatestFiniteMagnitude
+                    }
+                }
+                
                 counter += 1
             }
         } else {
@@ -516,16 +544,22 @@ public class  Route: NSManagedObject {
             return
         }
         
-        if ( maximumDistance > episilon) {
-            self.simplifyLocations(Array(locations[0...indexOfMaximumDistance]), episilon: episilon)
-            self.simplifyLocations(Array(locations[indexOfMaximumDistance...(locations.count - 1)]), episilon: episilon)
+        if (maximumDistance > episilon || maximumSpeedDifference > speedEpisilon) {
+            var cutOffIndex = indexOfMaximumSpeedDifference
+            if (maximumDistance > episilon) {
+                // If both conditions are met, we prefer to include points that affect the geometry
+                // rather than just speed.
+                cutOffIndex = indexOfMaximumDistance
+            }
+            self.simplifyLocations(Array(locations[0...cutOffIndex]), episilon: episilon, speedEpisilon: speedEpisilon)
+            self.simplifyLocations(Array(locations[cutOffIndex...(locations.count - 1)]), episilon: episilon, speedEpisilon: speedEpisilon)
         } else {
             startLoc!.simplifiedInRoute = self
 
             var i = 0
             for loc in locations {
-                // also include any inferred location, plus the first location following it
-                if loc.source.isInferred {
+                // also include any non-GPS location, plus the first location following it
+                if loc.source != .activeGPS {
                     if loc.simplifiedInRoute == nil {
                         loc.simplifiedInRoute = self
                     }

@@ -25,7 +25,7 @@ public class  Location: NSManagedObject {
     }
     
     class var minimumMovingSpeed: CLLocationSpeed {
-        return 0.5
+        return 0.2
     }
     
     
@@ -177,6 +177,10 @@ public class  Location: NSManagedObject {
         locDict["verticalAccuracy"] = verticalAccuracy
         
         return locDict
+    }
+    
+    public func timeIntervalSinceLocation(location: Location)->TimeInterval {
+        return self.date.timeIntervalSinceReferenceDate - location.date.timeIntervalSinceReferenceDate
     }
     
     override public var debugDescription: String {
