@@ -43,7 +43,7 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
     let minimumTimeIntervalBeforeDeclaringWalkingSession : TimeInterval = 10
     let timeIntervalForConsideringStoppedRoute : TimeInterval = 60
     
-    let timeIntervalBeforeStoppedRouteDueToUsuableSpeedReadings : TimeInterval = 90
+    let timeIntervalBeforeStoppedRouteDueToUsuableSpeedReadings : TimeInterval = 240
     let timeIntervalForStoppingRouteWithoutSubsequentWalking : TimeInterval = 200
     let timeIntervalForLocationTrackingDeferral : TimeInterval = 120
     
