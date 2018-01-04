@@ -326,12 +326,12 @@ public class APIClient {
         }
         params["predictionAggregators"] = predictionAggregatorsDictionaries
         
-        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: false) { (response) in
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: true) { (response) in
             switch response.result {
             case .success(_):
-                DDLogWarn("Yep")
+                DDLogInfo("Uploaded prediction aggregator")
             case .failure(_):
-                DDLogWarn("Nope!")
+                DDLogWarn("Error uploading prediction aggregator!")
             }
         }
     }

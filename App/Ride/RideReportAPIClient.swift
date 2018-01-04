@@ -161,6 +161,25 @@ class RideReportAPIClient: APIClientDelegate {
         })
     }
     
+    func uploadMisclassificationReport(trip: Trip, metadata metadataDict:[String: Any] = [:]) {
+        let routeURL = "trips/" + trip.uuid + "/misclassification_report"
+        
+        _ = AuthenticatedAPIRequest(client: APIClient.shared, method: .put, route: routeURL, parameters:metadataDict , authenticated: true) { (response) in
+            switch response.result {
+            case .success(let json):
+                if let routesToUpload = json["uploadPredictionAggregatorsForRoutes"].array {
+                    for routeID in routesToUpload {
+                        if let routeIdString = routeID.string, let route = Route.findRoute(withUUID: routeIdString) {
+                            APIClient.shared.uploadPredictionAggregators(forRoute: route)
+                        }
+                    }
+                }
+            case .failure(_):
+                DDLogWarn("Error uploading misclassification report!")
+            }
+        }
+    }
+    
     public func getTripDisplayData(displayDataURL: String, handler: @escaping (Data?)->()) {
         if let url = URL(string: displayDataURL), let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
             handler(cachedResponse.data)

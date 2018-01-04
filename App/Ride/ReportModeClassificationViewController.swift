@@ -74,14 +74,10 @@ class ReportModeClassificationViewController : UIViewController, MGLMapViewDeleg
     @IBAction func upload(_ sender: AnyObject) {
         var metadata: [String: Any] = [:]
         
-        guard let route = trip.route else {
-            return
-        }
-
-        if let notes = self.notesTextField.text, notes.characters.count > 0 {
+        if let notes = self.notesTextField.text, notes.count > 0 {
             metadata["notes"] = notes
         }
-        APIClient.shared.uploadRoute(route, includeFullLocations: true)
+        RideReportAPIClient.shared.uploadMisclassificationReport(trip: trip, metadata: metadata)
         
         self.dismiss(animated: true, completion: nil)
     }
