@@ -11,7 +11,7 @@ import Charts
 import SwiftyJSON
 import Alamofire
 
-class StatsViewController: UIViewController {
+class StatsViewController: UIViewController, ChartViewDelegate {
     @IBOutlet weak var seriesSegment: UISegmentedControl!
     @IBOutlet weak var barChartView: BarChartView!
     @IBOutlet weak var lineChartView: LineChartView!
@@ -80,20 +80,22 @@ class StatsViewController: UIViewController {
             axis.labelFont = UIFont.boldSystemFont(ofSize: 12)
             axis.labelTextColor = ColorPallete.shared.unknownGrey
         }
+
+        for pieChart in [piechart1!, piechart2!] {
+            pieChart.delegate = self
+            pieChart.legend.enabled = false
+            pieChart.chartDescription = nil
+            pieChart.holeRadiusPercent = 0.4
+            pieChart.transparentCircleRadiusPercent = 0.54
+            pieChart.noDataText = ""
+            pieChart.drawEntryLabelsEnabled = true
+            pieChart.drawCenterTextEnabled = true
+        }
         
-        piechart1.legend.enabled = false
-        piechart1.chartDescription = nil
-        piechart1.holeRadiusPercent = 0.3
-        piechart1.extraLeftOffset = 12
-        piechart1.extraRightOffset = 20
-        piechart1.noDataText = ""
-        
-        piechart2.legend.enabled = false
-        piechart2.chartDescription = nil
-        piechart2.holeRadiusPercent = 0.3
-        piechart2.extraLeftOffset = 20
-        piechart2.extraRightOffset = 12
-        piechart2.noDataText = ""
+        piechart1.extraLeftOffset = 0
+        piechart1.extraRightOffset = 14
+        piechart2.extraLeftOffset = 14
+        piechart2.extraRightOffset = 0
         
         reachabilityManager = NetworkReachabilityManager()
         
@@ -482,20 +484,14 @@ class StatsViewController: UIViewController {
             rollupsKey = "thisyear"
         }
         
+        piechart1.highlightValue(x: -1, dataSetIndex: -1)
+        piechart2.highlightValue(x: -1, dataSetIndex: -1)
+        
         guard let json = statsJson, let rollupsJson = json["rollups"].dictionary, let statsDict = rollupsJson[rollupsKey]?.dictionary else {
             piechart1.data = nil
             piechart2.data = nil
             return
         }
-        
-        let font  = UIFont.boldSystemFont(ofSize: 14)
-        
-        let percentFormatter = NumberFormatter()
-        percentFormatter.numberStyle = .percent
-        percentFormatter.maximumFractionDigits = 0
-        percentFormatter.roundingMode = .up
-        percentFormatter.multiplier = 100.0
-        percentFormatter.percentSymbol = "%"
         
         var entryData1: [PieChartDataEntry] = []
         let colors1: [UIColor] = [ColorPallete.shared.primaryLight, ColorPallete.shared.turquoise, ColorPallete.shared.pink, ColorPallete.shared.darkGrey, ColorPallete.shared.autoBrown]
@@ -522,19 +518,12 @@ class StatsViewController: UIViewController {
         if (entryData1.count > 0) {
             let dataSet1 = PieChartDataSet(values: entryData1, label: "Weather")
             dataSet1.sliceSpace = 2.0
+            dataSet1.selectionShift = 8
             dataSet1.automaticallyDisableSliceSpacing = true
             dataSet1.colors = colors1
-            dataSet1.valueLinePart1OffsetPercentage = 0.65
-            dataSet1.valueLineColor = ColorPallete.shared.darkGrey
-            dataSet1.valueLinePart1Length = 0.8
-            dataSet1.valueLinePart2Length = 0.4
-            dataSet1.yValuePosition = .outsideSlice
+            dataSet1.drawValuesEnabled = false
             
             let data1 = PieChartData(dataSet: dataSet1)
-            data1.setValueTextColor(ColorPallete.shared.darkGrey)
-            data1.setValueFont(font)
-            data1.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
-            
             piechart1.data = data1
         }
         
@@ -563,23 +552,68 @@ class StatsViewController: UIViewController {
         if (entryData2.count > 0) {
             let dataSet2 = PieChartDataSet(values: entryData2, label: "Mode-Share")
             dataSet2.sliceSpace = 2.0
+            dataSet2.selectionShift = 8
             dataSet2.automaticallyDisableSliceSpacing = true
             dataSet2.colors = colors2
-            dataSet2.valueLinePart1OffsetPercentage = 0.65
-            dataSet2.valueLineColor = ColorPallete.shared.darkGrey
-            dataSet2.valueLinePart1Length = 0.8
-            dataSet2.valueLinePart2Length = 0.4
-            dataSet2.yValuePosition = .outsideSlice
+            dataSet2.drawValuesEnabled = false
             
             let data2 = PieChartData(dataSet: dataSet2)
-            data2.setValueTextColor(ColorPallete.shared.darkGrey)
-            data2.setValueFont(font)
-            data2.setValueFormatter(DefaultValueFormatter(formatter: percentFormatter))
-            
             piechart2.data = data2
             
             piechart1.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
             piechart2.animate(xAxisDuration: 0.5, easingOption: .easeOutCirc)
+        }
+    }
+    
+    private var selectedPieChart: PieChartView? = nil
+    private var selectedEntry: ChartDataEntry? = nil
+    
+    @objc func chartValueSelected(_ chartView: ChartViewBase, entry: ChartDataEntry, highlight: Highlight) {
+        if let pieView = chartView as? PieChartView, let fraction = entry.value(forKey:"value") as? Double {
+            if let pieChart = self.selectedPieChart {
+                // deselect any already selected piechart entries
+                let previouslySelectedEntry = selectedEntry
+                
+                if (entry == previouslySelectedEntry) {
+                    // tapping the already selected entry unselects it
+                    pieChart.highlightValue(x: -1, dataSetIndex: -1)
+                    return
+                } else if (selectedPieChart != pieView) {
+                    // tapping a different piechart clears the selection on the other one
+                    pieChart.highlightValue(x: -1, dataSetIndex: -1)
+                }
+            }
+            
+            selectedPieChart = pieView
+            selectedEntry = entry
+            
+            let percentFormatter = NumberFormatter()
+            percentFormatter.numberStyle = .percent
+            percentFormatter.maximumFractionDigits = 0
+            percentFormatter.roundingMode = .up
+            percentFormatter.multiplier = 100.0
+            percentFormatter.percentSymbol = "% \nof trips"
+            
+            if let string = percentFormatter.string(from: NSNumber(value: fraction)) {
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = .center
+                
+                let magicalScalingFactor: CGFloat = 0.063
+                pieView.centerAttributedText = NSAttributedString(string: string, attributes: [NSAttributedStringKey.foregroundColor: ColorPallete.shared.darkGrey, NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: pieView.frame.width * magicalScalingFactor), NSAttributedStringKey.paragraphStyle: paragraphStyle])
+            } else {
+                pieView.centerText = nil
+            }
+        }
+    }
+    
+    @objc func chartValueNothingSelected(_ chartView: ChartViewBase) {
+        if let pieView = chartView as? PieChartView {
+            if let pieChart = self.selectedPieChart {
+                pieChart.highlightValue(nil)
+                selectedEntry = nil
+                selectedPieChart = nil
+            }
+            pieView.centerText = nil
         }
     }
 }

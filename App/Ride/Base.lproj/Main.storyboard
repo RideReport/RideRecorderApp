@@ -678,17 +678,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pSA-ng-4Kd" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="629.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="641.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UkN-7t-tmH" customClass="PieChartView" customModule="Charts">
-                                                <rect key="frame" x="6" y="46.5" width="202" height="202"/>
+                                                <rect key="frame" x="6" y="54.5" width="202" height="202"/>
                                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="UkN-7t-tmH" secondAttribute="height" id="uVC-pX-yIN"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgo-rF-cJI" customClass="PieChartView" customModule="Charts">
-                                                <rect key="frame" x="167" y="46.5" width="202" height="202"/>
+                                                <rect key="frame" x="167" y="54.5" width="202" height="202"/>
                                                 <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="Hgo-rF-cJI" secondAttribute="height" id="Xel-1V-NMT"/>
@@ -773,28 +773,28 @@
                                                 </connections>
                                             </segmentedControl>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4DP-EY-M0T" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="238.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="250.5" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="vO1-JH-coM"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvb-dp-11E" userLabel="Space View">
-                                                <rect key="frame" x="0.0" y="239.5" width="375" height="18"/>
+                                                <rect key="frame" x="0.0" y="251.5" width="375" height="18"/>
                                                 <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="18" id="n8t-pp-fDM"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eIw-Gw-Dtj" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="257.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="269.5" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="jVx-IN-yIZ"/>
                                                 </constraints>
                                             </view>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q7h-Lb-PW8">
-                                                <rect key="frame" x="107" y="266.5" width="161" height="29"/>
+                                                <rect key="frame" x="107" y="278.5" width="161" height="29"/>
                                                 <segments>
                                                     <segment title="Day"/>
                                                     <segment title="Week"/>
@@ -805,28 +805,28 @@
                                                 </connections>
                                             </segmentedControl>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vzr-Vx-Rtu" customClass="BarChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="302.5" width="375" height="300"/>
+                                                <rect key="frame" x="0.0" y="314.5" width="375" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="300" id="bBP-b7-nZa"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vVu-WK-FHk" customClass="LineChartView" customModule="Charts">
-                                                <rect key="frame" x="0.0" y="302.5" width="375" height="300"/>
+                                                <rect key="frame" x="0.0" y="314.5" width="375" height="300"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="300" id="tIQ-Da-W1b"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OYF-ZM-x0P" userLabel="Divider View">
-                                                <rect key="frame" x="0.0" y="610.5" width="375" height="1"/>
+                                                <rect key="frame" x="0.0" y="622.5" width="375" height="1"/>
                                                 <color key="backgroundColor" red="0.84313725490000002" green="0.87450980389999999" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="0.5" id="QLD-N2-bzs"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Y0-aN-csO" userLabel="Space View">
-                                                <rect key="frame" x="0.0" y="611.5" width="375" height="800"/>
+                                                <rect key="frame" x="0.0" y="623.5" width="375" height="800"/>
                                                 <color key="backgroundColor" red="0.95683129850000004" green="1" blue="0.92369692489999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="800" id="gC9-Q9-TxS"/>
@@ -844,7 +844,7 @@
                                             <constraint firstItem="ntu-0h-ZDg" firstAttribute="width" secondItem="pSA-ng-4Kd" secondAttribute="width" id="EV2-R3-74i"/>
                                             <constraint firstAttribute="trailing" secondItem="Hgo-rF-cJI" secondAttribute="trailing" constant="6" id="HWg-uv-SI0"/>
                                             <constraint firstItem="2Y0-aN-csO" firstAttribute="trailing" secondItem="OYF-ZM-x0P" secondAttribute="trailing" id="HfI-Ec-O3L"/>
-                                            <constraint firstItem="UkN-7t-tmH" firstAttribute="top" secondItem="BFJ-bl-7Dt" secondAttribute="bottom" constant="-18" id="Ik3-3t-w7o"/>
+                                            <constraint firstItem="UkN-7t-tmH" firstAttribute="top" secondItem="BFJ-bl-7Dt" secondAttribute="bottom" constant="-10" id="Ik3-3t-w7o"/>
                                             <constraint firstItem="2Y0-aN-csO" firstAttribute="leading" secondItem="OYF-ZM-x0P" secondAttribute="leading" id="KRq-tm-Jmi"/>
                                             <constraint firstItem="eIw-Gw-Dtj" firstAttribute="leading" secondItem="4DP-EY-M0T" secondAttribute="leading" id="LZm-fl-Eig"/>
                                             <constraint firstItem="Vzr-Vx-Rtu" firstAttribute="leading" secondItem="vVu-WK-FHk" secondAttribute="leading" id="Lea-GH-xcG"/>
@@ -864,7 +864,7 @@
                                             <constraint firstAttribute="trailing" secondItem="BFJ-bl-7Dt" secondAttribute="trailing" constant="12" id="gbV-LP-x8D"/>
                                             <constraint firstItem="Q7h-Lb-PW8" firstAttribute="top" secondItem="eIw-Gw-Dtj" secondAttribute="bottom" constant="8" id="hSG-qI-WmC"/>
                                             <constraint firstItem="Q7h-Lb-PW8" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="jaL-QE-gxS"/>
-                                            <constraint firstItem="4DP-EY-M0T" firstAttribute="top" secondItem="UkN-7t-tmH" secondAttribute="bottom" constant="-10" id="jfW-pZ-DWS"/>
+                                            <constraint firstItem="4DP-EY-M0T" firstAttribute="top" secondItem="UkN-7t-tmH" secondAttribute="bottom" constant="-6" id="jfW-pZ-DWS"/>
                                             <constraint firstItem="hvb-dp-11E" firstAttribute="leading" secondItem="4DP-EY-M0T" secondAttribute="leading" id="n4x-p7-d1o"/>
                                             <constraint firstItem="ucX-LG-YpG" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="och-P3-cKE"/>
                                             <constraint firstItem="vVu-WK-FHk" firstAttribute="centerX" secondItem="pSA-ng-4Kd" secondAttribute="centerX" id="pEN-eg-37w"/>
