@@ -128,14 +128,14 @@ public class PredictionAggregator : NSManagedObject {
     }
     
     func aggregatePredictionIsComplete()->Bool {
+        if predictions.count <= PredictionAggregator.minimumSampleCountForSuccess {
+            return false
+        }
+        
         if let predictedActivity = self.aggregatePredictedActivity {
             if predictedActivity.confidence > PredictionAggregator.highConfidence {
                 return true
             }
-        }
-        
-        if predictions.count <= PredictionAggregator.minimumSampleCountForSuccess {
-            return false
         }
         
         if predictions.count >= PredictionAggregator.maximumSampleBeforeFailure {
