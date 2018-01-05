@@ -19,7 +19,13 @@ class TrophiesViewController: UITableViewController {
     private var reachabilityManager: NetworkReachabilityManager?
     private var trophiesPerRow: Int!
     private var trophySpacing: CGFloat = 10.0
-    private var shouldShowGraphAnimation = false
+    
+    enum StatsAnimationState {
+        case waitingForData
+        case needsAnimation
+        case animated
+    }
+    private var statsAnimationState = StatsAnimationState.waitingForData
     
     override func viewDidLoad() {
         self.title = "Achievements"
@@ -40,7 +46,7 @@ class TrophiesViewController: UITableViewController {
         self.trophiesPerRow =  Int(floor((self.view.frame.size.width) / (TrophyProgressButton.defaultBadgeDimension + TrophiesViewController.minimumTrophySpacing)))
         self.trophySpacing = (self.view.frame.size.width - 2*TrophiesViewController.marginX - (CGFloat(trophiesPerRow) * TrophyProgressButton.defaultBadgeDimension)) / CGFloat(trophiesPerRow - 1)
         
-        self.shouldShowGraphAnimation = false
+        self.statsAnimationState = .waitingForData
         self.reloadData()
         self.updateData()
     }
@@ -49,17 +55,17 @@ class TrophiesViewController: UITableViewController {
         if let manager = reachabilityManager  {
             if  manager.isReachable {
                 RideReportAPIClient.shared.getTrophydex().apiResponse { (response) in
-                    self.shouldShowGraphAnimation = true
+                    self.statsAnimationState = .needsAnimation
                     self.reloadData()
                 }
             }
             else {
-                shouldShowGraphAnimation = true
+                self.statsAnimationState = .needsAnimation
                 self.reloadData()
             }
         } else {
             RideReportAPIClient.shared.getTrophydex().apiResponse { (response) in
-                self.shouldShowGraphAnimation = true
+                self.statsAnimationState = .needsAnimation
                 self.reloadData()
             }
         }
@@ -119,6 +125,7 @@ class TrophiesViewController: UITableViewController {
             if let type = jsonRow["type"].string {
                 if type == "category" {
                     let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "TrophyCategoryCell", for: indexPath)
+                    
                     self.configureTrophyCategoryCell(tableCell, json: jsonRow)
                     return tableCell
                 } else if type == "stats_series" {
@@ -347,10 +354,9 @@ class TrophiesViewController: UITableViewController {
         lineChartView.rightAxis.labelFont = UIFont.boldSystemFont(ofSize: 12)
         lineChartView.rightAxis.labelTextColor = ColorPallete.shared.unknownGrey
         
-        guard shouldShowGraphAnimation else {
-            // clear the graph so it can animate in
+        guard self.statsAnimationState != .waitingForData else {
+            // clear the graph so it can animate in once the data comes in
             lineChartView.clear()
-            
             return
         }
         
@@ -412,7 +418,10 @@ class TrophiesViewController: UITableViewController {
         lineChartView.data = data
         lineChartView.setVisibleXRange(minXRange: timePeriod, maxXRange: timePeriod)
         lineChartView.moveViewToX(entryData.last?.x ?? 0)
-        lineChartView.animate(xAxisDuration: 0.5, yAxisDuration: 0.0)
+        if self.statsAnimationState == .needsAnimation {
+            self.statsAnimationState = .animated
+            lineChartView.animate(xAxisDuration: 0.5, yAxisDuration: 0.0)
+        }
         lineChartView.isHidden = false
         
         lineChartView.xAxis.valueFormatter = DateValueFormatter(timeInterval: timeInterval, dateFormat: "MMM")
