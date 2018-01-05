@@ -148,8 +148,6 @@ import BadgeSwift
         emojiView.image = emojiDesaturated
         
         if (self.trophyProgress?.reward != nil) {
-            self.backgroundColor = ColorPallete.shared.almostWhite
-            
             if self.borderLayer == nil {
                 let borderLayer = CAShapeLayer()
                 borderLayer.fillColor = UIColor.clear.cgColor
@@ -161,23 +159,29 @@ import BadgeSwift
                 self.layer.addSublayer(borderLayer)
                 self.borderLayer = borderLayer
             }
-            if let layer = self.borderLayer {
-                let frameSize = self.frame.size
-                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width - self.rewardBorderWidth/2, height: frameSize.height - self.rewardBorderWidth/2)
-                
-                layer.bounds = borderRect
-                layer.position = CGPoint(x: frameSize.width/2, y: frameSize.height/2)
-                layer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: self.cornerRadius).cgPath
-            }
+            self.repostionBorderLayer()
             self.bringSubview(toFront: self.badgeView)
         } else {
-            self.backgroundColor = UIColor.clear
-            
             if let layer = self.borderLayer {
                 layer.removeFromSuperlayer()
                 self.borderLayer = nil
             }
         }
+    }
+    
+    private func repostionBorderLayer() {
+        if let layer = self.borderLayer {
+            let frameSize = self.frame.size
+            let borderRect = CGRect(x: 0, y: 0, width: frameSize.width - self.rewardBorderWidth/2, height: frameSize.height - self.rewardBorderWidth/2)
+            
+            layer.bounds = borderRect
+            layer.position = CGPoint(x: frameSize.width/2, y: frameSize.height/2)
+            layer.path = UIBezierPath(roundedRect: borderRect, cornerRadius: self.cornerRadius).cgPath
+        }
+    }
+    
+    override public func layoutSubviews() {
+        self.repostionBorderLayer()
     }
     
     private func commonInit() {
@@ -219,6 +223,8 @@ import BadgeSwift
         }
    
         currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.width, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeDimension))
+        currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: nil, attribute: NSLayoutAttribute.notAnAttribute, multiplier: 1.0, constant: self.badgeDimension))
+
         
         for view in [emojiView, emojiProgressView] {
             currentConstraints.append(NSLayoutConstraint(item: self, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: NSLayoutAttribute.leading, multiplier: 1.0, constant:0))
