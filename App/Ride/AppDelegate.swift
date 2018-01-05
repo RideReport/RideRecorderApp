@@ -194,29 +194,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return
         }
         
-        if let rootVC = self.window?.rootViewController {
+        if let window = self.window, let rootVC = window.rootViewController as? UITabBarController, let vcs = rootVC.viewControllers, let selectedViewController = vcs.first {
             if let presentedVC = rootVC.presentedViewController {
                 // dismiss anything in the way first
                 presentedVC.dismiss(animated: false, completion: nil)
             }
             
             connectVC.launchToConnectedApp = app
-            rootVC.present(navVC, animated: true, completion: nil)
+            navVC.modalTransitionStyle = .coverVertical
+            
+            selectedViewController.present(navVC, animated: true, completion: nil)
         }
-    }
-    
-    
-    func transitionToMainNavController() {
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let viewController : UIViewController = storyBoard.instantiateViewController(withIdentifier: "mainViewController") as UIViewController!
-        
-        let transition = CATransition()
-        transition.duration = 0.6
-        transition.type = kCATransitionFade
-        self.window?.rootViewController?.view.layer.add(transition, forKey: nil)
-        
-        self.window?.rootViewController = viewController
-        self.window?.makeKeyAndVisible()
     }
     
     func transitionToTripView(trip: Trip) {
@@ -237,6 +225,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             tripVC.selectedTrip = trip
             navVC.pushViewController(tripVC, animated: true)
         }
+    }
+    
+    func transitionToMainNavController() {
+        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController : UIViewController = storyBoard.instantiateViewController(withIdentifier: "mainViewController") as UIViewController!
+        
+        let transition = CATransition()
+        transition.duration = 0.6
+        transition.type = kCATransitionFade
+        self.window?.rootViewController?.view.layer.add(transition, forKey: nil)
+        
+        self.window?.rootViewController = viewController
+        self.window?.makeKeyAndVisible()
     }
     
     func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {

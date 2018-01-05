@@ -102,6 +102,10 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        if let navVC = self.navigationController {
+            navVC.setNavigationBarHidden(false, animated: animated)
+        }
+        
         self.refreshEmptyTableView()
     }
     

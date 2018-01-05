@@ -234,12 +234,6 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         self.title = "Ride Report"
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if let navVC = self.navigationController {
-            navVC.setNavigationBarHidden(false, animated: animated)
-        }
-    }
-    
     func refreshHeaderCells() {
         // only support one promo for now
         if let promo = Profile.profile().eligibilePromotion() {

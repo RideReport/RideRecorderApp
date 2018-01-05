@@ -93,6 +93,9 @@ class TripViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        if let navVC = self.navigationController {
+            navVC.setNavigationBarHidden(false, animated: animated)
+        }
         
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "TripSummaryViewDidChangeHeight"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
             guard let strongSelf = self else {
