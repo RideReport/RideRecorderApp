@@ -363,6 +363,13 @@ public class  Route: NSManagedObject {
             return
         }
         
+        if self.aggregateRoughtSpeed > 90.0 && self.duration() > 3600 {
+            // special case for air travel. fast speed and at least an hour.
+            DDLogInfo("Re-classifiying trip as aviation trip due to very high speed.")
+            
+            self.activityType = .aviation
+        }
+        
         
         guard self.locationCount() > 1 else {
             DDLogInfo("Tossing route with only one location")
@@ -649,7 +656,6 @@ public class  Route: NSManagedObject {
         return loc
     }
     
-    
     public var startDate : Date {
         if let firstLoc = self.firstLocation(includeCopied: false) {
             return firstLoc.date
@@ -664,6 +670,17 @@ public class  Route: NSManagedObject {
         }
         
         return self.creationDate
+    }
+    
+    var aggregateRoughtSpeed: CLLocationSpeed {
+        guard let startLoc = self.firstLocation(includeCopied: false), let endLoc = self.mostRecentLocation() else {
+                return 0.0
+        }
+        
+        let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
+        let time = endLoc.date.timeIntervalSince(startLoc.date as Date)
+        
+        return distance/time
     }
     
     var averageMovingSpeed : CLLocationSpeed {
