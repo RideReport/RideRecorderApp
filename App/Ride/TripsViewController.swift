@@ -12,6 +12,7 @@ import CoreData
 import SystemConfiguration
 import Presentr
 import CocoaLumberjack
+import StoreKit
 
 // FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
@@ -232,6 +233,18 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
         
         self.title = "Ride Report"
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if (Profile.profile().featureFlags.contains("ios_rating_request")) {
+            if #available(iOS 10.3, *) {
+                SKStoreReviewController.requestReview()
+            } else {
+                // Currently unspported on earlier versions
+            }
+        }
     }
     
     func refreshHeaderCells() {
