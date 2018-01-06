@@ -97,6 +97,14 @@ public class Profile: NSManagedObject {
         }
     }
     
+    class func resetPagitionState() {
+        if let profile = Static.profile {
+            Static.profile.nextSyncURL = nil
+            Static.profile.nextPageURL = nil
+            CoreDataManager.shared.saveContext()
+        }
+    }
+    
     class func resetProfile() {
         Static.profile = nil
     }

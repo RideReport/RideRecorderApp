@@ -538,6 +538,7 @@ class RideReportAPIClient: APIClientDelegate {
             switch response.result {
             case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
+                Profile.resetPagitionState()
                 self.updateAccountStatus()
             case .failure(let error):
                 DDLogWarn(String(format: "Error verifying email token: %@", error as CVarArg))
@@ -550,6 +551,7 @@ class RideReportAPIClient: APIClientDelegate {
             switch response.result {
             case .success(let json):
                 DDLogInfo(String(format: "Response: %@", json.stringValue))
+                Profile.resetPagitionState()
                 self.updateAccountStatus()
             case .failure(let error):
                 DDLogWarn(String(format: "Error verifying facebook token: %@", error as CVarArg))
