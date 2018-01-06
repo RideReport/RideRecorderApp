@@ -51,6 +51,7 @@
 		3D3306131D7774E900B7E56A /* Ride Report Notification Content.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 3D3306051D7774E900B7E56A /* Ride Report Notification Content.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3D3523A11FE09653009D3E6B /* UIKit+ClosureAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3523A01FE09653009D3E6B /* UIKit+ClosureAdditions.swift */; };
 		3D3599CA1F99763E0078E97D /* TrophyProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3599C91F99763E0078E97D /* TrophyProgress.swift */; };
+		3D3779A520004A7600A8B9D3 /* UIImage+HBAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3779A420004A7600A8B9D3 /* UIImage+HBAdditions.swift */; };
 		3D3C3E1B1E68E69B004C719E /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E171E68E69B004C719E /* pinGreen@2x.png */; };
 		3D3C3E1C1E68E69B004C719E /* pinGreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E171E68E69B004C719E /* pinGreen@2x.png */; };
 		3D3C3E1D1E68E69B004C719E /* pinGreen@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D3C3E181E68E69B004C719E /* pinGreen@3x.png */; };
@@ -540,6 +541,7 @@
 		3D3306101D7774E900B7E56A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D3523A01FE09653009D3E6B /* UIKit+ClosureAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+ClosureAdditions.swift"; sourceTree = "<group>"; };
 		3D3599C91F99763E0078E97D /* TrophyProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrophyProgress.swift; sourceTree = "<group>"; };
+		3D3779A420004A7600A8B9D3 /* UIImage+HBAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+HBAdditions.swift"; sourceTree = "<group>"; };
 		3D3C3E171E68E69B004C719E /* pinGreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGreen@2x.png"; sourceTree = "<group>"; };
 		3D3C3E181E68E69B004C719E /* pinGreen@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinGreen@3x.png"; sourceTree = "<group>"; };
 		3D3C3E191E68E69B004C719E /* pinRed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pinRed@2x.png"; sourceTree = "<group>"; };
@@ -1322,6 +1324,7 @@
 				3D3303591C6ECF3800780D76 /* NSString+HBAdditions.swift */,
 				3D3523A01FE09653009D3E6B /* UIKit+ClosureAdditions.swift */,
 				3D9705B81FE9C7F100F9F2EA /* UIViewController+Injection.swift */,
+				3D3779A420004A7600A8B9D3 /* UIImage+HBAdditions.swift */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -2571,6 +2574,7 @@
 				3D035CC71CCEBDE500444DCF /* ConnectedAppsViewController.swift in Sources */,
 				3D72BDE61F58B03B0043ECBA /* CLLocationSpeed+HBAdditions.swift in Sources */,
 				84FEF0121B9F7BF000F0BB89 /* BrowserViewController.swift in Sources */,
+				3D3779A520004A7600A8B9D3 /* UIImage+HBAdditions.swift in Sources */,
 				3D33035A1C6ECF3800780D76 /* NSString+HBAdditions.swift in Sources */,
 				3D72BDEE1F58B0950043ECBA /* CoreDataManager.swift in Sources */,
 				844B94A01B8BE1A3009F4E27 /* BKPasscodeInputView.m in Sources */,

@@ -13,13 +13,21 @@ import Kingfisher
 import UIImageColors
 import BadgeSwift
 
+public protocol TrophyProgressButtonDelegate: class {
+    func didFinishInitialRendering(color: UIColor?)
+}
+
 @IBDesignable public class TrophyProgressButton : UIButton {
+    weak open var delegate: TrophyProgressButtonDelegate?
+    
     public static var versionNumber = 1
     public static var defaultBadgeDimension: CGFloat = 78
     
     @IBInspectable var countLabelSize: CGFloat = 16
     @IBInspectable var emojiFontSize: CGFloat = 50
     @IBInspectable var badgeDimension: CGFloat = TrophyProgressButton.defaultBadgeDimension
+    
+    private var didCallDidFinishInitialRendering = false
     
     private var cornerRadius: CGFloat {
         get {
@@ -142,6 +150,13 @@ import BadgeSwift
             emojiView.image = nil
             badgeView.text = ""
             return
+        }
+        
+        if !didCallDidFinishInitialRendering {
+            didCallDidFinishInitialRendering = true
+            if let delegate = self.delegate {
+                delegate.didFinishInitialRendering(color: emojiSaturated?.getPixelColor(point: CGPoint(x: self.badgeDimension / 2, y: 0)))
+            }
         }
         
         emojiProgressView.image = emojiSaturated

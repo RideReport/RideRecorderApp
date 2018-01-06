@@ -11,7 +11,7 @@ import SwiftyJSON
 import Presentr
 import CocoaLumberjack
 
-class TrophyViewController: UIViewController {
+class TrophyViewController: UIViewController, TrophyProgressButtonDelegate {
     var trophyProgress: TrophyProgress? = nil
     
     private static let viewSizePercentageWidth: CGFloat = 0.8
@@ -27,7 +27,7 @@ class TrophyViewController: UIViewController {
     @IBOutlet weak var rewardDescriptionLabel: UILabel!
     
     private var shouldShowTrophyProgressView = true
-    
+    private var sparkleInColor: UIColor?
     
     static func presenter()-> Presentr {
         let width = ModalSize.fluid(percentage: Float(TrophyViewController.viewSizePercentageWidth))
@@ -56,13 +56,26 @@ class TrophyViewController: UIViewController {
         self.moreInfoTextView.isSelectable = true
         self.moreInfoTextView.isEditable = false
         
+        self.trophyProgressButton.delegate = self
+        
         refreshUI()
         
         if trophyProgress != nil && trophyProgress!.count >= 1 {
-            self.trophyProgressButton.isHidden = true
+            self.trophyProgressButton.layer.opacity = 0.0
         }
     }
     
+    let sparkleDX: CGFloat = -40
+    let sparkleDY: CGFloat = -60
+    func didFinishInitialRendering(color: UIColor?) {
+        let sparkleColor = color ?? ColorPallete.shared.brightBlue
+        self.sparkleInColor = sparkleColor
+        if shouldSparkleIn {
+            self.view.sparkle(sparkleColor, inRect: self.trophyProgressButton.frame.insetBy(dx: sparkleDX, dy: sparkleDY))
+        }
+    }
+    
+    private var shouldSparkleIn = false
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -72,8 +85,12 @@ class TrophyViewController: UIViewController {
         
         if shouldShowTrophyProgressView {
             if trophyProgress.count >= 1 {
-                self.view.sparkle(ColorPallete.shared.brightBlue, inRect: self.trophyProgressButton.frame.insetBy(dx: -30, dy: -30))
                 self.trophyProgressButton.fadeIn()
+                if let color = sparkleInColor {
+                    self.view.sparkle(color, inRect: self.trophyProgressButton.frame.insetBy(dx: sparkleDX, dy: sparkleDY))
+                } else {
+                    shouldSparkleIn = true
+                }
             } else {
                 self.trophyProgressButton.isHidden = false
             }
