@@ -1992,12 +1992,12 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="placeholder placeholder placeholder placeholder placeholderplaceholder placeholder placeholder placeholder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
-                                <rect key="frame" x="37.5" y="301.5" width="300" height="64.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="placeholder placeholder placeholder placeholder placeholderplaceholder placeholder placeholder placeholder" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="UL8-8P-mSA">
+                                <rect key="frame" x="37.5" y="262" width="300" height="143.5"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="63" id="H6P-Gz-cQ1"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -2048,13 +2048,6 @@
                                     <outlet property="delegate" destination="326-On-509" id="A3V-24-RL4"/>
                                 </connections>
                             </textView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Make Every Ride Count" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="zas-tV-1iZ">
-                                <rect key="frame" x="37.5" y="264.5" width="300" height="29"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
-                                <color key="textColor" red="0.26274509800000001" green="0.26274509800000001" blue="0.26274509800000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JzU-pM-JS3">
                                 <rect key="frame" x="143" y="552" width="89" height="48"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
@@ -2075,8 +2068,6 @@
                             <constraint firstItem="mTI-Gc-S80" firstAttribute="centerY" secondItem="7cW-Zb-E0S" secondAttribute="centerY" id="DZB-m0-PhM"/>
                             <constraint firstItem="JzU-pM-JS3" firstAttribute="centerX" secondItem="41H-6Z-f3d" secondAttribute="centerX" id="Fp3-aQ-b3J"/>
                             <constraint firstItem="UL8-8P-mSA" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" multiplier="4:5" id="Gi1-tz-gv3"/>
-                            <constraint firstItem="zas-tV-1iZ" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" multiplier="4:5" id="Iau-er-V1H"/>
-                            <constraint firstItem="UL8-8P-mSA" firstAttribute="top" secondItem="zas-tV-1iZ" secondAttribute="bottom" constant="8" id="LLU-Vz-7EJ"/>
                             <constraint firstItem="8qs-Gs-CEz" firstAttribute="top" secondItem="JzU-pM-JS3" secondAttribute="bottom" constant="-2" id="LvE-SJ-JDA"/>
                             <constraint firstItem="41H-6Z-f3d" firstAttribute="centerX" secondItem="UL8-8P-mSA" secondAttribute="centerX" id="Mv5-F8-8je"/>
                             <constraint firstItem="mTI-Gc-S80" firstAttribute="width" secondItem="7cW-Zb-E0S" secondAttribute="width" id="OvB-MH-n4W"/>
@@ -2084,7 +2075,6 @@
                             <constraint firstItem="41H-6Z-f3d" firstAttribute="centerX" secondItem="8qs-Gs-CEz" secondAttribute="centerX" id="gso-88-TDn"/>
                             <constraint firstItem="41H-6Z-f3d" firstAttribute="bottom" secondItem="8qs-Gs-CEz" secondAttribute="bottom" constant="10" id="pFE-Ma-puR"/>
                             <constraint firstItem="8qs-Gs-CEz" firstAttribute="leading" secondItem="7cW-Zb-E0S" secondAttribute="leadingMargin" constant="3" id="u2W-7N-VW8"/>
-                            <constraint firstItem="41H-6Z-f3d" firstAttribute="centerX" secondItem="zas-tV-1iZ" secondAttribute="centerX" id="wAP-eC-tJn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="41H-6Z-f3d"/>
                         <variation key="default">
@@ -2095,7 +2085,6 @@
                         <variation key="heightClass=regular">
                             <mask key="constraints">
                                 <include reference="pFE-Ma-puR"/>
-                                <include reference="LLU-Vz-7EJ"/>
                                 <include reference="2dD-au-2u1"/>
                                 <include reference="u2W-7N-VW8"/>
                             </mask>

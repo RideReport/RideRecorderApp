@@ -30,7 +30,9 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SetupTermsViewController.didTapLink(_:)))
         self.termsTextView.addGestureRecognizer(tapRecognizer)
         
-        helperTextLabel.markdownStringValue = "Track your miles, map your routes, and earn ride streaks for every ride you take. Just hop on your bike – **Ride Report will start automatically**."
+        self.spriteKitView.layer.opacity = 0.4
+        
+        helperTextLabel.markdownStringValue = "**Ride Report starts automatically whenever you hop on your bike**. You don't have to do a thing to keep track of every ride you take. "
         
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current

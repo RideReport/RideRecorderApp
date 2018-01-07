@@ -32,18 +32,18 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
             pushSimulationView.showsActionButon = false
             pushSimulationView.showsDestructiveActionButon = false
             if TARGET_OS_SIMULATOR == 0 && self.traitCollection.forceTouchCapability == UIForceTouchCapability.available {
-                helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Press it firmly** to rate your ride."
+                helperTextLabel.markdownStringValue = "At the end of your trip, Ride Report automatically notifies you. **Press the notification firmly** to rate your ride."
                 pushSimulationView.showsEditButton = false
                 pushSimulationView.allowsScrolling = false
                 pushSimulationView.slideLabel.text = "Press for more"
                 self.notificationHelperTextLabel.text = "firmly press this notification"
             } else {
-                helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Slide it left** to rate your ride."
+                helperTextLabel.markdownStringValue = "At the end of your trip, Ride Report automatically notifies you. **Slide the notification left** to rate your ride."
                 pushSimulationView.showsEditButton = true
                 pushSimulationView.editTitle = "View"
             }
         } else {
-            helperTextLabel.markdownStringValue = "At the end of your trip, you'll get a Ride Report notification. **Slide it left** to rate your ride."
+            helperTextLabel.markdownStringValue = "At the end of your trip, Ride Report automatically notifies you. **Slide the notification left** to rate your ride."
         }
         
         self.notificationHelperTextLabel.isHidden = true
