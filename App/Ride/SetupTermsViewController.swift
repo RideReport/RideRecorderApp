@@ -32,7 +32,7 @@ class SetupTermsViewController: SetupChildViewController, UITextViewDelegate, SK
         
         self.spriteKitView.layer.opacity = 0.4
         
-        helperTextLabel.markdownStringValue = "**Ride Report starts automatically whenever you hop on your bike**. You don't have to do a thing to keep track of every ride you take. "
+        helperTextLabel.markdownStringValue = "Ride Report **starts automatically** whenever you ride your bike. You don't have to do a thing. "
         
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.current

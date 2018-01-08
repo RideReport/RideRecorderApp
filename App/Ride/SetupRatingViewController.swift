@@ -47,7 +47,7 @@ class SetupRatingViewController: SetupChildViewController, RideNotificationViewD
         }
         
         self.notificationHelperTextLabel.isHidden = true
-        self.notificationHelperTextLabel.delay(4) {
+        self.notificationHelperTextLabel.delay(6) {
             if !self.didFigureOutNotificationview {
                 let opacityAnimation = CABasicAnimation(keyPath: "shadowOpacity")
                 opacityAnimation.duration = 1.0;
