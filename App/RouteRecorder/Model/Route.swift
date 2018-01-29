@@ -358,16 +358,32 @@ public class  Route: NSManagedObject {
         }
     }
     
+    #if DEBUG
+    public func reclose() {
+        self.isClosed = false
+        self.close()
+    }
+    #endif
+    
     func close() {
         guard self.isClosed != true else {
             return
         }
         
-        if self.aggregateRoughtSpeed > 90.0 && self.duration() > 3600 {
-            // special case for air travel. fast speed and at least an hour.
-            DDLogInfo("Re-classifiying trip as aviation trip due to very high speed.")
+        if let startLoc = self.firstLocation(includeCopied: true), let endLoc = self.mostRecentLocation() {
+            let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
+            let time = endLoc.date.timeIntervalSince(startLoc.date as Date)
             
-            self.activityType = .aviation
+            let oneHundredMiles = 100.0 * 1609.34
+            let oneHour = Double(60*60)
+            let twoHundredMilesPerHour = 200 / 2.23694
+            
+            if distance/time > twoHundredMilesPerHour && time > oneHour && distance > oneHundredMiles {
+                // special case for air travel. including copied locs because it is likely that is all we have if the user enabled airplane mode.
+                DDLogInfo("Re-classifiying trip as aviation trip due to very high speed.")
+                
+                self.activityType = .aviation
+            }
         }
         
         
@@ -670,17 +686,6 @@ public class  Route: NSManagedObject {
         }
         
         return self.creationDate
-    }
-    
-    var aggregateRoughtSpeed: CLLocationSpeed {
-        guard let startLoc = self.firstLocation(includeCopied: false), let endLoc = self.mostRecentLocation() else {
-                return 0.0
-        }
-        
-        let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
-        let time = endLoc.date.timeIntervalSince(startLoc.date as Date)
-        
-        return distance/time
     }
     
     var averageMovingSpeed : CLLocationSpeed {

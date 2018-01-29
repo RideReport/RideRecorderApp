@@ -882,6 +882,9 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 alertController.addAction(UIAlertAction(title: "⬆️ Upload Prediction Aggregators", style: UIAlertActionStyle.default, handler: { (_) in
                     APIClient.shared.uploadPredictionAggregators(forRoute: route)
                 }))
+                alertController.addAction(UIAlertAction(title: "🔃 Re-Close", style: UIAlertActionStyle.default, handler: { (_) in
+                    route.reclose()
+                }))
                 alertController.addAction(UIAlertAction(title: "〰 Re-simplifiy", style: UIAlertActionStyle.default, handler: { (_) in
                     route.resimplify()
                 }))
