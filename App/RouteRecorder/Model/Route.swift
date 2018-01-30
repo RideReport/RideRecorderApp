@@ -370,6 +370,23 @@ public class  Route: NSManagedObject {
             return
         }
         
+        guard self.locationCount() > 1 else {
+            DDLogInfo("Tossing route with only one location")
+            
+            self.cancel()
+
+            return
+        }
+        
+        if self.activityType.isMotorizedMode && self.locationCount() <= 2 {
+            DDLogInfo("Tossing motorized route with only a couple locations")
+            
+            self.cancel()
+
+            return
+        }
+        
+        
         if let startLoc = self.firstLocation(includeCopied: true), let endLoc = self.mostRecentLocation() {
             let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
             let time = endLoc.date.timeIntervalSince(startLoc.date as Date)
@@ -386,21 +403,12 @@ public class  Route: NSManagedObject {
             }
         }
         
-        
-        guard self.locationCount() > 1 else {
-            DDLogInfo("Tossing route with only one location")
-            
-            self.cancel()
+        if self.activityType == .cycling && self.averageMovingSpeed > 11.176 { // 25 mph
+            if self.locationCount() > 20 { // make sure we have enough locations to ensure some confidence in the speed
+                DDLogInfo("Re-classifiying trip as car trip due to high average moving speed.")
 
-            return
-        }
-        
-        if self.activityType.isMotorizedMode && self.locationCount() <= 2 {
-            DDLogInfo("Tossing motorized route with only a couple locations")
-            
-            self.cancel()
-
-            return
+                self.activityType = .automotive
+            }
         }
         
         self.calculateLength()
