@@ -66,9 +66,6 @@
 		3D42887F1D7789AF0071CEAE /* ColorPallete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AFFEAA1B041462009ABC19 /* ColorPallete.swift */; };
 		3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */ = {isa = PBXBuildFile; fileRef = 849FB1F51B87F1250002306F /* ride.report.cer */; };
 		3D493C491E7C5EC800BB7B34 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */; };
-		3D4951101C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
-		3D4951111C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
-		3D4951121C8E092300E216AA /* forest.cv in Resources */ = {isa = PBXBuildFile; fileRef = 3D49510F1C8E092300E216AA /* forest.cv */; };
 		3D4CA9F01FD0C36D00BCFD33 /* RideReportTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */; };
 		3D634F741ECCEEB2008B1894 /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848777B81A683A4A00B59B06 /* PopupView.swift */; };
 		3D634F751ECCEEB2008B1894 /* BalloonMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA687B21E82086400483741 /* BalloonMarker.swift */; };
@@ -549,7 +546,6 @@
 		3D3CB8DB1EDF7CD6003964CE /* 1.archive */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = 1.archive; sourceTree = "<group>"; };
 		3D3DB2931FEC738800DFF9CF /* TrophyReward.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrophyReward.swift; sourceTree = "<group>"; };
 		3D493C481E7C5EC800BB7B34 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
-		3D49510F1C8E092300E216AA /* forest.cv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = forest.cv; sourceTree = "<group>"; };
 		3D4CA9EF1FD0C36D00BCFD33 /* RideReportTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideReportTabBarController.swift; sourceTree = "<group>"; };
 		3D634F9A1ECCEFF8008B1894 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		3D65B9721D678C6500385D74 /* SetupWatchActivitySyncingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetupWatchActivitySyncingViewController.swift; sourceTree = "<group>"; };
@@ -1336,7 +1332,6 @@
 				84EA5FB11EB1BC3700964706 /* tspark@2x.png */,
 				84EA5FB21EB1BC3700964706 /* tspark@3x.png */,
 				3D0D8B231CE2560E0059AC6B /* bell.aiff */,
-				3D49510F1C8E092300E216AA /* forest.cv */,
 				8451037C1C20BAE600ABD323 /* Action@2x.png */,
 				8451037D1C20BAE600ABD323 /* Action@3x.png */,
 				842141C91C4427A2009DA851 /* iphonewhite@3x.png */,
@@ -1796,7 +1791,6 @@
 				3D2705E31C8785D400A96DE0 /* Assets.xcassets in Resources */,
 				3D4662A61F1EC18E00103126 /* ride.report.cer in Resources */,
 				3D2705E11C8785D400A96DE0 /* Main.storyboard in Resources */,
-				3D4951121C8E092300E216AA /* forest.cv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1854,7 +1848,6 @@
 				8492BCAD1C34A72E006BDDB8 /* new_trip_201.json in Resources */,
 				842141CB1C4427A2009DA851 /* iphonewhite@3x.png in Resources */,
 				8492BCB71C35C0A0006BDDB8 /* trip_no_token_401.json in Resources */,
-				3D4951111C8E092300E216AA /* forest.cv in Resources */,
 				8492BCBB1C35C0A0006BDDB8 /* trip_with_reward_200.json in Resources */,
 				8492BCAF1C34A72E006BDDB8 /* new_trip_409.json in Resources */,
 				8492BCB51C35C0A0006BDDB8 /* trip_bad_token_401.json in Resources */,
@@ -1875,7 +1868,6 @@
 				3D6D77941D7F8D8200A95602 /* tspark.png in Resources */,
 				8451FA881B9E2F6E008ACDCD /* menu@2x.png in Resources */,
 				3D3C3E1B1E68E69B004C719E /* pinGreen@2x.png in Resources */,
-				3D4951101C8E092300E216AA /* forest.cv in Resources */,
 				849FB1F61B87F1250002306F /* ride.report.cer in Resources */,
 				8451037E1C20BAE600ABD323 /* Action@2x.png in Resources */,
 				3D3C3E1F1E68E69B004C719E /* pinRed@2x.png in Resources */,
