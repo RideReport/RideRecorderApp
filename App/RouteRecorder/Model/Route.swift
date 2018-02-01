@@ -699,35 +699,23 @@ public class  Route: NSManagedObject {
         var sumSpeed : Double = 0.0
         var count = 0
         let locs = self.fetchOrderedLocations(simplified: false, includingInferred: false)
+        var hasFoundLocWithSpeed = false
 
         for location in locs {
-            if (location.speed > Location.minimumMovingSpeed && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
+            if (location.speed > Location.minimumMovingSpeed) {
                 count += 1
                 sumSpeed += (location as Location).speed
+            } else if location.speed >= 0 {
+                hasFoundLocWithSpeed = true
             }
         }
         
         if (count == 0) {
-            return 0
-        }
-        
-        return sumSpeed/Double(count)
-    }
-    
-    var averageSpeed : CLLocationSpeed {
-        var sumSpeed : Double = 0.0
-        var count = 0
-        let locs = self.fetchOrderedLocations(simplified: false, includingInferred: false)
-
-        for location in locs {
-            if (location.speed > 0 && location.horizontalAccuracy <= Location.acceptableLocationAccuracy) {
-                count += 1
-                sumSpeed += (location as Location).speed
+            if hasFoundLocWithSpeed {
+                return 0
+            } else {
+                return -1
             }
-        }
-        
-        if (count == 0) {
-            return 0
         }
         
         return sumSpeed/Double(count)
