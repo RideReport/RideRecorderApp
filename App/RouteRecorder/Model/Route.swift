@@ -370,22 +370,21 @@ public class  Route: NSManagedObject {
             return
         }
         
-        guard self.locationCount() > 1 else {
+        if self.locationCount() <= 1 {
             DDLogInfo("Tossing route with only one location")
             
             self.cancel()
 
             return
+        } else if self.locationCount() == 2 {
+            if let startLoc = self.firstLocation(includeCopied: true), let endLoc = self.mostRecentLocation(),
+                startLoc.clLocation().distance(from: endLoc.clLocation()) < 200 {
+                DDLogInfo("Canceling short route with only a couple locations")
+                self.cancel()
+                
+                return
+            }
         }
-        
-        if self.activityType.isMotorizedMode && self.locationCount() <= 2 {
-            DDLogInfo("Tossing motorized route with only a couple locations")
-            
-            self.cancel()
-
-            return
-        }
-        
         
         if let startLoc = self.firstLocation(includeCopied: true), let endLoc = self.mostRecentLocation() {
             let distance = startLoc.clLocation().distance(from: endLoc.clLocation())
@@ -413,7 +412,7 @@ public class  Route: NSManagedObject {
         
         self.calculateLength()
         
-        if self.activityType.isMotorizedMode && self.length < 250.0 {
+        if self.activityType.isMotorizedMode && self.length < 300.0 {
             DDLogInfo("Tossing motorized route that was too short")
             
             self.cancel()
