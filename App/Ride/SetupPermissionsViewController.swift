@@ -129,9 +129,10 @@ class SetupPermissionsViewController: SetupChildViewController {
             self.nextButton.fadeOut()
             self.notificationDetailsLabel.popIn()
             
-            NotificationManager.checkAuthorized(handler: { (status) in
+            NotificationManager.updateAuthorizationStatus() {
                 DispatchQueue.main.async {
-                    if status != .authorized {
+                    if NotificationManager.lastAuthorizationStatus != .authorized &&
+                       NotificationManager.lastAuthorizationStatus != .authorizedAlertsDenied {
                         self.notificationDetailsLabel.text = "1️⃣ Send notifications after your ride"
                         self.requestNotificationsPermission()
                     } else {
@@ -139,7 +140,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                         self.nextPermission()
                     }
                 }
-            })
+            }
         } else if self.currentPermissionsAsk == .askForLocations {
             self.notificationDetailsLabel.text = "✅ Send notifications after your ride"
 

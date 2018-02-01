@@ -11,14 +11,17 @@ import UserNotifications
 import CocoaLumberjack
 import RouteRecorder
 
-enum NotificationManagerAuthorizationStatus {
-    case notDetermined
+enum NotificationManagerAuthorizationStatus: Int16 {
+    case notDetermined = 0
     case authorized
+    case authorizedAlertsDenied
     case denied
 }
 
 class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
     static private(set) var shared : NotificationManager!
+    static private(set) var lastAuthorizationStatus: NotificationManagerAuthorizationStatus = .notDetermined
+    
     private var pendingRegistrationHandler: ((NotificationManagerAuthorizationStatus)->Void)? = nil
     
     struct Static {
@@ -41,35 +44,42 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
     public func didRegisterForNotifications(notificationSettings: UIUserNotificationSettings) {
         if let handler = self.pendingRegistrationHandler {
             self.pendingRegistrationHandler = nil
-            let auth = NotificationManager.getAuthorizationForSettings(notificationSettings)
-            handler(auth)
+            NotificationManager.lastAuthorizationStatus = NotificationManager.getAuthorizationForSettings(notificationSettings)
+            handler(NotificationManager.lastAuthorizationStatus)
         }
     }
     
-    static func checkAuthorized(handler: @escaping (NotificationManagerAuthorizationStatus)->Void) {
+    static func updateAuthorizationStatus(handler: @escaping ()->Void) {
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().getNotificationSettings { (settings) in
                 switch settings.authorizationStatus {
                 case .notDetermined:
-                    handler(.notDetermined)
+                    NotificationManager.lastAuthorizationStatus = .notDetermined
                 case .authorized:
-                    handler(.authorized)
+                    if settings.alertSetting == .enabled {
+                        NotificationManager.lastAuthorizationStatus = .authorized
+                    } else {
+                        NotificationManager.lastAuthorizationStatus = .authorizedAlertsDenied
+                    }
                 case .denied:
-                    handler(.denied)
+                    NotificationManager.lastAuthorizationStatus = .denied
                 }
+                
+                handler()
             }
         } else {
             if let settings = UIApplication.shared.currentUserNotificationSettings {
-               handler(NotificationManager.getAuthorizationForSettings(settings))
+               NotificationManager.lastAuthorizationStatus = NotificationManager.getAuthorizationForSettings(settings)
             } else {
-                handler(.notDetermined)
+                NotificationManager.lastAuthorizationStatus = .notDetermined
             }
+            handler()
         }
     }
     
     private static func getAuthorizationForSettings(_ notificationSettings: UIUserNotificationSettings)->NotificationManagerAuthorizationStatus {
         if notificationSettings.types.intersection(UIUserNotificationType.alert) == [] {
-            return .denied
+            return .authorizedAlertsDenied
         } else {
             return .authorized
         }
@@ -222,11 +232,13 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
 
             UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { (granted, error) in
                 DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                    UNUserNotificationCenter.current().setNotificationCategories(notificationCategories)
-                    if let handler = self.pendingRegistrationHandler {
-                        self.pendingRegistrationHandler = nil
-                        handler(granted ? .authorized : .denied)
+                    NotificationManager.updateAuthorizationStatus() {
+                        UIApplication.shared.registerForRemoteNotifications()
+                        UNUserNotificationCenter.current().setNotificationCategories(notificationCategories)
+                        if let handler = self.pendingRegistrationHandler {
+                            self.pendingRegistrationHandler = nil
+                            handler(NotificationManager.lastAuthorizationStatus)
+                        }
                     }
                 }
             }
@@ -293,10 +305,11 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
                 if let handler = self.pendingRegistrationHandler {
                     self.pendingRegistrationHandler = nil
                     if let settings = UIApplication.shared.currentUserNotificationSettings {
-                        handler(NotificationManager.getAuthorizationForSettings(settings))
+                        NotificationManager.lastAuthorizationStatus = NotificationManager.getAuthorizationForSettings(settings)
                     } else {
-                        handler(.notDetermined)
+                        NotificationManager.lastAuthorizationStatus = .notDetermined
                     }
+                    handler(NotificationManager.lastAuthorizationStatus)
                 }
             }
         }

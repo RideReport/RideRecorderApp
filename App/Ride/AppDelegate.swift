@@ -249,11 +249,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken)
+        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(deviceToken, notificationStatus: NotificationManager.lastAuthorizationStatus)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(nil)
+        RideReportAPIClient.shared.appDidReceiveNotificationDeviceToken(nil, notificationStatus: .notDetermined)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {

@@ -65,6 +65,7 @@ class RideReportAPIClient: APIClientDelegate {
     
     var hasRegisteredForRemoteNotifications: Bool = false
     var notificationDeviceToken: Data?
+    var notificationStatus: NotificationManagerAuthorizationStatus = .notDetermined
     
     //
     // MARK: - Trip Synchronization
@@ -348,12 +349,13 @@ class RideReportAPIClient: APIClientDelegate {
         }
     }
     
-    func appDidReceiveNotificationDeviceToken(_ token: Data?) {
+    func appDidReceiveNotificationDeviceToken(_ token: Data?, notificationStatus: NotificationManagerAuthorizationStatus) {
         let oldToken = self.notificationDeviceToken
         let hadRegisteredForRemoteNotifications = self.hasRegisteredForRemoteNotifications
         
         self.hasRegisteredForRemoteNotifications = true
         self.notificationDeviceToken = token
+        self.notificationStatus = notificationStatus
         if (oldToken != token || !hadRegisteredForRemoteNotifications) {
             self.updateAccountStatus()
         }
@@ -421,6 +423,8 @@ class RideReportAPIClient: APIClientDelegate {
         if let deviceToken = self.notificationDeviceToken {
             parameters["device_token"] = deviceToken.hexadecimalString()
         }
+        
+        parameters["notification_status"] = self.notificationStatus.rawValue
         
         parameters["profile"] = self.profileDictionary()
         
