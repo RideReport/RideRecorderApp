@@ -14,8 +14,6 @@ enum CurrentPermissionAsk {
     case askedForNotifications
     case askForLocations
     case askedForLocations
-    case askForMotion
-    case askedForMotion
     case sayFinished
     case finished
 }
@@ -83,7 +81,7 @@ class SetupPermissionsViewController: SetupChildViewController {
                     guard let strongSelf = self else {
                         return
                     }
-                    strongSelf.currentPermissionsAsk = .sayFinished // motion permission is not needed, for now
+                    strongSelf.currentPermissionsAsk = .sayFinished
                     strongSelf.nextPermission()
                 }
                 
@@ -112,40 +110,6 @@ class SetupPermissionsViewController: SetupChildViewController {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             completionBlock()
                         }
-                    })
-                    alertController.addAction(UIAlertAction(title: "Enable Ride Report Later", style: UIAlertActionStyle.destructive) { (_) in
-                        completionBlock()
-                    })
-                    self.present(alertController, animated: true, completion: nil)
-                } else {
-                    completionBlock()
-                }
-            }
-        }
-    }
-    
-    func requestMotionPermission() {
-        self.currentPermissionsAsk = .askedForMotion
-        
-        self.helperTextLabel.delay(1.5) {
-            RouteRecorder.shared.randomForestManager.startup()
-            RouteRecorder.shared.classificationManager.startup() {
-                let completionBlock = { [weak self] in
-                    guard let strongSelf = self else {
-                        return
-                    }
-                    strongSelf.currentPermissionsAsk = .sayFinished
-                    strongSelf.nextPermission()
-                }
-                
-                if (SensorClassificationManager.authorizationStatus == .denied) {
-                    let alertController = UIAlertController(title: "Motion & Fitness is disabled", message: "Ride Report needs permission to use your motion activity in order to log your bike trips automatically. We promise not to drain your battery!", preferredStyle: UIAlertControllerStyle.alert)
-                    alertController.addAction(UIAlertAction(title: "Go to Motion & Fitness Settings", style: UIAlertActionStyle.default) { (_) in
-                        let url = URL(string: UIApplicationOpenSettingsURLString)
-                        if url != nil && UIApplication.shared.canOpenURL(url!) {
-                            UIApplication.shared.openURL(url!)
-                        }
-                        completionBlock()
                     })
                     alertController.addAction(UIAlertAction(title: "Enable Ride Report Later", style: UIAlertActionStyle.destructive) { (_) in
                         completionBlock()
@@ -187,29 +151,15 @@ class SetupPermissionsViewController: SetupChildViewController {
                 
                 self.requestLocationsPermission()
             } else {
-                self.currentPermissionsAsk = .sayFinished // motion permission is not needed, for now
-                self.nextPermission()
-            }
-        } else if self.currentPermissionsAsk == .askForMotion { // currently gets skipped
-            self.notificationDetailsLabel.text = "✅ Use your location when Ride Report is in the background"
- 
-            if (SensorClassificationManager.authorizationStatus != .authorized) {
-                self.notificationDetailsLabel.delay(0.5) {
-                    self.notificationDetailsLabel.text = "3️⃣ Use your motion activity during your ride"
-                    self.notificationDetailsLabel.popIn()
-                }
-                
-                self.requestMotionPermission()
-            } else {
-                // they've already granted or denied it
-                self.currentPermissionsAsk = .sayFinished
+                RouteRecorder.shared.routeManager.startup(false)
+
+                self.currentPermissionsAsk = .sayFinished // location permission is not needed, for now
                 self.nextPermission()
             }
         } else if self.currentPermissionsAsk == .sayFinished {
             self.currentPermissionsAsk = .finished
             
             self.notificationDetailsLabel.text = "✅ Use your location during your ride"
-            //self.notificationDetailsLabel.text = "✅ Use your motion activity during your ride" <--- motion currently is skipped
             
             self.notificationDetailsLabel.delay(0.5) {
                 self.notificationDetailsLabel.fadeOut()

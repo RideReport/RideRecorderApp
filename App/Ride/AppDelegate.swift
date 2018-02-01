@@ -114,14 +114,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             HealthKitManager.startup()
         }
         
+        RouteRecorder.shared.randomForestManager.startup()
+        RouteRecorder.shared.classificationManager.startup(handler: {})
+        
         if (UserDefaults.standard.bool(forKey: "hasSeenSetup")) {
             // For new users, we wait to start permission-needing managers
             // This avoids immediately presenting the privacy permission dialogs.
             
             NotificationManager.startup()
-
-            RouteRecorder.shared.randomForestManager.startup()
-            RouteRecorder.shared.classificationManager.startup(handler: {})
             
             if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
                 DDLogInfo("Launched in background due to location update")
