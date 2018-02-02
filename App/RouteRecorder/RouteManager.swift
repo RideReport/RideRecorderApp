@@ -406,10 +406,13 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                 
                 DDLogVerbose(String(format: "Prediction: %@ confidence: %f", prediction.activityType.emoji, prediction.confidence))
                 
-                if prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence {
-                    let priorRoute = strongSelf.currentRoute ?? Route.mostRecentRoute()
-                    
-                    if let route = priorRoute, let loc = firstLocation, strongSelf.routeQualifiesForResumption(route: route, fromActivityType: prediction.activityType, fromDate: loc.date) {
+                var routeToResume: Route? = nil
+                if let priorRoute = strongSelf.currentRoute ?? Route.mostRecentRoute(), let loc = firstLocation, strongSelf.routeQualifiesForResumption(route: priorRoute, fromActivityType: prediction.activityType, fromDate: loc.date) {
+                    routeToResume = priorRoute
+                }
+                
+                if routeToResume != nil || (prediction.activityType != .stationary && prediction.confidence >= PredictionAggregator.highConfidence) {
+                    if let route = routeToResume  {
                         DDLogStateChange("Resuming route")
                         
                         route.reopen()
