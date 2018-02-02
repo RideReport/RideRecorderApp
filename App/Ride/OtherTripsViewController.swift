@@ -80,7 +80,7 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Trip")
         fetchedRequest.sortDescriptors = [NSSortDescriptor(key: "startDate", ascending: false)]
-        fetchedRequest.predicate = NSPredicate(format: "isInProgress = NO AND activityTypeInteger != %i AND startDate > %@ AND startDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
+        fetchedRequest.predicate = NSPredicate(format: "activityTypeInteger != %i AND startDate > %@ AND startDate < %@", ActivityType.cycling.rawValue, date.beginingOfDay() as CVarArg, date.daysFrom(1).beginingOfDay() as CVarArg)
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest:fetchedRequest , managedObjectContext: context, sectionNameKeyPath: nil, cacheName:cacheName )
         self.fetchedResultsController.delegate = self
@@ -215,14 +215,14 @@ class OtherTripsViewController: UIViewController, UITableViewDataSource, UITable
         
         let dateTitle = String(format: "%@", self.timeFormatter.string(from: trip.startDate))
 
-        let areaDescriptionString = trip.areaDescriptionString
-        var description = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
-        
-        for reward in trip.tripRewards.array as! [TripReward] {
-            description += ("\n\n" + reward.displaySafeEmoji + " " + reward.descriptionText)
+        if trip.isInProgress {
+            textLabel.text = String(format: "In Progress trip started at %@.", trip.timeString())
+        } else {
+            let areaDescriptionString = trip.areaDescriptionString
+            textLabel.text = String(format: "%@ %@ for %@%@.", trip.climacon ?? "", dateTitle, trip.length.distanceString(), (areaDescriptionString != "") ? (" " + areaDescriptionString) : "")
         }
+
         
-        textLabel.text = description
         detailLabel.text = trip.activityType.emoji
     }
     
