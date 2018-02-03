@@ -113,7 +113,7 @@ import Foundation
             var tripTypeString = ""
             switch self {
             case .unknown:
-                tripTypeString = "Unknown"
+                tripTypeString = "Unknown Trip"
             case .running:
                 tripTypeString = "Run"
             case .cycling:
@@ -131,23 +131,23 @@ import Foundation
             case .aviation:
                 tripTypeString = "Flight"
             case .maritime:
-                tripTypeString = "Boating"
+                tripTypeString = "Boat Trip"
             case .motorcycle:
-                tripTypeString = "Motorcycling"
+                tripTypeString = "Motorcycle Ride"
             case .tram:
                 tripTypeString = "Tram Ride"
             case .helicopter:
                 tripTypeString = "Helicopter Ride"
             case .skateboarding:
-                tripTypeString = "Skateboarding"
+                tripTypeString = "Skateboard Ride"
             case .skiing:
-                tripTypeString = "Skiing"
+                tripTypeString = "Ski Run"
             case .snowboarding:
-                tripTypeString = "Snowboarding"
+                tripTypeString = "Snowboard Run"
             case .wheelchair:
-                tripTypeString = "By Wheelchair"
+                tripTypeString = "Wheelchair Trip"
             case .other:
-                tripTypeString = "Other"
+                tripTypeString = "Other Trip"
             }
             
             return tripTypeString

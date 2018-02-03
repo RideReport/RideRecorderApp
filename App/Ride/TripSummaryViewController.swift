@@ -172,7 +172,11 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
                 self.ratingChoiceSelector.layoutIfNeeded()
             })
             
-            self.changeModeButton.setTitle("Not a " + (trip?.activityType.noun)! + "?", for: UIControlState())
+            let noun = (trip?.activityType.noun)! + "?"
+            let vowels: [Character] = ["a", "e", "i", "o", "u"]
+            let prefixString = vowels.contains(noun.lowercased().first ?? Character("")) ? "Not an " : "Not a "
+            
+            self.changeModeButton.setTitle(prefixString + noun, for: UIControlState())
         }
     }
     
