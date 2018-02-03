@@ -55,7 +55,7 @@ import RouteRecorder
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        self.fontSize = self.frame.width / CGFloat(self.shownModes.count) - 26.0
+        self.fontSize = self.frame.width / CGFloat(self.shownModes.count) - 30.0
         
         self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
         self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize), NSAttributedStringKey.foregroundColor:UIColor.black], for: .selected)
