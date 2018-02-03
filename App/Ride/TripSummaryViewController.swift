@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RouteRecorder
 
 class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
     @IBOutlet weak var grabberBarView: UIView!
@@ -275,21 +276,47 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
 
     @IBAction func selectedNewMode(_: AnyObject) {
         let mode = self.modeSelectorView.selectedMode
+        if mode == .unknown {
+            let alertController = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+            for type in ActivityType.userSelectableValues {
+                if !self.modeSelectorView.shownModes.contains(type) {
+                    alertController.addAction(UIAlertAction(title: type.emoji + " " + type.noun, style: UIAlertActionStyle.default) { (_) in
+                        self.modeSelectorView.selectedMode = type
+                        self.didSelectMode()
+                    })
+                }
+            }
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) { (_) in
+                self.modeSelectorView.selectedMode = self.selectedTrip.activityType
+                self.didSelectMode()
+            })
+            self.present(alertController, animated: true, completion: nil)
+            
+            return
+        }
         
-        CATransaction.begin()
-        let transition = CATransition()
-        transition.duration = 0.5
-        transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        transition.type = kCATransitionPush
-        transition.subtype = kCATransitionFromLeft
-        self.modeSelectorView.layer.add(transition, forKey: "transition")
-        self.ratingChoiceSelector.layer.add(transition, forKey: "transition")
-        self.modeSelectorView.isHidden = true
-        self.ratingChoiceSelector.isHidden = false
-        self.changeModeButton.isHidden = false
-        self.changeModeLabel.isHidden = true
-
-        CATransaction.commit()
+        didSelectMode()
+    }
+    
+    private func didSelectMode() {
+        if !self.modeSelectorView.isHidden {
+            CATransaction.begin()
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+            transition.type = kCATransitionPush
+            transition.subtype = kCATransitionFromLeft
+            self.modeSelectorView.layer.add(transition, forKey: "transition")
+            self.ratingChoiceSelector.layer.add(transition, forKey: "transition")
+            self.modeSelectorView.isHidden = true
+            self.ratingChoiceSelector.isHidden = false
+            self.changeModeButton.isHidden = false
+            self.changeModeLabel.isHidden = true
+            
+            CATransaction.commit()
+        }
+        
+        let mode = self.modeSelectorView.selectedMode
         
         if mode != self.selectedTrip.activityType {
             self.selectedTrip.activityType = self.modeSelectorView.selectedMode

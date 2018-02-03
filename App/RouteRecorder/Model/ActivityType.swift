@@ -17,7 +17,16 @@ import Foundation
     case bus
     case rail
     case stationary
-    case aviation // be sure to update count if changing this
+    case aviation
+    case maritime
+    case motorcycle
+    case tram
+    case helicopter
+    case skateboarding
+    case skiing
+    case wheelchair
+    case snowboarding // be sure to update userSelectableValues if changing this
+    case other = 999
     
     public static func ~= (left: ActivityType, right: ActivityType) -> Bool {
         if left.isMotorizedMode && right.isMotorizedMode {
@@ -30,7 +39,8 @@ import Foundation
         return (left == right)
     }
     
-    public static var count: Int { return Int(ActivityType.aviation.rawValue) + 1}
+    // userVisibleValues does not include stationary or unknown
+    public static var userSelectableValues: [ActivityType] = [.running, .cycling, .automotive, .walking, .bus, .rail, .aviation, .maritime, .motorcycle, .tram, .helicopter, .skateboarding, .skiing, .snowboarding, .wheelchair, .other]
     
     public var isMotorizedMode: Bool {
         get {
@@ -53,7 +63,7 @@ import Foundation
             var tripTypeString = ""
             switch self {
             case .unknown:
-                tripTypeString = "❓"
+                tripTypeString = "❗️"
             case .running:
                 tripTypeString = "🏃"
             case .cycling:
@@ -70,6 +80,24 @@ import Foundation
                 tripTypeString = "💤"
             case .aviation:
                 tripTypeString = "✈️"
+            case .maritime:
+                tripTypeString = "🛳"
+            case .motorcycle:
+                tripTypeString = "🏍"
+            case .tram:
+                tripTypeString = "🚡"
+            case .helicopter:
+                tripTypeString = "🚁"
+            case .skateboarding:
+                tripTypeString = "👟"
+            case .skiing:
+                tripTypeString = "⛷"
+            case .snowboarding:
+                tripTypeString = "🏂"
+            case .wheelchair:
+                tripTypeString = "♿️"
+            case .other:
+                tripTypeString = "❓"
             }
             
             return tripTypeString
@@ -102,6 +130,24 @@ import Foundation
                 tripTypeString = "Sitting"
             case .aviation:
                 tripTypeString = "Flight"
+            case .maritime:
+                tripTypeString = "Boating"
+            case .motorcycle:
+                tripTypeString = "Motorcycling"
+            case .tram:
+                tripTypeString = "Tram Ride"
+            case .helicopter:
+                tripTypeString = "Helicopter Ride"
+            case .skateboarding:
+                tripTypeString = "Skateboarding"
+            case .skiing:
+                tripTypeString = "Skiing"
+            case .snowboarding:
+                tripTypeString = "Snowboarding"
+            case .wheelchair:
+                tripTypeString = "By Wheelchair"
+            case .other:
+                tripTypeString = "Other"
             }
             
             return tripTypeString

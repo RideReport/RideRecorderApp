@@ -12,158 +12,11 @@ import RouteRecorder
 @IBDesignable class ModeSelectorView : UISegmentedControl {
     private var feedbackGenerator: NSObject!
     
-    private var shownModes: [ActivityType] = [.cycling, .walking, .running, .automotive, .bus, .rail] {
-        didSet {
-            reloadUI()
-        }
-    }
+    public let shownModes: [ActivityType] = [.cycling, .walking, .automotive, .bus, .rail]
     
-    @IBInspectable var fontSize: CGFloat = 40.0 {
-        didSet {
-            reloadUI()
-        }
-    }
+    private var fontSize: CGFloat = 40.0
     
-    var selectedMode: ActivityType {
-        get {
-            let selectedIndex = self.selectedSegmentIndex
-            guard selectedIndex != -1 else {
-                return .unknown
-            }
-            
-            guard let titleOfSelectedType = self.titleForSegment(at: selectedIndex) else {
-                return .unknown
-            }
-            
-            for i in 0...ActivityType.count {
-                if let type = ActivityType(rawValue: Int16(i)), type.emoji == titleOfSelectedType {
-                    return type
-                }
-            }
-            
-            return .unknown
-        }
-    }
-
-    @IBInspectable var showsRunning: Bool {
-        get {
-            return (shownModes.index(of: .running) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .running) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.running)
-            }
-        }
-    }
-    
-    @IBInspectable var showsCycling: Bool {
-        get {
-            return (shownModes.index(of: .cycling) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .cycling) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.cycling)
-            }
-        }
-    }
-    
-    @IBInspectable var showsAutomotive: Bool {
-        get {
-            return (shownModes.index(of: .automotive) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .automotive) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.automotive)
-            }
-        }
-    }
-    
-    @IBInspectable var showsWalking: Bool {
-        get {
-            return (shownModes.index(of: .walking) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .walking) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.walking)
-            }
-        }
-    }
-    
-    @IBInspectable var showsBus: Bool {
-        get {
-            return (shownModes.index(of: .bus) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .bus) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.bus)
-            }
-        }
-    }
-    
-    @IBInspectable var showsRail: Bool {
-        get {
-            return (shownModes.index(of: .rail) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .rail) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.rail)
-            }
-        }
-    }
-    
-    @IBInspectable var showsStationary: Bool {
-        get {
-            return (shownModes.index(of: .stationary) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .stationary) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.stationary)
-            }
-        }
-    }
-    
-    @IBInspectable var showsAviation: Bool {
-        get {
-            return (shownModes.index(of: .aviation) != nil)
-        }
-        set {
-            if let index = shownModes.index(of: .aviation) {
-                self.shownModes.remove(at: index)
-            }
-            
-            if newValue {
-                self.shownModes.append(.aviation)
-            }
-        }
-    }
+    public var selectedMode: ActivityType = .unknown
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -181,19 +34,14 @@ import RouteRecorder
         self.setBackgroundImage(imageWithColor(UIColor.clear), for: UIControlState(), barMetrics: .default)
         self.setBackgroundImage(imageWithColor(ColorPallete.shared.unknownGrey), for: .selected, barMetrics: .default)
         self.setDividerImage(imageWithColor(UIColor.clear), forLeftSegmentState: UIControlState(), rightSegmentState: UIControlState(), barMetrics: .default)
-        
+        self.isMomentary = true
         self.apportionsSegmentWidthsByContent = true
         
         if #available(iOS 9.0, *) {
             UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).adjustsFontSizeToFitWidth = true
             UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).minimumScaleFactor = 0.4
             UILabel.appearance(whenContainedInInstancesOf: [UISegmentedControl.self]).numberOfLines = 0
-        } else {
-            self.fontSize = 30
         }
-        
-        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
-        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize), NSAttributedStringKey.foregroundColor:UIColor.black], for: .selected)
         
         self.addTarget(self, action: #selector(ModeSelectorView.valueChanged(_:)), for: .valueChanged)
         if #available(iOS 10.0, *) {
@@ -204,16 +52,45 @@ import RouteRecorder
         reloadUI()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.fontSize = self.frame.width / CGFloat(self.shownModes.count) - 25.0
+        
+        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize)], for: UIControlState())
+        self.setTitleTextAttributes([NSAttributedStringKey.font: UIFont.systemFont(ofSize: self.fontSize), NSAttributedStringKey.foregroundColor:UIColor.black], for: .selected)
+    }
+    
     @objc func valueChanged(_ sender:UIButton)
     {
-        if #available(iOS 10.0, *) {
-            if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
-                feedbackGenerator.impactOccurred()
+        if self.selectedSegmentIndex == self.numberOfSegments - 1 {
+            // if they select the other segment, nothing has been selected
+            self.selectedSegmentIndex = UISegmentedControlNoSegment
+            self.selectedMode = .unknown
+        } else {
+            if #available(iOS 10.0, *) {
+                if let feedbackGenerator = self.feedbackGenerator as? UIImpactFeedbackGenerator {
+                    feedbackGenerator.impactOccurred()
+                }
+            }
+            
+            let selectedIndex = self.selectedSegmentIndex
+            guard selectedIndex != -1 else {
+                self.selectedMode = .unknown
+                return
+            }
+            
+            guard let titleOfSelectedType = self.titleForSegment(at: selectedIndex) else {
+                self.selectedMode = .unknown
+                return
+            }
+            
+            for type in ActivityType.userSelectableValues {
+                if type.emoji == titleOfSelectedType {
+                    self.selectedMode = type
+                }
             }
         }
-        
-        // make the button "sticky"
-        sender.isSelected = !sender.isSelected
     }
     
     private func imageWithColor(_ color: UIColor) -> UIImage {
@@ -233,9 +110,12 @@ import RouteRecorder
     
     func reloadUI() {
         self.removeAllSegments()
+        let selectedMode = self.selectedMode
         
         for (i, mode) in self.shownModes.enumerated() {
             self.insertSegment(withTitle: mode.emoji, at: i, animated: false)
         }
+        
+        self.insertSegment(withTitle: "…", at: self.numberOfSegments, animated: false)
     }
 }

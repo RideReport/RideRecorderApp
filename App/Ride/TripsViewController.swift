@@ -884,6 +884,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }))
                 alertController.addAction(UIAlertAction(title: "🔃 Re-Close", style: UIAlertActionStyle.default, handler: { (_) in
                     route.reclose()
+                    trip.activityType = route.activityType
+                    RideReportAPIClient.shared.saveAndPatchTripIfNeeded(trip)
                 }))
                 alertController.addAction(UIAlertAction(title: "〰 Re-simplifiy", style: UIAlertActionStyle.default, handler: { (_) in
                     route.resimplify()
