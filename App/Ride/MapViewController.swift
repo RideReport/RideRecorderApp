@@ -11,6 +11,8 @@ import CoreLocation
 import CoreData
 import CocoaLumberjack
 import RouteRecorder
+import SwiftMessages
+
 #if DEBUG
     import CoreMotion
 #endif
@@ -122,9 +124,20 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                 RideReportAPIClient.shared.getTripDisplayData(displayDataURL: displayDataURLString) { (data) in
                     self.isRequestingDisplayData = false
                     guard let data = data else {
-                        let alertController = UIAlertController(title: "Error loading map", message: "Ride Report could not download the map for this trip. Please try again later.", preferredStyle: UIAlertControllerStyle.alert)
-                        alertController.addAction(UIAlertAction(title: "We're so sorry ☹️", style: UIAlertActionStyle.cancel, handler: nil))
-                        self.present(alertController, animated: true, completion: nil)
+                        let view = MessageView.viewFromNib(layout: .cardView)
+                        view.configureTheme(.warning)
+                        view.configureDropShadow()
+                        view.button?.isHidden = true
+                        
+                        let iconText = ["😓", "😥", "😳", "🙄", "😭"].sm_random()!
+                        
+                        view.configureContent(title: "Could not load map", body: "Ride Report can't download the map for this trip. Please try again later.", iconText: iconText)
+
+                        
+                        var config = SwiftMessages.Config()
+                        config.presentationStyle = .top
+                        config.duration = .seconds(seconds: 3)
+                        SwiftMessages.show(config: config, view: view)
                         
                         return
                     }
