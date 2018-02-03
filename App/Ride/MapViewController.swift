@@ -133,6 +133,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
                         
                         view.configureContent(title: "Could not load map", body: "Ride Report can't download the map for this trip. Please try again later.", iconText: iconText)
 
+                        view.titleLabel?.numberOfLines = 1
+                        view.titleLabel?.adjustsFontSizeToFitWidth = true
+                        view.titleLabel?.minimumScaleFactor = 0.6
                         
                         var config = SwiftMessages.Config()
                         config.presentationStyle = .top

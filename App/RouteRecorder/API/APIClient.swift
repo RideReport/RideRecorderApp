@@ -160,6 +160,10 @@ public class AuthenticatedAPIRequest {
                         view.configureContent(title: "App Update Required", body: "Please update the app to keep using Ride Report!", iconText: "🤖")
                     }
                     
+                    view.titleLabel?.numberOfLines = 1
+                    view.titleLabel?.adjustsFontSizeToFitWidth = true
+                    view.titleLabel?.minimumScaleFactor = 0.6
+                    
                     var config = SwiftMessages.Config()
                     config.presentationStyle = .top
                     config.duration = .forever
@@ -179,6 +183,10 @@ public class AuthenticatedAPIRequest {
                     } else {
                         view.configureContent(title: "Ride Report is having trouble", body: "There was a problem talking to the server. We're working on it!", iconText: iconText)
                     }
+                    
+                    view.titleLabel?.numberOfLines = 1
+                    view.titleLabel?.adjustsFontSizeToFitWidth = true
+                    view.titleLabel?.minimumScaleFactor = 0.6
                     
                     var config = SwiftMessages.Config()
                     config.presentationStyle = .top
