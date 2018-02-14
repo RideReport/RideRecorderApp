@@ -118,6 +118,9 @@ public class SensorClassificationManager : ClassificationManager {
             
             let timeoutPredictionBlock = DispatchWorkItem {
                 self.cancelTimedoutPredictionBlock = nil
+                predictionAggregator.currentPrediction = nil
+                self.stopMotionUpdates()
+                
                 DDLogInfo("Prediction attempt expired, canceling!")
                 predictionAggregator.addUnknownTypePrediction()
                 handler(predictionAggregator)
