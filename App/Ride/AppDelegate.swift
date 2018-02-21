@@ -8,6 +8,7 @@
 
 import UIKit
 import RouteRecorder
+import CoreLocation
 import CoreData
 import CoreMotion
 import Crashlytics
@@ -15,6 +16,10 @@ import OAuthSwift
 import FBSDKCoreKit
 import Mixpanel
 import CocoaLumberjack
+
+#if DEBUG
+    import Mockingjay
+#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -73,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Mixpanel.initialize(token: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
 
-#if DEBUG
+#if DEBUG    
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
         RouteRecorder.inject(motionManager: CMMotionManager(),
                                       locationManager: LocationManager(type: .gpx),
@@ -382,5 +387,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIApplication.shared.presentLocalNotificationNow(notif)
     }
 
+    #if DEBUG    
+    private func stubEndpoint(_ endpoint: String, filename: String) {
+        let filePath = Bundle(for: type(of: self)).path(forResource: filename, ofType: "json")
+        let fileData = NSData(contentsOfFile: filePath!)
+        
+        let jsonDict = try! JSONSerialization.jsonObject(with: fileData! as Data, options: JSONSerialization.ReadingOptions.allowFragments) as! NSDictionary
+        
+        MockingjayProtocol.addStub(matcher: uri("/api/v4/" + endpoint),
+                                   builder: json(jsonDict["body"]!, status: (jsonDict["status-code"]! as! NSNumber).intValue, headers: jsonDict["headers"]! as! [String: String])
+        )
+    }
+    #endif
 }
 

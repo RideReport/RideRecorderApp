@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="25">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="25">
     <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="appSettingsText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="appSettingsUrl" optional="YES" attributeType="String" syncable="YES"/>

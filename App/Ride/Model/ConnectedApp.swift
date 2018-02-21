@@ -71,29 +71,16 @@ public class ConnectedApp: NSManagedObject {
     }
     
     func updateWithJson(withJson json: JSON) {
-        if let baseImageUrl = json["base_image_url"].string {
-            self.baseImageUrl = baseImageUrl
-        }
-        
-        
-        if let appSettingsUrl = json["app_settings_url"].string {
-            self.appSettingsUrl = appSettingsUrl
-        }
-        
-        if let appSettingsText = json["app_settings_text"].string {
-            self.appSettingsText = appSettingsText
-        }
-        
-        if let name = json["name"].string {
-            self.name = name
-        }
-        if let descriptionText = json["description_text"].string {
-            self.descriptionText = descriptionText
-        }
-        
-        if let authURL = json["web_authorize_url"].string {
-            self.webAuthorizeUrl = authURL
-        }
+        self.baseImageUrl = json["base_image_url"].string
+        self.appSettingsUrl = json["app_settings_url"].string
+        self.appSettingsText = json["app_settings_text"].string
+        self.name = json["name"].string
+        self.descriptionText = json["description_text"].string
+        self.connectButtonTitleText = json["connect_button_title_text"].string
+        self.fieldsHeaderText = json["fields_header_text"].string
+        self.scopesHeaderText = json["scope_header_text"].string
+        self.webAuthorizeUrl = json["web_authorize_url"].string
+        self.companyName = json["company_name"].string
         
         if let scopes = json["scopes"].array {
             var scopesToDelete = self.scopes.array as? [ConnectedAppScope] ?? []
@@ -109,6 +96,21 @@ public class ConnectedApp: NSManagedObject {
                 CoreDataManager.shared.currentManagedObjectContext().delete(scope)
             }
         }
+        
+        if let fields = json["fields"].array {
+            var fieldsToDelete = self.fields.array as? [ConnectedAppField] ?? []
+            
+            for field in fields {
+                if let field = ConnectedAppField.createOrUpdate(withJson: field, connectedApp: self), let index = fieldsToDelete.index(of: field) {
+                    fieldsToDelete.remove(at: index)
+                }
+            }
+            
+            for field in fieldsToDelete {
+                // delete any app objects we did not receive
+                CoreDataManager.shared.currentManagedObjectContext().delete(field)
+            }
+        }
     }
     
     func json()->JSON {
@@ -118,9 +120,12 @@ public class ConnectedApp: NSManagedObject {
         }
         
         let scopes = self.scopes.array as? [ConnectedAppScope] ?? []
+        
+        let fields = self.fields.array as? [ConnectedAppField] ?? []
 
         
         dict["scopes"].arrayObject = scopes.map {return $0.json().object}
+        dict["fields"].arrayObject = fields.map {return $0.json().object}
         
         return dict
     }

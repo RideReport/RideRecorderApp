@@ -233,11 +233,13 @@ class NotificationManager : NSObject, UNUserNotificationCenterDelegate {
             UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { (granted, error) in
                 DispatchQueue.main.async {
                     NotificationManager.updateAuthorizationStatus() {
-                        UIApplication.shared.registerForRemoteNotifications()
-                        UNUserNotificationCenter.current().setNotificationCategories(notificationCategories)
-                        if let handler = self.pendingRegistrationHandler {
-                            self.pendingRegistrationHandler = nil
-                            handler(NotificationManager.lastAuthorizationStatus)
+                        DispatchQueue.main.async {
+                            UIApplication.shared.registerForRemoteNotifications()
+                            UNUserNotificationCenter.current().setNotificationCategories(notificationCategories)
+                            if let handler = self.pendingRegistrationHandler {
+                                self.pendingRegistrationHandler = nil
+                                handler(NotificationManager.lastAuthorizationStatus)
+                            }
                         }
                     }
                 }

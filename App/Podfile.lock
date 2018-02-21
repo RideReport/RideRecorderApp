@@ -31,24 +31,19 @@ PODS:
   - Mixpanel-swift (2.3.0):
     - Mixpanel-swift/Complete (= 2.3.0)
   - Mixpanel-swift/Complete (2.3.0)
+  - Mockingjay (2.0.1):
+    - Mockingjay/Core (= 2.0.1)
+    - Mockingjay/XCTest (= 2.0.1)
+  - Mockingjay/Core (2.0.1):
+    - URITemplate (~> 2.0)
+  - Mockingjay/XCTest (2.0.1):
+    - Mockingjay/Core
   - OAuthSwift (1.1.1)
-  - OHHTTPStubs/Core (6.0.0)
-  - OHHTTPStubs/Default (6.0.0):
-    - OHHTTPStubs/Core
-    - OHHTTPStubs/JSON
-    - OHHTTPStubs/NSURLSession
-    - OHHTTPStubs/OHPathHelpers
-  - OHHTTPStubs/JSON (6.0.0):
-    - OHHTTPStubs/Core
-  - OHHTTPStubs/NSURLSession (6.0.0):
-    - OHHTTPStubs/Core
-  - OHHTTPStubs/OHPathHelpers (6.0.0)
-  - OHHTTPStubs/Swift (6.0.0):
-    - OHHTTPStubs/Default
   - Presentr (1.3)
   - SwiftMessages (4.1.0)
   - SwiftyJSON (3.1.4)
   - UIImageColors (1.4.0)
+  - URITemplate (2.0.3)
   - WebLinking (2.0.0)
 
 DEPENDENCIES:
@@ -68,8 +63,9 @@ DEPENDENCIES:
   - Mapbox-iOS-SDK
   - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.6.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
   - Mixpanel-swift
+  - Mockingjay
+  - Mockingjay/Core
   - OAuthSwift
-  - OHHTTPStubs/Swift
   - Presentr
   - SwiftMessages
   - SwiftyJSON
@@ -98,14 +94,15 @@ SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 27805cb5f36d2bffe732b1d392278f4e408d06d2
   Mapbox-iOS-SDK-symbols: c3a077d2d84ddde5e6a487eed5261a035808f3f4
   Mixpanel-swift: 9b0af868125d06db8476361429f0f404c81959dd
+  Mockingjay: 11a621880d2887f1775bdcf824341eb68f218450
   OAuthSwift: 6e3a103b3e5639411769cc7e199ec7e14bd1547f
-  OHHTTPStubs: 752f9b11fd810a15162d50f11c06ff94f8e012eb
   Presentr: 3f0825a42cb32ecd8fc6b6d0b0de87d7d0b42482
   SwiftMessages: 1bacc783c8f10bdfdc57c14860cae8a1f1fa6591
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   UIImageColors: 1f891e1a3224efebb01ad476df3a5aed4220ee24
+  URITemplate: ace0c4c46dcf8afe6e89b4060621852886b15c3b
   WebLinking: b476999d59f78bd6649e6754d60693a7d147b00c
 
-PODFILE CHECKSUM: 070f55058d0db292ef00f63b68f42de09be40705
+PODFILE CHECKSUM: 12366728d774770747bbb3d965041c4f9fabfade
 
 COCOAPODS: 1.3.1

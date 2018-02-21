@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import SwiftyJSON
+import CoreLocation
 
 public class  TripReward : NSManagedObject {
     var earnedAtCoordinate: CLLocationCoordinate2D? {

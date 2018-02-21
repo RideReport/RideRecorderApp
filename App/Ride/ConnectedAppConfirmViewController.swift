@@ -7,14 +7,61 @@
 //
 
 import Foundation
+import Eureka
+import SwiftMessages
 
-class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ConnectedAppImageView: UIView {
+    public var imageView: UIImageView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.frame = CGRect(x: 0, y: 0, width: 320, height: 140)
+        imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        addSubview(imageView)
+        
+        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-[imageView]-|", options: [], metrics: nil, views: ["imageView": imageView])
+        NSLayoutConstraint.activate(xConstraints)
+        
+        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-14-[imageView(140)]-0-|", options: [.alignAllCenterX], metrics: nil, views: ["imageView": imageView])
+        NSLayoutConstraint.activate(yConstraints)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class ConnectedAppTitleView: UIView {
+    public var titleView: UILabel!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        titleView = UILabel()
+        titleView.font = UIFont.boldSystemFont(ofSize: 16)
+        titleView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.numberOfLines = 0
+        titleView.lineBreakMode = .byTruncatingTail
+        titleView.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
+
+        addSubview(titleView)
+        
+        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[titleView]-16-|", options: [], metrics: nil, views: ["titleView": titleView])
+        NSLayoutConstraint.activate(xConstraints)
+        
+        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[titleView]-|", options: [.alignAllCenterX], metrics: nil, views: ["titleView": titleView])
+        NSLayoutConstraint.activate(yConstraints)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class ConnectedAppConfirmViewController : FormViewController {
     var connectingApp: ConnectedApp!
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var connectingAppLogo: UIImageView!
-    @IBOutlet weak var connectingAppDetailText: UILabel!
-    @IBOutlet weak var connectingAppScopesText: UILabel!
-    @IBOutlet weak var connectButton: UIButton!
     @IBOutlet weak var connectionActivityIndicatorView: UIView!
     @IBOutlet weak var connectionActivityIndicatorViewText: UILabel!
     
@@ -22,18 +69,9 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.connectionActivityIndicatorView.isHidden = true
-    }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        self.connectionActivityIndicatorView.isHidden = true
+        tableView?.estimatedSectionHeaderHeight = 40
         
         if self.connectingApp != nil {
             for s in self.connectingApp.scopes {
@@ -43,27 +81,143 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
             }
             
             self.title = self.connectingApp.name ?? "App"
-
-            self.connectingAppDetailText.text = self.connectingApp.descriptionText
-            self.connectingAppScopesText.text = String(format: "%@ would like the following data about your rides:", self.connectingApp.name ?? "App")
-            self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")
-            if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
-                self.connectingAppLogo.kf.setImage(with: url)
+            
+            form +++ Section() {
+                var header = HeaderFooterView<ConnectedAppImageView>(.class)
+                header.onSetupView = { (view, section) -> () in
+                    if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
+                        view.imageView.kf.setImage(with: url)
+                    } else {
+                        view.imageView.image = UIImage(named: "AppIcon")
+                    }
+                }
+                $0.header = header
             }
-            self.tableView.reloadData()
+            if let descriptionText = self.connectingApp.descriptionText {
+                form +++ Section() {
+                    var header = HeaderFooterView<ConnectedAppTitleView>(.class)
+                    header.height = { UITableViewAutomaticDimension }
+                    header.onSetupView = { (view, section) -> () in
+                        view.titleView.text = descriptionText
+                    }
+                    $0.header = header
+                }
+            }
+
+            if self.connectingApp.scopes.count > 0 {
+                var scopesHeader = String(format: "Share ride data with %@", self.connectingApp.companyName ?? self.connectingApp.name ?? "App")
+                if let scopesHeaderText = self.connectingApp.scopesHeaderText {
+                    scopesHeader = scopesHeaderText
+                }
+                
+                form +++ Section(scopesHeader) {
+                    $0.header?.height = { 36 }
+                }
+                
+                for scope in self.connectingApp.scopes {
+                    if let scope = scope as? ConnectedAppScope {
+                        form.last! <<< SwitchRow() {
+                            $0.title = scope.descriptionText ?? ""
+                            $0.value = scope.isGranted
+                            $0.cell.switchControl.isEnabled = !scope.isRequired
+                        }
+                    }
+                }
+            }
+            
+            var tags: [String] = []
+            
+            
+            
+            if self.connectingApp.fields.count > 0 {
+                var fieldsHeader = String(format: "Share the following with %@", self.connectingApp.companyName ?? self.connectingApp.name ?? "this App")
+                if let fieldHeaderText = self.connectingApp.fieldsHeaderText {
+                    fieldsHeader = fieldHeaderText
+                }
+                form +++ Section(fieldsHeader) {
+                    $0.header?.height = { 36 }
+                }
+                
+                for field in self.connectingApp.fields {
+                    guard let field = field as? ConnectedAppField else {
+                        continue
+                    }
+                    
+                    if field.type == "email" {
+                        form.last! <<< EmailRow(field.machineName) {
+                            $0.title = field.descriptionText
+                            $0.tag = field.machineName
+                            tags.append(field.machineName)
+                            $0.value = field.defaultText
+
+                            var ruleSet = RuleSet<String>()
+                            ruleSet.add(rule: RuleEmail())
+                            if field.isRequired {
+                                ruleSet.add(rule: RuleRequired())
+                            }
+                            
+                            $0.add(ruleSet: ruleSet)
+                            $0.validationOptions = .validatesOnChangeAfterBlurred
+                            
+                            $0.placeholder = field.placeholderText
+                        }.cellUpdate { cell, row in
+                            field.value = row.value
+                            
+                            if !row.isValid {
+                                cell.titleLabel?.textColor = .red
+                            }
+                        }
+                    } else {
+                        form.last! <<< TextRow(field.machineName) {
+                            $0.title = field.descriptionText
+                            $0.tag = field.machineName
+                            tags.append(field.machineName)
+                            $0.value = field.defaultText
+                            
+                            $0.placeholder = field.placeholderText
+                            if field.isRequired {
+                                $0.add(rule: RuleRequired())
+                                $0.validationOptions = .validatesOnChange
+                            }
+                        }.cellUpdate { cell, row in
+                            field.value = row.value
+                            
+                            if !row.isValid {
+                                cell.titleLabel?.textColor = .red
+                            }
+                        }
+                    }
+                }
+            }
+
+            let connectActionString = self.connectingApp.connectButtonTitleText ?? "Connect"
+            form +++ Section(footer: String(format: "By tapping '%@', you are allowing Ride Report to share the above data with %@. You can revoke this access anytime.", connectActionString, self.connectingApp.companyName ?? self.connectingApp.name ?? "this App"))
+            <<< ButtonRow(connectActionString) {
+                $0.title = connectActionString
+                $0.cell.tintColor = ColorPallete.shared.primaryDark
+                $0.disabled = Condition.function(tags) { form in
+                    return !form.validate().isEmpty
+                }
+            }.onCellSelection { (cell, row) in
+                if let form = row.section?.form, form.validate().isEmpty {
+                    self.connect()
+                }
+            }
+            
+            self.connectionActivityIndicatorViewText.text = String(format: "Connecting to %@…", self.connectingApp.name ?? "App")
         }
     }
-    
-    @IBAction func didFlipSwitch(_ sender: AnyObject) {
-        if let view = sender as? UIView,
-            let cellContent = view.superview,
-            let cell = cellContent.superview as? UITableViewCell,
-            let indexPath = self.tableView.indexPath(for: cell), indexPath.row < self.connectingApp.scopes.count, let scope = self.connectingApp.scopes[indexPath.row] as? ConnectedAppScope {
-                scope.isGranted = sender.isOn
-        }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
-    @IBAction func connect(_ sender: AnyObject) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+    }
+    
+    func connect() {
         if let superview = self.connectionActivityIndicatorView.superview {
             superview.bringSubview(toFront: self.connectionActivityIndicatorView)
         }
@@ -108,22 +262,4 @@ class ConnectedAppConfirmViewController : UIViewController, UITableViewDelegate,
         self.dismiss(animated: true, completion: nil)
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return connectingApp.scopes.count 
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let tableCell = self.tableView.dequeueReusableCell(withIdentifier: "AppConfirmPermisionTableCell", for: indexPath)
-        if let permissionText = tableCell.viewWithTag(1) as? UILabel, let permissionSwitch = tableCell.viewWithTag(2) as? UISwitch {
-            // For now we assume that all scopes are of type Bool
-            if  indexPath.row < connectingApp.scopes.count, let scope = connectingApp.scopes[indexPath.row] as? ConnectedAppScope {
-                permissionText.text = scope.descriptionText ?? ""
-                permissionSwitch.isEnabled = !scope.isRequired
-                permissionSwitch.isOn = scope.isGranted
-            }
-        }
-        
-        tableCell.selectionStyle = .none
-        return tableCell
-    }
 }

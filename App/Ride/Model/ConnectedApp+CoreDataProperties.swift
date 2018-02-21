@@ -15,6 +15,10 @@ extension ConnectedApp {
     @NSManaged public var appSettingsUrl: String?
     @NSManaged public var baseImageUrl: String?
     @NSManaged public var descriptionText: String?
+    @NSManaged public var companyName: String?
+    @NSManaged public var fieldsHeaderText: String?
+    @NSManaged public var scopesHeaderText: String?
+    @NSManaged public var connectButtonTitleText: String?
     @NSManaged public var isHiddenApp: Bool
     @NSManaged public var name: String?
     @NSManaged public var uuid: String
@@ -22,7 +26,7 @@ extension ConnectedApp {
     @NSManaged public var profile: Profile?
     @NSManaged public var promotions: Set<Promotion>?
     @NSManaged public var scopes: NSOrderedSet
-
+    @NSManaged public var fields: NSOrderedSet
 }
 
 // MARK: Generated accessors for scopes

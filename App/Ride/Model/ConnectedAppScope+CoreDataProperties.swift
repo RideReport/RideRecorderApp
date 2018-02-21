@@ -16,6 +16,5 @@ extension ConnectedAppScope {
     @NSManaged public var machineName: String?
     @NSManaged public var isRequired: Bool
     @NSManaged public var type: String?
-    @NSManaged public var connectedApp: ConnectedApp?
-
+    @NSManaged public var connectedApp: ConnectedApp
 }
