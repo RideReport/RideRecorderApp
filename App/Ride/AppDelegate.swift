@@ -78,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Mixpanel.initialize(token: "30ec76ef2bd713e7672d39b5e718a3af")
         CoreDataManager.startup()
 
-#if DEBUG    
+#if DEBUG
     if ProcessInfo.processInfo.environment["USE_TEST_MODE"] != nil {
         RouteRecorder.inject(motionManager: CMMotionManager(),
                                       locationManager: LocationManager(type: .gpx),

@@ -105,7 +105,7 @@ class ConnectedAppConfirmViewController : FormViewController {
             }
 
             if self.connectingApp.scopes.count > 0 {
-                var scopesHeader = String(format: "Share ride data with %@", self.connectingApp.companyName ?? self.connectingApp.name ?? "App")
+                var scopesHeader = String(format: "Share ride data with %@", self.connectingApp.companyName ?? self.connectingApp.name ?? "this App")
                 if let scopesHeaderText = self.connectingApp.scopesHeaderText {
                     scopesHeader = scopesHeaderText
                 }
