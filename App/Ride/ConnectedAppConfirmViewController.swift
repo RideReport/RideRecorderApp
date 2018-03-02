@@ -9,6 +9,7 @@
 import Foundation
 import Eureka
 import SwiftMessages
+import SafariServices
 
 class ConnectedAppImageView: UIView {
     public var imageView: UIImageView!
@@ -35,23 +36,39 @@ class ConnectedAppImageView: UIView {
 
 class ConnectedAppTitleView: UIView {
     public var titleView: UILabel!
+    public var moreInfoButton: UIButton!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        let stackview = UIStackView()
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        stackview.axis = .vertical
+        stackview.alignment = .fill
+        stackview.distribution = .fill
+        stackview.spacing = 2.0
+        addSubview(stackview)
+        
         titleView = UILabel()
         titleView.font = UIFont.boldSystemFont(ofSize: 16)
         titleView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.textAlignment = .center
         titleView.numberOfLines = 0
         titleView.lineBreakMode = .byTruncatingTail
         titleView.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
-
-        addSubview(titleView)
         
-        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[titleView]-16-|", options: [], metrics: nil, views: ["titleView": titleView])
+        moreInfoButton = UIButton()
+        moreInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        moreInfoButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        moreInfoButton.setTitleColor(ColorPallete.shared.primaryDark, for: UIControlState())
+
+        stackview.addArrangedSubview(titleView)
+        stackview.addArrangedSubview(moreInfoButton)
+        
+        let xConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[stackview]-16-|", options: [], metrics: nil, views: ["stackview": stackview])
         NSLayoutConstraint.activate(xConstraints)
         
-        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[titleView]-|", options: [.alignAllCenterX], metrics: nil, views: ["titleView": titleView])
+        let yConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[stackview]-16-|", options: [.alignAllCenterX], metrics: nil, views: ["stackview": stackview])
         NSLayoutConstraint.activate(yConstraints)
     }
     
@@ -60,10 +77,13 @@ class ConnectedAppTitleView: UIView {
     }
 }
 
-class ConnectedAppConfirmViewController : FormViewController {
+class ConnectedAppConfirmViewController : FormViewController, SFSafariViewControllerDelegate {
     var connectingApp: ConnectedApp!
     @IBOutlet weak var connectionActivityIndicatorView: UIView!
     @IBOutlet weak var connectionActivityIndicatorViewText: UILabel!
+    
+    private var safariViewController: UIViewController? = nil
+    private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
     
     private var hasCanceled = false
     
@@ -99,6 +119,12 @@ class ConnectedAppConfirmViewController : FormViewController {
                     header.height = { UITableViewAutomaticDimension }
                     header.onSetupView = { (view, section) -> () in
                         view.titleView.text = descriptionText
+                        if let _ = self.connectingApp.moreInfoUrl {
+                            view.moreInfoButton.setTitle(self.connectingApp.moreInfoText ?? "Learn More", for: UIControlState())
+                            view.moreInfoButton.addTarget(self, action: #selector(ConnectedAppConfirmViewController.moreInfo), for: .touchUpInside)
+                        } else {
+                            view.moreInfoButton.isHidden = true
+                        }
                     }
                     $0.header = header
                 }
@@ -159,12 +185,14 @@ class ConnectedAppConfirmViewController : FormViewController {
                             $0.add(ruleSet: ruleSet)
                             $0.validationOptions = .validatesOnChangeAfterBlurred
                             
-                            $0.placeholder = field.placeholderText
+                            if let placeholderText = field.placeholderText {
+                                $0.placeholder = placeholderText + (field.isRequired ? " (required)" : "")
+                            }
                         }.cellUpdate { cell, row in
                             field.value = row.value
                             
-                            if !row.isValid {
-                                cell.titleLabel?.textColor = .red
+                            if let value = row.value, !value.isEmpty && !row.isValid {
+                                cell.titleLabel?.textColor = ColorPallete.shared.badRed
                             }
                         }
                     } else {
@@ -174,7 +202,9 @@ class ConnectedAppConfirmViewController : FormViewController {
                             tags.append(field.machineName)
                             $0.value = field.defaultText
                             
-                            $0.placeholder = field.placeholderText
+                            if let placeholderText = field.placeholderText {
+                                $0.placeholder = placeholderText + (field.isRequired ? " (required)" : "")
+                            }
                             if field.isRequired {
                                 $0.add(rule: RuleRequired())
                                 $0.validationOptions = .validatesOnChange
@@ -182,8 +212,8 @@ class ConnectedAppConfirmViewController : FormViewController {
                         }.cellUpdate { cell, row in
                             field.value = row.value
                             
-                            if !row.isValid {
-                                cell.titleLabel?.textColor = .red
+                            if let value = row.value, !value.isEmpty && !row.isValid {
+                                cell.titleLabel?.textColor = ColorPallete.shared.badRed
                             }
                         }
                     }
@@ -191,7 +221,7 @@ class ConnectedAppConfirmViewController : FormViewController {
             }
 
             let connectActionString = self.connectingApp.connectButtonTitleText ?? "Connect"
-            form +++ Section(footer: String(format: "By tapping '%@', you are allowing Ride Report to share the above data with %@. You can revoke this access anytime.", connectActionString, self.connectingApp.companyName ?? self.connectingApp.name ?? "this App"))
+            form +++ Section(footer: String(format: "By tapping '%@', you are allowing Ride Report to share the above data with %@.", connectActionString, self.connectingApp.companyName ?? self.connectingApp.name ?? "this App"))
             <<< ButtonRow(connectActionString) {
                 $0.title = connectActionString
                 $0.cell.tintColor = ColorPallete.shared.primaryDark
@@ -215,6 +245,32 @@ class ConnectedAppConfirmViewController : FormViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+    }
+    
+    @objc func moreInfo() {
+        if let urlString = self.connectingApp.moreInfoUrl, let url = URL(string: urlString) {
+            if #available(iOS 9.0, *) {
+                let sfvc = SFSafariViewController(url: url)
+                self.safariViewController = sfvc
+                sfvc.delegate = self
+                self.navigationController?.present(sfvc, animated: true, completion: nil)
+                if let coordinator = transitionCoordinator {
+                    coordinator.animate(alongsideTransition: nil, completion: { (context) in
+                        let targetSubview = sfvc.view
+                        let loadingIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+                        loadingIndicator.color = ColorPallete.shared.darkGrey
+                        self.safariViewControllerActivityIndicator = loadingIndicator
+                        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+                        targetSubview?.addSubview(loadingIndicator)
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerY, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
+                        NSLayoutConstraint(item: loadingIndicator, attribute: .centerX, relatedBy: NSLayoutRelation.equal, toItem: targetSubview, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
+                        loadingIndicator.startAnimating()
+                    })
+                }
+            } else {
+                UIApplication.shared.openURL(url)
+            }
+        }
     }
     
     func connect() {
@@ -260,6 +316,26 @@ class ConnectedAppConfirmViewController : FormViewController {
         self.hasCanceled = true
         RideReportAPIClient.shared.disconnectApplication(self.connectingApp)
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc private func showPageLoadError() {
+        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.connectingApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
+        alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
+            _ = self.navigationController?.popViewController(animated: true)
+        }))
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    @available(iOS 9.0, *)
+    func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+        if let loadingIndicator = self.safariViewControllerActivityIndicator {
+            loadingIndicator.removeFromSuperview()
+            self.safariViewControllerActivityIndicator = nil
+        }
+        
+        if !didLoadSuccessfully {
+            self.perform(#selector(ConnectedAppConfirmViewController.showPageLoadError), with: nil, afterDelay: 1.0)
+        }
     }
     
 }

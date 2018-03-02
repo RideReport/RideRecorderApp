@@ -78,9 +78,11 @@ public class ConnectedApp: NSManagedObject {
         self.descriptionText = json["description_text"].string
         self.connectButtonTitleText = json["connect_button_title_text"].string
         self.fieldsHeaderText = json["fields_header_text"].string
-        self.scopesHeaderText = json["scope_header_text"].string
+        self.scopesHeaderText = json["scopes_header_text"].string
         self.webAuthorizeUrl = json["web_authorize_url"].string
         self.companyName = json["company_name"].string
+        self.moreInfoText = json["more_info_text"].string
+        self.moreInfoUrl = json["more_info_url"].string
         
         if let scopes = json["scopes"].array {
             var scopesToDelete = self.scopes.array as? [ConnectedAppScope] ?? []

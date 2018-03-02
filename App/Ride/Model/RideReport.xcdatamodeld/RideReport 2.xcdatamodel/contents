@@ -9,6 +9,8 @@
         <attribute name="descriptionText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fieldsHeaderText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isHiddenApp" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="moreInfoText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="moreInfoUrl" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scopesHeaderText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uuid" attributeType="String" syncable="YES"/>
@@ -131,7 +133,7 @@
         <relationship name="rows" toMany="YES" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="section" inverseEntity="TripsListRow" syncable="YES"/>
     </entity>
     <elements>
-        <element name="ConnectedApp" positionX="-54" positionY="72" width="128" height="285"/>
+        <element name="ConnectedApp" positionX="-54" positionY="72" width="128" height="315"/>
         <element name="ConnectedAppField" positionX="-27" positionY="153" width="128" height="165"/>
         <element name="ConnectedAppScope" positionX="-45" positionY="81" width="128" height="135"/>
         <element name="Encouragement" positionX="-45" positionY="135" width="128" height="90"/>

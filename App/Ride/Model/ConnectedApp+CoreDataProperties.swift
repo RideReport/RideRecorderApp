@@ -20,6 +20,8 @@ extension ConnectedApp {
     @NSManaged public var scopesHeaderText: String?
     @NSManaged public var connectButtonTitleText: String?
     @NSManaged public var isHiddenApp: Bool
+    @NSManaged public var moreInfoText: String?
+    @NSManaged public var moreInfoUrl: String?
     @NSManaged public var name: String?
     @NSManaged public var uuid: String
     @NSManaged public var webAuthorizeUrl: String?
