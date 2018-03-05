@@ -52,7 +52,11 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     private func refreshUI() {
         self.title = self.connectingApp.name ?? "App"
         
-        self.connectedAppDetailText.text = String(format: "%@ accesses data from your trips in Ride Report.", self.connectingApp.name ?? "App")
+        if (self.connectingApp.scopes.count > 0) {
+            self.connectedAppDetailText.text = String(format: "%@ accesses data from your trips in Ride Report.", self.connectingApp.name ?? "App")
+        } else {
+            self.connectedAppDetailText.text = self.connectingApp.descriptionText
+        }
         if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
             self.connectedAppLogo.kf.setImage(with: url)
         }
