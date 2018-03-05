@@ -155,12 +155,15 @@ public class Profile: NSManagedObject {
     }
     
     func eligibilePromotion()->Promotion? {
-        if let promo = self.promotions.array.first as? Promotion, promo.isUserDismissed == false {
-            if let app = promo.connectedApp, app.profile != nil {
-                // if the app is already connected, skip it!
-                return nil
+        for promo in self.promotions.array {
+            if let promo = promo as? Promotion, promo.isUserDismissed == false {
+                if let app = promo.connectedApp, app.profile != nil {
+                    // if the app is already connected, skip it!
+                    continue
+                } else {
+                    return promo
+                }
             }
-            return promo
         }
         
         return nil
