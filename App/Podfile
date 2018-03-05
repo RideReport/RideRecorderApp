@@ -48,7 +48,6 @@ target 'Ride Report UITests' do
     shared_pods
     app_pods
     pod 'Mockingjay'
-    
 end
 
 target 'Motion' do
