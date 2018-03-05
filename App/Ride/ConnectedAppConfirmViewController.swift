@@ -295,6 +295,7 @@ class ConnectedAppConfirmViewController : FormViewController, SFSafariViewContro
             switch response.result {
             case .success(_):
                 if let httpsResponse = response.response, httpsResponse.statusCode == 200 {
+                    
                     strongSelf.dismiss(animated: true, completion: nil)
                 } else {
                     // otherwise, keep polling

@@ -181,7 +181,11 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     func handleSelectedApp(fromList: Bool) {
         guard let urlString = self.selectedConnectedApp?.webAuthorizeUrl, let url = URL(string: urlString), url.host != nil else {
             // if there is no authorize url, go straight to permissions screen
-            self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
+            if fromList {
+                self.performSegue(withIdentifier: "showConnectAppConfirmViewController", sender: self)
+            } else {
+                self.performSegue(withIdentifier: "showConnectAppConfirmViewControllerNoAnimation", sender: self)
+            }
             return
         }
         
@@ -255,7 +259,7 @@ class ConnectedAppsBrowseViewController: UIViewController, UITableViewDelegate, 
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if (segue.identifier == "showConnectAppConfirmViewController") {
+        if (segue.identifier == "showConnectAppConfirmViewController" || segue.identifier == "showConnectAppConfirmViewControllerNoAnimation") {
             if let app = self.selectedConnectedApp,
                 let appVC = segue.destination as? ConnectedAppConfirmViewController {
                 appVC.connectingApp = app

@@ -616,6 +616,8 @@ class RideReportAPIClient: APIClientDelegate {
                     _ = ConnectedApp.createOrUpdate(withJson: json)
                     app.profile = Profile.profile()
                     CoreDataManager.shared.saveContext()
+                    
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "RideReportAPIClientDidConnectApplication"), object: nil)
                 }
             case .failure(let error):
                 DDLogWarn(String(format: "Error getting third party apps: %@", error as CVarArg))

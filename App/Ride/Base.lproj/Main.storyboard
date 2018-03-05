@@ -3331,11 +3331,12 @@ All the Apps</string>
                         <outlet property="tableView" destination="0d0-Jf-oXW" id="xq1-fs-ZCY"/>
                         <outlet property="view" destination="nFz-ik-M8z" id="elH-BL-F9l"/>
                         <segue destination="DkP-ZE-i1U" kind="show" identifier="showConnectAppConfirmViewController" id="9NQ-yp-dE0"/>
+                        <segue destination="DkP-ZE-i1U" kind="show" identifier="showConnectAppConfirmViewControllerNoAnimation" animates="NO" id="EaA-bp-eGw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DjJ-91-3tY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1777" y="-3374"/>
+            <point key="canvasLocation" x="1785" y="-3369"/>
         </scene>
         <!--Connected App Confirm View Controller-->
         <scene sceneID="Irk-ah-jXf">
@@ -4757,6 +4758,7 @@ Label</string>
         <image name="iphonewhite.png" width="738" height="1294"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="EaA-bp-eGw"/>
         <segue reference="WNJ-Ui-G2R"/>
     </inferredMetricsTieBreakers>
 </document>

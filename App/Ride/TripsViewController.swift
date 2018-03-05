@@ -32,6 +32,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var emptyTableView: UIView!
     @IBOutlet weak var emptyTableChick: UIView!
     
+    private var currentlyShownPromotion: Promotion?
     private var dateOfLastTableRefresh: Date = Date()
 
     private var reachability : Reachability!
@@ -168,6 +169,14 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             strongSelf.refreshHeaderCells()
         }
         
+        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "RideReportAPIClientDidConnectApplication"), object: nil, queue: nil) {[weak self] (notification : Notification) -> Void in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.refreshHeaderCells()
+        }
+        
         RideReportAPIClient.shared.syncTrips().apiResponse { (_) in
             self.refreshEmptyTableView()
         }
@@ -248,8 +257,8 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func refreshHeaderCells() {
-        // only support one promo for now
         if let promo = Profile.profile().eligibilePromotion() {
+            self.currentlyShownPromotion = promo
             self.shouldShowStreakAnimation = true
             if let app = promo.connectedApp {
                 // if we need to, fetch the app.
@@ -264,6 +273,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                 }
             }
         } else {
+            self.currentlyShownPromotion = nil
             self.shouldShowStreakAnimation = true
             if let rewardsCell = self.tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) {
                 if rewardsCell.reuseIdentifier == "RewardsViewTableCell" {
@@ -492,8 +502,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         let tableCell : UITableViewCell!
         
         if indexPath.section == 0 {
-            // for now we only support a single promotion
-            if let promo = Profile.profile().eligibilePromotion() {
+            if let promo = self.currentlyShownPromotion {
                 // do it
                 let reuseID = "PromoViewTableCell"
                 
@@ -791,8 +800,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     @IBAction func actOnPromo(_ sender: AnyObject) {
-        // only support one promo for now
-        if let promo = Profile.profile().promotions.array.first as? Promotion, let app = promo.connectedApp {
+        if let promo = self.currentlyShownPromotion, let app = promo.connectedApp {
             if let app = promo.connectedApp, app.name == nil || app.name?.isEmpty == true {
                 // if we need to, fetch the app.
                 if let button = sender as? UIButton {
@@ -820,7 +828,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     @IBAction func dismissPromo(_ sender: AnyObject) {
         // only support one promo for now
-        if let promo = Profile.profile().promotions.array.first as? Promotion {
+        if let promo = self.currentlyShownPromotion {
             promo.isUserDismissed = true
             CoreDataManager.shared.saveContext()
             self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
