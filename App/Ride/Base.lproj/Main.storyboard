@@ -3384,16 +3384,28 @@ All the Apps</string>
                                                             </mask>
                                                         </variation>
                                                     </activityIndicatorView>
+                                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="✅" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r9s-0V-zrJ">
+                                                        <rect key="frame" x="155" y="302" width="64" height="64"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="64" id="QUy-N3-CJY"/>
+                                                            <constraint firstAttribute="height" constant="64" id="YRm-VU-n2q"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="r9s-0V-zrJ" firstAttribute="centerY" secondItem="7Od-Yv-buJ" secondAttribute="centerY" id="9BY-S3-eOz"/>
                                                     <constraint firstAttribute="trailing" secondItem="5LW-K0-zOM" secondAttribute="trailing" constant="10" id="9Pp-CZ-DsO"/>
                                                     <constraint firstItem="5LW-K0-zOM" firstAttribute="top" secondItem="cKH-Fb-sSq" secondAttribute="bottom" constant="12" id="RaA-IJ-30A"/>
                                                     <constraint firstItem="cKH-Fb-sSq" firstAttribute="centerY" secondItem="7Od-Yv-buJ" secondAttribute="centerY" id="aIe-TB-HCf"/>
+                                                    <constraint firstItem="r9s-0V-zrJ" firstAttribute="centerX" secondItem="7Od-Yv-buJ" secondAttribute="centerX" id="bc5-4r-rf1"/>
                                                     <constraint firstItem="cKH-Fb-sSq" firstAttribute="centerX" secondItem="7Od-Yv-buJ" secondAttribute="centerX" id="rhT-fK-a2d"/>
                                                     <constraint firstItem="5LW-K0-zOM" firstAttribute="leading" secondItem="7Od-Yv-buJ" secondAttribute="leading" constant="10" id="uu1-zf-3Qb"/>
                                                 </constraints>
                                             </view>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <vibrancyEffect>
                                                 <blurEffect style="dark"/>
                                             </vibrancyEffect>
@@ -3438,7 +3450,9 @@ All the Apps</string>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="connectionActivityIndicatorView" destination="c0A-bh-Wrl" id="Qah-Pd-bta"/>
+                        <outlet property="connectionActivityCompleteView" destination="r9s-0V-zrJ" id="A4v-IP-Ps2"/>
+                        <outlet property="connectionActivityContainerView" destination="c0A-bh-Wrl" id="w0w-D6-gzR"/>
+                        <outlet property="connectionActivityIndicatorView" destination="cKH-Fb-sSq" id="xE5-Ni-YgY"/>
                         <outlet property="connectionActivityIndicatorViewText" destination="5LW-K0-zOM" id="8yU-Rs-hjb"/>
                     </connections>
                 </viewController>

@@ -79,8 +79,11 @@ class ConnectedAppTitleView: UIView {
 
 class ConnectedAppConfirmViewController : FormViewController, SFSafariViewControllerDelegate {
     var connectingApp: ConnectedApp!
-    @IBOutlet weak var connectionActivityIndicatorView: UIView!
+    
+    @IBOutlet weak var connectionActivityContainerView: UIView!
+    @IBOutlet weak var connectionActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var connectionActivityIndicatorViewText: UILabel!
+    @IBOutlet weak var connectionActivityCompleteView: UIView!
     
     private var safariViewController: UIViewController? = nil
     private var safariViewControllerActivityIndicator: UIActivityIndicatorView? = nil
@@ -90,7 +93,7 @@ class ConnectedAppConfirmViewController : FormViewController, SFSafariViewContro
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.connectionActivityIndicatorView.isHidden = true
+        self.connectionActivityContainerView.isHidden = true
         tableView?.estimatedSectionHeaderHeight = 40
         
         if self.connectingApp != nil {
@@ -274,10 +277,10 @@ class ConnectedAppConfirmViewController : FormViewController, SFSafariViewContro
     }
     
     func connect() {
-        if let superview = self.connectionActivityIndicatorView.superview {
-            superview.bringSubview(toFront: self.connectionActivityIndicatorView)
+        if let superview = self.connectionActivityContainerView.superview {
+            superview.bringSubview(toFront: self.connectionActivityContainerView)
         }
-        self.connectionActivityIndicatorView.isHidden = false
+        self.connectionActivityContainerView.isHidden = false
         
         self.postConnectApplication()
     }
@@ -295,8 +298,16 @@ class ConnectedAppConfirmViewController : FormViewController, SFSafariViewContro
             switch response.result {
             case .success(_):
                 if let httpsResponse = response.response, httpsResponse.statusCode == 200 {
-                    
-                    strongSelf.dismiss(animated: true, completion: nil)
+                    strongSelf.connectionActivityIndicatorView.isHidden = true
+                    strongSelf.connectionActivityCompleteView.popIn()
+                    strongSelf.connectionActivityIndicatorViewText.text = "Connected!"
+                    strongSelf.connectionActivityIndicatorViewText.delay(1.2, completionHandler: { [weak self] in
+                        guard let reallyStrongSelf = self else {
+                            return
+                        }
+                        
+                        reallyStrongSelf.dismiss(animated: true, completion: nil)
+                    })
                 } else {
                     // otherwise, keep polling
                     strongSelf.perform(#selector(ConnectedAppConfirmViewController.postConnectApplication), with: nil, afterDelay: 2.0)
@@ -308,7 +319,7 @@ class ConnectedAppConfirmViewController : FormViewController, SFSafariViewContro
                 }))
                 strongSelf.present(alertController, animated: true, completion: nil)
                 
-                strongSelf.connectionActivityIndicatorView.isHidden = true
+                strongSelf.connectionActivityContainerView.isHidden = true
             }
         }
     }
