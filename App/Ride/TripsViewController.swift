@@ -831,7 +831,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
         if let promo = self.currentlyShownPromotion {
             promo.isUserDismissed = true
             CoreDataManager.shared.saveContext()
-            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+            self.refreshHeaderCells()
         }
     }
     
