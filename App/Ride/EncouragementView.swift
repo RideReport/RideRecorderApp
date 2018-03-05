@@ -183,7 +183,7 @@ class UIImageColorsWrapper { // wrapper to let us use NSCache on the UIImageColo
         encouragementTitleLabel = UILabel()
         encouragementTitleLabel.numberOfLines = 1
         encouragementTitleLabel.adjustsFontSizeToFitWidth = true
-        encouragementTitleLabel.minimumScaleFactor = 0.6
+        encouragementTitleLabel.minimumScaleFactor = 0.3
         encouragementTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(encouragementTitleLabel)
         
