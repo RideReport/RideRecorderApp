@@ -682,6 +682,7 @@
 		3D7738C11F58A2AF00155DB8 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RouteRecorder/Info.plist; sourceTree = SOURCE_ROOT; };
 		3D7738C21F58A2AF00155DB8 /* RouteRecorderHeaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RouteRecorderHeaders.h; path = RouteRecorder/RouteRecorderHeaders.h; sourceTree = SOURCE_ROOT; };
 		3D79FE5F1CBD955400EF21C5 /* HealthKitSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthKitSetupViewController.swift; sourceTree = "<group>"; };
+		3D7A0B59204F12130034A5B2 /* RideReport 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RideReport 3.xcdatamodel"; sourceTree = "<group>"; };
 		3D818A131C938BED00B64403 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		3D818A151C938C0B00B64403 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		3D8969431D5FDDCE0034578A /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/System/Library/Frameworks/HealthKit.framework; sourceTree = DEVELOPER_DIR; };
@@ -3554,10 +3555,11 @@
 		3D72BD771F58ABE80043ECBA /* RideReport.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3D7A0B59204F12130034A5B2 /* RideReport 3.xcdatamodel */,
 				3D32DC8B203CF74F0092F4BE /* RideReport 2.xcdatamodel */,
 				3D72BD781F58ABE80043ECBA /* RideReport.xcdatamodel */,
 			);
-			currentVersion = 3D32DC8B203CF74F0092F4BE /* RideReport 2.xcdatamodel */;
+			currentVersion = 3D7A0B59204F12130034A5B2 /* RideReport 3.xcdatamodel */;
 			name = RideReport.xcdatamodeld;
 			path = Ride/Model/RideReport.xcdatamodeld;
 			sourceTree = "<group>";

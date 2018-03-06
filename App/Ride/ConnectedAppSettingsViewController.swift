@@ -52,11 +52,12 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     private func refreshUI() {
         self.title = self.connectingApp.name ?? "App"
         
-        if (self.connectingApp.scopes.count > 0) {
-            self.connectedAppDetailText.text = String(format: "%@ accesses data from your trips in Ride Report.", self.connectingApp.name ?? "App")
-        } else {
-            self.connectedAppDetailText.text = self.connectingApp.descriptionText
+        if let title = self.connectingApp.disconnectButtonTitleText {
+            self.connectedAppSettingsButton.setTitle(title, for: UIControlState())
         }
+        
+        self.connectedAppDetailText.text = self.connectingApp.descriptionText
+        
         if let urlString = self.connectingApp.baseImageUrl, let url = URL(string: urlString) {
             self.connectedAppLogo.kf.setImage(with: url)
         }
@@ -96,8 +97,18 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     }
     
     @IBAction func disconnect(_ sender: AnyObject) {
-        let alertController = UIAlertController(title: "Disconnect?", message: String(format: "Your trips data will no longer be shared with %@.", self.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
-        alertController.addAction(UIAlertAction(title: "Disconnect", style: UIAlertActionStyle.destructive, handler: { (_) in
+        var confirmationText = String(format: "Your Ride Report account will no longer be connected with %@.", self.connectingApp.name ?? "App")
+        if let text = self.connectingApp.disconnectConfirmationText {
+            confirmationText = text
+        }
+        
+        var disconnectTitle = "Disconnect"
+        if let title = self.connectingApp.disconnectButtonTitleText {
+            disconnectTitle = title
+        }
+        
+        let alertController = UIAlertController(title: nil, message: confirmationText, preferredStyle: UIAlertControllerStyle.actionSheet)
+        alertController.addAction(UIAlertAction(title: disconnectTitle, style: UIAlertActionStyle.destructive, handler: { (_) in
             RideReportAPIClient.shared.disconnectApplication(self.connectingApp).apiResponse{ [weak self] (response) in
                 guard let strongSelf = self else {
                     return
@@ -107,7 +118,12 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
                 case .success(_):
                     strongSelf.navigationController?.popViewController(animated: true)
                 case .failure(_):
-                    let alertController = UIAlertController(title:nil, message: String(format: "Your Ride Report account could not be disconnected from %@. Please try again later.", strongSelf.connectingApp.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
+                    var disconnectTitle = "disconnect"
+                    if let title = strongSelf.connectingApp.disconnectButtonTitleText {
+                        disconnectTitle = title.lowercased()
+                    }
+                    
+                    let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot %@. Please try again later.", disconnectTitle), preferredStyle: UIAlertControllerStyle.actionSheet)
                     alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
                         strongSelf.navigationController?.popViewController(animated: true)
                     }))
@@ -120,7 +136,12 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     }
     
     @objc private func showPageLoadError() {
-        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot connect to %@. Please try again later.", self.connectingApp?.name ?? "App"), preferredStyle: UIAlertControllerStyle.actionSheet)
+        var disconnectTitle = "disconnect"
+        if let title = self.connectingApp.disconnectButtonTitleText {
+            disconnectTitle = title.lowercased()
+        }
+        
+        let alertController = UIAlertController(title:nil, message: String(format: "Ride Report cannot %@. Please try again later.", disconnectTitle), preferredStyle: UIAlertControllerStyle.actionSheet)
         alertController.addAction(UIAlertAction(title: "Shucks", style: UIAlertActionStyle.destructive, handler: { (_) in
             _ = self.navigationController?.popViewController(animated: true)
         }))

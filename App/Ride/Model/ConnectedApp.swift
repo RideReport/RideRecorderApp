@@ -77,6 +77,8 @@ public class ConnectedApp: NSManagedObject {
         self.name = json["name"].string
         self.descriptionText = json["description_text"].string
         self.connectButtonTitleText = json["connect_button_title_text"].string
+        self.disconnectButtonTitleText = json["disconnect_button_title_text"].string
+        self.disconnectConfirmationText = json["disconnect_confirmation_text"].string
         self.fieldsHeaderText = json["fields_header_text"].string
         self.scopesHeaderText = json["scopes_header_text"].string
         self.webAuthorizeUrl = json["web_authorize_url"].string

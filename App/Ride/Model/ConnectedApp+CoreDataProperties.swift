@@ -19,6 +19,8 @@ extension ConnectedApp {
     @NSManaged public var fieldsHeaderText: String?
     @NSManaged public var scopesHeaderText: String?
     @NSManaged public var connectButtonTitleText: String?
+    @NSManaged public var disconnectButtonTitleText: String?
+    @NSManaged public var disconnectConfirmationText: String?
     @NSManaged public var isHiddenApp: Bool
     @NSManaged public var moreInfoText: String?
     @NSManaged public var moreInfoUrl: String?
