@@ -3482,12 +3482,11 @@ All the Apps</string>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cUD-Rz-l9F">
-                                <rect key="frame" x="102" y="534" width="171" height="48"/>
+                                <rect key="frame" x="12" y="534" width="351" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="8U0-9G-lDM"/>
                                     <constraint firstAttribute="height" constant="48" id="e2P-bJ-ICX"/>
                                     <constraint firstAttribute="height" constant="32" id="nCq-X5-e8T"/>
-                                    <constraint firstAttribute="width" constant="171" id="ymA-1x-kSs"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                 <state key="normal" title="Disconnect">
@@ -3531,6 +3530,7 @@ All the Apps</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="1DT-ep-oLE" firstAttribute="trailing" secondItem="cUD-Rz-l9F" secondAttribute="trailing" constant="12" id="0Pd-ys-lk3"/>
                             <constraint firstItem="K6g-wP-E6m" firstAttribute="centerX" secondItem="1DT-ep-oLE" secondAttribute="centerX" id="GfG-Zo-WBT"/>
                             <constraint firstItem="K6g-wP-E6m" firstAttribute="top" secondItem="1DT-ep-oLE" secondAttribute="top" constant="17" id="NY7-Eh-kTT"/>
                             <constraint firstItem="cUD-Rz-l9F" firstAttribute="centerX" secondItem="1DT-ep-oLE" secondAttribute="centerX" id="P4q-BP-hgv"/>
@@ -3540,6 +3540,7 @@ All the Apps</string>
                             <constraint firstItem="1DT-ep-oLE" firstAttribute="centerX" secondItem="KEX-Ud-VM8" secondAttribute="centerX" id="dKl-1b-8qK"/>
                             <constraint firstItem="KEX-Ud-VM8" firstAttribute="width" secondItem="5mC-sM-3MI" secondAttribute="width" multiplier="4:5" id="dk5-ZF-L79"/>
                             <constraint firstItem="1DT-ep-oLE" firstAttribute="bottom" secondItem="cUD-Rz-l9F" secondAttribute="bottom" constant="36" id="lKT-QQ-Hzn"/>
+                            <constraint firstItem="cUD-Rz-l9F" firstAttribute="leading" secondItem="1DT-ep-oLE" secondAttribute="leading" constant="12" id="mKS-Rc-qAM"/>
                             <constraint firstItem="cUD-Rz-l9F" firstAttribute="top" secondItem="xtt-QA-4oP" secondAttribute="bottom" constant="8" id="ttk-0l-Dno"/>
                             <constraint firstItem="KEX-Ud-VM8" firstAttribute="width" secondItem="5mC-sM-3MI" secondAttribute="width" id="wcX-pI-k3b"/>
                         </constraints>
