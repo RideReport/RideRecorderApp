@@ -3560,6 +3560,7 @@ All the Apps</string>
                         <outlet property="connectedAppDetailText" destination="KEX-Ud-VM8" id="ghJ-ik-qXm"/>
                         <outlet property="connectedAppLogo" destination="K6g-wP-E6m" id="CEZ-TO-8DL"/>
                         <outlet property="connectedAppSettingsButton" destination="xtt-QA-4oP" id="ejL-9t-fPR"/>
+                        <outlet property="disconnectedAppButton" destination="cUD-Rz-l9F" id="2rW-Hi-eLv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8sJ-XL-daI" userLabel="First Responder" sceneMemberID="firstResponder"/>

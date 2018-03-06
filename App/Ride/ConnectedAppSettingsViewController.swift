@@ -13,6 +13,7 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
     var connectingApp: ConnectedApp!
 
     @IBOutlet weak var connectedAppSettingsButton: UIButton!
+    @IBOutlet weak var disconnectedAppButton: UIButton!
     @IBOutlet weak var connectedAppLogo: UIImageView!
     @IBOutlet weak var connectedAppDetailText: UILabel!
     
@@ -53,7 +54,7 @@ class ConnectedAppSettingsViewController : UIViewController, SFSafariViewControl
         self.title = self.connectingApp.name ?? "App"
         
         if let title = self.connectingApp.disconnectButtonTitleText {
-            self.connectedAppSettingsButton.setTitle(title, for: UIControlState())
+            self.disconnectedAppButton.setTitle(title, for: UIControlState())
         }
         
         self.connectedAppDetailText.text = self.connectingApp.descriptionText
