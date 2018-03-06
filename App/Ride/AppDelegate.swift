@@ -192,6 +192,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func transitionToConnectApp(_ app: ConnectedApp) {
+        Mixpanel.mainInstance().track(
+            event: "tappedConnectApp",
+            properties: ["uuid": app.uuid]
+        )
+        
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let navVC = storyBoard.instantiateViewController(withIdentifier: "ConnectedAppSetupNavController") as! UINavigationController
         
