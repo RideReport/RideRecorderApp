@@ -194,7 +194,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func transitionToConnectApp(_ app: ConnectedApp) {
         Mixpanel.mainInstance().track(
             event: "tappedConnectApp",
-            properties: ["app_id": app.uuid]
+            properties: ["connected_app_id": app.uuid]
         )
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
