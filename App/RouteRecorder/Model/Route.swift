@@ -576,9 +576,9 @@ public class  Route: NSManagedObject {
         
         if (maximumDistance > episilon || maximumSpeedDifference > speedEpisilon) {
             var cutOffIndex = indexOfMaximumSpeedDifference
-            if (maximumDistance > episilon) {
+            if (maximumDistance > episilon && maximumSpeedDifference < Double.greatestFiniteMagnitude) {
                 // If both conditions are met, we prefer to include points that affect the geometry
-                // rather than just speed.
+                // – unless the maximumSpeedDifference speed is greatestFiniteMagnitude because the user stopped
                 cutOffIndex = indexOfMaximumDistance
             }
             self.simplifyLocations(Array(locations[0...cutOffIndex]), episilon: episilon, speedEpisilon: speedEpisilon)
