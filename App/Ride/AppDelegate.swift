@@ -321,7 +321,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        self.handleApplication(application, open: url)
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, options: options)
+    }
+    
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        self.handleApplication(application, open: url)
+        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
+    }
+    
+    private func handleApplication(_ application: UIApplication, open url: URL) {
         if (url.scheme == "ridereport") {
             if (url.host == "verify-email"){
                 if let queryItems = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems {
@@ -340,7 +351,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else if (url.host == "authorize-application") {
                 if let uuid = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.filter({ $0.name == "uuid" }).first?.value {
                     var fixedUUID = uuid
-                    if (!uuid.contains("-") && uuid.characters.count == 32) {
+                    if (!uuid.contains("-") && uuid.count == 32) {
                         // work around an absurd issue where we sometimes have URL's out there with dashless uuids.
                         fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 8))
                         fixedUUID.insert("-", at: fixedUUID.index(fixedUUID.startIndex, offsetBy: 13))
@@ -369,8 +380,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 OAuth2Swift.handle(url: url)
             }
         }
-        
-        return FBSDKApplicationDelegate.sharedInstance().application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
