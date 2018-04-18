@@ -17,6 +17,7 @@ public class PredictionAggregator : NSManagedObject {
     public static let sampleOffsetTimeInterval: TimeInterval = 0.25
     public static let minimumSampleCountForSuccess = 8
     public static let maximumSampleBeforeFailure = 15
+    internal var referenceBootDate: Date!
 
     convenience init() {
         let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
@@ -29,6 +30,25 @@ public class PredictionAggregator : NSManagedObject {
         for loc in locations {
             loc.predictionAggregator = self
         }
+    }
+    
+    public class func fetchPredictionAggregators()->[PredictionAggregator] {
+        let context = RouteRecorderDatabaseManager.shared.currentManagedObjectContext()
+        let fetchedRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "PredictionAggregator")
+        
+        let results: [AnyObject]?
+        do {
+            results = try context.fetch(fetchedRequest)
+        } catch let error {
+            DDLogWarn(String(format: "Error executing fetch request: %@", error as NSError))
+            results = nil
+        }
+        
+        guard let preds = results as? [PredictionAggregator] else {
+            return []
+        }
+        
+        return preds
     }
     
     public func fetchFirstReading(afterDate: Date)-> AccelerometerReading? {

@@ -38,7 +38,6 @@ public class SensorClassificationManager : ClassificationManager {
     public var routeRecorder: RouteRecorder!
     
     private var motionQueue: OperationQueue!
-    private var referenceBootDate: Date!
     
     public static var authorizationStatus : ClassificationManagerAuthorizationStatus = .notDetermined
     
@@ -88,7 +87,7 @@ public class SensorClassificationManager : ClassificationManager {
             }
             
             DispatchQueue.main.async {
-                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData,  predictionAggregator: predictionAggregator)
                 reading.predictionAggregator = predictionAggregator
             }
         }
@@ -119,11 +118,11 @@ public class SensorClassificationManager : ClassificationManager {
             let timeoutPredictionBlock = DispatchWorkItem {
                 self.cancelTimedoutPredictionBlock = nil
                 predictionAggregator.currentPrediction = nil
-                self.stopMotionUpdates()
                 
                 DDLogInfo("Prediction attempt expired, canceling!")
                 predictionAggregator.addUnknownTypePrediction()
                 handler(predictionAggregator)
+                self.stopMotionUpdates()
             }
             cancelTimedoutPredictionBlock = timeoutPredictionBlock
             DispatchQueue.main.asyncAfter(deadline: .now() + timeoutPredictionInterval, execute: timeoutPredictionBlock)
@@ -147,13 +146,13 @@ public class SensorClassificationManager : ClassificationManager {
     // MARK: Helper Functions
     //
     
-    private func accelerometerReading(forAccelerometerData accelerometerData:CMAccelerometerData)->AccelerometerReading {
+    private func accelerometerReading(forAccelerometerData accelerometerData:CMAccelerometerData, predictionAggregator: PredictionAggregator)->AccelerometerReading {
         let accelerometerReading = AccelerometerReading(accelerometerData: accelerometerData)
-        if self.referenceBootDate == nil {
-            self.referenceBootDate = Date(timeIntervalSinceNow: -1 * accelerometerData.timestamp)
+        if predictionAggregator.referenceBootDate == nil {
+            predictionAggregator.referenceBootDate = Date(timeIntervalSinceNow: -1 * accelerometerData.timestamp)
         }
         
-        accelerometerReading.date =  Date(timeInterval: accelerometerData.timestamp, since: self.referenceBootDate)
+        accelerometerReading.date =  Date(timeInterval: accelerometerData.timestamp, since: predictionAggregator.referenceBootDate)
         return accelerometerReading
     }
     
@@ -230,7 +229,7 @@ public class SensorClassificationManager : ClassificationManager {
             }
             
             DispatchQueue.main.async {
-                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData)
+                let reading = self.accelerometerReading(forAccelerometerData: accelerometerData, predictionAggregator: predictionAggregator)
                 reading.predictionAggregator = predictionAggregator
                 
                 RouteRecorderDatabaseManager.shared.saveContext()
