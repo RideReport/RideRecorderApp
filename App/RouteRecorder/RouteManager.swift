@@ -697,8 +697,9 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
         
         DDLogVerbose("Received location updates.")
         defer {
+            var oldBackgroundTaskID = UIBackgroundTaskInvalid
             if (self.locationUpdateBackgroundTaskID != UIBackgroundTaskInvalid) {
-                UIApplication.shared.endBackgroundTask(self.locationUpdateBackgroundTaskID)
+                oldBackgroundTaskID = self.locationUpdateBackgroundTaskID
                 self.locationUpdateBackgroundTaskID = UIBackgroundTaskInvalid
             }
             
@@ -715,6 +716,10 @@ public class RouteManager : NSObject, CLLocationManagerDelegate {
                 })
             } else {
                 DDLogInfo("Did not reschedule Route Manager Location Update Background task!")
+            }
+            
+            if (oldBackgroundTaskID != UIBackgroundTaskInvalid) {
+                UIApplication.shared.endBackgroundTask(oldBackgroundTaskID)
             }
         }
         
