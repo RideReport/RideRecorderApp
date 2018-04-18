@@ -704,6 +704,7 @@ public class  Trip: NSManagedObject {
             if let reward = element as? TripReward {
                 var rewardDict: [String: Any] = [:]
                 rewardDict["reward_uuid"] = reward.rewardUUID
+                rewardDict["icon_url_string"] = reward.iconURLString
                 rewardDict["emoji"] = reward.displaySafeEmoji
                 rewardDict["description"] = reward.descriptionText
                 rewardDicts.append(rewardDict)

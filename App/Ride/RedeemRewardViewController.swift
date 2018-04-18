@@ -14,7 +14,7 @@ import CocoaLumberjack
 class RedeemRewardViewController: UIViewController {
     var tripReward: TripReward?
     private static let viewSizePercentageWidth: CGFloat = 0.8
-    private static let viewSizePercentageHeight: CGFloat = 0.8
+    private static let viewSizeHeight: CGFloat = 475
     
     private var rewardJSON: JSON?
 
@@ -31,7 +31,7 @@ class RedeemRewardViewController: UIViewController {
     
     static func presenter()-> Presentr {
         let width = ModalSize.fluid(percentage: Float(RedeemRewardViewController.viewSizePercentageWidth))
-        let height = ModalSize.fluid(percentage: Float(RedeemRewardViewController.viewSizePercentageHeight))
+        let height = ModalSize.custom(size: 475)
         let center = ModalCenterPosition.center
         let customType = PresentationType.custom(width: width, height: height, center: center)
         
@@ -74,7 +74,7 @@ class RedeemRewardViewController: UIViewController {
         frame.origin.x = 0
         frame.origin.y = 0
         frame.size.width = frame.size.width * RedeemRewardViewController.viewSizePercentageWidth
-        frame.size.height = frame.size.height * RedeemRewardViewController.viewSizePercentageHeight
+        frame.size.height = RedeemRewardViewController.viewSizeHeight
         let borderRect = frame
         
         borderLayer.bounds = borderRect

@@ -48,7 +48,6 @@ public struct TrophyProgress {
         
         self.reward = TrophyReward(dictionary["reward"])
         
-        
         if let count = dictionary["count"].int {
             self.count = count
         } else {

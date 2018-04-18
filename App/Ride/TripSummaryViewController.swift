@@ -124,6 +124,7 @@ class TripSummaryViewController: UIViewController, RideSummaryViewDelegate {
                     var rewardDict: [String: Any] = [:]
                     rewardDict["object"] = reward
                     rewardDict["reward_uuid"] = reward.rewardUUID
+                    rewardDict["icon_url_string"] = reward.iconURLString
                     rewardDict["emoji"] = reward.displaySafeEmoji
                     rewardDict["description"] = reward.descriptionText
                     rewardDicts.append(rewardDict)

@@ -13,6 +13,8 @@ import CoreData
 extension TripReward {
     @NSManaged public var descriptionText: String
     @NSManaged public var emoji: String
+    @NSManaged public var rewardUUID: String?
+    @NSManaged public var iconURLString: String?
     @NSManaged public var trip: Trip
     @NSManaged public var earnedAtLatitude: Double
     @NSManaged public var earnedAtLongitude: Double

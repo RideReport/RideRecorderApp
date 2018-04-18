@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E199" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="27">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E199" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="26">
     <entity name="ConnectedApp" representedClassName=".ConnectedApp" syncable="YES">
         <attribute name="appSettingsText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="appSettingsUrl" optional="YES" attributeType="String" syncable="YES"/>
@@ -119,6 +119,8 @@
         <attribute name="earnedAtLatitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="earnedAtLongitude" optional="YES" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="emoji" attributeType="String" syncable="YES"/>
+        <attribute name="iconURLString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rewardUUID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="trip" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="tripRewards" inverseEntity="Trip" syncable="YES"/>
     </entity>
     <entity name="TripsListRow" representedClassName="TripsListRow" syncable="YES">
@@ -142,7 +144,7 @@
         <element name="Profile" positionX="-63" positionY="-18" width="128" height="210"/>
         <element name="Promotion" positionX="-45" positionY="135" width="128" height="180"/>
         <element name="Trip" positionX="-9" positionY="99" width="128" height="375"/>
-        <element name="TripReward" positionX="-27" positionY="90" width="128" height="120"/>
+        <element name="TripReward" positionX="-27" positionY="90" width="128" height="150"/>
         <element name="TripsListRow" positionX="-45" positionY="135" width="128" height="135"/>
         <element name="TripsListSection" positionX="-36" positionY="144" width="128" height="90"/>
     </elements>

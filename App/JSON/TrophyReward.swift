@@ -59,6 +59,7 @@ public struct TrophyReward {
     let description: String!
     let organizationName: String?
     let imageURL: URL?
+    let iconURL: URL?
     let instances: [TrophyRewardInstance]
     
     init?(_ dictionary: JSON) {
@@ -73,6 +74,12 @@ public struct TrophyReward {
             self.imageURL = URL(string: urlString)
         } else {
             self.imageURL = nil
+        }
+        
+        if let urlString = dictionary["icon_url"].string {
+            self.iconURL = URL(string: urlString)
+        } else {
+            self.iconURL = nil
         }
         
         var instancesArray: [TrophyRewardInstance] = []

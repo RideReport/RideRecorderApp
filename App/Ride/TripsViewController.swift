@@ -702,6 +702,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
                         var rewardDict: [String: Any] = [:]
                         rewardDict["object"] = reward
                         rewardDict["reward_uuid"] = reward.rewardUUID
+                        rewardDict["icon_url_string"] = reward.iconURLString
                         rewardDict["emoji"] = reward.displaySafeEmoji
                         rewardDict["description"] = reward.descriptionText
                         rewardDicts.append(rewardDict)
@@ -886,7 +887,7 @@ class TripsViewController: UIViewController, UITableViewDataSource, UITableViewD
             self.tableView.setEditing(false, animated: true)
             
             let alertController = UIAlertController(title: "🐞 Tools", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-            if let route = trip.route {
+            if let route = trip.route {                
                 alertController.addAction(UIAlertAction(title: "⬆️ Upload Prediction Aggregators", style: UIAlertActionStyle.default, handler: { (_) in
                     APIClient.shared.uploadPredictionAggregators(forRoute: route)
                 }))

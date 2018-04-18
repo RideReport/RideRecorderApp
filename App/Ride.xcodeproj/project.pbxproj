@@ -575,6 +575,7 @@
 		3D19303A1EAE912100915813 /* RideNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideNotificationView.swift; sourceTree = "<group>"; };
 		3D1A154F1CD80BC200F9BD8D /* HealthAppSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HealthAppSettingsViewController.swift; sourceTree = "<group>"; };
 		3D1E3E0C1F5A1C5A00B5800D /* RideReportAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RideReportAPIClient.swift; sourceTree = "<group>"; };
+		3D1FAE24208571AA007985D5 /* RideReport 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "RideReport 4.xcdatamodel"; sourceTree = "<group>"; };
 		3D21CF521CA9D5DB002C7108 /* ReportModeClassificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportModeClassificationViewController.swift; sourceTree = "<group>"; };
 		3D265C0C1D7779AF00405F69 /* Ride Report Notification Content.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Ride Report Notification Content.entitlements"; sourceTree = "<group>"; };
 		3D265C0F1D777B8100405F69 /* Ride-Report-Content-Extension-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Ride-Report-Content-Extension-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -3455,7 +3456,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Knock.RideReport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "6438ed5f-b808-40aa-8a8e-4f2e003ce209";
+				PROVISIONING_PROFILE = "a4806b4d-dd1b-4fff-96c3-493c81b1c004";
 				PROVISIONING_PROFILE_SPECIFIER = "Ride Report Dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Ride/Ride-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -3555,11 +3556,12 @@
 		3D72BD771F58ABE80043ECBA /* RideReport.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				3D1FAE24208571AA007985D5 /* RideReport 4.xcdatamodel */,
 				3D7A0B59204F12130034A5B2 /* RideReport 3.xcdatamodel */,
 				3D32DC8B203CF74F0092F4BE /* RideReport 2.xcdatamodel */,
 				3D72BD781F58ABE80043ECBA /* RideReport.xcdatamodel */,
 			);
-			currentVersion = 3D7A0B59204F12130034A5B2 /* RideReport 3.xcdatamodel */;
+			currentVersion = 3D1FAE24208571AA007985D5 /* RideReport 4.xcdatamodel */;
 			name = RideReport.xcdatamodeld;
 			path = Ride/Model/RideReport.xcdatamodeld;
 			sourceTree = "<group>";

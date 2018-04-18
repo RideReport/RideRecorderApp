@@ -19,6 +19,8 @@ class TrophyViewController: UIViewController, TrophyProgressButtonDelegate {
     
     @IBOutlet weak var trophyProgressButton: TrophyProgressButton!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var rewardMessageLabel: UILabel!
+    @IBOutlet weak var rewardExpiresLabel: UILabel!
     @IBOutlet weak var detailLabel: UILabel!
     @IBOutlet weak var moreInfoTextView: UITextView!
     
@@ -123,17 +125,13 @@ class TrophyViewController: UIViewController, TrophyProgressButtonDelegate {
         self.trophyProgressButton.trophyProgress = trophyProgress
         self.trophyProgressButton.showsCount = false
         
-        self.descriptionLabel.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
-        
         self.trophyProgressButton.isHidden = false
         self.rewardImageView.isHidden = true
         self.rewardOrganizationName.isHidden = true
         self.rewardDescriptionLabel.superview?.isHidden = true
         self.shouldShowTrophyProgressView = true
         
-        var hasReward = false
         if let reward = trophyProgress.reward {
-            hasReward = true
             if let imageURL = reward.imageURL {
                 self.trophyProgressButton.isHidden = true
                 self.shouldShowTrophyProgressView = false
@@ -210,11 +208,46 @@ class TrophyViewController: UIViewController, TrophyProgressButtonDelegate {
             }
         }
         
-        if hasReward {
-            detailString = detailString.replacingOccurrences(of: "trophy", with: "reward")
+        if let reward = trophyProgress.reward, let instance = reward.instances.first, case .coupon(let title, let message, _) = instance.type  {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale.current
+            dateFormatter.dateFormat = "MMM d ''yy"
+            
+            self.rewardMessageLabel.isHidden = false
+            self.descriptionLabel.isHidden = true
+            self.rewardExpiresLabel.isHidden = false
+
+            if instance.voided {
+                self.detailLabel.text = ""
+                self.rewardMessageLabel.text = "VOID"
+                self.rewardMessageLabel.textColor = ColorPallete.shared.badRed
+                if let expiresDate = instance.expires {
+                    self.rewardExpiresLabel.text = "Expired on " + dateFormatter.string(from: expiresDate) + "."
+                } else {
+                    self.rewardExpiresLabel.text = "Expired."
+                }
+            } else {
+                self.detailLabel.text = title
+                self.rewardMessageLabel.text = message
+            
+                if let expiresDate = instance.expires {
+                    if expiresDate.compare(Date().daysFrom(7)) == .orderedAscending {
+                        // if it's coming up in a week
+                        self.rewardExpiresLabel.textColor = ColorPallete.shared.badRed
+                    }
+                    
+                    self.rewardExpiresLabel.text = "Expires on " + dateFormatter.string(from: expiresDate) + "."
+                } else {
+                    self.rewardExpiresLabel.isHidden = true
+                }
+            }
+        } else {
+            self.detailLabel.text = detailString
+            self.descriptionLabel.text = trophyProgress.body ?? TrophyProgress.emptyBodyPlaceholderString
+            self.rewardMessageLabel.isHidden = true
+            self.rewardExpiresLabel.isHidden = true
+            self.descriptionLabel.isHidden = false
         }
-        
-        self.detailLabel.text = detailString
     }
     
     @IBAction func cancel(_ sender: AnyObject) {

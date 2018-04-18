@@ -74,7 +74,7 @@ public protocol TrophyProgressButtonDelegate: class {
             }
             
             if let iconURL = trophyProgress.iconURL {
-                return String(format: "%@-%.0f-%i", iconURL.lastPathComponent, self.countLabelSize, TrophyProgressButton.versionNumber)
+                return String(format: "%@-%.0f-%.0f-%i", iconURL.lastPathComponent, self.countLabelSize, self.emojiFontSize, TrophyProgressButton.versionNumber)
             }
             
             return String(format: "%@-%.0f-%.0f-%i", trophyProgress.emoji, self.countLabelSize, self.emojiFontSize, TrophyProgressButton.versionNumber)

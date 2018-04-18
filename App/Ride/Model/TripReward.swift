@@ -33,28 +33,6 @@ public class  TripReward : NSManagedObject {
         }
     }
     
-    var rewardUUID: String? {
-        get {
-            let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
-            if components.count == 2 {
-                return components[0]
-            }
-            
-            return nil
-        }
-    }
-    
-    var iconURL: URL? {
-        get {
-            let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
-            if components.count == 2 {
-                return URL(string: components[1])
-            }
-            
-            return nil
-        }
-    }
-    
     private static var stupidHackDelimterString = "%%%"
     var displaySafeEmoji: String {
         let components = self.emoji.components(separatedBy: TripReward.stupidHackDelimterString)
@@ -77,8 +55,12 @@ public class  TripReward : NSManagedObject {
             let reward = TripReward.init(entity: NSEntityDescription.entity(forEntityName: "TripReward", in: context)!, insertInto: context)
             reward.emoji = emoji
             reward.descriptionText = description
-            if let rewardUUID = dictionary["reward_uuid"] as? String, let icon_url = dictionary["icon_url"] as? String {
-                reward.emoji = rewardUUID + TripReward.stupidHackDelimterString + icon_url
+            
+            if let rewardUUID = dictionary["reward_uuid"] as? String {
+                reward.rewardUUID = rewardUUID
+            }
+            if let icon_url = dictionary["icon_url"] as? String  {
+                reward.iconURLString = icon_url
             }
             
             if let earnedAtCoordinateArray = dictionary["earned_at_coordinate"] as? [Double], earnedAtCoordinateArray.count == 2 {

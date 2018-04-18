@@ -96,7 +96,7 @@ import Foundation
             }
             if let layer = self.borderLayer {
                 let frameSize = self.frame.size
-                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width + 4, height: frameSize.height + 4)
+                let borderRect = CGRect(x: 0, y: 0, width: frameSize.width, height: frameSize.height - 6)
                 
                 layer.bounds = borderRect
                 layer.position = CGPoint(x: frameSize.width/2, y: frameSize.height/2)
@@ -157,7 +157,10 @@ import Foundation
         let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: String(format:"H:|-[emojiLabel(%f)]-12-[bodyLabel]|", self.emojiFont.pointSize*1.1), options: [.alignAllCenterY], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
         currentConstraints.append(contentsOf: widthConstraints)
         
-        let heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[bodyLabel(>=emojiLabel)]-4-|", options: [], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
+        var heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-4-[bodyLabel(>=emojiLabel)]-4-|", options: [], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
+        if (drawsDottedOutline) {
+            heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-8-[bodyLabel(>=emojiLabel)]-6-|", options: [], metrics: nil, views: ["emojiLabel": emojiLabel, "bodyLabel": bodyLabel])
+        }
         currentConstraints.append(contentsOf: heightConstraints)
         
         emojiLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
