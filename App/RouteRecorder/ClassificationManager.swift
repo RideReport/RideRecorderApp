@@ -193,9 +193,8 @@ public class SensorClassificationManager : ClassificationManager {
             
             if predictionAggregator.aggregatePredictionIsComplete() {
                 predictionAggregator.currentPrediction = nil
-                self.stopMotionUpdates()
                 
-                return true
+                return true // caller will call stopMotionUpdates after it has a chance to call the handler
             } else {
                 // start a new prediction and keep going
                 let newPrediction = Prediction()
@@ -216,10 +215,10 @@ public class SensorClassificationManager : ClassificationManager {
             guard error == nil else {
                 DDLogInfo("Error reading accelerometer data! Ending early…")
                 predictionAggregator.currentPrediction = nil
-                self.stopMotionUpdates()
                 
                 predictionAggregator.addUnknownTypePrediction()
                 handler(predictionAggregator)
+                self.stopMotionUpdates()
                 
                 return
             }
@@ -236,6 +235,7 @@ public class SensorClassificationManager : ClassificationManager {
                 
                 if self.runPredictionsAndFinishIfPossible(predictionAggregator: predictionAggregator) {
                     handler(predictionAggregator)
+                    self.stopMotionUpdates()
                 }
             }
         }
