@@ -323,6 +323,27 @@ public class APIClient {
     }
     #endif
     
+    public func uploadPredictionAggregators(_ predictionAggregators: [PredictionAggregator]) {
+        let routeURL = "/prediction_aggregators"
+        
+        var params: [String: Any] = [:]
+        var predictionAggregatorsDictionaries : [Any?] = []
+        
+        for aggregator in predictionAggregators {
+            predictionAggregatorsDictionaries.append(aggregator.jsonDictionary() as Any?)
+        }
+        params["predictionAggregators"] = predictionAggregatorsDictionaries
+        
+        _ = AuthenticatedAPIRequest(client: self, method: .post, route: routeURL, parameters:params , authenticated: true) { (response) in
+            switch response.result {
+            case .success(_):
+                DDLogInfo("Uploaded prediction aggregator")
+            case .failure(_):
+                DDLogWarn("Error uploading prediction aggregator!")
+            }
+        }
+    }
+    
     public func uploadPredictionAggregators(forRoute route: Route) {
         let routeURL = "/prediction_aggregators"
 
