@@ -1,0 +1,37 @@
+{
+    "aps": {
+        "alert": {
+            "body": "Test message",
+            "title": "Optional title"
+        },
+        "category": "myCategory"
+    },
+    
+    "WatchKit Simulator Actions": [
+        {
+            "title": "First Button",
+            "identifier": "firstButtonAction"
+        }
+    ],
+    
+    "description": "1.6 miles to SE 12th and Clay",
+    "length": 3.1,
+    "rewards": [
+                {
+                "emoji": "🤖",
+                "description": "Test Trophy 1"
+                },
+                {
+                "emoji": "🚣",
+                "description": "Test Trophy 2"
+                },
+                {
+                "emoji": "🚀",
+                "description": "Test Trophy 3"
+                },
+                {
+                "emoji": "🥉",
+                "description": "Test Trophy 4"
+                }
+                ]
+}

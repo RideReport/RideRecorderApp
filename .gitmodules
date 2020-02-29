@@ -1,0 +1,21 @@
+[submodule "Submodules/PNChart"]
+	path = Submodules/PNChart
+	url = git@github.com:RideReport/PNChart.git
+[submodule "Submodules/DMActivityInstagram"]
+	path = Submodules/DMActivityInstagram
+	url = git@github.com:RideReport/DMActivityInstagram.git
+[submodule "App/RideTests/ride_response_json"]
+	path = App/RideTests/ride_response_json
+	url = git@github.com:RideReport/ride_response_json.git
+[submodule "App/Frameworks/ActivityPredictor"]
+	path = App/Frameworks/ActivityPredictor
+	url = git@github.com:RideReport/ActivityPredictor.git
+[submodule "App/Frameworks/GpxLocationManager"]
+	path = App/Frameworks/GpxLocationManager
+	url = git@github.com:RideReport/GpxLocationManager.git
+[submodule "App/RouteRecorder/Frameworks/ActivityPredictor"]
+	path = App/RouteRecorder/Frameworks/ActivityPredictor
+	url = git@github.com:RideReport/ActivityPredictor.git
+[submodule "App/RouteRecorder/Frameworks/GpxLocationManager"]
+	path = App/RouteRecorder/Frameworks/GpxLocationManager
+	url = git@github.com:RideReport/GpxLocationManager.git

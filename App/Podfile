@@ -1,0 +1,77 @@
+platform :ios, '12.0'
+use_frameworks!
+
+def shared_pods
+    pod 'SwiftMessages',				'6.0.2'
+    pod 'KeychainAccess',				'3.1.2'
+    pod 'Alamofire',					'4.8.1'
+    pod 'SwiftyJSON',					'4.2.0'
+    pod 'OAuthSwift',					'1.2.2'
+    pod 'CocoaLumberjack/Swift',		'3.5.1'
+    pod 'GzipSwift',					'4.0.4'
+end
+
+def app_pods
+    pod 'OHHTTPStubs/Swift',		'6.1.0'
+    pod 'Eureka',					'4.3.1'
+    pod 'Kingfisher',				'4.10.1'
+    pod 'Charts',					'3.2.2'
+    pod 'WebLinking', :git => 'https://github.com/RideReport/WebLinking.swift.git'
+    pod 'Presentr',					'1.9'
+    pod 'UIImageColors',			'2.1.0'
+    pod 'Mapbox-iOS-SDK',			'4.8.0'
+    pod 'BadgeSwift',				'7.0.0'
+end
+
+target 'RouteRecorder' do
+    shared_pods
+end
+
+target 'Ride Report' do
+    shared_pods
+    app_pods
+    pod 'Mockingjay/Core',			'2.0.1', :configurations => ['Debug']
+end
+
+target 'Ride Report Tests' do 
+    app_pods
+    shared_pods
+    pod 'Mockingjay',				'2.0.1'
+    inherit! :search_paths
+end
+
+target 'Ride Report UITests' do
+    shared_pods
+    app_pods
+    pod 'Mockingjay',				'2.0.1'
+end
+
+target 'Motion' do
+    shared_pods
+    pod 'Eureka',					'4.3.1'
+end
+
+target 'Ride Report Notification Content' do
+    pod 'SwiftyJSON',					'4.2.0'
+    pod 'Kingfisher',					'4.10.1'
+    pod 'GzipSwift',					'4.0.4'
+    pod 'CocoaLumberjack/Swift',		'3.5.1'
+end
+
+
+swift4Targets = ['WebLinking']
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            if swift4Targets.include? target.name
+                config.build_settings['SWIFT_VERSION'] = '4.0'
+            else
+            
+            end
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
+            config.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = 'Ride Report Dev'
+        end
+    end
+end
+

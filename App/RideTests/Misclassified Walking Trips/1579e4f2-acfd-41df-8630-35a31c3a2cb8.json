@@ -1,0 +1,127 @@
+{
+  "locations": [
+    {
+      "altitude": 941.11474609375, 
+      "course": -1.0, 
+      "date": "2017-12-10T05:54:17.000000-0400", 
+      "horizontalAccuracy": 65.0, 
+      "latitude": 35.77573238437089, 
+      "longitude": -72.67882808308234, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 10.0
+    }, 
+    {
+      "altitude": 941.1329956054688, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:00:21.000000-0400", 
+      "horizontalAccuracy": 498.57729884151235, 
+      "latitude": 35.77715710856487, 
+      "longitude": -72.66723719781794, 
+      "source": 6, 
+      "speed": -1.0, 
+      "verticalAccuracy": 10.0
+    }, 
+    {
+      "altitude": 941.1495971679688, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:03:04.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.77705535132904, 
+      "longitude": -72.66749474365992, 
+      "source": 2, 
+      "speed": -1.0, 
+      "verticalAccuracy": 11.447372436523438
+    }, 
+    {
+      "altitude": 941.21240234375, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:03:40.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.77711000750022, 
+      "longitude": -72.66735838944767, 
+      "source": 2, 
+      "speed": -1.0, 
+      "verticalAccuracy": 18.023683547973633
+    }, 
+    {
+      "altitude": 941.255859375, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:04:09.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.777093809985594, 
+      "longitude": -72.6673987989032, 
+      "source": 2, 
+      "speed": -1.0, 
+      "verticalAccuracy": 18.530324935913086
+    }, 
+    {
+      "altitude": 941.255859375, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:04:15.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.777093809985594, 
+      "longitude": -72.6673987989032, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 18.530324935913086
+    }, 
+    {
+      "altitude": 941.3020629882812, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:04:44.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.77709347843151, 
+      "longitude": -72.66739962603903, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 19.11819839477539
+    }, 
+    {
+      "altitude": 941.3482666015625, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:04:46.000000-0400", 
+      "horizontalAccuracy": 165.0, 
+      "latitude": 35.77709549530204, 
+      "longitude": -72.66739459435699, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 19.129371643066406
+    }, 
+    {
+      "altitude": 941.3482666015625, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:05:27.000000-0400", 
+      "horizontalAccuracy": 316.4324765379299, 
+      "latitude": 35.77709436660727, 
+      "longitude": -72.66739741020544, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 19.80496597290039
+    }, 
+    {
+      "altitude": 941.3482666015625, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:05:27.000000-0400", 
+      "horizontalAccuracy": 316.4328091457909, 
+      "latitude": 35.77709436548676, 
+      "longitude": -72.66739741300094, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 19.80496597290039
+    }, 
+    {
+      "altitude": 941.3482666015625, 
+      "course": -1.0, 
+      "date": "2017-12-10T06:05:27.000000-0400", 
+      "horizontalAccuracy": 316.43283136510786, 
+      "latitude": 35.77709436519736, 
+      "longitude": -72.66739741372292, 
+      "source": 1, 
+      "speed": -1.0, 
+      "verticalAccuracy": 19.80496597290039
+    }
+  ], 
+  "object_type": "route", 
+  "prediction_aggregators": []
+}

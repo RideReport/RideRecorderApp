@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16D30" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Notification View Controller-->
+        <scene sceneID="cwh-vc-ff4">
+            <objects>
+                <viewController id="M4Y-Lb-cyx" userLabel="Notification View Controller" customClass="NotificationViewController" customModule="Ride_Report_Notification_Content" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Ft6-oW-KC0"/>
+                        <viewControllerLayoutGuide type="bottom" id="FKl-LY-JtV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" simulatedAppContext="notificationCenter" id="S3S-Oj-5AN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="438"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="kId-Mr-cBv">
+                                <rect key="frame" x="0.0" y="121.5" width="320" height="320"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="320" id="mAk-M4-fbE"/>
+                                </constraints>
+                            </imageView>
+                            <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Jjw-Fz-xBN" customClass="RideSummaryView" customModule="Ride_Report_Notification_Content" customModuleProvider="target">
+                                <rect key="frame" x="16" y="8" width="288" height="106"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.35686274509999999" green="0.56862745100000001" blue="0.31764705879999999" alpha="0.0" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="kId-Mr-cBv" firstAttribute="top" secondItem="Jjw-Fz-xBN" secondAttribute="bottom" constant="8" id="BZG-V7-hFC"/>
+                            <constraint firstItem="Jjw-Fz-xBN" firstAttribute="top" secondItem="Ft6-oW-KC0" secondAttribute="bottom" constant="8" id="Csw-F9-uce"/>
+                            <constraint firstItem="kId-Mr-cBv" firstAttribute="width" secondItem="S3S-Oj-5AN" secondAttribute="width" id="HKL-sK-hA1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Jjw-Fz-xBN" secondAttribute="trailing" id="VK9-7J-Aqv"/>
+                            <constraint firstItem="kId-Mr-cBv" firstAttribute="centerX" secondItem="S3S-Oj-5AN" secondAttribute="centerX" id="YQp-kq-bHz"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="Jjw-Fz-xBN" secondAttribute="leading" id="iXB-2Y-X5K"/>
+                            <constraint firstItem="FKl-LY-JtV" firstAttribute="top" relation="lessThanOrEqual" secondItem="kId-Mr-cBv" secondAttribute="bottom" id="tt1-5t-RTJ"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="438"/>
+                    <connections>
+                        <outlet property="mapImageHeightConstraint" destination="mAk-M4-fbE" id="jrt-Qh-4fj"/>
+                        <outlet property="mapImageView" destination="kId-Mr-cBv" id="1rQ-9F-bw0"/>
+                        <outlet property="rideSummaryView" destination="Jjw-Fz-xBN" id="HNL-lc-oI0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-539.20000000000005" y="214.99250374812596"/>
+        </scene>
+    </scenes>
+</document>

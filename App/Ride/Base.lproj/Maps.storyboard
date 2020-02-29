@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Stress Map View Controller-->
+        <scene sceneID="ufZ-BU-xvF">
+            <objects>
+                <viewController storyboardIdentifier="stressMapViewController" id="W0e-45-zli" customClass="StressMapViewController" customModule="Ride_Report" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rUj-YL-dNv">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s4l-my-UT6" customClass="MGLMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Q4-TE-DR4">
+                                <rect key="frame" x="327" y="8" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="5wh-l5-CDu"/>
+                                    <constraint firstAttribute="height" constant="40" id="ssg-Gy-6zI"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="map-center"/>
+                                <connections>
+                                    <action selector="centerMap:" destination="W0e-45-zli" eventType="touchUpInside" id="DEX-Zu-W5D"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="2Q4-TE-DR4" firstAttribute="top" secondItem="989-oQ-ffo" secondAttribute="top" constant="8" id="0ed-mM-Noc"/>
+                            <constraint firstItem="s4l-my-UT6" firstAttribute="width" secondItem="rUj-YL-dNv" secondAttribute="width" id="8Mo-76-Ldb"/>
+                            <constraint firstItem="s4l-my-UT6" firstAttribute="height" secondItem="rUj-YL-dNv" secondAttribute="height" id="AiG-kO-cT5"/>
+                            <constraint firstItem="989-oQ-ffo" firstAttribute="trailing" secondItem="2Q4-TE-DR4" secondAttribute="trailing" constant="8" id="Pwi-wy-4eG"/>
+                            <constraint firstAttribute="centerY" secondItem="s4l-my-UT6" secondAttribute="centerY" id="Wx3-xE-8YB"/>
+                            <constraint firstItem="989-oQ-ffo" firstAttribute="centerX" secondItem="s4l-my-UT6" secondAttribute="centerX" id="nX8-Hc-8Dr"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="989-oQ-ffo"/>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="s16-8X-TfT"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showStressMap" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="centerMapButton" destination="2Q4-TE-DR4" id="SOx-Lm-Xyn"/>
+                        <outlet property="mapView" destination="s4l-my-UT6" id="DQE-jq-MNt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YMn-TK-nLl" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-636" y="1492"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="map-center" width="40" height="40"/>
+    </resources>
+</document>

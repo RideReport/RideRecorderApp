@@ -1,0 +1,116 @@
+PODS:
+  - Alamofire (4.8.1)
+  - BadgeSwift (7.0.0)
+  - Charts (3.2.2):
+    - Charts/Core (= 3.2.2)
+  - Charts/Core (3.2.2)
+  - CocoaLumberjack/Core (3.5.1)
+  - CocoaLumberjack/Swift (3.5.1):
+    - CocoaLumberjack/Core
+  - Eureka (4.3.1)
+  - GzipSwift (4.0.4)
+  - KeychainAccess (3.1.2)
+  - Kingfisher (4.10.1)
+  - Mapbox-iOS-SDK (4.8.0)
+  - Mockingjay (2.0.1):
+    - Mockingjay/Core (= 2.0.1)
+    - Mockingjay/XCTest (= 2.0.1)
+  - Mockingjay/Core (2.0.1):
+    - URITemplate (~> 2.0)
+  - Mockingjay/XCTest (2.0.1):
+    - Mockingjay/Core
+  - OAuthSwift (1.2.2)
+  - OHHTTPStubs/Core (6.1.0)
+  - OHHTTPStubs/Default (6.1.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (6.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (6.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (6.1.0)
+  - OHHTTPStubs/Swift (6.1.0):
+    - OHHTTPStubs/Default
+  - Presentr (1.9)
+  - SwiftMessages (6.0.2):
+    - SwiftMessages/App (= 6.0.2)
+  - SwiftMessages/App (6.0.2)
+  - SwiftyJSON (4.2.0)
+  - UIImageColors (2.1.0)
+  - URITemplate (2.0.3)
+  - WebLinking (2.0.1)
+
+DEPENDENCIES:
+  - Alamofire (= 4.8.1)
+  - BadgeSwift (= 7.0.0)
+  - Charts (= 3.2.2)
+  - CocoaLumberjack/Swift (= 3.5.1)
+  - Eureka (= 4.3.1)
+  - GzipSwift (= 4.0.4)
+  - KeychainAccess (= 3.1.2)
+  - Kingfisher (= 4.10.1)
+  - Mapbox-iOS-SDK (= 4.8.0)
+  - Mockingjay (= 2.0.1)
+  - Mockingjay/Core (= 2.0.1)
+  - OAuthSwift (= 1.2.2)
+  - OHHTTPStubs/Swift (= 6.1.0)
+  - Presentr (= 1.9)
+  - SwiftMessages (= 6.0.2)
+  - SwiftyJSON (= 4.2.0)
+  - UIImageColors (= 2.1.0)
+  - WebLinking (from `https://github.com/RideReport/WebLinking.swift.git`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - BadgeSwift
+    - Charts
+    - CocoaLumberjack
+    - Eureka
+    - GzipSwift
+    - KeychainAccess
+    - Kingfisher
+    - Mapbox-iOS-SDK
+    - Mockingjay
+    - OAuthSwift
+    - OHHTTPStubs
+    - Presentr
+    - SwiftMessages
+    - SwiftyJSON
+    - UIImageColors
+    - URITemplate
+
+EXTERNAL SOURCES:
+  WebLinking:
+    :git: https://github.com/RideReport/WebLinking.swift.git
+
+CHECKOUT OPTIONS:
+  WebLinking:
+    :commit: 95dabb94a56cc7088fb8f0361feaa703dc75052a
+    :git: https://github.com/RideReport/WebLinking.swift.git
+
+SPEC CHECKSUMS:
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  BadgeSwift: 5cfacfad916d85e2f68d93dbb9ade4e9555903da
+  Charts: f69cf0518b6d1d62608ca504248f1bbe0b6ae77e
+  CocoaLumberjack: 2101f8a5508197a305e737d16c5c2e9e2157628c
+  Eureka: 28ea296f06710f6745266b71f17862048941a32d
+  GzipSwift: 1a5bc5f7827e09846b0635b5079f1224bc3b1c3a
+  KeychainAccess: b3816fddcf28aa29d94b10ec305cd52be14c472b
+  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
+  Mapbox-iOS-SDK: 864bc732a20c183d87f04923295e988b504453d9
+  Mockingjay: 11a621880d2887f1775bdcf824341eb68f218450
+  OAuthSwift: 27b34fe80b76b67cd8f45571e0be2432bc9f6de1
+  OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
+  Presentr: 7078d7eb5d1661ebeaae60c9e42a1e534de1b993
+  SwiftMessages: 8b3cc68dba2f1c91aac1a74c90b10287aac35371
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
+  UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
+  URITemplate: ace0c4c46dcf8afe6e89b4060621852886b15c3b
+  WebLinking: a5ee00bf4a13c1a6ee4c3214c6822f7a724ab044
+
+PODFILE CHECKSUM: 121a0d99d4f249f26f987ee6477f8c4ed75dc92f
+
+COCOAPODS: 1.9.0

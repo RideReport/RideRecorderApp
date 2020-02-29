@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19D76" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="26">
+    <entity name="Profile" representedClassName=".Profile" syncable="YES">
+        <attribute name="dateOfBirth" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="gender" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="weightKilograms" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="NO"/>
+    </entity>
+    <entity name="Trip" representedClassName=".Trip" syncable="YES">
+        <attribute name="activityTypeInteger" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="calories" optional="YES" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="climacon" optional="YES" attributeType="String"/>
+        <attribute name="displayDataURLString" optional="YES" attributeType="String"/>
+        <attribute name="endDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="endingPlacemarkName" optional="YES" attributeType="String"/>
+        <attribute name="healthKitUuid" optional="YES" attributeType="String"/>
+        <attribute name="isInProgress" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isSavedToHealthKit" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="isSummarySynced" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="isSynced" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="length" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="movingSpeed" optional="YES" attributeType="Double" usesScalarValueType="NO"/>
+        <attribute name="startDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="startingPlacemarkName" optional="YES" attributeType="String"/>
+        <attribute name="temperature" optional="YES" attributeType="Integer 16" usesScalarValueType="NO"/>
+        <attribute name="uuid" optional="YES" attributeType="String"/>
+        <relationship name="bikeTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="bikeTrip" inverseEntity="TripsListRow"/>
+        <relationship name="otherTripOfTripsListRow" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListRow" inverseName="otherTrips" inverseEntity="TripsListRow"/>
+        <relationship name="tripRewards" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="TripReward" inverseName="trip" inverseEntity="TripReward"/>
+        <fetchIndex name="byActivityTypeIntegerIndex">
+            <fetchIndexElement property="activityTypeInteger" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byIsSyncedIndex">
+            <fetchIndexElement property="isSynced" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byStartDateIndex">
+            <fetchIndexElement property="startDate" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byUuidIndex">
+            <fetchIndexElement property="uuid" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="TripReward" representedClassName=".TripReward" syncable="YES">
+        <attribute name="descriptionText" attributeType="String"/>
+        <attribute name="earnedAtLatitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES"/>
+        <attribute name="earnedAtLongitude" optional="YES" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES"/>
+        <attribute name="emoji" attributeType="String"/>
+        <attribute name="iconURLString" optional="YES" attributeType="String"/>
+        <attribute name="rewardUUID" optional="YES" attributeType="String"/>
+        <relationship name="trip" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="tripRewards" inverseEntity="Trip"/>
+    </entity>
+    <entity name="TripsListRow" representedClassName="TripsListRow" syncable="YES">
+        <attribute name="isOtherTripsRow" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="sortName" attributeType="String"/>
+        <relationship name="bikeTrip" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Trip" inverseName="bikeTripOfTripsListRow" inverseEntity="Trip"/>
+        <relationship name="otherTrips" toMany="YES" deletionRule="Nullify" destinationEntity="Trip" inverseName="otherTripOfTripsListRow" inverseEntity="Trip"/>
+        <relationship name="otherTripsRowOfSection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListSection" inverseName="otherTripsRow" inverseEntity="TripsListSection"/>
+        <relationship name="section" maxCount="1" deletionRule="Nullify" destinationEntity="TripsListSection" inverseName="rows" inverseEntity="TripsListSection"/>
+    </entity>
+    <entity name="TripsListSection" representedClassName="TripsListSection" syncable="YES">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="otherTripsRow" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="otherTripsRowOfSection" inverseEntity="TripsListRow"/>
+        <relationship name="rows" toMany="YES" deletionRule="Cascade" destinationEntity="TripsListRow" inverseName="section" inverseEntity="TripsListRow"/>
+    </entity>
+    <elements>
+        <element name="Profile" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="Trip" positionX="-9" positionY="99" width="128" height="343"/>
+        <element name="TripReward" positionX="-27" positionY="90" width="128" height="150"/>
+        <element name="TripsListRow" positionX="-45" positionY="135" width="128" height="135"/>
+        <element name="TripsListSection" positionX="-36" positionY="144" width="128" height="90"/>
+    </elements>
+</model>
