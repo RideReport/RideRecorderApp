@@ -65,6 +65,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MGLMapboxAccessToken</key>
+	<string>pk.eyJ1IjoicXVpY2tseXdpbGxpYW0iLCJhIjoibmZ3UkZpayJ9.8gNggPy6H5dpzf4Sph4-sA</string>
 	<key>MGLMapboxAccountType</key>
 	<integer>1</integer>
 	<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
@@ -89,9 +91,9 @@
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>$(PRODUCT_NAME) saves workouts, energy burned and cycling distance to the Health App.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Tap 'Always Allow' to log your bike rides automatically!</string>
+	<string>Tap &apos;Always Allow&apos; to log your bike rides automatically!</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Tap 'Always Allow' to log your bike rides automatically!</string>
+	<string>Tap &apos;Always Allow&apos; to log your bike rides automatically!</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your location information to log your bike rides.</string>
 	<key>NSMotionUsageDescription</key>

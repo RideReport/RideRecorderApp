@@ -31,8 +31,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, UIGestureRecogniz
         self.dateFormatter.locale = Locale.current
         self.dateFormatter.dateFormat = "MM/dd"
         
-        self.mapView.logoView.isHidden = true
-        self.mapView.attributionButton.isHidden = true
         self.mapView.isRotateEnabled = false
         self.mapView.backgroundColor = UIColor(red: 249/255, green: 255/255, blue: 247/255, alpha: 1.0)
         
